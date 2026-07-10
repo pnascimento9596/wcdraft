@@ -4,10 +4,17 @@
 // render common_name "Maldini"; the MV2-12 audit flagged the Cesare card as
 // reading like Paolo. The override map disambiguates colliding short names
 // at index-build time; non-colliding names are untouched.
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import type { RuntimePlayerCard } from "@wcdraft/data";
+import { DRAFT_POOL_BUNDLE, type RuntimePlayerCard } from "@wcdraft/data";
 
 import { buildDisplayNameOverrides } from "../data";
+
+function sortedEntries(overrides: ReadonlyMap<string, string>): [string, string][] {
+  return [...overrides.entries()].sort(([left], [right]) =>
+    left < right ? -1 : left > right ? 1 : 0,
+  );
+}
 
 let seq = 0;
 function card(
@@ -34,6 +41,38 @@ function card(
 }
 
 describe("buildDisplayNameOverrides (q-005)", () => {
+  it("keeps the real-bundle override map byte-identical to the pre-O(n) baseline", () => {
+    const overrides = buildDisplayNameOverrides(DRAFT_POOL_BUNDLE.player_cards);
+    const entries = [...overrides.entries()];
+    const serialized = JSON.stringify(entries);
+    const canonicalEntries = sortedEntries(overrides);
+
+    expect(DRAFT_POOL_BUNDLE.player_cards).toHaveLength(12_219);
+    expect(entries).toHaveLength(3_681);
+    expect(Buffer.byteLength(serialized)).toBe(113_071);
+    expect(createHash("sha256").update(serialized).digest("hex")).toBe(
+      "553319c2dfee6307fa3f1823a3afe0c4d6075d7a4ec7d4bb030d1edcbb74cbbe",
+    );
+    expect(
+      [0, 1, 17, 250, 500, 1_000, 1_500, 2_000, 2_500, 3_000, 3_500, 3_680].map(
+        (index) => canonicalEntries[index],
+      ),
+    ).toEqual([
+      ["P-00042:1954", "Miloš Milutinović"],
+      ["P-00042:1958", "Miloš Milutinović"],
+      ["P-00452:1958", "L. Allchurch"],
+      ["P-07363:1986", "P. Markov"],
+      ["P-14428:2014", "H. Almeida"],
+      ["P-29660:1962", "Mario David"],
+      ["P-43959:1998", "R. Lee"],
+      ["P-57865:2022", "R. Jiménez"],
+      ["P-73110:1998", "Hussein Abdulghani"],
+      ["P-87003:2026", "N. Mendes"],
+      ["P-W26-0236:2026", "E. Anderson"],
+      ["P-W26-0867:2026", "Odeh Al-Fakhouri"],
+    ]);
+  });
+
   it("disambiguates the Maldini collision with given-name initials", () => {
     const overrides = buildDisplayNameOverrides([
       card({
@@ -153,5 +192,31 @@ describe("buildDisplayNameOverrides (q-005)", () => {
     // Distinct players, identical names everywhere — both get an override
     // (the full name), and the card year remains the only separator.
     expect(overrides.size).toBe(2);
+  });
+
+  it("is independent of interleaved group and card ordering", () => {
+    const cards = [
+      card({ card_id: "C-a1", player_id: "P-a", common_name: "Lee", full_name: "Alex Lee" }),
+      card({ card_id: "C-b1", player_id: "P-b", common_name: "Kim", full_name: "Bea Kim" }),
+      card({ card_id: "C-c1", player_id: "P-c", common_name: "lee", full_name: "Chris Lee" }),
+      card({ card_id: "C-d1", player_id: "P-d", common_name: "KIM", full_name: "Dana Kim" }),
+      card({ card_id: "C-a2", player_id: "P-a", common_name: "Lee", full_name: "Alex Lee" }),
+    ];
+
+    expect(sortedEntries(buildDisplayNameOverrides(cards))).toEqual(
+      sortedEntries(buildDisplayNameOverrides([...cards].reverse())),
+    );
+  });
+
+  it("preserves the scrubbed empty-name fallback for distinct players", () => {
+    const overrides = buildDisplayNameOverrides([
+      card({ card_id: "C-a", player_id: "P-a", common_name: "not applicable", full_name: "" }),
+      card({ card_id: "C-b", player_id: "P-b", common_name: "", full_name: "not applicable" }),
+    ]);
+
+    expect(sortedEntries(overrides)).toEqual([
+      ["C-a", "—"],
+      ["C-b", "—"],
+    ]);
   });
 });
