@@ -151,7 +151,10 @@ type DrizzleSnapshot = {
     {
       columns: Record<string, unknown>;
       indexes: Record<string, { isUnique: boolean; where?: string }>;
-      foreignKeys: Record<string, { columnsFrom: string[]; columnsTo: string[] }>;
+      foreignKeys: Record<
+        string,
+        { columnsFrom: string[]; columnsTo: string[]; onDelete?: string; onUpdate?: string }
+      >;
       checkConstraints: Record<string, unknown>;
     }
   >;
@@ -223,6 +226,12 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(leaderboard?.columns).toHaveProperty("attempt_formation_id");
     expect(leaderboard?.columns).toHaveProperty("attempt_consumed_at");
     expect(attempts?.indexes.ranked_attempts_binding_uq).toMatchObject({ isUnique: true });
+    expect(attempts?.foreignKeys.ranked_attempts_session_id_sessions_id_fk).toMatchObject({
+      columnsFrom: ["session_id"],
+      columnsTo: ["id"],
+      onDelete: "set null",
+      onUpdate: "no action",
+    });
     expect(leaderboard?.foreignKeys.leaderboard_entries_ranked_attempt_binding_fk).toMatchObject({
       columnsFrom: [
         "attempt_id",
@@ -524,6 +533,21 @@ describe("@wcdraft/db migrations — 0012_ranked_attempt_structural_binding", ()
     expect(structuralBindingSql).toMatch(/ON DELETE restrict\s+ON UPDATE restrict/);
     expect(structuralBindingSql).toMatch(
       /ADD CONSTRAINT "leaderboard_entries_ranked_attempt_binding_fk"[\s\S]*ON UPDATE restrict\s+NOT VALID;/,
+    );
+  });
+
+  it("detaches durable attempts on session deletion and restores cascade on down", () => {
+    expect(structuralBindingSql).toMatch(
+      /DROP CONSTRAINT "ranked_attempts_session_id_sessions_id_fk"/,
+    );
+    expect(structuralBindingSql).toMatch(
+      /ADD CONSTRAINT "ranked_attempts_session_id_sessions_id_fk"[\s\S]*ON DELETE set null ON UPDATE no action/,
+    );
+    expect(structuralBindingDownSql).toMatch(
+      /DROP CONSTRAINT "ranked_attempts_session_id_sessions_id_fk"/,
+    );
+    expect(structuralBindingDownSql).toMatch(
+      /ADD CONSTRAINT "ranked_attempts_session_id_sessions_id_fk"[\s\S]*ON DELETE cascade ON UPDATE no action/,
     );
   });
 

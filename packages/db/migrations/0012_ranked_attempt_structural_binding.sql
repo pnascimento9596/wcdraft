@@ -10,6 +10,19 @@ ALTER TABLE "leaderboard_entries" ADD COLUMN "attempt_formation_id" text;
 --> statement-breakpoint
 ALTER TABLE "leaderboard_entries" ADD COLUMN "attempt_consumed_at" timestamp with time zone;
 --> statement-breakpoint
+-- Once a consumed attempt backs a durable public leaderboard row, deleting
+-- the issuing session must not cascade-delete that attempt and collide with
+-- the binding FK below. The nullable session id is provenance metadata; user
+-- ownership remains independently enforced with ON DELETE CASCADE. Outstanding
+-- attempts also detach and remain bounded by their expiry/sweep lifecycle.
+ALTER TABLE "ranked_attempts"
+  DROP CONSTRAINT "ranked_attempts_session_id_sessions_id_fk";
+--> statement-breakpoint
+ALTER TABLE "ranked_attempts"
+  ADD CONSTRAINT "ranked_attempts_session_id_sessions_id_fk"
+  FOREIGN KEY ("session_id") REFERENCES "public"."sessions"("id")
+  ON DELETE set null ON UPDATE no action;
+--> statement-breakpoint
 -- Preserve every existing attempt-backed row by deriving, never inventing,
 -- its missing binding witnesses. Attempt-less casual rows remain NULL.
 UPDATE "leaderboard_entries" AS "entry"

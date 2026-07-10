@@ -9,9 +9,11 @@
 // 0004): server-issued single-use seeds tie to a USER, so `user_id` is
 // NOT NULL — the requirement is structural, not an application check. The
 // F-1 "one of user_id / session_id" convention is superseded. `session_id`
-// stays nullable as an optional record of the issuing session; its
-// ON DELETE CASCADE is acceptable because attempts are short-lived
-// operational rows (window_expires_at), unlike public board entries.
+// stays nullable as an optional record of the issuing session. Migration 0012
+// changes that FK to ON DELETE SET NULL: a consumed attempt may become the
+// durable parent of a public board entry, so session revocation must detach
+// provenance rather than cascade into the board-to-attempt RESTRICT edge.
+// Outstanding attempts remain user-owned and bounded by expiry/sweep.
 import { sql } from "drizzle-orm";
 import { pgTable, text, timestamp, uuid, index, uniqueIndex, check } from "drizzle-orm/pg-core";
 import { users } from "./users.ts";
@@ -25,7 +27,7 @@ export const rankedAttempts = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     sessionId: text("session_id").references(() => sessions.id, {
-      onDelete: "cascade",
+      onDelete: "set null",
     }),
     seasonKey: text("season_key").notNull(),
     formationId: text("formation_id").notNull(),

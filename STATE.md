@@ -26,29 +26,46 @@ every violating `INSERT` or `UPDATE`. Their unvalidated status is explicit
 legacy debt; attempt-backed rows that can be derived are backfilled and every
 accepted post-0012 Ranked row is structurally bound. This declarative design
 was chosen over a leaderboard-only trigger because it also prevents a later
-attempt update or delete from invalidating an accepted ranked row. The down
-migration removes only the new metadata and constraints, restores the prior
-single-column attempt FK, and deletes no rows. Drizzle intent now declares migration 0009's
-existing partial unique attempt index; missing snapshots 0008 through 0012 were
+attempt update or delete from invalidating an accepted ranked row. Independent
+Red review at exact head `d1779b8b6a42203fac979d8369bc818b37f51efe`
+correctly returned FAIL: the prior cascade from nullable
+`ranked_attempts.session_id` to `sessions` tried to delete a now-durable attempt
+during ordinary session revocation, which the board binding rejected with
+SQLSTATE `23001`. The fix-forward changes that provenance FK to SET NULL on
+delete, so session deletion detaches both the attempt and board row while
+preserving their binding; direct attempt mutation/deletion remains restricted
+and user deletion still cascades both artifacts. Outstanding attempts also
+detach and remain user-owned until their bounded expiry/sweep. The 0012 down
+restores the exact pre-0012 session cascade plus the prior single-column
+board-attempt FK and deletes no rows. Drizzle intent now declares migration
+0009's existing partial unique attempt index; missing snapshots 0008 through 0012 were
 reconstructed, and the pre-existing broken 0004-to-0005 snapshot link was
 repaired. A fresh drizzle-kit parity probe reports no schema changes. The B4
 ephemeral-Neon lane will apply all 13 migrations, reproduce rejection of a
-ranked row bound to another user's unconsumed cross-config attempt, execute all
-13 downs, and delete its isolated branch. The failed first Neon run created and
-deleted its isolated branch successfully; the fix-forward must produce a new
-exact-head receipt before review or merge. Final local validation passed: frozen
-install already up to date; focused DB migration/PGlite/schema tests (3 files /
-117 tests); directly affected web PGlite tests (5 files / 94 tests); root
+ranked row bound to another user's unconsumed cross-config attempt, prove the
+complete ranked session lifecycle, execute all 13 downs, and delete its
+isolated branch. The first Neon run created and deleted its branch despite the
+legacy-data failure; replacement run `29109029455` at `d1779b8b` later passed
+all 13 ups, the adversarial probe, all 13 downs, empty-schema assertion, branch
+cleanup, and required aggregate, but that exact head is void after the
+independent lifecycle FAIL. Baseline local validation before that review
+passed: frozen install already up to date; focused DB tests (3 files / 117
+tests); directly affected web tests (5 files / 94 tests); root
 typecheck (8/8, 5 cached), lint (5/5, 3 cached), test (8/8, 6 cached before the
-NOT VALID fix-forward: changed DB 3 files / 116 tests, changed web 88 files passed / 1 skipped and 933 tests
-passed / 1 skipped, game-flow Playwright PASS, responsive desktop 84/0, mobile
-56/0, interaction targets 40/0), and production build (4/4, 3 cached, changed
-web build emitted 40/40 pages and `/api/health`); affected leaderboard golden
-(1 file / 6 tests, 3 cached prerequisite tasks); direct DB and web
-`tsc --noEmit`; the DB readiness CI contract (6 behavior cases / 6 workflow
-path cases / 8 workflow bindings); drizzle-kit current-snapshot parity; targeted
-ESLint; targeted Prettier; and `git diff --check`. Heavy realism was not run
-because no engine, rating, simulation, or runtime-data artifact changed.
+NOT VALID fix-forward: changed DB 3 files / 116 tests, changed web 88 files
+passed / 1 skipped and 933 tests passed / 1 skipped, game-flow Playwright PASS,
+responsive desktop 84/0, mobile 56/0, interaction targets 40/0), and production
+build (4/4, 3 cached, changed web build emitted 40/40 pages and `/api/health`);
+affected leaderboard golden (1 file / 6 tests, 3 cached prerequisite tasks); and
+the DB readiness CI contract (6 behavior / 6 workflow paths / 8 bindings).
+Lifecycle fix-forward validation now passes: focused DB migration/PGlite/schema
+tests (3 files / 119 tests, including the all-13 session/delete/mutation/user
+cascade graph and down-FK action); affected auth/leaderboard tests (7 files /
+106 tests); direct DB and web `tsc --noEmit`; DB and web ESLint; drizzle-kit
+current-snapshot parity; targeted Prettier; and `git diff --check`. A fresh
+exact-head CI/Neon receipt plus full new Red and cross-model reviews remain
+required. Heavy realism was not run because no engine, rating, simulation, or
+runtime-data artifact changed.
 
 Audit S1 B4 deploy/migration readiness:
 2026-07-10 · RED implementation on branch `ws-f4/audit-s1-health-readiness`,

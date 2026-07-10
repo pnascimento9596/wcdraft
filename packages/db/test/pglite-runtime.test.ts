@@ -448,6 +448,152 @@ describe("@wcdraft/db pglite runtime", () => {
     });
   });
 
+  it("deletes the owning session without invalidating a durable ranked binding", async () => {
+    await withMigratedPglite(async ({ client }) => {
+      const sessionId = "ranked-lifecycle-session";
+      const attemptId = "00000000-0000-4000-8000-000000000008";
+      const consumedAt = "2026-07-10T15:00:00.000Z";
+      await client.exec(`
+        INSERT INTO users (id, email, username)
+        VALUES ('${USER_ID}', 'ranked-lifecycle@example.com', 'ranked_lifecycle');
+
+        INSERT INTO sessions (id, user_id, csrf_secret, expires_at)
+        VALUES (
+          '${sessionId}',
+          '${USER_ID}',
+          'ranked-lifecycle-csrf',
+          now() + interval '1 hour'
+        );
+
+        INSERT INTO ranked_attempts (
+          id,
+          user_id,
+          session_id,
+          season_key,
+          formation_id,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          issued_parent_seed,
+          nonce,
+          window_expires_at,
+          consumed_at
+        )
+        VALUES (
+          '${attemptId}',
+          '${USER_ID}',
+          '${sessionId}',
+          'season-lifecycle',
+          '4-3-3',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          'seed-ranked-lifecycle',
+          'nonce-ranked-lifecycle',
+          now() + interval '1 hour',
+          '${consumedAt}'
+        );
+
+        INSERT INTO leaderboard_entries (
+          season_key,
+          mode,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          user_id,
+          session_id,
+          attempt_id,
+          attempt_formation_id,
+          attempt_consumed_at,
+          token,
+          verified_score
+        )
+        VALUES (
+          'season-lifecycle',
+          'ranked',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          '${USER_ID}',
+          '${sessionId}',
+          '${attemptId}',
+          '4-3-3',
+          '${consumedAt}',
+          'ranked-lifecycle-token',
+          180
+        )
+      `);
+
+      await client.exec(`DELETE FROM sessions WHERE id = '${sessionId}'`);
+
+      const sessionCount = await client.query<{ count: number }>(`
+        SELECT count(*)::integer AS count FROM sessions WHERE id = '${sessionId}'
+      `);
+      expect(sessionCount.rows).toEqual([{ count: 0 }]);
+
+      const graph = await client.query<{
+        attempt_session_id: string | null;
+        entry_session_id: string | null;
+        binding_intact: boolean;
+      }>(`
+        SELECT
+          attempt.session_id AS attempt_session_id,
+          entry.session_id AS entry_session_id,
+          (
+            entry.attempt_id = attempt.id
+            AND entry.user_id = attempt.user_id
+            AND entry.season_key = attempt.season_key
+            AND entry.attempt_formation_id = attempt.formation_id
+            AND entry.draft_mode = attempt.draft_mode
+            AND entry.draft_order = attempt.draft_order
+            AND entry.era = attempt.era
+            AND entry.rating_basis = attempt.rating_basis
+            AND entry.attempt_consumed_at = attempt.consumed_at
+          ) AS binding_intact
+        FROM leaderboard_entries AS entry
+        JOIN ranked_attempts AS attempt ON attempt.id = entry.attempt_id
+        WHERE entry.token = 'ranked-lifecycle-token'
+      `);
+      expect(graph.rows).toEqual([
+        {
+          attempt_session_id: null,
+          entry_session_id: null,
+          binding_intact: true,
+        },
+      ]);
+
+      await expect(
+        client.exec(`UPDATE ranked_attempts SET formation_id = '4-4-2' WHERE id = '${attemptId}'`),
+      ).rejects.toThrow(/leaderboard_entries_ranked_attempt_binding_fk|foreign key/i);
+      await expect(
+        client.exec(`DELETE FROM ranked_attempts WHERE id = '${attemptId}'`),
+      ).rejects.toThrow(/leaderboard_entries_ranked_attempt_binding_fk|foreign key/i);
+
+      await client.exec(`DELETE FROM users WHERE id = '${USER_ID}'`);
+      const afterUserDelete = await client.query<{
+        users: number;
+        sessions: number;
+        attempts: number;
+        entries: number;
+      }>(`
+        SELECT
+          (SELECT count(*)::integer FROM users WHERE id = '${USER_ID}') AS users,
+          (SELECT count(*)::integer FROM sessions WHERE user_id = '${USER_ID}') AS sessions,
+          (SELECT count(*)::integer FROM ranked_attempts WHERE id = '${attemptId}') AS attempts,
+          (
+            SELECT count(*)::integer
+            FROM leaderboard_entries
+            WHERE token = 'ranked-lifecycle-token'
+          ) AS entries
+      `);
+      expect(afterUserDelete.rows).toEqual([{ users: 0, sessions: 0, attempts: 0, entries: 0 }]);
+    });
+  });
+
   it("rejects another user's unconsumed cross-config attempt before ranked insertion", async () => {
     await withMigratedPglite(async ({ client }) => {
       const rivalId = "00000000-0000-4000-8000-000000000003";
@@ -810,6 +956,12 @@ describe("@wcdraft/db pglite runtime", () => {
       expect(constraints.rows).toEqual([
         { conname: "leaderboard_entries_attempt_id_ranked_attempts_id_fk" },
       ]);
+      const attemptSessionFk = await client.query<{ confdeltype: string }>(`
+        SELECT confdeltype
+        FROM pg_constraint
+        WHERE conname = 'ranked_attempts_session_id_sessions_id_fk'
+      `);
+      expect(attemptSessionFk.rows).toEqual([{ confdeltype: "c" }]);
       const indexes = await client.query<{ indexname: string }>(`
         SELECT indexname
         FROM pg_indexes
