@@ -205,10 +205,13 @@ Turbo tasks, and heavy realism (9/9). Report:
 
 Daily-seed 45-day runway refresh (Audit S1 A2):
 2026-07-10 · RED implementation on branch
-`ws-core/audit-s1-daily-runway`, based on `origin/main` `c77ee28` in PR #225
-(open/unmerged; must rebase after A1 lands). Scope: raises the Daily salt-map
-builder default from 14 to exactly 45 days and replaces the committed artifact
-with 45 contiguous UTC dates from `2026-07-10` through `2026-08-23` inclusive.
+`ws-core/audit-s1-daily-runway` in PR #225, rebased without conflicts onto
+`origin/main` `986c5789614b0dc2e3bc726f5e34b2dd266d1f55` after A1 shipped through
+PR #227 at that same commit. A1's typed fail-closed behavior outside committed
+Daily coverage remains the base behavior and is untouched here. A2 raises the
+Daily salt-map builder default from 14 to exactly 45 days and replaces the
+committed artifact with 45 contiguous UTC dates from `2026-07-10` through
+`2026-08-23` inclusive.
 Policy `greedyOverallAutoDraft`, N=128 sample seeds/candidate, 8 candidate
 salts/date, salt/seed construction, and the existing degeneracy bands are
 unchanged. All 45 selected candidates measured normal (qualifying range
@@ -218,14 +221,25 @@ unchanged. All 45 selected candidates measured normal (qualifying range
 Artifact fingerprint: 26,506 raw bytes / 2,229 gzip / 1,792 brotli, sha256
 `42d012d035565b4ff218d890b2ecbd28d0e3ea3c3c30240737d8ba4afc3f5d79`.
 No rating, sim, core, ETL, schema, auth, or A3 workflow semantics changed.
-Pre-documentation SHA `8398e74` passed two byte-stable five-step regeneration
-cycles, generated-artifact checks, focused/full data tests, root
-typecheck/lint/test/build, core/data/web goldens, and heavy realism locally;
-the independent reviewer re-executed those gates and issued FAIL solely for the
-missing current-state entry fixed here. Expensive gates intentionally await the
-mandatory post-A1 rebase; a fresh full RED review remains required at that new
-SHA. GitHub-hosted required jobs remain externally blocked by the account
-billing/spend-limit refusal recorded on PR #225.
+Post-rebase verification ran the mandated five-step regeneration chain twice
+with `--start-date 2026-07-10`; both passes ended with a clean worktree and
+zero-byte tracked diff. Both reproduced the artifact sha above plus manifest
+sha `7979fa756545287ef84a4cc338d9d2fa7d362f03e5ad84814318cf1bd7cc28bb`,
+compact-size report sha
+`003dbf2e48d7bc1469288795bd3fa08b353f2b5f919ff57eac89a99616add64c`,
+and score-distribution sha
+`16c01f921455ebd6a47b22e0ee7ee5f7e3d36239bc3df9982d123e155c75b06d`.
+The exact window, 45-date contiguity, today's coverage, and manifest/report
+fingerprints were asserted independently after each pass. Frozen install was
+already current (0.18s). Post-rebase local gates passed: focused Daily golden
+(1 file / 8 tests); full data tests (13 files passed / 1 skipped, 103 tests
+passed / 9 skipped); generated-artifact check; root typecheck (8/8), lint
+(5/5), test (8/8; core 391, data 103 passed / 9 skipped, DB 108, marketing 68,
+web 919 passed / 1 skipped, game-flow Playwright, responsive shell-fit 56
+desktop + 28 mobile metrics / 0 failures), and build (4/4); core goldens (111
+tests), data/integration goldens (71 tests), web leaderboard golden (6 tests),
+and heavy realism (9/9). Required PR gates now execute on the self-hosted
+`wcdraft-m4` runner; CI results remain unclaimed until this exact head is pushed.
 
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
