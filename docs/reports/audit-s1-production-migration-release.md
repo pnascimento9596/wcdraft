@@ -37,7 +37,9 @@ checks.
   tail.
 - Neon credentials enter exactly once through step-scoped environment
   variables. The API resolver requires exactly one branch flagged
-  primary/default and exactly one `read_write` endpoint on it.
+  primary/default, exactly one `read_write` endpoint on it, and exactly one
+  `neondb_owner` role returned by that branch's roles endpoint and bound to
+  that same branch ID.
 - The resolved URI must be direct, unpooled Neon PostgreSQL. It is written only
   to a mode-0600 runner-temp file and never to a GitHub output or artifact.
 - Preflight accepts only exit 1 with exactly one named pending tail. Ready,
@@ -163,6 +165,39 @@ inline-resolver execution, the complete production-migration contract, Bash
 parse, actionlint 1.7.12, full repository Prettier, and `git diff --check`.
 Broad exact-head CI and fresh independent Red review remain required before
 merge.
+
+## Post-resolver Neon role-discovery fix-forward
+
+Resolver fix PR #240 squash-merged as
+`f8550d59eedc0ca50c9277d33cb8ecd7dc0d788b`. Production migration dispatch run
+`29127699669` passed the dispatch guard, checkout, authenticated live-main
+binding, package install, exact journal-tail binding, and ESM resolver startup.
+The resolver reached the Neon API but failed closed before connection-URI
+resolution because the live branch-list payload omitted the optional
+`default_role_name` property. Database preflight, final live-main
+revalidation, migration, and postflight were skipped; protected-receipt
+cleanup passed. No database mutation occurred, and production remained at
+migration `0011`.
+
+The fresh role-discovery fix-forward starts from exact current main `f8550d5`.
+After selecting exactly one flagged primary/default branch and exactly one
+direct `read_write` endpoint on it, the resolver now queries
+`/projects/{project_id}/branches/{branch_id}/roles`. It requires exactly one
+role whose `branch_id` equals the selected primary branch and whose name is
+the repository's established owner role, `neondb_owner`, then supplies that
+explicit role to `connection_uri`. Missing or duplicate matching roles fail
+before requesting a connection URI. This deterministic rule avoids guessing
+from list order and preserves the existing primary-branch, direct-endpoint,
+secret-flow, protected-file, preflight, and pre-mutation TOCTOU controls.
+
+The executable workflow contract now mocks all four Neon calls, verifies the
+exact branch-scoped roles path, bearer binding, and each connection parameter
+(`branch_id`, `database_name`, `role_name`, and `pooled`) individually. It also
+executes missing-role and duplicate-role refusal cases and proves neither can
+write a connection file. Narrow validation passed the full production
+migration contract, Bash parse, actionlint 1.7.12, full repository Prettier,
+and `git diff --check`. Broad exact-head CI and fresh independent Red review
+remain required before merge.
 
 The first root attempt is not counted: an interrupted sibling task left a
 generated-artifact lock and the untracked raw draft bundle absent. The lane

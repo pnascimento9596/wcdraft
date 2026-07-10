@@ -108,6 +108,28 @@ Narrow resolver validation passed under local Node 22.22.3: exact inline
 resolver execution, the complete production-migration contract, Bash parse,
 actionlint 1.7.12, full repository Prettier, and `git diff --check`. Broad
 exact-head CI and fresh independent Red review remain required before merge.
+After resolver fix PR #240 squash-merged as
+`f8550d59eedc0ca50c9277d33cb8ecd7dc0d788b`, production migration dispatch run
+`29127699669` passed auth, install, journal binding, and ESM resolver startup,
+then failed closed because the live branch payload omitted the optional
+`default_role_name`. Neon API calls occurred, but connection-URI resolution,
+database preflight, final main revalidation, migration, and postflight were
+not reached; cleanup passed and no database mutation occurred. Production
+remained at migration `0011`. The fresh role-discovery fix-forward branch
+`ws-f4/audit-s1-production-migrate-neon-role`, based on exact current main
+`f8550d5`, queries the selected primary branch's roles endpoint and requires
+exactly one role bound to that branch with the established name
+`neondb_owner`. It supplies that explicit role to the connection-URI request;
+missing or duplicate matches refuse before a URI is requested or written.
+The executable resolver contract now mocks exactly four Neon requests,
+verifies the branch-scoped roles path and all four connection parameters
+individually, and executes missing-role and duplicate-role refusal cases that
+prove no connection file is created. Existing secret handling, primary and
+direct-endpoint guards, authenticated live-main checks, protected receipts,
+known-pending preflight, and pre-mutation revalidation remain unchanged.
+Narrow validation passed the full workflow contract, Bash parse, actionlint
+1.7.12, full repository Prettier, and `git diff --check`; broad exact-head CI
+and fresh independent Red review remain required before merge.
 
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch
