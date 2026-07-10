@@ -142,7 +142,7 @@ jobs:
           echo "::add-mask::$NEON_API_KEY"
           echo "::add-mask::$NEON_PROJECT_ID"
           node <<'NODE'
-          const fs = require("node:fs");
+          const { writeFileSync } = await import("node:fs");
           const api = "https://console.neon.tech/api/v2";
           const apiKey = process.env.NEON_API_KEY.trim();
           const projectId = process.env.NEON_PROJECT_ID.trim();
@@ -187,7 +187,7 @@ jobs:
           if (!/^postgres(?:ql)?:$/.test(parsed.protocol) || !parsed.hostname.endsWith(".neon.tech") || parsed.hostname.includes("-pooler.")) {
             throw new Error("Neon connection is not an unpooled direct Neon PostgreSQL endpoint");
           }
-          fs.writeFileSync(connectionFile, uri, { mode: 0o600, flag: "wx" });
+          writeFileSync(connectionFile, uri, { mode: 0o600, flag: "wx" });
           NODE
           direct_url="$(cat "$CONNECTION_FILE")"
           echo "::add-mask::$direct_url"

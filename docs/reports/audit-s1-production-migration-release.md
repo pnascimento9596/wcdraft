@@ -135,6 +135,35 @@ production-migration workflow contract, Node and Bash syntax, actionlint
 migration, runtime-data, rating, simulation, or ETL file changed. Broad
 exact-head CI and fresh independent Red review remain required before merge.
 
+## Post-auth Neon resolver fix-forward
+
+Auth fix PR #239 squash-merged as
+`bc872ac59f3d98bee3b403ec6361359df21f9174`. Production migration dispatch run
+`29126577241` then passed the authenticated live-main binding, frozen package
+install, and exact journal-tail binding. It failed safely in `Resolve unique
+Neon primary direct connection` under Node 22.23.1 with
+`ERR_AMBIGUOUS_MODULE_SYNTAX`: the inline stdin script combined CommonJS
+`require("node:fs")` with top-level `await`. Node rejected the program before
+its first Neon API request. Database preflight, final live-main revalidation,
+migration, and postflight were skipped; protected cleanup passed. No database
+mutation occurred, and production remained at migration `0011`.
+
+The fresh resolver fix-forward starts from exact current main `bc872ac`. The
+inline program now uses `await import("node:fs")`, making its stdin module mode
+unambiguously ESM without changing Neon target selection, response validation,
+secret handling, or protected file semantics. The executable workflow contract
+extracts that exact heredoc, runs it through plain Node stdin after CI's
+explicit Node 22 setup, supplies no-network mock branch/endpoint/connection
+responses, and verifies all three request paths, bearer binding, the expected
+direct URL, and mode-0600 output. It also rejects any reintroduced
+`require("node:fs")` in the resolver.
+
+Narrow resolver validation passed under local Node 22.22.3: exact extracted
+inline-resolver execution, the complete production-migration contract, Bash
+parse, actionlint 1.7.12, full repository Prettier, and `git diff --check`.
+Broad exact-head CI and fresh independent Red review remain required before
+merge.
+
 The first root attempt is not counted: an interrupted sibling task left a
 generated-artifact lock and the untracked raw draft bundle absent. The lane
 removed only its stale lock/processes, regenerated and fingerprint-checked the

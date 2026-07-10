@@ -172,9 +172,6 @@ jobs:
       - name: DB readiness CI contract probe
         run: scripts/ci/require-neon-for-db-paths.test.sh
 
-      - name: Production migration workflow contract probe
-        run: scripts/ci/production-migration-workflow.test.sh
-
       - name: Daily salt-map revert contract probe
         run: scripts/ci/validate-daily-salt-map-revert.test.sh
 
@@ -189,6 +186,9 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+
+      - name: Production migration workflow contract probe (Node 22)
+        run: scripts/ci/production-migration-workflow.test.sh
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
