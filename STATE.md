@@ -43,10 +43,11 @@ scrubs `${RUNNER_TEMP}/gitleaks.tmp` at both hygiene start and its always-run
 post phase. The existing canonical-path guards still constrain deletion to the
 runner work root and protect the active workspace, so global/user temp is not
 touched. A committed contract probe runs in the static CI job and passed 1
-TMPDIR binding check, 4 actor guards, 1 static aggregate-name expression, 2
-aggregate-name literals, 10 downstream `needs` edges, 3 actor gate cases, 2
-independently seeded temp removals, and 4 active-workspace/outside sentinel
-checks. Local fix-forward validation passed: frozen pnpm install (187 packages,
+TMPDIR binding check, 4 actor guards, 1 static composite-if binding, 4 static
+dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name
+literals, 10 downstream `needs` edges, 3 actor gate cases, 2 independently
+seeded temp removals, and 4 active-workspace/outside sentinel checks. Local
+fix-forward validation passed: frozen pnpm install (187 packages,
 2.9s / 3.01s real; final-tree recheck already up to date in 318ms / 0.39s
 real); root typecheck 8/8 cached tasks (0.60s real); actionlint v1.7.12 across 4
 workflows (0.02s real); Bash 3.2 syntax for 2 scripts; Node syntax for the
