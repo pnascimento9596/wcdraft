@@ -71,6 +71,7 @@ type SurfaceMetric = {
   readonly maxScrollWidth: number;
   readonly clientWidth: number;
   readonly horizontalOverflow: boolean;
+  readonly modeDockClearance: number | null;
   readonly navWraps: readonly string[];
   readonly maxContainerWidth: number;
   readonly smallTargets: readonly string[];
@@ -858,6 +859,30 @@ async function measurePrimaryAction(
   };
 }
 
+async function measureModeDockClearance(page: Page, surface: SurfaceCase): Promise<number | null> {
+  if (surface.label !== "mode-select") return null;
+  const initialClearance = await page.evaluate(() => {
+    const dock = document.querySelector('[class*="modeDock"]');
+    const lastCard = [...document.querySelectorAll('button[role="radio"]')].at(-1);
+    const dockBox = dock?.getBoundingClientRect();
+    const lastCardBox = lastCard?.getBoundingClientRect();
+    return dockBox && lastCardBox ? Math.round(dockBox.top - lastCardBox.bottom) : null;
+  });
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(100);
+  const endClearance = await page.evaluate(() => {
+    const dock = document.querySelector('[class*="modeDock"]');
+    const cards = [...document.querySelectorAll('button[role="radio"]')];
+    const lastCard = cards.at(-1);
+    const dockBox = dock?.getBoundingClientRect();
+    const lastCardBox = lastCard?.getBoundingClientRect();
+    if (!dockBox || !lastCardBox) return null;
+    return Math.round(dockBox.top - lastCardBox.bottom);
+  });
+  if (initialClearance === null || endClearance === null) return null;
+  return Math.min(initialClearance, endClearance);
+}
+
 function shellRuleApplies(surface: SurfaceCase, viewport: ViewportCase): boolean {
   return surface.shellRule === true && viewport.width >= 1024;
 }
@@ -888,6 +913,7 @@ async function captureSurface(
     await mkdir(path.dirname(screenshotPath), { recursive: true });
     await page.screenshot({ path: screenshotPath, fullPage: true });
     const baseMetric = await measure(page);
+    const modeDockClearance = await measureModeDockClearance(page, surface);
     const shellRule = shellRuleApplies(surface, viewport);
     const noScrollGate = shellRule
       ? baseMetric.scrollHeight <= baseMetric.clientHeight + 1 && primaryAction.inViewport === true
@@ -909,6 +935,7 @@ async function captureSurface(
       consoleErrors: errors,
       devOverlay,
       ...baseMetric,
+      modeDockClearance,
     };
   } finally {
     await context.close();

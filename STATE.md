@@ -585,6 +585,38 @@ still required that app-owned context; PR #165 reported `mergeStateStatus`
 `BLOCKED`. The security goal was met even though the earlier display-name model
 was false: no bot job received a runner, and the protected context was absent.
 
+Audit Season 1 D3 mode-select IA:
+2026-07-10 · YELLOW implementation on branch
+`ws-ux/audit-s1-mode-select-ia`, based on `origin/main`
+`50184ef9a346912b5338b2a8a4fe42361bfea45e` (D2). The five-mode selector now
+keeps Daily as the broadcast lead and compacts Classic, Open Draft, Memory, and
+Blind Open into a two-column board on phone and short-landscape viewports.
+Classic and Memory are labeled `Ranked-capable` and `Casual by default` in both
+their chips and preview strings. An 84px safe-area-aware dock reserve keeps the
+sticky phone action clear of the cards, while viewports at or below 500px tall
+use an in-flow action instead. The D2 strict harness now fails on the minimum
+mode-dock clearance across initial paint and end-of-scroll, and its permanent
+wrapper adds a dedicated mode/setup phase at `360x800`, `390x844`, and
+`667x375` in both themes. Ranked-capable setup exposes a visible 46px
+Casual/Ranked choice with Casual selected by default; Ranked calls the existing
+`requestRankedAttempt`, preserves its server-issued seed/attempt metadata, and
+surfaces direct sign-in or resend-verification actions on the current 401/403
+gates. Legacy ranked query URLs only restore that visible selection and are no
+longer the sole entry path. B2 was not merged at this base: current issuance
+remains compatible, but outstanding-attempt reuse, farming resistance, expiry
+sweep, and rate-limit behavior must be reverified after B2 lands. No core,
+rating, sim, token validation, schema, ETL, runtime-data, or leaderboard-server
+semantics changed. Validation passed: focused web source contracts (3 files /
+22 tests, then 2 files / 19 tests after visual fix); root typecheck (8/8, web
+uncached on the final run); root lint (5/5, web uncached); root test (8/8, web
+uncached: 88 files passed / 1 skipped, 935 tests passed / 1 skipped, expanded
+game-flow PASS); strict responsive browser gate (84 desktop-shell + 56
+mobile-shell + 40 interaction + 12 mode/setup metrics = 192, 0 failures); and
+root production build (4/4, web uncached, with only the existing webpack
+circular-chunk and edge-runtime static-generation warnings). Golden suites and
+heavy realism were not run because D3 changes no deterministic core, data,
+rating, simulation, or leaderboard-validation behavior.
+
 Audit Season 1 D2 interaction-floor harness:
 2026-07-10 · Standalone controls now hold a measured 44px minimum in both
 dimensions across Review simulation/back actions, History result/seed actions,

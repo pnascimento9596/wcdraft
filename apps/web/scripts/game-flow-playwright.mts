@@ -155,18 +155,21 @@ async function stopProcess(proc: ChildProcessWithoutNullStreams): Promise<void> 
 async function newBrowserCase(
   browser: Browser,
   init?: {
-    record: RunRecordV1;
+    readonly record?: RunRecordV1;
+    readonly viewport?: { readonly width: number; readonly height: number };
+    readonly allowedHttpErrorPathnames?: readonly string[];
   },
 ): Promise<BrowserCase> {
   const context = await browser.newContext({
-    viewport: { width: 390, height: 844 },
+    viewport: init?.viewport ?? { width: 390, height: 844 },
     colorScheme: "light",
     reducedMotion: "reduce",
     isMobile: true,
     hasTouch: true,
     deviceScaleFactor: 1,
   });
-  if (init) {
+  if (init?.record) {
+    const record = init.record;
     await context.addInitScript(
       ({ record, recordPrefix, indexKey, schemaVersion }) => {
         window.localStorage.setItem(`${recordPrefix}${record.run_id}`, JSON.stringify(record));
@@ -187,7 +190,7 @@ async function newBrowserCase(
         window.localStorage.setItem("wcdraft:run-counter:v1", String(record.updated_seq));
       },
       {
-        record: init.record,
+        record,
         recordPrefix: RUN_RECORD_PREFIX,
         indexKey: RUN_INDEX_KEY,
         schemaVersion: RUN_RECORD_SCHEMA_VERSION,
@@ -209,7 +212,12 @@ async function newBrowserCase(
   page.on("response", (response) => {
     if (response.status() < 400) return;
     const url = new URL(response.url());
-    if (isAllowedBestEffortFailure(url.pathname)) return;
+    if (
+      isAllowedBestEffortFailure(url.pathname) ||
+      init?.allowedHttpErrorPathnames?.includes(url.pathname) === true
+    ) {
+      return;
+    }
     httpErrors.push(`${response.status()} ${url.pathname}`);
   });
   return { page, context, errors, httpErrors };
@@ -466,6 +474,154 @@ async function verifyModeSelectCtaDoesNotTapThrough(
   await assertNoBrowserErrors(testCase, "mode-select CTA tap target");
 }
 
+const MODE_SELECT_VIEWPORTS = [
+  { width: 360, height: 800, name: "360x800", expectedDockPosition: "sticky" },
+  { width: 390, height: 844, name: "390x844", expectedDockPosition: "sticky" },
+  { width: 667, height: 375, name: "667x375", expectedDockPosition: "static" },
+] as const;
+
+async function verifyModeSelectCompactBoard(browser: Browser, baseUrl: string): Promise<void> {
+  for (const viewport of MODE_SELECT_VIEWPORTS) {
+    const testCase = await newBrowserCase(browser, { viewport });
+    const { page } = testCase;
+    await page.goto(`${baseUrl}/play`, { waitUntil: "domcontentloaded" });
+    await page.getByRole("radio", { name: /Classic/u }).waitFor();
+    await page.waitForTimeout(3_000);
+
+    const cards = page.getByRole("radio");
+    assert((await cards.count()) === 5, `${viewport.name} did not render all five modes`);
+    for (const label of ["Classic", "Memory"] as const) {
+      const copy = (await page.getByRole("radio", { name: new RegExp(label, "u") }).innerText())
+        .replace(/\s+/gu, " ")
+        .trim()
+        .toLowerCase();
+      assert(
+        copy.includes("ranked-capable") && copy.includes("casual by default"),
+        `${viewport.name} ${label} did not show ranked-capable / casual-default copy: ${copy}`,
+      );
+    }
+
+    const layout = await page.evaluate(() => {
+      const grid = document.querySelector('[class*="modeGrid"]');
+      const dock = document.querySelector('[class*="modeDock"]');
+      if (!grid || !dock) return null;
+      return {
+        columns: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
+        dockPosition: getComputedStyle(dock).position,
+      };
+    });
+    assert(layout, `${viewport.name} mode board did not expose layout metrics`);
+    assert(layout.columns === 2, `${viewport.name} mode board used ${layout.columns} columns`);
+    assert(
+      layout.dockPosition === viewport.expectedDockPosition,
+      `${viewport.name} dock position was ${layout.dockPosition}`,
+    );
+
+    const measureClearance = async () =>
+      await page.evaluate(() => {
+        const dock = document.querySelector('[class*="modeDock"]');
+        const lastCard = [...document.querySelectorAll('button[role="radio"]')].at(-1);
+        const dockBox = dock?.getBoundingClientRect();
+        const cardBox = lastCard?.getBoundingClientRect();
+        return dockBox && cardBox ? Math.round(dockBox.top - cardBox.bottom) : null;
+      });
+    const initialClearance = await measureClearance();
+    assert(
+      initialClearance !== null && initialClearance >= 0,
+      `${viewport.name} mode dock overlapped the initial card paint by ${String(initialClearance)}px`,
+    );
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(100);
+    const endClearance = await measureClearance();
+    assert(
+      endClearance !== null && endClearance >= 0,
+      `${viewport.name} mode dock overlapped the final card paint by ${String(endClearance)}px`,
+    );
+    await assertNoHorizontalOverflow(page, `${viewport.name} compact mode board`);
+    await assertNoBrowserErrors(testCase, `${viewport.name} compact mode board`);
+  }
+}
+
+async function verifyRankedSetupGates(browser: Browser, baseUrl: string): Promise<void> {
+  const testCase = await newBrowserCase(browser, {
+    allowedHttpErrorPathnames: ["/api/ranked/attempt"],
+  });
+  const { page } = testCase;
+  let rankedRequests = 0;
+  const requestBodies: unknown[] = [];
+  await page.route("**/api/auth/csrf", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ csrfToken: "playwright-ranked-csrf" }),
+    });
+  });
+  await page.route("**/api/ranked/attempt", async (route) => {
+    rankedRequests += 1;
+    requestBodies.push(route.request().postDataJSON());
+    const needsSignIn = rankedRequests === 1;
+    await route.fulfill({
+      status: needsSignIn ? 401 : 403,
+      contentType: "application/json",
+      body: JSON.stringify(
+        needsSignIn
+          ? {
+              error: "AUTH_REQUIRED",
+              message:
+                "Sign in to post ranked runs. Casual posts anonymously and can be claimed later.",
+            }
+          : {
+              error: "VERIFICATION_REQUIRED",
+              message:
+                "Verify your email to post ranked runs. Casual posts still work while verification is pending.",
+            },
+      ),
+    });
+  });
+
+  await page.goto(`${baseUrl}/play/draft?mode=hidden`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("heading", { name: "Lock a formation" }).waitFor();
+  const playType = page.getByRole("group", { name: "Play type" });
+  const casual = playType.getByRole("button", { name: "Casual" });
+  const ranked = playType.getByRole("button", { name: "Ranked" });
+  assert((await casual.getAttribute("aria-pressed")) === "true", "Casual was not the default");
+  assert((await ranked.getAttribute("aria-pressed")) === "false", "Ranked defaulted on");
+
+  await ranked.click();
+  await page.getByText(/Ranked requests an account-bound server seed/u).waitFor();
+  const lock = page.getByRole("button", { name: "Lock 4-3-3 & spin" });
+  await lock.click();
+  const signInAlert = page.getByRole("alert");
+  await signInAlert.getByText(/Sign in to post ranked runs/u).waitFor();
+  const signIn = signInAlert.getByRole("link", { name: "Sign in" });
+  assert(
+    (await signIn.getAttribute("href")) ===
+      "/sign-in?next=%2Fplay%2Fdraft%3Fmode%3Dhidden%26lane%3Dranked",
+    "ranked sign-in did not preserve the visible Memory / Ranked setup",
+  );
+
+  await lock.click();
+  const verifyAlert = page.getByRole("alert");
+  await verifyAlert.getByText(/Verify your email to post ranked runs/u).waitFor();
+  assert(
+    (await verifyAlert.getByRole("link", { name: "Resend verification" }).getAttribute("href")) ===
+      "/account?verify=1",
+    "ranked verification gate did not link to the verification flow",
+  );
+  assert(rankedRequests === 2, `expected two ranked attempts, received ${rankedRequests}`);
+  for (const body of requestBodies) {
+    assert(
+      typeof body === "object" &&
+        body !== null &&
+        "draft_mode" in body &&
+        body.draft_mode === "hidden",
+      "ranked setup did not request the existing Memory attempt contract",
+    );
+  }
+  assert((await readRunRecords(page)).length === 0, "gated ranked setup created a local run");
+  await assertNoBrowserErrors(testCase, "ranked setup gates");
+}
+
 async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): Promise<void> {
   const target = firstPositionFirstTarget();
   const testCase = await newBrowserCase(browser);
@@ -601,11 +757,13 @@ async function main(): Promise<void> {
       headless: true,
     });
     await verifyModeSelectCtaDoesNotTapThrough(browser, server.baseUrl);
+    await verifyModeSelectCompactBoard(browser, server.baseUrl);
+    await verifyRankedSetupGates(browser, server.baseUrl);
     await verifyPositionFirstDraftFlow(browser, server.baseUrl);
     await verifyManagerOnlyGuardFlow(browser, server.baseUrl);
     await verifyReviewResultsShareFlow(browser, server.baseUrl);
     console.log(
-      "game-flow-playwright: ok - mode-select CTA, draft setup, position-first target, lock-pick, manager guard, review simulate, results, and share",
+      "game-flow-playwright: ok - mode-select CTA/compact dock, Casual/Ranked setup gates, position-first target, lock-pick, manager guard, review simulate, results, and share",
     );
   } finally {
     if (browser) await browser.close();

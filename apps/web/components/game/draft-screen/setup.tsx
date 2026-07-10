@@ -38,6 +38,20 @@ const RATING_BASIS_LABELS: Record<RatingBasis, string> = {
   current: "Current",
 };
 
+type DraftLane = "casual" | "ranked";
+
+type FormationError = {
+  readonly message: string;
+  readonly action?: {
+    readonly href: string;
+    readonly label: string;
+  };
+};
+
+function rankedDraftReturnPath(draftMode: DraftMode): string {
+  return draftMode === "hidden" ? "/play/draft?mode=hidden&lane=ranked" : "/play/draft?lane=ranked";
+}
+
 /**
  * The rating bases the setup control offers, in display order. EXPORTED as the
  * control-of-record so a test can pin it against the bases actually present in
@@ -46,6 +60,9 @@ const RATING_BASIS_LABELS: Record<RatingBasis, string> = {
 export const SETUP_RATING_BASES = ["career", "current"] as const satisfies readonly RatingBasis[];
 
 function DraftSetupDisclosure({
+  lane,
+  onLane,
+  rankedCapable,
   eraPreset,
   onEraPreset,
   draftFlow,
@@ -54,6 +71,9 @@ function DraftSetupDisclosure({
   onRatingBasis,
   disabled,
 }: {
+  lane: DraftLane;
+  onLane: (lane: DraftLane) => void;
+  rankedCapable: boolean;
   eraPreset: EraPresetId;
   onEraPreset: (p: EraPresetId) => void;
   draftFlow: DraftFlow;
@@ -63,15 +83,16 @@ function DraftSetupDisclosure({
   disabled: boolean;
 }) {
   // Owner note: the setup axes must be visible on arrival. The control still
-  // collapses on demand, but it no longer hides the Era / Draft mode / Rating
-  // basis choices by default on mobile.
+  // collapses on demand, but it no longer hides the play type / Era / Draft
+  // mode / Rating basis choices by default on mobile.
   const [open, setOpen] = useState(true);
-  // Summary mirrors all three config axes.
+  // Summary mirrors every visible setup axis.
   const summaryParts = [
+    ...(rankedCapable ? [lane === "ranked" ? "Ranked" : "Casual"] : []),
     `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]}`,
     ERA_PRESET_LABELS[eraPreset],
   ] as const;
-  const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]} · ${ERA_PRESET_LABELS[eraPreset]}`;
+  const summary = summaryParts.join(" · ");
   return (
     <div>
       <button
@@ -92,6 +113,30 @@ function DraftSetupDisclosure({
       </button>
       {open ? (
         <div className={s.setupPanel}>
+          {rankedCapable ? (
+            <div className={s.setupAxis}>
+              <span className={s.setupAxisLabel}>Play type</span>
+              <div className={s.setupSeg} role="group" aria-label="Play type">
+                {(["casual", "ranked"] as const).map((nextLane) => (
+                  <button
+                    key={nextLane}
+                    type="button"
+                    className={`${s.setupSegBtn} ${lane === nextLane ? s.setupSegBtnActive : ""}`}
+                    aria-pressed={lane === nextLane}
+                    disabled={disabled}
+                    onClick={() => onLane(nextLane)}
+                  >
+                    {nextLane === "casual" ? "Casual" : "Ranked"}
+                  </button>
+                ))}
+              </div>
+              <p className={s.setupAxisNote}>
+                {lane === "ranked"
+                  ? "Ranked requests an account-bound server seed when you lock a formation. Sign in and verify your email first."
+                  : "Casual by default — start immediately, then post to the Casual board after the run."}
+              </p>
+            </div>
+          ) : null}
           <div className={s.setupAxis}>
             <span className={s.setupAxisLabel}>Era</span>
             <div className={s.setupSeg} role="group" aria-label="Era preset">
@@ -161,35 +206,39 @@ function DraftSetupDisclosure({
 export function FormationSelect({
   gameData,
   draftMode,
-  ranked,
+  initialRanked,
   onLocked,
 }: {
   gameData: GameData;
   /** Run mode for the record being created. */
   draftMode: DraftMode;
-  /** Hidden route hook: ranked drafts must use a server-issued seed. */
-  ranked?: boolean;
+  /** Backward-compatible URL state; the visible setup choice is authoritative. */
+  initialRanked?: boolean;
   onLocked: (record: RunRecordV1, warning: string | null) => void;
 }) {
   const defaultFormation: SupportedFormationId =
     SUPPORTED_FORMATION_OPTIONS[0]?.formation_id ?? "4-3-3";
   const [selected, setSelected] = useState<SupportedFormationId>(defaultFormation);
   const [pending, setPending] = useState<SupportedFormationId | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<FormationError | null>(null);
   const rankedIssuance = useUnsafeMutationLatch();
+  const rankedCapable = isRankedDraftMode(draftMode);
+  const [lane, setLane] = useState<DraftLane>(
+    rankedCapable && initialRanked === true ? "ranked" : "casual",
+  );
   const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
   const [draftFlow, setDraftFlow] = useState<DraftFlow>("squad_first");
   const [ratingBasis, setRatingBasis] = useState<RatingBasis>("career");
 
   const lockIn = useCallback(
     async (formation_id: SupportedFormationId) => {
-      if (ranked === true && !rankedIssuance.begin()) return;
+      if (lane === "ranked" && !rankedIssuance.begin()) return;
       setError(null);
       setPending(formation_id);
       let rankedAttemptIssued = false;
       try {
         let rankedAttempt: Awaited<ReturnType<typeof requestRankedAttempt>> | null = null;
-        if (ranked === true) {
+        if (lane === "ranked") {
           if (!isRankedDraftMode(draftMode)) {
             throw new Error(
               `${DRAFT_MODE_COPY[draftMode].label} is casual and does not issue ranked seeds.`,
@@ -207,18 +256,34 @@ export function FormationSelect({
           if (rankedAttempt.outcomeUnknown) {
             rankedIssuance.markOutcomeUnknown();
             setPending(null);
-            setError(
-              `${rankedAttempt.message ?? "The ranked seed request ended before the server confirmed it."} This configuration is locked for this page; check your account or choose another mode.`,
-            );
+            setError({
+              message: `${rankedAttempt.message ?? "The ranked seed request ended before the server confirmed it."} This configuration is locked for this page; check your account or choose another mode.`,
+            });
             return;
           }
           rankedIssuance.settle();
-          throw new Error(
-            rankedAttempt.message ??
-              (rankedAttempt.status === 401
+          const needsSignIn =
+            rankedAttempt.code === "AUTH_REQUIRED" || rankedAttempt.status === 401;
+          const needsVerification = rankedAttempt.code === "VERIFICATION_REQUIRED";
+          setError({
+            message:
+              rankedAttempt.message ??
+              (needsSignIn
                 ? "Sign in before starting a ranked draft."
-                : "Ranked draft seed could not be issued."),
-          );
+                : needsVerification
+                  ? "Verify your email before starting a ranked draft."
+                  : "Ranked setup is unavailable right now. Your formation is still selected; try again or switch to Casual."),
+            action: needsSignIn
+              ? {
+                  href: `/sign-in?next=${encodeURIComponent(rankedDraftReturnPath(draftMode))}`,
+                  label: "Sign in",
+                }
+              : needsVerification
+                ? { href: "/account?verify=1", label: "Resend verification" }
+                : undefined,
+          });
+          setPending(null);
+          return;
         }
         if (rankedAttempt !== null) {
           rankedAttemptIssued = true;
@@ -248,19 +313,20 @@ export function FormationSelect({
             : null;
         onLocked(created.record, warning);
       } catch (err) {
-        if (ranked === true) rankedIssuance.settle();
+        if (lane === "ranked") rankedIssuance.settle();
         if (rankedAttemptIssued) {
-          setError(
-            "The ranked seed was issued, but this draft could not start locally. This configuration remains locked; check your account or choose another mode.",
-          );
+          setError({
+            message:
+              "The ranked seed was issued, but this draft could not start locally. This configuration remains locked; check your account or choose another mode.",
+          });
         } else {
           const d = describeGameError(err);
-          setError(`${d.title}: ${d.message}`);
+          setError({ message: `${d.title}: ${d.message}` });
         }
         setPending(null);
       }
     },
-    [gameData, draftMode, ranked, eraPreset, draftFlow, ratingBasis, onLocked, rankedIssuance],
+    [gameData, draftMode, lane, eraPreset, draftFlow, ratingBasis, onLocked, rankedIssuance],
   );
 
   const locked = pending !== null || rankedIssuance.locked;
@@ -282,6 +348,12 @@ export function FormationSelect({
           ) : null}
         </div>
         <DraftSetupDisclosure
+          lane={lane}
+          onLane={(nextLane) => {
+            setLane(nextLane);
+            setError(null);
+          }}
+          rankedCapable={rankedCapable}
           eraPreset={eraPreset}
           onEraPreset={setEraPreset}
           draftFlow={draftFlow}
@@ -322,7 +394,12 @@ export function FormationSelect({
         </div>
         {error ? (
           <div className={s.formationError} role="alert">
-            <p>{error}</p>
+            <span>{error.message}</span>
+            {error.action ? (
+              <Link href={error.action.href} className="btn btn--ghost">
+                {error.action.label}
+              </Link>
+            ) : null}
             {rankedIssuance.outcomeUnknown || rankedIssuance.phase === "committed" ? (
               <p>
                 <Link href="/account">Check account</Link>

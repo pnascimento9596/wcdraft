@@ -30,6 +30,7 @@ export type ResponsiveMetricForAdjudication = {
   readonly maxScrollWidth: number;
   readonly clientWidth: number;
   readonly horizontalOverflow: boolean;
+  readonly modeDockClearance: number | null;
   readonly navWraps: readonly string[];
   readonly smallTargets: readonly string[];
   readonly axeViolations: readonly string[];
@@ -52,6 +53,13 @@ export function responsiveMetricFailures(metric: ResponsiveMetricForAdjudication
   if (metric.horizontalOverflow) {
     failures.push(
       `${prefix}: horizontal overflow ${metric.maxScrollWidth.toString()}/${metric.clientWidth.toString()}`,
+    );
+  }
+  if (metric.surface === "mode-select" && metric.modeDockClearance === null) {
+    failures.push(`${prefix}: mode dock clearance unavailable`);
+  } else if (metric.modeDockClearance !== null && metric.modeDockClearance < 0) {
+    failures.push(
+      `${prefix}: mode dock overlaps last card by ${Math.abs(metric.modeDockClearance).toString()}px`,
     );
   }
   if (metric.smallTargets.length > 0) {

@@ -472,9 +472,18 @@
 }
 
 .formationError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
   margin: 0;
   color: var(--loss);
   font-family: var(--font-family);
+}
+
+.formationError :global(.btn) {
+  flex: 0 0 auto;
 }
 
 /* ── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────

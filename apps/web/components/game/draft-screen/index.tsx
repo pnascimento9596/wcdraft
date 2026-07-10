@@ -144,7 +144,10 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
         : modeParam === "open_hidden" || modeParam === "blind_open"
           ? "open_hidden"
           : "classic";
-  const rankedDraft =
+  // Legacy ranked URLs remain valid as an initial selection, but the setup
+  // now exposes the same Casual / Ranked choice directly. The query flag is
+  // state restoration, not the only way into a ranked attempt.
+  const initialRanked =
     isRankedDraftMode(requestedMode) &&
     !daily &&
     (searchParams?.get("lane") === "ranked" || searchParams?.get("ranked") === "1");
@@ -215,7 +218,7 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
       <FormationSelect
         gameData={mode.gameData}
         draftMode={requestedMode}
-        ranked={rankedDraft}
+        initialRanked={initialRanked}
         onLocked={(record, warning) => {
           // Replace URL with new run id; keep history clean.
           router.replace(

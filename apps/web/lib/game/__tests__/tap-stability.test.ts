@@ -89,10 +89,15 @@ describe("mode-select sticky CTA contract", () => {
 
   it("reserves the dock height below the mode cards", () => {
     const grid = block(".modeGridDaily");
-    expect(grid).toContain("padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px))");
-    expect(grid).toContain(
-      "scroll-padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px))",
-    );
+    expect(grid).toContain("--mode-dock-reserve: calc(84px + env(safe-area-inset-bottom, 0px))");
+    expect(grid).toContain("padding-block-end: var(--mode-dock-reserve)");
+    expect(grid).toContain("scroll-padding-block-end: var(--mode-dock-reserve)");
+  });
+
+  it("keeps the dock in flow on short landscape viewports", () => {
+    const shortViewport = css.slice(css.indexOf("@media (max-height: 500px)"));
+    expect(shortViewport).toContain(".modeDock");
+    expect(shortViewport).toContain("position: static");
   });
 });
 

@@ -13,9 +13,6 @@ export default function ModeSelectPage() {
       <header className="page-head">
         <span className="eyebrow">New draft</span>
         <h1 className="display">Choose your mode</h1>
-        {/* ws-ux/mobile-polish-2: subtitle + pool note merged into one line —
-            the header must leave both mode cards visible in a ~390×664
-            viewport with zero scroll. */}
         <p className="lede">
           Seventeen spins, one all-time XI — live on the real 1930–2026 pool, all in your browser.
         </p>

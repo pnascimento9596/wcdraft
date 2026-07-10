@@ -22,6 +22,7 @@ function metric(
     maxScrollWidth: 1024,
     clientWidth: 1024,
     horizontalOverflow: false,
+    modeDockClearance: null,
     navWraps: [],
     smallTargets: [],
     axeViolations: [],
@@ -58,6 +59,16 @@ describe("responsive layout contract", () => {
       "history 1024x768 light: targets below 44px Retry preview 96x36",
       "history 1024x768 light: console CSP blocked inline style",
     ]);
+  });
+
+  it("fails strict adjudication when the sticky mode dock covers the last mode card", () => {
+    expect(responsiveMetricFailures(metric({ modeDockClearance: -18 }))).toEqual([
+      "history 1024x768 light: mode dock overlaps last card by 18px",
+    ]);
+    expect(responsiveMetricFailures(metric({ modeDockClearance: 0 }))).toEqual([]);
+    expect(
+      responsiveMetricFailures(metric({ surface: "mode-select", modeDockClearance: null })),
+    ).toEqual(["mode-select 1024x768 light: mode dock clearance unavailable"]);
   });
 
   it("uses the DOM nonce property when CSP hides the nonce attribute", () => {
