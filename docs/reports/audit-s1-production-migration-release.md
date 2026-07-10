@@ -85,15 +85,21 @@ parse, actionlint 1.7.12, full repository Prettier check, and `git diff
 repository baseline, not exact-head approval for this fix; broad PR CI and the
 fresh Red reviewer must re-execute the new head before merge.
 
-The first Git-integrated Vercel preview for fix head `a33de06`, deployment
-`dpl_6rGDpuxsikQSzc6p8awSNj51Rc2e`, entered `ERROR` immediately after its
-source-clone line, before dependency installation or an application build
-command. Vercel exposed no error code or message. A single preview redeploy,
-`dpl_4YQa2Sjf7MVnu5Pdofbb5r3Tbm2K`, reused the incomplete source snapshot and
-reproduced the same pre-build failure. These are source/integration failures,
-not product-build evidence. This report update intentionally triggers a fresh
-Git integration clone; the resulting exact-head Vercel check must pass before
-merge.
+The Git-integrated Vercel preview for fix head `a33de06`, deployment
+`dpl_6rGDpuxsikQSzc6p8awSNj51Rc2e`, and its single preview redeploy
+`dpl_4YQa2Sjf7MVnu5Pdofbb5r3Tbm2K` both failed before dependency installation
+or an application build command. Replacement evidence head `edf83c6`
+independently reproduced the same failure in
+`dpl_796UKnmeaNTJdzee2beXNZpUpAyf`. Human-readable `vercel inspect --logs`
+output stopped after the Git clone line and displayed no error code or message.
+The authoritative authenticated Vercel `/v13/deployments/<id>` records for all
+three report `readyState=ERROR`, `errorStep=build-container-init`,
+`errorCode=sts_credentials_fetch_failed`, and `errorMessage=null`;
+`gitSource.sha` is `a33de06a45504e35eb18f0954c4aa479a2f3d4ba` for the first two and
+`edf83c6961948ebc6b723844d4e8bfbe6ef74768` for the third. These are Vercel
+build-container credential-initialization failures, not product-build evidence.
+The exact-head Vercel check remains externally failed. No further manual preview
+retry or trigger-only commit is performed.
 
 The first root attempt is not counted: an interrupted sibling task left a
 generated-artifact lock and the untracked raw draft bundle absent. The lane

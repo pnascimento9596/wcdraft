@@ -52,14 +52,19 @@ repository Prettier check, and `git diff --check`. The prior full root run is
 not claimed as exact-head evidence for this new commit; the PR's broad
 CI-config path and fresh independent Red re-review must re-execute exact-head
 gates before merge.
-The first Vercel preview for TOCTOU-fix head `a33de06`, deployment
-`dpl_6rGDpuxsikQSzc6p8awSNj51Rc2e`, failed before any install/build command:
-its only source log was the Git clone line, followed by an immediate empty-error
-deployment. One Vercel preview redeploy of that same incomplete source snapshot,
-`dpl_4YQa2Sjf7MVnu5Pdofbb5r3Tbm2K`, reproduced the pre-build failure with no
-error code or message. These are source/integration failures, not product-build
-verdicts. A subsequent docs-only evidence commit retriggers a fresh Git
-integration clone, whose exact-head Vercel check remains required.
+The Vercel preview for TOCTOU-fix head `a33de06`, deployment
+`dpl_6rGDpuxsikQSzc6p8awSNj51Rc2e`, and its single preview redeploy
+`dpl_4YQa2Sjf7MVnu5Pdofbb5r3Tbm2K` both failed before any product install/build
+command. Replacement evidence head `edf83c6` independently reproduced the same
+pre-build failure in `dpl_796UKnmeaNTJdzee2beXNZpUpAyf`. Human-readable
+`vercel inspect --logs` output stopped after the Git clone line and displayed no
+error code or message. The authoritative authenticated Vercel v13 deployment
+records for all three identify `readyState=ERROR`,
+`errorStep=build-container-init`, `errorCode=sts_credentials_fetch_failed`, and
+`errorMessage=null`, with `gitSource.sha` correctly bound to `a33de06` for the
+first two and `edf83c6` for the third. These are Vercel build-container
+credential-initialization failures, not product-build verdicts. The exact-head
+Vercel check remains externally failed; no further preview retry is performed.
 
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch
