@@ -134,6 +134,7 @@ jobs:
               - 'etl/src/wcdraft_etl/rating_io.py'
             db:
               - 'packages/db/**'
+              - 'migrations/**'
               - 'package.json'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
@@ -163,6 +164,9 @@ jobs:
 
       - name: Runner hygiene contract probe
         run: scripts/ci/self-hosted-runner-hygiene.test.sh
+
+      - name: DB readiness CI contract probe
+        run: scripts/ci/require-neon-for-db-paths.test.sh
 
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
@@ -477,8 +481,8 @@ jobs:
     # round-trip against THAT, and deletes the branch in always() — so a
     # misconfigured secret can NEVER target production.
     #
-    # Skips with a warning when NEON_API_KEY or NEON_PROJECT_ID is absent
-    # (fork PRs don't get secrets; this keeps their CI green).
+    # Missing Neon credentials hard-fail DB/migration-path PRs. For CI-only
+    # changes and other non-DB paths, the integration lane remains skip-is-green.
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -507,22 +511,10 @@ jobs:
       - name: Gate — require Neon API key + project id
         id: gate
         env:
+          DB_PATHS_CHANGED: ${{ needs.changes.outputs.db }}
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
-        # Emits skip=true (with a workflow warning, not a failure) when
-        # either secret is missing — contributors on forks don't have them
-        # and we don't want their CI to red over an integration-only job.
-        # Also prints LENGTH diagnostics so any future secret-storage drift
-        # is immediately visible in the run log (the values themselves stay
-        # masked by GitHub Actions' secret scrubber).
-        run: |
-          if [ -z "$NEON_API_KEY" ] || [ -z "$NEON_PROJECT_ID" ]; then
-            echo "::warning::NEON_API_KEY or NEON_PROJECT_ID secret is not set — skipping ephemeral-branch rollback-check."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-            echo "[gate] NEON_API_KEY length=${#NEON_API_KEY} NEON_PROJECT_ID length=${#NEON_PROJECT_ID}"
-          fi
+        run: scripts/ci/require-neon-for-db-paths.sh
 
       - name: Create ephemeral Neon branch
         id: branch_create

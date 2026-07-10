@@ -8,11 +8,12 @@ import { getDb } from "@wcdraft/db";
 
 import { validateCookieSecret } from "@/lib/auth/handler-helpers";
 import { handleLeaderboardMeGet } from "@/lib/leaderboard/board-route";
-import { isLeaderboardEnabled, leaderboardDarkResponse } from "@/lib/leaderboard/enabled";
+import { leaderboardGateResponse } from "@/lib/leaderboard/enabled";
 import { currentSeasonKey } from "@/lib/leaderboard/server-data";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  if (!isLeaderboardEnabled()) return leaderboardDarkResponse();
+  const gate = leaderboardGateResponse();
+  if (gate) return gate;
   return handleLeaderboardMeGet(req, {
     db: getDb(),
     now: () => Date.now(),

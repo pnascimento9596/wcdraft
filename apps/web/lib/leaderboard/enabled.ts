@@ -40,3 +40,23 @@ export function isLeaderboardAccountRequired(): boolean {
 export function leaderboardDarkResponse(): NextResponse {
   return new NextResponse(null, { status: 404 });
 }
+
+export type LeaderboardAvailabilityError = {
+  readonly error: "SERVICE_UNAVAILABLE";
+};
+
+/**
+ * Shared runtime gate. The feature flag remains first so dark deploys stay a
+ * bare 404; an enabled but DB-unconfigured deploy is an honest typed 503 and
+ * never reaches getDb()'s generic configuration throw.
+ */
+export function leaderboardGateResponse(): NextResponse | null {
+  if (!isLeaderboardEnabled()) return leaderboardDarkResponse();
+  if (!process.env.DATABASE_URL?.trim()) {
+    return NextResponse.json<LeaderboardAvailabilityError>(
+      { error: "SERVICE_UNAVAILABLE" },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+  return null;
+}

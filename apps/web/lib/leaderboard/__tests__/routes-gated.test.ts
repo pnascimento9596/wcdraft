@@ -12,8 +12,10 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 
 import * as boardRoute from "@/app/api/leaderboard/route";
+import * as lineupRoute from "@/app/api/leaderboard/lineup/route";
 import * as meRoute from "@/app/api/leaderboard/me/route";
 import * as submitRoute from "@/app/api/leaderboard/submit/route";
+import * as rankedAttemptRoute from "@/app/api/ranked/attempt/route";
 import { isLeaderboardAccountRequired, isLeaderboardEnabled } from "../enabled";
 
 const ENV_KEYS = ["LEADERBOARD_ENABLED", "DATABASE_URL", "AUTH_COOKIE_SECRET"] as const;
@@ -77,6 +79,37 @@ describe("ship-dark — flag absent → 404 on every route, no deps touched", ()
   });
 });
 
+describe("enabled but DB-unconfigured — typed availability failure", () => {
+  beforeEach(() => {
+    process.env.LEADERBOARD_ENABLED = "true";
+    delete process.env.DATABASE_URL;
+  });
+
+  it("returns SERVICE_UNAVAILABLE before getDb on every leaderboard entrypoint", async () => {
+    const responses = await Promise.all([
+      boardRoute.GET(new NextRequest("http://localhost/api/leaderboard")),
+      meRoute.GET(new NextRequest("http://localhost/api/leaderboard/me")),
+      submitRoute.POST(submitReq()),
+      lineupRoute.GET(new NextRequest("http://localhost/api/leaderboard/lineup?entry_id=x")),
+      lineupRoute.POST(
+        new Request("http://localhost/api/leaderboard/lineup", {
+          method: "POST",
+          body: JSON.stringify({ token: "t1.x" }),
+        }),
+      ),
+      rankedAttemptRoute.POST(
+        new NextRequest("http://localhost/api/ranked/attempt", { method: "POST" }),
+      ),
+    ]);
+
+    for (const response of responses) {
+      expect(response.status).toBe(503);
+      expect(response.headers.get("cache-control")).toBe("no-store");
+      expect(await response.json()).toEqual({ error: "SERVICE_UNAVAILABLE" });
+    }
+  });
+});
+
 describe("method surface — only the plan §6 methods are exported", () => {
   it("submit exports POST only", () => {
     expect(typeof submitRoute.POST).toBe("function");
@@ -92,5 +125,16 @@ describe("method surface — only the plan §6 methods are exported", () => {
       expect(mod.PUT).toBeUndefined();
       expect(mod.DELETE).toBeUndefined();
     }
+  });
+
+  it("lineup exports GET + POST and ranked attempt exports POST only", () => {
+    expect(typeof lineupRoute.GET).toBe("function");
+    expect(typeof lineupRoute.POST).toBe("function");
+    expect((lineupRoute as Record<string, unknown>).PUT).toBeUndefined();
+    expect((lineupRoute as Record<string, unknown>).DELETE).toBeUndefined();
+    expect(typeof rankedAttemptRoute.POST).toBe("function");
+    expect((rankedAttemptRoute as Record<string, unknown>).GET).toBeUndefined();
+    expect((rankedAttemptRoute as Record<string, unknown>).PUT).toBeUndefined();
+    expect((rankedAttemptRoute as Record<string, unknown>).DELETE).toBeUndefined();
   });
 });

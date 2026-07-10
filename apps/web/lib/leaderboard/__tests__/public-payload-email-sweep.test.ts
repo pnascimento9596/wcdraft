@@ -54,6 +54,7 @@ import { createSession, SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { allowAllRunOgSignRateLimiter } from "../../game/run-og-sign-rate-limiter-db";
 import { testCookieSecret, setupTestDb } from "../../auth/__tests__/_test-db";
 import { hashPassword } from "../../auth/passwords";
+import { handleHealthGet } from "../../health/readiness";
 import { handleLeaderboardBoardGet, handleLeaderboardMeGet } from "../board-route";
 import { handleLeaderboardLineupGet, handleLeaderboardLineupPost } from "../lineup-route";
 import { handleRankedAttemptPost } from "../ranked-attempt-route";
@@ -83,6 +84,7 @@ const PUBLIC_API_METHODS = [
   "GET /api/auth/csrf",
   "GET /api/auth/session",
   "GET /api/auth/verify",
+  "GET /api/health",
   "GET /api/leaderboard",
   "GET /api/leaderboard/lineup",
   "GET /api/leaderboard/me",
@@ -473,6 +475,18 @@ describe("public route payload email sweep", () => {
       ),
     );
     captures.push(routeCapture("GET /api/og/health", await ogHealthGet()));
+    captures.push(
+      routeCapture(
+        "GET /api/health",
+        await handleHealthGet({
+          databaseUrl: undefined,
+          buildSha: "public-payload-sweep",
+          readLatestMigration: async () => {
+            throw new Error("unconfigured health must not query the database");
+          },
+        }),
+      ),
+    );
     captures.push(
       routeCapture(
         "POST /api/og/sign",
