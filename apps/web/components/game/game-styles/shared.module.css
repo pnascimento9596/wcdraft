@@ -803,7 +803,8 @@
     max-width: 100%;
     padding: 3px 6px;
     font-size: 8.5px;
-    white-space: nowrap;
+    line-height: 1.2;
+    white-space: normal;
   }
 
   .modeCard:not(.modeCardFeatured) .modeDesc,

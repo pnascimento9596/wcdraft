@@ -184,10 +184,13 @@ naming behavior changed.
 Audit S1 B3 production-migration release lane:
 2026-07-10 · RED operations/security follow-up on branch
 `ws-f4/audit-s1-production-migrate`, based on shipped B3 `origin/main`
-`86bba8d71360dad634bbe6c4d7a799e1399675dc`. B3 code is merged, but production
-traffic remains intentionally rolled back to healthy D2
-`50184ef9a346912b5338b2a8a4fe42361bfea45e` while the production database is
-still at migration `0011`; B3 live verification is therefore not complete.
+`86bba8d71360dad634bbe6c4d7a799e1399675dc`. B3 code and its migration-release
+fixes are merged. Production migration workflow run `29128843386` succeeded at
+exact main `b3b8d3271c283b762cd898c33627b0040698298c`, and production now serves
+that SHA from Vercel deployment `dpl_HV4JziuW75yUpFZDUjXGPqjo4DGD`. Live
+`/api/health` reports database ready at migration index `12`, tag
+`0012_ranked_attempt_structural_binding`, journal id `13`, and 13 known
+migrations; the temporary D2 traffic rollback and pending-0012 state are over.
 The new manual `production-db-migrate.yml` release workflow accepts an exact
 main SHA and exact expected journal-tail migration, binds the caller input to
 the dispatch event, checkout, and current remote default branch, and resolves
@@ -307,6 +310,16 @@ known-pending preflight, and pre-mutation revalidation remain unchanged.
 Narrow validation passed the full workflow contract, Bash parse, actionlint
 1.7.12, full repository Prettier, and `git diff --check`; broad exact-head CI
 and fresh independent Red review remain required before merge.
+Role-discovery fix PR #241 then squash-merged as
+`b3b8d3271c283b762cd898c33627b0040698298c`. Exact-main workflow run
+`29128843386` passed all release stages: dispatch and authenticated SHA guards,
+dependency install, journal binding, primary endpoint and owner-role binding,
+known-pending preflight, immediate pre-mutation main revalidation, migration,
+exact postflight, and receipt cleanup. Live health subsequently confirmed
+build SHA `b3b8d327`, schema index `12` / migration
+`0012_ranked_attempt_structural_binding`, journal id `13` / 13 known, and
+`db.status=ready` on Vercel deployment
+`dpl_HV4JziuW75yUpFZDUjXGPqjo4DGD`.
 
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch
@@ -587,12 +600,14 @@ was false: no bot job received a runner, and the protected context was absent.
 
 Audit Season 1 D3 mode-select IA:
 2026-07-10 · YELLOW implementation on branch
-`ws-ux/audit-s1-mode-select-ia`, based on `origin/main`
-`50184ef9a346912b5338b2a8a4fe42361bfea45e` (D2). The five-mode selector now
+`ws-ux/audit-s1-mode-select-ia`, originally based on D2
+`50184ef9a346912b5338b2a8a4fe42361bfea45e` and cleanly rebased onto current
+`origin/main` `b3b8d3271c283b762cd898c33627b0040698298c`. The five-mode selector now
 keeps Daily as the broadcast lead and compacts Classic, Open Draft, Memory, and
 Blind Open into a two-column board on phone and short-landscape viewports.
-Classic and Memory are labeled `Ranked-capable` and `Casual by default` in both
-their chips and preview strings. The first PR head
+Classic and Memory carry the literal combined label
+`Ranked-capable · casual by default` in their tags and chips, and both terms in
+their preview strings. The first PR head
 `2e6f61e87fa7103dfda2d1a00f67445fb1f4b8dd` failed independent review: the
 169px Daily-unavailable notice remained sticky and overlapped the final card row
 by 73px at `360x800` and 21px at `390x844`. The replacement keeps only that
