@@ -19,9 +19,11 @@ UPDATE "leaderboard_entries" AS "entry"
  WHERE "entry"."attempt_id" = "attempt"."id";
 --> statement-breakpoint
 -- MATCH SIMPLE foreign keys skip validation when any referencing column is
--- NULL. This validated CHECK closes that gap for every ranked row. It also
--- makes migration failure honest if historical ranked data lacks a referenced,
--- consumed attempt; no historical row is deleted or fabricated.
+-- NULL. This CHECK closes that gap for every newly written ranked row.
+-- Migration 0009 deliberately preserved pre-binding ranked rows with a
+-- NOT VALID constraint, so this stronger replacement must do the same: legacy
+-- rows that cannot be derived remain visible and unchanged, while PostgreSQL
+-- still enforces a NOT VALID constraint for every INSERT or UPDATE.
 ALTER TABLE "leaderboard_entries" ADD CONSTRAINT "leaderboard_entries_ranked_attempt_binding_chk"
   CHECK (
     "leaderboard_entries"."mode" <> 'ranked'
@@ -34,7 +36,7 @@ ALTER TABLE "leaderboard_entries" ADD CONSTRAINT "leaderboard_entries_ranked_att
       AND "leaderboard_entries"."rating_basis" IS NOT NULL
       AND "leaderboard_entries"."attempt_consumed_at" IS NOT NULL
     )
-  );
+  ) NOT VALID;
 --> statement-breakpoint
 CREATE UNIQUE INDEX "ranked_attempts_binding_uq"
   ON "ranked_attempts" USING btree (
@@ -77,4 +79,5 @@ ALTER TABLE "leaderboard_entries"
     "consumed_at"
   )
   ON DELETE restrict
-  ON UPDATE restrict;
+  ON UPDATE restrict
+  NOT VALID;

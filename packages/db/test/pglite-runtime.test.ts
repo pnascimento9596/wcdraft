@@ -527,6 +527,161 @@ describe("@wcdraft/db pglite runtime", () => {
     });
   });
 
+  it("preserves pre-binding ranked rows while enforcing 0012 for every new write", async () => {
+    const client = await PGlite.create();
+    try {
+      await applyMigrationsThrough(client, "0008");
+      await client.exec(`
+        INSERT INTO users (id, email, username)
+        VALUES ('${USER_ID}', 'legacy-ranked@example.com', 'legacy_ranked');
+
+        INSERT INTO leaderboard_entries (
+          season_key,
+          mode,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          user_id,
+          token,
+          verified_score
+        )
+        VALUES (
+          'season-legacy',
+          'ranked',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          '${USER_ID}',
+          'legacy-unbound-ranked-token',
+          111
+        )
+      `);
+
+      await applyMigrationFile(client, "0009_ranked_attempt_binding.sql");
+      await applyMigrationFile(client, "0010_account_password.sql");
+      await applyMigrationFile(client, "0011_email_verification.sql");
+
+      const newAttemptId = "00000000-0000-4000-8000-000000000007";
+      await client.exec(`
+        INSERT INTO ranked_attempts (
+          id,
+          user_id,
+          season_key,
+          formation_id,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          issued_parent_seed,
+          nonce,
+          window_expires_at,
+          consumed_at
+        )
+        VALUES (
+          '${newAttemptId}',
+          '${USER_ID}',
+          'season-new',
+          '4-3-3',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          'seed-new-write',
+          'nonce-new-write-0000',
+          now() + interval '1 hour',
+          '2026-07-10T14:00:00.000Z'
+        )
+      `);
+
+      await applyMigrationFile(client, "0012_ranked_attempt_structural_binding.sql");
+
+      const legacy = await client.query<{
+        attempt_id: string | null;
+        attempt_formation_id: string | null;
+        attempt_consumed_at: Date | null;
+      }>(`
+        SELECT attempt_id, attempt_formation_id, attempt_consumed_at
+        FROM leaderboard_entries
+        WHERE token = 'legacy-unbound-ranked-token'
+      `);
+      expect(legacy.rows).toEqual([
+        {
+          attempt_id: null,
+          attempt_formation_id: null,
+          attempt_consumed_at: null,
+        },
+      ]);
+
+      const validation = await client.query<{ conname: string; convalidated: boolean }>(`
+        SELECT conname, convalidated
+        FROM pg_constraint
+        WHERE conname IN (
+          'leaderboard_entries_ranked_attempt_binding_chk',
+          'leaderboard_entries_ranked_attempt_binding_fk'
+        )
+        ORDER BY conname
+      `);
+      expect(validation.rows).toEqual([
+        {
+          conname: "leaderboard_entries_ranked_attempt_binding_chk",
+          convalidated: false,
+        },
+        {
+          conname: "leaderboard_entries_ranked_attempt_binding_fk",
+          convalidated: false,
+        },
+      ]);
+
+      await expect(
+        client.exec(`
+          INSERT INTO leaderboard_entries (
+            season_key,
+            mode,
+            draft_mode,
+            draft_order,
+            era,
+            rating_basis,
+            user_id,
+            attempt_id,
+            token,
+            verified_score
+          )
+          VALUES (
+            'season-new',
+            'ranked',
+            'classic',
+            'squad_first',
+            'all_time',
+            'career',
+            '${USER_ID}',
+            '${newAttemptId}',
+            'new-incomplete-ranked-token',
+            222
+          )
+        `),
+      ).rejects.toThrow(/leaderboard_entries_ranked_attempt_binding_chk|check constraint/i);
+
+      const inserted = await client.query<{ count: number }>(`
+        SELECT count(*)::integer AS count
+        FROM leaderboard_entries
+        WHERE token = 'new-incomplete-ranked-token'
+      `);
+      expect(inserted.rows).toEqual([{ count: 0 }]);
+
+      await applyDownMigrationFile(client, "0012_ranked_attempt_structural_binding.down.sql");
+      const survivor = await client.query<{ token: string; attempt_id: string | null }>(`
+        SELECT token, attempt_id
+        FROM leaderboard_entries
+        WHERE token = 'legacy-unbound-ranked-token'
+      `);
+      expect(survivor.rows).toEqual([{ token: "legacy-unbound-ranked-token", attempt_id: null }]);
+    } finally {
+      await client.close();
+    }
+  });
+
   it("applies 0012 over historical rows and rolls only 0012 back without data loss", async () => {
     const client = await PGlite.create();
     try {

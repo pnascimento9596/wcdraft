@@ -496,7 +496,7 @@ describe("@wcdraft/db migrations — 0012_ranked_attempt_structural_binding", ()
     expect(structuralBindingSql).not.toMatch(/DELETE FROM/);
   });
 
-  it("requires every ranked row to carry a complete consumed-attempt binding", () => {
+  it("requires every newly written ranked row to carry a complete consumed-attempt binding", () => {
     expect(structuralBindingSql).toMatch(
       /ADD CONSTRAINT "leaderboard_entries_ranked_attempt_binding_chk"/,
     );
@@ -511,6 +511,9 @@ describe("@wcdraft/db migrations — 0012_ranked_attempt_structural_binding", ()
     ]) {
       expect(structuralBindingSql).toContain(`"leaderboard_entries"."${column}" IS NOT NULL`);
     }
+    expect(structuralBindingSql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_ranked_attempt_binding_chk"[\s\S]*\) NOT VALID;/,
+    );
   });
 
   it("binds user, season, full config, and consumed_at through one composite FK", () => {
@@ -519,6 +522,9 @@ describe("@wcdraft/db migrations — 0012_ranked_attempt_structural_binding", ()
       /FOREIGN KEY \(\s*"attempt_id",\s*"user_id",\s*"season_key",\s*"attempt_formation_id",\s*"draft_mode",\s*"draft_order",\s*"era",\s*"rating_basis",\s*"attempt_consumed_at"\s*\)[\s\S]*REFERENCES "public"\."ranked_attempts" \(\s*"id",\s*"user_id",\s*"season_key",\s*"formation_id",\s*"draft_mode",\s*"draft_order",\s*"era",\s*"rating_basis",\s*"consumed_at"\s*\)/,
     );
     expect(structuralBindingSql).toMatch(/ON DELETE restrict\s+ON UPDATE restrict/);
+    expect(structuralBindingSql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_ranked_attempt_binding_fk"[\s\S]*ON UPDATE restrict\s+NOT VALID;/,
+    );
   });
 
   it("rolls back metadata only and restores the prior single-column FK", () => {

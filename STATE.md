@@ -16,22 +16,31 @@ consumption timestamp on attempt-backed leaderboard rows, deriving both from
 the referenced attempt for historical rows. Together with the leaderboard's
 existing user, season, and full draft-config columns, those witnesses form a
 restrictive composite foreign key to a unique consumed-attempt key. A
-ranked-only complete-binding check prevents `MATCH SIMPLE` null bypasses;
-attempt-less Casual rows remain null and unchanged. This declarative design was
-chosen over a leaderboard-only trigger because it also prevents a later attempt
-update or delete from invalidating an accepted ranked row. The down migration
-removes only the new metadata and constraints, restores the prior single-column
-attempt FK, and deletes no rows. Drizzle intent now declares migration 0009's
+ranked-only complete-binding check prevents `MATCH SIMPLE` null bypasses for
+new writes; attempt-less Casual rows remain null and unchanged. The first
+exact-head ephemeral-Neon run proved production-derived history also contains
+pre-binding Ranked rows without complete attempt witnesses (SQLSTATE `23514`).
+Both new constraints are therefore installed `NOT VALID`: PostgreSQL preserves
+those rows without deletion or fabricated binding data while still rejecting
+every violating `INSERT` or `UPDATE`. Their unvalidated status is explicit
+legacy debt; attempt-backed rows that can be derived are backfilled and every
+accepted post-0012 Ranked row is structurally bound. This declarative design
+was chosen over a leaderboard-only trigger because it also prevents a later
+attempt update or delete from invalidating an accepted ranked row. The down
+migration removes only the new metadata and constraints, restores the prior
+single-column attempt FK, and deletes no rows. Drizzle intent now declares migration 0009's
 existing partial unique attempt index; missing snapshots 0008 through 0012 were
 reconstructed, and the pre-existing broken 0004-to-0005 snapshot link was
 repaired. A fresh drizzle-kit parity probe reports no schema changes. The B4
 ephemeral-Neon lane will apply all 13 migrations, reproduce rejection of a
 ranked row bound to another user's unconsumed cross-config attempt, execute all
-13 downs, and delete its isolated branch. Final local validation passed: frozen
+13 downs, and delete its isolated branch. The failed first Neon run created and
+deleted its isolated branch successfully; the fix-forward must produce a new
+exact-head receipt before review or merge. Final local validation passed: frozen
 install already up to date; focused DB migration/PGlite/schema tests (3 files /
-116 tests); directly affected web PGlite tests (5 files / 94 tests); root
-typecheck (8/8, 5 cached), lint (5/5, 3 cached), test (8/8, 6 cached: changed DB
-3 files / 116 tests, changed web 88 files passed / 1 skipped and 933 tests
+117 tests); directly affected web PGlite tests (5 files / 94 tests); root
+typecheck (8/8, 5 cached), lint (5/5, 3 cached), test (8/8, 6 cached before the
+NOT VALID fix-forward: changed DB 3 files / 116 tests, changed web 88 files passed / 1 skipped and 933 tests
 passed / 1 skipped, game-flow Playwright PASS, responsive desktop 84/0, mobile
 56/0, interaction targets 40/0), and production build (4/4, 3 cached, changed
 web build emitted 40/40 pages and `/api/health`); affected leaderboard golden
