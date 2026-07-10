@@ -186,9 +186,11 @@ Audit S1 B3 production-migration release lane:
 `ws-f4/audit-s1-production-migrate`, based on shipped B3 `origin/main`
 `86bba8d71360dad634bbe6c4d7a799e1399675dc`. B3 code and its migration-release
 fixes are merged. Production migration workflow run `29128843386` succeeded at
-exact main `b3b8d3271c283b762cd898c33627b0040698298c`, and production now serves
-that SHA from Vercel deployment `dpl_HV4JziuW75yUpFZDUjXGPqjo4DGD`. Live
-`/api/health` reports database ready at migration index `12`, tag
+exact main `b3b8d3271c283b762cd898c33627b0040698298c`, applying migration `0012`.
+Production has since advanced to C2 exact main
+`6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` on Ready Vercel deployment
+`dpl_6Qp6gdmtYXzJMuU8rCL7qfhAYjT8`. Live `/api/health` reports database ready
+at migration index `12`, tag
 `0012_ranked_attempt_structural_binding`, journal id `13`, and 13 known
 migrations; the temporary D2 traffic rollback and pending-0012 state are over.
 The new manual `production-db-migrate.yml` release workflow accepts an exact
@@ -602,9 +604,10 @@ Audit Season 1 D3 mode-select IA:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-mode-select-ia`, originally based on D2
 `50184ef9a346912b5338b2a8a4fe42361bfea45e` and cleanly rebased onto current
-`origin/main` `b3b8d3271c283b762cd898c33627b0040698298c`. The five-mode selector now
-keeps Daily as the broadcast lead and compacts Classic, Open Draft, Memory, and
-Blind Open into a two-column board on phone and short-landscape viewports.
+`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` after C2 shipped. The five-mode
+selector now keeps Daily as the broadcast lead and compacts Classic, Open
+Draft, Memory, and Blind Open into a two-column board on phone and
+short-landscape viewports.
 Classic and Memory carry the literal combined label
 `Ranked-capable · casual by default` in their tags and chips, and both terms in
 their preview strings. The first PR head
@@ -629,14 +632,17 @@ rating, sim, token validation, schema, ETL, runtime-data, or leaderboard-server
 semantics changed. Fix-forward validation passed: direct three-state responsive
 proof (3 states x 3 viewports x 2 themes = 18 metrics, 0 failures); unavailable
 clearance is 4px/4px at both portrait viewports and 8px/8px at `667x375`; the
-supported full wrapper passed 84 desktop-shell + 56 mobile-shell + 40
-interaction + 24 mode/setup metrics = 204, 0 failures; expanded game-flow
-PASS; focused web source contracts; root typecheck (8/8), root lint (5/5), and
-root production build (4/4); and a forced root test passed 8/8 tasks, 0 cached,
-in 9m49.178s (web 88 files passed / 1 skipped, 936 tests passed / 1 skipped,
-expanded game-flow PASS, and a second 204/0 responsive pass). Golden suites and
-heavy realism were not run because D3 changes no deterministic core, data,
-rating, simulation, or leaderboard-validation behavior.
+final post-C2 focused tests passed 3/3 files and 23/23 tests; expanded game-flow
+Playwright passed the compact dock, unavailable notice, and ranked 401/403
+flows. The final isolated full wrapper exited zero with complete JSON receipts:
+84 desktop-shell + 56 mobile-shell + 40 interaction + 24 mode/setup metrics =
+204, 0 failures. Post-C2 root typecheck passed 8/8 tasks (web uncached), lint
+passed 5/5 (web uncached), and production build passed 4/4 (web uncached; 40/40
+pages). An earlier forced root test passed 8/8 tasks with 0 cached in 9m49.178s
+(web 88 files passed / 1 skipped, 936 tests passed / 1 skipped, expanded
+game-flow PASS, and 204/0 responsive), before the semantic-no-op rebase. Golden
+suites and heavy realism were not run because D3 changes no deterministic core,
+data, rating, simulation, or leaderboard-validation behavior.
 
 Audit Season 1 D2 interaction-floor harness:
 2026-07-10 · Standalone controls now hold a measured 44px minimum in both
