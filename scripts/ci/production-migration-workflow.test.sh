@@ -65,10 +65,12 @@ cp "$pre" "$probe_root/world-readable.txt"
 chmod 644 "$probe_root/world-readable.txt"
 run_case world-readable 1 pre "$probe_root/world-readable.txt" 1 12 0012_ranked_attempt_structural_binding 13
 
+node "$repo_root/scripts/ci/read-github-ref.test.mjs"
+
 assert_contains "$workflow" "github.ref == format('refs/heads/{0}', github.event.repository.default_branch)"
 assert_contains "$workflow" 'EXPECTED_MAIN_SHA: ${{ inputs.expected_main_sha }}'
 assert_contains "$workflow" 'git rev-parse HEAD'
-assert_contains "$workflow" 'git ls-remote --exit-code origin'
+assert_contains "$workflow" 'node scripts/ci/read-github-ref.mjs'
 assert_contains "$workflow" 'primaryCandidates.length !== 1'
 assert_contains "$workflow" 'endpoint.type === "read_write"'
 assert_contains "$workflow" 'pooled: "false"'
@@ -81,14 +83,27 @@ assert_contains "$workflow" 'DATABASE_URL_UNPOOLED='
 assert_contains "$runbook" 'production-db-migrate.yml'
 assert_contains "$runbook" '0012_ranked_attempt_structural_binding'
 
-remote_query_count="$(grep -Fc 'git ls-remote --exit-code origin' "$workflow")"
+api_query_count="$(grep -Fc 'node scripts/ci/read-github-ref.mjs' "$workflow")"
+token_scope_count="$(grep -Fc 'GITHUB_REF_TOKEN: ${{ github.token }}' "$workflow")"
+default_branch_count="$(grep -Fc 'GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}' "$workflow")"
 head_query_count="$(grep -Fc 'git rev-parse HEAD' "$workflow")"
 event_binding_count="$(grep -Fc 'event_sha="$GITHUB_SHA"' "$workflow")"
 clean_tree_count="$(grep -Fc 'git status --porcelain=v1 --untracked-files=all' "$workflow")"
-[ "$remote_query_count" -eq 2 ] || fail "workflow must query live remote main exactly twice"
+[ "$api_query_count" -eq 2 ] || fail "workflow must query authenticated GitHub ref API exactly twice"
+[ "$token_scope_count" -eq 2 ] || fail "GitHub token must enter exactly two ref-query step environments"
+[ "$default_branch_count" -eq 2 ] || fail "default branch must bind exactly two ref-query steps"
 [ "$head_query_count" -eq 2 ] || fail "workflow must bind the checkout HEAD exactly twice"
 [ "$event_binding_count" -eq 2 ] || fail "workflow must bind the dispatch SHA exactly twice"
 [ "$clean_tree_count" -eq 2 ] || fail "workflow must prove a clean checkout exactly twice"
+
+grep -Fq 'git ls-remote' "$workflow" && fail "unauthenticated git ls-remote is forbidden"
+github_token_refs="$(grep -Fc '${{ github.token }}' "$workflow")"
+[ "$github_token_refs" -eq 2 ] || fail "GitHub token must appear only in the two ref-query env bindings"
+contents_read_count="$(grep -Fc '  contents: read' "$workflow")"
+[ "$contents_read_count" -eq 1 ] || fail "workflow token permissions must remain contents:read only"
+if grep -E '(GITHUB_REF_TOKEN|github\.token).*(GITHUB_OUTPUT|GITHUB_STEP_SUMMARY|git config)' "$workflow"; then
+  fail "GitHub token may not enter outputs, summaries, or git config"
+fi
 
 api_key_refs="$(grep -Fc '${{ secrets.NEON_API_KEY }}' "$workflow")"
 project_id_refs="$(grep -Fc '${{ secrets.NEON_PROJECT_ID }}' "$workflow")"
@@ -110,4 +125,4 @@ fi
 steps_between="$(sed -n "$((revalidate_line + 1)),$((migrate_line - 1))p" "$workflow" | grep -Ec '^      - name:' || true)"
 [ "$steps_between" -eq 0 ] || fail "final live-main revalidation must be immediately adjacent to migration"
 
-echo "production migration workflow contract: PASS (8 classifier cases + 14 bindings + two live-main checks + secret/order guards)"
+echo "production migration workflow contract: PASS (8 classifier cases + GitHub ref success/5 refusals + 14 bindings + two authenticated live-main checks + secret/order guards)"

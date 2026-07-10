@@ -23,6 +23,10 @@ checks.
 ## Safety contract
 
 - Manual dispatch only, repository/default-branch only, read-only GitHub token.
+- Both live-main checks call the authenticated repository Git-ref API with
+  `${{ github.token }}` supplied only to that step's environment. Checkout
+  credentials remain disabled, and the token never enters command arguments,
+  Git config, workflow outputs, summaries, or application logs.
 - Caller input, dispatch SHA, checkout SHA, and current remote-main SHA must be
   the same exact lowercase 40-character commit.
 - After exact known-pending preflight, the workflow queries live remote main a
@@ -69,11 +73,11 @@ check could become stale while setup, Neon resolution, and database preflight
 ran. A concurrent merge could therefore leave the old checkout at the mutation
 boundary even though the early check had passed.
 
-The fix-forward adds a second live `git ls-remote` query after successful exact
+The fix-forward adds a second live default-ref query after successful exact
 known-pending classification and immediately before the migration step. It
 again requires the live default ref, dispatch SHA, and checkout HEAD to equal
-`EXPECTED_MAIN_SHA`, and requires a clean checkout. The contract now proves
-there are exactly two live remote queries and checkout bindings, and proves the
+`EXPECTED_MAIN_SHA`, and requires a clean checkout. The contract proves there
+are exactly two live remote queries and checkout bindings, and proves the
 strict order preflight -> final revalidation -> migration with no intervening
 workflow step. Migration-hash validation and crash-recovery cleanup were noted
 as non-blocking future hardening and intentionally remain outside this minimal
@@ -100,6 +104,36 @@ three report `readyState=ERROR`, `errorStep=build-container-init`,
 build-container credential-initialization failures, not product-build evidence.
 The exact-head Vercel check remains externally failed. No further manual preview
 retry or trigger-only commit is performed.
+
+## Post-merge dispatch auth fix-forward
+
+PR #238 squash-merged as
+`95c4cd99d91e5353476e8b465a67b69077151433`. Production migration dispatch run
+`29125250786` then failed safely in `Bind checkout and remote main to approved
+SHA`: the unauthenticated `git ls-remote origin` returned exit 128 because the
+private-repository checkout correctly retained `persist-credentials:false`.
+Every step from package setup through Neon target resolution, database
+preflight, migration, and postflight was skipped. Protected-receipt cleanup
+passed. The workflow never reached Neon and made no database mutation;
+production remained at migration `0011`.
+
+The auth fix-forward starts from exact current main `95c4cd9` in a fresh
+worktree and branch. Both live-main bindings now invoke a small Node GitHub
+Git-ref reader. `${{ github.token }}` enters only the two query step
+environments under the existing workflow-level `contents: read` permission;
+checkout credentials remain disabled. The helper sends the token only in the
+in-memory `Authorization` header, never a command argument, Git config, output,
+summary, or log. It fails closed on a missing token, non-success HTTP status,
+wrong ref identity, malformed/missing object SHA, or malformed repository/ref
+input. The workflow contract rejects any residual `git ls-remote`, requires
+exactly two authenticated API calls and token scopes in the existing safety
+order, and runs a helper test covering success plus five refusal cases.
+
+Narrow auth-fix validation passed the ref-helper matrix, the full executable
+production-migration workflow contract, Node and Bash syntax, actionlint
+1.7.12, full repository Prettier, and `git diff --check`. No product, schema,
+migration, runtime-data, rating, simulation, or ETL file changed. Broad
+exact-head CI and fresh independent Red review remain required before merge.
 
 The first root attempt is not counted: an interrupted sibling task left a
 generated-artifact lock and the untracked raw draft bundle absent. The lane
