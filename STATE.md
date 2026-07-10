@@ -4,6 +4,153 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 B5 rollback target binding:
+2026-07-11 · RED safety fix on branch
+`ws-f4/audit-s1-rollback-target-binding`, rebased onto shipped B1+B2
+`origin/main` `d47d06af78e018c362751c25e5ea865ff072786c`. The pre-fix focused
+regression reproduced the unsafe control: with an attacker-chosen
+`NEON_EPHEMERAL_BRANCH_ID` and both API credentials absent, the guard resolved
+successfully instead of rejecting, allowing the destructive migration path to
+continue. The replacement guard makes `NEON_API_KEY` and `NEON_PROJECT_ID`
+mandatory, parses but never logs the direct/unpooled endpoint and database,
+queries `current_database()` through the rollback DB handle, and requires the
+connected database to equal the URL database. It then resolves the exact host
+and endpoint ID through Neon API truth with one unambiguous match, requires a
+read-write endpoint in the expected project, binds its branch to the sentinel,
+and independently verifies the branch response. Primary/default,
+API-protected, and protected-name branches refuse closed. The first migration
+apply is inside the verified callback, so every refusal precedes all apply,
+test-row, purge, and down-migration statements. API and driver failures expose
+neither the database URL nor API key.
+
+Pre-rebase focused target-guard tests passed 37/37, covering absent
+credentials/sentinel, wrong sentinel, split and duplicate endpoint mappings,
+current-database mismatch/query failure, primary/default/protected targets,
+protected names, malformed/non-Neon/pooled URLs, API and response-shape
+failures, wrong project/branch/read-only mappings, one valid ephemeral control,
+and executable guard-before-migrate wiring. The explicit guard +
+migration-golden + PGlite bundle passed 148/148 (37 guard, 99 migration golden,
+12 PGlite), and the full DB package passed 156/156. Pre-rebase root validation
+passed typecheck 8/8, lint 5/5, test 8/8 (core 391, data 162 passed / 9 skipped,
+DB 156, marketing 68, web 936 passed / 1 skipped, game-flow Playwright PASS,
+responsive desktop 84/0 + mobile 56/0 + interaction targets 40/0), and build
+4/4 with 40/40 web pages. No schema, migration, product runtime, rating,
+simulation, ETL, or generated-data artifact changed. No live or ephemeral Neon
+branch was created, modified, or deleted during local verification; the real
+destructive round-trip remains the PR's credentialed ephemeral-Neon CI gate.
+Post-rebase exact-source revalidation and independent RED review remain
+mandatory.
+
+Independent review of frozen head
+`ebf1faeeeb3e48c0b3f93b4b25db2284269e7871` returned FAIL (report SHA-256
+`464abe493fc047ac297d0dc240b5a19dc0ddefe035b6353aecf07e8a7fad5ef1`):
+the verified-target callback ended after only the initial `migrate()`, leaving
+test-row mutations, purge deletes, reverse downs, and clean-state assertions
+outside the trust boundary. The fix-forward moves the entire apply → probes →
+purge → downs → clean assertion sequence inside the callback; only pool teardown
+remains outside. A structural contract now enumerates every `db.execute` in the
+script, allows only the read-only `current_database()` verifier before the
+scope, and requires every subsequent DB execution plus migration apply to fall
+between explicit verified-scope markers. Post-fix focused guard coverage passes
+37/37, DB typecheck/lint and diff check pass. The failed head's CI was cancelled
+before credentialed mutation and is not evidence; replacement exact-source root
+test passed 8/8 in 8m18.872s (core 391, data 168 / 9 skipped, DB 156,
+marketing 68, web 1,044 / 1 skipped, game-flow PASS, responsive 204/0).
+Replacement exact-head re-review and CI remain required.
+
+The next independent re-review of replacement head
+`34072171dc7da6468c431bed697f33d853fae2cc` confirmed the runtime enclosure
+fix but returned FAIL (report SHA-256
+`ed52d15bfd35caf50264d7fd101227c9b9d27ecd49044ae9709156c5b5de5788`):
+the regex contract inventoried only 29 awaited forms out of 46 actual
+`db.execute` call sites. The second fix-forward replaces marker/regex ordering
+with a TypeScript AST contract over actual CallExpression nodes. It requires
+one `runWithVerifiedRollbackTarget` call with an arrow function as its third
+argument, pins all 46 `db.execute` calls, permits exactly the one
+`current_database()` verifier outside that callback, requires the other 45
+inside its real AST body, inventories the sole `migrate(...)` call inside, and
+requires pool teardown after the callback. Focused 37/37, full DB 156/156,
+typecheck 8/8, lint 5/5, build 4/4 with 40/40 pages, workflow contract,
+actionlint, Prettier, and diff check pass. A new frozen SHA/re-review/CI are
+required; the earlier runtime-identical browser receipt is not promoted as
+new review evidence.
+
+The third independent re-review of head
+`0476090972db0146fa7ca90788c358c314203c29` returned FAIL (report SHA-256
+`eaa5a9c2dbe582f199cdf55f5afe39714c6246b3a19ee44f1f83ec42430f0251`):
+text-equal `db` receivers did not prove lexical handle identity, and a concrete
+nested-shadow rewrite kept every asserted count green while verifying handle A
+and mutating handle B. The third fix-forward makes handle identity architectural:
+`RollbackTargetDependencies<Handle>` carries one `verifiedHandle`, both
+`queryCurrentDatabase(handle)` and `destructiveOperation(target, handle)` receive
+that exact object, and the real script uses only its callback-provided
+`verifiedDb` capability. The AST contract inventories every `.execute` receiver
+regardless of name, requires all 46 to use `verifiedDb`, validates the exact
+read-only verifier SQL, rejects shadow declarations in both callbacks, pins one
+outer `openMigratorDb`, requires the sole `migrate` to consume `verifiedDb`, and
+AST-checks one post-callback `pool.end`. Negative in-memory fixtures prove nested
+shadow, alternate receiver, and compound verifier rewrites are detected.
+Focused 38/38, full DB 157/157, typecheck 8/8, lint 5/5, build 4/4 with 40/40
+pages, workflow/actionlint/format/diff checks pass. The prior review's broader
+test interruption was host ENOSPC;
+obsolete audit clones were safely removed, restoring 15 GiB without deleting
+worktrees or reports.
+
+The fourth independent re-review of head
+`926ee177166bb9d3c8695a4740b8753a937dd81a` returned FAIL (report SHA-256
+`a3f7ce1bdb373ef7c00c1a45b915928110e798a62e34646d01bceffe5cebdd5a`):
+the capability API preserved handle identity only after the caller selected a
+handle. A compiling substitution could discard the direct `openMigratorDb()`
+handle, supply pooled `getDb()` as `verifiedHandle`, and keep all 46/45/1 AST
+counts green. When both targets share a database name, API evidence could then
+verify the ephemeral direct URL while destructive work reached the pooled
+production target. The fourth fix-forward binds `verifiedHandle: db` and
+`pool.end()` to the sole exact `const { db, pool } = openMigratorDb()` declaration
+inside `main`, requires the direct client import, rejects any other `db`/`pool`
+binding, assignment, or local migrator shadow, and adds pooled-substitution and
+reassignment negative fixtures. Replacement exact-head review and protected CI
+remain mandatory; no failed head performed a credentialed database mutation.
+
+The fifth independent re-review of head
+`33152be85d16419fc829a883ef8cd1e8aacdc783` returned FAIL (report SHA-256
+`16dcb5d8ad7d1ce59f55deaeafb64dba8ee511d4fa0e1b5d32c05a93198c10dd`):
+the contract bound the teardown receiver to the paired `pool` but proved only
+that one textual `pool.end()` appeared after the callback. A never-called
+nested teardown function preserved every count, exact binding, receiver, and
+ordering assertion while no teardown executed. The fifth fix-forward requires
+the guard call to be inside exactly one `try` whose paired `finally` contains
+exactly one statement: the awaited, sole `pool.end()` call. A teardown-decoy
+negative fixture pins this control-flow relationship. The failed head's CI was
+cancelled before credentialed rollback work; replacement exact-head review and
+protected CI remain mandatory.
+
+The sixth independent re-review of head
+`3f06f7c1da4323112615c89e25008c62f64672c2` returned FAIL (report SHA-256
+`437d4ca5ecf530327e146b60ff90e7953928ff07418d2606ac98dcf23a595972`):
+the exact outer binding and paired-finally contracts still permitted mutation
+through an alias (`Object.assign(alias, getDb())`) and direct reassignment of
+the `verifiedDb` callback parameter. Both compiling rewrites retained every
+46/45/1 count and control-flow assertion while redirecting verification and
+destruction to the pooled handle. The sixth fix-forward removes three obsolete
+outer `db` helper arguments and allowlists every capability reference: outer
+`db` appears only in its direct binding and `verifiedHandle` initializer;
+`verifiedDb` appears only in its two parameter declarations, 46 execute
+receivers, and one migration argument; `pool` appears only in its binding and
+paired teardown. Alias, object mutation, and parameter-reassignment fixtures
+pin the rejected rewrites. Failed-head CI was cancelled before credentialed
+rollback work; replacement exact-head review and protected CI remain mandatory.
+
+After the final B1+B2 rebase, focused guard coverage again passed 37/37 and
+the full DB package passed 156/156. Root typecheck passed 8/8, lint 5/5, build
+4/4 with 40/40 pages, the production migration workflow contract passed all
+documented classifier/ref/resolver/binding/order cases, and actionlint v1.7.12,
+Prettier, and diff check passed. The frozen browser-inclusive root test passed
+8/8 tasks in 7m31.385s: core 391, data 168 passed / 9 skipped, DB 156,
+marketing 68, web 1,044 passed / 1 skipped, expanded game-flow PASS, and
+responsive 204 metrics / 0 failures (desktop 84, mobile 56, interactions 40,
+mode/setup 24). Fresh exact-SHA RED review and protected credentialed CI remain
+mandatory.
+
 Audit Season 1 shared bounded-request contract (Unit D1):
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-bounded-requests`, initially based on Wave-A `origin/main`

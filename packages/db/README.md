@@ -28,10 +28,14 @@ Greenfield additive scaffold:
   one transaction, plus a hand-authored down-migration
   (`migrations/0000_init.down.sql`) that drops in FK-safe reverse order.
 - An ephemeral-branch-safe migration runner (`scripts/migrate.ts`) and a
-  destructive rollback-check (`scripts/rollback-check.ts`) that **refuses to
-  run** without an explicit `NEON_EPHEMERAL_BRANCH_ID` sentinel and (when
-  `NEON_API_KEY` is also set) confirms via the Neon API that the target
-  branch is not primary/default.
+  destructive rollback-check (`scripts/rollback-check.ts`) that **requires**
+  an explicit `NEON_EPHEMERAL_BRANCH_ID`, `NEON_API_KEY`, and
+  `NEON_PROJECT_ID`. Before any destructive operation, it queries
+  `current_database()` through the migration DB handle and binds the direct
+  connection endpoint to exactly one Neon API endpoint and branch. The
+  connected database, endpoint, project, branch, and sentinel must agree; the
+  branch must be read-write, non-primary/default, unprotected, and outside the
+  protected-name denylist.
 - Committed `scripts/neon-branch-create.ts` + `scripts/neon-branch-delete.ts`
   that drive the Neon API to fork ephemeral branches off the primary and
   destroy them after each round-trip.
@@ -62,10 +66,10 @@ Two **secrets** must live in your local shell env (or a gitignored file you
 source; `~/.config/wcdraft/neon.env` is conventional) and as GitHub repo
 secrets for CI:
 
-| Var               | Purpose                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| `NEON_API_KEY`    | Drives `db:branch:create` + `db:branch:delete` (CI's ephemeral-branch lifecycle).         |
-| `NEON_PROJECT_ID` | The Neon project to fork branches from. Set as a repo secret so CI doesn't list projects. |
+| Var               | Purpose                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------- |
+| `NEON_API_KEY`    | Drives branch lifecycle and is mandatory for rollback-check target verification.         |
+| `NEON_PROJECT_ID` | Identifies the project for branch creation, deletion, and rollback-check target binding. |
 
 `db:branch:create` writes the **per-run** DB URLs to a working env file:
 
@@ -73,12 +77,14 @@ secrets for CI:
 | -------------------------- | ---------------------------------------- | --------------------------------------------------------------------- |
 | `DATABASE_URL`             | Neon **pooled** (`...-pooler.neon.tech`) | Runtime route handlers (later sub-units) via `getDb()`                |
 | `DATABASE_URL_UNPOOLED`    | Neon **direct** (`...neon.tech`)         | `scripts/migrate.ts` and `scripts/rollback-check.ts` (CLI migrations) |
-| `NEON_EPHEMERAL_BRANCH_ID` | Branch id sentinel                       | `scripts/rollback-check.ts` safety guard                              |
+| `NEON_EPHEMERAL_BRANCH_ID` | Branch ID sentinel                       | Exact branch equality check in `scripts/rollback-check.ts`            |
 | `NEON_PROJECT_ID`          | Echoed back for `db:branch:delete`       | `scripts/neon-branch-delete.ts`                                       |
 
 The working env file is gitignored (covered by `.gitignore`'s `.env.*`
 pattern). Always target a Neon **branch**, never prod, for apply/rollback
-checks — the runner refuses to start otherwise.
+checks. Sentinel-only local reruns are intentionally unsupported: the runner
+refuses without API credentials or when the connected endpoint cannot be
+bound unambiguously to that sentinel.
 
 ## Local quick-start
 
