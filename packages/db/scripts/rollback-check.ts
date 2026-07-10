@@ -23,9 +23,9 @@
 //   step 2 — INSERT two anonymous saved_runs rows (NULL owner) with the
 //            same token; assert the second is rejected by the
 //            UNIQUE NULLS NOT DISTINCT constraint
-//   step 3 — INSERT two anonymous leaderboard_entries rows (NULL user)
-//            with the same (season, mode, token); assert the second is
-//            rejected
+//   step 3 — assert leaderboard constraints, including rejection of a ranked
+//            row bound to another user's unconsumed cross-config attempt and
+//            the successful session lifecycle of a durable ranked binding
 //   step 4 — run paired down-migrations in reverse journal order
 //   step 5 — assert the public schema is empty (no tables, no drizzle bookkeeping)
 //
@@ -164,6 +164,32 @@ async function assertInsertRejected(
       `[rollback-check] FATAL: ${description} — INSERT SHOULD have been ` +
         "rejected but succeeded. A 0004 column constraint is missing or " +
         "its name drifted from the schema.",
+    );
+  }
+  const msg = errorDiagnostics(actualError);
+  if (!expectedReason.test(msg)) {
+    throw new Error(
+      `[rollback-check] FATAL: ${description} — rejection did not match ` +
+        `${expectedReason.toString()}. Error: ${msg.slice(0, 300)}`,
+    );
+  }
+  console.log(`  ✓ ${description}`);
+}
+
+async function assertMutationRejected(
+  description: string,
+  mutation: () => Promise<unknown>,
+  expectedReason: RegExp,
+): Promise<void> {
+  let actualError: unknown = null;
+  try {
+    await mutation();
+  } catch (e) {
+    actualError = e;
+  }
+  if (actualError === null) {
+    throw new Error(
+      `[rollback-check] FATAL: ${description} — mutation SHOULD have been rejected but succeeded.`,
     );
   }
   const msg = errorDiagnostics(actualError);
@@ -455,6 +481,162 @@ async function main(): Promise<void> {
         `),
       /not-null constraint|null value/i,
     );
+    // Audit S1 B3 adversarial reproduction: an application bug or direct SQL
+    // writer must not be able to attach a ranked row to another user's
+    // unconsumed attempt from a different season/config. Supply non-null
+    // witnesses so the composite FK (not merely the ranked CHECK) adjudicates.
+    await db.execute(sql`
+      INSERT INTO users (email, username)
+      VALUES ('rollback-check-rival@example.com', 'rivaluser')
+    `);
+    const ownerRows = await db.execute<{ id: string }>(sql`
+      SELECT id FROM users WHERE email = 'rollback-check-a@example.com'
+    `);
+    const rivalRows = await db.execute<{ id: string }>(sql`
+      SELECT id FROM users WHERE email = 'rollback-check-rival@example.com'
+    `);
+    const ownerId = ownerRows.rows[0]?.id;
+    const rivalId = rivalRows.rows[0]?.id;
+    if (!ownerId || !rivalId) {
+      throw new Error("[rollback-check] FATAL: ranked binding probe users were not created");
+    }
+    const attemptRows = await db.execute<{ id: string }>(sql`
+      INSERT INTO ranked_attempts
+        (user_id, season_key, formation_id, draft_mode, draft_order, era, rating_basis, issued_parent_seed, nonce, window_expires_at)
+      VALUES
+        (${rivalId}::uuid, 'rollback-check-rival-season', '3-5-2', 'hidden', 'position_first', 'modern', 'current', 'rollback-check-rival-seed', 'rollback-check-rival-nonce', NOW() + INTERVAL '10 minutes')
+      RETURNING id
+    `);
+    const adversarialAttemptId = attemptRows.rows[0]?.id;
+    if (!adversarialAttemptId) {
+      throw new Error("[rollback-check] FATAL: adversarial ranked attempt was not created");
+    }
+    await assertInsertRejected(
+      "leaderboard_entries: another user's unconsumed cross-config attempt must be rejected",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, attempt_id, attempt_formation_id, attempt_consumed_at, token, verified_score)
+          VALUES
+            (${lbSeason}, 'ranked', 'classic', 'squad_first', 'all_time', 'career', ${ownerId}::uuid, ${adversarialAttemptId}::uuid, '4-3-3', NOW(), ${`${lbToken}-adversarial-binding`}, 999)
+        `),
+      /leaderboard_entries_ranked_attempt_binding_fk|foreign key|23503/i,
+    );
+    // Review fix-forward: a successful ranked graph must not make session
+    // revocation fail. Both session references detach, while the attempt and
+    // public entry retain their exact composite binding. User ownership still
+    // cascades both artifacts, and direct attempt mutation/deletion remains
+    // restricted for the lifetime of the entry.
+    const rankedSessionId = `rollback-check-ranked-session-${Math.floor(performance.now()).toString()}`;
+    const rankedToken = `${lbToken}-ranked-lifecycle`;
+    await db.execute(sql`
+      INSERT INTO sessions (id, user_id, csrf_secret, expires_at)
+      VALUES (${rankedSessionId}, ${ownerId}::uuid, ${sessionCsrf}, NOW() + INTERVAL '1 hour')
+    `);
+    const lifecycleAttempts = await db.execute<{
+      id: string;
+      consumed_at: Date | string;
+    }>(sql`
+      INSERT INTO ranked_attempts
+        (user_id, session_id, season_key, formation_id, draft_mode, draft_order, era, rating_basis, issued_parent_seed, nonce, window_expires_at, consumed_at)
+      VALUES
+        (${ownerId}::uuid, ${rankedSessionId}, ${lbSeason}, '4-3-3', 'classic', 'squad_first', 'all_time', 'career', 'rollback-check-lifecycle-seed', 'rollback-check-lifecycle-nonce', NOW() + INTERVAL '10 minutes', NOW())
+      RETURNING id, consumed_at
+    `);
+    const lifecycleAttemptId = lifecycleAttempts.rows[0]?.id;
+    const lifecycleConsumedAt = lifecycleAttempts.rows[0]?.consumed_at;
+    if (!lifecycleAttemptId || lifecycleConsumedAt == null) {
+      throw new Error("[rollback-check] FATAL: ranked lifecycle attempt was not created");
+    }
+    await db.execute(sql`
+      INSERT INTO leaderboard_entries
+        (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, session_id, attempt_id, attempt_formation_id, attempt_consumed_at, token, verified_score)
+      VALUES
+        (${lbSeason}, 'ranked', 'classic', 'squad_first', 'all_time', 'career', ${ownerId}::uuid, ${rankedSessionId}, ${lifecycleAttemptId}::uuid, '4-3-3', ${lifecycleConsumedAt}, ${rankedToken}, 180)
+    `);
+
+    await db.execute(sql`DELETE FROM sessions WHERE id = ${rankedSessionId}`);
+    const lifecycleGraph = await db.execute<{
+      attempt_session_id: string | null;
+      entry_session_id: string | null;
+      session_deleted: boolean;
+      binding_intact: boolean;
+    }>(sql`
+      SELECT
+        attempt.session_id AS attempt_session_id,
+        entry.session_id AS entry_session_id,
+        NOT EXISTS (SELECT 1 FROM sessions WHERE id = ${rankedSessionId}) AS session_deleted,
+        (
+          entry.attempt_id = attempt.id
+          AND entry.user_id = attempt.user_id
+          AND entry.season_key = attempt.season_key
+          AND entry.attempt_formation_id = attempt.formation_id
+          AND entry.draft_mode = attempt.draft_mode
+          AND entry.draft_order = attempt.draft_order
+          AND entry.era = attempt.era
+          AND entry.rating_basis = attempt.rating_basis
+          AND entry.attempt_consumed_at = attempt.consumed_at
+        ) AS binding_intact
+      FROM leaderboard_entries AS entry
+      JOIN ranked_attempts AS attempt ON attempt.id = entry.attempt_id
+      WHERE entry.token = ${rankedToken}
+    `);
+    const lifecycleRow = lifecycleGraph.rows[0];
+    if (
+      lifecycleGraph.rows.length !== 1 ||
+      lifecycleRow?.attempt_session_id !== null ||
+      lifecycleRow.entry_session_id !== null ||
+      lifecycleRow.session_deleted !== true ||
+      lifecycleRow.binding_intact !== true
+    ) {
+      throw new Error(
+        "[rollback-check] FATAL: session deletion did not preserve the detached ranked binding",
+      );
+    }
+    console.log("  ✓ ranked lifecycle: session deleted; attempt + entry detached; binding intact");
+
+    await assertMutationRejected(
+      "ranked lifecycle: referenced attempt key mutation remains restricted",
+      () =>
+        db.execute(sql`
+          UPDATE ranked_attempts SET formation_id = '4-4-2'
+          WHERE id = ${lifecycleAttemptId}::uuid
+        `),
+      /leaderboard_entries_ranked_attempt_binding_fk|foreign key|23001|23503/i,
+    );
+    await assertMutationRejected(
+      "ranked lifecycle: direct referenced attempt deletion remains restricted",
+      () =>
+        db.execute(sql`
+          DELETE FROM ranked_attempts WHERE id = ${lifecycleAttemptId}::uuid
+        `),
+      /leaderboard_entries_ranked_attempt_binding_fk|foreign key|23001|23503/i,
+    );
+
+    await db.execute(sql`DELETE FROM users WHERE id = ${ownerId}::uuid`);
+    const userCascade = await db.execute<{
+      users: number;
+      sessions: number;
+      attempts: number;
+      entries: number;
+    }>(sql`
+      SELECT
+        (SELECT count(*)::integer FROM users WHERE id = ${ownerId}::uuid) AS users,
+        (SELECT count(*)::integer FROM sessions WHERE user_id = ${ownerId}::uuid) AS sessions,
+        (SELECT count(*)::integer FROM ranked_attempts WHERE id = ${lifecycleAttemptId}::uuid) AS attempts,
+        (SELECT count(*)::integer FROM leaderboard_entries WHERE token = ${rankedToken}) AS entries
+    `);
+    const cascadeRow = userCascade.rows[0];
+    if (
+      cascadeRow?.users !== 0 ||
+      cascadeRow.sessions !== 0 ||
+      cascadeRow.attempts !== 0 ||
+      cascadeRow.entries !== 0
+    ) {
+      throw new Error("[rollback-check] FATAL: user deletion did not cascade ranked graph cleanly");
+    }
+    console.log("  ✓ ranked lifecycle: user deletion cascades attempt + entry cleanly");
+
     // ON DELETE SET NULL semantics: board entries are public artifacts that
     // must SURVIVE session expiry/sweep (unlike cascading operational rows).
     // sessionB owns no leaderboard rows yet — bind one, delete the session,

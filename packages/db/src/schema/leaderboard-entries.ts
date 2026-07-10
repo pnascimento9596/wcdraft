@@ -51,7 +51,18 @@
 //     `challenge_date`, and `rating_version`. Existing rows default to
 //     season/null date. Daily rows are date-scoped, structurally casual-only,
 //     and unique by visible per-day identity instead of global token.
-import { pgTable, text, timestamp, uuid, integer, jsonb, index, check } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  integer,
+  jsonb,
+  index,
+  uniqueIndex,
+  foreignKey,
+  check,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users } from "./users.ts";
 import { sessions } from "./sessions.ts";
@@ -78,9 +89,12 @@ export const leaderboardEntries = pgTable(
     token: text("token").notNull(),
     verifiedScore: integer("verified_score").notNull(),
     scoreBreakdown: jsonb("score_breakdown"),
-    attemptId: uuid("attempt_id").references(() => rankedAttempts.id, {
-      onDelete: "set null",
-    }),
+    attemptId: uuid("attempt_id"),
+    // Persisted witnesses for the two attempt dimensions that the board did
+    // not already store. Migration 0012 combines these with user/season/full
+    // board config in a composite FK to a consumed ranked_attempts row.
+    attemptFormationId: text("attempt_formation_id"),
+    attemptConsumedAt: timestamp("attempt_consumed_at", { withTimezone: true }),
     hiddenAt: timestamp("hidden_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -128,6 +142,38 @@ export const leaderboardEntries = pgTable(
     index("leaderboard_entries_attempt_idx")
       .on(t.attemptId)
       .where(sql`${t.attemptId} IS NOT NULL`),
+    // Declares migration 0009's existing one-attempt/one-entry intent in the
+    // Drizzle schema so future generated migrations cannot silently drop it.
+    uniqueIndex("leaderboard_entries_ranked_attempt_uq")
+      .on(t.attemptId)
+      .where(sql`${t.attemptId} IS NOT NULL`),
+    foreignKey({
+      name: "leaderboard_entries_ranked_attempt_binding_fk",
+      columns: [
+        t.attemptId,
+        t.userId,
+        t.seasonKey,
+        t.attemptFormationId,
+        t.draftMode,
+        t.draftOrder,
+        t.era,
+        t.ratingBasis,
+        t.attemptConsumedAt,
+      ],
+      foreignColumns: [
+        rankedAttempts.id,
+        rankedAttempts.userId,
+        rankedAttempts.seasonKey,
+        rankedAttempts.formationId,
+        rankedAttempts.draftMode,
+        rankedAttempts.draftOrder,
+        rankedAttempts.era,
+        rankedAttempts.ratingBasis,
+        rankedAttempts.consumedAt,
+      ],
+    })
+      .onDelete("restrict")
+      .onUpdate("restrict"),
     check("leaderboard_entries_mode_chk", sql`${t.mode} IN ('casual', 'ranked')`),
     check("leaderboard_entries_challenge_type_chk", sql`${t.challengeType} IN ('season', 'daily')`),
     check(
@@ -183,6 +229,18 @@ export const leaderboardEntries = pgTable(
     check(
       "leaderboard_entries_ranked_attempt_chk",
       sql`${t.mode} <> 'ranked' OR ${t.attemptId} IS NOT NULL`,
+    ),
+    check(
+      "leaderboard_entries_ranked_attempt_binding_chk",
+      sql`${t.mode} <> 'ranked' OR (
+        ${t.attemptId} IS NOT NULL
+        AND ${t.userId} IS NOT NULL
+        AND ${t.attemptFormationId} IS NOT NULL
+        AND ${t.draftOrder} IS NOT NULL
+        AND ${t.era} IS NOT NULL
+        AND ${t.ratingBasis} IS NOT NULL
+        AND ${t.attemptConsumedAt} IS NOT NULL
+      )`,
     ),
   ],
 );

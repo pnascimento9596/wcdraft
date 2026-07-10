@@ -1152,8 +1152,11 @@ describe("ranked account gate", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]!.mode).toBe("ranked");
     expect(rows[0]!.userId).toBe(inserted[0]!.id);
-    expect(rows[0]!.attemptId).toBe((await allAttempts())[0]!.id);
-    expect((await allAttempts())[0]!.consumedAt).toBeInstanceOf(Date);
+    const attempt = (await allAttempts())[0]!;
+    expect(rows[0]!.attemptId).toBe(attempt.id);
+    expect(rows[0]!.attemptFormationId).toBe("4-3-3");
+    expect(rows[0]!.attemptConsumedAt).toEqual(attempt.consumedAt);
+    expect(attempt.consumedAt).toBeInstanceOf(Date);
   });
 
   it("account-bound ranked alias overrides username per entry", async () => {
@@ -1227,6 +1230,7 @@ describe("ranked account gate", () => {
   });
 
   it("account-bound ranked Memory submit ranks inside the Memory lane only", async () => {
+    const rivalConsumedAt = new Date(Date.now() - 2_000);
     const player = await db
       .insert(users)
       .values({
@@ -1257,6 +1261,7 @@ describe("ranked account gate", () => {
         issuedParentSeed: "memory-rival-seed",
         nonce: "nonce-rival-000000",
         windowExpiresAt: new Date(Date.now() + 60_000),
+        consumedAt: rivalConsumedAt,
       })
       .returning();
     await db.insert(leaderboardEntries).values({
@@ -1273,6 +1278,8 @@ describe("ranked account gate", () => {
       verifiedScore: -10,
       scoreBreakdown: [],
       attemptId: rivalAttempt[0]!.id,
+      attemptFormationId: "4-3-3",
+      attemptConsumedAt: rivalConsumedAt,
       createdAt: new Date(Date.now() - 1000),
     });
     const { sessionId, opts } = await sessionReqOpts(player[0]!.id);

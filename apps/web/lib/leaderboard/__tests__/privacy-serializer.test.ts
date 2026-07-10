@@ -8,6 +8,7 @@ const { db, pg, reset } = await setupTestDb();
 afterAll(async () => pg.close());
 
 let attemptSeq = 0;
+const ATTEMPT_CONSUMED_AT = new Date("2026-06-12T12:30:00.000Z");
 beforeEach(async () => {
   await reset();
   attemptSeq = 0;
@@ -30,6 +31,7 @@ async function issueRankedAttempt(userId: string, seed: string): Promise<string>
       nonce: `nonce-privacy-${String(attemptSeq).padStart(4, "0")}`,
       issuedAt: new Date("2026-06-12T12:00:00.000Z"),
       windowExpiresAt: new Date("2026-06-12T13:00:00.000Z"),
+      consumedAt: ATTEMPT_CONSUMED_AT,
     })
     .returning();
   return attempt!.id;
@@ -58,6 +60,8 @@ describe("leaderboard public serializers", () => {
         verifiedScore: 88,
         scoreBreakdown: [],
         attemptId,
+        attemptFormationId: "4-3-3",
+        attemptConsumedAt: ATTEMPT_CONSUMED_AT,
         createdAt: new Date("2026-06-12T12:00:00.000Z"),
       })
       .returning();
@@ -110,6 +114,8 @@ describe("leaderboard public serializers", () => {
         verifiedScore: 99,
         scoreBreakdown: [],
         attemptId: badAttemptId,
+        attemptFormationId: "4-3-3",
+        attemptConsumedAt: ATTEMPT_CONSUMED_AT,
         createdAt: new Date("2026-06-12T12:00:00.000Z"),
       },
       {
@@ -126,6 +132,8 @@ describe("leaderboard public serializers", () => {
         verifiedScore: 88,
         scoreBreakdown: [],
         attemptId: goodAttemptId,
+        attemptFormationId: "4-3-3",
+        attemptConsumedAt: ATTEMPT_CONSUMED_AT,
         createdAt: new Date("2026-06-12T12:00:01.000Z"),
       },
     ]);

@@ -9,11 +9,13 @@
 // 0004): server-issued single-use seeds tie to a USER, so `user_id` is
 // NOT NULL — the requirement is structural, not an application check. The
 // F-1 "one of user_id / session_id" convention is superseded. `session_id`
-// stays nullable as an optional record of the issuing session; its
-// ON DELETE CASCADE is acceptable because attempts are short-lived
-// operational rows (window_expires_at), unlike public board entries.
+// stays nullable as an optional record of the issuing session. Migration 0012
+// changes that FK to ON DELETE SET NULL: a consumed attempt may become the
+// durable parent of a public board entry, so session revocation must detach
+// provenance rather than cascade into the board-to-attempt RESTRICT edge.
+// Outstanding attempts remain user-owned and bounded by expiry/sweep.
 import { sql } from "drizzle-orm";
-import { pgTable, text, timestamp, uuid, index, check } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, index, uniqueIndex, check } from "drizzle-orm/pg-core";
 import { users } from "./users.ts";
 import { sessions } from "./sessions.ts";
 
@@ -25,7 +27,7 @@ export const rankedAttempts = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     sessionId: text("session_id").references(() => sessions.id, {
-      onDelete: "cascade",
+      onDelete: "set null",
     }),
     seasonKey: text("season_key").notNull(),
     formationId: text("formation_id").notNull(),
@@ -57,6 +59,20 @@ export const rankedAttempts = pgTable(
       t.era,
       t.ratingBasis,
       t.issuedAt,
+    ),
+    // Migration 0012 references the complete consumed-attempt identity from
+    // leaderboard_entries. `id` is already unique, but the wider key makes
+    // user/season/config/consumption equality a structural FK invariant.
+    uniqueIndex("ranked_attempts_binding_uq").on(
+      t.id,
+      t.userId,
+      t.seasonKey,
+      t.formationId,
+      t.draftMode,
+      t.draftOrder,
+      t.era,
+      t.ratingBasis,
+      t.consumedAt,
     ),
     check("ranked_attempts_season_key_chk", sql`char_length(${t.seasonKey}) BETWEEN 1 AND 256`),
     check("ranked_attempts_formation_id_chk", sql`char_length(${t.formationId}) BETWEEN 1 AND 64`),

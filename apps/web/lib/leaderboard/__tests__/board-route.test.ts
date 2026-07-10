@@ -79,7 +79,9 @@ async function seed(opts: SeedOpts): Promise<string> {
     userId = u!.id;
   }
   let attemptId: string | null = null;
+  let attemptConsumedAt: Date | null = null;
   if (mode === "ranked") {
+    attemptConsumedAt = new Date(BASE_MS + seq * 1000);
     const [attempt] = await db
       .insert(rankedAttempts)
       .values({
@@ -95,6 +97,7 @@ async function seed(opts: SeedOpts): Promise<string> {
         nonce: `nonce-${String(seq).padStart(16, "0")}`,
         issuedAt: new Date(BASE_MS),
         windowExpiresAt: new Date(BASE_MS + 86_400_000),
+        consumedAt: attemptConsumedAt,
       })
       .returning();
     attemptId = attempt!.id;
@@ -126,6 +129,8 @@ async function seed(opts: SeedOpts): Promise<string> {
       verifiedScore: opts.score,
       scoreBreakdown: [],
       attemptId,
+      attemptFormationId: attemptId === null ? null : "4-3-3",
+      attemptConsumedAt,
       hiddenAt: opts.hiddenAt ?? null,
       createdAt: new Date(BASE_MS + (opts.at ?? seq) * 1000),
     })

@@ -308,6 +308,8 @@ export async function handleLeaderboardSubmit(
                 verifiedScore: verdict.verified_score,
                 scoreBreakdown: verdict.score_breakdown,
                 attemptId: attempt.id,
+                attemptFormationId: verdict.token_body.fid,
+                attemptConsumedAt: attempt.consumedAt,
               },
               deps.now,
             );
@@ -331,6 +333,8 @@ export async function handleLeaderboardSubmit(
               verifiedScore: verdict.verified_score,
               scoreBreakdown: verdict.score_breakdown,
               attemptId: null,
+              attemptFormationId: null,
+              attemptConsumedAt: null,
             },
             deps.now,
           );

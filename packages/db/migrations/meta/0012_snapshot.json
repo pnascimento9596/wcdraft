@@ -1,6 +1,6 @@
 {
-  "id": "bbb19299-76e2-4863-8c9a-31fd07afb4c0",
-  "prevId": "d3070d79-4274-4a04-be90-b23a6f9939ab",
+  "id": "49b6a712-eba4-4607-a2bd-d7065ffee7fa",
+  "prevId": "470c5467-54d7-49e6-aca3-27dc97a0d90b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -24,6 +24,24 @@
         "username": {
           "name": "username",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password_set_at": {
+          "name": "password_set_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email_verified_at": {
+          "name": "email_verified_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
@@ -58,7 +76,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -149,8 +169,12 @@
           "name": "magic_link_tokens_user_id_users_id_fk",
           "tableFrom": "magic_link_tokens",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -234,8 +258,12 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -406,8 +434,12 @@
           "name": "saved_runs_owner_user_id_users_id_fk",
           "tableFrom": "saved_runs",
           "tableTo": "users",
-          "columnsFrom": ["owner_user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "owner_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -415,8 +447,12 @@
           "name": "saved_runs_session_id_sessions_id_fk",
           "tableFrom": "saved_runs",
           "tableTo": "sessions",
-          "columnsFrom": ["session_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -454,6 +490,42 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "season_key": {
+          "name": "season_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "formation_id": {
+          "name": "formation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "draft_mode": {
+          "name": "draft_mode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "draft_order": {
+          "name": "draft_order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "era": {
+          "name": "era",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rating_basis": {
+          "name": "rating_basis",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "issued_parent_seed": {
           "name": "issued_parent_seed",
@@ -529,6 +601,147 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "ranked_attempts_user_seed_idx": {
+          "name": "ranked_attempts_user_seed_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "issued_parent_seed",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ranked_attempts_user_config_idx": {
+          "name": "ranked_attempts_user_config_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "season_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "formation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_mode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "era",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rating_basis",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "issued_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ranked_attempts_binding_uq": {
+          "name": "ranked_attempts_binding_uq",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "season_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "formation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_mode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "era",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rating_basis",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "consumed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -536,8 +749,12 @@
           "name": "ranked_attempts_user_id_users_id_fk",
           "tableFrom": "ranked_attempts",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -545,16 +762,57 @@
           "name": "ranked_attempts_session_id_sessions_id_fk",
           "tableFrom": "ranked_attempts",
           "tableTo": "sessions",
-          "columnsFrom": ["session_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
+          "columnsFrom": [
+            "session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "ranked_attempts_season_key_chk": {
+          "name": "ranked_attempts_season_key_chk",
+          "value": "char_length(\"ranked_attempts\".\"season_key\") BETWEEN 1 AND 256"
+        },
+        "ranked_attempts_formation_id_chk": {
+          "name": "ranked_attempts_formation_id_chk",
+          "value": "char_length(\"ranked_attempts\".\"formation_id\") BETWEEN 1 AND 64"
+        },
+        "ranked_attempts_draft_mode_chk": {
+          "name": "ranked_attempts_draft_mode_chk",
+          "value": "\"ranked_attempts\".\"draft_mode\" IN ('classic', 'hidden')"
+        },
+        "ranked_attempts_draft_order_chk": {
+          "name": "ranked_attempts_draft_order_chk",
+          "value": "\"ranked_attempts\".\"draft_order\" IN ('squad_first', 'position_first')"
+        },
+        "ranked_attempts_era_chk": {
+          "name": "ranked_attempts_era_chk",
+          "value": "\"ranked_attempts\".\"era\" IN ('all_time', 'post_2000', 'post_2010', 'modern')"
+        },
+        "ranked_attempts_rating_basis_chk": {
+          "name": "ranked_attempts_rating_basis_chk",
+          "value": "\"ranked_attempts\".\"rating_basis\" IN ('career', 'current')"
+        },
+        "ranked_attempts_seed_chk": {
+          "name": "ranked_attempts_seed_chk",
+          "value": "char_length(\"ranked_attempts\".\"issued_parent_seed\") BETWEEN 1 AND 256"
+        },
+        "ranked_attempts_nonce_chk": {
+          "name": "ranked_attempts_nonce_chk",
+          "value": "char_length(\"ranked_attempts\".\"nonce\") BETWEEN 16 AND 128"
+        },
+        "ranked_attempts_window_chk": {
+          "name": "ranked_attempts_window_chk",
+          "value": "\"ranked_attempts\".\"window_expires_at\" > \"ranked_attempts\".\"issued_at\""
+        }
+      },
       "isRLSEnabled": false
     },
     "public.leaderboard_entries": {
@@ -574,6 +832,25 @@
           "primaryKey": false,
           "notNull": true
         },
+        "challenge_type": {
+          "name": "challenge_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'season'"
+        },
+        "challenge_date": {
+          "name": "challenge_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_version": {
+          "name": "rating_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "mode": {
           "name": "mode",
           "type": "text",
@@ -585,6 +862,24 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "draft_order": {
+          "name": "draft_order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "era": {
+          "name": "era",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_basis": {
+          "name": "rating_basis",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "user_id": {
           "name": "user_id",
@@ -628,6 +923,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "attempt_formation_id": {
+          "name": "attempt_formation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attempt_consumed_at": {
+          "name": "attempt_consumed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
         "hidden_at": {
           "name": "hidden_at",
           "type": "timestamp with time zone",
@@ -653,7 +960,37 @@
               "nulls": "last"
             },
             {
+              "expression": "challenge_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
               "expression": "mode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_mode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "era",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rating_basis",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -683,6 +1020,76 @@
           "method": "btree",
           "with": {}
         },
+        "leaderboard_entries_daily_top_idx": {
+          "name": "leaderboard_entries_daily_top_idx",
+          "columns": [
+            {
+              "expression": "challenge_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "challenge_date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "mode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_mode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "draft_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "era",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rating_basis",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "verified_score",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"leaderboard_entries\".\"hidden_at\" IS NULL AND \"leaderboard_entries\".\"challenge_type\" = 'daily'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "leaderboard_entries_session_idx": {
           "name": "leaderboard_entries_session_idx",
           "columns": [
@@ -698,6 +1105,72 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "leaderboard_entries_user_recent_idx": {
+          "name": "leaderboard_entries_user_recent_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "season_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "mode",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"leaderboard_entries\".\"user_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "leaderboard_entries_attempt_idx": {
+          "name": "leaderboard_entries_attempt_idx",
+          "columns": [
+            {
+              "expression": "attempt_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"leaderboard_entries\".\"attempt_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "leaderboard_entries_ranked_attempt_uq": {
+          "name": "leaderboard_entries_ranked_attempt_uq",
+          "columns": [
+            {
+              "expression": "attempt_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"leaderboard_entries\".\"attempt_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -705,8 +1178,12 @@
           "name": "leaderboard_entries_user_id_users_id_fk",
           "tableFrom": "leaderboard_entries",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -714,38 +1191,88 @@
           "name": "leaderboard_entries_session_id_sessions_id_fk",
           "tableFrom": "leaderboard_entries",
           "tableTo": "sessions",
-          "columnsFrom": ["session_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "leaderboard_entries_attempt_id_ranked_attempts_id_fk": {
-          "name": "leaderboard_entries_attempt_id_ranked_attempts_id_fk",
+        "leaderboard_entries_ranked_attempt_binding_fk": {
+          "name": "leaderboard_entries_ranked_attempt_binding_fk",
           "tableFrom": "leaderboard_entries",
           "tableTo": "ranked_attempts",
-          "columnsFrom": ["attempt_id"],
-          "columnsTo": ["id"],
-          "onDelete": "set null",
-          "onUpdate": "no action"
+          "columnsFrom": [
+            "attempt_id",
+            "user_id",
+            "season_key",
+            "attempt_formation_id",
+            "draft_mode",
+            "draft_order",
+            "era",
+            "rating_basis",
+            "attempt_consumed_at"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id",
+            "season_key",
+            "formation_id",
+            "draft_mode",
+            "draft_order",
+            "era",
+            "rating_basis",
+            "consumed_at"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "leaderboard_entries_dedupe_uq": {
-          "name": "leaderboard_entries_dedupe_uq",
-          "nullsNotDistinct": true,
-          "columns": ["season_key", "mode", "user_id", "token"]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
         "leaderboard_entries_mode_chk": {
           "name": "leaderboard_entries_mode_chk",
           "value": "\"leaderboard_entries\".\"mode\" IN ('casual', 'ranked')"
         },
+        "leaderboard_entries_challenge_type_chk": {
+          "name": "leaderboard_entries_challenge_type_chk",
+          "value": "\"leaderboard_entries\".\"challenge_type\" IN ('season', 'daily')"
+        },
+        "leaderboard_entries_daily_mode_chk": {
+          "name": "leaderboard_entries_daily_mode_chk",
+          "value": "\"leaderboard_entries\".\"challenge_type\" <> 'daily' OR \"leaderboard_entries\".\"mode\" = 'casual'"
+        },
+        "leaderboard_entries_challenge_date_chk": {
+          "name": "leaderboard_entries_challenge_date_chk",
+          "value": "(\n        \"leaderboard_entries\".\"challenge_type\" = 'season' AND \"leaderboard_entries\".\"challenge_date\" IS NULL\n      ) OR (\n        \"leaderboard_entries\".\"challenge_type\" = 'daily' AND \"leaderboard_entries\".\"challenge_date\" ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'\n      )"
+        },
+        "leaderboard_entries_rating_version_chk": {
+          "name": "leaderboard_entries_rating_version_chk",
+          "value": "\"leaderboard_entries\".\"rating_version\" IS NULL OR char_length(\"leaderboard_entries\".\"rating_version\") BETWEEN 1 AND 256"
+        },
         "leaderboard_entries_draft_mode_chk": {
           "name": "leaderboard_entries_draft_mode_chk",
           "value": "\"leaderboard_entries\".\"draft_mode\" IN ('classic', 'hidden')"
+        },
+        "leaderboard_entries_draft_order_chk": {
+          "name": "leaderboard_entries_draft_order_chk",
+          "value": "\"leaderboard_entries\".\"draft_order\" IS NULL OR \"leaderboard_entries\".\"draft_order\" IN ('squad_first', 'position_first')"
+        },
+        "leaderboard_entries_era_chk": {
+          "name": "leaderboard_entries_era_chk",
+          "value": "\"leaderboard_entries\".\"era\" IS NULL OR \"leaderboard_entries\".\"era\" IN ('all_time', 'post_2000', 'post_2010', 'modern')"
+        },
+        "leaderboard_entries_rating_basis_chk": {
+          "name": "leaderboard_entries_rating_basis_chk",
+          "value": "\"leaderboard_entries\".\"rating_basis\" IS NULL OR \"leaderboard_entries\".\"rating_basis\" IN ('career', 'current')"
+        },
+        "leaderboard_entries_config_complete_chk": {
+          "name": "leaderboard_entries_config_complete_chk",
+          "value": "(\n        \"leaderboard_entries\".\"draft_order\" IS NULL AND \"leaderboard_entries\".\"era\" IS NULL AND \"leaderboard_entries\".\"rating_basis\" IS NULL\n      ) OR (\n        \"leaderboard_entries\".\"draft_order\" IS NOT NULL AND \"leaderboard_entries\".\"era\" IS NOT NULL AND \"leaderboard_entries\".\"rating_basis\" IS NOT NULL\n      )"
         },
         "leaderboard_entries_display_alias_chk": {
           "name": "leaderboard_entries_display_alias_chk",
@@ -758,6 +1285,14 @@
         "leaderboard_entries_ranked_user_chk": {
           "name": "leaderboard_entries_ranked_user_chk",
           "value": "\"leaderboard_entries\".\"mode\" <> 'ranked' OR \"leaderboard_entries\".\"user_id\" IS NOT NULL"
+        },
+        "leaderboard_entries_ranked_attempt_chk": {
+          "name": "leaderboard_entries_ranked_attempt_chk",
+          "value": "\"leaderboard_entries\".\"mode\" <> 'ranked' OR \"leaderboard_entries\".\"attempt_id\" IS NOT NULL"
+        },
+        "leaderboard_entries_ranked_attempt_binding_chk": {
+          "name": "leaderboard_entries_ranked_attempt_binding_chk",
+          "value": "\"leaderboard_entries\".\"mode\" <> 'ranked' OR (\n        \"leaderboard_entries\".\"attempt_id\" IS NOT NULL\n        AND \"leaderboard_entries\".\"user_id\" IS NOT NULL\n        AND \"leaderboard_entries\".\"attempt_formation_id\" IS NOT NULL\n        AND \"leaderboard_entries\".\"draft_order\" IS NOT NULL\n        AND \"leaderboard_entries\".\"era\" IS NOT NULL\n        AND \"leaderboard_entries\".\"rating_basis\" IS NOT NULL\n        AND \"leaderboard_entries\".\"attempt_consumed_at\" IS NOT NULL\n      )"
         }
       },
       "isRLSEnabled": false
@@ -814,7 +1349,10 @@
       "compositePrimaryKeys": {
         "auth_rate_limits_pk": {
           "name": "auth_rate_limits_pk",
-          "columns": ["bucket_key", "window_start"]
+          "columns": [
+            "bucket_key",
+            "window_start"
+          ]
         }
       },
       "uniqueConstraints": {},

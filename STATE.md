@@ -4,6 +4,83 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 B3 ranked-attempt structural binding:
+2026-07-10 · RED implementation on branch
+`ws-f4/audit-s1-ranked-binding`, initially based on `origin/main`
+`de7e7095be4f352f38671826bca85c761039846c` and rebased without code conflicts
+onto C1-shipped `origin/main`
+`41a6ffaeb72202db4f530a39ac8f7b9847f62ddc`, then D2-shipped `origin/main`
+`50184ef9a346912b5338b2a8a4fe42361bfea45e`. Migration
+`0012_ranked_attempt_structural_binding` persists the attempt formation and
+consumption timestamp on attempt-backed leaderboard rows, deriving both from
+the referenced attempt for historical rows. Together with the leaderboard's
+existing user, season, and full draft-config columns, those witnesses form a
+restrictive composite foreign key to a unique consumed-attempt key. A
+ranked-only complete-binding check prevents `MATCH SIMPLE` null bypasses for
+new writes; attempt-less Casual rows remain null and unchanged. The first
+exact-head ephemeral-Neon run proved production-derived history also contains
+pre-binding Ranked rows without complete attempt witnesses (SQLSTATE `23514`).
+Both new constraints are therefore installed `NOT VALID`: PostgreSQL preserves
+those rows without deletion or fabricated binding data while still rejecting
+every violating `INSERT` or `UPDATE`. Their unvalidated status is explicit
+legacy debt; attempt-backed rows that can be derived are backfilled and every
+accepted post-0012 Ranked row is structurally bound. This declarative design
+was chosen over a leaderboard-only trigger because it also prevents a later
+attempt update or delete from invalidating an accepted ranked row. Independent
+Red review at exact head `d1779b8b6a42203fac979d8369bc818b37f51efe`
+correctly returned FAIL: the prior cascade from nullable
+`ranked_attempts.session_id` to `sessions` tried to delete a now-durable attempt
+during ordinary session revocation, which the board binding rejected with
+SQLSTATE `23001`. The fix-forward changes that provenance FK to SET NULL on
+delete, so session deletion detaches both the attempt and board row while
+preserving their binding; direct attempt mutation/deletion remains restricted
+and user deletion still cascades both artifacts. Outstanding attempts also
+detach and remain user-owned until their bounded expiry/sweep. The 0012 down
+restores the exact pre-0012 session cascade plus the prior single-column
+board-attempt FK and deletes no rows. Drizzle intent now declares migration
+0009's existing partial unique attempt index; missing snapshots 0008 through 0012 were
+reconstructed, and the pre-existing broken 0004-to-0005 snapshot link was
+repaired. Drizzle-kit parity at reviewed replacement code head
+`697b52cd784d9d2e3378b8ef5dd35a2f8a336ae5` reported no schema changes. The
+first Neon run created and deleted its branch despite the legacy-data failure;
+replacement run `29109029455` at `d1779b8b` later passed all 13 ups, the
+adversarial probe, all 13 downs, empty-schema assertion, branch cleanup, and
+required aggregate, but that exact head is void after the independent lifecycle
+FAIL. Baseline local validation before that review passed: frozen install
+already up to date; focused DB tests (3 files / 117 tests); directly affected
+web tests (5 files / 94 tests); root
+typecheck (8/8, 5 cached), lint (5/5, 3 cached), test (8/8, 6 cached before the
+NOT VALID fix-forward: changed DB 3 files / 116 tests, changed web 88 files
+passed / 1 skipped and 933 tests passed / 1 skipped, game-flow Playwright PASS,
+responsive desktop 84/0, mobile 56/0, interaction targets 40/0), and production
+build (4/4, 3 cached, changed web build emitted 40/40 pages and `/api/health`);
+affected leaderboard golden (1 file / 6 tests, 3 cached prerequisite tasks); and
+the DB readiness CI contract (6 behavior / 6 workflow paths / 8 bindings).
+Lifecycle fix-forward validation now passes: focused DB migration/PGlite/schema
+tests (3 files / 119 tests, including the all-13 session/delete/mutation/user
+cascade graph and down-FK action); affected auth/leaderboard tests (7 files /
+106 tests); direct DB and web `tsc --noEmit`; DB and web ESLint; drizzle-kit
+current-snapshot parity; targeted Prettier; and `git diff --check`. Exact-head
+CI run `29111268384` at `697b52c` completed PASS with the required aggregate,
+static/contracts, golden, typecheck/lint/test/build, database, secrets,
+GitGuardian, and Vercel checks green; path-gated ETL, realism, and ingest jobs
+skipped as expected. Ephemeral-Neon job `86425533042` reported
+`applied=13 pending=0 total=13`, rejected the cross-user/unconsumed/cross-config
+attempt, proved session deletion detached attempt and entry while preserving
+the binding, kept referenced-key mutation and direct attempt deletion
+restricted, proved user cascade, ran all 13 downs, asserted an empty schema,
+and deleted its branch. Independent Red re-review report
+`audit-s1-b3-final-rereview-697b52c.md` returned PASS at the exact replacement
+head after an independent adversarial matrix, 13/13 ups and downs, focused DB
+119/119, affected web 106/106, leaderboard golden 6/6, root uncached typecheck
+8/8, lint 5/5, build 4/4 with 40/40 pages, and root uncached test 8/8 in
+8m50.877s (core 391, data 162 passed / 9 skipped, DB 119, marketing 68, web 933
+passed / 1 skipped, responsive 180 metrics / 0 failures). Replacement GLM 5.2
+report `audit-s1-crossmodel-b3-697b52c.md` also returned PASS from a fresh clone
+after frozen install, DB 119/119, DB typecheck, diff check, and exact head/base
+verification. Heavy realism was not run because no engine, rating, simulation,
+or runtime-data artifact changed.
+
 Audit S1 B4 deploy/migration readiness:
 2026-07-10 · RED implementation on branch `ws-f4/audit-s1-health-readiness`,
 based on `origin/main` `f9ea1a5c3893a9e34e4fc8d67465c1385b79bfbe`. The committed Drizzle

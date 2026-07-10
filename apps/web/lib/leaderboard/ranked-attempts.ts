@@ -88,7 +88,7 @@ export async function consumeRankedAttempt(
   db: Db,
   args: ConsumeRankedAttemptArgs,
   now: () => number,
-): Promise<{ id: string } | null> {
+): Promise<{ id: string; consumedAt: Date } | null> {
   const at = new Date(now());
   const result = await db.execute<{ id: string }>(sql`
     UPDATE ${rankedAttempts}
@@ -111,7 +111,8 @@ export async function consumeRankedAttempt(
      )
      RETURNING id
   `);
-  return result.rows[0] ?? null;
+  const row = result.rows[0];
+  return row ? { id: row.id, consumedAt: at } : null;
 }
 
 export async function findExistingRankedAttemptEntry(

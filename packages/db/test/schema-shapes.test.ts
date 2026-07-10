@@ -177,6 +177,8 @@ describe("@wcdraft/db schema — shape", () => {
       verifiedScore: number;
       scoreBreakdown: unknown;
       attemptId: string | null;
+      attemptFormationId: string | null;
+      attemptConsumedAt: Date | null;
       hiddenAt: Date | null;
       createdAt: Date;
     }>();
@@ -191,6 +193,8 @@ describe("@wcdraft/db schema — shape", () => {
       era?: string | null;
       ratingBasis?: string | null;
       displayAlias?: string | null;
+      attemptFormationId?: string | null;
+      attemptConsumedAt?: Date | null;
       token: string;
       verifiedScore: number;
     }>();

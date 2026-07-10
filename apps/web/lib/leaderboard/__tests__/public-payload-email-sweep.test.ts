@@ -340,6 +340,7 @@ describe("public route payload email sweep", () => {
           nonce: "nonce-classic-route",
           issuedAt: new Date(NOW),
           windowExpiresAt: new Date(NOW + 60_000),
+          consumedAt: new Date(NOW),
         },
         {
           userId: user!.id,
@@ -354,6 +355,7 @@ describe("public route payload email sweep", () => {
           nonce: "nonce-memory-route0",
           issuedAt: new Date(NOW),
           windowExpiresAt: new Date(NOW + 60_000),
+          consumedAt: new Date(NOW),
         },
       ])
       .returning();
@@ -373,6 +375,8 @@ describe("public route payload email sweep", () => {
         verifiedScore: 88,
         scoreBreakdown: [],
         attemptId: classicAttempt!.id,
+        attemptFormationId: "4-3-3",
+        attemptConsumedAt: new Date(NOW),
         createdAt: new Date(NOW - 5_000),
       },
       {
@@ -389,6 +393,8 @@ describe("public route payload email sweep", () => {
         verifiedScore: 77,
         scoreBreakdown: [],
         attemptId: memoryAttempt!.id,
+        attemptFormationId: "4-3-3",
+        attemptConsumedAt: new Date(NOW),
         createdAt: new Date(NOW - 4_000),
       },
       {
