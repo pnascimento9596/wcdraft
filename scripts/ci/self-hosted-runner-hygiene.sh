@@ -58,6 +58,11 @@ safe_remove_runner_path() {
   rm -rf -- "$candidate"
 }
 
+scrub_job_temp_files() {
+  safe_remove_runner_path "$runner_temp/gitleaks.tmp"
+  rm -f -- "$runner_temp/neon-ephemeral.env" "$runner_temp"/realism-*.log
+}
+
 free_kb() {
   df -Pk "$work_root" | awk 'NR == 2 { print $4 }'
 }
@@ -67,6 +72,8 @@ if [ "$phase" = "start" ]; then
     echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
     exit 1
   fi
+
+  scrub_job_temp_files
 
   before_kb="$(free_kb)"
   echo "runner-hygiene: free_kb=$before_kb threshold_kb=$threshold_kb"
@@ -107,7 +114,7 @@ if [ "$phase" = "start" ]; then
 fi
 
 if [ "$phase" = "finish" ]; then
-  rm -f -- "$runner_temp/neon-ephemeral.env" "$runner_temp"/realism-*.log
+  scrub_job_temp_files
   if git -C "$workspace" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     git -C "$workspace" reset --hard HEAD
     git -C "$workspace" clean -ffdx

@@ -30,6 +30,7 @@ jobs:
   changes:
     name: changes · ETL path detector
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    if: ${{ github.actor != 'dependabot[bot]' }}
     outputs:
       ci_config: ${{ steps.filter.outputs.ci_config }}
       etl: ${{ steps.filter.outputs.etl }}
