@@ -65,6 +65,29 @@ records for all three identify `readyState=ERROR`,
 first two and `edf83c6` for the third. These are Vercel build-container
 credential-initialization failures, not product-build verdicts. The exact-head
 Vercel check remains externally failed; no further preview retry is performed.
+After PR #238 squash-merged as
+`95c4cd99d91e5353476e8b465a67b69077151433`, production migration dispatch run
+`29125250786` failed safely in the first SHA-binding step with exit 128:
+`git ls-remote origin` could not authenticate to the private repository because
+checkout intentionally uses `persist-credentials:false`. Setup, journal
+resolution, Neon target resolution, database preflight, final revalidation,
+migration, and postflight were all skipped; protected-receipt cleanup passed.
+The workflow never reached Neon and made no database mutation, so production
+remained at migration `0011`. The auth fix-forward on fresh branch
+`ws-f4/audit-s1-production-migrate-auth`, based on exact current main `95c4cd9`,
+replaces both unauthenticated Git queries with the repository Git-ref API. Each
+query receives `${{ github.token }}` only through its own step environment,
+while workflow permissions remain `contents: read`; a Node helper keeps the
+token out of command arguments, Git config, outputs, summaries, and logs. It
+accepts only HTTP success with the exact `refs/heads/<default>` identity and a
+lowercase 40-character object SHA. The executable contract forbids
+`git ls-remote`, requires exactly two authenticated API invocations and token
+scopes in the existing safety order, and exercises one success plus five
+fail-closed HTTP/schema/token cases. Narrow auth-fix validation passed the ref
+helper matrix, the full production-migration workflow contract, Node and Bash
+syntax, actionlint 1.7.12, full repository Prettier, and `git diff --check`.
+No product, schema, migration, runtime-data, rating, simulation, or ETL file
+changed; broad exact-head CI and fresh independent Red review remain required.
 
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch
