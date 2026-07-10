@@ -723,8 +723,10 @@ current pin on overlap):
 Data/bundle anchors:
 `draft-pool.compact.json` raw bytes `130,545,042` with sha256
 `461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a`;
-draft-pool manifest Brotli bucket `2,224,896` (copied `.br` bytes `2,224,859`);
-manifest sha256 `2d475e8f0224e320cb51ce870280dc0016d51456cd96ce3ecddad8d49d218fd4`.
+draft-pool canonical `.br` bytes `2,224,859`; legacy three-file Brotli total
+(manifest + draft + scenario) `2,231,500`; all five tracked `.br` repository
+artifacts total `2,233,894`; raw manifest sha256
+`aa70f018471e9c4091323b6e441ae309ddfa0bb86f7831b547cdffe4739bdad7`.
 `scenario-2026.compact.json` raw bytes `108,775` with sha256
 `7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398`.
 Runtime data delivery is versioned at `/data/wcdraft/runtime-data-2.9.0/`, with
@@ -912,9 +914,10 @@ broken-pipe MCP transport error.
 | Career basis counts            | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
 | career-stature table           | 847 players · 209 material · 114 source-derived legends                                                                                   |
 | explicit leaderboard season id | season-2026-manager-attrition                                                                                                             |
-| compact brotli total           | 2,231,296 measured bytes                                                                                                                  |
-| served draft-pool br artifact  | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; manifest bucket `2,224,896`; decompressed sha `461601…` |
-| compact sha256                 | manifest `2d475e8f…` · draft `461601…` · scenario `7846fa3a…`                                                                             |
+| compact brotli total (legacy 3-file) | 2,231,500 measured bytes (manifest + draft + scenario)                                                                                    |
+| all tracked compact `.br` total      | 2,233,894 repository bytes (manifest + draft + scenario + score distribution + daily seed map)                                            |
+| served draft-pool br artifact        | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; decompressed sha `461601…`                               |
+| compact sha256                       | manifest `aa70f018…` · draft `461601…` · scenario `7846fa3a…`                                                                             |
 | generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes                                  |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)

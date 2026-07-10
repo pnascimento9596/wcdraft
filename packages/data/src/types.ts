@@ -117,26 +117,29 @@ export interface RuntimeAttribution {
 
 // ─── Bundle hash/size record ─────────────────────────────────────────────────
 
-/**
- * Verifiable fingerprint of an emitted bundle file. The builder stamps these
- * into `RuntimeDataManifest.bundles`; the integrity test asserts the on-disk
- * files match.
- */
-export interface RuntimeBundleFingerprint {
+/** Legacy fingerprint fields present since `runtime-data-2.9.0` was published. */
+export interface RuntimeBundleFingerprintCore {
   /** Path relative to the manifest file (e.g. "draft-pool.compact.json"). */
   path: string;
   /** Compatibility alias for raw_sha256. */
   sha256: string;
-  /** Hex-encoded SHA-256 of the canonical raw JSON bytes. */
-  raw_sha256: string;
-  /** Hex-encoded SHA-256 of the canonical `${path}.br` bytes. */
-  compressed_sha256: string;
   /** Raw byte length on disk. */
   bytes: number;
   /** Gzip-compressed byte length (level 9, smallest, deterministic). */
   bytes_gzip: number;
   /** Compatibility alias for compressed_bytes; exact, never bucketed. */
   bytes_brotli: number;
+}
+
+/**
+ * Exact materialization metadata added after the first `runtime-data-2.9.0`
+ * manifest was published. These fields are an all-or-none group on the wire.
+ */
+export interface RuntimeBundleMaterializationMetadata {
+  /** Hex-encoded SHA-256 of the canonical raw JSON bytes. */
+  raw_sha256: string;
+  /** Hex-encoded SHA-256 of the canonical `${path}.br` bytes. */
+  compressed_sha256: string;
   /** Exact byte length of the canonical `${path}.br` artifact. */
   compressed_bytes: number;
   /** Brotli implementation version that produced the canonical artifact. */
@@ -148,6 +151,31 @@ export interface RuntimeBundleFingerprint {
     size_hint: number;
   };
 }
+
+/** Exact fingerprint emitted by current builders and required by build/copy gates. */
+export interface MaterializedRuntimeBundleFingerprint
+  extends RuntimeBundleFingerprintCore, RuntimeBundleMaterializationMetadata {}
+
+/**
+ * Fingerprint shape accepted from the already-published pre-materialization
+ * manifest. Unknown materialization facts stay absent rather than fabricated.
+ */
+export interface LegacyRuntimeBundleFingerprint extends RuntimeBundleFingerprintCore {
+  raw_sha256?: undefined;
+  compressed_sha256?: undefined;
+  compressed_bytes?: undefined;
+  brotli_impl_version?: undefined;
+  options?: undefined;
+}
+
+/**
+ * Browser-visible bundle fingerprint. Current manifests carry the complete
+ * materialization block; the original `runtime-data-2.9.0` payload carries
+ * only the legacy core. Runtime parsing rejects every partial combination.
+ */
+export type RuntimeBundleFingerprint =
+  | LegacyRuntimeBundleFingerprint
+  | MaterializedRuntimeBundleFingerprint;
 
 // ─── Reference score distribution ────────────────────────────────────────────
 

@@ -23,7 +23,7 @@ import { fileURLToPath } from "node:url";
 import { brotliDecompressSync } from "node:zlib";
 
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
-import type { RuntimeBundleFingerprint, RuntimeDataManifest } from "../src/types.js";
+import type { MaterializedRuntimeBundleFingerprint, RuntimeDataManifest } from "../src/types.js";
 
 const TEST_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PACKAGE_DIR = path.resolve(TEST_DIR, "..");
@@ -50,7 +50,7 @@ interface SizeBudget {
 }
 
 interface SizeReport {
-  bundles: Record<string, RuntimeBundleFingerprint>;
+  bundles: Record<string, MaterializedRuntimeBundleFingerprint>;
   total_brotli_bytes: number;
   total_gzip_bytes: number;
   total_raw_bytes: number;

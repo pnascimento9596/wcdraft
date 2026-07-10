@@ -60,13 +60,32 @@ function requireFingerprint(value: unknown, label: string, path: string): void {
   const fp = requireRecord(value, label, path);
   requireString(fp.path, label, `${path}.path`);
   const sha256 = requireString(fp.sha256, label, `${path}.sha256`);
-  const rawSha256 = requireString(fp.raw_sha256, label, `${path}.raw_sha256`);
-  requireString(fp.compressed_sha256, label, `${path}.compressed_sha256`);
-  requireString(fp.brotli_impl_version, label, `${path}.brotli_impl_version`);
   const bytes = requireNumber(fp.bytes, label, `${path}.bytes`);
   requireNumber(fp.bytes_gzip, label, `${path}.bytes_gzip`);
   const bytesBrotli = requireNumber(fp.bytes_brotli, label, `${path}.bytes_brotli`);
+
+  const materializationFields = [
+    "raw_sha256",
+    "compressed_sha256",
+    "compressed_bytes",
+    "brotli_impl_version",
+    "options",
+  ] as const;
+  const presentFields = materializationFields.filter((field) => Object.hasOwn(fp, field));
+  if (presentFields.length === 0) return;
+  if (presentFields.length !== materializationFields.length) {
+    const missingFields = materializationFields.filter((field) => !Object.hasOwn(fp, field));
+    fail(
+      label,
+      path,
+      `materialization metadata must be all-or-none; missing ${missingFields.join(", ")}`,
+    );
+  }
+
+  const rawSha256 = requireString(fp.raw_sha256, label, `${path}.raw_sha256`);
+  requireString(fp.compressed_sha256, label, `${path}.compressed_sha256`);
   const compressedBytes = requireNumber(fp.compressed_bytes, label, `${path}.compressed_bytes`);
+  requireString(fp.brotli_impl_version, label, `${path}.brotli_impl_version`);
   const options = requireRecord(fp.options, label, `${path}.options`);
   if (options.quality !== 11) fail(label, `${path}.options.quality`, "expected 11");
   if (options.mode !== "text") fail(label, `${path}.options.mode`, 'expected "text"');
