@@ -60,6 +60,7 @@ import { MiniNationFlag } from "../mini-nation-flag";
 import { SpinStage, skipSpinAnimState, type SpinAnimState } from "../slot-machine";
 import { SynergyBar } from "../synergy-bar";
 import { GameFallback } from "../game-fallback";
+import { DailyUnavailableNotice } from "../daily-unavailable-notice";
 import { LocalProgressBandWithVersions, type FriendRunContext } from "../local-progress-band";
 import { DraftAppBar } from "./app-bar";
 import { TOTAL_SPINS } from "./constants";
@@ -145,6 +146,16 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   // ── Sub-renderers per mode ───────────────────────────────────────────────
   if (mode.kind === "loading") {
     return <DraftLoadingShell />;
+  }
+
+  if (mode.kind === "daily_unavailable") {
+    return (
+      <div className={s.draftShell}>
+        <h1 className="visually-hidden">Daily Draft unavailable</h1>
+        <DraftAppBar spinNumber={null} progressPct={0} />
+        <DailyUnavailableNotice />
+      </div>
+    );
   }
 
   if (mode.kind === "error") {

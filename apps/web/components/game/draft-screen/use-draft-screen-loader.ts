@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import { loadGameData, type GameData } from "@/lib/game/data";
-import { DAILY_DRAFT_CONFIG, dailyChallengeForDate } from "@/lib/game/daily";
+import { DAILY_DRAFT_CONFIG, dailyChallengeForDate, dailyCoverageForDate } from "@/lib/game/daily";
 import { describeGameError } from "@/lib/game/errors";
 import {
   createNewRunRecord,
@@ -21,6 +21,7 @@ import { VOLATILE_STORAGE_WARNING } from "./constants";
 
 export type DraftScreenMode =
   | { kind: "loading" }
+  | { kind: "daily_unavailable" }
   | { kind: "formation_select"; gameData: GameData }
   | {
       kind: "ready";
@@ -81,6 +82,10 @@ export function useDraftScreenLoader(
             });
           }
         } else if (opts.dailyDate) {
+          if (!dailyCoverageForDate(opts.dailyDate, gd.dailySeedSaltMap).covered) {
+            setMode({ kind: "daily_unavailable" });
+            return;
+          }
           const challenge = dailyChallengeForDate(opts.dailyDate, gd.dailySeedSaltMap);
           const created = createNewRunRecord(gd, {
             formation_id: DAILY_DRAFT_CONFIG.formationId,

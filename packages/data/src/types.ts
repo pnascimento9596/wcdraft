@@ -145,6 +145,13 @@ export interface RuntimeBundleFingerprint {
  */
 export const SCORE_DISTRIBUTION_SCHEMA_VERSION = "score-distribution-1.0.0" as const;
 export const DAILY_SEED_SALT_MAP_SCHEMA_VERSION = "daily-seed-salt-map-1.0.0" as const;
+/**
+ * Daily-v1 builder policy. Candidate 0 is unsalted; later candidates use
+ * suffixes 2 through this inclusive upper bound. Runtime validation shares
+ * this bound so historical local records cannot smuggle arbitrary suffixes
+ * when their original rolling salt map is no longer available.
+ */
+export const DAILY_SEED_MAX_SALT_ATTEMPTS = 8 as const;
 
 /**
  * Anchors stamped into the score-distribution artifact at generation time.

@@ -49,7 +49,7 @@ import { buildSimWorldInputs } from "../game/simulate";
 import {
   DAILY_CHALLENGE_KIND,
   SEASON_CHALLENGE_KIND,
-  deriveDailySeed,
+  dailyCoverageForDate,
   isCanonicalDailyConfig,
   isDailyChallengeDate,
   type LeaderboardChallengeKind,
@@ -67,6 +67,7 @@ export type SubmitRejectionCode =
   | "TOKEN_TOO_LARGE"
   | "MALFORMED_TOKEN"
   | "WRONG_SEASON"
+  | "DAILY_UNAVAILABLE"
   | "INVALID_NAME"
   | "ILLEGAL_PICK"
   | "SIM_FAILURE"
@@ -94,6 +95,7 @@ export const SUBMIT_ERROR_HTTP_STATUS: Readonly<Record<SubmitErrorCode, number>>
   TOKEN_TOO_LARGE: 400,
   MALFORMED_TOKEN: 400,
   WRONG_SEASON: 409,
+  DAILY_UNAVAILABLE: 409,
   AUTH_REQUIRED: 401,
   VERIFICATION_REQUIRED: 403,
   CSRF_FAILED: 403,
@@ -293,7 +295,14 @@ function submissionPreflight(
     if (tokenChallenge.d !== challenge.date || tokenChallenge.s !== token.ps) {
       return rejected("INVALID_BODY", "daily token date/seed does not match the submission");
     }
-    if (tokenChallenge.s !== deriveDailySeed(tokenChallenge.d, data.gameData.dailySeedSaltMap)) {
+    const coverage = dailyCoverageForDate(tokenChallenge.d, data.gameData.dailySeedSaltMap);
+    if (!coverage.covered) {
+      return rejected(
+        "DAILY_UNAVAILABLE",
+        "daily submissions are unavailable outside the published UTC coverage window",
+      );
+    }
+    if (tokenChallenge.s !== coverage.seed) {
       return rejected("INVALID_BODY", "daily token seed does not match the UTC date");
     }
     if (

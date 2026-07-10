@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { DraftMode } from "@wcdraft/core";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
+import { loadDailyAvailability } from "@/lib/game/data";
+import { utcDateString } from "@/lib/game/daily";
+import { DAILY_UNAVAILABLE_TITLE, DailyUnavailableNotice } from "./daily-unavailable-notice";
 import { LocalProgressBandFromStorage } from "./local-progress-band";
 import s from "./game.module.css";
 
 type PlayMode = "daily" | DraftMode;
+type DailyAvailabilityState = "checking" | "available" | "unavailable";
 
 const MODE_COPY: Record<
   PlayMode,
@@ -82,7 +86,18 @@ const MODE_COPY: Record<
 export function ModeSelect() {
   const router = useRouter();
   const [mode, setMode] = useState<PlayMode>("daily");
+  const [dailyAvailability, setDailyAvailability] = useState<DailyAvailabilityState>("checking");
   const selected = MODE_COPY[mode];
+
+  useEffect(() => {
+    let active = true;
+    void loadDailyAvailability(utcDateString()).then((available) => {
+      if (active) setDailyAvailability(available ? "available" : "unavailable");
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <>
@@ -91,6 +106,8 @@ export function ModeSelect() {
         {(Object.keys(MODE_COPY) as PlayMode[]).map((key) => {
           const item = MODE_COPY[key];
           const on = mode === key;
+          const checking = key === "daily" && dailyAvailability === "checking";
+          const unavailable = key === "daily" && dailyAvailability === "unavailable";
           return (
             <button
               key={key}
@@ -118,10 +135,18 @@ export function ModeSelect() {
                 </span>
                 <span className={s.modeName}>{item.title}</span>
               </span>
-              <span className={s.modeDesc}>{item.desc}</span>
-              <span className={s.modePreview}>{item.preview}</span>
+              <span className={s.modeDesc}>
+                {unavailable
+                  ? DAILY_UNAVAILABLE_TITLE
+                  : checking
+                    ? "Checking today's Daily…"
+                    : item.desc}
+              </span>
+              <span className={s.modePreview}>
+                {unavailable ? "DAILY · PAUSED" : checking ? "DAILY · CHECKING" : item.preview}
+              </span>
               <span className={s.modeFeatures}>
-                {item.chips.map((chip) => (
+                {(unavailable || checking ? ["Other modes ready"] : item.chips).map((chip) => (
                   <span key={chip} className={s.modeFeatureChip}>
                     <span className={s.modeFeatureDot} aria-hidden="true" />
                     {chip}
@@ -129,22 +154,45 @@ export function ModeSelect() {
                 ))}
               </span>
               <span className={s.modeCardBottom}>
-                <span className={s.modeCta}>{item.cta} →</span>
+                <span className={s.modeCta}>
+                  {unavailable
+                    ? "Unavailable today"
+                    : checking
+                      ? "Checking availability"
+                      : item.cta}
+                  {unavailable || checking ? "" : " →"}
+                </span>
                 {on ? <span className={s.modeSelectedText}>Selected</span> : null}
               </span>
             </button>
           );
         })}
       </div>
-      <div className={s.modeDock}>
-        <button
-          type="button"
-          className="btn btn--primary"
-          onClick={() => router.push(selected.href)}
-        >
-          {selected.featured ? selected.cta : `Continue with ${selected.title}`} →
-        </button>
-      </div>
+      {mode === "daily" && dailyAvailability === "unavailable" ? (
+        <div className={s.modeDock}>
+          <DailyUnavailableNotice />
+        </div>
+      ) : mode === "daily" && dailyAvailability === "checking" ? (
+        <div className={s.modeDock}>
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => router.push("/play/draft")}
+          >
+            Play Classic while we check →
+          </button>
+        </div>
+      ) : (
+        <div className={s.modeDock}>
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => router.push(selected.href)}
+          >
+            {selected.featured ? selected.cta : `Continue with ${selected.title}`} →
+          </button>
+        </div>
+      )}
     </>
   );
 }

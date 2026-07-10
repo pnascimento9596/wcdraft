@@ -156,7 +156,9 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
   });
 
   it("round-trips daily challenge metadata into token-loaded virtual records", () => {
-    const challenge = dailyChallengeForDate("2026-06-29");
+    const saltMap = gameData.dailySeedSaltMap;
+    if (saltMap === null) throw new Error("daily salt map fixture is missing");
+    const challenge = dailyChallengeForDate(saltMap.window.start_date, saltMap);
     const record = {
       ...buildOriginRecord(gameData, challenge.seed),
       parent_seed: challenge.seed,
@@ -164,7 +166,7 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
     };
     const decoded = decodeRunToken(encodeRunToken(record));
     if (decoded === null || decoded.v !== 3) throw new Error("daily token did not decode as t3");
-    expect(decoded.ch).toEqual({ k: "daily", d: "2026-06-29", s: challenge.seed });
+    expect(decoded.ch).toEqual({ k: "daily", d: challenge.date, s: challenge.seed });
 
     const virtual = virtualRecordFromToken(decoded, gameData);
     expect(virtual.parent_seed).toBe(challenge.seed);
@@ -173,7 +175,9 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
   });
 
   it("does not render forged daily metadata when seed/date derivation disagrees", () => {
-    const challenge = dailyChallengeForDate("2026-06-29");
+    const saltMap = gameData.dailySeedSaltMap;
+    if (saltMap === null) throw new Error("daily salt map fixture is missing");
+    const challenge = dailyChallengeForDate(saltMap.window.start_date, saltMap);
     const record = {
       ...buildOriginRecord(gameData, challenge.seed),
       parent_seed: challenge.seed,
@@ -183,7 +187,7 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
     if (body.v !== 3) throw new Error("daily token did not encode as t3");
     const forged = {
       ...body,
-      ch: { k: "daily" as const, d: "2026-06-30", s: challenge.seed },
+      ch: { k: "daily" as const, d: saltMap.dates[1]!.date, s: challenge.seed },
     };
     const decoded = decodeRunToken(encodeBody(forged));
     expect(decoded).not.toBeNull();

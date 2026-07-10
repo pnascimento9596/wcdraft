@@ -18,6 +18,7 @@ import { describe, expect, it } from "vitest";
 
 import { buildRunTokenBody, decodeRunToken, type RunTokenV3Body } from "../../game/run-token";
 import { dailyChallengeForDate, deriveDailySeed } from "../../game/daily";
+import type { DailySeedVettingMetrics } from "@wcdraft/data";
 import { DISPLAY_NAME_MAX, validateDisplayName } from "../display-name";
 import { DEFAULT_LEADERBOARD_SEASON_ID } from "../season";
 import {
@@ -36,21 +37,44 @@ import {
 
 // ─── Shared origin run (module-scope: one autoDraft + one sim) ──────────────
 
-const data: ValidationData = {
+const serverData: ValidationData = {
   gameData: buildServerGameData(),
   scenario: serverScenarioBundle(),
 };
+function testDateEntry(date: string, salt: number): DailySeedVettingMetrics {
+  return {
+    date,
+    salt,
+    seed: `wcdraft:daily:v1:${date}${salt === 0 ? "" : `#${salt.toString()}`}`,
+    sample_seed_prefix: `wcdraft:daily:v1:${date}:test`,
+    selected: true,
+    degenerate: false,
+    reason: "normal",
+    runs: 1,
+    perfect_runs: 0,
+    perfect_rate: 0,
+    qualifying_runs: 1,
+    qualifying_rate: 1,
+    mean: 1,
+    median: 1,
+    min: 1,
+    max: 1,
+    exact_seed_score: 1,
+    exact_seed_qualified: true,
+    exact_seed_perfect: false,
+  };
+}
 const TEST_SALT_MAP: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]> = {
   schema_version: "daily-seed-salt-map-1.0.0",
   _doc: "test salt map",
   anchors: {
-    dataset_version: data.gameData.manifest.dataset_version,
-    engine_version: data.gameData.manifest.engine_version,
-    rating_version_historical: data.gameData.manifest.rating_version_historical,
-    rating_version_projected: data.gameData.manifest.rating_version_projected,
-    ruleset_version: data.gameData.manifest.ruleset_version,
-    draft_pool_sha256: data.gameData.manifest.bundles.draft_pool.sha256,
-    scenario_2026_sha256: data.gameData.manifest.bundles.scenario_2026.sha256,
+    dataset_version: serverData.gameData.manifest.dataset_version,
+    engine_version: serverData.gameData.manifest.engine_version,
+    rating_version_historical: serverData.gameData.manifest.rating_version_historical,
+    rating_version_projected: serverData.gameData.manifest.rating_version_projected,
+    ruleset_version: serverData.gameData.manifest.ruleset_version,
+    draft_pool_sha256: serverData.gameData.manifest.bundles.draft_pool.sha256,
+    scenario_2026_sha256: serverData.gameData.manifest.bundles.scenario_2026.sha256,
   },
   window: { start_date: "2026-07-03", days: 2, timezone: "UTC" },
   policy: "greedyOverallAutoDraft",
@@ -69,7 +93,16 @@ const TEST_SALT_MAP: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>
   salts: {
     "2026-07-04": 2,
   },
-  dates: [],
+  dates: [testDateEntry("2026-07-03", 0), testDateEntry("2026-07-04", 2)],
+};
+const TEST_UNSALTED_MAP = {
+  ...TEST_SALT_MAP,
+  salts: {},
+  dates: [testDateEntry("2026-07-03", 0), testDateEntry("2026-07-04", 0)],
+};
+const data: ValidationData = {
+  ...serverData,
+  gameData: { ...serverData.gameData, dailySeedSaltMap: TEST_SALT_MAP },
 };
 const ORIGIN_SEED = "wcdraft:f4-u2:negatives:1";
 const origin = buildOriginRecord(data.gameData, ORIGIN_SEED, "classic");
@@ -105,8 +138,8 @@ function dataWithSaltMap(saltMap: NonNullable<ValidationData["gameData"]["dailyS
 }
 
 function dailySubmission(
-  date = "2026-06-29",
-  saltMap?: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>,
+  date = "2026-07-03",
+  saltMap: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]> = TEST_SALT_MAP,
 ) {
   const challenge = dailyChallengeForDate(date, saltMap);
   const record = {
@@ -382,8 +415,8 @@ describe("daily challenge contract", () => {
     expect(v.status).toBe("accepted");
     if (v.status !== "accepted") return;
     expect(v.challenge_type).toBe("daily");
-    expect(v.challenge_date).toBe("2026-06-29");
-    expect(v.token_body.ps).toBe(deriveDailySeed("2026-06-29"));
+    expect(v.challenge_date).toBe("2026-07-03");
+    expect(v.token_body.ps).toBe(deriveDailySeed("2026-07-03", TEST_SALT_MAP));
     expect(v.draft_order).toBe("squad_first");
     expect(v.era).toBe("all_time");
     expect(v.rating_basis).toBe("career");
@@ -408,7 +441,7 @@ describe("daily challenge contract", () => {
       expect(accepted.token_body.ps).toBe("wcdraft:daily:v1:2026-07-04#2");
     }
 
-    const stale = dailySubmission("2026-07-04");
+    const stale = dailySubmission("2026-07-04", TEST_UNSALTED_MAP);
     expect(
       rejectionCode(
         validateSubmission(
@@ -478,7 +511,7 @@ describe("daily challenge contract", () => {
     const decoded = decodeRunToken(daily.token);
     expect(decoded?.v).toBe(3);
     const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV3Body;
-    body.ch = { k: "daily", d: "2026-06-30", s: daily.challenge.seed };
+    body.ch = { k: "daily", d: "2026-07-04", s: daily.challenge.seed };
     const forged = encodeBody(body);
 
     expect(
@@ -490,12 +523,46 @@ describe("daily challenge contract", () => {
             draft_mode: "classic",
             display_name: "daily_player",
             challenge: "daily",
-            challenge_date: "2026-06-30",
+            challenge_date: "2026-07-04",
           },
           data,
         ),
       ),
     ).toBe("INVALID_BODY");
+  });
+
+  it("rejects uncovered Daily metadata before a replay that would fail", () => {
+    const challenge = {
+      kind: "daily" as const,
+      date: "2026-07-05",
+      seed: "wcdraft:daily:v1:2026-07-05",
+    };
+    const record = {
+      ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI"),
+      challenge,
+    };
+    const expected = expectedRunFor(data.gameData, data.scenario, record);
+    const decoded = decodeRunToken(encodeBody(buildRunTokenBody(record)));
+    if (!decoded || decoded.v !== 3) throw new Error("daily token failed to decode as t3");
+    const [first] = playerPicks(decoded);
+    if (!first) throw new Error("daily token has no player picks");
+    first.p.ci = 99;
+
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: encodeBody(decoded),
+            claimed_score: expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "daily",
+            challenge_date: challenge.date,
+          },
+          data,
+        ),
+      ),
+    ).toBe("DAILY_UNAVAILABLE");
   });
 
   it("still rejects illegal daily picks through the replay keystone", () => {
@@ -525,7 +592,7 @@ describe("daily challenge contract", () => {
   });
 
   it("rejects non-canonical daily configs", () => {
-    const challenge = dailyChallengeForDate("2026-06-29");
+    const challenge = dailyChallengeForDate("2026-07-03", TEST_SALT_MAP);
     const record = {
       ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI", {
         ratingBasis: "current",
@@ -551,7 +618,7 @@ describe("daily challenge contract", () => {
   });
 
   it("rejects a valid same-seed daily token built for a non-canonical formation", () => {
-    const challenge = dailyChallengeForDate("2026-06-29");
+    const challenge = dailyChallengeForDate("2026-07-03", TEST_SALT_MAP);
     const record = {
       ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI", {
         formationId: "4-2-3-1",
@@ -791,6 +858,7 @@ describe("U3 seam — SUBMIT_ERROR_HTTP_STATUS", () => {
       TOKEN_TOO_LARGE: 400,
       MALFORMED_TOKEN: 400,
       WRONG_SEASON: 409,
+      DAILY_UNAVAILABLE: 409,
       AUTH_REQUIRED: 401,
       VERIFICATION_REQUIRED: 403,
       CSRF_FAILED: 403,

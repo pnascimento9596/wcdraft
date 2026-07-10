@@ -15,6 +15,7 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import { leaderboardEntries, rankedAttempts, users } from "@wcdraft/db";
+import type { DailySeedVettingMetrics } from "@wcdraft/data";
 
 import { createSession } from "../../auth/sessions";
 import { setupTestDb, testCookieSecret } from "../../auth/__tests__/_test-db";
@@ -50,18 +51,41 @@ const GOLDEN = fixtureJson as unknown as {
 
 const SECRET = testCookieSecret("f4-u3-routes");
 const VERIFIED_AT = new Date(Date.UTC(2026, 5, 29, 12, 0, 0));
-const data: ValidationData = getValidationData();
+const serverData: ValidationData = getValidationData();
+function testDateEntry(date: string, salt: number): DailySeedVettingMetrics {
+  return {
+    date,
+    salt,
+    seed: `wcdraft:daily:v1:${date}${salt === 0 ? "" : `#${salt.toString()}`}`,
+    sample_seed_prefix: `wcdraft:daily:v1:${date}:test`,
+    selected: true,
+    degenerate: false,
+    reason: "normal",
+    runs: 1,
+    perfect_runs: 0,
+    perfect_rate: 0,
+    qualifying_runs: 1,
+    qualifying_rate: 1,
+    mean: 1,
+    median: 1,
+    min: 1,
+    max: 1,
+    exact_seed_score: 1,
+    exact_seed_qualified: true,
+    exact_seed_perfect: false,
+  };
+}
 const TEST_SALT_MAP: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]> = {
   schema_version: "daily-seed-salt-map-1.0.0",
   _doc: "test salt map",
   anchors: {
-    dataset_version: data.gameData.manifest.dataset_version,
-    engine_version: data.gameData.manifest.engine_version,
-    rating_version_historical: data.gameData.manifest.rating_version_historical,
-    rating_version_projected: data.gameData.manifest.rating_version_projected,
-    ruleset_version: data.gameData.manifest.ruleset_version,
-    draft_pool_sha256: data.gameData.manifest.bundles.draft_pool.sha256,
-    scenario_2026_sha256: data.gameData.manifest.bundles.scenario_2026.sha256,
+    dataset_version: serverData.gameData.manifest.dataset_version,
+    engine_version: serverData.gameData.manifest.engine_version,
+    rating_version_historical: serverData.gameData.manifest.rating_version_historical,
+    rating_version_projected: serverData.gameData.manifest.rating_version_projected,
+    ruleset_version: serverData.gameData.manifest.ruleset_version,
+    draft_pool_sha256: serverData.gameData.manifest.bundles.draft_pool.sha256,
+    scenario_2026_sha256: serverData.gameData.manifest.bundles.scenario_2026.sha256,
   },
   window: { start_date: "2026-07-03", days: 2, timezone: "UTC" },
   policy: "greedyOverallAutoDraft",
@@ -80,7 +104,16 @@ const TEST_SALT_MAP: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>
   salts: {
     "2026-07-04": 2,
   },
-  dates: [],
+  dates: [testDateEntry("2026-07-03", 0), testDateEntry("2026-07-04", 2)],
+};
+const TEST_UNSALTED_MAP = {
+  ...TEST_SALT_MAP,
+  salts: {},
+  dates: [testDateEntry("2026-07-03", 0), testDateEntry("2026-07-04", 0)],
+};
+const data: ValidationData = {
+  ...serverData,
+  gameData: { ...serverData.gameData, dailySeedSaltMap: TEST_SALT_MAP },
 };
 let attemptSeq = 0;
 
@@ -187,8 +220,8 @@ function bodyForRecord(
 }
 
 function dailyBody(
-  date = "2026-06-29",
-  saltMap?: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>,
+  date = "2026-07-03",
+  saltMap: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]> = TEST_SALT_MAP,
   over: Record<string, unknown> = {},
 ): { body: Record<string, unknown>; expectedScore: number; challengeDate: string } {
   const challenge = dailyChallengeForDate(date, saltMap);
@@ -214,9 +247,9 @@ function dailyBody(
 
 function dailyBodyForConfig(
   config: Parameters<typeof buildOriginRecord>[4],
-  date = "2026-06-29",
+  date = "2026-07-03",
 ): { body: Record<string, unknown>; expectedScore: number; challengeDate: string } {
-  const challenge = dailyChallengeForDate(date);
+  const challenge = dailyChallengeForDate(date, TEST_SALT_MAP);
   const record = {
     ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI", config),
     challenge,
@@ -365,7 +398,7 @@ describe("transport gates (before any pipeline work)", () => {
 
   it("daily ranked mode → 400 INVALID_BODY before auth or validation, no row", async () => {
     const res = await handleLeaderboardSubmit(
-      makeReq({ body: dailyBody("2026-06-29", undefined, { mode: "ranked" }).body }),
+      makeReq({ body: dailyBody("2026-07-03", TEST_SALT_MAP, { mode: "ranked" }).body }),
       makeDeps({
         getValidation: () => {
           throw new Error("daily ranked must not reach validation");
@@ -507,6 +540,40 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     const res = await handleLeaderboardSubmit(makeReq(), makeDeps({ getValidation: () => broken }));
     expect(res.status).toBe(500);
     expect((await errorOf(res)).error).toBe("SIM_FAILURE");
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("uncovered Daily → DAILY_UNAVAILABLE before broken-scenario re-sim", async () => {
+    const challenge = {
+      kind: "daily" as const,
+      date: "2026-07-05",
+      seed: "wcdraft:daily:v1:2026-07-05",
+    };
+    const record = {
+      ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI"),
+      challenge,
+    };
+    const expected = expectedRunFor(data.gameData, data.scenario, record);
+    const broken: ValidationData = {
+      ...data,
+      scenario: { ...data.scenario, teams: [] } as ValidationData["scenario"],
+    };
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        body: {
+          token: encodeBody(buildRunTokenBody(record)),
+          claimed_score: expected.score,
+          draft_mode: "classic",
+          display_alias: "daily_tester",
+          challenge: "daily",
+          challenge_date: challenge.date,
+        },
+      }),
+      makeDeps({ getValidation: () => broken, todayUtcDate: () => challenge.date }),
+    );
+
+    expect(res.status).toBe(409);
+    expect(await errorOf(res)).toMatchObject({ error: "DAILY_UNAVAILABLE" });
     expect(await allRows()).toHaveLength(0);
   });
 });
@@ -747,7 +814,7 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     });
 
     await reset();
-    const stale = dailyBody("2026-07-04");
+    const stale = dailyBody("2026-07-04", TEST_UNSALTED_MAP);
     const rejected = await handleLeaderboardSubmit(
       makeReq({ body: stale.body }),
       makeDeps({
@@ -765,10 +832,10 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
   });
 
   it("past daily submit is read-only and rejected after verification", async () => {
-    const daily = dailyBody("2026-06-28");
+    const daily = dailyBody("2026-07-03");
     const res = await handleLeaderboardSubmit(
       makeReq({ body: daily.body }),
-      makeDeps({ todayUtcDate: () => "2026-06-29" }),
+      makeDeps({ todayUtcDate: () => "2026-07-04" }),
     );
     expect(res.status).toBe(403);
     expect((await errorOf(res)).error).toBe("BAD_ATTEMPT");
