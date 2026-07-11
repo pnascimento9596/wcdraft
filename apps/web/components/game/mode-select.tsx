@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { DraftMode } from "@wcdraft/core";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
@@ -13,6 +13,12 @@ import s from "./game.module.css";
 
 type PlayMode = "daily" | DraftMode;
 type DailyAvailabilityState = "checking" | "available" | "unavailable" | "timeout";
+type DailyAvailability = {
+  readonly date: string;
+  readonly state: DailyAvailabilityState;
+};
+
+export const DAILY_DATE_CHECK_INTERVAL_MS = 60_000;
 
 const MODE_COPY: Record<
   PlayMode,
@@ -87,25 +93,61 @@ const MODE_COPY: Record<
 export function ModeSelect() {
   const router = useRouter();
   const [mode, setMode] = useState<PlayMode>("daily");
-  const [dailyAvailability, setDailyAvailability] = useState<DailyAvailabilityState>("checking");
+  const [daily, setDaily] = useState<DailyAvailability>(() => ({
+    date: utcDateString(),
+    state: "checking",
+  }));
   const [dailyRetry, setDailyRetry] = useState(0);
+  const dailyAvailability = daily.state;
   const selected = MODE_COPY[mode];
   const dailyUnavailableSelected = mode === "daily" && dailyAvailability === "unavailable";
 
+  const refreshUtcDate = useCallback(() => {
+    const nextDate = utcDateString();
+    setDaily((current) =>
+      current.date === nextDate ? current : { date: nextDate, state: "checking" },
+    );
+  }, []);
+
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") refreshUtcDate();
+    };
+    window.addEventListener("focus", refreshUtcDate);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    const interval = window.setInterval(refreshUtcDate, DAILY_DATE_CHECK_INTERVAL_MS);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshUtcDate);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [refreshUtcDate]);
+
   useEffect(() => {
     let active = true;
-    setDailyAvailability("checking");
-    void loadDailyAvailability(utcDateString())
+    const date = daily.date;
+    setDaily((current) => (current.date === date ? { date, state: "checking" } : current));
+    void loadDailyAvailability(date)
       .then((available) => {
-        if (active) setDailyAvailability(available ? "available" : "unavailable");
+        if (!active) return;
+        setDaily((current) =>
+          current.date === date
+            ? { date, state: available ? "available" : "unavailable" }
+            : current,
+        );
       })
       .catch((error: unknown) => {
-        if (active) setDailyAvailability(isRuntimeDataTimeout(error) ? "timeout" : "unavailable");
+        if (!active) return;
+        setDaily((current) =>
+          current.date === date
+            ? { date, state: isRuntimeDataTimeout(error) ? "timeout" : "unavailable" }
+            : current,
+        );
       });
     return () => {
       active = false;
     };
-  }, [dailyRetry]);
+  }, [daily.date, dailyRetry]);
 
   return (
     <>

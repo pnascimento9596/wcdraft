@@ -1048,6 +1048,51 @@ no core, runtime-data, rating, simulation, leaderboard-validation, schema,
 migration, or ETL semantics changed. Report:
 `docs/reports/audit-s1-d4-share-resilience-2026-07-11.md`.
 
+Audit Season 1 D5 trust copy and UTC rollover:
+2026-07-11 · YELLOW implementation on branch
+`ws-ux/audit-s1-trust-copy`, rebased as one isolated commit onto shipped D4 main
+`c90d87e853a61756676421edff2e9d6064d42988`. Settings now includes a
+five-line `Your data` panel that distinguishes device-local runs, optional
+server mirroring, signed-in Account history, public leaderboard permanence,
+and browser-clearing limits, with direct Privacy and Account links. The
+Leaderboard nav entry is always reachable; when `LEADERBOARD_ENABLED` is dark,
+`/leaderboard` renders an explained closed state without loading the board or
+season key, while board APIs and result-posting affordances retain their
+existing server gate. Selecting Current under Rating basis now shows the exact
+consequence `Current ratings play as a tougher board — expect lower scores`.
+A shared standing-copy formatter prevents board, submit, and Daily share copy
+from drifting: fields from 1 through 19 lead with exact rank and field size
+plus `Ties share a rank`; percentile wording begins only at 20, and zero-field
+or missing-rank responses do not produce impossible claims. The first
+independent exact-head review correctly rejected unchecked malformed tuples
+that could display negative/over-100 percentiles or rank greater than field
+size. The fix-forward validates positive safe-integer ranks, known-field tuple
+consistency, and integer percentiles from 1 through 100; invalid percentiles
+degrade to exact copy, contradictory tuples degrade to rank-pending, and the
+compact Daily label uses the same validator. A known rank with an unavailable
+field denominator remains the honest standalone `#rank`. ModeSelect now
+keys Daily availability to a memoized UTC date, rechecks that date on focus,
+visible-tab return, and a cleaned-up 60-second interval, and shows checking
+immediately on rollover. Prior-date requests are lifetime-guarded, so a late
+resolution cannot restore yesterday's card. D1 bounded loading, D2 interaction
+targets/reduced motion, D3 mode IA, and D4 share availability remain intact.
+Validation: the initial focused component, contract, standing-copy, and mounted
+rollover set passed 7/7 files and 90/90 tests. After the exact D4-main rebase,
+all five changed test files passed 68/68. Fix-forward focused coverage passed
+73/73 across four consumers; replacement complete web Vitest passed 103 files /
+1 skipped and 1,101 tests / 1 skipped; complete data Vitest remained 16
+files / 1 skipped and 168 tests / 9 skipped. Game-flow Playwright passed. The
+responsive shell passed 204/204 metrics with zero failures (84 desktop, 56
+mobile, 40 interaction, 24 mode/setup). Root typecheck passed 8/8 tasks, lint
+passed 5/5 tasks, and production build passed 4/4 tasks with 40/40 pages
+generated; targeted Prettier and diff checks passed. Golden suites and heavy
+realism were not run because no deterministic core, rating, simulation,
+compact-data, leaderboard-validation, schema, migration, or ETL semantics
+changed. Initial independent FAIL report:
+`/tmp/audit-s1-d5-fresh-review-7c30c08.md`, SHA-256
+`83b597d0e10c44d7bd6a06ca21c56b486678c181fca48bb788325d029875fe8c`. Report:
+`docs/reports/audit-s1-d5-trust-copy-2026-07-11.md`.
+
 Audit Season 1 D2 interaction-floor harness:
 2026-07-10 · Standalone controls now hold a measured 44px minimum in both
 dimensions across Review simulation/back actions, History result/seed actions,

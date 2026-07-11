@@ -11,6 +11,10 @@ import Link from "next/link";
 
 import { draftModeLaneLabel } from "@/lib/leaderboard/config";
 import type { SubmitBoardMode, SubmitPhase } from "@/lib/leaderboard/submit-state";
+import {
+  dailyLeaderboardStandingText,
+  leaderboardStandingText,
+} from "@/lib/leaderboard/standing-copy";
 
 import s from "./leaderboard.module.css";
 
@@ -236,16 +240,8 @@ function SubmitOutcome({
     return (
       <div className={s.outcome} role="status">
         <p className={`${s.outcomeTitle} ${s.outcomeTitleGood}`}>On the board</p>
-        {phase.rank !== null && challengeKind === "daily" && phase.fieldSize > 0 ? (
-          <p className={s.outcomeRank}>
-            {dailyStandingText({
-              rank: phase.rank,
-              percentile: phase.percentile,
-              fieldSize: phase.fieldSize,
-            })}
-          </p>
-        ) : phase.rank !== null ? (
-          <p className={s.outcomeRank}>Rank #{phase.rank}</p>
+        {phase.rank !== null ? (
+          <p className={s.outcomeRank}>{standingText(phase, challengeKind)}</p>
         ) : (
           <p className={s.outcomeMsg}>Posted — your rank will show on the board.</p>
         )}
@@ -263,15 +259,7 @@ function SubmitOutcome({
         <p className={s.outcomeMsg}>
           This exact run was posted before
           {phase.rank !== null
-            ? ` — your best sits at ${
-                challengeKind === "daily" && phase.fieldSize > 0
-                  ? dailyStandingText({
-                      rank: phase.rank,
-                      percentile: phase.percentile,
-                      fieldSize: phase.fieldSize,
-                    })
-                  : `rank #${phase.rank}`
-              }.`
+            ? ` — your best sits at ${standingText(phase, challengeKind)}.`
             : "."}
         </p>
         <Link href={leaderboardHref} className="btn btn--ghost">
@@ -347,11 +335,15 @@ function SubmitOutcome({
   );
 }
 
-function dailyStandingText(phase: {
-  readonly rank: number;
-  readonly percentile: number | null;
-  readonly fieldSize: number;
-}): string {
-  const rankLine = `#${phase.rank} of ${phase.fieldSize} today`;
-  return phase.percentile !== null ? `${rankLine} · Top ${phase.percentile}%` : rankLine;
+function standingText(
+  phase: {
+    readonly rank: number | null;
+    readonly percentile: number | null;
+    readonly fieldSize: number;
+  },
+  challengeKind: "season" | "daily",
+): string {
+  return challengeKind === "daily"
+    ? dailyLeaderboardStandingText(phase)
+    : leaderboardStandingText(phase);
 }

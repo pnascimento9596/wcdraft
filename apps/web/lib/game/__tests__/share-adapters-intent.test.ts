@@ -78,13 +78,21 @@ describe("buildShareCaption", () => {
     expect(caption).toContain(SHARE_TAGLINE);
   });
 
-  it("leads daily captions with rank and percentile when supplied", () => {
+  it("leads a sparse daily field with exact rank, size, and the tie rule", () => {
     const caption = buildShareCaption(makeView({ challenge_date: "2026-06-29" }), TOKEN_URL, {
       dailyStanding: { rank: 2, percentile: 50, fieldSize: 12 },
     });
     expect(caption).toContain(
-      "#2 of 12 today · Top 50% of today's field — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.",
+      "#2 of 12 today · Ties share a rank — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.",
     );
+    expect(caption).not.toContain("Top 50%");
+  });
+
+  it("allows daily percentile copy once the field reaches 20", () => {
+    const caption = buildShareCaption(makeView({ challenge_date: "2026-06-29" }), TOKEN_URL, {
+      dailyStanding: { rank: 2, percentile: 95, fieldSize: 20 },
+    });
+    expect(caption).toContain("#2 of 20 today · Top 95% of today's field");
   });
 
   it("appends the share URL when one is provided", () => {

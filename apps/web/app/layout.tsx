@@ -6,7 +6,6 @@ import { ThemeProvider } from "../components/theme-provider";
 import { AuthProvider } from "../components/auth-context";
 import { SiteHeader } from "../components/site-header";
 import { isAuthEnabled } from "../lib/auth/auth-enabled";
-import { isLeaderboardEnabled } from "../lib/leaderboard/enabled";
 import { getBuildStamp } from "../lib/build-stamp";
 import {
   metadataBaseUrl,
@@ -88,9 +87,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // round-trip /api/auth/config on first paint. Setting RESEND_API_KEY,
   // AUTH_EMAIL_FROM, and AUTH_BASE_URL in the Vercel env flips this true.
   const authEnabled = isAuthEnabled();
-  // F-4 U4 — same ship-dark pattern for the leaderboard nav entry: the env
-  // is read server-side here; when dark the entry simply doesn't exist.
-  const leaderboardEnabled = isLeaderboardEnabled();
   return (
     <html lang="en" data-theme="light" suppressHydrationWarning>
       <body>
@@ -108,7 +104,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               Skip to content
             </a>
             <div className="shell">
-              <SiteHeader leaderboardEnabled={leaderboardEnabled} buildStamp={getBuildStamp()} />
+              <SiteHeader buildStamp={getBuildStamp()} />
               <main id="main">{children}</main>
               <SiteFooter />
             </div>

@@ -28,6 +28,7 @@ import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
 import { buildNarrativeLabels, topScorerView, type TopScorerView } from "./results-adapters";
 import { formatNullableNumber } from "./view-models";
 import { displayNameFromNames } from "./display-names";
+import { dailyLeaderboardStandingText } from "../leaderboard/standing-copy";
 
 // ─── Headline ────────────────────────────────────────────────────────────────
 
@@ -326,10 +327,7 @@ function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding |
 
 export function dailyStandingText(standing: DailyShareStanding | null): string {
   if (standing === null) return DAILY_STANDING_CLAIM_COPY;
-  const rankLine = `#${standing.rank} of ${standing.fieldSize} today`;
-  return standing.percentile !== null
-    ? `${rankLine} · Top ${standing.percentile}% of today's field`
-    : rankLine;
+  return dailyLeaderboardStandingText(standing);
 }
 
 // ─── Social web intents ──────────────────────────────────────────────────────

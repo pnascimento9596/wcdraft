@@ -1,14 +1,11 @@
 // F-4 U4 — /leaderboard board page.
 //
-// SHIP-DARK: server-gated on the same LEADERBOARD_ENABLED env the API
-// routes read — no NEXT_PUBLIC_ mirror. When dark this page 404s exactly
-// like the routes (notFound() before anything else is touched), and the
-// nav entry that links here isn't rendered (site-header gate).
+// SHIP-DARK: the board and posting APIs remain server-gated. The public page
+// stays reachable and explains the closed state without touching board data.
 
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-
 import { BoardScreen } from "@/components/leaderboard/board-screen";
+import { LeaderboardClosed } from "@/components/leaderboard/board-views";
 import { isLeaderboardEnabled } from "@/lib/leaderboard/enabled";
 import { currentSeasonKey } from "@/lib/leaderboard/server-data";
 
@@ -19,10 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function LeaderboardPage() {
-  if (!isLeaderboardEnabled()) notFound();
+  const enabled = isLeaderboardEnabled();
   return (
     <div className="container container--narrow page leaderboard-page">
-      <BoardScreen currentSeasonKey={currentSeasonKey()} />
+      {enabled ? <BoardScreen currentSeasonKey={currentSeasonKey()} /> : <LeaderboardClosed />}
     </div>
   );
 }
