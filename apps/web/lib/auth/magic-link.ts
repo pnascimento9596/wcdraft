@@ -22,7 +22,11 @@ import { magicLinkTokens, users } from "@wcdraft/db";
 import type { Db, User } from "@wcdraft/db";
 import { isRequestTimeoutError } from "@wcdraft/data/client";
 import { AuthError } from "./errors";
-import { consumeRateLimit } from "./rate-limit";
+import {
+  consumeDistinctIdentifierPerIp,
+  consumeRateLimit,
+  MAGIC_LINK_DISTINCT_IDENTIFIERS_PER_IP,
+} from "./rate-limit";
 import { generateToken, sha256Hex } from "./tokens";
 import { RESEND_TIMEOUT_MS, type EmailSender } from "./email";
 import { safeNextPath } from "./safe-next-path";
@@ -265,7 +269,16 @@ async function consumeMagicLinkQuotas(
       },
       { db: tx, now: deps.now },
     );
-    if (!ipRate.allowed) return { ipRate, emailRate: null };
+    if (!ipRate.allowed) return { ipRate, distinctRate: null, emailRate: null };
+    const distinctRate = await consumeDistinctIdentifierPerIp(
+      {
+        ipAddress,
+        identifier: email,
+        ...MAGIC_LINK_DISTINCT_IDENTIFIERS_PER_IP,
+      },
+      { db: tx, now: deps.now },
+    );
+    if (!distinctRate.allowed) return { ipRate, distinctRate, emailRate: null };
     const emailRate = await consumeRateLimit(
       {
         bucket: { kind: "email", value: email },
@@ -274,10 +287,13 @@ async function consumeMagicLinkQuotas(
       },
       { db: tx, now: deps.now },
     );
-    return { ipRate, emailRate };
+    return { ipRate, distinctRate, emailRate };
   });
   if (!outcome.ipRate.allowed) {
     throw new AuthError("RATE_LIMITED", "too many requests from this address");
+  }
+  if (!outcome.distinctRate?.allowed) {
+    throw new AuthError("RATE_LIMITED", "too many different addresses from this source");
   }
   if (!outcome.emailRate?.allowed) {
     throw new AuthError("RATE_LIMITED", "too many requests for this email");

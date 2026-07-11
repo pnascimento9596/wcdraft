@@ -4,6 +4,36 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 Wave B cross-model fix-forward:
+2026-07-11 · RED candidate on branch `ws-f4/audit-s1-wave-b-review-fixes`, based on
+post-Wave-B `origin/main` `890db10e32462473778778d2b1d4dedc9feb4d29`. The Wave B
+boundary review ran through the owner's Ollama Cloud subscription as
+`ollama-cloud/glm-5.2` with max thinking and returned FAIL with four verified
+defects. This fix-forward updates the two stale migration-truth attestations and
+operator dispatch examples/defaults to the 14-entry journal tail
+`0013_audit_s1_auth_abuse`; runtime exact-tail guards remain unchanged. Magic-link
+requests now enforce a separate five-distinct-identifiers-per-IP/hour cap after
+the coarse ten-request IP allowance and before the identifier quota. Only
+family-prefixed hashes persist. A per-IP counter-row lock serializes first-seen
+markers in a transaction; repeats do not increment, concurrent same-pair requests
+count once, and a blocked source touches neither marker nor victim identifier.
+Password login now checks IP first in one transaction and returns before touching
+the identifier bucket when blocked. Verify POST checks Origin/Host before runtime
+dependency construction, form parsing, session/bootstrap/DB work, or cookie
+attachment.
+
+Final-candidate focused PGlite/route coverage passes 40/40, including repeats, sixth-distinct
+rejection, concurrent same-pair count-once, the counter-at-five parallel-sixth
+case (both rejected; durable count six), magic-link and password non-poisoning,
+and early bad-Origin refusal. DB passes 161/161; final direct web Vitest passes
+1,074 / 1 expected skip. Final forced typecheck passes 8/8, lint 5/5, and build
+4/4 with 40/40 pages, all with zero cached tasks.
+Game-flow Playwright passed and responsive verification passed 204/0 (84 desktop,
+56 mobile, 40 interaction, 24 mode/setup). No migration/schema, email provider,
+external database, merge, deploy, or production mutation is part of this lane.
+The durable implementation report is
+`docs/reports/audit-s1-wave-b-crossmodel-fixes-2026-07-11.md`.
+
 Audit S1 B5 rollback target binding:
 2026-07-11 · RED safety fix on branch
 `ws-f4/audit-s1-rollback-target-binding`, rebased onto shipped B1+B2
@@ -709,8 +739,8 @@ exact-head independent re-review and new protected CI are mandatory.
 Audit S1 B4 deploy/migration readiness:
 2026-07-10 · RED implementation on branch `ws-f4/audit-s1-health-readiness`,
 based on `origin/main` `f9ea1a5c3893a9e34e4fc8d67465c1385b79bfbe`. The committed Drizzle
-journal has 12 contiguous entries, `0000_init` through
-`0011_email_verification`; the web build now derives its exact supported
+journal has 14 contiguous entries, `0000_init` through
+`0013_audit_s1_auth_abuse`, reverified on 2026-07-11; the web build now derives its exact supported
 migration range from that journal. `/api/health` publishes the honest build
 SHA, six runtime-data anchors, expected versus actual migration, and one of
 `ready`, `unconfigured`, `schema_mismatch`, or `error` after at most one
@@ -1879,9 +1909,9 @@ web static assets.
   `LEADERBOARD_REQUIRE_ACCOUNT` is retired as an env lever and removed from
   Turbo env lists; ranked submit requires an account in code without reading
   that flag.
-- Repo migration truth is 12 journal entries, `0000_init` through
-  `0011_email_verification`, verified from
-  `packages/db/migrations/meta/_journal.json` on 2026-07-10. The production
+- Repo migration truth is 14 journal entries, `0000_init` through
+  `0013_audit_s1_auth_abuse`, verified from
+  `packages/db/migrations/meta/_journal.json` on 2026-07-11. The production
   Vercel project has a `DATABASE_URL` binding, but the pre-B4 public surface did
   not expose the database's actual applied migration; do not infer it from the
   obsolete 0004/0005 receipt. After B4 deploys, `/api/health` expected-versus-

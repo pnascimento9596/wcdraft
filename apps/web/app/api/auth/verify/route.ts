@@ -27,7 +27,7 @@ import {
   setSessionCookie,
 } from "@/lib/auth/handler-helpers";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
-import { CSRF_COOKIE_NAME } from "@/lib/auth/csrf";
+import { CSRF_COOKIE_NAME, verifyOriginHost } from "@/lib/auth/csrf";
 import { AuthError } from "@/lib/auth/errors";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 
@@ -83,6 +83,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (!isAuthEnabled()) {
       throw new AuthError("AUTH_DISABLED", "Auth feature is not enabled.");
     }
+    verifyOriginHost({
+      origin: req.headers.get("origin"),
+      referer: req.headers.get("referer"),
+      host: req.headers.get("host"),
+    });
     const deps = buildRuntimeDeps();
     // Forms POST as application/x-www-form-urlencoded by default. NextRequest's
     // .formData() handles both that and multipart/form-data uniformly.

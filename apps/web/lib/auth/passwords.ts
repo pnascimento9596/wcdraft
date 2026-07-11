@@ -82,23 +82,27 @@ export async function authenticatePassword(
     throw new AuthError("INVALID_CREDENTIALS", "Identifier or password is incorrect.");
   }
 
-  const emailRate = await consumeRateLimit(
-    {
-      bucket: { kind: "password-email-15m", value: identifier },
-      windowMs: PASSWORD_RATE_PER_EMAIL.windowMs,
-      maxCount: PASSWORD_RATE_PER_EMAIL.maxCount,
-    },
-    deps,
-  );
-  const ipRate = await consumeRateLimit(
-    {
-      bucket: { kind: "password-ip-15m", value: args.ipAddress || "unknown" },
-      windowMs: PASSWORD_RATE_PER_IP.windowMs,
-      maxCount: PASSWORD_RATE_PER_IP.maxCount,
-    },
-    deps,
-  );
-  if (!emailRate.allowed || !ipRate.allowed) {
+  const rates = await deps.db.transaction(async (tx) => {
+    const ipRate = await consumeRateLimit(
+      {
+        bucket: { kind: "password-ip-15m", value: args.ipAddress || "unknown" },
+        windowMs: PASSWORD_RATE_PER_IP.windowMs,
+        maxCount: PASSWORD_RATE_PER_IP.maxCount,
+      },
+      { db: tx, now: deps.now },
+    );
+    if (!ipRate.allowed) return { ipRate, emailRate: null };
+    const emailRate = await consumeRateLimit(
+      {
+        bucket: { kind: "password-email-15m", value: identifier },
+        windowMs: PASSWORD_RATE_PER_EMAIL.windowMs,
+        maxCount: PASSWORD_RATE_PER_EMAIL.maxCount,
+      },
+      { db: tx, now: deps.now },
+    );
+    return { ipRate, emailRate };
+  });
+  if (!rates.ipRate.allowed || !rates.emailRate?.allowed) {
     throw new AuthError("RATE_LIMITED", "Too many password attempts. Wait and try again.");
   }
 

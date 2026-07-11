@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeAll, afterEach } from "vitest";
-import { users } from "@wcdraft/db";
+import { authRateLimits, users } from "@wcdraft/db";
 
 import { setupTestDb } from "./_test-db";
 import type { AuthError } from "../errors";
 import { authenticatePassword, hashPassword, validatePasswordStrength } from "../passwords";
+import { consumeRateLimit } from "../rate-limit";
+import { PASSWORD_RATE_PER_IP } from "../passwords";
 
 let env: Awaited<ReturnType<typeof setupTestDb>>;
 beforeAll(async () => {
@@ -96,6 +98,39 @@ describe("password auth", () => {
       authenticatePassword(
         { identifier: "none@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.4" },
         { db: env.db, now: () => Date.UTC(2026, 5, 30, 12, 16, 0) },
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_CREDENTIALS" });
+  });
+
+  it("does not consume a victim identifier bucket after the source IP is blocked", async () => {
+    const now = Date.UTC(2026, 5, 30, 12, 0, 0);
+    const blockedIp = "203.0.113.200";
+    for (let index = 0; index < PASSWORD_RATE_PER_IP.maxCount; index += 1) {
+      await consumeRateLimit(
+        {
+          bucket: { kind: "password-ip-15m", value: blockedIp },
+          ...PASSWORD_RATE_PER_IP,
+        },
+        { db: env.db, now: () => now },
+      );
+    }
+    await expect(
+      authenticatePassword(
+        { identifier: "victim@example.com", password: "Wrong-enough-42", ipAddress: blockedIp },
+        { db: env.db, now: () => now },
+      ),
+    ).rejects.toMatchObject({ code: "RATE_LIMITED" });
+    const rows = await env.db.select().from(authRateLimits);
+    expect(rows.filter((row) => row.bucketKey.startsWith("password-email-15m:"))).toHaveLength(0);
+
+    await expect(
+      authenticatePassword(
+        {
+          identifier: "victim@example.com",
+          password: "Wrong-enough-42",
+          ipAddress: "198.51.100.200",
+        },
+        { db: env.db, now: () => now },
       ),
     ).rejects.toMatchObject({ code: "INVALID_CREDENTIALS" });
   });

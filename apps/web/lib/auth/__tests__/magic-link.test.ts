@@ -22,6 +22,7 @@ import {
   MAGIC_LINK_RATE_PER_IP,
   PASSWORD_RESET_RESPONSE_TARGET_MS,
 } from "@/lib/auth/magic-link";
+import { MAGIC_LINK_DISTINCT_IDENTIFIERS_PER_IP } from "@/lib/auth/rate-limit";
 import { LogEmailSender, RESEND_TIMEOUT_MS, type EmailSender } from "@/lib/auth/email";
 import { RequestTimeoutError } from "@wcdraft/data/client";
 import { sha256Hex } from "@/lib/auth/tokens";
@@ -148,10 +149,13 @@ describe("requestMagicLink", () => {
     const now = Date.UTC(2026, 5, 1);
     const sender = new LogEmailSender(() => undefined);
     const attackingIp = "203.0.113.9";
-    for (let index = 0; index < 40; index += 1) {
+    for (let index = 0; index <= MAGIC_LINK_RATE_PER_IP.maxCount; index += 1) {
       const request = requestMagicLink(
         {
-          email: index === 39 ? "victim@example.com" : `decoy-${index.toString()}@example.com`,
+          email:
+            index === MAGIC_LINK_RATE_PER_IP.maxCount
+              ? "victim@example.com"
+              : `decoy-${(index % MAGIC_LINK_DISTINCT_IDENTIFIERS_PER_IP.maxCount).toString()}@example.com`,
           ipAddress: attackingIp,
         },
         makeDeps({ now, sender }),
@@ -161,9 +165,7 @@ describe("requestMagicLink", () => {
     }
 
     const rowsAfterAttack = await env.db.select().from(authRateLimits);
-    expect(rowsAfterAttack.filter((row) => row.bucketKey.startsWith("email:"))).toHaveLength(
-      MAGIC_LINK_RATE_PER_IP.maxCount,
-    );
+    expect(rowsAfterAttack.filter((row) => row.bucketKey.startsWith("email:"))).toHaveLength(5);
 
     // The victim still has the full identifier allowance from a legitimate source.
     for (let index = 0; index < MAGIC_LINK_RATE_PER_EMAIL.maxCount; index += 1) {
@@ -172,6 +174,79 @@ describe("requestMagicLink", () => {
         makeDeps({ now, sender }),
       );
     }
+  });
+
+  it("counts repeated identifiers once and rejects the sixth distinct identifier per IP", async () => {
+    const now = Date.UTC(2026, 5, 1);
+    const sender = new LogEmailSender(() => undefined);
+    const ipAddress = "203.0.113.44";
+    for (let index = 0; index < 3; index += 1) {
+      await requestMagicLink({ email: "repeat@example.com", ipAddress }, makeDeps({ now, sender }));
+    }
+    for (let index = 1; index < MAGIC_LINK_DISTINCT_IDENTIFIERS_PER_IP.maxCount; index += 1) {
+      await requestMagicLink(
+        { email: `distinct-${index.toString()}@example.com`, ipAddress },
+        makeDeps({ now, sender }),
+      );
+    }
+    await expect(
+      requestMagicLink({ email: "sixth@example.com", ipAddress }, makeDeps({ now, sender })),
+    ).rejects.toMatchObject({ code: "RATE_LIMITED" });
+
+    const rows = await env.db.select().from(authRateLimits);
+    expect(rows.find((row) => row.bucketKey.startsWith("magic-distinct-ip:"))?.count).toBe(6);
+    expect(rows.some((row) => row.bucketKey.includes("repeat@example.com"))).toBe(false);
+    expect(rows.some((row) => row.bucketKey.includes(ipAddress))).toBe(false);
+  });
+
+  it("concurrent requests for the same IP and identifier increment distinct count once", async () => {
+    const now = Date.UTC(2026, 5, 1);
+    const ipAddress = "198.51.100.88";
+    await Promise.all(
+      Array.from({ length: 3 }, () =>
+        requestMagicLink(
+          { email: "parallel@example.com", ipAddress },
+          makeDeps({ now, sender: new LogEmailSender(() => undefined) }),
+        ),
+      ),
+    );
+    const rows = await env.db.select().from(authRateLimits);
+    expect(rows.find((row) => row.bucketKey.startsWith("magic-distinct-ip:"))?.count).toBe(1);
+    expect(rows.filter((row) => row.bucketKey.startsWith("magic-distinct-marker:"))).toHaveLength(
+      1,
+    );
+  });
+
+  it("rejects both concurrent first requests for the same sixth identifier", async () => {
+    const now = Date.UTC(2026, 5, 1);
+    const ipAddress = "198.51.100.89";
+    for (let index = 0; index < MAGIC_LINK_DISTINCT_IDENTIFIERS_PER_IP.maxCount; index += 1) {
+      await requestMagicLink(
+        { email: `prefill-${index.toString()}@example.com`, ipAddress },
+        makeDeps({ now, sender: new LogEmailSender(() => undefined) }),
+      );
+    }
+
+    const outcomes = await Promise.allSettled(
+      Array.from({ length: 2 }, () =>
+        requestMagicLink(
+          { email: "parallel-sixth@example.com", ipAddress },
+          makeDeps({ now, sender: new LogEmailSender(() => undefined) }),
+        ),
+      ),
+    );
+    expect(outcomes).toHaveLength(2);
+    for (const outcome of outcomes) {
+      expect(outcome.status).toBe("rejected");
+      if (outcome.status === "rejected") {
+        expect(outcome.reason).toMatchObject({ code: "RATE_LIMITED" });
+      }
+    }
+    const rows = await env.db.select().from(authRateLimits);
+    expect(rows.find((row) => row.bucketKey.startsWith("magic-distinct-ip:"))?.count).toBe(6);
+    expect(rows.filter((row) => row.bucketKey.startsWith("magic-distinct-marker:"))).toHaveLength(
+      6,
+    );
   });
 
   it("deletes an undelivered sign-in token when the sender fails", async () => {
