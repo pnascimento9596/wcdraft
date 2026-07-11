@@ -9,8 +9,9 @@
 //                                      401 AUTH_REQUIRED / 403 CSRF_FAILED
 //   5. cheap validation preflight     — malformed requests never burn limiter
 //   6. rate-limit SEAM (U5 plugs in)  — 429 RATE_LIMITED + Retry-After
-//   7. validateSubmission (U2)        — full replay/resim; SUBMIT_ERROR_HTTP_STATUS
-//   8. insert (NULLS-NOT-DISTINCT dedupe) → 201 inserted / 200 duplicate
+//   7. ranked attempt precheck         — duplicate OR matching live attempt
+//   8. validateSubmission (U2)         — full replay/resim; SUBMIT_ERROR_HTTP_STATUS
+//   9. insert (NULLS-NOT-DISTINCT dedupe) → 201 inserted / 200 duplicate
 //
 // Honest-state: the persisted score is the SERVER's re-sim, the returned
 // rank is the identity's CURRENT board rank read by a SECOND statement after
@@ -25,6 +26,7 @@ import { z } from "zod";
 
 import { readClientIp } from "../http/client-ip";
 import { DAILY_CHALLENGE_KIND, utcDateString } from "../game/daily";
+import { decodeRunToken, tokenDraftConfig } from "../game/run-token";
 import {
   LeaderboardGateError,
   RANKED_AUTH_REQUIRED_MESSAGE,
@@ -38,7 +40,12 @@ import {
   type ApiLeaderboardEntry,
   type BoardMode,
 } from "./store";
-import { consumeRankedAttempt, findExistingRankedAttemptEntry } from "./ranked-attempts";
+import {
+  consumeRankedAttempt,
+  findExistingRankedAttemptEntry,
+  precheckRankedAttempt,
+} from "./ranked-attempts";
+import { DEFAULT_LEADERBOARD_SEASON_ID } from "./season";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
 import {
   SUBMIT_ERROR_HTTP_STATUS,
@@ -217,7 +224,65 @@ export async function handleLeaderboardSubmit(
       return res;
     }
 
-    // 7 — the U2 pure pipeline (full replay + re-sim run only past this point).
+    // 7 — ranked requests must prove the cheap, indexed attempt boundary
+    // before any pick replay or simulation. This read does not consume; the
+    // post-replay transaction retains the atomic consumed_at IS NULL update.
+    if (submissionMode === "ranked") {
+      if (identity.userId === null) {
+        throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
+      }
+      const token = decodeRunToken(body.token as string);
+      if (token === null) throw new Error("cheap-ranked preflight lost decoded token");
+      if (token.md !== "classic" && token.md !== "hidden") {
+        throw new Error("cheap-ranked preflight admitted a non-board draft mode");
+      }
+      const config = tokenDraftConfig(token);
+      const seasonKey = validationData.seasonKey ?? DEFAULT_LEADERBOARD_SEASON_ID;
+      const attempt = await precheckRankedAttempt(
+        deps.db,
+        {
+          seasonKey,
+          formationId: token.fid,
+          draftMode: token.md,
+          draftOrder: config.draft_flow,
+          era: config.era_preset,
+          ratingBasis: config.rating_basis,
+          userId: identity.userId,
+          parentSeed: token.ps,
+          token: body.token as string,
+        },
+        deps.now,
+      );
+      if (attempt.kind === "duplicate") {
+        const best = await identityBoardRank(deps.db, {
+          seasonKey,
+          challengeType: "season",
+          challengeDate: null,
+          mode: "ranked",
+          draftMode: token.md,
+          draftOrder: config.draft_flow,
+          era: config.era_preset,
+          ratingBasis: config.rating_basis,
+          identityKey: identity.userId,
+        });
+        const responseBody: SubmitResponseBody = {
+          entry: await toApiEntryWithProfile(deps.db, attempt.row),
+          duplicate: true,
+          rank: best?.rank ?? null,
+          percentile: best?.percentile ?? null,
+          field_size: best?.fieldSize ?? null,
+        };
+        return NextResponse.json(responseBody, { status: 200 });
+      }
+      if (attempt.kind === "missing") {
+        throw new LeaderboardGateError(
+          "BAD_ATTEMPT",
+          "ranked submissions require a valid unexpired server-issued attempt",
+        );
+      }
+    }
+
+    // 8 — the U2 pure pipeline (full replay + re-sim run only past this point).
     const verdict = validateSubmission(submission, validationData);
     if (verdict.status === "rejected") {
       return validationError(verdict);
@@ -249,7 +314,7 @@ export async function handleLeaderboardSubmit(
       );
     }
 
-    // 8 — persist + honest dedupe; rank is a SECOND read after the insert
+    // 9 — persist + honest dedupe; rank is a SECOND read after the insert
     // (current rank, not the insert's snapshot).
     const token = body.token as string;
     const result =
@@ -260,6 +325,7 @@ export async function handleLeaderboardSubmit(
             }
             const duplicate = await findExistingRankedAttemptEntry(tx as Db, {
               seasonKey: verdict.season_key,
+              formationId: verdict.token_body.fid,
               userId: identity.userId,
               token,
               draftMode: verdict.draft_mode,
@@ -284,6 +350,22 @@ export async function handleLeaderboardSubmit(
               deps.now,
             );
             if (attempt === null) {
+              // A concurrent identical submit can commit while this UPDATE is
+              // waiting on its attempt row. Reconcile that winner from a new
+              // READ COMMITTED statement snapshot before rejecting the loser.
+              const concurrentDuplicate = await findExistingRankedAttemptEntry(tx as Db, {
+                seasonKey: verdict.season_key,
+                formationId: verdict.token_body.fid,
+                userId: identity.userId,
+                token,
+                draftMode: verdict.draft_mode,
+                draftOrder: verdict.draft_order,
+                era: verdict.era,
+                ratingBasis: verdict.rating_basis,
+              });
+              if (concurrentDuplicate) {
+                return { kind: "duplicate" as const, row: concurrentDuplicate };
+              }
               throw new LeaderboardGateError(
                 "BAD_ATTEMPT",
                 "ranked submissions require a valid unexpired server-issued attempt",

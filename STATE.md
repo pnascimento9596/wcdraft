@@ -407,6 +407,73 @@ after frozen install, DB 119/119, DB typecheck, diff check, and exact head/base
 verification. Heavy realism was not run because no engine, rating, simulation,
 or runtime-data artifact changed.
 
+Audit S1 B1+B2 ranked-attempt lifecycle:
+2026-07-11 · rebased RED candidate on branch
+`ws-f4/audit-s1-ranked-attempt-lifecycle`, based on shipped D3 `origin/main`
+`7ab21687628fbec439e44e5236b999bdd3af2915`. Pre-fix route harnesses proved
+that a cheap-valid Ranked token with no issued attempt still reached full
+simulation and returned `500 SIM_FAILURE`, while repeated and eight-way
+concurrent attempt requests minted fresh seeds, expired rows remained, and an
+eleventh distinct config in one hour was still accepted. Ranked submit now
+runs a read-only indexed gate after identity, cheap token/config validation,
+and the existing submit limiter but before replay/simulation: an exact
+previously accepted duplicate returns its existing row and current rank, the
+newest live attempt for the exact user/season/formation/full-config must match
+the token seed, and every other request returns typed `403 BAD_ATTEMPT`. The
+post-replay transaction still rechecks the duplicate and atomically consumes
+the same canonical attempt with `consumed_at IS NULL ... RETURNING`, preserving
+B3's structural witnesses and concurrent loser behavior.
+
+Issuance now locks the account's stable `users` primary-key row inside the
+transaction, sweeps at most 25 expired unconsumed rows from that user's indexed
+history, reuses the newest exact-config live attempt as `200` without generating
+new entropy, and mints only when none exists. An atomic indexed compatibility
+cleanup deletes every other pre-fix live row for the exact config; submit and
+consume independently accept only the newest canonical row. Every issuance request,
+including idempotent reuse, consumes a hashed `auth_rate_limits` user bucket
+capped at 10/hour; the eleventh returns typed `429 RATE_LIMITED` with honest
+`Retry-After`. Existing user/config, user/seed, user/issued, season-dedupe,
+user-PK, and rate-bucket PK indexes cover every new lookup or serialization
+boundary, so no schema migration was necessary. Casual and Daily routes remain
+attempt-free.
+
+The shipped D3 ranked-setup boundary was revalidated with this candidate:
+focused submit, issuance, and mounted-mutation coverage passed 3 files / 115
+tests. The complete web Vitest suite passed 95 files / 1 skipped and 1,043
+tests / 1 skipped. Root typecheck passed 8/8 tasks, lint 5/5, and build 4/4 with
+40/40 pages. Core RNG/narrative goldens passed 69/69, draft goldens 42/42,
+data goldens 54/54, integration goldens 22/22, and leaderboard golden 6/6.
+Full-repository Prettier and `git diff --check` passed.
+The pre-fix exploit assertions now return `BAD_ATTEMPT` without the
+simulation-only error; eight concurrent requests return one `201`, seven
+identical `200` reuses, and one stored attempt; ten sequential same-config
+requests return the same attempt, while the eleventh returns typed `429`.
+The legacy compatibility regression starts with 30 live same-config rows,
+returns the newest attempt, and proves exactly one physical row remains. Final
+frozen-code web test passed 1,043 / 1 skipped, expanded game-flow Playwright
+passed through visible Casual/Ranked setup and the full draft/share path, and
+the responsive wrapper passed 204 metrics / 0 failures: desktop 84/0, mobile
+56/0, interaction targets 40/0, and mode/setup 24/0. Heavy realism was not run
+because no engine, rating, simulation, or runtime-data semantics changed.
+Independent exact-head RED review, protected CI, merge, deploy, and live
+verification remain pending.
+
+The first independent review of rebased candidate
+`2b84bc82baffc34c1609ff6384cb67b3aace595f` returned FAIL after reproducing a
+PostgreSQL READ COMMITTED race: the consume subquery filtered unconsumed rows,
+but the outer UPDATE did not. A concurrent same-token loser could therefore
+wait, re-update the winner's now-consumed attempt, collide with B3's restrictive
+structural FK, and surface 500. The fix-forward repeats `consumed_at IS NULL`
+on the outer UPDATE so PostgreSQL's post-wait row recheck cannot touch the
+winner. When consume returns no row, a new-statement exact duplicate read now
+reconciles the committed winner before returning `BAD_ATTEMPT`. A concurrent
+same-token route regression requires one 201, one 200 duplicate, one board row,
+and one consumed attempt. Post-fix focused D3+B1+B2 coverage passes 116/116;
+complete web Vitest passes 1,044 / 1 skipped; typecheck 8/8, lint 5/5, build
+4/4 with 40/40 pages, leaderboard golden 6/6, Prettier, and diff check pass.
+The failed head's CI was cancelled and is not release evidence. A fresh
+exact-head independent re-review and new protected CI are mandatory.
+
 Audit S1 B4 deploy/migration readiness:
 2026-07-10 · RED implementation on branch `ws-f4/audit-s1-health-readiness`,
 based on `origin/main` `f9ea1a5c3893a9e34e4fc8d67465c1385b79bfbe`. The committed Drizzle
