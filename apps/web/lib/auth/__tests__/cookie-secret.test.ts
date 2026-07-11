@@ -81,10 +81,12 @@ describe("jsonError — SECRET_MISCONFIGURED body scrub (q-008)", () => {
       expect(body.error).toBe("SECRET_MISCONFIGURED");
       expect(body.message).toBe("Server configuration error.");
       expect(JSON.stringify(body)).not.toMatch(/AUTH_COOKIE_SECRET|randomBytes|base64url/);
-      // Detail is preserved server-side.
+      expect(JSON.stringify(spy.mock.calls)).not.toMatch(
+        /AUTH_COOKIE_SECRET|randomBytes|base64url/,
+      );
       expect(spy).toHaveBeenCalledWith(
-        "[auth] secret misconfigured:",
-        expect.stringContaining("AUTH_COOKIE_SECRET"),
+        "[security]",
+        expect.stringContaining("AUTH_CONFIGURATION_ERROR"),
       );
     } finally {
       spy.mockRestore();
@@ -95,6 +97,28 @@ describe("jsonError — SECRET_MISCONFIGURED body scrub (q-008)", () => {
     const res = jsonError(new AuthError("RATE_LIMITED", "Too many requests"));
     const body = (await res.json()) as { error: string; message: string };
     expect(res.status).toBe(429);
-    expect(body.message).toBe("Too many requests");
+    expect(body.message).toBe("Too many requests. Try again later.");
+  });
+
+  it("redacts unexpected database error messages from logs and responses", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    try {
+      const res = jsonError(new Error("database failed for victim@example.com"));
+      const body = (await res.json()) as Record<string, string>;
+      expect(res.status).toBe(500);
+      expect(body).toMatchObject({
+        error: "INTERNAL_ERROR",
+        message: "The request could not be completed.",
+      });
+      expect(body.correlation_id).toMatch(/^[0-9a-f-]{36}$/u);
+      expect(JSON.stringify(body)).not.toContain("victim@example.com");
+      expect(JSON.stringify(spy.mock.calls)).not.toContain("victim@example.com");
+      expect(spy).toHaveBeenCalledWith(
+        "[security]",
+        expect.stringContaining("AUTH_UNEXPECTED_ERROR"),
+      );
+    } finally {
+      spy.mockRestore();
+    }
   });
 });

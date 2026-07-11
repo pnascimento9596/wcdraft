@@ -28,11 +28,12 @@
 import { AuthError } from "./errors";
 import { verifyMagicLink, type MagicLinkDeps } from "./magic-link";
 import { validateSessionCookie, type SessionDeps } from "./sessions";
-import type { Session } from "@wcdraft/db";
+import type { Db, Session } from "@wcdraft/db";
 import { ensureSession } from "./anon-session";
 import { verifyCsrfDoubleSubmit, verifyOriginHost } from "./csrf";
 import { issueAuthenticatedSession } from "./session-issue";
 import { safeNextPath } from "./safe-next-path";
+import { createCorrelationId, logSecurityEvent } from "./security-log";
 
 // ── Interstitial render ────────────────────────────────────────────────────
 
@@ -254,18 +255,35 @@ export async function consumeAndIssueSession(
     sessionCsrfSecret: anonSession.csrfSecret,
   });
 
-  // 4) Atomic token consume + user upsert.
-  const { user } = await verifyMagicLink({ token: args.token }, deps);
+  // 4/5) Token consume, user materialization, and session rotation are one
+  // transaction. A failed downstream session write rolls the consume back,
+  // so the same token can complete on retry instead of being burned.
+  const issued = await deps.db.transaction(async (tx) => {
+    const transactionDeps = { ...deps, db: tx as unknown as Db };
+    const { user } = await verifyMagicLink({ token: args.token }, transactionDeps);
+    return issueAuthenticatedSession(
+      {
+        session: anonSession,
+        userId: user.id,
+      },
+      transactionDeps,
+    );
+  });
 
-  // 5) Rotate the anon session in place (see threat-model comment above).
-  const issued = await issueAuthenticatedSession(
-    {
-      session: anonSession,
-      userId: user.id,
-      onAuthenticatedSessionReady: args.onAuthenticatedSessionReady,
-    },
-    deps,
-  );
+  if (args.onAuthenticatedSessionReady) {
+    try {
+      await args.onAuthenticatedSessionReady({
+        sessionId: issued.sessionId,
+        userId: issued.userId,
+      });
+    } catch (error) {
+      logSecurityEvent({
+        code: "AUTH_POST_SESSION_HOOK_FAILED",
+        correlationId: createCorrelationId(),
+        error,
+      });
+    }
+  }
 
   return {
     redirectTo: safeNextPath(args.next),

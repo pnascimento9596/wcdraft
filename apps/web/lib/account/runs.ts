@@ -7,6 +7,7 @@ import { BOARD_DRAFT_ORDERS, BOARD_ERAS, BOARD_RATING_BASES } from "@/lib/leader
 import { utcDateString } from "@/lib/game/daily";
 import { dailyStreakFromDates } from "@/lib/game/local-progress";
 import { draftModeLabel } from "@/lib/game/mode-labels";
+import { readSavedRunQuota, type SavedRunQuota } from "@/lib/game/saved-runs-store";
 
 export interface AccountIdentity {
   readonly userId: string;
@@ -66,6 +67,7 @@ export interface AccountRunsPage {
     readonly total: number;
     readonly hasMore: boolean;
   };
+  readonly quota: SavedRunQuota;
 }
 
 export interface AccountRunsPageOptions {
@@ -132,6 +134,7 @@ export async function readAccountRunsPage(
     userId,
     rows.map((r) => r.token),
   );
+  const quota = await readSavedRunQuota({ userId, sessionId: "account-quota" }, { db });
 
   return {
     identity,
@@ -143,6 +146,7 @@ export async function readAccountRunsPage(
       total,
       hasMore: offset + rows.length < total,
     },
+    quota,
   };
 }
 

@@ -139,6 +139,16 @@ const structuralBindingDownSql = readFileSync(
   "utf8",
 );
 
+const auditAuthSql = readFileSync(
+  new URL("../migrations/0013_audit_s1_auth_abuse.sql", import.meta.url),
+  "utf8",
+);
+
+const auditAuthDownSql = readFileSync(
+  new URL("../migrations/0013_audit_s1_auth_abuse.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
@@ -169,7 +179,7 @@ function readSnapshot(index: number): DrizzleSnapshot {
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(13);
+    expect(journal.entries).toHaveLength(14);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -196,14 +206,16 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[11]?.idx).toBe(11);
     expect(journal.entries[12]?.tag).toBe("0012_ranked_attempt_structural_binding");
     expect(journal.entries[12]?.idx).toBe(12);
+    expect(journal.entries[13]?.tag).toBe("0013_audit_s1_auth_abuse");
+    expect(journal.entries[13]?.idx).toBe(13);
   });
 
-  it("has one linked drizzle-kit snapshot for every journal entry through 0012", () => {
+  it("has one linked drizzle-kit snapshot for every journal entry through 0013", () => {
     const snapshotFiles = readdirSync(new URL("../migrations/meta", import.meta.url))
       .filter((file) => /^\d{4}_snapshot\.json$/u.test(file))
       .sort();
     expect(snapshotFiles).toHaveLength(journal.entries.length);
-    expect(snapshotFiles.at(-1)).toBe("0012_snapshot.json");
+    expect(snapshotFiles.at(-1)).toBe("0013_snapshot.json");
 
     const snapshots = journal.entries.map((entry) => readSnapshot(entry.idx));
     for (let index = 1; index < snapshots.length; index += 1) {
@@ -807,6 +819,59 @@ describe("@wcdraft/db migrations — 0003_summary_jsonb", () => {
     expect(summarySql).not.toMatch(/ALTER TABLE "magic_link_tokens"/);
     expect(summarySql).not.toMatch(/ALTER TABLE "leaderboard_entries"/);
     expect(summarySql).not.toMatch(/ALTER TABLE "ranked_attempts"/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0013_audit_s1_auth_abuse", () => {
+  it("adds delivery truth and exact saved-run quota state", () => {
+    for (const column of [
+      "purpose",
+      "delivery_status",
+      "delivery_attempted_at",
+      "delivery_correlation_id",
+    ]) {
+      expect(auditAuthSql).toContain(`ADD COLUMN "${column}"`);
+    }
+    expect(auditAuthSql).toContain('ADD COLUMN "payload_bytes" integer DEFAULT 0 NOT NULL');
+    expect(auditAuthSql).toContain('ADD COLUMN "pinned_at" timestamp with time zone');
+    expect(auditAuthSql).toMatch(/UPDATE "saved_runs"[\s\S]+octet_length\(convert_to/);
+    expect(auditAuthSql).toContain("saved_runs_owner_unpinned_eviction_idx");
+    expect(auditAuthSql).toContain("saved_runs_session_unpinned_eviction_idx");
+  });
+
+  it("keeps snapshot columns, constraints, and partial indexes in parity", () => {
+    const latest = readSnapshot(13);
+    const magic = latest.tables["public.magic_link_tokens"];
+    const runs = latest.tables["public.saved_runs"];
+    expect(magic?.columns).toMatchObject({
+      purpose: expect.anything(),
+      delivery_status: expect.anything(),
+      delivery_attempted_at: expect.anything(),
+      delivery_correlation_id: expect.anything(),
+    });
+    expect(runs?.columns).toMatchObject({
+      payload_bytes: expect.anything(),
+      pinned_at: expect.anything(),
+    });
+    expect(runs?.indexes.saved_runs_owner_unpinned_eviction_idx?.where).toContain("pinned_at");
+    expect(runs?.indexes.saved_runs_session_unpinned_eviction_idx?.where).toContain("pinned_at");
+    expect(runs?.checkConstraints).toHaveProperty("saved_runs_payload_bytes_chk");
+  });
+
+  it("down migration removes only the 0013 additions in dependency-safe order", () => {
+    expect(
+      auditAuthDownSql.indexOf('DROP INDEX IF EXISTS "saved_runs_owner_unpinned_eviction_idx"'),
+    ).toBeLessThan(auditAuthDownSql.indexOf('DROP COLUMN IF EXISTS "payload_bytes"'));
+    for (const column of [
+      "delivery_correlation_id",
+      "delivery_attempted_at",
+      "delivery_status",
+      "purpose",
+      "pinned_at",
+      "payload_bytes",
+    ]) {
+      expect(auditAuthDownSql).toContain(`DROP COLUMN IF EXISTS "${column}"`);
+    }
   });
 });
 

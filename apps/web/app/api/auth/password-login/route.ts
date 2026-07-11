@@ -3,7 +3,6 @@
 // issuance path from the magic-link verifier.
 import { NextResponse, type NextRequest } from "next/server";
 
-import { ensureSession } from "@/lib/auth/anon-session";
 import {
   CSRF_COOKIE_NAME,
   CSRF_HEADER_NAME,
@@ -13,13 +12,14 @@ import {
 import { AuthError } from "@/lib/auth/errors";
 import {
   buildRuntimeDeps,
+  clearBootstrapCsrfCookie,
+  ensureMutationSession,
   jsonError,
   readRequestCookie,
   setCsrfCookie,
   setSessionCookie,
 } from "@/lib/auth/handler-helpers";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
-import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { authenticatePassword } from "@/lib/auth/passwords";
 import { issueAuthenticatedSession } from "@/lib/auth/session-issue";
 import { safeNextPath } from "@/lib/auth/safe-next-path";
@@ -39,6 +39,7 @@ interface RequestBody {
 const MAX_PASSWORD_LOGIN_BODY_BYTES = 4 * 1024;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  let freshSession: { readonly cookieValue: string; readonly csrfSecret: string } | null = null;
   try {
     if (!isAuthEnabled()) {
       throw new AuthError("AUTH_DISABLED", "Auth feature is not enabled.");
@@ -49,8 +50,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       referer: req.headers.get("referer"),
       host: req.headers.get("host"),
     });
-    const cookieRaw = readRequestCookie(req, SESSION_COOKIE_NAME);
-    const { session } = await ensureSession(cookieRaw, deps);
+    const { session, fresh, cookieValue } = await ensureMutationSession(req, deps);
+    if (fresh) freshSession = { cookieValue, csrfSecret: session.csrfSecret };
     verifyCsrfDoubleSubmit({
       cookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),
       headerValue: req.headers.get(CSRF_HEADER_NAME),
@@ -85,8 +86,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
     setSessionCookie(response, issued.sessionCookieValue);
     setCsrfCookie(response, issued.csrfSecret);
+    clearBootstrapCsrfCookie(response);
     return response;
   } catch (err) {
-    return jsonError(err);
+    const response = jsonError(err);
+    if (freshSession) {
+      setSessionCookie(response, freshSession.cookieValue);
+      setCsrfCookie(response, freshSession.csrfSecret);
+      clearBootstrapCsrfCookie(response);
+    }
+    return response;
   }
 }

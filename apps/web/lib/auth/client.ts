@@ -150,6 +150,18 @@ export async function putJson<T>(
   });
 }
 
+/** PATCH with a JSON body (sets Content-Type) + CSRF. */
+export async function patchJson<T>(
+  url: string,
+  body: unknown,
+): Promise<{ ok: boolean; status: number; data: T | null }> {
+  return requestJsonWithCsrf<T>("authenticated PATCH", url, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
 async function requestJsonWithCsrf<T>(
   operation: string,
   url: string,

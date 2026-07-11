@@ -13,6 +13,7 @@
 //   Max-Age                   — session TTL in seconds; matches the DB row
 import { NextResponse, type NextRequest } from "next/server";
 import { getDb, type Db } from "@wcdraft/db";
+import { validateSessionCookie } from "./sessions";
 import { AuthError } from "./errors";
 import { SESSION_COOKIE_NAME, SESSION_TTL_MS, type SessionDeps } from "./sessions";
 import { CSRF_COOKIE_NAME } from "./csrf";
@@ -25,6 +26,12 @@ import {
 } from "./recent-magic";
 import { boundedBodyErrorResponse } from "../http/bounded-body";
 import { readClientIp } from "../http/client-ip";
+import {
+  BOOTSTRAP_CSRF_COOKIE_NAME,
+  BOOTSTRAP_CSRF_TTL_MS,
+  materializeBootstrapSession,
+} from "./bootstrap-csrf";
+import { createCorrelationId, logSecurityEvent } from "./security-log";
 
 export interface RuntimeDeps extends SessionDeps {
   readonly sender: EmailSender;
@@ -142,6 +149,34 @@ export function readRequestCookie(req: NextRequest, name: string): string | null
 
 export { readClientIp };
 
+export async function ensureMutationSession(
+  req: NextRequest,
+  deps: SessionDeps,
+): Promise<{
+  session: Awaited<ReturnType<typeof validateSessionCookie>>;
+  fresh: boolean;
+  cookieValue: string;
+}> {
+  const sessionCookie = readRequestCookie(req, SESSION_COOKIE_NAME);
+  if (sessionCookie) {
+    try {
+      const session = await validateSessionCookie(sessionCookie, deps);
+      return { session, fresh: false, cookieValue: sessionCookie };
+    } catch (error) {
+      if (!(error instanceof AuthError)) throw error;
+    }
+  }
+  const materialized = await materializeBootstrapSession(
+    {
+      bootstrapCookieValue: readRequestCookie(req, BOOTSTRAP_CSRF_COOKIE_NAME),
+      csrfCookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),
+      csrfHeaderValue: req.headers.get("x-csrf-token"),
+    },
+    deps,
+  );
+  return { ...materialized, fresh: true };
+}
+
 function isProd(): boolean {
   return process.env.NODE_ENV === "production";
 }
@@ -218,6 +253,25 @@ export function setRecentMagicCookie(
   );
 }
 
+export function setBootstrapCsrfCookie(response: NextResponse, value: string): void {
+  response.headers.append(
+    "Set-Cookie",
+    buildSetCookieValue({
+      name: BOOTSTRAP_CSRF_COOKIE_NAME,
+      value,
+      maxAgeSeconds: BOOTSTRAP_CSRF_TTL_MS / 1000,
+      httpOnly: true,
+    }),
+  );
+}
+
+export function clearBootstrapCsrfCookie(response: NextResponse): void {
+  response.headers.append(
+    "Set-Cookie",
+    `${BOOTSTRAP_CSRF_COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax${isProd() ? "; Secure" : ""}; HttpOnly`,
+  );
+}
+
 export function clearSessionCookie(response: NextResponse): void {
   // Max-Age=0 with the same Path expires the cookie.
   response.headers.append(
@@ -232,25 +286,65 @@ export function clearSessionCookie(response: NextResponse): void {
     "Set-Cookie",
     `${RECENT_MAGIC_COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax${isProd() ? "; Secure" : ""}; HttpOnly`,
   );
+  clearBootstrapCsrfCookie(response);
 }
 
 export function jsonError(err: unknown): NextResponse {
   const bodyError = boundedBodyErrorResponse(err);
   if (bodyError) return bodyError;
   if (err instanceof AuthError) {
-    // q-003 — server-misconfiguration detail (env-var names, secret-generation
-    // commands) must never reach the client. Log the full message server-side
-    // and return a generic body; every other code's message is its code-level
-    // copy and stays as-is.
+    const correlationId = createCorrelationId();
     if (err.code === "SECRET_MISCONFIGURED") {
-      console.error("[auth] secret misconfigured:", err.message);
+      logSecurityEvent({
+        code: "AUTH_CONFIGURATION_ERROR",
+        correlationId,
+        error: err,
+      });
       return NextResponse.json(
-        { error: err.code, message: "Server configuration error." },
+        {
+          error: err.code,
+          message: publicAuthErrorMessage(err.code),
+          correlation_id: correlationId,
+        },
         { status: err.status },
       );
     }
-    return NextResponse.json({ error: err.code, message: err.message }, { status: err.status });
+    return NextResponse.json(
+      { error: err.code, message: publicAuthErrorMessage(err.code) },
+      { status: err.status },
+    );
   }
-  console.error("[auth] unexpected error", err);
-  return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+  const correlationId = createCorrelationId();
+  logSecurityEvent({ code: "AUTH_UNEXPECTED_ERROR", correlationId, error: err });
+  return NextResponse.json(
+    {
+      error: "INTERNAL_ERROR",
+      message: "The request could not be completed.",
+      correlation_id: correlationId,
+    },
+    { status: 500 },
+  );
+}
+
+function publicAuthErrorMessage(code: AuthError["code"]): string {
+  const messages: Record<AuthError["code"], string> = {
+    TOKEN_EXPIRED: "This link has expired.",
+    TOKEN_CONSUMED: "This link has already been used.",
+    TOKEN_UNKNOWN: "This link is not valid.",
+    TOKEN_MALFORMED: "This link is not valid.",
+    SESSION_INVALID: "The session is not valid.",
+    SESSION_EXPIRED: "The session has expired.",
+    SESSION_TAMPERED: "The session is not valid.",
+    CSRF_MISSING: "The protected request is missing required state.",
+    CSRF_MISMATCH: "The protected request could not be verified.",
+    ORIGIN_MISMATCH: "The request origin could not be verified.",
+    ANON_FORBIDDEN: "Sign in is required.",
+    INVALID_CREDENTIALS: "The credentials are not valid.",
+    PASSWORD_WEAK: "The password does not meet the requirements.",
+    RATE_LIMITED: "Too many requests. Try again later.",
+    EMAIL_INVALID: "Enter a valid email address.",
+    AUTH_DISABLED: "Auth is not available in this deployment.",
+    SECRET_MISCONFIGURED: "Server configuration error.",
+  };
+  return messages[code];
 }

@@ -53,6 +53,7 @@ export async function setupTestDb(): Promise<{
     "0010_account_password.sql",
     "0011_email_verification.sql",
     "0012_ranked_attempt_structural_binding.sql",
+    "0013_audit_s1_auth_abuse.sql",
   ]) {
     const sql = loadMigration(file).replace(/-->\s*statement-breakpoint/g, "");
     await pg.exec(sql);

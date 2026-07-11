@@ -10,7 +10,6 @@
 // Rate limits (per email AND per IP) are applied inside requestMagicLink.
 import { NextResponse, type NextRequest } from "next/server";
 import { requestMagicLink } from "@/lib/auth/magic-link";
-import { ensureSession } from "@/lib/auth/anon-session";
 import {
   verifyCsrfDoubleSubmit,
   verifyOriginHost,
@@ -20,6 +19,8 @@ import {
 import {
   buildRuntimeDeps,
   buildMagicLinkDeps,
+  clearBootstrapCsrfCookie,
+  ensureMutationSession,
   jsonError,
   readRequestCookie,
   setCsrfCookie,
@@ -27,7 +28,6 @@ import {
 } from "@/lib/auth/handler-helpers";
 import { readClientIp } from "@/lib/http/client-ip";
 import { requireJsonObject } from "@/lib/http/bounded-body";
-import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { AuthError } from "@/lib/auth/errors";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 
@@ -39,6 +39,7 @@ interface RequestBody {
 const MAX_MAGIC_LINK_BODY_BYTES = 2 * 1024;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  let freshSession: { readonly cookieValue: string; readonly csrfSecret: string } | null = null;
   try {
     // F-3.6 ship-dark gate — refuse before building secret-dependent deps.
     // The sign-in UI is hidden in this mode, but a directly-POSTed payload
@@ -57,8 +58,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
 
     // 2) Resolve / ensure session, then CSRF double-submit check.
-    const cookieRaw = readRequestCookie(req, SESSION_COOKIE_NAME);
-    const { session, fresh, cookieValue } = await ensureSession(cookieRaw, deps);
+    const { session, fresh, cookieValue } = await ensureMutationSession(req, deps);
+    if (fresh) freshSession = { cookieValue, csrfSecret: session.csrfSecret };
     verifyCsrfDoubleSubmit({
       cookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),
       headerValue: req.headers.get(CSRF_HEADER_NAME),
@@ -81,9 +82,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (fresh) {
       setSessionCookie(response, cookieValue);
       setCsrfCookie(response, session.csrfSecret);
+      clearBootstrapCsrfCookie(response);
     }
     return response;
   } catch (err) {
-    return jsonError(err);
+    const response = jsonError(err);
+    if (freshSession) {
+      setSessionCookie(response, freshSession.cookieValue);
+      setCsrfCookie(response, freshSession.csrfSecret);
+      clearBootstrapCsrfCookie(response);
+    }
+    return response;
   }
 }

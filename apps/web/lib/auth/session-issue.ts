@@ -3,6 +3,7 @@ import { sessions as sessionsTable, type Session } from "@wcdraft/db";
 
 import { createSession, SESSION_TTL_MS, signCookie, type SessionDeps } from "./sessions";
 import { generateOpaqueToken } from "./tokens";
+import { createCorrelationId, logSecurityEvent } from "./security-log";
 
 export interface IssueAuthenticatedSessionArgs {
   readonly session: Session;
@@ -59,8 +60,12 @@ export async function issueAuthenticatedSession(
         sessionId,
         userId: args.userId,
       });
-    } catch (e) {
-      console.error("[auth] onAuthenticatedSessionReady hook failed", e);
+    } catch (error) {
+      logSecurityEvent({
+        code: "AUTH_POST_SESSION_HOOK_FAILED",
+        correlationId: createCorrelationId(),
+        error,
+      });
     }
   }
 

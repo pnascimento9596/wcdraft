@@ -36,6 +36,7 @@ import {
 import { AuthError } from "../auth/errors";
 import { readRequestCookie } from "../auth/handler-helpers";
 import { SESSION_COOKIE_NAME, validateSessionCookie, type SessionDeps } from "../auth/sessions";
+import { BOOTSTRAP_CSRF_COOKIE_NAME, materializeBootstrapSession } from "../auth/bootstrap-csrf";
 import { SUBMIT_ERROR_HTTP_STATUS, type SubmitGateCode } from "./validate";
 
 export const RANKED_AUTH_REQUIRED_MESSAGE =
@@ -48,6 +49,8 @@ export interface SubmitIdentity {
   readonly sessionId: string | null;
   readonly userId: string | null;
   readonly emailVerified: boolean;
+  readonly freshSessionCookieValue?: string;
+  readonly csrfSecret?: string;
 }
 
 /** Gate failure with the single-sourced HTTP status for its code. */
@@ -89,20 +92,45 @@ export async function requireSubmitIdentity(
     if (deps.requireAccount()) {
       throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
     }
-    return { sessionId: null, userId: null, emailVerified: false };
+    return {
+      sessionId: null,
+      userId: null,
+      emailVerified: false,
+    };
   }
 
   let session;
+  let freshSessionCookieValue: string | null = null;
   try {
     session = await validateSessionCookie(cookie, sessionDeps(deps));
   } catch (err) {
     if (err instanceof AuthError) {
-      const message = deps.requireAccount()
-        ? RANKED_AUTH_REQUIRED_MESSAGE
-        : `session invalid (${err.code})`;
-      throw new LeaderboardGateError("AUTH_REQUIRED", message);
+      try {
+        verifyOriginHost({
+          origin: req.headers.get("origin"),
+          referer: req.headers.get("referer"),
+          host: req.headers.get("host"),
+        });
+        const materialized = await materializeBootstrapSession(
+          {
+            bootstrapCookieValue: readRequestCookie(req, BOOTSTRAP_CSRF_COOKIE_NAME),
+            csrfCookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),
+            csrfHeaderValue: req.headers.get(CSRF_HEADER_NAME),
+          },
+          sessionDeps(deps),
+        );
+        session = materialized.session;
+        freshSessionCookieValue = materialized.cookieValue;
+      } catch (bootstrapError) {
+        if (!(bootstrapError instanceof AuthError)) throw bootstrapError;
+        const message = deps.requireAccount()
+          ? RANKED_AUTH_REQUIRED_MESSAGE
+          : `session invalid (${err.code})`;
+        throw new LeaderboardGateError("AUTH_REQUIRED", message);
+      }
+    } else {
+      throw err;
     }
-    throw err;
   }
 
   try {
@@ -142,7 +170,12 @@ export async function requireSubmitIdentity(
       throw new LeaderboardGateError("VERIFICATION_REQUIRED", RANKED_VERIFICATION_REQUIRED_MESSAGE);
     }
   }
-  return { sessionId: session.id, userId: session.userId, emailVerified };
+  return {
+    sessionId: session.id,
+    userId: session.userId,
+    emailVerified,
+    ...(freshSessionCookieValue ? { freshSessionCookieValue, csrfSecret: session.csrfSecret } : {}),
+  };
 }
 
 /**
@@ -163,7 +196,11 @@ export async function requireReadIdentity(
       now: deps.now,
       cookieSecret: deps.getCookieSecret(),
     });
-    return { sessionId: session.id, userId: session.userId, emailVerified: false };
+    return {
+      sessionId: session.id,
+      userId: session.userId,
+      emailVerified: false,
+    };
   } catch (err) {
     if (err instanceof AuthError) {
       throw new LeaderboardGateError("AUTH_REQUIRED", `session invalid (${err.code})`);

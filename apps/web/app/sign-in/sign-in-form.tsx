@@ -337,8 +337,17 @@ function CheckYourEmail({
       </div>
       <h2 className="signin-sent__h display">check your email</h2>
       <p className="signin-sent__msg">
-        We sent a single-use {purpose === "reset" ? "password reset" : "sign-in"} link to{" "}
-        <strong className="signin-sent__email mono">{email}</strong>.
+        {purpose === "reset" ? (
+          <>
+            If <strong className="signin-sent__email mono">{email}</strong> is eligible, a
+            single-use password reset delivery was requested.
+          </>
+        ) : (
+          <>
+            We sent a single-use sign-in link to{" "}
+            <strong className="signin-sent__email mono">{email}</strong>.
+          </>
+        )}
       </p>
       {purpose === "reset" ? (
         <p className="signin-sent__hint">

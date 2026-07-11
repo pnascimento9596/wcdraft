@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
-import { magicLinkTokens, users } from "@wcdraft/db";
+import { leaderboardEntries, magicLinkTokens, users } from "@wcdraft/db";
 
 import type { RuntimeDeps } from "@/lib/auth/handler-helpers";
 
@@ -189,6 +189,37 @@ describe("account route auth status", () => {
     await expect(verifyPasswordHash(user?.passwordHash ?? null, resetPassword)).resolves.toBe(true);
   });
 
+  it("deletes account-owned leaderboard rows through the user cascade", async () => {
+    const userId = await insertUser("delete-cascade@example.com", testCredential("delete"));
+    const auth = await createSession({ userId }, runtime.deps!);
+    await env.db.insert(leaderboardEntries).values({
+      seasonKey: "delete-season",
+      mode: "casual",
+      draftMode: "classic",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
+      userId,
+      displayAlias: "delete_me",
+      token: "delete-token",
+      verifiedScore: 1,
+      scoreBreakdown: [],
+    });
+    const response = await accountDelete(
+      req("/api/account", {
+        method: "DELETE",
+        headers: {
+          ...sessionHeaders(auth.cookieValue, auth.session.csrfSecret),
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ confirm: "delete my account" }),
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(await env.db.select().from(users)).toHaveLength(0);
+    expect(await env.db.select().from(leaderboardEntries)).toHaveLength(0);
+  });
+
   it("signs up with username/email/password, sends verification, and issues an authenticated session", async () => {
     const anon = await createSession({ userId: null }, runtime.deps!);
     const headers = sessionHeaders(anon.cookieValue, anon.session.csrfSecret);
@@ -294,9 +325,10 @@ describe("account route auth status", () => {
       await expect(response.json()).resolves.toMatchObject({ ok: true });
       expect(throwingSender.calls).toBe(1);
       expect(consoleSpy).toHaveBeenCalledWith(
-        "[auth/reset] deferred email send failed",
-        "reset provider down",
+        "[security]",
+        expect.stringContaining("AUTH_EMAIL_DELIVERY_FAILED"),
       );
+      expect(JSON.stringify(consoleSpy.mock.calls)).not.toContain("reset provider down");
     } finally {
       consoleSpy.mockRestore();
     }

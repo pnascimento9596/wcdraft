@@ -10,6 +10,7 @@ import { setupTestDb } from "@/lib/auth/__tests__/_test-db";
 import { sessions, users, savedRuns, leaderboardEntries, rankedAttempts } from "@wcdraft/db";
 import { eq, isNull, and } from "drizzle-orm";
 import { claimLeaderboardEntries, claimAnonArtifacts } from "@/lib/leaderboard/claim";
+import { ACCOUNT_SAVED_RUNS_CAP, readSavedRunQuota, saveRun } from "@/lib/game/saved-runs-store";
 
 let env: Awaited<ReturnType<typeof setupTestDb>>;
 beforeAll(async () => {
@@ -20,6 +21,14 @@ afterEach(async () => {
 });
 
 const deps = () => ({ db: env.db });
+
+function deferred(): { promise: Promise<void>; resolve: () => void } {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
 
 async function makeUser(email: string): Promise<string> {
   const [u] = await env.db.insert(users).values({ email }).returning();
@@ -432,6 +441,75 @@ describe("claimAnonArtifacts — one transaction, two transfers", () => {
       runs: { transferred: 0, dropped: 0 },
       leaderboard: { transferred: 0, dropped: 0 },
     });
+  });
+
+  it("serializes claim and save on the target account quota", async () => {
+    const uid = await makeUser("claim-save-race@example.com");
+    await makeSession({ id: "ses-claim-save-account", userId: uid });
+    await makeSession({ id: "ses-claim-save-anon" });
+    const createdAt = new Date(Date.UTC(2026, 5, 1));
+    await env.db.insert(savedRuns).values([
+      ...Array.from({ length: ACCOUNT_SAVED_RUNS_CAP - 1 }, (_, index) => ({
+        id: `20000000-0000-4000-8000-${(index + 1).toString().padStart(12, "0")}`,
+        ownerUserId: uid,
+        token: `account-${index.toString()}`,
+        payloadBytes: 1,
+        claimState: "claimed" as const,
+        createdAt,
+      })),
+      ...Array.from({ length: 5 }, (_, index) => ({
+        id: `30000000-0000-4000-8000-${(index + 1).toString().padStart(12, "0")}`,
+        ownerUserId: null,
+        sessionId: "ses-claim-save-anon",
+        token: `anonymous-${index.toString()}`,
+        payloadBytes: 9,
+        claimState: "anonymous" as const,
+        createdAt,
+      })),
+    ]);
+    const claimHasUserLock = deferred();
+    const releaseClaim = deferred();
+    let saveHasUserLock = false;
+    const claim = claimAnonArtifacts(
+      { sessionId: "ses-claim-save-anon", userId: uid },
+      {
+        db: env.db,
+        onSavedRunScopeLocked: async (scope) => {
+          if (scope.kind === "user") {
+            claimHasUserLock.resolve();
+            await releaseClaim.promise;
+          }
+        },
+      },
+    );
+    await claimHasUserLock.promise;
+    const save = saveRun(
+      {
+        token: "concurrent-account-save",
+        versionAnchors: null,
+        runId: "concurrent-account-save",
+        parentSeed: null,
+        summary: null,
+      },
+      { userId: uid, sessionId: "ses-claim-save-account" },
+      {
+        db: env.db,
+        onScopeLocked: async () => {
+          saveHasUserLock = true;
+        },
+      },
+    );
+    await Promise.resolve();
+    expect(saveHasUserLock).toBe(false);
+    releaseClaim.resolve();
+    await Promise.all([claim, save]);
+
+    const quota = await readSavedRunQuota(
+      { userId: uid, sessionId: "ses-claim-save-account" },
+      deps(),
+    );
+    expect(quota.usedRows).toBe(ACCOUNT_SAVED_RUNS_CAP);
+    expect(quota.usedBytes).toBeLessThanOrEqual(quota.maxBytes);
   });
 
   it("partial failure rolls back BOTH transfers (saved_runs stays anon)", async () => {

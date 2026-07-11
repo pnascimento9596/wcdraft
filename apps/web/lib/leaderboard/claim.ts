@@ -84,6 +84,10 @@ export interface ClaimDeps {
 /** Dependencies for the combined claim moment — needs to open a transaction. */
 export interface ClaimRunnerDeps {
   readonly db: Pick<Db, "transaction">;
+  readonly onSavedRunScopeLocked?: (scope: {
+    kind: "user" | "session";
+    id: string;
+  }) => Promise<void>;
 }
 
 export interface ClaimArgs {
@@ -208,7 +212,10 @@ export async function claimAnonArtifacts(
     // The drizzle transaction handle structurally satisfies both the saved-runs
     // `StoreDeps.db` surface and `ClaimTx`, so the SAME `tx` drives both
     // transfers under one transaction — no cast at the seam.
-    const runs = await claimAnonRuns(args, { db: tx });
+    const runs = await claimAnonRuns(args, {
+      db: tx,
+      onScopeLocked: deps.onSavedRunScopeLocked,
+    });
     const leaderboard = await claimLeaderboardEntries(args, { db: tx });
     return { runs, leaderboard };
   });

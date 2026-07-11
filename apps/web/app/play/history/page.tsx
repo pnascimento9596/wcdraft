@@ -6,7 +6,7 @@ import { GameFallback } from "../../../components/game/game-fallback";
 export const metadata: Metadata = {
   title: "Run history",
   description:
-    "Your most recent completed wcdraft runs. Signed-in users can open Account for the full server-backed history.",
+    "Your most recent completed wcdraft runs. Signed-in users can open Account for server-backed history capped at 500 runs.",
   // Local-only, per-browser content — nothing to index; noindex.
   robots: { index: false, follow: true },
 };

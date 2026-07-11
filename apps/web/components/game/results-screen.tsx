@@ -59,6 +59,7 @@ import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
 import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
 import { encodeRunToken } from "@/lib/game/run-token";
 import { listRunRecords, setRunPinned } from "@/lib/game/run-record";
+import { mirrorRunPinToServer } from "@/lib/game/save-mirror";
 import s from "./game.module.css";
 
 // MemoryReveal renders only for blind-mode runs (see below). Lazy-load it so
@@ -433,6 +434,7 @@ function ResultsBody({
       setPinned(result.record.pinned === true);
       setPinWarning(result.warnings[0] ?? null);
       setProgressRefresh((n) => n + 1);
+      void mirrorRunPinToServer(record.run_id, result.record.pinned === true);
       return;
     }
     setPinWarning("Could not update the local pin for this run.");

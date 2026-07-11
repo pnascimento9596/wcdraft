@@ -5,6 +5,7 @@
 // email delivery flow in production). The actual form lives
 // in the SignInForm client component.
 import type { Metadata } from "next";
+import Link from "next/link";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 import "./sign-in.css";
 import { SignInForm } from "./sign-in-form";
@@ -52,7 +53,8 @@ export default function SignInPage(): React.ReactElement {
           </li>
           <li>
             <span className="signin-screen__crumb-num">03</span>
-            Email is the only PII. No tracking, no profile fluff.
+            Account and technical data are limited to what the service needs. See the{" "}
+            <Link href="/privacy">Privacy Policy</Link>.
           </li>
         </ul>
       </div>

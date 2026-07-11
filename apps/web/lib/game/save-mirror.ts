@@ -15,7 +15,7 @@
 //     (summary would be a lie).
 import { buildShareView } from "./share-adapters";
 import { encodeRunToken, RunTokenError } from "./run-token";
-import { postJson, ensureCsrfToken } from "@/lib/auth/client";
+import { ensureCsrfToken, patchJson, postJson } from "@/lib/auth/client";
 import type { GameData } from "./data";
 import type { RunRecordV1 } from "./run-record";
 import type { SavedRunSummary } from "./saved-runs-store";
@@ -124,6 +124,7 @@ export async function mirrorRunToServer(
       runId: record.run_id,
       parentSeed: record.parent_seed,
       summary,
+      pinned: record.pinned === true,
     });
     if (r.ok) mirrorComplete.add(key);
     return {
@@ -141,5 +142,15 @@ export async function mirrorRunToServer(
     };
   } finally {
     mirrorInFlight.delete(key);
+  }
+}
+
+/** Best-effort mirror of the local preservation flag. Local state stays authoritative. */
+export async function mirrorRunPinToServer(runId: string, pinned: boolean): Promise<void> {
+  try {
+    await ensureCsrfToken();
+    await patchJson("/api/runs", { runId, pinned });
+  } catch {
+    // Pinning is already durable locally. The next full mirror can reconcile it.
   }
 }

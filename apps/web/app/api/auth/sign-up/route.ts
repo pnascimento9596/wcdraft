@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { ensureSession } from "@/lib/auth/anon-session";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 import {
   CSRF_COOKIE_NAME,
@@ -12,6 +11,8 @@ import { AuthError } from "@/lib/auth/errors";
 import {
   buildMagicLinkDeps,
   buildRuntimeDeps,
+  clearBootstrapCsrfCookie,
+  ensureMutationSession,
   jsonError,
   readRequestCookie,
   setCsrfCookie,
@@ -20,7 +21,6 @@ import {
 import { requestMagicLink } from "@/lib/auth/magic-link";
 import { safeNextPath } from "@/lib/auth/safe-next-path";
 import { issueAuthenticatedSession } from "@/lib/auth/session-issue";
-import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { createPasswordAccount } from "@/lib/auth/signup";
 import { claimAnonArtifacts } from "@/lib/leaderboard/claim";
 import { readClientIp } from "@/lib/http/client-ip";
@@ -38,6 +38,7 @@ interface RequestBody {
 const MAX_SIGN_UP_BODY_BYTES = 6 * 1024;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  let freshSession: { readonly cookieValue: string; readonly csrfSecret: string } | null = null;
   try {
     if (!isAuthEnabled()) {
       throw new AuthError("AUTH_DISABLED", "Auth feature is not enabled.");
@@ -48,8 +49,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       referer: req.headers.get("referer"),
       host: req.headers.get("host"),
     });
-    const cookieRaw = readRequestCookie(req, SESSION_COOKIE_NAME);
-    const { session } = await ensureSession(cookieRaw, deps);
+    const { session, fresh, cookieValue } = await ensureMutationSession(req, deps);
+    if (fresh) freshSession = { cookieValue, csrfSecret: session.csrfSecret };
     verifyCsrfDoubleSubmit({
       cookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),
       headerValue: req.headers.get(CSRF_HEADER_NAME),
@@ -106,8 +107,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
     setSessionCookie(response, issued.sessionCookieValue);
     setCsrfCookie(response, issued.csrfSecret);
+    clearBootstrapCsrfCookie(response);
     return response;
   } catch (err) {
-    return jsonError(err);
+    const response = jsonError(err);
+    if (freshSession) {
+      setSessionCookie(response, freshSession.cookieValue);
+      setCsrfCookie(response, freshSession.csrfSecret);
+      clearBootstrapCsrfCookie(response);
+    }
+    return response;
   }
 }

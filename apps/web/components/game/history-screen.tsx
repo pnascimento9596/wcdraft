@@ -125,7 +125,7 @@ export function HistoryScreen() {
           <h1 className="display">No completed runs yet</h1>
           <p className="page-head__note">
             Finish a draft and simulate the run to see it here. Signed-in users can open Account for
-            the complete server history.
+            server history, capped at 500 runs or 8 MiB.
           </p>
         </header>
         {mode.persistence === "volatile" ? (
@@ -154,8 +154,8 @@ export function HistoryScreen() {
         <span className="eyebrow">Run history</span>
         <h1 className="display">Recent runs</h1>
         <p className="page-head__note">
-          This shortcut shows the 5 most recent completed runs. Account is the complete server
-          history for signed-in users.
+          This shortcut shows the 5 most recent completed runs. Account keeps up to 500 runs or 8
+          MiB for signed-in users.
         </p>
       </header>
 
@@ -176,7 +176,7 @@ export function HistoryScreen() {
       <div className={s.resultsActions}>
         {isSignedIn ? (
           <Link href="/account" className="btn btn--ghost">
-            View all in Account
+            View account history
           </Link>
         ) : null}
         <Link href={draftHref(null)} className="btn btn--primary">

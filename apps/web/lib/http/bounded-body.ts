@@ -30,10 +30,16 @@ export interface RequireJsonObjectOptions {
   readonly allowedContentTypes?: readonly string[];
 }
 
-export async function requireJsonObject(
-  request: Pick<Request, "headers" | "body">,
+/**
+ * Apply the cheap, header-only portion of the bounded JSON contract.
+ *
+ * Routes with a cost firewall can call this before an independent quota read,
+ * then call `requireJsonObject` only after that read allows body consumption.
+ */
+export function validateJsonRequestMetadata(
+  request: Pick<Request, "headers">,
   options: RequireJsonObjectOptions,
-): Promise<Record<string, unknown>> {
+): void {
   const allowed = options.allowedContentTypes ?? ["application/json"];
   const mediaType = (request.headers.get("content-type") ?? "").split(";")[0]!.trim().toLowerCase();
   if (!allowed.map((x) => x.toLowerCase()).includes(mediaType)) {
@@ -50,7 +56,15 @@ export async function requireJsonObject(
       throw new BoundedBodyError("BODY_TOO_LARGE", `body exceeds ${options.maxBytes} bytes`);
     }
   }
+}
 
+export async function requireJsonObject(
+  request: Pick<Request, "headers" | "body">,
+  options: RequireJsonObjectOptions,
+): Promise<Record<string, unknown>> {
+  validateJsonRequestMetadata(request, options);
+  const declared = request.headers.get("content-length");
+  const declaredBytes = declared === null || declared === "" ? null : Number(declared);
   const read = await readBoundedText(request, options.maxBytes);
   if (read.status === "too_large") {
     throw new BoundedBodyError("BODY_TOO_LARGE", `body exceeds ${options.maxBytes} bytes`);
