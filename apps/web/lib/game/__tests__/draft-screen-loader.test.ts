@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { GameData } from "../data";
+import { RuntimeDataLoadError } from "../errors";
 import { loadInitialDraftData } from "../../../components/game/draft-screen/use-draft-screen-loader";
 
 const gameData = {} as GameData;
@@ -27,6 +28,21 @@ describe("Daily draft setup preflight", () => {
     await expect(
       loadInitialDraftData(null, "2026-07-03", { loadDailyAvailability, loadGameData }),
     ).resolves.toEqual({ kind: "daily_unavailable" });
+    expect(loadGameData).not.toHaveBeenCalled();
+  });
+
+  it("preserves a translated metadata timeout for the retryable first-load panel", async () => {
+    const timeout = new Error("timed out");
+    timeout.name = "RequestTimeoutError";
+    const translated = new RuntimeDataLoadError("Daily metadata took too long to load.", timeout);
+    const loadDailyAvailability = vi.fn(async () => {
+      throw translated;
+    });
+    const loadGameData = vi.fn(async () => gameData);
+
+    await expect(
+      loadInitialDraftData(null, "2026-07-03", { loadDailyAvailability, loadGameData }),
+    ).rejects.toBe(translated);
     expect(loadGameData).not.toHaveBeenCalled();
   });
 

@@ -44,12 +44,14 @@ afterEach(() => {
 describe("createServerRunHistoryProvider", () => {
   it("returns empty entries with a warning when /api/runs throws", async () => {
     const provider = createServerRunHistoryProvider({
-      fetcher: () => Promise.reject(new Error("network down")),
+      fetcher: () =>
+        Promise.reject(new Error("network down at https://user:secret@example.invalid/private")),
     });
     const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
     expect(result.entries).toEqual([]);
     expect(result.persistence).toBe("volatile");
-    expect(result.warnings[0]).toMatch(/network down/);
+    expect(result.warnings[0]).toBe("server-history: fetch failed");
+    expect(result.warnings[0]).not.toMatch(/network|user|secret|example\.invalid|private/u);
   });
 
   it("returns empty entries with a warning on non-2xx", async () => {

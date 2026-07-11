@@ -9,6 +9,29 @@ const loaders = vi.hoisted(() => ({
 
 vi.mock("@wcdraft/data/client", () => ({
   DAILY_SEED_MAX_SALT_ATTEMPTS: 8,
+  REQUEST_BUDGET_MS: { dailyMetadata: 12_000, runtimeData: 30_000 },
+  isRequestTimeoutError: (error: unknown) =>
+    error instanceof Error && error.name === "RequestTimeoutError",
+  boundedRequest: async (
+    run: (signal: AbortSignal) => Promise<unknown>,
+    options: { timeoutMs: number },
+  ) => {
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<never>((_resolve, reject) => {
+      timer = setTimeout(() => {
+        const error = new Error("timed out");
+        error.name = "RequestTimeoutError";
+        controller.abort(error);
+        reject(error);
+      }, options.timeoutMs);
+    });
+    try {
+      return await Promise.race([run(controller.signal), timeout]);
+    } finally {
+      if (timer !== undefined) clearTimeout(timer);
+    }
+  },
   loadDataManifest: loaders.manifest,
   loadDailySeedSaltMap: loaders.saltMap,
   loadDraftPoolBundle: loaders.draftPool,
@@ -68,21 +91,24 @@ describe("lightweight Daily availability loader", () => {
     expect(loaders.draftPool).not.toHaveBeenCalled();
   });
 
-  it("bounds a held-open metadata request and resolves unavailable", async () => {
+  it("bounds a held-open metadata request and exposes a translated timeout", async () => {
     vi.useFakeTimers();
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
     try {
       loaders.manifest.mockImplementation(
         ({ signal }: { signal: AbortSignal }) =>
           new Promise((_, reject) => {
-            signal.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+            signal.addEventListener("abort", () => reject(signal.reason), { once: true });
           }),
       );
 
-      const pending = loadDailyAvailability("2026-07-03");
+      const pending = loadDailyAvailability("2026-07-03").catch((error: unknown) => error);
       await vi.advanceTimersByTimeAsync(12_000);
 
-      await expect(pending).resolves.toBe(false);
+      await expect(pending).resolves.toMatchObject({
+        name: "RuntimeDataLoadError",
+        message: expect.stringContaining("too long"),
+      });
       expect(loaders.saltMap).not.toHaveBeenCalled();
       expect(loaders.draftPool).not.toHaveBeenCalled();
     } finally {

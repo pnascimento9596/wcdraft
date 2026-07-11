@@ -9,6 +9,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { isRequestTimeoutError } from "@wcdraft/data/client";
 
 import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
@@ -32,10 +33,11 @@ type Mode =
       persistence: "durable" | "volatile";
       warnings: string[];
     }
-  | { kind: "error"; title: string; message: string };
+  | { kind: "error"; title: string; message: string; timedOut: boolean };
 
 export function HistoryScreen() {
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
+  const [retryNonce, setRetryNonce] = useState(0);
   const reqToken = useRef(0);
   // F-3.5 — provider swap. Signed-in users read the server-backed history
   // (saved_runs + the F-3 anon→account claim means runs saved BEFORE
@@ -66,11 +68,20 @@ export function HistoryScreen() {
         });
       } catch (err) {
         if (myToken !== reqToken.current) return;
-        const d = describeGameError(err);
-        setMode({ kind: "error", title: d.title, message: d.message });
+        if (isRequestTimeoutError(err)) {
+          setMode({
+            kind: "error",
+            title: "History took too long to load",
+            message: "The read stopped after 12 seconds. It is safe to retry.",
+            timedOut: true,
+          });
+        } else {
+          const d = describeGameError(err);
+          setMode({ kind: "error", title: d.title, message: d.message, timedOut: false });
+        }
       }
     })();
-  }, [authReady, isSignedIn]);
+  }, [authReady, isSignedIn, retryNonce]);
 
   if (mode.kind === "loading") {
     return (
@@ -90,6 +101,13 @@ export function HistoryScreen() {
         <div className={s.errorPanel} role="alert">
           <h2 className={s.errorTitle}>{mode.title}</h2>
           <p className={s.errorMessage}>{mode.message}</p>
+          <button
+            type="button"
+            className="btn btn--ghost"
+            onClick={() => setRetryNonce((value) => value + 1)}
+          >
+            {mode.timedOut ? "Retry history" : "Try again"}
+          </button>
           <Link href={draftHref(null)} className="btn btn--primary">
             Start a new draft
           </Link>

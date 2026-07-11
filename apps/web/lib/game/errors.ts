@@ -42,6 +42,14 @@ export class RuntimeDataLoadError extends GameDataError {
   }
 }
 
+export function isRuntimeDataTimeout(error: unknown): boolean {
+  return (
+    error instanceof RuntimeDataLoadError &&
+    error.cause instanceof Error &&
+    error.cause.name === "RequestTimeoutError"
+  );
+}
+
 export class RunRecordError extends GameDataError {
   constructor(message: string) {
     super(message);

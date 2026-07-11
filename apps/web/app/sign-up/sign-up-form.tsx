@@ -4,11 +4,17 @@ import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ensureCsrfToken, postJson } from "@/lib/auth/client";
+import {
+  isUnsafeMutationResponseAmbiguous,
+  unsafeMutationUnknownMessage,
+  useUnsafeMutationLatch,
+} from "@/lib/unsafe-mutation";
 
 type State =
   | { kind: "idle" }
   | { kind: "submitting" }
   | { kind: "error"; message: string }
+  | { kind: "unknown"; message: string }
   | { kind: "created" };
 
 export function SignUpForm(): React.ReactElement {
@@ -19,6 +25,7 @@ export function SignUpForm(): React.ReactElement {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
+  const mutation = useUnsafeMutationLatch();
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "/account";
@@ -31,6 +38,7 @@ export function SignUpForm(): React.ReactElement {
 
   async function submit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+    if (!mutation.begin()) return;
     setState({ kind: "submitting" });
     try {
       const response = await postJson<{
@@ -44,18 +52,38 @@ export function SignUpForm(): React.ReactElement {
         password,
         next,
       });
+      if (isUnsafeMutationResponseAmbiguous(response.status)) {
+        mutation.markOutcomeUnknown();
+        setState({
+          kind: "unknown",
+          message:
+            "The server could not confirm whether account creation completed. This request is locked; refresh, sign in, or change the account details before trying again.",
+        });
+        return;
+      }
       if (!response.ok) {
+        mutation.settle();
         setState({
           kind: "error",
           message: response.data?.message ?? "Account could not be created.",
         });
         return;
       }
+      mutation.markCommitted();
       setState({ kind: "created" });
       router.push(response.data?.redirectTo ?? "/account");
       router.refresh();
-    } catch {
-      setState({ kind: "error", message: "Network hiccup. Try again." });
+    } catch (error) {
+      mutation.markOutcomeUnknown();
+      setState({
+        kind: "unknown",
+        message: unsafeMutationUnknownMessage(error, {
+          timeout:
+            "The account request timed out and may have completed. This request is locked; refresh, sign in, or change the account details before trying again.",
+          transport:
+            "The connection ended before account creation was confirmed. This request is locked; refresh, sign in, or change the account details before trying again.",
+        }),
+      });
     }
   }
 
@@ -71,7 +99,8 @@ export function SignUpForm(): React.ReactElement {
           value={username}
           onChange={(event) => {
             setUsername(event.target.value);
-            if (state.kind === "error") setState({ kind: "idle" });
+            mutation.resetForChangedOperation();
+            if (state.kind === "error" || state.kind === "unknown") setState({ kind: "idle" });
           }}
           autoComplete="username"
           placeholder="manager_10"
@@ -91,7 +120,8 @@ export function SignUpForm(): React.ReactElement {
           value={email}
           onChange={(event) => {
             setEmail(event.target.value);
-            if (state.kind === "error") setState({ kind: "idle" });
+            mutation.resetForChangedOperation();
+            if (state.kind === "error" || state.kind === "unknown") setState({ kind: "idle" });
           }}
           type="email"
           inputMode="email"
@@ -111,7 +141,8 @@ export function SignUpForm(): React.ReactElement {
           value={password}
           onChange={(event) => {
             setPassword(event.target.value);
-            if (state.kind === "error") setState({ kind: "idle" });
+            mutation.resetForChangedOperation();
+            if (state.kind === "error" || state.kind === "unknown") setState({ kind: "idle" });
           }}
           type="password"
           autoComplete="new-password"
@@ -120,13 +151,18 @@ export function SignUpForm(): React.ReactElement {
         />
       </div>
 
-      <button type="submit" className="signin-form__submit" disabled={state.kind === "submitting"}>
+      <button type="submit" className="signin-form__submit" disabled={mutation.locked}>
         {state.kind === "submitting" ? "Creating..." : "Create account"}
       </button>
 
-      {state.kind === "error" ? (
+      {state.kind === "error" || state.kind === "unknown" ? (
         <p id="signup-error" className="signin-form__error" role="alert">
           {state.message}
+          {state.kind === "unknown" ? (
+            <button type="button" className="signin-form__inline" onClick={() => location.reload()}>
+              Refresh to check state
+            </button>
+          ) : null}
         </p>
       ) : (
         <p className="signin-form__hint">

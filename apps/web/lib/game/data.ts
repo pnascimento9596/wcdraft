@@ -20,7 +20,14 @@ import {
   type DraftDataset,
   type EraPresetId,
 } from "@wcdraft/core";
-import { loadDailySeedSaltMap, loadDataManifest, loadDraftPoolBundle } from "@wcdraft/data/client";
+import {
+  boundedRequest,
+  isRequestTimeoutError,
+  loadDailySeedSaltMap,
+  loadDataManifest,
+  loadDraftPoolBundle,
+  REQUEST_BUDGET_MS,
+} from "@wcdraft/data/client";
 import type {
   DailySeedSaltMap,
   DraftPoolBundle,
@@ -70,7 +77,6 @@ export interface GameData {
 
 let cachedGameData: GameData | null = null;
 let inFlight: Promise<GameData> | null = null;
-const DAILY_AVAILABILITY_TIMEOUT_MS = 12_000;
 
 /** Test-only — drop the session memo (no production caller). */
 export function clearGameDataCacheForTests(): void {
@@ -85,18 +91,38 @@ export function clearGameDataCacheForTests(): void {
  * unavailable result.
  */
 export async function loadDailyAvailability(date: string): Promise<boolean> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), DAILY_AVAILABILITY_TIMEOUT_MS);
   try {
-    const manifest = await loadDataManifest({ signal: controller.signal });
-    if (manifest.bundles.daily_seed_salt_map === undefined) return false;
-    const saltMap = await loadDailySeedSaltMap({ signal: controller.signal });
-    return dailyCoverageForDate(date, saltMap).covered;
+    return await boundedRequest(
+      async (signal) => {
+        const manifest = await loadDataManifest({
+          signal,
+          timeoutMs: REQUEST_BUDGET_MS.dailyMetadata,
+        });
+        if (manifest.bundles.daily_seed_salt_map === undefined) return false;
+        const saltMap = await loadDailySeedSaltMap({
+          signal,
+          timeoutMs: REQUEST_BUDGET_MS.dailyMetadata,
+        });
+        return dailyCoverageForDate(date, saltMap).covered;
+      },
+      {
+        operation: "Daily metadata",
+        timeoutMs: REQUEST_BUDGET_MS.dailyMetadata,
+        safety: "safe-read",
+      },
+    );
   } catch (err) {
-    console.error("[daily] availability metadata failed", err);
+    if (isRequestTimeoutError(err)) {
+      throw new RuntimeDataLoadError(
+        "Daily metadata took too long to load. Retry the check or choose another mode.",
+        err,
+      );
+    }
+    console.error(
+      "[daily] availability metadata failed",
+      err instanceof Error ? err.name : "UnknownError",
+    );
     return false;
-  } finally {
-    clearTimeout(timeout);
   }
 }
 
@@ -108,35 +134,62 @@ export async function loadDailyAvailability(date: string): Promise<boolean> {
 export async function loadGameData(): Promise<GameData> {
   if (cachedGameData) return cachedGameData;
   if (inFlight) return inFlight;
-  inFlight = (async () => {
-    try {
-      // Manifest (~6 KB) and the draft-pool bundle (~5 MB brotli) load from
-      // independent static URLs, so fetch them concurrently instead of serially
-      // — removes one manifest round-trip from the first-play critical path.
-      // Promise.all preserves the prior error semantics (reject on first error).
-      const manifestPromise = loadDataManifest();
-      const draftPoolPromise = loadDraftPoolBundle();
-      const manifest = await manifestPromise;
-      const dailySeedSaltMapPromise =
-        manifest.bundles.daily_seed_salt_map === undefined
-          ? Promise.resolve(null)
-          : loadDailySeedSaltMap();
-      const [draftPool, dailySeedSaltMap] = await Promise.all([
-        draftPoolPromise,
-        dailySeedSaltMapPromise,
-      ]);
-      const gd = buildGameData(manifest, draftPool, dailySeedSaltMap);
-      cachedGameData = gd;
-      return gd;
-    } catch (err) {
+  inFlight = boundedRequest(
+    async (signal) => {
+      try {
+        // Manifest (~6 KB) and the draft-pool bundle (~5 MB brotli) load from
+        // independent static URLs, so fetch them concurrently instead of serially
+        // — removes one manifest round-trip from the first-play critical path.
+        // Promise.all preserves the prior error semantics (reject on first error).
+        const manifestPromise = loadDataManifest({ signal });
+        const draftPoolPromise = loadDraftPoolBundle({ signal });
+        const manifest = await manifestPromise;
+        const dailySeedSaltMapPromise =
+          manifest.bundles.daily_seed_salt_map === undefined
+            ? Promise.resolve(null)
+            : loadDailySeedSaltMap({ signal });
+        const [draftPool, dailySeedSaltMap] = await Promise.all([
+          draftPoolPromise,
+          dailySeedSaltMapPromise,
+        ]);
+        const gd = buildGameData(manifest, draftPool, dailySeedSaltMap);
+        cachedGameData = gd;
+        return gd;
+      } catch (err) {
+        if (isRequestTimeoutError(err)) {
+          throw new RuntimeDataLoadError(
+            "Runtime data took too long to load. Retry, or return to mode selection.",
+            err,
+          );
+        }
+        throw new RuntimeDataLoadError(
+          "The runtime data could not be loaded. Retry, or return to mode selection.",
+          err,
+        );
+      }
+    },
+    {
+      operation: "runtime game data",
+      timeoutMs: REQUEST_BUDGET_MS.runtimeData,
+      safety: "safe-read",
+    },
+  )
+    .catch((err: unknown) => {
+      if (err instanceof RuntimeDataLoadError) throw err;
+      if (isRequestTimeoutError(err)) {
+        throw new RuntimeDataLoadError(
+          "Runtime data took too long to load. Retry, or return to mode selection.",
+          err,
+        );
+      }
       throw new RuntimeDataLoadError(
-        `Failed to load wcdraft runtime data: ${err instanceof Error ? err.message : String(err)}`,
+        "The runtime data could not be loaded. Retry, or return to mode selection.",
         err,
       );
-    } finally {
+    })
+    .finally(() => {
       inFlight = null;
-    }
-  })();
+    });
   return inFlight;
 }
 

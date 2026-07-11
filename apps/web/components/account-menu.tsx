@@ -17,7 +17,7 @@ import { deleteCsrf } from "@/lib/auth/client";
 import { focusFirstWithin, trapTabWithin } from "@/lib/a11y/focus";
 
 export function AccountMenu(): React.ReactElement | null {
-  const { authEnabled, isSignedIn, session, ready, refresh } = useAuth();
+  const { authEnabled, isSignedIn, session, ready, refresh, sessionError } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -92,6 +92,26 @@ export function AccountMenu(): React.ReactElement | null {
 
   if (!authEnabled) return null;
 
+  // Keep the loading shell ahead of signed-out inference: session=null is not
+  // an authenticated answer until the bounded first read settles.
+  if (!ready) {
+    return <span className="account-chip account-chip--loading" aria-label="Checking session" />;
+  }
+
+  if (sessionError !== null) {
+    return (
+      <div className="account-session-error" role="alert">
+        <span>
+          {sessionError === "timeout" ? "Session check timed out." : "Session unavailable."}
+        </span>
+        <button type="button" onClick={() => void refresh()}>
+          Retry
+        </button>
+        <Link href="/play">Keep playing</Link>
+      </div>
+    );
+  }
+
   if (!isSignedIn) {
     return (
       <Link href="/sign-in" className="signin-stub signin-stub--live" aria-label="Sign in">
@@ -99,11 +119,6 @@ export function AccountMenu(): React.ReactElement | null {
         Sign in
       </Link>
     );
-  }
-
-  // Skeleton — render while we haven't loaded yet so layout doesn't shift.
-  if (!ready) {
-    return <span className="account-chip account-chip--loading" aria-hidden="true" />;
   }
 
   const identity = session?.username ?? (session?.userId ? shortenId(session.userId) : "me");

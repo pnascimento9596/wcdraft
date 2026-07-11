@@ -4,6 +4,157 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit Season 1 shared bounded-request contract (Unit D1):
+2026-07-10 · YELLOW implementation on branch
+`ws-ux/audit-s1-bounded-requests`, initially based on Wave-A `origin/main`
+`f9ea1a5c3893a9e34e4fc8d67465c1385b79bfbe` and finally rebased onto C2-shipped
+`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc`. One browser-safe
+`boundedRequest` helper now enforces elapsed fetch-plus-body budgets with a
+composed `AbortSignal` and PII-free `RequestTimeoutError`: 30 seconds for
+runtime data and 12 seconds for Daily metadata, leaderboard, auth, account,
+history, and progress calls. Runtime manifests/bundles, game-data first load,
+A1's Daily metadata preflight, leaderboard reads and mutations, session/CSRF
+and auth calls, Account pagination, server history, and signed-in progress all
+use the same helper and documented constants; no scoped client retains a
+standalone abort timer. Safe reads settle into explicit Retry plus an alternate
+route. Unsafe mutations run exactly once, describe timeout outcomes as unknown,
+and the leaderboard form is removed after timeout or transport-unknown outcomes
+so it cannot immediately dispatch a duplicate post. A direct `/play/daily`
+metadata timeout now reaches the draft container's Retry/choose-another-mode
+panel instead of being collapsed into publication unavailability; non-timeout
+metadata failures remain fail-closed. Runtime, draft, review, results, share,
+history, leaderboard, auth, account, and progress first-load surfaces no longer
+hold an indefinite spinner when their underlying request never resolves.
+
+Held-open fetch/body tests cover the shared helper and every scoped request
+domain, including timer/listener cleanup, response-body stalls, late
+completion, one-call mutation behavior, retry safety, and URL/credential
+redaction. The old PR-head review observation that a timed-out leaderboard
+submit still exposed its mutation form was fixed-forward, with both timeout and
+transport-unknown views now rendering only the safe board-check action. Before
+the final C2 rebase, full affected validation passed: data 16 files passed / 1
+skipped and 168 tests passed / 9 skipped; web 91 files passed / 1 skipped and
+943 tests passed / 1 skipped; game-flow Playwright; responsive desktop 84/0,
+mobile 56/0, and interaction targets 40/0; root typecheck 8/8, lint 5/5, and
+build 4/4 with 40/40 web pages. The generated-artifact deterministic
+rebuild/check, agent-contract check, full-repository Prettier, and `git diff
+--check` also passed. After rebasing onto C2, the combined code preserved its
+linear display-name grouping and passed the overlap matrix (8 web files / 76
+tests plus data 1 file / 6 tests), root typecheck 8/8, lint 5/5, full-repository
+Prettier, and build 4/4 with 40/40 pages. Existing Next circular-chunk and Edge
+static-generation warnings remain unchanged. No schema, migration, rating,
+simulation, draft semantics, runtime-data payload, or API response contract
+changed; the PR's protected CI must rerun at the pushed final head.
+
+The first independent review of D1 head
+`dd3faa71fcad841608e824fce92f5c1529a8613a` returned **FAIL** (report
+SHA-256 `a24d3259f159b1909090f1862881c67f650e2f964aab762aa13b8903bb928fce`).
+It found two fix-forward defects: ranked seed and auth/account mutation
+timeouts became ordinary errors whose controls could immediately dispatch a
+second unsafe write, and the first-load evidence exercised helpers or static
+views rather than the mounted state-owning containers. The fix-forward adds a
+shared synchronous unsafe-mutation latch with explicit pending, committed,
+and outcome-unknown states. Ranked-attempt failures now carry a typed
+`outcomeUnknown` witness; timeout or transport-unknown issuance locks the
+entire formation/config surface for that page and exposes only Account/mode
+alternates. A successful seed response is marked committed before local run
+creation, persistence, or parent handoff, so any later client failure also
+stays locked and cannot mint a second pre-consumption seed. Definitive HTTP
+failures remain usable. The same unknown-outcome guard now covers password
+sign-in, magic-link sign-in, password reset, sign-up, username and password
+updates, verification resend, account deletion, and Account sign-out. Only an
+operation-relevant input change can reset eligible auth/profile writes;
+verification, deletion, and ranked issuance require reload/read
+reconciliation or a safe alternate.
+
+Real ReactDOM mounts now cover `AuthProvider` + `AccountMenu`, `ModeSelect`,
+`DraftScreen`, `HistoryScreen`, `ResultsScreen`, `ReviewScreen`, `ShareScreen`,
+and `BoardScreen` from a never-resolving first read through budget expiry,
+stable timeout copy, safe Retry, and alternate navigation. Mounted mutation
+regressions hold real POST/PUT/DELETE calls open and prove an attempted repeat
+leaves the request count at exactly one, with no ranked `onLocked` or router
+handoff; they also cover transport loss, definitive HTTP recovery, changed
+operations, successful seed issuance followed by local creation failure, and
+successful issuance followed by a throwing parent callback. The mounts use
+ReactDOM and Vitest directly with one test-only `happy-dom` dependency; no
+testing-library stack or production dependency was added. Final focused
+validation passed 5/5 files and 25/25 tests. Complete explicit non-browser
+suites passed: web 95 files passed / 1 skipped and 969 tests passed / 1
+skipped; data 16 files passed / 1 skipped and 168 tests passed / 9 skipped.
+Forced root gates passed with zero cache hits: typecheck 8/8, lint 5/5, and
+build 4/4, with the web build generating 40/40 pages. The final isolated
+browser rerun passed game flow and responsive checks (desktop 84/0, mobile
+56/0, interaction targets 40/0); an earlier overlapping browser receipt was
+discarded and is not claimed. Full-repository Prettier and `git diff --check`
+also passed. Existing Next circular-chunk and Edge static-generation warnings
+remain unchanged. No schema, migration, rating, simulation, draft semantics,
+runtime-data payload, or server API response contract changed. A fresh
+independent exact-head review and protected CI remain mandatory before merge.
+
+A second fresh independent review of replacement head
+`411d6af9cdf9a3fda6389f9b410cee5290aa8d74` also returned **FAIL** (report
+SHA-256 `6f02364748f8572586c03ba74cc5f14f5cf077442856f49cfc4d0c9d00298cd1`).
+It found one remaining classification gap: the ranked-attempt route commits an
+attempt before returning HTTP 201, but a successful response whose JSON body
+was unreadable or failed the required attempt-shape validation fell through as
+`outcomeUnknown: false`. Formation setup therefore released the latch and
+could mint a second attempt. The second fix-forward now treats every successful
+2xx response without a fully validated issued-attempt contract as
+outcome-unknown. The mounted surface remains permanently locked with Account
+and mode-selection alternatives; known application 4xx responses still release
+the latch, and a valid 201 remains accepted. Direct adversarial coverage spans
+unreadable and malformed 201 responses, unusable 200/204/299 boundaries,
+400/500 response classifications, and a valid 201. Real mounted Formation coverage
+proves both unreadable and malformed committed 201 responses stay at exactly
+one POST with no `onLocked` or router handoff. Post-fix focused validation
+passed 2/2 files and 29/29 tests; complete web Vitest passed 95 files / 1
+skipped and 981 tests / 1 skipped; complete data Vitest passed 16 files / 1
+skipped and 168 tests / 9 skipped. Forced root typecheck passed 8/8, lint 5/5,
+and build 4/4 with zero cache hits and 40/40 generated pages. The prior
+browser receipt and cancelled protected CI belonged to the failed head and are
+not claimed for this source change. The replacement exact-source browser run
+passed game flow plus responsive desktop 84/0, mobile 56/0, and interaction
+targets 40/0, followed by clean browser/Next teardown and restoration of
+`next-env.d.ts`. Protected CI and a fresh exact-head independent review remain
+mandatory before merge.
+
+A third fresh independent review of replacement head
+`28115bcad3093509e124c0e796e1bf4a4491ee29` returned **FAIL** (report
+SHA-256 `c94a0b2bfed3cf87a6c187d7303aa358ee774466b2f5930ba89b01178467a88e`).
+It found that the second fix still treated HTTP 408 and 5xx responses as
+definitive non-commit verdicts even though an origin write can commit before a
+gateway timeout or unexpected post-commit failure reaches the browser. The
+third fix-forward adds one explicit response classifier for unsafe mutations:
+known application 4xx responses, including 429 but excluding 408, are
+definitive; HTTP 408 and every 5xx are outcome-unknown. Ranked attempt issuance,
+magic-link and reset delivery, password sign-in, sign-up, username update,
+verification resend, password set/change, and account deletion now keep their
+one-dispatch latch after those ambiguous HTTP responses and expose only honest
+operation-specific reconciliation or alternate actions. Successful username
+and password responses also must contain the required `profile.username` and
+`hasPassword: true` contracts before downstream state changes; an unusable 2xx
+remains locked. The idempotent/reconciled Account and Header sign-out flows and
+the deduped leaderboard-submit flow remain unchanged.
+
+Direct coverage now pins 400/401/403/409/429 as definitive and
+408/500/502/503/504 as outcome-unknown. Real mounted regressions cover every
+affected operation, assert the exact POST/PUT/DELETE count remains one after a
+repeat, require a safe reconciliation/alternate path, and prove no router or
+ranked handoff. Mounted controls also prove representative definitive 4xx
+responses release their latch and valid response contracts remain usable.
+Current-source non-browser validation passed: focused 2/2 files and 73/73
+tests; complete web Vitest 95 files passed / 1 skipped and 1025 tests passed / 1
+skipped; complete data Vitest 16 files passed / 1 skipped and 168 tests passed /
+9 skipped; root typecheck 8/8, lint 5/5, and build 4/4 with 40/40 generated
+pages. The previous browser receipt belongs to superseded head `28115bc`; a
+fresh browser run against frozen source/test diff SHA-256
+`e84a75310f712f6da24c40682e490a7da4ae2dec46cf7257a1c9c0f5639ebb9b`
+passed game flow plus responsive desktop 84/0, mobile 56/0, and interaction
+targets 40/0. The responsive wrapper/verifier, game-flow, Next dev, and
+next-server process scan was clean after teardown; `next-env.d.ts` and generated
+assets were restored. Exact-head independent review, protected CI, and
+merge/deploy/live verification remain mandatory.
+
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-display-name-on`, initially based on C1-shipped `origin/main`

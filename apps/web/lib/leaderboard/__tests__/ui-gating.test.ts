@@ -461,7 +461,19 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
   it("unreachable: transport failure is its own honest state", () => {
     const html = render({ kind: "unreachable" });
     expect(html).toContain("reach the server");
-    expect(html).toContain("Nothing was posted");
+    expect(html).toContain("No server verdict");
+    expect(html).toContain("Check leaderboard");
+    expect(html).not.toContain("Post casual run");
+    expect(html).not.toContain("<input");
+  });
+
+  it("timeout: mutation outcome stays unknown and is not presented as safe to replay", () => {
+    const html = render({ kind: "timeout" });
+    expect(html).toContain("post timed out");
+    expect(html).toContain("outcome is unknown");
+    expect(html).toContain("Check leaderboard");
+    expect(html).not.toContain("Post casual run");
+    expect(html).not.toContain("<input");
   });
 });
 
@@ -637,6 +649,15 @@ describe("board views", () => {
     const html = renderToStaticMarkup(createElement(BoardError, { onRetry: () => undefined }));
     expect(html).toContain('role="alert"');
     expect(html).toContain("Try again");
+  });
+
+  it("timeout board state exposes a safe retry and a non-blocking alternate action", () => {
+    const html = renderToStaticMarkup(
+      createElement(BoardError, { timedOut: true, onRetry: () => undefined }),
+    );
+    expect(html).toContain("12 seconds");
+    expect(html).toContain("Retry board");
+    expect(html).toContain("Keep drafting");
   });
 
   it("me-chip shows season-scope best + rank; honest dash when boardless", () => {

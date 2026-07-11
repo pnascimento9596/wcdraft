@@ -12,6 +12,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { isRankedDraftMode } from "@wcdraft/core";
+import { isRequestTimeoutError } from "@wcdraft/data/client";
 
 import { useAuth } from "@/components/auth-context";
 import { putJson } from "@/lib/auth/client";
@@ -276,7 +277,12 @@ async function submitAfterProfile({
   let aliasForEntry = displayName;
   if (needsUsername) {
     if (displayName === null) return rankedAuthRequiredPhase();
-    const profile = await putJson<ProfileUpdateBody>("/api/profile", { username: displayName });
+    let profile: Awaited<ReturnType<typeof putJson<ProfileUpdateBody>>>;
+    try {
+      profile = await putJson<ProfileUpdateBody>("/api/profile", { username: displayName });
+    } catch (error) {
+      return { kind: isRequestTimeoutError(error) ? "timeout" : "unreachable" };
+    }
     if (!profile.ok) {
       if (profile.status === 401) return rankedAuthRequiredPhase();
       const reason =

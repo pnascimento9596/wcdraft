@@ -44,6 +44,8 @@ export type SubmitPhase =
     }
   /** Transport failure — the request never produced a server verdict. */
   | { readonly kind: "unreachable" }
+  /** Timeout after dispatch — the server outcome is unknown; do not auto-replay. */
+  | { readonly kind: "timeout" }
   /** Local memory: this token was submitted earlier from this device. */
   | { readonly kind: "submitted-earlier" };
 

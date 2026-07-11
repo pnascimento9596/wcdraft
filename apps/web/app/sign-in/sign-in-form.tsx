@@ -4,12 +4,22 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { postJson, ensureCsrfToken } from "@/lib/auth/client";
+import {
+  isUnsafeMutationResponseAmbiguous,
+  unsafeMutationUnknownMessage,
+  useUnsafeMutationLatch,
+} from "@/lib/unsafe-mutation";
 
 type State =
   | { kind: "idle" }
   | { kind: "link-submitting"; purpose: "signin" | "reset" }
   | { kind: "password-submitting" }
   | { kind: "sent"; email: string; purpose: "signin" | "reset" }
+  | {
+      kind: "unknown";
+      operation: "password" | "signin-link" | "reset-link";
+      message: string;
+    }
   | { kind: "error"; message: string };
 
 export function SignInForm(): React.ReactElement {
@@ -20,6 +30,7 @@ export function SignInForm(): React.ReactElement {
   const [password, setPassword] = useState("");
   const [linkEmail, setLinkEmail] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
+  const mutation = useUnsafeMutationLatch();
   const identifierRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,12 +56,24 @@ export function SignInForm(): React.ReactElement {
         setState({ kind: "error", message: "Enter the email address for the link." });
         return;
       }
+      if (!mutation.begin()) return;
       setState({ kind: "link-submitting", purpose });
       try {
         const endpoint = purpose === "reset" ? "/api/auth/password-reset" : "/api/auth/magic-link";
         const body = purpose === "reset" ? { email } : { email, next };
         const r = await postJson<{ ok?: boolean; message?: string }>(endpoint, body);
+        if (isUnsafeMutationResponseAmbiguous(r.status)) {
+          mutation.markOutcomeUnknown();
+          setState({
+            kind: "unknown",
+            operation: purpose === "signin" ? "signin-link" : "reset-link",
+            message:
+              "The server could not confirm whether the delivery request completed. This request is locked; refresh or change the email before sending another link.",
+          });
+          return;
+        }
         if (r.status === 429) {
+          mutation.settle();
           setState({
             kind: "error",
             message: "Too many email requests. Wait a minute and try again.",
@@ -58,18 +81,30 @@ export function SignInForm(): React.ReactElement {
           return;
         }
         if (!r.ok) {
+          mutation.settle();
           setState({
             kind: "error",
             message: r.data?.message ?? "We couldn't send the link. Try again.",
           });
           return;
         }
+        mutation.settle();
         setState({ kind: "sent", email, purpose });
-      } catch {
-        setState({ kind: "error", message: "Network hiccup. Try again." });
+      } catch (error) {
+        mutation.markOutcomeUnknown();
+        setState({
+          kind: "unknown",
+          operation: purpose === "signin" ? "signin-link" : "reset-link",
+          message: unsafeMutationUnknownMessage(error, {
+            timeout:
+              "The delivery request timed out and may still be processing. This request is locked; refresh or change the email before sending another link.",
+            transport:
+              "The connection ended before delivery was confirmed. This request is locked; refresh or change the email before sending another link.",
+          }),
+        });
       }
     },
-    [emailForSecondaryFlow, next],
+    [emailForSecondaryFlow, mutation, next],
   );
 
   const submitPassword = useCallback(
@@ -81,27 +116,69 @@ export function SignInForm(): React.ReactElement {
         identifierRef.current?.focus();
         return;
       }
+      if (!mutation.begin()) return;
       setState({ kind: "password-submitting" });
       try {
         const r = await postJson<{ ok?: boolean; redirectTo?: string; message?: string }>(
           "/api/auth/password-login",
           { identifier: trimmed, password, next },
         );
+        if (isUnsafeMutationResponseAmbiguous(r.status)) {
+          mutation.markOutcomeUnknown();
+          setState({
+            kind: "unknown",
+            operation: "password",
+            message:
+              "The server could not confirm whether sign-in completed. This request is locked; refresh or change the credentials before trying again.",
+          });
+          return;
+        }
         if (r.status === 429) {
+          mutation.settle();
           setState({ kind: "error", message: "Too many password attempts. Wait and try again." });
           return;
         }
         if (!r.ok) {
+          mutation.settle();
           setState({ kind: "error", message: "Username/email or password is incorrect." });
           return;
         }
+        mutation.markCommitted();
         router.push(r.data?.redirectTo ?? "/play");
         router.refresh();
-      } catch {
-        setState({ kind: "error", message: "Network hiccup. Try again." });
+      } catch (error) {
+        mutation.markOutcomeUnknown();
+        setState({
+          kind: "unknown",
+          operation: "password",
+          message: unsafeMutationUnknownMessage(error, {
+            timeout:
+              "The sign-in request timed out and may have completed. This request is locked; refresh or change the credentials before trying again.",
+            transport:
+              "The connection ended before sign-in was confirmed. This request is locked; refresh or change the credentials before trying again.",
+          }),
+        });
       }
     },
-    [identifier, next, password, router],
+    [identifier, mutation, next, password, router],
+  );
+
+  const clearErrorOrChangedOperation = useCallback(
+    (field: "identifier" | "password" | "link-email") => {
+      if (state.kind === "error") {
+        setState({ kind: "idle" });
+        return;
+      }
+      if (state.kind !== "unknown") return;
+      const changesUnknownOperation =
+        state.operation === "password"
+          ? field === "identifier" || field === "password"
+          : field === "link-email" || (field === "identifier" && linkEmail.trim() === "");
+      if (!changesUnknownOperation) return;
+      mutation.resetForChangedOperation();
+      setState({ kind: "idle" });
+    },
+    [linkEmail, mutation, state],
   );
 
   if (state.kind === "sent") {
@@ -122,7 +199,9 @@ export function SignInForm(): React.ReactElement {
   return (
     <div
       className="signin-form"
-      aria-describedby={state.kind === "error" ? "signin-error" : undefined}
+      aria-describedby={
+        state.kind === "error" || state.kind === "unknown" ? "signin-error" : undefined
+      }
     >
       <form className="signin-form__section" onSubmit={submitPassword} noValidate>
         <label htmlFor={identifierId} className="signin-form__label">
@@ -138,7 +217,7 @@ export function SignInForm(): React.ReactElement {
           value={identifier}
           onChange={(e) => {
             setIdentifier(e.target.value);
-            if (state.kind === "error") setState({ kind: "idle" });
+            clearErrorOrChangedOperation("identifier");
           }}
           className="signin-form__input"
           aria-invalid={state.kind === "error"}
@@ -152,6 +231,7 @@ export function SignInForm(): React.ReactElement {
             type="button"
             className="signin-form__inline"
             onClick={() => void sendLink("reset")}
+            disabled={mutation.locked}
           >
             Forgot password?
           </button>
@@ -164,15 +244,11 @@ export function SignInForm(): React.ReactElement {
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
-              if (state.kind === "error") setState({ kind: "idle" });
+              clearErrorOrChangedOperation("password");
             }}
             className="signin-form__input"
           />
-          <button
-            type="submit"
-            className="signin-form__submit"
-            disabled={state.kind === "password-submitting"}
-          >
+          <button type="submit" className="signin-form__submit" disabled={mutation.locked}>
             <span>{state.kind === "password-submitting" ? "Signing in..." : "Sign in"}</span>
           </button>
         </div>
@@ -196,14 +272,14 @@ export function SignInForm(): React.ReactElement {
             value={linkEmail}
             onChange={(e) => {
               setLinkEmail(e.target.value);
-              if (state.kind === "error") setState({ kind: "idle" });
+              clearErrorOrChangedOperation("link-email");
             }}
             className="signin-form__input"
           />
           <button
             type="button"
             className="signin-form__submit signin-form__submit--ghost"
-            disabled={linkSubmitting !== null}
+            disabled={mutation.locked}
             onClick={() => void sendLink("signin")}
           >
             <span>{linkSubmitting === "signin" ? "Sending..." : "Send link"}</span>
@@ -211,9 +287,14 @@ export function SignInForm(): React.ReactElement {
         </div>
       </div>
 
-      {state.kind === "error" ? (
+      {state.kind === "error" || state.kind === "unknown" ? (
         <p id="signin-error" className="signin-form__error" role="alert">
           {state.message}
+          {state.kind === "unknown" ? (
+            <button type="button" className="signin-form__inline" onClick={() => location.reload()}>
+              Refresh to check state
+            </button>
+          ) : null}
         </p>
       ) : (
         <p className="signin-form__hint">

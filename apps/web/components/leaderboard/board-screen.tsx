@@ -47,7 +47,7 @@ import {
 } from "./board-views";
 import s from "./leaderboard.module.css";
 
-type LoadPhase = "loading" | "ready" | "error";
+type LoadPhase = "loading" | "ready" | "error" | "timeout";
 type AdvancedLaneSummary =
   | { readonly kind: "ready"; readonly count: number }
   | { readonly kind: "error" };
@@ -97,7 +97,7 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
     void fetchBoardPage({ filter: nextFilter, cursor: null }).then((r) => {
       if (seq !== reqSeq.current) return;
       if (!r.ok) {
-        setPhase("error");
+        setPhase(r.reason === "timeout" ? "timeout" : "error");
         return;
       }
       setNowMs(Date.now());
@@ -211,7 +211,9 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
             <p>Loading the board…</p>
           </div>
         )}
-        {phase === "error" && <BoardError onRetry={() => loadFirstPage(filter)} />}
+        {(phase === "error" || phase === "timeout") && (
+          <BoardError timedOut={phase === "timeout"} onRetry={() => loadFirstPage(filter)} />
+        )}
         {phase === "ready" && rows.length === 0 && <EmptyBoard filter={filter} />}
         {phase === "ready" && rows.length > 0 && (
           <BoardRows

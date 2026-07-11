@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import {
   ERA_PRESET_IDS,
   isRankedDraftMode,
@@ -16,6 +17,7 @@ import {
   type SupportedFormationId,
 } from "@/lib/game/formation-layout";
 import { requestRankedAttempt } from "@/lib/leaderboard/client";
+import { useUnsafeMutationLatch } from "@/lib/unsafe-mutation";
 import { createNewRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
@@ -174,14 +176,17 @@ export function FormationSelect({
   const [selected, setSelected] = useState<SupportedFormationId>(defaultFormation);
   const [pending, setPending] = useState<SupportedFormationId | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const rankedIssuance = useUnsafeMutationLatch();
   const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
   const [draftFlow, setDraftFlow] = useState<DraftFlow>("squad_first");
   const [ratingBasis, setRatingBasis] = useState<RatingBasis>("career");
 
   const lockIn = useCallback(
     async (formation_id: SupportedFormationId) => {
+      if (ranked === true && !rankedIssuance.begin()) return;
       setError(null);
       setPending(formation_id);
+      let rankedAttemptIssued = false;
       try {
         let rankedAttempt: Awaited<ReturnType<typeof requestRankedAttempt>> | null = null;
         if (ranked === true) {
@@ -199,12 +204,25 @@ export function FormationSelect({
           });
         }
         if (rankedAttempt !== null && !rankedAttempt.ok) {
+          if (rankedAttempt.outcomeUnknown) {
+            rankedIssuance.markOutcomeUnknown();
+            setPending(null);
+            setError(
+              `${rankedAttempt.message ?? "The ranked seed request ended before the server confirmed it."} This configuration is locked for this page; check your account or choose another mode.`,
+            );
+            return;
+          }
+          rankedIssuance.settle();
           throw new Error(
             rankedAttempt.message ??
               (rankedAttempt.status === 401
                 ? "Sign in before starting a ranked draft."
                 : "Ranked draft seed could not be issued."),
           );
+        }
+        if (rankedAttempt !== null) {
+          rankedAttemptIssued = true;
+          rankedIssuance.markCommitted();
         }
         const created = createNewRunRecord(gameData, {
           formation_id,
@@ -230,13 +248,22 @@ export function FormationSelect({
             : null;
         onLocked(created.record, warning);
       } catch (err) {
-        const d = describeGameError(err);
-        setError(`${d.title}: ${d.message}`);
+        if (ranked === true) rankedIssuance.settle();
+        if (rankedAttemptIssued) {
+          setError(
+            "The ranked seed was issued, but this draft could not start locally. This configuration remains locked; check your account or choose another mode.",
+          );
+        } else {
+          const d = describeGameError(err);
+          setError(`${d.title}: ${d.message}`);
+        }
         setPending(null);
       }
     },
-    [gameData, draftMode, ranked, eraPreset, draftFlow, ratingBasis, onLocked],
+    [gameData, draftMode, ranked, eraPreset, draftFlow, ratingBasis, onLocked, rankedIssuance],
   );
+
+  const locked = pending !== null || rankedIssuance.locked;
 
   return (
     <div className={s.draftShell}>
@@ -261,7 +288,7 @@ export function FormationSelect({
           onDraftFlow={setDraftFlow}
           ratingBasis={ratingBasis}
           onRatingBasis={setRatingBasis}
-          disabled={pending !== null}
+          disabled={locked}
         />
         <div className={s.formationGrid}>
           {/* ws-ux/mobile-polish-2: blurb prose dropped from the tile — at
@@ -279,7 +306,7 @@ export function FormationSelect({
                   pending === fid ? s.formationCardPending : ""
                 }`}
                 aria-pressed={active}
-                disabled={pending !== null}
+                disabled={locked}
                 onClick={() => setSelected(fid)}
               >
                 <MiniPitch formation_id={fid} />
@@ -293,13 +320,24 @@ export function FormationSelect({
             );
           })}
         </div>
-        {error ? <p className={s.formationError}>{error}</p> : null}
+        {error ? (
+          <div className={s.formationError} role="alert">
+            <p>{error}</p>
+            {rankedIssuance.outcomeUnknown || rankedIssuance.phase === "committed" ? (
+              <p>
+                <Link href="/account">Check account</Link>
+                {" · "}
+                <Link href="/play">Choose another mode</Link>
+              </p>
+            ) : null}
+          </div>
+        ) : null}
       </section>
       <div className={s.formationDock}>
         <button
           type="button"
           className="btn btn--primary"
-          disabled={pending !== null}
+          disabled={locked}
           onClick={() => lockIn(selected)}
         >
           {pending === selected ? "Locking…" : `Lock ${selected} & spin`}

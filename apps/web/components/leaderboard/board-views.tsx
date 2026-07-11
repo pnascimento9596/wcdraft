@@ -434,17 +434,31 @@ function dailyStandingLabel(row: BoardRowView): string {
   return row.percentile !== null ? `Top ${row.percentile}%` : `#${row.rank}`;
 }
 
-export function BoardError({ onRetry }: { onRetry: () => void }) {
+export function BoardError({
+  timedOut = false,
+  onRetry,
+}: {
+  timedOut?: boolean;
+  onRetry: () => void;
+}) {
   return (
     <div className={s.stateBox} role="alert">
-      <p className={s.stateTitle}>Couldn&rsquo;t load the board</p>
-      <p>
-        The standings didn&rsquo;t come back from the server. Nothing is shown rather than something
-        made up.
+      <p className={s.stateTitle}>
+        {timedOut ? "The board took too long to load" : "Couldn’t load the board"}
       </p>
-      <button type="button" className="btn btn--ghost" onClick={onRetry}>
-        Try again
-      </button>
+      <p>
+        {timedOut
+          ? "The standings request stopped after 12 seconds. It is safe to retry this read."
+          : "The standings didn’t come back from the server. Nothing is shown rather than something made up."}
+      </p>
+      <div className={s.stateActions}>
+        <button type="button" className="btn btn--ghost" onClick={onRetry}>
+          {timedOut ? "Retry board" : "Try again"}
+        </button>
+        <Link href="/play" className="btn btn--ghost">
+          Keep drafting
+        </Link>
+      </div>
     </div>
   );
 }

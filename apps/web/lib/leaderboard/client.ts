@@ -7,7 +7,10 @@
 //
 // Browser-only — do not import from a Server Component.
 
-import { ensureCsrfToken } from "../auth/client";
+import { boundedRequest, isRequestTimeoutError, REQUEST_BUDGET_MS } from "@wcdraft/data/client";
+
+import { postJsonResponse } from "../auth/client";
+import { isUnsafeMutationResponseAmbiguous } from "../unsafe-mutation";
 import type { BoardDraftModeFilter, BoardFilter, BoardPageWire } from "./board-view";
 import { boardQueryString } from "./board-view";
 import type { LeaderboardLineupView, LeaderboardLineupWire } from "./lineup-view";
@@ -18,7 +21,7 @@ import { outcomeFromResponse, type SubmitBoardMode, type SubmitPhase } from "./s
 
 export type BoardFetchResult =
   | { readonly ok: true; readonly page: BoardPageWire }
-  | { readonly ok: false };
+  | { readonly ok: false; readonly reason: "timeout" | "unavailable" };
 
 export async function fetchBoardPage(opts: {
   filter: BoardFilter;
@@ -26,13 +29,23 @@ export async function fetchBoardPage(opts: {
   limit?: number;
 }): Promise<BoardFetchResult> {
   try {
-    const r = await fetch(`/api/leaderboard${boardQueryString(opts)}`, {
-      headers: { Accept: "application/json" },
-    });
-    if (!r.ok) return { ok: false };
-    return { ok: true, page: (await r.json()) as BoardPageWire };
-  } catch {
-    return { ok: false };
+    return await boundedRequest(
+      async (signal) => {
+        const r = await fetch(`/api/leaderboard${boardQueryString(opts)}`, {
+          headers: { Accept: "application/json" },
+          signal,
+        });
+        if (!r.ok) return { ok: false, reason: "unavailable" } as const;
+        return { ok: true, page: (await r.json()) as BoardPageWire } as const;
+      },
+      {
+        operation: "leaderboard standings",
+        timeoutMs: REQUEST_BUDGET_MS.leaderboard,
+        safety: "safe-read",
+      },
+    );
+  } catch (error) {
+    return { ok: false, reason: isRequestTimeoutError(error) ? "timeout" : "unavailable" };
   }
 }
 
@@ -55,22 +68,32 @@ export async function fetchMyPresence(opts: {
   filter: BoardFilter;
 }): Promise<MyBoardPresence | null> {
   try {
-    const r = await fetch(`/api/leaderboard/me${boardQueryString({ ...opts, cursor: null })}`, {
-      credentials: "include",
-      headers: { Accept: "application/json" },
-    });
-    if (!r.ok) return null;
-    const body = (await r.json()) as {
-      best: { id?: unknown; verified_score?: unknown } | null;
-      rank: number | null;
-    };
-    if (body.best === null || typeof body.best.id !== "string") return null;
-    return {
-      bestEntryId: body.best.id,
-      rank: typeof body.rank === "number" ? body.rank : null,
-      verifiedScore:
-        typeof body.best.verified_score === "number" ? body.best.verified_score : Number.NaN,
-    };
+    return await boundedRequest(
+      async (signal) => {
+        const r = await fetch(`/api/leaderboard/me${boardQueryString({ ...opts, cursor: null })}`, {
+          credentials: "include",
+          headers: { Accept: "application/json" },
+          signal,
+        });
+        if (!r.ok) return null;
+        const body = (await r.json()) as {
+          best: { id?: unknown; verified_score?: unknown } | null;
+          rank: number | null;
+        };
+        if (body.best === null || typeof body.best.id !== "string") return null;
+        return {
+          bestEntryId: body.best.id,
+          rank: typeof body.rank === "number" ? body.rank : null,
+          verifiedScore:
+            typeof body.best.verified_score === "number" ? body.best.verified_score : Number.NaN,
+        };
+      },
+      {
+        operation: "leaderboard account presence",
+        timeoutMs: REQUEST_BUDGET_MS.leaderboard,
+        safety: "safe-read",
+      },
+    );
   } catch {
     return null;
   }
@@ -86,19 +109,40 @@ export async function fetchLeaderboardLineup(
   entryId: string,
 ): Promise<LeaderboardLineupFetchResult> {
   try {
-    const q = new URLSearchParams({ entry_id: entryId });
-    const r = await fetch(`/api/leaderboard/lineup?${q.toString()}`, {
-      headers: { Accept: "application/json" },
-    });
-    const body = (await r.json().catch(() => null)) as LeaderboardLineupWire | null;
-    if (r.ok && body?.ok === true) return { ok: true, lineup: body.lineup };
+    return await boundedRequest(
+      async (signal) => {
+        const q = new URLSearchParams({ entry_id: entryId });
+        const r = await fetch(`/api/leaderboard/lineup?${q.toString()}`, {
+          headers: { Accept: "application/json" },
+          signal,
+        });
+        let body: LeaderboardLineupWire | null;
+        try {
+          body = (await r.json()) as LeaderboardLineupWire;
+        } catch {
+          if (signal.aborted) throw signal.reason;
+          body = null;
+        }
+        if (r.ok && body?.ok === true) return { ok: true, lineup: body.lineup } as const;
+        return {
+          ok: false,
+          message:
+            body?.ok === false ? body.message : "The lineup could not be inspected for this entry.",
+        } as const;
+      },
+      {
+        operation: "leaderboard lineup",
+        timeoutMs: REQUEST_BUDGET_MS.leaderboard,
+        safety: "safe-read",
+      },
+    );
+  } catch (error) {
     return {
       ok: false,
-      message:
-        body?.ok === false ? body.message : "The lineup could not be inspected for this entry.",
+      message: isRequestTimeoutError(error)
+        ? "The lineup check timed out. Close this panel or try it again."
+        : "The lineup inspector did not respond.",
     };
-  } catch {
-    return { ok: false, message: "The lineup inspector did not respond." };
   }
 }
 
@@ -106,7 +150,8 @@ export async function fetchLeaderboardLineup(
 
 /**
  * POST one run to the board. Resolves to the UI phase for the settled
- * outcome — `unreachable` when no server verdict was produced.
+ * outcome — timeout is distinct because a dispatched mutation may have
+ * reached the server even when the client did not receive its verdict.
  */
 export async function submitRun(input: {
   token: string;
@@ -117,32 +162,21 @@ export async function submitRun(input: {
   challenge?: "season" | "daily";
   challengeDate?: string | null;
 }): Promise<SubmitPhase> {
-  let r: Response;
   try {
-    const csrf = await ensureCsrfToken();
-    r = await fetch("/api/leaderboard/submit", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "x-csrf-token": csrf,
-      },
-      body: JSON.stringify({
-        token: input.token,
-        claimed_score: input.claimedScore,
-        draft_mode: input.draftMode,
-        display_alias: input.displayName,
-        mode: input.mode,
-        challenge: input.challenge ?? "season",
-        challenge_date: input.challengeDate ?? null,
-      }),
+    const r = await postJsonResponse<unknown>("/api/leaderboard/submit", {
+      token: input.token,
+      claimed_score: input.claimedScore,
+      draft_mode: input.draftMode,
+      display_alias: input.displayName,
+      mode: input.mode,
+      challenge: input.challenge ?? "season",
+      challenge_date: input.challengeDate ?? null,
     });
-  } catch {
+    return outcomeFromResponse(r.status, r.data, r.headers.get("Retry-After"));
+  } catch (error) {
+    if (isRequestTimeoutError(error)) return { kind: "timeout" };
     return { kind: "unreachable" };
   }
-  const body: unknown = await r.json().catch(() => null);
-  return outcomeFromResponse(r.status, body, r.headers.get("Retry-After"));
 }
 
 // ─── Ranked attempt seed ────────────────────────────────────────────────────
@@ -162,7 +196,26 @@ export type RankedAttemptFetchResult =
         readonly rating_basis: BoardRatingBasis;
       };
     }
-  | { readonly ok: false; readonly status: number | null; readonly message: string | null };
+  | {
+      readonly ok: false;
+      readonly status: number | null;
+      readonly message: string | null;
+      readonly timedOut: boolean;
+      /**
+       * No definitive non-commit verdict was received, or a successful HTTP
+       * response could not be decoded into its issued attempt. Either case
+       * makes issuing another seed unsafe.
+       */
+      readonly outcomeUnknown: boolean;
+    };
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function isUsableExpiry(value: unknown): value is string {
+  return isNonEmptyString(value) && !Number.isNaN(Date.parse(value));
+}
 
 export async function requestRankedAttempt(input: {
   readonly formationId: string;
@@ -171,71 +224,78 @@ export async function requestRankedAttempt(input: {
   readonly era: BoardEra;
   readonly ratingBasis: BoardRatingBasis;
 }): Promise<RankedAttemptFetchResult> {
-  let r: Response;
   try {
-    const csrf = await ensureCsrfToken();
-    r = await fetch("/api/ranked/attempt", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "x-csrf-token": csrf,
-      },
-      body: JSON.stringify({
-        formation_id: input.formationId,
-        draft_mode: input.draftMode,
-        draft_order: input.draftOrder,
-        era: input.era,
-        rating_basis: input.ratingBasis,
-      }),
+    const r = await postJsonResponse<{
+      attempt_id?: unknown;
+      parent_seed?: unknown;
+      expires_at?: unknown;
+      season_key?: unknown;
+      formation_id?: unknown;
+      draft_mode?: unknown;
+      draft_order?: unknown;
+      era?: unknown;
+      rating_basis?: unknown;
+      message?: unknown;
+    }>("/api/ranked/attempt", {
+      formation_id: input.formationId,
+      draft_mode: input.draftMode,
+      draft_order: input.draftOrder,
+      era: input.era,
+      rating_basis: input.ratingBasis,
     });
-  } catch {
-    return { ok: false, status: null, message: null };
-  }
-  const body = (await r.json().catch(() => null)) as {
-    attempt_id?: unknown;
-    parent_seed?: unknown;
-    expires_at?: unknown;
-    season_key?: unknown;
-    formation_id?: unknown;
-    draft_mode?: unknown;
-    draft_order?: unknown;
-    era?: unknown;
-    rating_basis?: unknown;
-    message?: unknown;
-  } | null;
-  if (
-    r.ok &&
-    body !== null &&
-    typeof body.attempt_id === "string" &&
-    typeof body.parent_seed === "string" &&
-    typeof body.expires_at === "string" &&
-    typeof body.season_key === "string" &&
-    body.formation_id === input.formationId &&
-    body.draft_mode === input.draftMode &&
-    body.draft_order === input.draftOrder &&
-    body.era === input.era &&
-    body.rating_basis === input.ratingBasis
-  ) {
+    const body = r.data;
+    if (
+      r.ok &&
+      body !== null &&
+      isNonEmptyString(body.attempt_id) &&
+      isNonEmptyString(body.parent_seed) &&
+      isUsableExpiry(body.expires_at) &&
+      isNonEmptyString(body.season_key) &&
+      body.formation_id === input.formationId &&
+      body.draft_mode === input.draftMode &&
+      body.draft_order === input.draftOrder &&
+      body.era === input.era &&
+      body.rating_basis === input.ratingBasis
+    ) {
+      return {
+        ok: true,
+        attempt: {
+          attempt_id: body.attempt_id,
+          parent_seed: body.parent_seed,
+          expires_at: body.expires_at,
+          season_key: body.season_key,
+          formation_id: input.formationId,
+          draft_mode: input.draftMode,
+          draft_order: input.draftOrder,
+          era: input.era,
+          rating_basis: input.ratingBasis,
+        },
+      };
+    }
+    const acceptedWithoutUsableAttempt = r.ok;
+    const acknowledgementAmbiguous = isUnsafeMutationResponseAmbiguous(r.status);
     return {
-      ok: true,
-      attempt: {
-        attempt_id: body.attempt_id,
-        parent_seed: body.parent_seed,
-        expires_at: body.expires_at,
-        season_key: body.season_key,
-        formation_id: input.formationId,
-        draft_mode: input.draftMode,
-        draft_order: input.draftOrder,
-        era: input.era,
-        rating_basis: input.ratingBasis,
-      },
+      ok: false,
+      status: r.status,
+      message: acceptedWithoutUsableAttempt
+        ? "The ranked seed response could not be verified. The attempt may have been issued."
+        : acknowledgementAmbiguous
+          ? "The server could not confirm whether the ranked attempt was issued."
+          : typeof body?.message === "string"
+            ? body.message
+            : null,
+      timedOut: false,
+      outcomeUnknown: acceptedWithoutUsableAttempt || acknowledgementAmbiguous,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: null,
+      message: isRequestTimeoutError(error)
+        ? "The ranked request timed out. It may have completed; check before trying again."
+        : null,
+      timedOut: isRequestTimeoutError(error),
+      outcomeUnknown: true,
     };
   }
-  return {
-    ok: false,
-    status: r.status,
-    message: typeof body?.message === "string" ? body.message : null,
-  };
 }

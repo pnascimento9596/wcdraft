@@ -93,6 +93,7 @@ export function ResultsScreen({
   const parsed = useMemo(() => parseRunSearchParams(searchParams ?? null), [searchParams]);
 
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
+  const [retryNonce, setRetryNonce] = useState(0);
   const reqToken = useRef(0);
 
   useEffect(() => {
@@ -180,7 +181,7 @@ export function ResultsScreen({
         setMode({ kind: "error", title: d.title, message: d.message });
       }
     })();
-  }, [parsed, router]);
+  }, [parsed, retryNonce, router]);
 
   if (mode.kind === "loading") {
     return (
@@ -200,6 +201,13 @@ export function ResultsScreen({
         <div className={s.errorPanel} role="alert">
           <h2 className={s.errorTitle}>{mode.title}</h2>
           <p className={s.errorMessage}>{mode.message}</p>
+          <button
+            type="button"
+            className="btn btn--ghost"
+            onClick={() => setRetryNonce((value) => value + 1)}
+          >
+            Retry loading
+          </button>
           <Link href={draftHref(null)} className="btn btn--primary">
             Start a new draft
           </Link>

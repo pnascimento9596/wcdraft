@@ -9,7 +9,7 @@ import {
 
 import { loadDailyAvailability, loadGameData, type GameData } from "@/lib/game/data";
 import { DAILY_DRAFT_CONFIG, dailyChallengeForDate, dailyCoverageForDate } from "@/lib/game/daily";
-import { describeGameError } from "@/lib/game/errors";
+import { describeGameError, isRuntimeDataTimeout } from "@/lib/game/errors";
 import {
   createNewRunRecord,
   evictStaleRunRecords,
@@ -61,7 +61,12 @@ export async function loadInitialDraftData(
       if (!(await deps.loadDailyAvailability(dailyDate))) {
         return { kind: "daily_unavailable" };
       }
-    } catch {
+    } catch (error) {
+      // A timeout is distinct from honest publication unavailability: the
+      // request outcome is unknown, so let the container render its bounded
+      // Retry + alternate-mode recovery panel. Other metadata failures remain
+      // fail-closed as A1 requires.
+      if (isRuntimeDataTimeout(error)) throw error;
       return { kind: "daily_unavailable" };
     }
   }
@@ -77,6 +82,7 @@ export function useDraftScreenLoader(
   retryFromError: () => void;
 } {
   const [mode, setMode] = useState<DraftScreenMode>({ kind: "loading" });
+  const [retryNonce, setRetryNonce] = useState(0);
   const reqToken = useRef(0);
 
   useEffect(() => {
@@ -161,25 +167,10 @@ export function useDraftScreenLoader(
     return () => {
       reqToken.current += 1;
     };
-  }, [requestRunId, opts.dailyDate]);
+  }, [requestRunId, opts.dailyDate, retryNonce]);
 
   const retryFromError = useCallback(() => {
-    const myToken = ++reqToken.current;
-    setMode({ kind: "loading" });
-    loadGameData()
-      .then((gd) => {
-        if (myToken !== reqToken.current) return;
-        setMode({ kind: "formation_select", gameData: gd });
-      })
-      .catch((err) => {
-        if (myToken !== reqToken.current) return;
-        const d = describeGameError(err);
-        setMode({
-          kind: "error",
-          title: d.title,
-          message: d.message,
-        });
-      });
+    setRetryNonce((value) => value + 1);
   }, []);
 
   return { mode, setMode, retryFromError };
