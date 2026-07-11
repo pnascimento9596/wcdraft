@@ -45,7 +45,7 @@ import {
   loadScoreDistributionOnce,
   referenceStandingForRecord,
 } from "@/lib/game/reference-standing";
-import type { ReferenceStanding } from "@wcdraft/data/client";
+import { boundedRequest, type ReferenceStanding } from "@wcdraft/data/client";
 
 import s from "./game.module.css";
 
@@ -67,6 +67,9 @@ type OgSignState =
   | { kind: "pending" }
   | { kind: "ready"; signed: string }
   | { kind: "error"; message: string };
+
+const OG_SIGN_BUDGET_MS = 4_000;
+type ShareAction = "copy-caption" | "copy-link" | "native";
 
 export function ShareScreen() {
   const searchParams = useSearchParams();
@@ -384,7 +387,6 @@ function ShareBody({
     setOgSign({ kind: "idle" });
     if (shareLink.kind !== "ready") return;
     let controller: AbortController | null = null;
-    let timeout: number | null = null;
     let delayTimeout: number | null = null;
     const retryDelays = [0, 650, 1500] as const;
     const wait = (ms: number) =>
@@ -394,14 +396,22 @@ function ShareBody({
     const signCurrentRun = async (exposeError: boolean): Promise<boolean> => {
       setOgSign({ kind: "pending" });
       controller = new AbortController();
-      timeout = window.setTimeout(() => controller?.abort(), 4000);
       try {
-        const response = await fetch("/api/og/sign", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ run: shareLink.token }),
-          signal: controller.signal,
-        });
+        const response = await boundedRequest(
+          async (signal) =>
+            await fetch("/api/og/sign", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ run: shareLink.token }),
+              signal,
+            }),
+          {
+            operation: "signed share preview",
+            timeoutMs: OG_SIGN_BUDGET_MS,
+            safety: "safe-read",
+            signal: controller.signal,
+          },
+        );
         if (!response.ok) {
           if (!cancelled && exposeError) {
             setOgSign({
@@ -430,7 +440,7 @@ function ShareBody({
           });
         }
       } finally {
-        if (timeout !== null) window.clearTimeout(timeout);
+        controller = null;
       }
       return false;
     };
@@ -446,20 +456,21 @@ function ShareBody({
     return () => {
       cancelled = true;
       if (delayTimeout !== null) window.clearTimeout(delayTimeout);
-      if (timeout !== null) window.clearTimeout(timeout);
       controller?.abort();
     };
   }, [shareLink, ogRetryNonce]);
 
-  const shareLinkPending =
+  const ogPreviewPending =
     shareLink.kind === "ready" && (ogSign.kind === "idle" || ogSign.kind === "pending");
   const signedOg = ogSign.kind === "ready" ? ogSign.signed : null;
+  const replayUrl =
+    shareLink.kind === "ready" ? `${shareLink.origin}${shareHref(shareLink.token)}` : null;
   const shareUrl =
-    shareLink.kind === "ready" && !shareLinkPending && (signedOg !== null || isRecipient)
+    shareLink.kind === "ready" && signedOg !== null
       ? `${shareLink.origin}${shareHref(shareLink.token, signedOg)}`
-      : null;
+      : replayUrl;
   const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
-  const ogPreviewError = ogSign.kind === "error" && !isRecipient ? ogSign.message : null;
+  const ogPreviewError = ogSign.kind === "error" ? ogSign.message : null;
   const shareUnavailable = !!shareLinkError || !shareUrl;
   const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
   const [referenceStanding, setReferenceStanding] = useState<ReferenceStanding | null>(null);
@@ -542,43 +553,53 @@ function ShareBody({
   }, [shareUrl, intentText, caption]);
 
   const [linkCopied, setLinkCopied] = useState(false);
+  const shareActionsRef = useRef<Set<ShareAction>>(new Set());
+  const [shareActions, setShareActions] = useState<ReadonlySet<ShareAction>>(new Set());
+
+  function beginShareAction(action: ShareAction): boolean {
+    if (shareActionsRef.current.has(action)) return false;
+    shareActionsRef.current.add(action);
+    setShareActions(new Set(shareActionsRef.current));
+    return true;
+  }
+
+  function finishShareAction(action: ShareAction) {
+    if (!shareActionsRef.current.delete(action)) return;
+    setShareActions(new Set(shareActionsRef.current));
+  }
 
   function retryOgPreview() {
-    if (shareLink.kind !== "ready" || shareLinkPending) return;
+    if (shareLink.kind !== "ready" || ogPreviewPending) return;
     setOgRetryNonce((n) => n + 1);
   }
 
   async function copyLink() {
-    if (!shareUrl) {
-      retryOgPreview();
-      return;
-    }
+    if (!shareUrl || !beginShareAction("copy-link")) return;
     try {
       await navigator.clipboard.writeText(shareUrl);
       setLinkCopied(true);
       window.setTimeout(() => setLinkCopied(false), 2000);
     } catch {
       setLinkCopied(false);
+    } finally {
+      finishShareAction("copy-link");
     }
   }
 
   async function copyCaption() {
-    if (shareLinkPending) return;
-    if (!shareUrl) {
-      retryOgPreview();
-      return;
-    }
+    if (!shareUrl || !beginShareAction("copy-caption")) return;
     try {
       await navigator.clipboard.writeText(caption);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
+    } finally {
+      finishShareAction("copy-caption");
     }
   }
 
   async function downloadSvg() {
-    if (shareLinkPending) return;
     const node = svgRef.current;
     if (!node) return;
     const exportNode = node.cloneNode(true) as SVGSVGElement;
@@ -598,12 +619,10 @@ function ShareBody({
   }
 
   async function shareNative() {
-    if (!shareUrl) {
-      retryOgPreview();
-      return;
-    }
+    if (!shareUrl || !beginShareAction("native")) return;
     if (typeof navigator === "undefined" || !navigator.share) {
       setShared("unsupported");
+      finishShareAction("native");
       return;
     }
     try {
@@ -618,6 +637,8 @@ function ShareBody({
       setShared("ok");
     } catch {
       setShared("idle");
+    } finally {
+      finishShareAction("native");
     }
   }
 
@@ -633,10 +654,10 @@ function ShareBody({
     record.challenge?.kind === "daily"
       ? "Draft today's teams →"
       : `${teamLabel} went ${view.display_record} — draft your own all-time XI →`;
-  const shareReadyNote = shareLinkPending
-    ? "Preparing the signed run preview..."
+  const shareReadyNote = ogPreviewPending
+    ? "Replay link ready. Preparing the signed preview; sharing works now with the static preview card."
     : ogPreviewError
-      ? "Retry the signed preview before copying or sharing."
+      ? "preview unavailable, link works"
       : signedOg
         ? "Signed run preview ready for large-card unfurls."
         : "Replay-safe share link ready.";
@@ -695,14 +716,14 @@ function ShareBody({
         ) : null}
         {ogPreviewError ? (
           <p className={s.shareHint} role="status">
-            <strong>Large-card preview unavailable.</strong> {ogPreviewError} The replay token is
-            ready, but copy/share waits for the signed preview.
+            <strong>preview unavailable, link works</strong> {ogPreviewError} The replay link uses
+            the static preview card until signing succeeds.
             <button type="button" className={s.shareRetryButton} onClick={retryOgPreview}>
               Retry preview
             </button>
           </p>
         ) : null}
-        {shareLinkPending ? (
+        {ogPreviewPending ? (
           <p className={s.shareHint} role="status">
             {shareReadyNote}
           </p>
@@ -714,32 +735,28 @@ function ShareBody({
         <div className={s.resultsActions}>
           <button
             type="button"
-            className={`${isRecipient ? "btn btn--ghost" : "btn btn--primary"}${
-              shareLinkPending ? " btn--disabled" : ""
-            }`}
+            className={`${isRecipient ? "btn btn--ghost" : "btn btn--primary"}${shareActions.has("copy-caption") ? " btn--disabled" : ""}`}
             onClick={copyCaption}
-            disabled={shareLinkPending}
-            aria-disabled={shareLinkPending}
+            disabled={shareActions.has("copy-caption")}
+            aria-disabled={shareActions.has("copy-caption")}
           >
-            {copied ? "Copied ✓" : "Copy caption"}
+            {shareActions.has("copy-caption") ? "Copying..." : copied ? "Copied ✓" : "Copy caption"}
           </button>
-          <button
-            type="button"
-            className={`btn btn--ghost${shareLinkPending ? " btn--disabled" : ""}`}
-            onClick={downloadSvg}
-            disabled={shareLinkPending}
-            aria-disabled={shareLinkPending}
-          >
+          <button type="button" className="btn btn--ghost" onClick={downloadSvg}>
             Download card
           </button>
           <button
             type="button"
-            className={`btn btn--ghost${shareUnavailable ? " btn--disabled" : ""}`}
+            className={`btn btn--ghost${shareUnavailable || shareActions.has("native") ? " btn--disabled" : ""}`}
             onClick={shareNative}
-            disabled={shareUnavailable}
-            aria-disabled={shareUnavailable}
+            disabled={shareUnavailable || shareActions.has("native")}
+            aria-disabled={shareUnavailable || shareActions.has("native")}
           >
-            {shared === "unsupported" ? "Share unavailable" : "Native share"}
+            {shareActions.has("native")
+              ? "Sharing..."
+              : shared === "unsupported"
+                ? "Share unavailable"
+                : "Native share"}
           </button>
         </div>
         {/* Social web intents (ws-results/history-share). All affordances
@@ -788,11 +805,16 @@ function ShareBody({
                 </a>
                 <button
                   type="button"
-                  className={`btn btn--ghost ${s.shareIntentButton}`}
+                  className={`btn btn--ghost ${s.shareIntentButton}${shareActions.has("copy-link") ? " btn--disabled" : ""}`}
                   onClick={copyLink}
                   aria-label="Copy share link"
+                  disabled={shareActions.has("copy-link")}
                 >
-                  {linkCopied ? "Link copied ✓" : "Copy link"}
+                  {shareActions.has("copy-link")
+                    ? "Copying..."
+                    : linkCopied
+                      ? "Link copied ✓"
+                      : "Copy link"}
                 </button>
               </>
             ) : (
@@ -840,7 +862,7 @@ function ShareBody({
           {shareLinkError
             ? "The card remains exportable, but this run cannot be shared as a reproducible replay URL."
             : ogPreviewError
-              ? "The replay token is ready; retry preview to copy a signed URL."
+              ? "preview unavailable, link works — the static preview card is active; Retry only refreshes the preview."
               : `${shareReadyNote} The replay URL reproduces this run byte-for-byte from its seed.`}{" "}
           Nothing here uses any official competition name, emblem, or trophy.
         </p>

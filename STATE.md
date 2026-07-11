@@ -1011,6 +1011,43 @@ process scan was empty after teardown. Golden
 suites and heavy realism were not run because D3 changes no deterministic core,
 data, rating, simulation, or leaderboard-validation behavior.
 
+Audit Season 1 D4 share resilience:
+2026-07-11 · YELLOW implementation on branch
+`ws-ux/audit-s1-share-resilience`, rebased as one isolated commit onto tagged Wave B main
+`f9559061de9b47b00c8fc1b5a1ea1164358f61ae`. Replay-token creation now makes
+the unsigned `/play/share?run=...` URL, caption, copy-link, native-share, and
+social-intent actions available immediately. Signed OG generation is an
+independent enhancement: the existing `/api/og/sign` POST contract is
+unchanged, but its client request now uses D1's shared four-second bounded
+request and retains the existing three-attempt schedule. Pending, timed-out,
+HTTP-failed, or malformed signing responses leave the replay link active; the
+unsigned share page continues to select the static `og-default` metadata. The
+visible failure state contains the literal honest status `preview unavailable,
+link works`, and Retry restarts only preview signing without disabling or
+dispatching a share action. Per-action synchronous latches prevent duplicate
+clipboard/native dispatch while allowing different share actions to remain
+independent. Unmount aborts the preview request and its lifetime guard ignores
+a late successful response. The signing and verification server routes were
+not changed. Mounted coverage holds signing open while exercising immediate
+caption/copy/native actions, proves the unchanged sign request shape, covers
+HTTP and bounded-timeout static fallback, isolates Retry, proves late success
+after unmount is inert, and verifies exactly-once native dispatch. Validation:
+focused share/OG/source tests passed 5/5 files and 60/60 tests; complete direct
+web Vitest passed 100 files / 1 skipped and 1,079 tests / 1 skipped; complete
+data Vitest passed 16 files / 1 skipped and 168 tests / 9 skipped. Root
+typecheck passed 8/8 tasks, lint passed 5/5 tasks, and production build passed
+4/4 tasks with 40/40 pages generated. The first post-Wave-B responsive run
+honestly failed because the now-immediate long unsigned replay URL made the
+caption overflow horizontally on the Share author surface at 667x375 and
+768x1024. The fix-forward constrains the caption to its container and allows
+unbroken token URLs to wrap. The complete replacement web run passed game-flow
+Playwright and all 204 responsive metrics with zero failures (84 desktop, 56
+mobile, 40 interaction, 24 mode/setup), followed by typecheck, lint, build,
+Prettier, and diff checks. Golden suites and heavy realism were not run because
+no core, runtime-data, rating, simulation, leaderboard-validation, schema,
+migration, or ETL semantics changed. Report:
+`docs/reports/audit-s1-d4-share-resilience-2026-07-11.md`.
+
 Audit Season 1 D2 interaction-floor harness:
 2026-07-10 · Standalone controls now hold a measured 44px minimum in both
 dimensions across Review simulation/back actions, History result/seed actions,
