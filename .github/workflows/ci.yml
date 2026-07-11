@@ -568,9 +568,9 @@ jobs:
         env:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
-        # The runner's in-script guard checks NEON_EPHEMERAL_BRANCH_ID is set
-        # AND (when NEON_API_KEY is present) that the branch is NOT primary/default.
-        # A misconfigured workflow that pointed at production would be caught here.
+        # The runner's in-script guard requires API credentials and binds the
+        # connected direct endpoint + current_database() to the exact ephemeral
+        # sentinel. Primary/default/protected targets refuse before migration.
         run: |
           set -a
           . "$RUNNER_TEMP/neon-ephemeral.env"
