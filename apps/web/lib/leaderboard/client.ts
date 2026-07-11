@@ -200,6 +200,8 @@ export type RankedAttemptFetchResult =
       readonly status: number | null;
       readonly message: string | null;
       readonly timedOut: boolean;
+      /** No HTTP verdict was received, so issuing another seed is unsafe. */
+      readonly outcomeUnknown: boolean;
     };
 
 export async function requestRankedAttempt(input: {
@@ -262,6 +264,7 @@ export async function requestRankedAttempt(input: {
       status: r.status,
       message: typeof body?.message === "string" ? body.message : null,
       timedOut: false,
+      outcomeUnknown: false,
     };
   } catch (error) {
     return {
@@ -271,6 +274,7 @@ export async function requestRankedAttempt(input: {
         ? "The ranked request timed out. It may have completed; check before trying again."
         : null,
       timedOut: isRequestTimeoutError(error),
+      outcomeUnknown: true,
     };
   }
 }

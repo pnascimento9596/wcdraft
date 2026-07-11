@@ -4,22 +4,18 @@ import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import {
-  authClientErrorMessage,
-  deleteCsrf,
-  deleteJson,
-  postJson,
-  putJson,
-} from "@/lib/auth/client";
+import { deleteCsrf, deleteJson, postJson, putJson } from "@/lib/auth/client";
 import { useAuth } from "@/components/auth-context";
 import { fetchAccountRunsPage } from "@/lib/account/client";
 import { isRequestTimeoutError } from "@wcdraft/data/client";
 import type { AccountRun, AccountRunsPage } from "@/lib/account/runs";
 import { formatAccountRunRecord } from "@/lib/account/run-format";
+import { unsafeMutationUnknownMessage, useUnsafeMutationLatch } from "@/lib/unsafe-mutation";
 
 type Notice =
   | { kind: "idle" }
   | { kind: "ok"; message: string }
+  | { kind: "unknown"; message: string }
   | { kind: "error"; message: string };
 
 export function AccountClient({ initial }: { readonly initial: AccountRunsPage }) {
@@ -147,28 +143,30 @@ export function AccountClient({ initial }: { readonly initial: AccountRunsPage }
 function IdentityPanel({ identity }: { readonly identity: AccountRunsPage["identity"] }) {
   const router = useRouter();
   const { refresh } = useAuth();
-  const [signingOut, setSigningOut] = useState(false);
-  const [signOutError, setSignOutError] = useState<string | null>(null);
+  const mutation = useUnsafeMutationLatch();
+  const [signOutNotice, setSignOutNotice] = useState<Notice>({ kind: "idle" });
   const signOut = useCallback(async () => {
-    setSigningOut(true);
-    setSignOutError(null);
+    if (!mutation.begin()) return;
+    setSignOutNotice({ kind: "idle" });
     try {
       await deleteCsrf("/api/auth/session");
+      mutation.markCommitted();
       await refresh();
       router.push("/");
       router.refresh();
     } catch (error) {
-      setSignOutError(
-        authClientErrorMessage(error, {
+      mutation.markOutcomeUnknown();
+      setSignOutNotice({
+        kind: "unknown",
+        message: unsafeMutationUnknownMessage(error, {
           timeout:
-            "Sign-out timed out and may have completed. Refresh this page before trying again.",
-          fallback: "Sign-out could not be completed. Refresh and try again.",
+            "Sign-out timed out and may have completed. This action is locked; reload Account to check the session before trying again.",
+          transport:
+            "The connection ended before sign-out was confirmed. This action is locked; reload Account to check the session before trying again.",
         }),
-      );
-    } finally {
-      setSigningOut(false);
+      });
     }
-  }, [refresh, router]);
+  }, [mutation, refresh, router]);
 
   return (
     <section className="account-panel">
@@ -187,16 +185,12 @@ function IdentityPanel({ identity }: { readonly identity: AccountRunsPage["ident
           type="button"
           className="account-link-button"
           onClick={signOut}
-          disabled={signingOut}
+          disabled={mutation.locked}
         >
-          {signingOut ? "Signing out..." : "Sign out"}
+          {mutation.phase === "pending" ? "Signing out..." : "Sign out"}
         </button>
       </div>
-      {signOutError ? (
-        <p className="account-notice account-notice--error" role="alert">
-          {signOutError}
-        </p>
-      ) : null}
+      <MutationNotice notice={signOutNotice} />
     </section>
   );
 }
@@ -210,12 +204,12 @@ function UsernamePanel({
 }) {
   const [value, setValue] = useState(username ?? "");
   const [notice, setNotice] = useState<Notice>({ kind: "idle" });
-  const [saving, setSaving] = useState(false);
+  const mutation = useUnsafeMutationLatch();
 
   const submit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      setSaving(true);
+      if (!mutation.begin()) return;
       setNotice({ kind: "idle" });
       try {
         const response = await putJson<{
@@ -224,6 +218,7 @@ function UsernamePanel({
           username_reason?: string;
         }>("/api/profile", { username: value });
         if (!response.ok || typeof response.data?.profile?.username !== "string") {
+          mutation.settle();
           setNotice({
             kind: "error",
             message: response.data?.message ?? "Username was not saved.",
@@ -231,23 +226,24 @@ function UsernamePanel({
           return;
         }
         const saved = response.data.profile.username;
+        mutation.settle();
         setValue(saved);
         setNotice({ kind: "ok", message: "Username saved." });
-        await onUsernameSet(saved);
+        await onUsernameSet(saved).catch(() => undefined);
       } catch (error) {
+        mutation.markOutcomeUnknown();
         setNotice({
-          kind: "error",
-          message: authClientErrorMessage(error, {
+          kind: "unknown",
+          message: unsafeMutationUnknownMessage(error, {
             timeout:
-              "The username update timed out and may have completed. Refresh Account before trying again.",
-            fallback: "Network hiccup. Try again.",
+              "The username update timed out and may have completed. This value is locked; reload Account or change the username before trying again.",
+            transport:
+              "The connection ended before the username update was confirmed. This value is locked; reload Account or change the username before trying again.",
           }),
         });
-      } finally {
-        setSaving(false);
       }
     },
-    [onUsernameSet, value],
+    [mutation, onUsernameSet, value],
   );
 
   return (
@@ -259,22 +255,22 @@ function UsernamePanel({
           <span>Public username</span>
           <input
             value={value}
-            onChange={(event) => setValue(event.target.value)}
+            onChange={(event) => {
+              setValue(event.target.value);
+              mutation.resetForChangedOperation();
+              if (notice.kind === "unknown") setNotice({ kind: "idle" });
+            }}
             autoComplete="username"
             placeholder="manager_10"
             minLength={3}
             maxLength={20}
           />
         </label>
-        <button type="submit" className="account-action" disabled={saving}>
-          {saving ? "Saving..." : "Save username"}
+        <button type="submit" className="account-action" disabled={mutation.locked}>
+          {mutation.phase === "pending" ? "Saving..." : "Save username"}
         </button>
       </form>
-      {notice.kind !== "idle" ? (
-        <p className={`account-notice account-notice--${notice.kind}`} role="status">
-          {notice.message}
-        </p>
-      ) : null}
+      <MutationNotice notice={notice} />
     </section>
   );
 }
@@ -287,35 +283,37 @@ function VerificationPanel({
   readonly onVerificationSent: () => Promise<void>;
 }) {
   const [notice, setNotice] = useState<Notice>({ kind: "idle" });
-  const [sending, setSending] = useState(false);
+  const mutation = useUnsafeMutationLatch();
 
   const resend = useCallback(async () => {
-    setSending(true);
+    if (!mutation.begin()) return;
     setNotice({ kind: "idle" });
     try {
       const response = await postJson<{ message?: string }>("/api/auth/resend-verification", {});
       if (!response.ok) {
+        mutation.settle();
         setNotice({
           kind: "error",
           message: response.data?.message ?? "Verification email was not sent.",
         });
         return;
       }
+      mutation.settle();
       setNotice({ kind: "ok", message: "Verification link sent." });
-      await onVerificationSent();
+      await onVerificationSent().catch(() => undefined);
     } catch (error) {
+      mutation.markOutcomeUnknown();
       setNotice({
-        kind: "error",
-        message: authClientErrorMessage(error, {
+        kind: "unknown",
+        message: unsafeMutationUnknownMessage(error, {
           timeout:
-            "The delivery request timed out and may still be processing. Wait before trying again.",
-          fallback: "Network hiccup. Try again.",
+            "The delivery request timed out and may still be processing. This action is locked; reload Account before sending another link.",
+          transport:
+            "The connection ended before delivery was confirmed. This action is locked; reload Account before sending another link.",
         }),
       });
-    } finally {
-      setSending(false);
     }
-  }, [onVerificationSent]);
+  }, [mutation, onVerificationSent]);
 
   return (
     <section className="account-panel">
@@ -325,16 +323,17 @@ function VerificationPanel({
       ) : (
         <>
           <p>Verify email before ranked attempts or ranked posts. Casual play still works.</p>
-          <button type="button" className="account-action" onClick={resend} disabled={sending}>
-            {sending ? "Sending..." : "Resend verification"}
+          <button
+            type="button"
+            className="account-action"
+            onClick={resend}
+            disabled={mutation.locked}
+          >
+            {mutation.phase === "pending" ? "Sending..." : "Resend verification"}
           </button>
         </>
       )}
-      {notice.kind !== "idle" ? (
-        <p className={`account-notice account-notice--${notice.kind}`} role="status">
-          {notice.message}
-        </p>
-      ) : null}
+      <MutationNotice notice={notice} />
     </section>
   );
 }
@@ -353,12 +352,12 @@ function PasswordPanel({
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [notice, setNotice] = useState<Notice>({ kind: "idle" });
-  const [saving, setSaving] = useState(false);
+  const mutation = useUnsafeMutationLatch();
 
   const submit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      setSaving(true);
+      if (!mutation.begin()) return;
       setNotice({ kind: "idle" });
       try {
         const response = await putJson<{ message?: string; hasPassword?: boolean }>(
@@ -369,6 +368,7 @@ function PasswordPanel({
           },
         );
         if (!response.ok) {
+          mutation.settle();
           setNotice({
             kind: "error",
             message:
@@ -377,24 +377,25 @@ function PasswordPanel({
           });
           return;
         }
+        mutation.settle();
         setCurrentPassword("");
         setNewPassword("");
         setNotice({ kind: "ok", message: "Password updated." });
-        await onPasswordSet();
+        await onPasswordSet().catch(() => undefined);
       } catch (error) {
+        mutation.markOutcomeUnknown();
         setNotice({
-          kind: "error",
-          message: authClientErrorMessage(error, {
+          kind: "unknown",
+          message: unsafeMutationUnknownMessage(error, {
             timeout:
-              "The password update timed out and may have completed. Refresh or sign in again before retrying.",
-            fallback: "Network hiccup. Try again.",
+              "The password update timed out and may have completed. This request is locked; reload Account or change a password field before trying again.",
+            transport:
+              "The connection ended before the password update was confirmed. This request is locked; reload Account or change a password field before trying again.",
           }),
         });
-      } finally {
-        setSaving(false);
       }
     },
-    [currentPassword, newPassword, onPasswordSet],
+    [currentPassword, mutation, newPassword, onPasswordSet],
   );
 
   return (
@@ -410,7 +411,11 @@ function PasswordPanel({
               type="password"
               autoComplete="current-password"
               value={currentPassword}
-              onChange={(event) => setCurrentPassword(event.target.value)}
+              onChange={(event) => {
+                setCurrentPassword(event.target.value);
+                mutation.resetForChangedOperation();
+                if (notice.kind === "unknown") setNotice({ kind: "idle" });
+              }}
             />
           </label>
         ) : null}
@@ -420,13 +425,17 @@ function PasswordPanel({
             type="password"
             autoComplete={hasPassword ? "new-password" : "new-password"}
             value={newPassword}
-            onChange={(event) => setNewPassword(event.target.value)}
+            onChange={(event) => {
+              setNewPassword(event.target.value);
+              mutation.resetForChangedOperation();
+              if (notice.kind === "unknown") setNotice({ kind: "idle" });
+            }}
             minLength={10}
             required
           />
         </label>
-        <button type="submit" className="account-action" disabled={saving}>
-          {saving
+        <button type="submit" className="account-action" disabled={mutation.locked}>
+          {mutation.phase === "pending"
             ? "Saving..."
             : setNewPasswordMode
               ? "Set new password"
@@ -440,11 +449,7 @@ function PasswordPanel({
           ? "Fresh reset links let you set a new password without the old one."
           : `Forgot it? Use reset on sign-in for ${email ?? "this account"}, then set a new password here.`}
       </p>
-      {notice.kind !== "idle" ? (
-        <p className={`account-notice account-notice--${notice.kind}`} role="status">
-          {notice.message}
-        </p>
-      ) : null}
+      <MutationNotice notice={notice} />
     </section>
   );
 }
@@ -452,39 +457,41 @@ function PasswordPanel({
 function DeletePanel() {
   const [confirm, setConfirm] = useState("");
   const [notice, setNotice] = useState<Notice>({ kind: "idle" });
-  const [deleting, setDeleting] = useState(false);
+  const mutation = useUnsafeMutationLatch();
   const router = useRouter();
 
   const deleteAccount = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      setDeleting(true);
+      if (!mutation.begin()) return;
       setNotice({ kind: "idle" });
       try {
         const response = await deleteJson<{ message?: string }>("/api/account", { confirm });
         if (!response.ok) {
+          mutation.settle();
           setNotice({
             kind: "error",
             message: response.data?.message ?? "Account was not deleted.",
           });
           return;
         }
+        mutation.markCommitted();
         router.push("/");
         router.refresh();
       } catch (error) {
+        mutation.markOutcomeUnknown();
         setNotice({
-          kind: "error",
-          message: authClientErrorMessage(error, {
+          kind: "unknown",
+          message: unsafeMutationUnknownMessage(error, {
             timeout:
-              "Deletion timed out and may have completed. Do not retry yet; refresh or sign in to check account state.",
-            fallback: "Network hiccup. Account not deleted.",
+              "Deletion timed out and may have completed. This action is locked; reload or sign in to check account state before doing anything else.",
+            transport:
+              "The connection ended before deletion was confirmed. This action is locked; reload or sign in to check account state before doing anything else.",
           }),
         });
-      } finally {
-        setDeleting(false);
       }
     },
-    [confirm, router],
+    [confirm, mutation, router],
   );
 
   return (
@@ -500,16 +507,26 @@ function DeletePanel() {
             autoComplete="off"
           />
         </label>
-        <button type="submit" className="account-danger" disabled={deleting}>
-          {deleting ? "Deleting..." : "Delete account"}
+        <button type="submit" className="account-danger" disabled={mutation.locked}>
+          {mutation.phase === "pending" ? "Deleting..." : "Delete account"}
         </button>
       </form>
-      {notice.kind !== "idle" ? (
-        <p className={`account-notice account-notice--${notice.kind}`} role="status">
-          {notice.message}
-        </p>
-      ) : null}
+      <MutationNotice notice={notice} />
     </section>
+  );
+}
+
+function MutationNotice({ notice }: { readonly notice: Notice }): React.ReactElement | null {
+  if (notice.kind === "idle") return null;
+  const failed = notice.kind === "error" || notice.kind === "unknown";
+  return (
+    <div
+      className={`account-notice account-notice--${failed ? "error" : "ok"}`}
+      role={failed ? "alert" : "status"}
+    >
+      <p>{notice.message}</p>
+      {notice.kind === "unknown" ? <a href="/account">Reload Account to check state</a> : null}
+    </div>
   );
 }
 

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { DEFAULT_BOARD_FILTER } from "../config";
-import { fetchBoardPage, submitRun } from "../client";
+import { fetchBoardPage, requestRankedAttempt, submitRun } from "../client";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -41,6 +41,30 @@ describe("leaderboard client request budgets", () => {
     await vi.advanceTimersByTimeAsync(12_000);
 
     await expect(pending).resolves.toEqual({ kind: "timeout" });
+    expect(fetcher).toHaveBeenCalledOnce();
+  });
+
+  it("types a held-open ranked seed request as outcome-unknown", async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal("document", { cookie: "wcdraft_csrf=test-token" });
+    const fetcher = vi.fn(() => new Promise<Response>(() => undefined));
+    vi.stubGlobal("fetch", fetcher);
+
+    const pending = requestRankedAttempt({
+      formationId: "4-3-3",
+      draftMode: "classic",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
+    });
+    await vi.advanceTimersByTimeAsync(12_000);
+
+    await expect(pending).resolves.toMatchObject({
+      ok: false,
+      status: null,
+      timedOut: true,
+      outcomeUnknown: true,
+    });
     expect(fetcher).toHaveBeenCalledOnce();
   });
 });

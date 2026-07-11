@@ -46,6 +46,51 @@ static-generation warnings remain unchanged. No schema, migration, rating,
 simulation, draft semantics, runtime-data payload, or API response contract
 changed; the PR's protected CI must rerun at the pushed final head.
 
+The first independent review of D1 head
+`dd3faa71fcad841608e824fce92f5c1529a8613a` returned **FAIL** (report
+SHA-256 `a24d3259f159b1909090f1862881c67f650e2f964aab762aa13b8903bb928fce`).
+It found two fix-forward defects: ranked seed and auth/account mutation
+timeouts became ordinary errors whose controls could immediately dispatch a
+second unsafe write, and the first-load evidence exercised helpers or static
+views rather than the mounted state-owning containers. The fix-forward adds a
+shared synchronous unsafe-mutation latch with explicit pending, committed,
+and outcome-unknown states. Ranked-attempt failures now carry a typed
+`outcomeUnknown` witness; timeout or transport-unknown issuance locks the
+entire formation/config surface for that page and exposes only Account/mode
+alternates. A successful seed response is marked committed before local run
+creation, persistence, or parent handoff, so any later client failure also
+stays locked and cannot mint a second pre-consumption seed. Definitive HTTP
+failures remain usable. The same unknown-outcome guard now covers password
+sign-in, magic-link sign-in, password reset, sign-up, username and password
+updates, verification resend, account deletion, and Account sign-out. Only an
+operation-relevant input change can reset eligible auth/profile writes;
+verification, deletion, and ranked issuance require reload/read
+reconciliation or a safe alternate.
+
+Real ReactDOM mounts now cover `AuthProvider` + `AccountMenu`, `ModeSelect`,
+`DraftScreen`, `HistoryScreen`, `ResultsScreen`, `ReviewScreen`, `ShareScreen`,
+and `BoardScreen` from a never-resolving first read through budget expiry,
+stable timeout copy, safe Retry, and alternate navigation. Mounted mutation
+regressions hold real POST/PUT/DELETE calls open and prove an attempted repeat
+leaves the request count at exactly one, with no ranked `onLocked` or router
+handoff; they also cover transport loss, definitive HTTP recovery, changed
+operations, successful seed issuance followed by local creation failure, and
+successful issuance followed by a throwing parent callback. The mounts use
+ReactDOM and Vitest directly with one test-only `happy-dom` dependency; no
+testing-library stack or production dependency was added. Final focused
+validation passed 5/5 files and 25/25 tests. Complete explicit non-browser
+suites passed: web 95 files passed / 1 skipped and 969 tests passed / 1
+skipped; data 16 files passed / 1 skipped and 168 tests passed / 9 skipped.
+Forced root gates passed with zero cache hits: typecheck 8/8, lint 5/5, and
+build 4/4, with the web build generating 40/40 pages. The final isolated
+browser rerun passed game flow and responsive checks (desktop 84/0, mobile
+56/0, interaction targets 40/0); an earlier overlapping browser receipt was
+discarded and is not claimed. Full-repository Prettier and `git diff --check`
+also passed. Existing Next circular-chunk and Edge static-generation warnings
+remain unchanged. No schema, migration, rating, simulation, draft semantics,
+runtime-data payload, or server API response contract changed. A fresh
+independent exact-head review and protected CI remain mandatory before merge.
+
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-display-name-on`, initially based on C1-shipped `origin/main`
