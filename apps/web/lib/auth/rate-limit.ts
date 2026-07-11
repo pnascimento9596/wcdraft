@@ -37,6 +37,12 @@ export type RateLimitBucketKind =
   | "password-ip-15m"
   | "verification-session-15m";
 
+/** Lower than the coarse 10-request/hour source cap by design. */
+export const MAGIC_LINK_DISTINCT_IDENTIFIERS_PER_IP = {
+  maxCount: 5,
+  windowMs: 60 * 60 * 1000,
+} as const;
+
 export interface RateLimitArgs {
   /** "<kind>:<plaintext>" — hashed inside. */
   readonly bucket: { kind: RateLimitBucketKind; value: string };
@@ -83,6 +89,69 @@ export async function consumeRateLimit(
     ? null
     : Math.max(1, Math.ceil((windowStartMs + winMs - nowMs) / 1000));
   return { allowed, count, windowStart, retryAfterSeconds };
+}
+
+/**
+ * Record one distinct normalized identifier for an IP in the current window.
+ * Both persisted keys are family-prefixed SHA-256 digests. The marker primary
+ * key makes only the first request for a pair increment the shared IP counter.
+ * A counter-row `FOR UPDATE` lock serializes every identifier for an IP. The
+ * lock is acquired in a later statement than the insert-on-conflict, which is
+ * important under PostgreSQL READ COMMITTED: a waiter gets a fresh snapshot
+ * after the winning transaction commits instead of trusting a stale statement
+ * snapshot. The caller must invoke this helper inside a transaction.
+ */
+export async function consumeDistinctIdentifierPerIp(
+  args: {
+    readonly ipAddress: string;
+    readonly identifier: string;
+    readonly windowMs: number;
+    readonly maxCount: number;
+  },
+  deps: RateLimitDeps,
+): Promise<RateLimitResult & { readonly inserted: boolean }> {
+  const nowMs = deps.now();
+  const windowStartMs = nowMs - (nowMs % args.windowMs);
+  const windowStart = new Date(windowStartMs);
+  const normalizedIp = args.ipAddress.trim().toLowerCase() || "unknown";
+  const ipHash = sha256Hex(normalizedIp);
+  const identifierHash = sha256Hex(args.identifier.trim().toLowerCase());
+  const markerKey = `magic-distinct-marker:${sha256Hex(`${ipHash}:${identifierHash}`)}`;
+  const counterKey = `magic-distinct-ip:${ipHash}`;
+
+  await deps.db.execute(sql`
+    INSERT INTO ${authRateLimits} (bucket_key, window_start, count, updated_at)
+    VALUES (${counterKey}, ${windowStart}, 0, NOW())
+    ON CONFLICT (bucket_key, window_start) DO NOTHING
+  `);
+  const locked = await deps.db.execute<{ count: number }>(sql`
+    SELECT count
+    FROM ${authRateLimits}
+    WHERE bucket_key = ${counterKey} AND window_start = ${windowStart}
+    FOR UPDATE
+  `);
+  let count = locked.rows[0]?.count ?? 0;
+  const marker = await deps.db.execute<{ inserted: number }>(sql`
+    INSERT INTO ${authRateLimits} (bucket_key, window_start, count, updated_at)
+    VALUES (${markerKey}, ${windowStart}, 1, NOW())
+    ON CONFLICT (bucket_key, window_start) DO NOTHING
+    RETURNING 1 AS inserted
+  `);
+  const inserted = marker.rows.length === 1;
+  if (inserted) {
+    const incremented = await deps.db.execute<{ count: number }>(sql`
+      UPDATE ${authRateLimits}
+      SET count = count + 1, updated_at = NOW()
+      WHERE bucket_key = ${counterKey} AND window_start = ${windowStart}
+      RETURNING count
+    `);
+    count = incremented.rows[0]?.count ?? count + 1;
+  }
+  const allowed = count <= args.maxCount;
+  const retryAfterSeconds = allowed
+    ? null
+    : Math.max(1, Math.ceil((windowStartMs + args.windowMs - nowMs) / 1000));
+  return { allowed, count, inserted, windowStart, retryAfterSeconds };
 }
 
 /**
