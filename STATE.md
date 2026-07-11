@@ -4,6 +4,35 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 Wave D boundary review fix-forward:
+2026-07-11 · RED candidate on branch `ws-ux/audit-s1-wave-d-review-fixes`, based on
+post-D5 `origin/main` `7f25ee45d88701830b73f300132c731c423db733`. The Wave D
+cross-model review found two responsive blockers: compact mobile-menu links had
+no explicit 44px interaction floor and the responsive harness never opened that
+menu, while the two-action Daily timeout recovery dock could exceed the shared
+one-action reserve and cover mode cards at 360x800 and 390x844. Mobile-menu links
+now retain a 44px minimum height even in the compact padding tier. A dedicated
+hydration-aware browser surface opens the menu and measures every visible
+interaction at 360x800, 390x844, 667x375, and 768x1024 in both themes. The Daily
+timeout recovery dock and its grid reserve are now in normal flow, matching the
+existing unavailable-notice safety pattern; available and checking one-action
+docks retain sticky behavior.
+
+Focused source contracts pass 22/22. The first full responsive attempt was not
+product evidence because a fresh-worktree workspace package had not yet been
+built; after dependency builds, a second attempt passed the existing and new
+timeout phases but correctly failed the new menu proof because its click preceded
+client hydration. The harness now waits for hydration before clicking and requires
+the menu to lose its `hidden` attribute. A focused real-browser rerun passes 8/0
+opened-menu metrics across the four required viewports and two themes. The final
+expanded responsive adjudication passes 218/0: 84 desktop, 56 mobile shell, 40
+interaction, 30 mode/setup, and 8 opened-mobile-navigation metrics. The complete
+web gate passes 1,103 tests with one expected skip plus game-flow and the same
+218/0 responsive matrix. Forced root typecheck passes 8/8, lint 5/5, and build
+4/4 with 40/40 pages, all with zero cached tasks. Exact-head CI, independent
+review, merge, deploy, and live proof remain required. The durable implementation
+report is `docs/reports/audit-s1-wave-d-crossmodel-fixes-2026-07-11.md`.
+
 Audit S1 Wave B cross-model fix-forward:
 2026-07-11 · RED candidate on branch `ws-f4/audit-s1-wave-b-review-fixes`, based on
 post-Wave-B `origin/main` `890db10e32462473778778d2b1d4dedc9feb4d29`. The Wave B

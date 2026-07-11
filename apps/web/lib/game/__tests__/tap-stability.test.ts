@@ -21,6 +21,10 @@ const modeSelectSource = readFileSync(
   fileURLToPath(new URL("../../../components/game/mode-select.tsx", import.meta.url)),
   "utf8",
 );
+const responsiveHarnessSource = readFileSync(
+  fileURLToPath(new URL("../../../scripts/verify-responsive-layout-browser.mts", import.meta.url)),
+  "utf8",
+);
 
 // The canonical lock-bar section (the later block wins the cascade over the
 // shadowed legacy block earlier in the file).
@@ -98,7 +102,7 @@ describe("mode-select sticky CTA contract", () => {
     expect(grid).toContain("scroll-padding-block-end: var(--mode-dock-reserve)");
   });
 
-  it("keeps the taller unavailable notice in flow without a stale dock reserve", () => {
+  it("keeps taller Daily recovery docks in flow without a stale dock reserve", () => {
     const inFlowDock = block(".modeDockInFlow");
     const inFlowGrid = block(".modeGridDockInFlow");
     expect(inFlowDock).toContain("position: static");
@@ -107,8 +111,17 @@ describe("mode-select sticky CTA contract", () => {
     expect(modeSelectSource).toContain(
       'const dailyUnavailableSelected = mode === "daily" && dailyAvailability === "unavailable"',
     );
-    expect(modeSelectSource).toContain('dailyUnavailableSelected ? s.modeGridDockInFlow : ""');
+    expect(modeSelectSource).toContain(
+      'dailyAvailability === "unavailable" || dailyAvailability === "timeout"',
+    );
+    expect(modeSelectSource).toContain('dailyRecoveryDockInFlow ? s.modeGridDockInFlow : ""');
     expect(modeSelectSource).toContain("${s.modeDock} ${s.modeDockInFlow}");
+  });
+
+  it("measures the two-action timeout recovery surface", () => {
+    expect(responsiveHarnessSource).toContain('label: "mode-select-timeout"');
+    expect(responsiveHarnessSource).toContain('name: "Retry Daily check"');
+    expect(responsiveHarnessSource).toContain('name: "Play Classic instead"');
   });
 
   it("keeps the dock in flow on short landscape viewports", () => {

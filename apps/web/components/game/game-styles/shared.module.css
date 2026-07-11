@@ -241,8 +241,8 @@
   scroll-padding-block-end: var(--mode-dock-reserve);
 }
 
-/* The unavailable notice is taller than the one-line action dock. Keep that
-   state in normal flow so its copy can wrap without ever covering a card. */
+/* Recovery states can be taller than the one-line action dock. Keep those
+   states in normal flow so wrapped copy or multiple actions cannot cover a card. */
 .modeGridDockInFlow {
   padding-block-end: 0;
   scroll-padding-block-end: 0;
