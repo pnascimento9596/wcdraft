@@ -41,6 +41,10 @@ import { MissingRecordError, RuntimeDataLoadError } from "./errors";
 import { dailyCoverageForDate } from "./daily";
 import { composeVersions, type RunRecordVersions } from "./versions";
 import { displayNameFromNames, fullDisplayName } from "./display-names";
+import {
+  type RuntimeDataServiceWorkerHandoff,
+  waitForRuntimeDataServiceWorkerHandoff,
+} from "../service-worker";
 
 export { composeVersions, type RunRecordVersions } from "./versions";
 
@@ -82,6 +86,60 @@ let inFlight: Promise<GameData> | null = null;
 export function clearGameDataCacheForTests(): void {
   cachedGameData = null;
   inFlight = null;
+}
+
+/**
+ * Page-side half of the cold-install transfer handoff. The manifest remains
+ * free to load concurrently, but the large pool request waits until the new
+ * worker controls this page (or the bounded coordinator deliberately falls
+ * through). Exported for an executable uncontrolled-page race test.
+ */
+export async function loadDraftPoolAfterServiceWorkerHandoff({
+  waitForHandoff = waitForRuntimeDataServiceWorkerHandoff,
+  loadDraftPool = loadDraftPoolBundle,
+}: {
+  waitForHandoff?: () => Promise<RuntimeDataServiceWorkerHandoff>;
+  loadDraftPool?: () => Promise<DraftPoolBundle>;
+} = {}): Promise<DraftPoolBundle> {
+  const handoff = await waitForHandoff();
+  if (handoff === "timed-out") {
+    throw new Error("Runtime-data service-worker promotion timed out");
+  }
+  return loadDraftPool();
+}
+
+/**
+ * Load one coherent runtime-data revision. All revision-bearing requests start
+ * only after the same service-worker controller has been selected. A slow
+ * install fails this attempt instead of launching duplicate pool work while
+ * the worker is still filling its atomic cache.
+ */
+export async function loadRuntimeDataAfterServiceWorkerHandoff({
+  waitForHandoff = waitForRuntimeDataServiceWorkerHandoff,
+  loadManifest = loadDataManifest,
+  loadDraftPool = loadDraftPoolBundle,
+  loadDailyMap = loadDailySeedSaltMap,
+}: {
+  waitForHandoff?: () => Promise<RuntimeDataServiceWorkerHandoff>;
+  loadManifest?: () => Promise<RuntimeDataManifest>;
+  loadDraftPool?: () => Promise<DraftPoolBundle>;
+  loadDailyMap?: () => Promise<DailySeedSaltMap>;
+} = {}): Promise<{
+  manifest: RuntimeDataManifest;
+  draftPool: DraftPoolBundle;
+  dailySeedSaltMap: DailySeedSaltMap | null;
+}> {
+  const handoff = await waitForHandoff();
+  if (handoff === "timed-out") {
+    throw new Error("Runtime-data service-worker promotion timed out");
+  }
+
+  const manifest = await loadManifest();
+  const [draftPool, dailySeedSaltMap] = await Promise.all([
+    loadDraftPool(),
+    manifest.bundles.daily_seed_salt_map === undefined ? Promise.resolve(null) : loadDailyMap(),
+  ]);
+  return { manifest, draftPool, dailySeedSaltMap };
 }
 
 /**
@@ -137,21 +195,15 @@ export async function loadGameData(): Promise<GameData> {
   inFlight = boundedRequest(
     async (signal) => {
       try {
-        // Manifest (~6 KB) and the draft-pool bundle (~5 MB brotli) load from
-        // independent static URLs, so fetch them concurrently instead of serially
-        // — removes one manifest round-trip from the first-play critical path.
-        // Promise.all preserves the prior error semantics (reject on first error).
-        const manifestPromise = loadDataManifest({ signal });
-        const draftPoolPromise = loadDraftPoolBundle({ signal });
-        const manifest = await manifestPromise;
-        const dailySeedSaltMapPromise =
-          manifest.bundles.daily_seed_salt_map === undefined
-            ? Promise.resolve(null)
-            : loadDailySeedSaltMap({ signal });
-        const [draftPool, dailySeedSaltMap] = await Promise.all([
-          draftPoolPromise,
-          dailySeedSaltMapPromise,
-        ]);
+        // Select one controller before any revision-bearing request begins.
+        // This prevents an old manifest from being combined with a new pool.
+        // The D1 signal still binds every fetch to the shared 30-second budget.
+        const { manifest, draftPool, dailySeedSaltMap } =
+          await loadRuntimeDataAfterServiceWorkerHandoff({
+            loadManifest: () => loadDataManifest({ signal }),
+            loadDraftPool: () => loadDraftPoolBundle({ signal }),
+            loadDailyMap: () => loadDailySeedSaltMap({ signal }),
+          });
         const gd = buildGameData(manifest, draftPool, dailySeedSaltMap);
         cachedGameData = gd;
         return gd;

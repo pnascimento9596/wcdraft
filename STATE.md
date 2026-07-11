@@ -463,6 +463,100 @@ exact-head CI run `29151151957` succeeded, and PR #235 squash-merged as
 `dpl_575fb` reached READY; live health matched the exact release with DB ready
 at schema migration `0012`, endpoint probes passed, and the production
 `390x844` responsive proof returned 2 metrics / 0 failures.
+Audit S1 C3 atomic service-worker lifecycle:
+2026-07-10–11 · RED implementation on branch `ws-f4/audit-s1-sw-atomic`, initially
+based on `origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` and finally rebased
+onto Wave-D-tagged `origin/main` `c0fd708e518ca96f8e9992f1e445c719c08e3533`. The generated
+worker config now iterates every manifest bundle and fails closed unless the
+known runtime-critical closure is present: manifest, canonical Brotli draft
+pool, scenario, Daily seed salt map, and score distribution. The live 2.9.0
+manifest derives 5 required cache entries and data revision
+`e08a2facf9c85830`; the draft entry binds both 130,545,042 decoded bytes /
+SHA-256 `461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a`
+and 2,224,859 transfer bytes / compressed SHA-256
+`053161069c28d441d87857bb199600c15dc2f7299336a4aa140054b45d03f853`.
+The data cache is now `wcdraft-data-b:<data_revision>` with no deploy token;
+only the shell cache is keyed by deploy revision, so an ordinary UI-only
+deployment neither writes, deletes, refetches, nor rotates unchanged data.
+
+Install now waits for every required fetch, HTTP success, fingerprint/header
+proof, cache put, and post-put presence proof; any failure rejects install,
+never calls `skipWaiting`, and removes a newly named partial candidate only
+after all active fills settle. Activation re-verifies the full new set before
+enumerating or deleting any old `wcdraft-*` cache, then claims clients. The
+large pool fills last. An origin-wide Web Lock plus per-worker in-flight promise
+deduplicates active/installing worker demand. A page-side production handoff
+also closes the genuinely uncontrolled cold-page race: manifest, pool, and
+Daily-map demand wait for one controller revision after atomic activation/claim.
+Existing controllers wait when registration exposes an installing/waiting
+update. Unsupported browsers and definitive registration rejection fall through
+to direct loading; a 15-second pending-install timeout fails the attempt without
+launching duplicate pool work.
+
+The fake CacheStorage/ServiceWorker lifecycle harness executes the committed
+`public/sw.js` and the real page handoff. It proves: failed new required asset
+retains the old complete caches and skips promotion; healthy deploy verifies,
+promotes, cleans, and claims; UI-only deploy performs zero data fetches/writes;
+data change rotates; non-OK, throwing put, silently missing put, and malformed
+config fail closed; incomplete activation deletes nothing; separate active and
+installing worker globals fetch the pool once; and a truly uncontrolled page
+does not invoke its pool loader until install + activation + claim, after which
+the worker cache hit keeps total pool network count at exactly 1. Pre-rebase focused proof
+passed 4/4 files and 37/37 tests. Pre-rebase non-browser web Vitest passed 90 files /
+949 tests with 1 file / 1 benchmark skipped. The generated worker/config
+integration loaded all three lifecycle listeners with exactly 5 entries and
+the revision above. Deterministic generated-artifact `--check` rebuilt the
+compact chain and left every tracked data/report/lock artifact unchanged.
+Forced root typecheck passed 8/8 tasks with 0 cache hits in 9.230s; forced lint
+passed 5/5 with 0 cache hits in 6.786s; forced build passed 4/4 with 0 cache
+hits in 21.087s and emitted 40/40 web pages. The fresh authoritative
+post-handoff forced root test passed 8/8 tasks with 0 cache hits in 7m34.102s:
+core 391/391, data 162 passed / 9 skipped, DB 119/119, marketing 68/68, and web
+949 passed / 1 benchmark skipped; game-flow Playwright passed; responsive
+desktop measured 84 checks / 0 failures, mobile 56/0, and interaction targets
+40/0. All C3 Next, Playwright, responsive, and Chrome processes were confirmed
+exited after the receipt. No runtime-data, rating, draft, simulation, schema,
+API, or database artifact changed.
+
+The final rebase composed C3 with D1 rather than choosing either side:
+`loadGameData` selects one service-worker controller before starting any
+revision-bearing request and passes D1's shared 30-second abort signal to the
+manifest, pool, and optional salt-map fetches. A first overlap run was invalid
+because this preserved worktree's
+linked `@wcdraft/data` build output predated D1; after rebuilding core/data/DB,
+the complete seven-file C3+D1 matrix passed 49/49. Deterministic regeneration
+then passed with no tracked artifact drift. Final forced gates passed with zero
+cache hits: typecheck 8/8, lint 5/5, root test 8/8 in 8m47.648s, and build 4/4
+with 40/40 pages. Root suites recorded core 391, data 168 passed / 9 skipped,
+DB 161, marketing 68, and web 1,116 passed / 1 benchmark skipped; game-flow
+passed and responsive adjudication passed 218/0 (84 desktop, 56 mobile, 40
+interaction, 30 mode/setup, 8 opened navigation). Core goldens passed 69 + 42,
+data goldens 54 + 22, and leaderboard golden 6. The durable report is
+`docs/reports/audit-s1-c3-atomic-service-worker-2026-07-11.md`. Exact-head CI,
+fresh RED review, Ollama Cloud cross-model review, merge, deploy, and live proof
+remain required.
+
+The first fresh exact-head RED review at `02b1103f89075deed7f0100afc01873b4698005a`
+returned FAIL despite all re-executed repository gates passing. Its adversarial
+probe proved that a same-length corrupt Brotli pool could promote because only
+headers were checked, an integrity-failed required response could still reach a
+controlled page, an update could combine an old-controller manifest with a
+new-controller pool, and worker lock/fetch work was unbounded while the
+15-second page fallback could duplicate the pool transfer. The fix-forward now
+hashes the actual decoded bytes for every required response, permits live
+fallback only after successful integrity proof, bounds lock acquisition and
+network fill with a shared abortable 25-second worker budget, selects one
+controller before any manifest/pool/Daily request, and fails a handoff timeout
+without launching duplicate direct work. New executed negative cases cover both
+same-length corruption paths, persistence-only fallback, stalled fetch, stalled
+lock, revision-coherent request start, timeout non-fallback, and deletion
+rejection; the focused worker/handoff matrix passes 24/24 and the seven-file C3+D1
+overlap passes 56/56. The fix-forward full gate then passed: generated-artifact
+check, forced typecheck 8/8, lint 5/5, root test 8/8 in 7m53.744s, build 4/4 with
+40/40 pages, responsive 218/0, web 1,123 passed + 1 expected skip, core goldens
+69 + 42, data goldens 54 + 22, and leaderboard golden 6. It still requires CI,
+independent exact-head RED PASS, Ollama Cloud PASS, merge, deployment, and live
+proof.
 
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
