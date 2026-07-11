@@ -22,6 +22,7 @@ import {
 
 import type { RunRecordV1 } from "./run-record";
 import type { RunRecordVersions } from "./versions";
+import { loadGameData } from "./data";
 
 /** One-line How-to-Play / a11y explainer, kept next to the computation. */
 export const REFERENCE_STANDING_EXPLAINER =
@@ -71,7 +72,12 @@ let cached: Promise<ScoreDistribution | null> | null = null;
  * retry-loop or fabricate.
  */
 export function loadScoreDistributionOnce(): Promise<ScoreDistribution | null> {
-  cached ??= loadScoreDistribution().catch(() => null);
+  cached ??= loadGameData()
+    .then(({ manifest }) => loadScoreDistribution({ manifest }))
+    .catch((error: unknown) => {
+      console.error("[reference-standing] score distribution unavailable", error);
+      return null;
+    });
   return cached;
 }
 

@@ -7,7 +7,8 @@
 import { loadScenario2026Bundle } from "@wcdraft/data/client";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
-import { RuntimeDataLoadError } from "./errors";
+import { loadGameData } from "./data";
+import { toRuntimeDataLoadError } from "./errors";
 
 let cachedScenario: Scenario2026Bundle | null = null;
 let inFlight: Promise<Scenario2026Bundle> | null = null;
@@ -28,14 +29,15 @@ export async function loadScenarioBundle(): Promise<Scenario2026Bundle> {
   if (inFlight) return inFlight;
   inFlight = (async () => {
     try {
-      const bundle = await loadScenario2026Bundle();
+      // Reuse the exact manifest already bound to this session's game data and
+      // six anchors; a mid-deploy manifest refresh must not authorize a
+      // different scenario underneath an existing run.
+      const { manifest } = await loadGameData();
+      const bundle = await loadScenario2026Bundle({ manifest });
       cachedScenario = bundle;
       return bundle;
     } catch (err) {
-      throw new RuntimeDataLoadError(
-        `Failed to load 2026 scenario bundle: ${err instanceof Error ? err.message : String(err)}`,
-        err,
-      );
+      throw toRuntimeDataLoadError("Failed to load 2026 scenario bundle", err);
     } finally {
       inFlight = null;
     }

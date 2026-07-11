@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -142,12 +143,30 @@ async function installDailyAvailabilityFixture(
 ): Promise<void> {
   const saltMap = gameData.dailySeedSaltMap;
   assert(saltMap, "responsive Daily state fixture requires the committed salt map");
+  const saltMapBody = JSON.stringify(saltMap);
+  const saltMapBytes = Buffer.byteLength(saltMapBody);
+  const saltMapSha256 = createHash("sha256").update(saltMapBody).digest("hex");
   const unavailableBundles: Record<string, unknown> = { ...gameData.manifest.bundles };
   delete unavailableBundles.daily_seed_salt_map;
   const manifest =
     state === "unavailable"
       ? { ...gameData.manifest, bundles: unavailableBundles }
-      : gameData.manifest;
+      : {
+          ...gameData.manifest,
+          bundles: {
+            ...gameData.manifest.bundles,
+            daily_seed_salt_map: {
+              ...gameData.manifest.bundles.daily_seed_salt_map!,
+              bytes: saltMapBytes,
+              sha256: saltMapSha256,
+              raw_sha256: saltMapSha256,
+              options: {
+                ...gameData.manifest.bundles.daily_seed_salt_map!.options!,
+                size_hint: saltMapBytes,
+              },
+            },
+          },
+        };
   const frozenNow = Date.parse(`${saltMap.window.start_date}T12:00:00.000Z`);
   assert(Number.isFinite(frozenNow), "responsive Daily state fixture has an invalid start date");
   await page.addInitScript({ content: `Date.now = () => ${frozenNow.toString()};` });
@@ -188,7 +207,7 @@ async function installDailyAvailabilityFixture(
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify(saltMap),
+      body: saltMapBody,
     });
   });
 }

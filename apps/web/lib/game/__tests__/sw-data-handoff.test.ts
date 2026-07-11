@@ -13,6 +13,8 @@ import {
   loadRuntimeDataAfterServiceWorkerHandoff,
 } from "../data";
 
+const TEST_MANIFEST = {} as RuntimeDataManifest;
+
 class FakeServiceWorkerContainer implements ServiceWorkerContainerLike {
   controller: unknown | null = null;
   readonly ready: Promise<ServiceWorkerRegistrationLike>;
@@ -80,6 +82,7 @@ describe("cold-page service-worker data handoff", () => {
     const loadDraftPool = vi.fn(async () => pool);
 
     const pending = loadDraftPoolAfterServiceWorkerHandoff({
+      manifest: TEST_MANIFEST,
       waitForHandoff: () =>
         waitForRuntimeDataServiceWorkerHandoff({
           nodeEnv: "production",
@@ -109,6 +112,7 @@ describe("cold-page service-worker data handoff", () => {
     const loadDraftPool = vi.fn(async () => pool);
 
     const pending = loadDraftPoolAfterServiceWorkerHandoff({
+      manifest: TEST_MANIFEST,
       waitForHandoff: () =>
         waitForRuntimeDataServiceWorkerHandoff({
           nodeEnv: "production",
@@ -149,6 +153,7 @@ describe("cold-page service-worker data handoff", () => {
 
     await expect(
       loadDraftPoolAfterServiceWorkerHandoff({
+        manifest: TEST_MANIFEST,
         waitForHandoff: () =>
           waitForRuntimeDataServiceWorkerHandoff({
             nodeEnv: "production",
@@ -170,6 +175,7 @@ describe("cold-page service-worker data handoff", () => {
     const loadDraftPool = vi.fn(async () => pool);
 
     const pending = loadDraftPoolAfterServiceWorkerHandoff({
+      manifest: TEST_MANIFEST,
       waitForHandoff: () =>
         waitForRuntimeDataServiceWorkerHandoff({
           nodeEnv: "production",

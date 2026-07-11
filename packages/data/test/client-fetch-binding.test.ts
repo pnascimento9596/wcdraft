@@ -12,6 +12,7 @@
 // real loaders complete without illegal-invocation errors.
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { createHash } from "node:crypto";
 
 import {
   DEFAULT_RUNTIME_DATA_BASE_PATH,
@@ -22,6 +23,30 @@ import {
   loadScenario2026Bundle,
 } from "../src/client.js";
 import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "../src/index.js";
+import type { RuntimeDataManifest } from "../src/types.js";
+
+const POOL_BODY = JSON.stringify(DRAFT_POOL_BUNDLE);
+const SCENARIO_BODY = JSON.stringify(SCENARIO_2026_BUNDLE);
+const sha256 = (value: string): string => createHash("sha256").update(value).digest("hex");
+const TEST_MANIFEST: RuntimeDataManifest = structuredClone(RUNTIME_DATA_MANIFEST);
+Object.assign(TEST_MANIFEST.bundles.draft_pool, {
+  bytes: Buffer.byteLength(POOL_BODY),
+  sha256: sha256(POOL_BODY),
+  raw_sha256: sha256(POOL_BODY),
+  options: {
+    ...TEST_MANIFEST.bundles.draft_pool.options!,
+    size_hint: Buffer.byteLength(POOL_BODY),
+  },
+});
+Object.assign(TEST_MANIFEST.bundles.scenario_2026, {
+  bytes: Buffer.byteLength(SCENARIO_BODY),
+  sha256: sha256(SCENARIO_BODY),
+  raw_sha256: sha256(SCENARIO_BODY),
+  options: {
+    ...TEST_MANIFEST.bundles.scenario_2026.options!,
+    size_hint: Buffer.byteLength(SCENARIO_BODY),
+  },
+});
 
 // ─── Strict global-fetch harness ─────────────────────────────────────────────
 
@@ -58,13 +83,13 @@ function installStrictFetch(): void {
     const url = String(args[0]);
     calls.push({ url, receiver: this });
     if (url.endsWith("/manifest.json")) {
-      return Promise.resolve(jsonResponse(RUNTIME_DATA_MANIFEST));
+      return Promise.resolve(jsonResponse(TEST_MANIFEST));
     }
     if (url.endsWith(`/${DRAFT_POOL_BROTLI_PATH}`)) {
-      return Promise.resolve(jsonResponse(DRAFT_POOL_BUNDLE));
+      return Promise.resolve(new Response(POOL_BODY));
     }
     if (url.endsWith("/scenario-2026.compact.json")) {
-      return Promise.resolve(jsonResponse(SCENARIO_2026_BUNDLE));
+      return Promise.resolve(new Response(SCENARIO_BODY));
     }
     return Promise.resolve(new Response(null, { status: 404 }));
   }
@@ -117,7 +142,7 @@ describe("client.ts — global fetch binding regression", () => {
   });
 
   it("loadDraftPoolBundle invokes the global fetch with globalThis as receiver", async () => {
-    const pool = await loadDraftPoolBundle();
+    const pool = await loadDraftPoolBundle({ manifest: TEST_MANIFEST });
     expect(pool.schema_version).toBe(DRAFT_POOL_BUNDLE.schema_version);
     expect(calls.length).toBe(1);
     expect(calls[0]!.url).toBe(`${DEFAULT_RUNTIME_DATA_BASE_PATH}/${DRAFT_POOL_BROTLI_PATH}`);
@@ -125,7 +150,7 @@ describe("client.ts — global fetch binding regression", () => {
   });
 
   it("loadScenario2026Bundle invokes the global fetch with globalThis as receiver", async () => {
-    const scenario = await loadScenario2026Bundle();
+    const scenario = await loadScenario2026Bundle({ manifest: TEST_MANIFEST });
     expect(scenario.schema_version).toBe(SCENARIO_2026_BUNDLE.schema_version);
     expect(calls.length).toBe(1);
     expect(calls[0]!.receiver).toBe(globalThis);
@@ -161,8 +186,19 @@ describe("client.ts — global fetch binding regression", () => {
         jsonResponse({ schema_version: RUNTIME_DATA_MANIFEST.schema_version }),
       )) as typeof fetch;
 
-    await expect(loadDraftPoolBundle({ fetch: malformedFetch })).rejects.toThrow(
-      /malformed draft pool bundle at player_cards/u,
-    );
+    const malformedBody = JSON.stringify({ schema_version: RUNTIME_DATA_MANIFEST.schema_version });
+    const malformedManifest = structuredClone(TEST_MANIFEST);
+    Object.assign(malformedManifest.bundles.draft_pool, {
+      bytes: Buffer.byteLength(malformedBody),
+      sha256: sha256(malformedBody),
+      raw_sha256: sha256(malformedBody),
+      options: {
+        ...malformedManifest.bundles.draft_pool.options!,
+        size_hint: Buffer.byteLength(malformedBody),
+      },
+    });
+    await expect(
+      loadDraftPoolBundle({ fetch: malformedFetch, manifest: malformedManifest }),
+    ).rejects.toThrow(/malformed draft pool bundle at player_cards/u);
   });
 });

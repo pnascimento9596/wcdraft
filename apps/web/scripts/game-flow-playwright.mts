@@ -1,4 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import net from "node:net";
@@ -54,12 +55,29 @@ async function installDailyAvailabilityFixture(
 ): Promise<void> {
   const saltMap = gameData.dailySeedSaltMap;
   assert(saltMap, "game-flow Daily state fixture requires the committed salt map");
+  const saltMapBody = JSON.stringify(saltMap);
+  const saltMapSha256 = createHash("sha256").update(saltMapBody).digest("hex");
   const unavailableBundles: Record<string, unknown> = { ...gameData.manifest.bundles };
   delete unavailableBundles.daily_seed_salt_map;
   const manifest =
     state === "unavailable"
       ? { ...gameData.manifest, bundles: unavailableBundles }
-      : gameData.manifest;
+      : {
+          ...gameData.manifest,
+          bundles: {
+            ...gameData.manifest.bundles,
+            daily_seed_salt_map: {
+              ...gameData.manifest.bundles.daily_seed_salt_map!,
+              bytes: Buffer.byteLength(saltMapBody),
+              sha256: saltMapSha256,
+              raw_sha256: saltMapSha256,
+              options: {
+                ...gameData.manifest.bundles.daily_seed_salt_map!.options!,
+                size_hint: Buffer.byteLength(saltMapBody),
+              },
+            },
+          },
+        };
   const frozenNow = Date.parse(`${saltMap.window.start_date}T12:00:00.000Z`);
   assert(Number.isFinite(frozenNow), "game-flow Daily state fixture has an invalid start date");
   await page.addInitScript({ content: `Date.now = () => ${frozenNow.toString()};` });
@@ -74,7 +92,7 @@ async function installDailyAvailabilityFixture(
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify(saltMap),
+      body: saltMapBody,
     });
   });
 }

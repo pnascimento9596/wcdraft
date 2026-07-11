@@ -2,7 +2,7 @@ import { createHash, webcrypto } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 
-import type { DraftPoolBundle } from "@wcdraft/data";
+import type { DraftPoolBundle, RuntimeDataManifest } from "@wcdraft/data";
 import { describe, expect, it, vi } from "vitest";
 
 import {
@@ -15,6 +15,7 @@ import { loadDraftPoolAfterServiceWorkerHandoff } from "../data";
 const ORIGIN = "https://www.wcdraft.test";
 const SCENARIO_BUNDLE_KEY = ["scenario", "2026"].join("_");
 const SW_SOURCE = readFileSync(new URL("../../../public/sw.js", import.meta.url), "utf8");
+const TEST_MANIFEST = {} as RuntimeDataManifest;
 
 interface PrecacheEntry {
   key: string;
@@ -856,6 +857,7 @@ describe("executed service-worker lifecycle", () => {
       return (await harness.request(poolPath)) as unknown as DraftPoolBundle;
     });
     const pageLoad = loadDraftPoolAfterServiceWorkerHandoff({
+      manifest: TEST_MANIFEST,
       waitForHandoff: () =>
         waitForRuntimeDataServiceWorkerHandoff({
           nodeEnv: "production",
