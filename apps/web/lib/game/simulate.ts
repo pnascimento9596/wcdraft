@@ -45,6 +45,7 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 import { managerTournamentFor } from "./adapters";
 import type { GameData } from "./data";
 import { MissingRecordError } from "./errors";
+import { runWithSimulationWorker, SimulationWorkerBusyError } from "./sim-worker-client";
 import type {
   PersistedKnockoutLadderMeta,
   PersistedKnockoutLadderRoundMeta,
@@ -321,6 +322,12 @@ export interface RunSimulationResult {
   warning: string | null;
 }
 
+export interface RunSimulationOptions {
+  signal?: AbortSignal;
+  /** Test seam for the reusable worker client. */
+  runWorker?: typeof runWithSimulationWorker;
+}
+
 /**
  * Run the tournament off the main thread when possible. Falls back to
  * `runSimulationSync` if the Worker constructor is missing or throws.
@@ -332,97 +339,56 @@ export function runSimulation(
   gameData: GameData,
   scenario: Scenario2026Bundle,
   record: RunRecordV1,
+  options: RunSimulationOptions = {},
 ): Promise<RunSimulationResult> {
-  return new Promise<RunSimulationResult>((resolve, reject) => {
-    // Decide if we can use a worker. SSR / Node test envs have no Worker.
-    const canUseWorker = typeof window !== "undefined" && typeof Worker !== "undefined";
-    if (!canUseWorker) {
-      runMainThread(gameData, scenario, record, "worker unavailable in this environment").then(
-        resolve,
-        reject,
-      );
-      return;
+  return runSimulationAsync(
+    gameData,
+    scenario,
+    record,
+    options.signal,
+    options.runWorker ?? runWithSimulationWorker,
+  );
+}
+
+async function runSimulationAsync(
+  gameData: GameData,
+  scenario: Scenario2026Bundle,
+  record: RunRecordV1,
+  signal?: AbortSignal,
+  runWorker: typeof runWithSimulationWorker = runWithSimulationWorker,
+): Promise<RunSimulationResult> {
+  if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
+  const inputs = buildWorkerSimInputs(gameData, scenario, record);
+  const input: Omit<WorkerInput, "request_id"> = {
+    kind: "run",
+    draft: record.draft,
+    parent_seed: record.parent_seed,
+    world: inputs.world,
+    scenario: inputs.scenario,
+  };
+  try {
+    const output = await runWorker(input, signal);
+    return {
+      via: "worker",
+      simulation: output.simulation,
+      telemetry: output.telemetry,
+      warning: null,
+    };
+  } catch (error) {
+    if (
+      (error instanceof Error && error.name === "AbortError") ||
+      error instanceof SimulationWorkerBusyError
+    ) {
+      throw error;
     }
-
-    let worker: Worker;
-    try {
-      worker = new Worker(new URL("./sim.worker.ts", import.meta.url), {
-        type: "module",
-      });
-    } catch (err) {
-      runMainThread(
-        gameData,
-        scenario,
-        record,
-        `simulation worker failed to spawn (${err instanceof Error ? err.message : String(err)}); ran on main thread`,
-      ).then(resolve, reject);
-      return;
-    }
-
-    let inputs: ResolvedWorkerSimInputs;
-    try {
-      inputs = buildWorkerSimInputs(gameData, scenario, record);
-    } catch (err) {
-      worker.terminate();
-      reject(err);
-      return;
-    }
-
-    const cleanup = () => {
-      worker.removeEventListener("message", onMessage);
-      worker.removeEventListener("error", onError);
-      worker.terminate();
-    };
-
-    const onMessage = (ev: MessageEvent<WorkerOutput>) => {
-      const data = ev.data;
-      if (!data || typeof data !== "object") {
-        cleanup();
-        reject(new Error("sim worker returned a malformed message"));
-        return;
-      }
-      if (data.kind === "done") {
-        cleanup();
-        resolve({
-          via: "worker",
-          simulation: data.simulation,
-          telemetry: data.telemetry,
-          warning: null,
-        });
-        return;
-      }
-      if (data.kind === "error") {
-        cleanup();
-        reject(new Error(`sim worker error: ${data.message}`));
-        return;
-      }
-      cleanup();
-      reject(new Error(`sim worker returned an unknown message kind`));
-    };
-
-    const onError = (ev: ErrorEvent) => {
-      cleanup();
-      // Fall back to main thread on worker spawn / runtime error.
-      runMainThread(
-        gameData,
-        scenario,
-        record,
-        `simulation worker failed (${ev.message || "unknown error"}); ran on main thread`,
-      ).then(resolve, reject);
-    };
-
-    worker.addEventListener("message", onMessage);
-    worker.addEventListener("error", onError);
-
-    const input: WorkerInput = {
-      kind: "run",
-      draft: record.draft,
-      parent_seed: record.parent_seed,
-      world: inputs.world,
-      scenario: inputs.scenario,
-    };
-    worker.postMessage(input);
-  });
+    return runMainThread(
+      gameData,
+      scenario,
+      record,
+      `simulation worker failed (${error instanceof Error ? error.message : String(error)}); ran on main thread`,
+      signal,
+    );
+  }
 }
 
 async function runMainThread(
@@ -430,16 +396,20 @@ async function runMainThread(
   scenario: Scenario2026Bundle,
   record: RunRecordV1,
   warning: string | null,
+  signal?: AbortSignal,
 ): Promise<RunSimulationResult> {
   // Yield to the event loop so the UI gets a paint before the work runs.
   await new Promise<void>((r) => setTimeout(r, 0));
+  if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
   const { simulation, telemetry } = runSimulationSync(gameData, scenario, record);
+  if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
   return { via: "main", simulation, telemetry, warning };
 }
 
 // ─── Worker message protocol ─────────────────────────────────────────────────
 
 export interface WorkerInput {
+  request_id: number;
   kind: "run";
   draft: RunRecordV1["draft"];
   parent_seed: string;
@@ -448,8 +418,13 @@ export interface WorkerInput {
 }
 
 export type WorkerOutput =
-  | { kind: "done"; simulation: PersistedSimulation; telemetry: SimulationTelemetry }
-  | { kind: "error"; message: string; stack?: string };
+  | {
+      request_id: number;
+      kind: "done";
+      simulation: PersistedSimulation;
+      telemetry: SimulationTelemetry;
+    }
+  | { request_id: number; kind: "error"; message: string; stack?: string };
 
 /**
  * Worker-side entry point — called by `sim.worker.ts`. Exported so that path
@@ -467,6 +442,7 @@ export function handleWorkerInput(input: WorkerInput): WorkerOutput {
         ? performance.now()
         : null;
     return {
+      request_id: input.request_id,
       kind: "done",
       simulation: {
         scenario: input.scenario,
@@ -481,6 +457,7 @@ export function handleWorkerInput(input: WorkerInput): WorkerOutput {
     };
   } catch (err) {
     return {
+      request_id: input.request_id,
       kind: "error",
       message: err instanceof Error ? err.message : String(err),
       stack: err instanceof Error ? err.stack : undefined,

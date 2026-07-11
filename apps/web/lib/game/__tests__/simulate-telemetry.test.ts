@@ -9,7 +9,7 @@
 // subset was identical). The fix moves telemetry into a sibling
 // `SimulationTelemetry` field returned alongside the payload.
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { autoDraft, buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
 import {
@@ -26,6 +26,7 @@ import type { RunRecordV1 } from "../run-record";
 import {
   buildWorkerSimInputs,
   handleWorkerInput,
+  runSimulation,
   runSimulationSync,
   type SyncSimulationResult,
 } from "../simulate";
@@ -171,6 +172,7 @@ describe("simulate.ts — determinism / telemetry separation", () => {
   it("worker payload pruning preserves byte-identical simulation output", () => {
     const workerInputs = buildWorkerSimInputs(gameData, SCENARIO_2026_BUNDLE, record);
     const workerOutput = handleWorkerInput({
+      request_id: 1,
       kind: "run",
       draft: record.draft,
       parent_seed: record.parent_seed,
@@ -181,7 +183,31 @@ describe("simulate.ts — determinism / telemetry separation", () => {
 
     expect(workerOutput.kind).toBe("done");
     if (workerOutput.kind !== "done") return;
+    expect(workerOutput.request_id).toBe(1);
     expect(JSON.stringify(workerOutput.simulation)).toBe(JSON.stringify(sync));
+  });
+
+  it("worker failure falls back to a byte-identical synchronous result", async () => {
+    const sync = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, record).simulation;
+    const result = await runSimulation(gameData, SCENARIO_2026_BUNDLE, record, {
+      runWorker: async () => {
+        throw new Error("fixture worker failure");
+      },
+    });
+
+    expect(result.via).toBe("main");
+    expect(result.warning).toContain("fixture worker failure");
+    expect(JSON.stringify(result.simulation)).toBe(JSON.stringify(sync));
+  });
+
+  it("caller cancellation never falls through to a main-thread simulation", async () => {
+    const runWorker = vi.fn(async () => {
+      throw new DOMException("cancelled", "AbortError");
+    });
+    await expect(
+      runSimulation(gameData, SCENARIO_2026_BUNDLE, record, { runWorker }),
+    ).rejects.toMatchObject({ name: "AbortError" });
+    expect(runWorker).toHaveBeenCalledOnce();
   });
 
   it("worker payload only carries drafted-card nations, not the full pool map", () => {

@@ -12,6 +12,7 @@ import {
   saveRunRecord,
   setRunPinned,
   setRunSimulation,
+  setRunStatus,
   type RunRecordV1,
 } from "../run-record";
 import { DAILY_DRAFT_CONFIG, type DailyChallenge } from "../daily";
@@ -249,6 +250,35 @@ describe("run-record persisted boundary", () => {
     expect(loaded.status).toBe("loaded");
     expect(loaded.record?.status).toBe("complete");
     expect(loaded.record?.simulation?.matches).toHaveLength(simulation.matches.length);
+  });
+
+  it("keeps a concurrently completed run when an older simulation attempts cleanup", () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:owned-cleanup");
+    saveRunRecord(created);
+    const operationA = setRunStatus(created.run_id, gameData.versions, "simulating");
+    expect(operationA).toMatchObject({ status: "updated", persistence: "durable" });
+    const operationB = setRunStatus(created.run_id, gameData.versions, "simulating");
+    expect(operationB).toMatchObject({ status: "updated", persistence: "durable" });
+
+    const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, created);
+    const completed = setRunSimulation(created.run_id, gameData.versions, simulation, {
+      status: "simulating",
+      updated_seq: operationB.record!.updated_seq,
+    });
+    expect(completed.status).toBe("updated");
+
+    const staleCleanup = setRunStatus(created.run_id, gameData.versions, "ready", {
+      status: "simulating",
+      updated_seq: operationA.record!.updated_seq,
+    });
+    expect(staleCleanup.status).toBe("conflict");
+    const loaded = loadRunRecord(created.run_id, gameData.versions);
+    expect(loaded.status).toBe("loaded");
+    expect(loaded.record).toMatchObject({
+      status: "complete",
+      updated_seq: completed.record!.updated_seq,
+    });
+    expect(loaded.record?.simulation).toEqual(simulation);
   });
 
   it("keeps pinned runs past the five-record recent cap", () => {

@@ -23,6 +23,10 @@ self.addEventListener("message", (ev: MessageEvent<WorkerInput>) => {
   const data = ev.data;
   if (!data || data.kind !== "run") {
     const out: WorkerOutput = {
+      request_id:
+        typeof (data as { request_id?: unknown } | null)?.request_id === "number"
+          ? (data as { request_id: number }).request_id
+          : -1,
       kind: "error",
       message: "sim worker: unexpected input message",
     };

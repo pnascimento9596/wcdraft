@@ -39,9 +39,8 @@ import {
   createDbSubmitRateLimiter,
   STORE_ERROR_RETRY_AFTER_SECONDS,
 } from "../submit-rate-limiter-db";
-import type { ValidationData } from "../validate";
-import { encodeBody } from "./_harness";
-import { buildOriginRecord, expectedRunFor } from "./_harness";
+import type { SubmissionBody, ValidationData } from "../validate";
+import { buildOriginRecord, buildSubmissionBody, encodeBody, expectedRunFor } from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
 
 const GOLDEN = fixtureJson as unknown as {
@@ -208,16 +207,12 @@ function bodyForRecord(
   seed: string,
   config: Parameters<typeof buildOriginRecord>[4],
   over: Record<string, unknown> = {},
-): Record<string, unknown> {
+): SubmissionBody & Record<string, unknown> {
   const record = buildOriginRecord(data.gameData, seed, "classic", "Config XI", config);
-  const expected = expectedRunFor(data.gameData, data.scenario, record);
-  return {
-    token: encodeBody(buildRunTokenBody(record)),
-    claimed_score: expected.score,
-    draft_mode: record.draft.mode,
+  return buildSubmissionBody(data.gameData, data.scenario, record, {
     display_alias: "config_tester",
     ...over,
-  };
+  });
 }
 
 function dailyBody(
