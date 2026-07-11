@@ -101,6 +101,8 @@ export function ModeSelect() {
   const dailyAvailability = daily.state;
   const selected = MODE_COPY[mode];
   const dailyUnavailableSelected = mode === "daily" && dailyAvailability === "unavailable";
+  const dailyRecoveryDockInFlow =
+    mode === "daily" && (dailyAvailability === "unavailable" || dailyAvailability === "timeout");
 
   const refreshUtcDate = useCallback(() => {
     const nextDate = utcDateString();
@@ -156,7 +158,7 @@ export function ModeSelect() {
         className={[
           s.modeGrid,
           s.modeGridDaily,
-          dailyUnavailableSelected ? s.modeGridDockInFlow : "",
+          dailyRecoveryDockInFlow ? s.modeGridDockInFlow : "",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -242,7 +244,7 @@ export function ModeSelect() {
         })}
       </div>
       {mode === "daily" && dailyAvailability === "timeout" ? (
-        <div className={s.modeDock} role="alert">
+        <div className={`${s.modeDock} ${s.modeDockInFlow}`} role="alert">
           <button
             type="button"
             className="btn btn--primary"

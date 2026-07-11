@@ -31,8 +31,10 @@ const modeSetupSurfaces = [
   "mode-select-checking",
   "mode-select-available",
   "mode-select-unavailable",
+  "mode-select-timeout",
   "draft-setup",
 ].join(",");
+const mobileNavSurfaces = "mobile-menu-open";
 
 type ProcessExit = {
   readonly code: number | null;
@@ -367,6 +369,12 @@ try {
     surfaces: modeSetupSurfaces,
     viewports: "360x800,390x844,667x375",
   });
+  const mobileNav = await runAudit({
+    server,
+    phase: "ci-mobile-nav",
+    surfaces: mobileNavSurfaces,
+    viewports: "360x800,390x844,667x375,768x1024",
+  });
   console.log(
     [
       `responsive-shell-fit: ok`,
@@ -374,6 +382,7 @@ try {
       `mobile metrics=${mobile.metrics} failures=${mobile.failures} out=${mobile.outDir}`,
       `interactions metrics=${interactions.metrics} failures=${interactions.failures} out=${interactions.outDir}`,
       `mode-setup metrics=${modeSetup.metrics} failures=${modeSetup.failures} out=${modeSetup.outDir}`,
+      `mobile-nav metrics=${mobileNav.metrics} failures=${mobileNav.failures} out=${mobileNav.outDir}`,
     ].join(" - "),
   );
 } finally {

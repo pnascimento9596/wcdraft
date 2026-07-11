@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 import {
   INLINE_TEXT_LINK_ALLOWLIST,
@@ -6,6 +8,15 @@ import {
   responsiveMetricFailures,
   type ResponsiveMetricForAdjudication,
 } from "../../../scripts/responsive-layout-contract";
+
+const globalsCss = readFileSync(
+  fileURLToPath(new URL("../../../app/globals.css", import.meta.url)),
+  "utf8",
+);
+const responsiveHarness = readFileSync(
+  fileURLToPath(new URL("../../../scripts/verify-responsive-layout-browser.mts", import.meta.url)),
+  "utf8",
+);
 
 function metric(
   overrides: Partial<ResponsiveMetricForAdjudication> = {},
@@ -39,6 +50,14 @@ describe("responsive layout contract", () => {
     expect(responsiveMetricFailures(metric({ smallTargets: ["Copy full seed 115x36"] }))).toEqual([
       "history 1024x768 light: targets below 44px Copy full seed 115x36",
     ]);
+  });
+
+  it("applies and measures the 44px floor on opened mobile navigation links", () => {
+    const mobileLinkRule = /\.mobile-menu__link \{[^}]*\}/u.exec(globalsCss)?.[0] ?? "";
+    expect(mobileLinkRule).toContain("min-height: 44px");
+    expect(responsiveHarness).toContain('label: "mobile-menu-open"');
+    expect(responsiveHarness).toContain('waitForLoadState("networkidle")');
+    expect(responsiveHarness).toContain('getByRole("button", { name: "Open menu" }).click()');
   });
 
   it("allowlists only prose links that remain in text flow", () => {

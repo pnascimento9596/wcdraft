@@ -714,6 +714,7 @@ main {
   border-bottom: 1px solid var(--line);
   display: flex;
   align-items: baseline;
+  min-height: 44px;
   gap: 0.75rem;
 }
 .mobile-menu__link:last-child {
@@ -1697,8 +1698,8 @@ main {
   .wordmark {
     gap: 0.45rem;
   }
-  /* Mobile menu links land tighter without breaking tap target (still
-     >= 32px row height once line-height padding is added). */
+  /* Mobile menu links land tighter while retaining the explicit 44px
+     interaction floor declared by the base rule. */
   .mobile-menu__link {
     padding-block: 0.55rem;
   }

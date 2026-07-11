@@ -134,7 +134,7 @@ function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-type DailyAvailabilityFixtureState = "checking" | "available" | "unavailable";
+type DailyAvailabilityFixtureState = "checking" | "available" | "unavailable" | "timeout";
 
 async function installDailyAvailabilityFixture(
   page: Page,
@@ -151,10 +151,18 @@ async function installDailyAvailabilityFixture(
   const frozenNow = Date.parse(`${saltMap.window.start_date}T12:00:00.000Z`);
   assert(Number.isFinite(frozenNow), "responsive Daily state fixture has an invalid start date");
   await page.addInitScript({ content: `Date.now = () => ${frozenNow.toString()};` });
-  if (state === "checking") {
+  if (state === "checking" || state === "timeout") {
     await page.addInitScript({
       content: `{
         const originalFetch = globalThis.fetch.bind(globalThis);
+        const originalSetTimeout = globalThis.setTimeout.bind(globalThis);
+        ${
+          state === "timeout"
+            ? `globalThis.setTimeout = function(callback, delay, ...args) {
+          return originalSetTimeout(callback, delay === 12000 ? 1 : delay, ...args);
+        };`
+            : ""
+        }
         globalThis.fetch = function(input, init) {
           const requestUrl = typeof input === "string" || input instanceof URL
             ? input.toString()
@@ -622,6 +630,16 @@ function surfaceCases(): readonly SurfaceCase[] {
       },
     },
     {
+      label: "mobile-menu-open",
+      path: "/",
+      primaryAction: { role: "link", name: "Play" },
+      prepare: async (page) => {
+        await page.waitForLoadState("networkidle");
+        await page.getByRole("button", { name: "Open menu" }).click();
+        await page.locator("#mobile-menu:not([hidden])").waitFor();
+      },
+    },
+    {
       label: "mode-select-checking",
       path: "/play",
       primaryAction: { role: "radio", name: /Today/u },
@@ -653,6 +671,18 @@ function surfaceCases(): readonly SurfaceCase[] {
       },
       prepare: async (page) => {
         await page.getByRole("status").waitFor();
+      },
+    },
+    {
+      label: "mode-select-timeout",
+      path: "/play",
+      primaryAction: { role: "radio", name: /Today/u },
+      route: async (page) => {
+        await installDailyAvailabilityFixture(page, "timeout");
+      },
+      prepare: async (page) => {
+        await page.getByRole("button", { name: "Retry Daily check" }).waitFor();
+        await page.getByRole("button", { name: "Play Classic instead" }).waitFor();
       },
     },
     {
