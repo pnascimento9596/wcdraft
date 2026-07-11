@@ -517,6 +517,19 @@ desktop measured 84 checks / 0 failures, mobile 56/0, and interaction targets
 40/0. All C3 Next, Playwright, responsive, and Chrome processes were confirmed
 exited after the receipt. No runtime-data, rating, draft, simulation, schema,
 API, or database artifact changed.
+Audit S1 C5 retained-runtime closure and server path hygiene:
+2026-07-11 · RED data-delivery implementation on branch
+`ws-f4/audit-s1-retained-runtime`, based on C1/C2-shipped `origin/main`
+`6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc`. Runtime materialization now
+derives every current and retained file from that schema's own manifest,
+requires and fingerprints Daily salt-map and score-distribution bundles when
+advertised, validates the complete current-plus-retained closure before any
+target mutation, and copies the exact validated bytes. Legacy raw-only
+manifests do not gain invented Brotli variants; C1 canonical Brotli variants
+remain mandatory wherever their exact compressed fingerprint metadata is
+present. Missing files, raw/compressed fingerprint drift, malformed or unsafe
+manifest paths, and an incomplete retention window fail closed while leaving
+an existing good target untouched.
 
 The final rebase composed C3 with D1 rather than choosing either side:
 `loadGameData` selects one service-worker controller before starting any
@@ -558,6 +571,43 @@ check, forced typecheck 8/8, lint 5/5, root test 8/8 in 7m53.744s, build 4/4 wit
 independent exact-head RED PASS, Ollama Cloud PASS, merge, deployment, and live
 proof.
 
+The enforced policy constant retains exactly the two immediately prior minor
+runtime schemas on every bump. For current `runtime-data-2.9.0`, source and
+copy output therefore retain 2.7.0 + 2.8.0 instead of the stale 2.3.0–2.6.0
+set. The 2.7 manifest/scenario are byte-identical to historical commit
+`7a1ebbfa78ba10ba3f788dface675864cccef1aa`; its recovered draft decompresses
+to 129,711,288 bytes / SHA-256 `976f6ac5…f00`, exactly matching that manifest.
+The 2.8 manifest/scenario are byte-identical to historical commit
+`eed5c4e8e7048fc9b78614304394427fd5229f89`; its recovered draft decompresses
+to 130,553,412 bytes / SHA-256 `7d6d06b9…48c`, exactly matching that manifest.
+Their retained Brotli files measure 2,222,522 and 2,225,295 bytes respectively.
+
+The runtime consumer inventory found leaderboard server data and share-page
+metadata; the first post-removal web pretest also exposed the service-worker
+version generator as a build-time fixed-root filesystem reader. Server and
+share metadata now use the compiled current versioned base. Server validation
+reads the canonical current draft `.br`, decompresses/parses it once per
+process, and memoizes the same bundle object. The generator seam is held for
+integration with C3's active manifest-derived rewrite instead of patching its
+stale base implementation. No fixed unversioned manifest or raw draft is
+copied. The measured static runtime tree fell from 141,520,329 to 7,055,318
+bytes: 130,690,498 bytes of fixed-root current data and 8,452,682 bytes of
+out-of-policy retained data were removed, for 134,465,011 bytes / 95.01% total
+reduction. Current C1 artifact fingerprints, schema `runtime-data-2.9.0`,
+rating, engine, simulation, draft semantics, ETL inputs, and generated bundle
+bytes remain unchanged.
+
+Focused validation currently passes: manifest-derived copy/closure/policy and
+fail-closed tests 7/7; full `@wcdraft/data` suite 164 passed / 9 skipped; server
+path/cache tests 3/3; related non-browser web tests 4 files / 134 tests; data
+and web lint; data and web typecheck; root typecheck 8/8; root lint 5/5; full
+non-browser web Vitest 939 passed / 1 skipped; data goldens 54/54; integration
+goldens 22/22; leaderboard golden 6/6; the ordered compact → score distribution
+→ compact regeneration chain; and forced `check:generated` regeneration with
+no tracked fingerprint drift. Web pretest intentionally remains red only at
+the C3-owned generator seam above; broader build and fresh exact-head review
+wait for that integration. No browser lane was run because C3/D1 own the shared
+browser lifecycle.
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-display-name-on`, initially based on C1-shipped `origin/main`

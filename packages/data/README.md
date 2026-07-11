@@ -13,10 +13,11 @@ browser and Node consumers.
 
 ## Bundles
 
-Artifacts live in `src/generated/` and are mirrored to
-`apps/web/public/data/wcdraft/` by `scripts/copy-web-assets.mjs` so Next.js
-can serve them as static assets. The manifest, scenario bundle, and compact-size
-report are tracked; the oversized draft pool is regenerated on demand and locked
+Artifacts live in `src/generated/` and are mirrored to the schema-versioned
+`apps/web/public/data/wcdraft/<runtime-data-schema>/` directory by
+`scripts/copy-web-assets.mjs` so Next.js can serve them as static assets. The
+manifest, scenario bundle, and compact-size report are tracked; the oversized
+draft pool is materialized from its tracked canonical Brotli artifact and locked
 by the tracked manifest/report fingerprints.
 
 | File                         | Shape                 | Purpose                                                                                                                              |
@@ -40,11 +41,11 @@ Browser clients fetch runtime data from a schema-versioned path:
 /data/wcdraft/<runtime-data-schema>/scenario-2026.compact.json
 ```
 
-The fixed legacy paths under `/data/wcdraft/{manifest,draft-pool,scenario}...`
-are still mirrored for old clients and server-side filesystem readers, but new
-browser code must use the versioned base path exported by
-`@wcdraft/data/client`. This removes the mid-deploy hard-fail window where newly
-deployed code can receive an edge-cached manifest from a previous runtime schema.
+There is no fixed unversioned runtime tree. Browser and server consumers both
+use the versioned base path exported by `@wcdraft/data/client`. This removes the
+mid-deploy hard-fail window where newly deployed code can receive an edge-cached
+manifest from a previous runtime schema and avoids shipping a duplicate raw
+draft-pool JSON file.
 
 `draft-pool.compact.json.br` is a max-quality Brotli encoding of the exact
 `draft-pool.compact.json` bytes fingerprinted by the manifest. Next.js serves
@@ -68,17 +69,19 @@ The service worker receives concrete versioned precache URLs from generated
 
 ## Retained runtime data
 
-`src/retained-runtime-data/<runtime-data-schema>/` stores the compressed
-draft-pool artifact plus manifest and scenario bundle for retained schemas.
-`copy-web-assets.mjs` validates every retained directory by decompressing the
-`.br` artifact and checking it against its manifest fingerprint, then copies
-retained versions alongside the current generated version.
+`src/retained-runtime-data/<runtime-data-schema>/` stores the manifest-derived
+runtime closure for each retained schema. The draft pool remains compressed;
+every other bundle is retained exactly as its own manifest advertises, including
+Daily salt maps and score distributions where present. C1-era canonical Brotli
+variants are required only when that manifest carries their exact compressed
+fingerprints. `copy-web-assets.mjs` validates the complete current-plus-retained
+closure before changing its output.
 
 This retention is the atomic-versioning contract for future schema/data bumps:
 a client built against version `N` can continue resolving `N` assets after
-version `N+1` deploys, while new clients fetch `N+1` from a different path. Keep
-at least the immediately previous shipped runtime-data schema retained whenever
-the runtime data version changes.
+version `N+1` deploys, while new clients fetch `N+1` from a different path. The
+fail-closed policy retains exactly the last **two** prior minor schema versions;
+every schema bump must advance that two-version window.
 
 ## Loaders
 
@@ -89,7 +92,9 @@ const { manifest, draftPool, scenario2026 } = await loadRuntimeData();
 
 // Node (tests, scripts)
 import { loadRuntimeDataFromDisk } from "@wcdraft/data/node";
-const data = await loadRuntimeDataFromDisk({ dir: "/abs/path/to/data/wcdraft" });
+const data = await loadRuntimeDataFromDisk({
+  dir: "/abs/path/to/data/wcdraft/runtime-data-2.9.0",
+});
 
 // Static import — tests, codegen, dev tooling only. DO NOT use from
 // `apps/web` runtime code; statically importing the draft pool would

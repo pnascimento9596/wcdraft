@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { loadDataManifest } from "@wcdraft/data/client";
+import { DEFAULT_RUNTIME_DATA_BASE_PATH, loadDataManifest } from "@wcdraft/data/client";
 import { GameFallback } from "../../../components/game/game-fallback";
 import { ShareScreen } from "../../../components/game/share-screen";
 import { composeVersions } from "../../../lib/game/data";
@@ -118,5 +118,5 @@ function runtimeDataBasePath(): string {
     process.env.WCDRAFT_SITE_URL ??
     process.env.NEXT_PUBLIC_SITE_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-  return new URL("/data/wcdraft", base).toString();
+  return new URL(DEFAULT_RUNTIME_DATA_BASE_PATH, base).toString();
 }
