@@ -103,6 +103,36 @@ describe("leaderboard client request budgets", () => {
     expect(fetcher).toHaveBeenCalledOnce();
   });
 
+  it("honors caller cancellation even when the underlying ranked fetch resolves late", async () => {
+    vi.stubGlobal("document", { cookie: "wcdraft_csrf=test-token" });
+    const deferred: { resolve?: (response: Response) => void } = {};
+    const fetcher = vi.fn<typeof fetch>(
+      () =>
+        new Promise<Response>((resolve) => {
+          deferred.resolve = resolve;
+        }),
+    );
+    vi.stubGlobal("fetch", fetcher);
+    const controller = new AbortController();
+
+    const pending = requestRankedAttempt(RANKED_INPUT, { signal: controller.signal });
+    controller.abort(new DOMException("superseded", "AbortError"));
+
+    await expect(pending).resolves.toMatchObject({
+      ok: false,
+      status: null,
+      outcomeUnknown: true,
+    });
+    deferred.resolve?.(
+      new Response(JSON.stringify(validRankedAttemptBody()), {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+    await Promise.resolve();
+    expect(fetcher).toHaveBeenCalledOnce();
+  });
+
   it.each([
     ["an unreadable body", "not-json"],
     ["a malformed body", JSON.stringify({ attempt_id: "incomplete-attempt" })],
@@ -125,6 +155,7 @@ describe("leaderboard client request budgets", () => {
     await expect(requestRankedAttempt(RANKED_INPUT)).resolves.toEqual({
       ok: false,
       status: 201,
+      code: null,
       message: "The ranked seed response could not be verified. The attempt may have been issued.",
       timedOut: false,
       outcomeUnknown: true,

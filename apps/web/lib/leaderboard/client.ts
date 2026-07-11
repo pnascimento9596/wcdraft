@@ -199,6 +199,7 @@ export type RankedAttemptFetchResult =
   | {
       readonly ok: false;
       readonly status: number | null;
+      readonly code: string | null;
       readonly message: string | null;
       readonly timedOut: boolean;
       /**
@@ -217,13 +218,16 @@ function isUsableExpiry(value: unknown): value is string {
   return isNonEmptyString(value) && !Number.isNaN(Date.parse(value));
 }
 
-export async function requestRankedAttempt(input: {
-  readonly formationId: string;
-  readonly draftMode: BoardDraftModeFilter;
-  readonly draftOrder: BoardDraftOrder;
-  readonly era: BoardEra;
-  readonly ratingBasis: BoardRatingBasis;
-}): Promise<RankedAttemptFetchResult> {
+export async function requestRankedAttempt(
+  input: {
+    readonly formationId: string;
+    readonly draftMode: BoardDraftModeFilter;
+    readonly draftOrder: BoardDraftOrder;
+    readonly era: BoardEra;
+    readonly ratingBasis: BoardRatingBasis;
+  },
+  options?: { readonly signal?: AbortSignal },
+): Promise<RankedAttemptFetchResult> {
   try {
     const r = await postJsonResponse<{
       attempt_id?: unknown;
@@ -235,14 +239,19 @@ export async function requestRankedAttempt(input: {
       draft_order?: unknown;
       era?: unknown;
       rating_basis?: unknown;
+      error?: unknown;
       message?: unknown;
-    }>("/api/ranked/attempt", {
-      formation_id: input.formationId,
-      draft_mode: input.draftMode,
-      draft_order: input.draftOrder,
-      era: input.era,
-      rating_basis: input.ratingBasis,
-    });
+    }>(
+      "/api/ranked/attempt",
+      {
+        formation_id: input.formationId,
+        draft_mode: input.draftMode,
+        draft_order: input.draftOrder,
+        era: input.era,
+        rating_basis: input.ratingBasis,
+      },
+      options,
+    );
     const body = r.data;
     if (
       r.ok &&
@@ -277,6 +286,7 @@ export async function requestRankedAttempt(input: {
     return {
       ok: false,
       status: r.status,
+      code: typeof body?.error === "string" ? body.error : null,
       message: acceptedWithoutUsableAttempt
         ? "The ranked seed response could not be verified. The attempt may have been issued."
         : acknowledgementAmbiguous
@@ -291,6 +301,7 @@ export async function requestRankedAttempt(input: {
     return {
       ok: false,
       status: null,
+      code: null,
       message: isRequestTimeoutError(error)
         ? "The ranked request timed out. It may have completed; check before trying again."
         : null,

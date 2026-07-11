@@ -22,6 +22,8 @@ function metric(
     maxScrollWidth: 1024,
     clientWidth: 1024,
     horizontalOverflow: false,
+    modeDockInitialClearance: null,
+    modeDockTerminalClearance: null,
     navWraps: [],
     smallTargets: [],
     axeViolations: [],
@@ -57,6 +59,42 @@ describe("responsive layout contract", () => {
       "history 1024x768 light: horizontal overflow 1026/1024",
       "history 1024x768 light: targets below 44px Retry preview 96x36",
       "history 1024x768 light: console CSP blocked inline style",
+    ]);
+  });
+
+  it("fails strict adjudication when the mode dock covers any card at either checkpoint", () => {
+    expect(
+      responsiveMetricFailures(
+        metric({
+          surface: "mode-select-unavailable",
+          modeDockInitialClearance: -18,
+          modeDockTerminalClearance: -4,
+        }),
+      ),
+    ).toEqual([
+      "mode-select-unavailable 1024x768 light: mode dock overlaps cards at initial paint by 18px",
+      "mode-select-unavailable 1024x768 light: mode dock overlaps cards at terminal scroll by 4px",
+    ]);
+    expect(
+      responsiveMetricFailures(
+        metric({
+          surface: "mode-select-available",
+          modeDockInitialClearance: 0,
+          modeDockTerminalClearance: 0,
+        }),
+      ),
+    ).toEqual([]);
+    expect(
+      responsiveMetricFailures(
+        metric({
+          surface: "mode-select-checking",
+          modeDockInitialClearance: null,
+          modeDockTerminalClearance: null,
+        }),
+      ),
+    ).toEqual([
+      "mode-select-checking 1024x768 light: mode dock initial clearance unavailable",
+      "mode-select-checking 1024x768 light: mode dock terminal clearance unavailable",
     ]);
   });
 

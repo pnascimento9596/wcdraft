@@ -43,10 +43,10 @@ const MODE_COPY: Record<
   classic: {
     index: "01",
     title: DRAFT_MODE_COPY.classic.label,
-    tag: "Ranked",
+    tag: "Ranked-capable · casual by default",
     desc: DRAFT_MODE_COPY.classic.description,
-    preview: "CLASSIC · RANKED",
-    chips: ["3 choices", "Ranked", "Synergy"],
+    preview: "CLASSIC · RANKED-CAPABLE · CASUAL BY DEFAULT",
+    chips: ["3 choices", "Ranked-capable · casual by default", "Synergy"],
     cta: "Start drafting",
     href: "/play/draft",
   },
@@ -63,10 +63,10 @@ const MODE_COPY: Record<
   hidden: {
     index: "03",
     title: DRAFT_MODE_COPY.hidden.label,
-    tag: "Blind",
+    tag: "Ranked-capable · casual by default",
     desc: DRAFT_MODE_COPY.hidden.description,
-    preview: "MEMORY · BLIND",
-    chips: ["Ratings hidden", "3 choices", "Ranked"],
+    preview: "MEMORY · RANKED-CAPABLE · CASUAL BY DEFAULT",
+    chips: ["Ratings hidden", "3 choices", "Ranked-capable · casual by default"],
     cta: "Draft from memory",
     href: "/play/draft?mode=hidden",
     secondary: true,
@@ -90,6 +90,7 @@ export function ModeSelect() {
   const [dailyAvailability, setDailyAvailability] = useState<DailyAvailabilityState>("checking");
   const [dailyRetry, setDailyRetry] = useState(0);
   const selected = MODE_COPY[mode];
+  const dailyUnavailableSelected = mode === "daily" && dailyAvailability === "unavailable";
 
   useEffect(() => {
     let active = true;
@@ -109,7 +110,17 @@ export function ModeSelect() {
   return (
     <>
       <LocalProgressBandFromStorage compact />
-      <div className={`${s.modeGrid} ${s.modeGridDaily}`} role="radiogroup" aria-label="Draft mode">
+      <div
+        className={[
+          s.modeGrid,
+          s.modeGridDaily,
+          dailyUnavailableSelected ? s.modeGridDockInFlow : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        role="radiogroup"
+        aria-label="Draft mode"
+      >
         {(Object.keys(MODE_COPY) as PlayMode[]).map((key) => {
           const item = MODE_COPY[key];
           const on = mode === key;
@@ -205,8 +216,8 @@ export function ModeSelect() {
             Play Classic instead
           </button>
         </div>
-      ) : mode === "daily" && dailyAvailability === "unavailable" ? (
-        <div className={s.modeDock}>
+      ) : dailyUnavailableSelected ? (
+        <div className={`${s.modeDock} ${s.modeDockInFlow}`}>
           <DailyUnavailableNotice />
         </div>
       ) : mode === "daily" && dailyAvailability === "checking" ? (

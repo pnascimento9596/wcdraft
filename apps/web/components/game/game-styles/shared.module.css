@@ -234,9 +234,18 @@
   margin-top: 14px;
 }
 .modeGridDaily {
+  --mode-dock-reserve: calc(84px + env(safe-area-inset-bottom, 0px));
+
   grid-auto-rows: auto;
-  padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px));
-  scroll-padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px));
+  padding-block-end: var(--mode-dock-reserve);
+  scroll-padding-block-end: var(--mode-dock-reserve);
+}
+
+/* The unavailable notice is taller than the one-line action dock. Keep that
+   state in normal flow so its copy can wrap without ever covering a card. */
+.modeGridDockInFlow {
+  padding-block-end: 0;
+  scroll-padding-block-end: 0;
 }
 @media (min-width: 52rem) {
   .modeGridDaily {
@@ -530,6 +539,10 @@
   background: var(--s0);
 }
 
+.modeDockInFlow {
+  position: static;
+}
+
 .modeDock :global(.btn) {
   width: 100%;
 }
@@ -751,5 +764,79 @@
   .modeDock {
     margin: 4px calc(-1 * var(--m-container-x)) -8px;
     padding-inline: var(--m-container-x);
+  }
+}
+
+/* Five-mode mobile/short-landscape composition: Daily keeps the broadcast
+   lead, while the four repeatable modes form a compact two-column board. */
+@media (max-width: 430px), (max-height: 500px) and (max-width: 51.99rem) {
+  .modeGridDaily {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .modeCard {
+    min-width: 0;
+    min-height: 142px;
+  }
+
+  .modeCardFeatured {
+    grid-column: 1 / -1;
+    min-height: 108px;
+  }
+
+  .modeCardFeatured .modeDesc {
+    display: none;
+  }
+
+  .modeCardSecondary {
+    min-height: 132px;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCardTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding-right: 26px;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeTag {
+    max-width: 100%;
+    padding: 3px 6px;
+    font-size: 8.5px;
+    line-height: 1.2;
+    white-space: normal;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeDesc,
+  .modeCard:not(.modeCardFeatured) .modeFeatures {
+    display: none;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modePreview {
+    width: 100%;
+    min-height: 30px;
+    font-size: 9.5px;
+    line-height: 1.2;
+    white-space: normal;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCta {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+}
+
+/* A sticky action would consume too much of a 375px-tall landscape viewport.
+   Keep it in flow there; the two-column board remains compact and no card can
+   paint underneath the action. */
+@media (max-height: 500px) and (max-width: 63.99rem) {
+  .modeGridDaily {
+    padding-block-end: 0;
+    scroll-padding-block-end: 0;
+  }
+
+  .modeDock {
+    position: static;
+    margin-top: 8px;
   }
 }

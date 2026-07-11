@@ -114,6 +114,7 @@ export async function postJson<T>(
 export async function postJsonResponse<T>(
   url: string,
   body: unknown,
+  options?: { readonly signal?: AbortSignal },
 ): Promise<{ ok: boolean; status: number; headers: Headers; data: T | null }> {
   return requestWithCsrf(
     "authenticated POST",
@@ -122,6 +123,7 @@ export async function postJsonResponse<T>(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
+      signal: options?.signal,
     },
     async (response, signal) => {
       let data: T | null;

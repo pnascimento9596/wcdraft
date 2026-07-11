@@ -27,6 +27,12 @@ const shellSurfaces = [
   "squad-review",
 ].join(",");
 const interactionSurfaces = ["home", "results", "share-author", "history", "settings"].join(",");
+const modeSetupSurfaces = [
+  "mode-select-checking",
+  "mode-select-available",
+  "mode-select-unavailable",
+  "draft-setup",
+].join(",");
 
 type ProcessExit = {
   readonly code: number | null;
@@ -46,9 +52,12 @@ type NextDevServer = {
 };
 
 type AuditMetric = {
+  readonly surface?: string;
   readonly shellRule?: boolean;
   readonly noScrollGate?: "pass" | "fail" | "n-a";
   readonly horizontalOverflow?: boolean;
+  readonly modeDockInitialClearance?: number | null;
+  readonly modeDockTerminalClearance?: number | null;
   readonly axeViolations?: readonly unknown[];
   readonly navWraps?: readonly unknown[];
   readonly smallTargets?: readonly unknown[];
@@ -316,6 +325,12 @@ async function runAudit(opts: {
   const failures = result.metrics.filter((metric) => {
     if (metric.shellRule === true && metric.noScrollGate !== "pass") return true;
     if (metric.horizontalOverflow === true) return true;
+    if (metric.surface?.startsWith("mode-select") === true) {
+      if (metric.modeDockInitialClearance === null) return true;
+      if (metric.modeDockTerminalClearance === null) return true;
+      if ((metric.modeDockInitialClearance ?? 0) < 0) return true;
+      if ((metric.modeDockTerminalClearance ?? 0) < 0) return true;
+    }
     if ((metric.axeViolations?.length ?? 0) > 0) return true;
     if ((metric.navWraps?.length ?? 0) > 0) return true;
     if ((metric.smallTargets?.length ?? 0) > 0) return true;
@@ -346,12 +361,19 @@ try {
     surfaces: interactionSurfaces,
     viewports: "667x375,768x1024,1024x768,1366x768",
   });
+  const modeSetup = await runAudit({
+    server,
+    phase: "ci-mode-setup",
+    surfaces: modeSetupSurfaces,
+    viewports: "360x800,390x844,667x375",
+  });
   console.log(
     [
       `responsive-shell-fit: ok`,
       `desktop metrics=${desktop.metrics} failures=${desktop.failures} out=${desktop.outDir}`,
       `mobile metrics=${mobile.metrics} failures=${mobile.failures} out=${mobile.outDir}`,
       `interactions metrics=${interactions.metrics} failures=${interactions.failures} out=${interactions.outDir}`,
+      `mode-setup metrics=${modeSetup.metrics} failures=${modeSetup.failures} out=${modeSetup.outDir}`,
     ].join(" - "),
   );
 } finally {

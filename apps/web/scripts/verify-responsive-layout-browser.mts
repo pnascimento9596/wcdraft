@@ -47,6 +47,7 @@ type SurfaceCase = {
   readonly path: string;
   readonly prepare?: (page: Page) => Promise<void>;
   readonly route?: (page: Page) => Promise<void>;
+  readonly waitForNetworkIdle?: boolean;
   readonly shellRule?: boolean;
   readonly allowResponseErrorPathnames?: readonly string[];
   readonly primaryAction?: {
@@ -71,6 +72,8 @@ type SurfaceMetric = {
   readonly maxScrollWidth: number;
   readonly clientWidth: number;
   readonly horizontalOverflow: boolean;
+  readonly modeDockInitialClearance: number | null;
+  readonly modeDockTerminalClearance: number | null;
   readonly navWraps: readonly string[];
   readonly maxContainerWidth: number;
   readonly smallTargets: readonly string[];
@@ -129,6 +132,57 @@ const themes: readonly Theme[] = ["light", "dark"];
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
+}
+
+type DailyAvailabilityFixtureState = "checking" | "available" | "unavailable";
+
+async function installDailyAvailabilityFixture(
+  page: Page,
+  state: DailyAvailabilityFixtureState,
+): Promise<void> {
+  const saltMap = gameData.dailySeedSaltMap;
+  assert(saltMap, "responsive Daily state fixture requires the committed salt map");
+  const unavailableBundles: Record<string, unknown> = { ...gameData.manifest.bundles };
+  delete unavailableBundles.daily_seed_salt_map;
+  const manifest =
+    state === "unavailable"
+      ? { ...gameData.manifest, bundles: unavailableBundles }
+      : gameData.manifest;
+  const frozenNow = Date.parse(`${saltMap.window.start_date}T12:00:00.000Z`);
+  assert(Number.isFinite(frozenNow), "responsive Daily state fixture has an invalid start date");
+  await page.addInitScript({ content: `Date.now = () => ${frozenNow.toString()};` });
+  if (state === "checking") {
+    await page.addInitScript({
+      content: `{
+        const originalFetch = globalThis.fetch.bind(globalThis);
+        globalThis.fetch = function(input, init) {
+          const requestUrl = typeof input === "string" || input instanceof URL
+            ? input.toString()
+            : input.url;
+          const pathname = new URL(requestUrl, globalThis.location.href).pathname;
+          if (pathname.endsWith("/manifest.json")) {
+            return new Promise(function() {});
+          }
+          return originalFetch(input, init);
+        };
+      }`,
+    });
+    return;
+  }
+  await page.route("**/manifest.json", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(manifest),
+    });
+  });
+  await page.route("**/daily-seed-salt-map.compact.json", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(saltMap),
+    });
+  });
 }
 
 function draftRecord(
@@ -460,9 +514,11 @@ async function runAxe(page: Page, axeSource: string): Promise<string[]> {
   });
 }
 
-async function settle(page: Page): Promise<void> {
+async function settle(page: Page, waitForNetworkIdle = true): Promise<void> {
   await page.waitForLoadState("domcontentloaded");
-  await page.waitForLoadState("networkidle", { timeout: 5_000 }).catch(() => undefined);
+  if (waitForNetworkIdle) {
+    await page.waitForLoadState("networkidle", { timeout: 5_000 }).catch(() => undefined);
+  }
   await page.waitForTimeout(250);
 }
 
@@ -566,11 +622,37 @@ function surfaceCases(): readonly SurfaceCase[] {
       },
     },
     {
-      label: "mode-select",
+      label: "mode-select-checking",
       path: "/play",
       primaryAction: { role: "radio", name: /Today/u },
+      waitForNetworkIdle: false,
+      route: async (page) => {
+        await installDailyAvailabilityFixture(page, "checking");
+      },
       prepare: async (page) => {
-        await page.getByRole("radio", { name: /Classic/u }).waitFor();
+        await page.getByRole("button", { name: "Play Classic while we check →" }).waitFor();
+      },
+    },
+    {
+      label: "mode-select-available",
+      path: "/play",
+      primaryAction: { role: "radio", name: /Today/u },
+      route: async (page) => {
+        await installDailyAvailabilityFixture(page, "available");
+      },
+      prepare: async (page) => {
+        await page.getByRole("button", { name: "Play daily →" }).waitFor();
+      },
+    },
+    {
+      label: "mode-select-unavailable",
+      path: "/play",
+      primaryAction: { role: "radio", name: /Today/u },
+      route: async (page) => {
+        await installDailyAvailabilityFixture(page, "unavailable");
+      },
+      prepare: async (page) => {
+        await page.getByRole("status").waitFor();
       },
     },
     {
@@ -858,6 +940,37 @@ async function measurePrimaryAction(
   };
 }
 
+async function measureModeDockClearance(
+  page: Page,
+  surface: SurfaceCase,
+): Promise<{
+  modeDockInitialClearance: number | null;
+  modeDockTerminalClearance: number | null;
+}> {
+  if (!surface.label.startsWith("mode-select")) {
+    return { modeDockInitialClearance: null, modeDockTerminalClearance: null };
+  }
+  const measureCurrentClearance = async () =>
+    await page.evaluate(() => {
+      const dockBox = document.querySelector('[class*="modeDock"]')?.getBoundingClientRect();
+      const cardBottoms = [...document.querySelectorAll('button[role="radio"]')].map(
+        (card) => card.getBoundingClientRect().bottom,
+      );
+      if (!dockBox || cardBottoms.length === 0) return null;
+      return Math.round(dockBox.top - Math.max(...cardBottoms));
+    });
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(100);
+  const modeDockInitialClearance = await measureCurrentClearance();
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(100);
+  const modeDockTerminalClearance = await measureCurrentClearance();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(100);
+  return { modeDockInitialClearance, modeDockTerminalClearance };
+}
+
 function shellRuleApplies(surface: SurfaceCase, viewport: ViewportCase): boolean {
   return surface.shellRule === true && viewport.width >= 1024;
 }
@@ -879,7 +992,8 @@ async function captureSurface(
     await surface.route?.(page);
     await page.goto(`${BASE_URL}${surface.path}`, { waitUntil: "domcontentloaded" });
     await surface.prepare?.(page);
-    await settle(page);
+    await settle(page, surface.waitForNetworkIdle !== false);
+    const modeDockClearances = await measureModeDockClearance(page, surface);
     const devOverlay = await hideDevOverlay(page);
     const axeViolations = await runAxe(page, axeSource);
     const primaryAction = await measurePrimaryAction(page, surface.primaryAction);
@@ -909,6 +1023,7 @@ async function captureSurface(
       consoleErrors: errors,
       devOverlay,
       ...baseMetric,
+      ...modeDockClearances,
     };
   } finally {
     await context.close();
