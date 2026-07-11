@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ThemeSetting } from "../../components/theme-setting";
 
 export const metadata: Metadata = {
@@ -28,6 +29,19 @@ export default function SettingsPage() {
           <ThemeSetting />
         </div>
       </div>
+
+      <section className="settings-data" aria-labelledby="your-data-title">
+        <h2 id="your-data-title">Your data</h2>
+        <p>Runs in this browser are saved locally on this device.</p>
+        <p>Completed runs may also be mirrored to the server for history and replay.</p>
+        <p>Signed-in Account history follows your account across browsers.</p>
+        <p>Leaderboard posts are public season standings and may remain visible.</p>
+        <p>Clearing browser data does not delete server history or leaderboard posts.</p>
+        <div className="settings-data__links">
+          <Link href="/privacy">Read the Privacy Policy</Link>
+          <Link href="/account">Manage Account data</Link>
+        </div>
+      </section>
     </div>
   );
 }

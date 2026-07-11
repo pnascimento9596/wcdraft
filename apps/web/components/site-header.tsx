@@ -14,16 +14,16 @@ export interface MenuItem {
 }
 
 /**
- * F-4 U4 — menu derivation. The Leaderboard entry exists only when the
- * server says the feature is live (layout reads LEADERBOARD_ENABLED; no
- * NEXT_PUBLIC_ mirror) — when dark there is no dead link anywhere.
+ * The Leaderboard route remains reachable while posting is dark so the page
+ * can explain the closed state instead of looking broken. The server flag
+ * still controls board data and submission surfaces.
  */
-export function buildMenu(opts: { leaderboardEnabled: boolean }): MenuItem[] {
+export function buildMenu(): MenuItem[] {
   return [
     { href: "/play", label: "Play" },
     { href: "/play/daily", label: "Daily" },
     { href: "/play/history", label: "History" },
-    ...(opts.leaderboardEnabled ? [{ href: "/leaderboard", label: "Leaderboard" }] : []),
+    { href: "/leaderboard", label: "Leaderboard" },
     { href: "/how-to-play", label: "How to Play" },
     { href: "/settings", label: "Settings" },
     { href: "/privacy", label: "Privacy Policy" },
@@ -31,15 +31,13 @@ export function buildMenu(opts: { leaderboardEnabled: boolean }): MenuItem[] {
 }
 
 export function SiteHeader({
-  leaderboardEnabled = false,
   buildStamp = "dev",
 }: {
-  leaderboardEnabled?: boolean;
   /** Build identifier (short SHA · date, or "dev") — computed server-side in
       the root layout from VERCEL_GIT_COMMIT_SHA; see lib/build-stamp.ts. */
   buildStamp?: string;
 }) {
-  const menu = buildMenu({ leaderboardEnabled });
+  const menu = buildMenu();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 

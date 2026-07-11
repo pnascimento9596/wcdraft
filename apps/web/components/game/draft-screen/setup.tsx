@@ -191,8 +191,9 @@ function DraftSetupDisclosure({
               ))}
             </div>
             <p className={s.setupAxisNote}>
-              Career: each card on its whole-career peak. Current: the player at that
-              tournament&rsquo;s strength, estimated where a career is still in progress.
+              {ratingBasis === "current"
+                ? "Current ratings play as a tougher board — expect lower scores"
+                : "Career ratings use each card's whole-career peak."}
             </p>
           </div>
         </div>

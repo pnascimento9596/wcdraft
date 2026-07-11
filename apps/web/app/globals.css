@@ -1335,6 +1335,39 @@ main {
 .setting__control {
   flex: none;
 }
+.settings-data {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1.4rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-card);
+}
+.settings-data h2,
+.settings-data p {
+  margin: 0;
+}
+.settings-data h2 {
+  font-family: var(--font-family);
+  font-size: 1.15rem;
+}
+.settings-data p {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.settings-data__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 0.25rem;
+}
+.settings-data__links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
 /* Segmented theme control (settings page) */
 .segmented {
   display: inline-flex;

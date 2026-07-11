@@ -1,9 +1,9 @@
 // F-4 U4 — UI ship-dark gating + component state renders.
 //
 // Server-side gate only (no NEXT_PUBLIC_ mirror): with LEADERBOARD_ENABLED
-// unset/garbage the /leaderboard page 404s exactly like the API routes, the
-// nav has no Leaderboard entry (no dead links), and the results page passes
-// a false prop so the submit affordance never mounts. Component states are
+// unset/garbage the /leaderboard page explains its closed state without
+// touching board data, the nav remains an honest route to that explanation,
+// and the results page passes a false prop so the submit affordance never mounts. Component states are
 // string-rendered (no DOM env) — every submit outcome + board state.
 
 import { readFileSync } from "node:fs";
@@ -72,19 +72,19 @@ function findElement(node: ReactNode, type: unknown): ReactElement | null {
 }
 
 describe("ship-dark — flag off", () => {
-  it("/leaderboard page 404s like the API (notFound before any data work)", () => {
-    let digest: string | null = null;
-    try {
-      LeaderboardPage();
-    } catch (err) {
-      digest = (err as { digest?: string }).digest ?? null;
-    }
-    expect(digest).toMatch(/NEXT_NOT_FOUND|NEXT_HTTP_ERROR_FALLBACK;404/);
+  it("/leaderboard renders an explained closed state instead of a generic 404", () => {
+    const html = renderToStaticMarkup(LeaderboardPage());
+    expect(html).toContain("Leaderboard is closed");
+    expect(html).toContain("Public boards and result posting are not open right now");
+    expect(html).toContain("Local runs and signed-in Account history are unaffected");
+    expect(html).toContain('href="/play"');
+    expect(html).toContain('href="/play/history"');
+    expect(html).not.toContain("NEXT_NOT_FOUND");
   });
 
-  it("nav has no Leaderboard entry (no dead link anywhere)", () => {
-    const menu = buildMenu({ leaderboardEnabled: false });
-    expect(menu.some((m) => m.href === "/leaderboard")).toBe(false);
+  it("nav keeps Leaderboard reachable for the closed-state explanation", () => {
+    const menu = buildMenu();
+    expect(menu.some((m) => m.href === "/leaderboard")).toBe(true);
   });
 
   it("results page passes leaderboardEnabled=false to the screen", () => {
@@ -109,7 +109,7 @@ describe("ship-dark — flag on", () => {
   });
 
   it("nav gains the Leaderboard entry between History and How to Play", () => {
-    const menu = buildMenu({ leaderboardEnabled: true });
+    const menu = buildMenu();
     const hrefs = menu.map((m) => m.href);
     expect(hrefs.indexOf("/leaderboard")).toBe(hrefs.indexOf("/play/history") + 1);
   });
@@ -124,7 +124,7 @@ describe("ship-dark — flag on", () => {
       forward: noop,
       refresh: noop,
     } as unknown as AppRouterInstance;
-    const renderHeader = (leaderboardEnabled: boolean) =>
+    const renderHeader = () =>
       renderToStaticMarkup(
         createElement(
           AppRouterContext.Provider,
@@ -134,13 +134,12 @@ describe("ship-dark — flag on", () => {
             null,
             createElement(AuthProvider, {
               authEnabled: false,
-              children: createElement(SiteHeader, { leaderboardEnabled }),
+              children: createElement(SiteHeader),
             }),
           ),
         ),
       );
-    expect(renderHeader(true).split('href="/leaderboard"').length - 1).toBe(2);
-    expect(renderHeader(false)).not.toContain('href="/leaderboard"');
+    expect(renderHeader().split('href="/leaderboard"').length - 1).toBe(2);
   });
 
   it("results page passes leaderboardEnabled=true to the screen", () => {
@@ -247,7 +246,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       fieldSize: 0,
     });
     expect(html).toContain("On the board");
-    expect(html).toContain("Rank #4");
+    expect(html).toContain("#4");
     expect(html).toContain(`href="${LEADERBOARD_HREF.replace(/&/g, "&amp;")}"`);
   });
 
@@ -272,7 +271,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       fieldSize: 0,
     });
     expect(html).toContain("Already on the board");
-    expect(html).toContain("rank #7");
+    expect(html).toContain("#7");
   });
 
   it("submitted-earlier (local memory): no form, link to board", () => {
@@ -612,9 +611,9 @@ describe("board views", () => {
         onToggle: () => undefined,
       }),
     );
-    expect(html).toContain("Top 100%");
+    expect(html).not.toContain("Top 100%");
     expect(html).toContain("88 pts");
-    expect(html).toContain("#1 of 2 today");
+    expect(html).toContain("#1 of 2 today · Ties share a rank");
   });
 
   it("toolbar keeps Daily/Season headline lanes and gates Advanced combos by count", () => {

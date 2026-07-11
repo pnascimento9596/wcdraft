@@ -15,6 +15,11 @@ import { dailyDraftHref } from "@/lib/game/navigation";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import type { MyBoardPresence } from "@/lib/leaderboard/client";
 import type { LeaderboardLineupView } from "@/lib/leaderboard/lineup-view";
+import {
+  dailyLeaderboardStandingText,
+  leaderboardStandingText,
+  LEADERBOARD_PERCENTILE_MIN_FIELD_SIZE,
+} from "@/lib/leaderboard/standing-copy";
 import Link from "next/link";
 import {
   ADVANCED_BOARD_CONFIG_OPTIONS,
@@ -37,6 +42,35 @@ export type BoardLineupPanelState =
 export type AdvancedLaneSummary =
   | { readonly kind: "ready"; readonly count: number }
   | { readonly kind: "error" };
+
+export function LeaderboardClosed() {
+  return (
+    <>
+      <header className="page-head">
+        <span className="eyebrow">Standings</span>
+        <h1 className="display">Leaderboard is closed</h1>
+        <p className="lede">Public boards and result posting are not open right now.</p>
+      </header>
+      <section className={s.stateBox} aria-labelledby="leaderboard-closed-title">
+        <p className={s.stateTitle} id="leaderboard-closed-title">
+          Your drafts still work
+        </p>
+        <p>
+          Local runs and signed-in Account history are unaffected. When boards reopen, this page
+          will show verified standings and posting rules.
+        </p>
+        <div className={s.stateActions}>
+          <Link href="/play" className="btn btn--primary">
+            Draft a team
+          </Link>
+          <Link href="/play/history" className="btn btn--ghost">
+            View run history
+          </Link>
+        </div>
+      </section>
+    </>
+  );
+}
 
 export function BoardHead({
   currentSeasonKey,
@@ -249,13 +283,9 @@ export function BoardRows({
                     {draftModeLaneLabel(r.draftMode)}
                   </span>
                   <span>{r.timeLabel}</span>
-                  {daily ? (
-                    <span>
-                      #{r.rank} of {r.fieldSize} today
-                    </span>
-                  ) : (
-                    r.percentile !== null && <span>top {r.percentile}%</span>
-                  )}
+                  <span>
+                    {daily ? dailyLeaderboardStandingText(r) : leaderboardStandingText(r)}
+                  </span>
                 </span>
               </span>
               <span className={daily ? `${s.rowScore} ${s.rowScoreDaily}` : s.rowScore}>
@@ -431,7 +461,9 @@ export function EmptyBoard({ filter }: { filter: BoardFilter }) {
 }
 
 function dailyStandingLabel(row: BoardRowView): string {
-  return row.percentile !== null ? `Top ${row.percentile}%` : `#${row.rank}`;
+  return row.fieldSize >= LEADERBOARD_PERCENTILE_MIN_FIELD_SIZE && row.percentile !== null
+    ? `Top ${row.percentile}%`
+    : `#${row.rank}`;
 }
 
 export function BoardError({
