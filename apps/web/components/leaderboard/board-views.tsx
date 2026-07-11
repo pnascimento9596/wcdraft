@@ -16,9 +16,9 @@ import { formatNullableNumber } from "@/lib/game/view-models";
 import type { MyBoardPresence } from "@/lib/leaderboard/client";
 import type { LeaderboardLineupView } from "@/lib/leaderboard/lineup-view";
 import {
+  dailyLeaderboardStandingCompactText,
   dailyLeaderboardStandingText,
   leaderboardStandingText,
-  LEADERBOARD_PERCENTILE_MIN_FIELD_SIZE,
 } from "@/lib/leaderboard/standing-copy";
 import Link from "next/link";
 import {
@@ -461,9 +461,7 @@ export function EmptyBoard({ filter }: { filter: BoardFilter }) {
 }
 
 function dailyStandingLabel(row: BoardRowView): string {
-  return row.fieldSize >= LEADERBOARD_PERCENTILE_MIN_FIELD_SIZE && row.percentile !== null
-    ? `Top ${row.percentile}%`
-    : `#${row.rank}`;
+  return dailyLeaderboardStandingCompactText(row);
 }
 
 export function BoardError({

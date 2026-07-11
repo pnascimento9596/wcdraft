@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  dailyLeaderboardStandingCompactText,
   dailyLeaderboardStandingText,
   leaderboardStandingText,
   LEADERBOARD_PERCENTILE_MIN_FIELD_SIZE,
@@ -44,6 +45,42 @@ describe("leaderboard standing copy boundaries", () => {
   it("does not invent a rank when the server omitted it", () => {
     expect(leaderboardStandingText({ rank: null, percentile: 50, fieldSize: 19 })).toBe(
       "Field size 19 · Rank pending",
+    );
+  });
+
+  it.each([-5, 0, 101, 1.5, Number.NaN, Number.POSITIVE_INFINITY])(
+    "omits invalid percentile %s at the threshold",
+    (percentile) => {
+      const standing = { rank: 1, percentile, fieldSize: 20 };
+      expect(leaderboardStandingText(standing)).toBe("#1 of 20 this board");
+      expect(dailyLeaderboardStandingCompactText(standing)).toBe("#1");
+    },
+  );
+
+  it("degrades an inconsistent rank and field tuple without an impossible claim", () => {
+    const standing = { rank: 21, percentile: 1, fieldSize: 20 };
+    expect(leaderboardStandingText(standing)).toBe("Field size 20 · Rank pending");
+    expect(dailyLeaderboardStandingCompactText(standing)).toBe("Rank pending");
+  });
+
+  it("uses the same validated boundary for compact fields 19 and 20", () => {
+    expect(dailyLeaderboardStandingCompactText({ rank: 4, percentile: 85, fieldSize: 19 })).toBe(
+      "#4",
+    );
+    expect(dailyLeaderboardStandingCompactText({ rank: 4, percentile: 85, fieldSize: 20 })).toBe(
+      "Top 85%",
+    );
+  });
+
+  it("keeps non-finite rank, field, and percentile inputs honest", () => {
+    expect(
+      leaderboardStandingText({ rank: Number.POSITIVE_INFINITY, percentile: 1, fieldSize: 20 }),
+    ).toBe("Field size 20 · Rank pending");
+    expect(
+      leaderboardStandingText({ rank: 1, percentile: 1, fieldSize: Number.POSITIVE_INFINITY }),
+    ).toBe("#1");
+    expect(leaderboardStandingText({ rank: 4, percentile: Number.NaN, fieldSize: 19 })).toBe(
+      "#4 of 19 this board · Ties share a rank",
     );
   });
 });

@@ -58,12 +58,23 @@ yesterday's card. They separately exercise visible-tab and focus rechecks,
 ignore a late prior-day success after the new day is unavailable, and verify
 listener plus interval cleanup on unmount.
 
+The first independent exact-head review returned FAIL because malformed but
+JSON-valid standing tuples could still emit impossible public claims: negative
+or over-100 percentiles and a rank greater than the known field size. The
+fix-forward validates the complete display tuple, restricts percentile wording
+to safe integers from 1 through 100, degrades contradictory known rank/field
+inputs to rank-pending, and routes the compact Daily label through the same
+validator. A valid server rank with an unavailable denominator remains the
+honest standalone `#rank`. New tests cover negative, zero, over-100,
+fractional, non-finite, rank-over-field, and the 19/20 compact boundary.
+
 ## Validation
 
 - Focused component, copy, contract, and mounted lifecycle tests: 7 files
   passed; 90 tests passed.
 - Final post-rebase changed-file set: 5 files, 68 tests passed.
-- Complete direct web Vitest: 103 files passed / 1 skipped; 1,092 tests passed /
+- Fix-forward focused consumers: 4 files, 73 tests passed.
+- Replacement complete direct web Vitest: 103 files passed / 1 skipped; 1,101 tests passed /
   1 skipped.
 - Complete data Vitest: 16 files passed / 1 skipped; 168 tests passed / 9
   skipped.
@@ -76,6 +87,9 @@ listener plus interval cleanup on unmount.
 - Responsive shell: 204 metrics / 0 failures — desktop 84/0, mobile 56/0,
   interaction targets 40/0, mode/setup 24/0.
 - Targeted Prettier and `git diff --check`: passed.
+- Initial independent review: FAIL at `7c30c087cf075740ae25311f4b84cbe6586d23d8`;
+  `/tmp/audit-s1-d5-fresh-review-7c30c08.md`; SHA-256
+  `83b597d0e10c44d7bd6a06ca21c56b486678c181fca48bb788325d029875fe8c`.
 
 ## Risk and carryover
 
