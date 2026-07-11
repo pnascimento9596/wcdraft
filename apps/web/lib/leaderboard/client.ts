@@ -10,6 +10,7 @@
 import { boundedRequest, isRequestTimeoutError, REQUEST_BUDGET_MS } from "@wcdraft/data/client";
 
 import { postJsonResponse } from "../auth/client";
+import { isUnsafeMutationResponseAmbiguous } from "../unsafe-mutation";
 import type { BoardDraftModeFilter, BoardFilter, BoardPageWire } from "./board-view";
 import { boardQueryString } from "./board-view";
 import type { LeaderboardLineupView, LeaderboardLineupWire } from "./lineup-view";
@@ -272,17 +273,19 @@ export async function requestRankedAttempt(input: {
       };
     }
     const acceptedWithoutUsableAttempt = r.ok;
+    const acknowledgementAmbiguous = isUnsafeMutationResponseAmbiguous(r.status);
     return {
       ok: false,
       status: r.status,
-      message:
-        typeof body?.message === "string"
-          ? body.message
-          : acceptedWithoutUsableAttempt
-            ? "The ranked seed response could not be verified. The attempt may have been issued."
+      message: acceptedWithoutUsableAttempt
+        ? "The ranked seed response could not be verified. The attempt may have been issued."
+        : acknowledgementAmbiguous
+          ? "The server could not confirm whether the ranked attempt was issued."
+          : typeof body?.message === "string"
+            ? body.message
             : null,
       timedOut: false,
-      outcomeUnknown: acceptedWithoutUsableAttempt,
+      outcomeUnknown: acceptedWithoutUsableAttempt || acknowledgementAmbiguous,
     };
   } catch (error) {
     return {

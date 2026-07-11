@@ -4,7 +4,11 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { postJson, ensureCsrfToken } from "@/lib/auth/client";
-import { unsafeMutationUnknownMessage, useUnsafeMutationLatch } from "@/lib/unsafe-mutation";
+import {
+  isUnsafeMutationResponseAmbiguous,
+  unsafeMutationUnknownMessage,
+  useUnsafeMutationLatch,
+} from "@/lib/unsafe-mutation";
 
 type State =
   | { kind: "idle" }
@@ -58,6 +62,16 @@ export function SignInForm(): React.ReactElement {
         const endpoint = purpose === "reset" ? "/api/auth/password-reset" : "/api/auth/magic-link";
         const body = purpose === "reset" ? { email } : { email, next };
         const r = await postJson<{ ok?: boolean; message?: string }>(endpoint, body);
+        if (isUnsafeMutationResponseAmbiguous(r.status)) {
+          mutation.markOutcomeUnknown();
+          setState({
+            kind: "unknown",
+            operation: purpose === "signin" ? "signin-link" : "reset-link",
+            message:
+              "The server could not confirm whether the delivery request completed. This request is locked; refresh or change the email before sending another link.",
+          });
+          return;
+        }
         if (r.status === 429) {
           mutation.settle();
           setState({
@@ -109,6 +123,16 @@ export function SignInForm(): React.ReactElement {
           "/api/auth/password-login",
           { identifier: trimmed, password, next },
         );
+        if (isUnsafeMutationResponseAmbiguous(r.status)) {
+          mutation.markOutcomeUnknown();
+          setState({
+            kind: "unknown",
+            operation: "password",
+            message:
+              "The server could not confirm whether sign-in completed. This request is locked; refresh or change the credentials before trying again.",
+          });
+          return;
+        }
         if (r.status === 429) {
           mutation.settle();
           setState({ kind: "error", message: "Too many password attempts. Wait and try again." });

@@ -10,6 +10,25 @@ import { isRequestTimeoutError } from "@wcdraft/data/client";
  */
 export type UnsafeMutationPhase = "idle" | "pending" | "committed" | "outcome-unknown";
 
+export type UnsafeMutationResponseDisposition = "definitive" | "outcome-unknown";
+
+/**
+ * Classify the acknowledgement value of an HTTP response to a non-idempotent
+ * mutation. Known application 4xx responses reject the request definitively,
+ * except 408; a 408 or 5xx may be returned after the write committed but before
+ * its acknowledgement reached the browser.
+ */
+export function unsafeMutationResponseDisposition(
+  status: number,
+): UnsafeMutationResponseDisposition {
+  if (!Number.isInteger(status) || status < 100 || status > 599) return "outcome-unknown";
+  return status === 408 || status >= 500 ? "outcome-unknown" : "definitive";
+}
+
+export function isUnsafeMutationResponseAmbiguous(status: number): boolean {
+  return unsafeMutationResponseDisposition(status) === "outcome-unknown";
+}
+
 export interface UnsafeMutationLatch {
   readonly phase: UnsafeMutationPhase;
   readonly locked: boolean;

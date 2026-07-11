@@ -10,7 +10,11 @@ import { fetchAccountRunsPage } from "@/lib/account/client";
 import { isRequestTimeoutError } from "@wcdraft/data/client";
 import type { AccountRun, AccountRunsPage } from "@/lib/account/runs";
 import { formatAccountRunRecord } from "@/lib/account/run-format";
-import { unsafeMutationUnknownMessage, useUnsafeMutationLatch } from "@/lib/unsafe-mutation";
+import {
+  isUnsafeMutationResponseAmbiguous,
+  unsafeMutationUnknownMessage,
+  useUnsafeMutationLatch,
+} from "@/lib/unsafe-mutation";
 
 type Notice =
   | { kind: "idle" }
@@ -217,7 +221,16 @@ function UsernamePanel({
           message?: string;
           username_reason?: string;
         }>("/api/profile", { username: value });
-        if (!response.ok || typeof response.data?.profile?.username !== "string") {
+        if (isUnsafeMutationResponseAmbiguous(response.status)) {
+          mutation.markOutcomeUnknown();
+          setNotice({
+            kind: "unknown",
+            message:
+              "The server could not confirm whether the username was saved. This value is locked; reload Account or change the username before trying again.",
+          });
+          return;
+        }
+        if (!response.ok) {
           mutation.settle();
           setNotice({
             kind: "error",
@@ -225,7 +238,16 @@ function UsernamePanel({
           });
           return;
         }
-        const saved = response.data.profile.username;
+        const saved = response.data?.profile?.username;
+        if (typeof saved !== "string" || saved.trim().length === 0) {
+          mutation.markOutcomeUnknown();
+          setNotice({
+            kind: "unknown",
+            message:
+              "The server accepted the username update, but its saved profile could not be verified. This value is locked; reload Account or change the username before trying again.",
+          });
+          return;
+        }
         mutation.settle();
         setValue(saved);
         setNotice({ kind: "ok", message: "Username saved." });
@@ -290,6 +312,15 @@ function VerificationPanel({
     setNotice({ kind: "idle" });
     try {
       const response = await postJson<{ message?: string }>("/api/auth/resend-verification", {});
+      if (isUnsafeMutationResponseAmbiguous(response.status)) {
+        mutation.markOutcomeUnknown();
+        setNotice({
+          kind: "unknown",
+          message:
+            "The server could not confirm whether the verification email was sent. This action is locked; reload Account before sending another link.",
+        });
+        return;
+      }
       if (!response.ok) {
         mutation.settle();
         setNotice({
@@ -367,6 +398,15 @@ function PasswordPanel({
             newPassword,
           },
         );
+        if (isUnsafeMutationResponseAmbiguous(response.status)) {
+          mutation.markOutcomeUnknown();
+          setNotice({
+            kind: "unknown",
+            message:
+              "The server could not confirm whether the password was updated. This request is locked; reload Account or change a password field before trying again.",
+          });
+          return;
+        }
         if (!response.ok) {
           mutation.settle();
           setNotice({
@@ -374,6 +414,15 @@ function PasswordPanel({
             message:
               response.data?.message ??
               "Password was not changed. Use your current password or a fresh magic link.",
+          });
+          return;
+        }
+        if (response.data?.hasPassword !== true) {
+          mutation.markOutcomeUnknown();
+          setNotice({
+            kind: "unknown",
+            message:
+              "The server accepted the password update, but the account state could not be verified. This request is locked; reload Account or change a password field before trying again.",
           });
           return;
         }
@@ -467,6 +516,15 @@ function DeletePanel() {
       setNotice({ kind: "idle" });
       try {
         const response = await deleteJson<{ message?: string }>("/api/account", { confirm });
+        if (isUnsafeMutationResponseAmbiguous(response.status)) {
+          mutation.markOutcomeUnknown();
+          setNotice({
+            kind: "unknown",
+            message:
+              "The server could not confirm whether the account was deleted. This action is locked; reload or sign in to check account state before doing anything else.",
+          });
+          return;
+        }
         if (!response.ok) {
           mutation.settle();
           setNotice({

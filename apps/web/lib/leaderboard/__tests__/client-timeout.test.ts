@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { unsafeMutationResponseDisposition } from "@/lib/unsafe-mutation";
+
 import { DEFAULT_BOARD_FILTER } from "../config";
 import { fetchBoardPage, requestRankedAttempt, submitRun } from "../client";
 
@@ -29,6 +31,23 @@ afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
+});
+
+describe("unsafe mutation HTTP acknowledgement classification", () => {
+  it.each([
+    [400, "definitive"],
+    [401, "definitive"],
+    [403, "definitive"],
+    [409, "definitive"],
+    [429, "definitive"],
+    [408, "outcome-unknown"],
+    [500, "outcome-unknown"],
+    [502, "outcome-unknown"],
+    [503, "outcome-unknown"],
+    [504, "outcome-unknown"],
+  ] as const)("classifies HTTP %i as %s", (status, expected) => {
+    expect(unsafeMutationResponseDisposition(status)).toBe(expected);
+  });
 });
 
 describe("leaderboard client request budgets", () => {
@@ -118,7 +137,15 @@ describe("leaderboard client request budgets", () => {
     [204, null, true],
     [299, JSON.stringify({ attempt_id: "incomplete-attempt" }), true],
     [400, JSON.stringify({ message: "Bad request." }), false],
-    [500, "not-json", false],
+    [401, JSON.stringify({ message: "Sign in first." }), false],
+    [403, JSON.stringify({ message: "Verify email first." }), false],
+    [409, JSON.stringify({ message: "Attempt already exists." }), false],
+    [429, JSON.stringify({ message: "Slow down." }), false],
+    [408, JSON.stringify({ message: "Request timeout." }), true],
+    [500, "not-json", true],
+    [502, JSON.stringify({ message: "Bad gateway." }), true],
+    [503, JSON.stringify({ message: "Unavailable." }), true],
+    [504, JSON.stringify({ message: "Gateway timeout." }), true],
   ] as const)(
     "classifies HTTP %i with no usable attempt as outcomeUnknown=%s",
     async (status, responseBody, outcomeUnknown) => {

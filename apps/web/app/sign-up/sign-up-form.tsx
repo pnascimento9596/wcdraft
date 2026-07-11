@@ -4,7 +4,11 @@ import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ensureCsrfToken, postJson } from "@/lib/auth/client";
-import { unsafeMutationUnknownMessage, useUnsafeMutationLatch } from "@/lib/unsafe-mutation";
+import {
+  isUnsafeMutationResponseAmbiguous,
+  unsafeMutationUnknownMessage,
+  useUnsafeMutationLatch,
+} from "@/lib/unsafe-mutation";
 
 type State =
   | { kind: "idle" }
@@ -48,6 +52,15 @@ export function SignUpForm(): React.ReactElement {
         password,
         next,
       });
+      if (isUnsafeMutationResponseAmbiguous(response.status)) {
+        mutation.markOutcomeUnknown();
+        setState({
+          kind: "unknown",
+          message:
+            "The server could not confirm whether account creation completed. This request is locked; refresh, sign in, or change the account details before trying again.",
+        });
+        return;
+      }
       if (!response.ok) {
         mutation.settle();
         setState({
