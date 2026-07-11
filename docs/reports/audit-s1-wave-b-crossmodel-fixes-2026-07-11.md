@@ -62,13 +62,27 @@ repository at `/tmp/audit-s1-crossmodel-wave-b.md`; its review packet is
   40 interaction targets, 24 mode/setup).
 - Canonical generated-data materialization produced zero tracked fingerprint
   diff.
-- Prettier and `git diff --check`: pending final candidate.
+- Prettier and `git diff --check`: PASS. Local `actionlint` was unavailable;
+  the executable workflow contract passed under Node 22 and protected CI remains
+  authoritative for the static workflow lane.
 
 Two initial invocations were setup-only failures and are not counted as product
 evidence: focused Vitest ran before workspace package outputs existed (zero test
 bodies), and direct `vitest run` initially bypassed generated raw-data
 materialization (860 tests passed while 18 suites failed import). After package
 build/materialization, the canonical commands above passed.
+
+The initial protected-CI static job at head
+`fe4ac21bdf68c5e0b3eb8c34c2196c916abc4d89` then failed honestly because the
+production-migration shell contract still required the old 0012 literal in the
+runbook. The operator files were already correct at 0013; the companion fixture
+was stale. The fix-forward keeps the 0012 classifier scenarios as generic
+historical inputs, derives the current tag from the committed journal, extracts
+the workflow input default, requires those values to match exactly, and checks
+the runbook dispatch argument against the same derived tail. The failed CI head
+is not release evidence. The exact failing shell contract now passes under Node
+22.22.3, Bash syntax passes, the affected focused auth suites remain 40/40, and
+exact replacement-head CI is mandatory.
 
 ## Risk and handoff
 

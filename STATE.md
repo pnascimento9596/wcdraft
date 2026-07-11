@@ -34,6 +34,17 @@ external database, merge, deploy, or production mutation is part of this lane.
 The durable implementation report is
 `docs/reports/audit-s1-wave-b-crossmodel-fixes-2026-07-11.md`.
 
+Protected CI at initial head `fe4ac21bdf68c5e0b3eb8c34c2196c916abc4d89`
+correctly failed the static contract because
+`scripts/ci/production-migration-workflow.test.sh` still hardcoded the historical
+0012 runbook value after current operator truth moved to 0013. Runtime code and
+the classifier cases were unaffected. The fix-forward preserves the generic
+0012 classifier fixtures but replaces the stale binding with a dynamic invariant:
+derive the committed journal tail, extract the workflow input default, require
+their exact equality, and require the runbook dispatch example to name that same
+tail. Replacement exact-head CI is required; the failed run is not release
+evidence.
+
 Audit S1 B5 rollback target binding:
 2026-07-11 · RED safety fix on branch
 `ws-f4/audit-s1-rollback-target-binding`, rebased onto shipped B1+B2

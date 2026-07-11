@@ -216,7 +216,29 @@ assert_contains "$workflow" 'classify-production-migration-status.sh post'
 assert_contains "$workflow" 'rm -rf -- "$RECEIPT_DIR"'
 assert_contains "$workflow" 'DATABASE_URL_UNPOOLED='
 assert_contains "$runbook" 'production-db-migrate.yml'
-assert_contains "$runbook" '0012_ranked_attempt_structural_binding'
+
+# Operator defaults/examples must follow the committed journal tail. Keep the
+# classifier's 0012 fixtures above: they prove the classifier is generic over a
+# supplied migration, while these bindings prove current operator truth.
+journal_tail="$(
+  node -e '
+    const journal = require(process.argv[1]);
+    const tail = journal.entries.at(-1)?.tag;
+    if (typeof tail !== "string" || tail.length === 0) process.exit(1);
+    process.stdout.write(tail);
+  ' "$repo_root/packages/db/migrations/meta/_journal.json"
+)" || fail "could not derive committed migration journal tail"
+workflow_default="$(
+  awk '
+    /expected_pending_migration:/ { in_input = 1; next }
+    in_input && /^[[:space:]]+default:/ {
+      sub(/^[[:space:]]+default:[[:space:]]*/, ""); print; exit
+    }
+  ' "$workflow"
+)"
+[ "$workflow_default" = "$journal_tail" ] ||
+  fail "workflow pending-migration default $workflow_default does not match journal tail $journal_tail"
+assert_contains "$runbook" "expected_pending_migration=$journal_tail"
 
 api_query_count="$(grep -Fc 'node scripts/ci/read-github-ref.mjs' "$workflow")"
 token_scope_count="$(grep -Fc 'GITHUB_REF_TOKEN: ${{ github.token }}' "$workflow")"
