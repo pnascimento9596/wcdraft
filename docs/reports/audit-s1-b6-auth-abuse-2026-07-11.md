@@ -160,6 +160,43 @@ Focused regression evidence after the fix-forward:
 The exact fix-forward SHA still requires fresh independent RED re-review and
 protected CI. Prior PASS counts do not transfer to the changed head.
 
+## Independent-review fix-forward B6-R2
+
+The independent review of head
+`6143463e1eac584cc8bc79df3a14687cab41479a` found that both `POST /api/runs`
+and `PATCH /api/runs` called `resolveMutationAuth` before rejecting a mismatched
+Origin. With a valid five-minute stateless bootstrap, that resolver can consume
+the bootstrap and materialize the durable 30-day session. The later Origin
+failure then flowed through `attachFreshSession`, returning the newly created
+session and CSRF cookies to a request that had already failed the Origin
+boundary.
+
+Both handlers now call `verifyOriginHost` before `resolveMutationAuth`. This
+preserves the existing `ORIGIN_MISMATCH` error code, public message, and 401
+status, while ensuring the rejected request cannot invoke auth resolution,
+consume the bootstrap, create a durable session, read its body, touch the
+saved-run store, or emit `Set-Cookie`.
+
+The regression invokes both POST and PATCH with a mismatched Origin and a
+request shape that would otherwise pass the CSRF inputs. Each response retains
+the existing 401 `ORIGIN_MISMATCH` shape, the mutation resolver is called zero
+times, the body reader and relevant store mutation are called zero times, and
+the response has no `Set-Cookie` header.
+
+The adjacent mutating runs endpoints were inspected. Claim and DELETE use
+`resolveAuth`, not the stateless-bootstrap-upgrading `resolveMutationAuth`, and
+therefore do not share this materialization-and-cookie defect. Their ordering
+is unchanged to avoid broadening the fix beyond the reviewed failure mode.
+
+Focused replacement-head validation passed: the route Origin/quota and bounded
+body suites passed 2 files / 12 tests; `@wcdraft/web` typecheck passed; scoped
+ESLint, Prettier, and `git diff --check` passed. No browser, broad root gate,
+external database, or email-provider action was run in this fix-forward.
+
+Head `6143463e1eac584cc8bc79df3a14687cab41479a` and any review result tied to it
+are invalidated. Focused validation, fresh exact-head RED re-review, and
+protected CI must repeat on the replacement commit.
+
 ## Risks and required review focus
 
 - Migration `0013` backfills every saved run and creates two indexes. Production

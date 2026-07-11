@@ -221,6 +221,21 @@ account, while an anonymous request still reads and reaches the transactional
 save path. Exact-head RED re-review and protected CI must repeat after this
 fix-forward.
 
+The next independent review of head `6143463e` found B6-R2: the saved-run POST
+and PATCH handlers resolved mutation auth before checking Origin. A valid
+stateless bootstrap on a cross-origin request could therefore be upgraded to a
+durable session and returned through the error-path cookies before the bad
+Origin was rejected. Both handlers now verify Origin first, before any auth
+resolver or bootstrap materializer can run. Regression cases pin the existing
+`ORIGIN_MISMATCH` response while proving zero resolver calls, zero body/store
+work, and no `Set-Cookie` for cross-origin POST and PATCH requests. The other
+mutating runs handlers use the non-materializing auth resolver and do not share
+this bootstrap side effect, so their established ordering is unchanged. Head
+`6143463e` is invalidated. Focused replacement-head validation passed 2 files /
+12 tests, web typecheck, scoped ESLint, Prettier, and diff check; fresh
+exact-head RED re-review and protected CI must repeat on the replacement
+commit.
+
 Audit Season 1 shared bounded-request contract (Unit D1):
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-bounded-requests`, initially based on Wave-A `origin/main`

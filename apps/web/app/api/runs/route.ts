@@ -79,13 +79,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 export async function POST(req: NextRequest): Promise<NextResponse> {
   let freshSession: Awaited<ReturnType<typeof resolveMutationAuth>>["freshSession"] = null;
   try {
-    const auth = await resolveMutationAuth(req);
-    freshSession = auth.freshSession;
     verifyOriginHost({
       origin: req.headers.get("origin"),
       referer: req.headers.get("referer"),
       host: req.headers.get("host"),
     });
+    const auth = await resolveMutationAuth(req);
+    freshSession = auth.freshSession;
     verifyCsrfDoubleSubmit({
       cookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),
       headerValue: req.headers.get(CSRF_HEADER_NAME),
@@ -176,13 +176,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 export async function PATCH(req: NextRequest): Promise<NextResponse> {
   let freshSession: Awaited<ReturnType<typeof resolveMutationAuth>>["freshSession"] = null;
   try {
-    const auth = await resolveMutationAuth(req);
-    freshSession = auth.freshSession;
     verifyOriginHost({
       origin: req.headers.get("origin"),
       referer: req.headers.get("referer"),
       host: req.headers.get("host"),
     });
+    const auth = await resolveMutationAuth(req);
+    freshSession = auth.freshSession;
     verifyCsrfDoubleSubmit({
       cookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),
       headerValue: req.headers.get(CSRF_HEADER_NAME),
