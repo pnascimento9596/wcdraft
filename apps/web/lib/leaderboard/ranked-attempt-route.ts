@@ -1,8 +1,9 @@
 // POST /api/ranked/attempt handler.
 //
-// Authenticated ranked draft creation seam: mint one short-window server seed
-// for the signed-in user and exact draft config. This is intentionally separate
-// from /api/leaderboard/submit so ranked submit can reject client-chosen seeds.
+// Authenticated ranked draft creation seam: return the one short-window server
+// seed for the signed-in user and exact draft config, minting only when no live
+// attempt exists. This is intentionally separate from /api/leaderboard/submit
+// so ranked submit can reject client-chosen seeds.
 
 import { NextResponse, type NextRequest } from "next/server";
 import type { Db } from "@wcdraft/db";
@@ -10,7 +11,12 @@ import { z } from "zod";
 
 import { isBoardDraftMode, isBoardDraftOrder, isBoardEra, isBoardRatingBasis } from "./config";
 import { LeaderboardGateError, requireSubmitIdentity } from "./identity-gate";
-import { createRankedAttempt, type IssuedRankedAttempt } from "./ranked-attempts";
+import {
+  createRankedAttempt,
+  RankedAttemptRateLimitError,
+  type CreateRankedAttemptDeps,
+  type IssuedRankedAttempt,
+} from "./ranked-attempts";
 
 export interface RankedAttemptRouteDeps {
   readonly db: Db;
@@ -18,6 +24,7 @@ export interface RankedAttemptRouteDeps {
   readonly getCookieSecret: () => string;
   readonly currentSeasonKey: () => string;
   readonly randomBytes?: (size: number) => Uint8Array;
+  readonly consumeIssueRateLimit?: CreateRankedAttemptDeps["consumeIssueRateLimit"];
 }
 
 const RankedAttemptBodySchema = z.object({
@@ -101,12 +108,25 @@ export async function handleRankedAttemptPost(
         era: body.era,
         ratingBasis: body.rating_basis,
       },
-      { now: deps.now, randomBytes: deps.randomBytes },
+      {
+        now: deps.now,
+        randomBytes: deps.randomBytes,
+        consumeIssueRateLimit: deps.consumeIssueRateLimit,
+      },
     );
-    const res = NextResponse.json(toResponseBody(issued), { status: 201 });
+    const res = NextResponse.json(toResponseBody(issued), { status: issued.reused ? 200 : 201 });
     res.headers.set("Cache-Control", "no-store");
     return res;
   } catch (err) {
+    if (err instanceof RankedAttemptRateLimitError) {
+      const res = NextResponse.json(
+        { error: "RATE_LIMITED", message: err.message },
+        { status: 429 },
+      );
+      res.headers.set("Retry-After", String(err.retryAfterSeconds));
+      res.headers.set("Cache-Control", "no-store");
+      return res;
+    }
     if (err instanceof LeaderboardGateError) {
       return NextResponse.json(
         {

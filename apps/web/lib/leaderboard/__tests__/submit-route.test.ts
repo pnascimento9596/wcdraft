@@ -9,6 +9,7 @@
 //   - dedupe conflict path (NULLS NOT DISTINCT, all three anon shapes)
 //   - session identity + CSRF negatives (double-submit + origin)
 //   - ranked account gate negatives (no cookie, anonymous, forged, expired)
+//   - ranked duplicate/live-attempt precheck runs before replay and simulation
 //   - rate-limit seam: 429 + Retry-After, runs AFTER identity and BEFORE
 //     the CPU-bound pipeline (throwing getValidation proves ordering)
 
@@ -1096,6 +1097,95 @@ describe("ranked account gate", () => {
     expect(await allRows()).toHaveLength(0);
   });
 
+  it("rejects a missing ranked attempt before a simulation-only failure can execute", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({
+        email: "precheck-ranked@example.com",
+        username: "precheck_ranked",
+        emailVerifiedAt: VERIFIED_AT,
+      })
+      .returning();
+    const { opts } = await sessionReqOpts(inserted[0]!.id);
+    const broken: ValidationData = {
+      gameData: data.gameData,
+      scenario: { ...data.scenario, teams: [] } as ValidationData["scenario"],
+    };
+
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        ...opts,
+        body: validBody({ mode: "ranked", display_alias: undefined, display_name: undefined }),
+      }),
+      makeDeps({ getValidation: () => broken }),
+    );
+
+    expect(res.status).toBe(403);
+    expect(await errorOf(res)).toMatchObject({
+      error: "BAD_ATTEMPT",
+      message: "ranked submissions require a valid unexpired server-issued attempt",
+    });
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("returns an exact ranked duplicate before replay or simulation", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({
+        email: "duplicate-precheck@example.com",
+        username: "duplicate_precheck",
+        emailVerifiedAt: VERIFIED_AT,
+      })
+      .returning();
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = validBody({ mode: "ranked", display_alias: undefined, display_name: undefined });
+    await issueRankedAttemptForBody({ userId: inserted[0]!.id, sessionId, body });
+
+    const first = await handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps());
+    expect(first.status).toBe(201);
+
+    const broken: ValidationData = {
+      gameData: data.gameData,
+      scenario: { ...data.scenario, teams: [] } as ValidationData["scenario"],
+    };
+    const duplicate = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body }),
+      makeDeps({ getValidation: () => broken }),
+    );
+
+    expect(duplicate.status).toBe(200);
+    expect(await duplicate.json()).toMatchObject({ duplicate: true, rank: 1, field_size: 1 });
+    expect(await allRows()).toHaveLength(1);
+    expect(await allAttempts()).toHaveLength(1);
+  });
+
+  it("reconciles concurrent same-token ranked submits to one insert and one duplicate", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({
+        email: "concurrent-ranked@example.com",
+        username: "concurrent_ranked",
+        emailVerifiedAt: VERIFIED_AT,
+      })
+      .returning();
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = validBody({ mode: "ranked", display_alias: undefined, display_name: undefined });
+    await issueRankedAttemptForBody({ userId: inserted[0]!.id, sessionId, body });
+
+    const [left, right] = await Promise.all([
+      handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps()),
+      handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps()),
+    ]);
+
+    expect([left.status, right.status].sort()).toEqual([200, 201]);
+    const payloads = await Promise.all([left.json(), right.json()]);
+    expect(payloads.map((payload) => payload.duplicate).sort()).toEqual([false, true]);
+    expect(await allRows()).toHaveLength(1);
+    const attempts = await allAttempts();
+    expect(attempts).toHaveLength(1);
+    expect(attempts[0]!.consumedAt).not.toBeNull();
+  });
+
   it("account-bound ranked with a mismatched issued seed → 403 BAD_ATTEMPT", async () => {
     const inserted = await db
       .insert(users)
@@ -1118,6 +1208,45 @@ describe("ranked account gate", () => {
     expect((await errorOf(res)).error).toBe("BAD_ATTEMPT");
     expect(await allRows()).toHaveLength(0);
     expect((await allAttempts())[0]!.consumedAt).toBeNull();
+  });
+
+  it("rejects a superseded live seed before simulation and leaves attempts unconsumed", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({
+        email: "superseded-seed@example.com",
+        username: "superseded_seed",
+        emailVerifiedAt: VERIFIED_AT,
+      })
+      .returning();
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = validBody({ mode: "ranked", display_alias: undefined, display_name: undefined });
+    await issueRankedAttemptForBody({
+      userId: inserted[0]!.id,
+      sessionId,
+      body,
+      issuedAt: new Date(Date.now() - 2_000),
+    });
+    await issueRankedAttemptForBody({
+      userId: inserted[0]!.id,
+      sessionId,
+      body,
+      parentSeed: "wcdraft:ranked:v1:newer-canonical-seed",
+      issuedAt: new Date(Date.now() - 1_000),
+    });
+    const broken: ValidationData = {
+      gameData: data.gameData,
+      scenario: { ...data.scenario, teams: [] } as ValidationData["scenario"],
+    };
+
+    const res = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body }),
+      makeDeps({ getValidation: () => broken }),
+    );
+
+    expect(res.status).toBe(403);
+    expect((await errorOf(res)).error).toBe("BAD_ATTEMPT");
+    expect((await allAttempts()).every((attempt) => attempt.consumedAt === null)).toBe(true);
   });
 
   it("account-bound ranked with username fallback → 201 ranked row, no email", async () => {
