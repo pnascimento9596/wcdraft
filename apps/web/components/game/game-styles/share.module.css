@@ -139,6 +139,8 @@
   line-height: 1.5;
   color: var(--ink-soft);
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 100%;
   background: var(--bg-sunken);
   border: 1px solid var(--line);
   border-radius: 10px;
