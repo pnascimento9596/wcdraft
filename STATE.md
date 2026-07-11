@@ -152,8 +152,15 @@ fresh browser run against frozen source/test diff SHA-256
 passed game flow plus responsive desktop 84/0, mobile 56/0, and interaction
 targets 40/0. The responsive wrapper/verifier, game-flow, Next dev, and
 next-server process scan was clean after teardown; `next-env.d.ts` and generated
-assets were restored. Exact-head independent review, protected CI, and
-merge/deploy/live verification remain mandatory.
+assets were restored. Release verification subsequently completed:
+independent report `/tmp/audit-s1-d1-final-review-c6ae2d6.md` returned PASS
+with SHA-256
+`7c6199ab3e4745ab10a9c2355b9f42cbf6aa450fa4ff7cf6f40da2d3b4306c39`,
+exact-head CI run `29151151957` succeeded, and PR #235 squash-merged as
+`1681d64c2567b87f6c6bdb512bca7a67693fd28b`. Vercel deployment
+`dpl_575fb` reached READY; live health matched the exact release with DB ready
+at schema migration `0012`, endpoint probes passed, and the production
+`390x844` responsive proof returned 2 metrics / 0 failures.
 
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
@@ -603,8 +610,9 @@ was false: no bot job received a runner, and the protected context was absent.
 Audit Season 1 D3 mode-select IA:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-mode-select-ia`, originally based on D2
-`50184ef9a346912b5338b2a8a4fe42361bfea45e` and cleanly rebased onto current
-`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` after C2 shipped. The five-mode
+`50184ef9a346912b5338b2a8a4fe42361bfea45e` and rebased without a stash onto
+current `origin/main` `1681d64c2567b87f6c6bdb512bca7a67693fd28b`
+after D1 shipped. The five-mode
 selector now keeps Daily as the broadcast lead and compacts Classic, Open
 Draft, Memory, and Blind Open into a two-column board on phone and
 short-landscape viewports.
@@ -625,22 +633,41 @@ default; Ranked calls the existing
 `requestRankedAttempt`, preserves its server-issued seed/attempt metadata, and
 surfaces direct sign-in or resend-verification actions on the current 401/403
 gates. Legacy ranked query URLs only restore that visible selection and are no
-longer the sole entry path. B2 was not merged at this base: current issuance
-remains compatible, but outstanding-attempt reuse, farming resistance, expiry
-sweep, and rate-limit behavior must be reverified after B2 lands. No core,
+longer the sole entry path. D1's bounded request, response-disposition, and
+unsafe-mutation contracts are preserved: unusable successful bodies, HTTP 408,
+and every 5xx remain outcome-unknown and one-dispatch locked; typed server
+`code` still drives sign-in and verification actions after definitive 4xx
+responses. B2 is not merged at this base: current issuance remains compatible,
+but outstanding-attempt reuse, farming resistance, expiry sweep, and rate-limit
+behavior must be reverified after B2 lands. No core,
 rating, sim, token validation, schema, ETL, runtime-data, or leaderboard-server
-semantics changed. Fix-forward validation passed: direct three-state responsive
+semantics changed. An interim review found that a delayed successful ranked
+issuance could resume after FormationSelect unmounted or navigation replaced
+the setup, then create and persist a run and invoke the stale `onLocked`
+handoff. Ranked issuance now composes a caller AbortSignal into the bounded
+CSRF POST and checks both component lifetime and a monotonically increasing
+request sequence after the await and before local creation or handoff. Mounted
+regressions prove delayed success after unmount/navigation creates zero runs,
+persists nothing, and performs no callback/router handoff; a replacement mount
+supersedes the old request and only its own response can create/handoff.
+Fix-forward validation passed: direct three-state responsive
 proof (3 states x 3 viewports x 2 themes = 18 metrics, 0 failures); unavailable
 clearance is 4px/4px at both portrait viewports and 8px/8px at `667x375`; the
-final post-C2 focused tests passed 3/3 files and 23/23 tests; expanded game-flow
-Playwright passed the compact dock, unavailable notice, and ranked 401/403
-flows. The final isolated full wrapper exited zero with complete JSON receipts:
+final post-D1 focused tests passed 5/5 files and 99/99 tests; complete direct
+web Vitest passed 95 files / 1 skipped and 1,031 tests / 1 skipped; complete
+data Vitest passed 16 files / 1 skipped and 168 tests / 9 skipped. Expanded
+game-flow Playwright passed the compact dock, unavailable notice, visible
+Casual/Ranked choice, ranked 401/403 flows, position-first setup, and the full
+draft-through-share path. The final isolated full wrapper exited zero with
+complete JSON receipts:
 84 desktop-shell + 56 mobile-shell + 40 interaction + 24 mode/setup metrics =
-204, 0 failures. Post-C2 root typecheck passed 8/8 tasks (web uncached), lint
+204, 0 failures. Post-D1 root typecheck passed 8/8 tasks (web uncached), lint
 passed 5/5 (web uncached), and production build passed 4/4 (web uncached; 40/40
-pages). An earlier forced root test passed 8/8 tasks with 0 cached in 9m49.178s
-(web 88 files passed / 1 skipped, 936 tests passed / 1 skipped, expanded
-game-flow PASS, and 204/0 responsive), before the semantic-no-op rebase. Golden
+pages); full-repository Prettier and `git diff --check` passed. Browser-relevant
+source was frozen at SHA-256
+`a0fe5fb384ae9065dfd2a91a9802aa13d8c503268a0508407f5a2085f1533586`,
+and the game-flow, responsive wrapper/verifier, Next dev, and next-server
+process scan was empty after teardown. Golden
 suites and heavy realism were not run because D3 changes no deterministic core,
 data, rating, simulation, or leaderboard-validation behavior.
 

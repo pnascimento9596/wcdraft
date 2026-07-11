@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ERA_PRESET_IDS,
@@ -229,10 +229,32 @@ export function FormationSelect({
   const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
   const [draftFlow, setDraftFlow] = useState<DraftFlow>("squad_first");
   const [ratingBasis, setRatingBasis] = useState<RatingBasis>("career");
+  const mountedRef = useRef(true);
+  const requestSequenceRef = useRef(0);
+  const activeRequestRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      requestSequenceRef.current += 1;
+      activeRequestRef.current?.abort();
+      activeRequestRef.current = null;
+    };
+  }, []);
 
   const lockIn = useCallback(
     async (formation_id: SupportedFormationId) => {
       if (lane === "ranked" && !rankedIssuance.begin()) return;
+      const requestSequence = requestSequenceRef.current + 1;
+      requestSequenceRef.current = requestSequence;
+      activeRequestRef.current?.abort();
+      const controller = lane === "ranked" ? new AbortController() : null;
+      activeRequestRef.current = controller;
+      const isCurrentRequest = () =>
+        mountedRef.current &&
+        requestSequenceRef.current === requestSequence &&
+        controller?.signal.aborted !== true;
       setError(null);
       setPending(formation_id);
       let rankedAttemptIssued = false;
@@ -244,13 +266,17 @@ export function FormationSelect({
               `${DRAFT_MODE_COPY[draftMode].label} is casual and does not issue ranked seeds.`,
             );
           }
-          rankedAttempt = await requestRankedAttempt({
-            formationId: formation_id,
-            draftMode,
-            draftOrder: draftFlow,
-            era: eraPreset,
-            ratingBasis,
-          });
+          rankedAttempt = await requestRankedAttempt(
+            {
+              formationId: formation_id,
+              draftMode,
+              draftOrder: draftFlow,
+              era: eraPreset,
+              ratingBasis,
+            },
+            { signal: controller?.signal },
+          );
+          if (!isCurrentRequest()) return;
         }
         if (rankedAttempt !== null && !rankedAttempt.ok) {
           if (rankedAttempt.outcomeUnknown) {
@@ -285,6 +311,7 @@ export function FormationSelect({
           setPending(null);
           return;
         }
+        if (!isCurrentRequest()) return;
         if (rankedAttempt !== null) {
           rankedAttemptIssued = true;
           rankedIssuance.markCommitted();
@@ -311,8 +338,10 @@ export function FormationSelect({
             ? created.warnings.join(" · ") ||
               "This draft is saved in this tab only — browser storage is unavailable."
             : null;
+        if (!isCurrentRequest()) return;
         onLocked(created.record, warning);
       } catch (err) {
+        if (!isCurrentRequest()) return;
         if (lane === "ranked") rankedIssuance.settle();
         if (rankedAttemptIssued) {
           setError({
@@ -324,6 +353,8 @@ export function FormationSelect({
           setError({ message: `${d.title}: ${d.message}` });
         }
         setPending(null);
+      } finally {
+        if (activeRequestRef.current === controller) activeRequestRef.current = null;
       }
     },
     [gameData, draftMode, lane, eraPreset, draftFlow, ratingBasis, onLocked, rankedIssuance],

@@ -80,7 +80,9 @@ describe("broadcast tactics UI source contract", () => {
     expect(setup).toContain("const [open, setOpen] = useState(true)");
     expect(setup).toContain('aria-label="Play type"');
     expect(setup).toContain('"casual", "ranked"');
-    expect(setup).toContain("requestRankedAttempt({");
+    expect(setup).toContain("requestRankedAttempt(");
+    expect(setup).toContain("{ signal: controller?.signal }");
+    expect(setup).toContain("if (!isCurrentRequest()) return");
     expect(setup).toContain("const [selected, setSelected] = useState<SupportedFormationId>");
     expect(setup).toContain("onClick={() => setSelected(fid)}");
     expect(setup).toContain("onClick={() => lockIn(selected)}");

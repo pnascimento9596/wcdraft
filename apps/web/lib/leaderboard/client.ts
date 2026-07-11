@@ -218,13 +218,16 @@ function isUsableExpiry(value: unknown): value is string {
   return isNonEmptyString(value) && !Number.isNaN(Date.parse(value));
 }
 
-export async function requestRankedAttempt(input: {
-  readonly formationId: string;
-  readonly draftMode: BoardDraftModeFilter;
-  readonly draftOrder: BoardDraftOrder;
-  readonly era: BoardEra;
-  readonly ratingBasis: BoardRatingBasis;
-}): Promise<RankedAttemptFetchResult> {
+export async function requestRankedAttempt(
+  input: {
+    readonly formationId: string;
+    readonly draftMode: BoardDraftModeFilter;
+    readonly draftOrder: BoardDraftOrder;
+    readonly era: BoardEra;
+    readonly ratingBasis: BoardRatingBasis;
+  },
+  options?: { readonly signal?: AbortSignal },
+): Promise<RankedAttemptFetchResult> {
   try {
     const r = await postJsonResponse<{
       attempt_id?: unknown;
@@ -238,13 +241,17 @@ export async function requestRankedAttempt(input: {
       rating_basis?: unknown;
       error?: unknown;
       message?: unknown;
-    }>("/api/ranked/attempt", {
-      formation_id: input.formationId,
-      draft_mode: input.draftMode,
-      draft_order: input.draftOrder,
-      era: input.era,
-      rating_basis: input.ratingBasis,
-    });
+    }>(
+      "/api/ranked/attempt",
+      {
+        formation_id: input.formationId,
+        draft_mode: input.draftMode,
+        draft_order: input.draftOrder,
+        era: input.era,
+        rating_basis: input.ratingBasis,
+      },
+      options,
+    );
     const body = r.data;
     if (
       r.ok &&

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import { createElement, type ReactElement } from "react";
+import { act, createElement, type ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AccountClient } from "@/app/account/account-client";
@@ -30,7 +30,10 @@ const authContext = vi.hoisted(() => ({
 }));
 
 type CreateRunResult = ReturnType<(typeof import("@/lib/game/run-record"))["createNewRunRecord"]>;
-const runRecordSeam = vi.hoisted(() => ({ result: null as CreateRunResult | null }));
+const runRecordSeam = vi.hoisted(() => ({
+  result: null as CreateRunResult | null,
+  calls: 0,
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => navigation,
@@ -79,8 +82,10 @@ vi.mock("@/lib/game/run-record", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/game/run-record")>();
   return {
     ...actual,
-    createNewRunRecord: (...args: Parameters<typeof actual.createNewRunRecord>) =>
-      runRecordSeam.result ?? actual.createNewRunRecord(...args),
+    createNewRunRecord: (...args: Parameters<typeof actual.createNewRunRecord>) => {
+      runRecordSeam.calls += 1;
+      return runRecordSeam.result ?? actual.createNewRunRecord(...args);
+    },
   };
 });
 
@@ -155,6 +160,7 @@ beforeEach(() => {
   vi.useFakeTimers();
   navigation.params = new URLSearchParams();
   runRecordSeam.result = null;
+  runRecordSeam.calls = 0;
   document.cookie = "wcdraft_csrf=test-token; Path=/";
 });
 
@@ -689,7 +695,7 @@ async function mountRankedFormation(fetcher: ReturnType<typeof heldOpenFetch>, o
     createElement(FormationSelect, {
       gameData: {} as GameData,
       draftMode: "classic",
-      ranked: true,
+      initialRanked: true,
       onLocked,
     }),
   );
@@ -697,6 +703,99 @@ async function mountRankedFormation(fetcher: ReturnType<typeof heldOpenFetch>, o
 }
 
 describe("mounted ranked seed issuance lock", () => {
+  it("drops a delayed ranked success after unmount/navigation before local creation", async () => {
+    const deferred: {
+      resolve?: (response: Response) => void;
+      signal?: AbortSignal;
+    } = {};
+    const fetcher = vi.fn<typeof fetch>(
+      (_input, init) =>
+        new Promise<Response>((resolve) => {
+          deferred.resolve = resolve;
+          if (init?.signal instanceof AbortSignal) deferred.signal = init.signal;
+        }),
+    );
+    const { view, onLocked, lock } = await mountRankedFormation(fetcher);
+
+    await click(lock);
+    expect(fetcher).toHaveBeenCalledOnce();
+    await view.unmount();
+    expect(deferred.signal?.aborted).toBe(true);
+
+    deferred.resolve?.(
+      new Response(JSON.stringify(rankedAttemptBody()), {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+    await advanceTime(0);
+
+    expect(runRecordSeam.calls).toBe(0);
+    expect(onLocked).not.toHaveBeenCalled();
+    expect(navigation.replace).not.toHaveBeenCalled();
+    expect(navigation.push).not.toHaveBeenCalled();
+  });
+
+  it("lets a replacement mount supersede a delayed ranked request without stale handoff", async () => {
+    const responses: Array<(response: Response) => void> = [];
+    const signals: AbortSignal[] = [];
+    const fetcher = vi.fn<typeof fetch>(
+      (_input, init) =>
+        new Promise<Response>((resolve) => {
+          responses.push(resolve);
+          if (init?.signal instanceof AbortSignal) signals.push(init.signal);
+        }),
+    );
+    const first = await mountRankedFormation(fetcher);
+    await click(first.lock);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await first.view.unmount();
+    expect(signals[0]?.aborted).toBe(true);
+
+    runRecordSeam.result = {
+      record: { run_id: "replacement-ranked-run" } as RunRecordV1,
+      persistence: "durable",
+      warnings: [],
+    };
+    const replacementOnLocked = vi.fn();
+    const replacement = await mountRankedFormation(fetcher, replacementOnLocked);
+    try {
+      await click(replacement.lock);
+      expect(fetcher).toHaveBeenCalledTimes(2);
+
+      await act(async () => {
+        responses[0]?.(
+          new Response(JSON.stringify(rankedAttemptBody()), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+        await Promise.resolve();
+      });
+      expect(runRecordSeam.calls).toBe(0);
+      expect(first.onLocked).not.toHaveBeenCalled();
+      expect(replacementOnLocked).not.toHaveBeenCalled();
+
+      await act(async () => {
+        responses[1]?.(
+          new Response(JSON.stringify(rankedAttemptBody()), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+          }),
+        );
+        await Promise.resolve();
+      });
+      expect(runRecordSeam.calls).toBe(1);
+      expect(first.onLocked).not.toHaveBeenCalled();
+      expect(replacementOnLocked).toHaveBeenCalledOnce();
+      expect(replacementOnLocked.mock.calls[0]?.[0]).toMatchObject({
+        run_id: "replacement-ranked-run",
+      });
+    } finally {
+      await replacement.view.unmount();
+    }
+  });
+
   it("never remints after a held-open timeout", async () => {
     const fetcher = heldOpenFetch();
     const { view, onLocked, lock } = await mountRankedFormation(fetcher);
