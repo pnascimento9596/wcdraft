@@ -8,6 +8,9 @@
 //
 // The sender NEVER receives the raw token (only the URL the user receives),
 // so the only place the secret exists is the email itself.
+import { boundedRequest } from "@wcdraft/data/client";
+
+export const RESEND_TIMEOUT_MS = 8_000;
 
 export interface SendMagicLinkArgs {
   readonly toEmail: string;
@@ -68,18 +71,30 @@ export class ResendEmailSender implements EmailSender {
         `<p>${escapeHtml(copy.footer)}</p>`,
       text: `${copy.lede}\n\n${args.magicLinkUrl}\n\n${copy.footer}`,
     };
-    const resp = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.apiKey.trim()}`,
-        "Content-Type": "application/json",
+    await boundedRequest(
+      async (signal) => {
+        const resp = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${this.apiKey.trim()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+          signal,
+        });
+        if (!resp.ok) {
+          // Consume inside the same deadline. The provider body is never
+          // logged by the centralized security logger.
+          const txt = await resp.text();
+          throw new Error(`Resend API failed: HTTP ${resp.status.toString()} ${txt.slice(0, 300)}`);
+        }
       },
-      body: JSON.stringify(body),
-    });
-    if (!resp.ok) {
-      const txt = await resp.text();
-      throw new Error(`Resend API failed: HTTP ${resp.status.toString()} ${txt.slice(0, 300)}`);
-    }
+      {
+        operation: "authentication email delivery",
+        timeoutMs: RESEND_TIMEOUT_MS,
+        safety: "unsafe-mutation",
+      },
+    );
   }
 }
 

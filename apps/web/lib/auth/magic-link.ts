@@ -20,18 +20,21 @@
 import { and, eq, isNull } from "drizzle-orm";
 import { magicLinkTokens, users } from "@wcdraft/db";
 import type { Db, User } from "@wcdraft/db";
+import { isRequestTimeoutError } from "@wcdraft/data/client";
 import { AuthError } from "./errors";
 import { consumeRateLimit } from "./rate-limit";
 import { generateToken, sha256Hex } from "./tokens";
-import type { EmailSender } from "./email";
+import { RESEND_TIMEOUT_MS, type EmailSender } from "./email";
 import { safeNextPath } from "./safe-next-path";
+import { createCorrelationId, logSecurityEvent } from "./security-log";
 
 export const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
 /** Per-email rate: at most N requests per W minutes. */
 export const MAGIC_LINK_RATE_PER_EMAIL = { maxCount: 3, windowMs: 15 * 60 * 1000 };
 /** Per-IP rate: at most N requests per W hour. */
 export const MAGIC_LINK_RATE_PER_IP = { maxCount: 10, windowMs: 60 * 60 * 1000 };
-const PASSWORD_RESET_RESPONSE_FLOOR_MS = 250;
+/** Longer than the provider deadline so eligible and ineligible requests share a response target. */
+export const PASSWORD_RESET_RESPONSE_TARGET_MS = RESEND_TIMEOUT_MS + 500;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -43,6 +46,8 @@ export interface MagicLinkDeps {
   readonly verifyBaseUrl: string;
   /** From-address used by the email; LogEmailSender ignores it. */
   readonly fromAddress: string;
+  /** Test seam; production uses PASSWORD_RESET_RESPONSE_TARGET_MS. */
+  readonly passwordResetResponseTargetMs?: number;
 }
 
 export interface RequestMagicLinkArgs {
@@ -106,43 +111,54 @@ export async function requestMagicLink(
     next: args.next,
   });
 
-  const emailRate = await consumeRateLimit(
-    {
-      bucket: { kind: "email", value: email },
-      windowMs: MAGIC_LINK_RATE_PER_EMAIL.windowMs,
-      maxCount: MAGIC_LINK_RATE_PER_EMAIL.maxCount,
-    },
-    { db: deps.db, now: deps.now },
-  );
-  if (!emailRate.allowed) {
-    throw new AuthError("RATE_LIMITED", "too many requests for this email");
-  }
-  const ipRate = await consumeRateLimit(
-    {
-      bucket: { kind: "ip", value: args.ipAddress || "unknown" },
-      windowMs: MAGIC_LINK_RATE_PER_IP.windowMs,
-      maxCount: MAGIC_LINK_RATE_PER_IP.maxCount,
-    },
-    { db: deps.db, now: deps.now },
-  );
-  if (!ipRate.allowed) {
-    throw new AuthError("RATE_LIMITED", "too many requests from this address");
-  }
+  await consumeMagicLinkQuotas(email, args.ipAddress, deps);
 
   const expiresAt = new Date(deps.now() + MAGIC_LINK_TTL_MS);
+  const purpose = args.purpose ?? "signin";
+  const correlationId = createCorrelationId();
 
   await deps.db.insert(magicLinkTokens).values({
     tokenHash,
     email,
+    purpose,
+    deliveryStatus: "pending",
+    deliveryAttemptedAt: new Date(deps.now()),
+    deliveryCorrelationId: correlationId,
     expiresAt,
   });
 
-  await deps.sender.sendMagicLink({
-    toEmail: email,
-    magicLinkUrl,
-    fromAddress: deps.fromAddress,
-    purpose: args.purpose ?? "signin",
-  });
+  try {
+    await deps.sender.sendMagicLink({
+      toEmail: email,
+      magicLinkUrl,
+      fromAddress: deps.fromAddress,
+      purpose,
+    });
+  } catch (error) {
+    // A token the user never received is not a valid outstanding sign-in.
+    try {
+      await deps.db.delete(magicLinkTokens).where(eq(magicLinkTokens.tokenHash, tokenHash));
+    } catch (bookkeepingError) {
+      logSecurityEvent({
+        code: "AUTH_EMAIL_BOOKKEEPING_FAILED",
+        correlationId,
+        error: bookkeepingError,
+      });
+    }
+    logSecurityEvent({ code: "AUTH_EMAIL_DELIVERY_FAILED", correlationId, error });
+    throw error;
+  }
+
+  // Delivery succeeded. A bookkeeping outage must not invalidate the token the
+  // user already received or turn a successful provider call into an error.
+  try {
+    await deps.db
+      .update(magicLinkTokens)
+      .set({ deliveryStatus: "delivered" })
+      .where(eq(magicLinkTokens.tokenHash, tokenHash));
+  } catch (error) {
+    logSecurityEvent({ code: "AUTH_EMAIL_BOOKKEEPING_FAILED", correlationId, error });
+  }
 
   return { tokenHash, expiresAt };
 }
@@ -150,35 +166,20 @@ export async function requestMagicLink(
 export async function requestPasswordResetMagicLink(
   args: RequestMagicLinkArgs,
   deps: MagicLinkDeps,
-): Promise<{ sent: boolean; tokenHash: string | null; expiresAt: Date | null }> {
+): Promise<{
+  eligible: boolean;
+  requested: boolean;
+  delivered: boolean;
+  tokenHash: string;
+  expiresAt: Date;
+}> {
   const responseStartedAt = performance.now();
   const email = args.email.trim().toLowerCase();
   if (!EMAIL_RE.test(email)) {
     throw new AuthError("EMAIL_INVALID");
   }
 
-  const emailRate = await consumeRateLimit(
-    {
-      bucket: { kind: "email", value: email },
-      windowMs: MAGIC_LINK_RATE_PER_EMAIL.windowMs,
-      maxCount: MAGIC_LINK_RATE_PER_EMAIL.maxCount,
-    },
-    { db: deps.db, now: deps.now },
-  );
-  if (!emailRate.allowed) {
-    throw new AuthError("RATE_LIMITED", "too many requests for this email");
-  }
-  const ipRate = await consumeRateLimit(
-    {
-      bucket: { kind: "ip", value: args.ipAddress || "unknown" },
-      windowMs: MAGIC_LINK_RATE_PER_IP.windowMs,
-      maxCount: MAGIC_LINK_RATE_PER_IP.maxCount,
-    },
-    { db: deps.db, now: deps.now },
-  );
-  if (!ipRate.allowed) {
-    throw new AuthError("RATE_LIMITED", "too many requests from this address");
-  }
+  await consumeMagicLinkQuotas(email, args.ipAddress, deps);
 
   const existing = await deps.db.select({ id: users.id }).from(users).where(eq(users.email, email));
   const userId = existing[0]?.id ?? null;
@@ -190,41 +191,97 @@ export async function requestPasswordResetMagicLink(
     next: args.next,
   });
   const expiresAt = new Date(deps.now() + MAGIC_LINK_TTL_MS);
+  const correlationId = createCorrelationId();
   await deps.db.insert(magicLinkTokens).values({
     tokenHash,
     email,
     userId,
+    purpose: "reset",
+    deliveryStatus: userId === null ? "not_eligible" : "pending",
+    deliveryAttemptedAt: userId === null ? null : new Date(deps.now()),
+    deliveryCorrelationId: correlationId,
     expiresAt,
   });
+  let delivered = false;
   if (userId !== null) {
+    let deliveryStatus: "delivered" | "failed" | "unknown";
     try {
-      void deps.sender
-        .sendMagicLink({
-          toEmail: email,
-          magicLinkUrl,
-          fromAddress: deps.fromAddress,
-          purpose: args.purpose ?? "reset",
-        })
-        .catch(logDeferredResetSendFailure);
-    } catch (err) {
-      logDeferredResetSendFailure(err);
+      await deps.sender.sendMagicLink({
+        toEmail: email,
+        magicLinkUrl,
+        fromAddress: deps.fromAddress,
+        purpose: "reset",
+      });
+      delivered = true;
+      deliveryStatus = "delivered";
+    } catch (error) {
+      deliveryStatus = isRequestTimeoutError(error) ? "unknown" : "failed";
+      logSecurityEvent({ code: "AUTH_EMAIL_DELIVERY_FAILED", correlationId, error });
+    }
+    try {
+      await deps.db
+        .update(magicLinkTokens)
+        .set({ deliveryStatus })
+        .where(eq(magicLinkTokens.tokenHash, tokenHash));
+    } catch (error) {
+      logSecurityEvent({ code: "AUTH_EMAIL_BOOKKEEPING_FAILED", correlationId, error });
     }
   }
-  await waitForPasswordResetFloor(responseStartedAt);
-  return { sent: userId !== null, tokenHash, expiresAt };
+  await waitForPasswordResetTarget(
+    responseStartedAt,
+    deps.passwordResetResponseTargetMs ?? PASSWORD_RESET_RESPONSE_TARGET_MS,
+  );
+  return {
+    eligible: userId !== null,
+    requested: userId !== null,
+    delivered,
+    tokenHash,
+    expiresAt,
+  };
 }
 
-async function waitForPasswordResetFloor(responseStartedAt: number): Promise<void> {
-  const remaining = PASSWORD_RESET_RESPONSE_FLOOR_MS - (performance.now() - responseStartedAt);
+async function waitForPasswordResetTarget(
+  responseStartedAt: number,
+  targetMs: number,
+): Promise<void> {
+  const remaining = targetMs - (performance.now() - responseStartedAt);
   if (remaining <= 0) return;
   await new Promise((resolve) => setTimeout(resolve, remaining));
 }
 
-function logDeferredResetSendFailure(err: unknown): void {
-  console.error(
-    "[auth/reset] deferred email send failed",
-    err instanceof Error ? err.message : err,
-  );
+async function consumeMagicLinkQuotas(
+  email: string,
+  ipAddress: string,
+  deps: Pick<MagicLinkDeps, "db" | "now">,
+): Promise<void> {
+  const outcome = await deps.db.transaction(async (tx) => {
+    // Coarse source quota is always consumed first. A blocked source returns
+    // before the identifier bucket is touched, preventing target poisoning.
+    const ipRate = await consumeRateLimit(
+      {
+        bucket: { kind: "ip", value: ipAddress || "unknown" },
+        windowMs: MAGIC_LINK_RATE_PER_IP.windowMs,
+        maxCount: MAGIC_LINK_RATE_PER_IP.maxCount,
+      },
+      { db: tx, now: deps.now },
+    );
+    if (!ipRate.allowed) return { ipRate, emailRate: null };
+    const emailRate = await consumeRateLimit(
+      {
+        bucket: { kind: "email", value: email },
+        windowMs: MAGIC_LINK_RATE_PER_EMAIL.windowMs,
+        maxCount: MAGIC_LINK_RATE_PER_EMAIL.maxCount,
+      },
+      { db: tx, now: deps.now },
+    );
+    return { ipRate, emailRate };
+  });
+  if (!outcome.ipRate.allowed) {
+    throw new AuthError("RATE_LIMITED", "too many requests from this address");
+  }
+  if (!outcome.emailRate?.allowed) {
+    throw new AuthError("RATE_LIMITED", "too many requests for this email");
+  }
 }
 
 export interface VerifyMagicLinkArgs {

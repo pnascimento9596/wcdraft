@@ -99,7 +99,12 @@ export function AccountClient({ initial }: { readonly initial: AccountRunsPage }
         <div className="account-section-head">
           <div>
             <span className="eyebrow">History</span>
-            <h2 id="account-runs-title">All saved runs</h2>
+            <h2 id="account-runs-title">Saved runs</h2>
+            <p className="account-panel__note">
+              {initial.quota.usedRows.toLocaleString()} of {initial.quota.maxRows.toLocaleString()}{" "}
+              runs · {formatQuotaBytes(initial.quota.usedBytes)} of{" "}
+              {formatQuotaBytes(initial.quota.maxBytes)}
+            </p>
           </div>
           <Link href="/play/history" className="account-inline-link">
             Recent view
@@ -668,6 +673,10 @@ function formatRecord(run: AccountRun): string {
 
 function valueOrDash(value: number | null): string {
   return value === null ? "—" : value.toString();
+}
+
+function formatQuotaBytes(bytes: number): string {
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MiB`;
 }
 
 function percentOrDash(value: number | null): string {

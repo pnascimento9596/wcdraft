@@ -28,10 +28,17 @@ import { readClientIp } from "../http/client-ip";
 import { DAILY_CHALLENGE_KIND, utcDateString } from "../game/daily";
 import { decodeRunToken, tokenDraftConfig } from "../game/run-token";
 import {
+  clearBootstrapCsrfCookie,
+  jsonError,
+  setCsrfCookie,
+  setSessionCookie,
+} from "../auth/handler-helpers";
+import {
   LeaderboardGateError,
   RANKED_AUTH_REQUIRED_MESSAGE,
   requireSubmitIdentity,
   type IdentityGateDeps,
+  type SubmitIdentity,
 } from "./identity-gate";
 import {
   identityBoardRank,
@@ -154,6 +161,7 @@ export async function handleLeaderboardSubmit(
   req: NextRequest,
   deps: SubmitRouteDeps,
 ): Promise<NextResponse> {
+  let resolvedIdentity: SubmitIdentity | null = null;
   try {
     // 2 — content-type, then declared + actual size, before any JSON work.
     const contentType = (req.headers.get("content-type") ?? "").toLowerCase();
@@ -195,6 +203,7 @@ export async function handleLeaderboardSubmit(
 
     // 4 — identity gate (throws LeaderboardGateError).
     const identity = await requireSubmitIdentity(req, gateDeps(deps, submissionMode));
+    resolvedIdentity = identity;
 
     const submission = {
       token: body.token,
@@ -207,7 +216,7 @@ export async function handleLeaderboardSubmit(
     };
     const validationData = deps.getValidation();
     const cheapVerdict = validateSubmissionCheap(submission, validationData);
-    if (cheapVerdict !== null) return validationError(cheapVerdict);
+    if (cheapVerdict !== null) return withIdentitySession(validationError(cheapVerdict), identity);
 
     // 6 — rate-limit seam (deny-nothing default in U3; U5 implements).
     const decision = await deps.rateLimiter.checkSubmit({
@@ -221,7 +230,7 @@ export async function handleLeaderboardSubmit(
         { status: SUBMIT_ERROR_HTTP_STATUS.RATE_LIMITED },
       );
       res.headers.set("Retry-After", String(decision.retryAfterSeconds));
-      return res;
+      return withIdentitySession(res, identity);
     }
 
     // 7 — ranked requests must prove the cheap, indexed attempt boundary
@@ -285,32 +294,38 @@ export async function handleLeaderboardSubmit(
     // 8 — the U2 pure pipeline (full replay + re-sim run only past this point).
     const verdict = validateSubmission(submission, validationData);
     if (verdict.status === "rejected") {
-      return validationError(verdict);
+      return withIdentitySession(validationError(verdict), identity);
     }
 
     if (
       verdict.challenge_type === DAILY_CHALLENGE_KIND &&
       verdict.challenge_date !== (deps.todayUtcDate ?? utcDateString)()
     ) {
-      return NextResponse.json(
-        {
-          error: "BAD_ATTEMPT",
-          message: "daily submissions are only open for today's UTC draft",
-        },
-        { status: SUBMIT_ERROR_HTTP_STATUS.BAD_ATTEMPT },
+      return withIdentitySession(
+        NextResponse.json(
+          {
+            error: "BAD_ATTEMPT",
+            message: "daily submissions are only open for today's UTC draft",
+          },
+          { status: SUBMIT_ERROR_HTTP_STATUS.BAD_ATTEMPT },
+        ),
+        identity,
       );
     }
 
     const username =
       identity.userId === null ? null : await publicUsernameForUser(deps.db, identity.userId);
     if (verdict.display_alias === null && username === null) {
-      return NextResponse.json(
-        {
-          error: "INVALID_NAME",
-          message: "a username or display alias is required for public board entries",
-          name_reason: "not_a_string",
-        },
-        { status: SUBMIT_ERROR_HTTP_STATUS.INVALID_NAME },
+      return withIdentitySession(
+        NextResponse.json(
+          {
+            error: "INVALID_NAME",
+            message: "a username or display alias is required for public board entries",
+            name_reason: "not_a_string",
+          },
+          { status: SUBMIT_ERROR_HTTP_STATUS.INVALID_NAME },
+        ),
+        identity,
       );
     }
 
@@ -438,25 +453,42 @@ export async function handleLeaderboardSubmit(
       percentile: best?.percentile ?? null,
       field_size: best?.fieldSize ?? null,
     };
-    return NextResponse.json(responseBody, {
-      status: result.kind === "duplicate" ? 200 : 201,
-    });
+    return withIdentitySession(
+      NextResponse.json(responseBody, {
+        status: result.kind === "duplicate" ? 200 : 201,
+      }),
+      identity,
+    );
   } catch (err) {
     if (err instanceof LeaderboardGateError) {
-      return NextResponse.json(
-        {
-          error: err.code,
-          message: err.message,
-          ...(err.code === "VERIFICATION_REQUIRED"
-            ? { resend_verification: "/api/auth/resend-verification" }
-            : {}),
-        },
-        { status: err.status },
+      return withIdentitySession(
+        NextResponse.json(
+          {
+            error: err.code,
+            message: err.message,
+            ...(err.code === "VERIFICATION_REQUIRED"
+              ? { resend_verification: "/api/auth/resend-verification" }
+              : {}),
+          },
+          { status: err.status },
+        ),
+        resolvedIdentity,
       );
     }
-    console.error("[leaderboard] unexpected submit error", err);
-    return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+    return withIdentitySession(jsonError(err), resolvedIdentity);
   }
+}
+
+function withIdentitySession(
+  response: NextResponse,
+  identity: SubmitIdentity | null,
+): NextResponse {
+  if (identity?.freshSessionCookieValue && identity.csrfSecret) {
+    setSessionCookie(response, identity.freshSessionCookieValue);
+    setCsrfCookie(response, identity.csrfSecret);
+    clearBootstrapCsrfCookie(response);
+  }
+  return response;
 }
 
 async function publicUsernameForUser(db: Db, userId: string): Promise<string | null> {

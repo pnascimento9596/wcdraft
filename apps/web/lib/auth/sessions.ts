@@ -19,7 +19,7 @@
 // deleted session row revokes everywhere immediately. F-2 deals only with
 // the engagement/retention layer; the cost is acceptable.
 import { createHmac, randomBytes } from "node:crypto";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { sessions } from "@wcdraft/db";
 import type { Db, Session } from "@wcdraft/db";
 import { AuthError } from "./errors";
@@ -95,6 +95,29 @@ export async function validateSessionCookie(
 /** Delete a session row (sign-out). Idempotent. */
 export async function deleteSession(sessionId: string, deps: SessionDeps): Promise<void> {
   await deps.db.delete(sessions).where(eq(sessions.id, sessionId));
+}
+
+/** Indexed, bounded lazy sweep; correctness never depends on it running. */
+export async function sweepExpiredSessions(
+  deps: Pick<SessionDeps, "db" | "now">,
+  limit = 250,
+): Promise<number> {
+  const boundedLimit = Math.max(1, Math.min(1_000, Math.trunc(limit)));
+  const result = await deps.db.execute<{ count: string }>(sql`
+    WITH expired AS (
+      SELECT id
+      FROM ${sessions}
+      WHERE expires_at <= ${new Date(deps.now())}
+      ORDER BY expires_at ASC, id ASC
+      LIMIT ${boundedLimit}
+    ), deleted AS (
+      DELETE FROM ${sessions}
+      WHERE id IN (SELECT id FROM expired)
+      RETURNING 1
+    )
+    SELECT COUNT(*)::text AS count FROM deleted
+  `);
+  return Number(result.rows[0]?.count ?? "0");
 }
 
 // ── Cookie signing helpers ─────────────────────────────────────────────────

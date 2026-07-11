@@ -17,6 +17,7 @@ import {
   timestamp,
   uuid,
   jsonb,
+  integer,
   index,
   uniqueIndex,
   check,
@@ -44,12 +45,24 @@ export const savedRuns = pgTable(
     summary: jsonb("summary"),
     runId: text("run_id"),
     parentSeed: text("parent_seed"),
+    /** Exact UTF-8 byte count of the persisted payload columns. */
+    payloadBytes: integer("payload_bytes").notNull().default(0),
+    /** Server mirror of the local preservation flag; pinned rows are never evicted. */
+    pinnedAt: timestamp("pinned_at", { withTimezone: true }),
     claimState: text("claim_state").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     index("saved_runs_owner_created_idx").on(t.ownerUserId, t.createdAt),
     index("saved_runs_session_idx").on(t.sessionId),
+    index("saved_runs_owner_unpinned_eviction_idx")
+      .on(t.ownerUserId, t.createdAt, t.id)
+      .where(sql`${t.ownerUserId} IS NOT NULL AND ${t.pinnedAt} IS NULL`),
+    index("saved_runs_session_unpinned_eviction_idx")
+      .on(t.sessionId, t.createdAt, t.id)
+      .where(
+        sql`${t.ownerUserId} IS NULL AND ${t.sessionId} IS NOT NULL AND ${t.pinnedAt} IS NULL`,
+      ),
     uniqueIndex("saved_runs_owner_token_uq")
       .on(t.ownerUserId, t.token)
       .where(sql`${t.ownerUserId} IS NOT NULL`),
@@ -57,6 +70,7 @@ export const savedRuns = pgTable(
       .on(t.sessionId, t.token)
       .where(sql`${t.ownerUserId} IS NULL AND ${t.sessionId} IS NOT NULL`),
     check("saved_runs_claim_state_chk", sql`${t.claimState} IN ('anonymous', 'claimed')`),
+    check("saved_runs_payload_bytes_chk", sql`${t.payloadBytes} >= 0`),
   ],
 );
 

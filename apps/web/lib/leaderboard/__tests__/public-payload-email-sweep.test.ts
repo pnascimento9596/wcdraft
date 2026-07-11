@@ -45,7 +45,7 @@ import { POST as cspReportPost } from "@/app/api/csp-report/route";
 import { GET as ogHealthGet } from "@/app/api/og/health/route";
 import { POST as ogSignPost } from "@/app/api/og/sign/route";
 import { GET as profileGet, PUT as profilePut } from "@/app/api/profile/route";
-import { GET as runsGet, POST as runsPost } from "@/app/api/runs/route";
+import { GET as runsGet, PATCH as runsPatch, POST as runsPost } from "@/app/api/runs/route";
 import { DELETE as runDelete, GET as runDetailGet } from "@/app/api/runs/[id]/route";
 import { POST as runsClaimPost } from "@/app/api/runs/claim/route";
 import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "@/lib/auth/csrf";
@@ -92,6 +92,7 @@ const PUBLIC_API_METHODS = [
   "GET /api/profile",
   "GET /api/runs",
   "GET /api/runs/[id]",
+  "PATCH /api/runs",
   "POST /api/auth/magic-link",
   "POST /api/auth/password-login",
   "POST /api/auth/password-reset",
@@ -596,6 +597,18 @@ describe("public route payload email sweep", () => {
     expect(typeof saveRunBody.run?.id).toBe("string");
     const savedRouteRunId = saveRunBody.run!.id as string;
     captures.push(routeCapture("POST /api/runs", saveRunRes));
+    captures.push(
+      routeCapture(
+        "PATCH /api/runs",
+        await runsPatch(
+          req("/api/runs", {
+            method: "PATCH",
+            headers: { ...authHeaders, "content-type": "application/json" },
+            body: JSON.stringify({ runId: "run-route-sweep", pinned: true }),
+          }),
+        ),
+      ),
+    );
 
     captures.push(
       routeCapture(

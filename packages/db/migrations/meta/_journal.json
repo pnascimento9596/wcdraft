@@ -92,6 +92,13 @@
       "when": 1783706400000,
       "tag": "0012_ranked_attempt_structural_binding",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1783773033302,
+      "tag": "0013_audit_s1_auth_abuse",
+      "breakpoints": true
     }
   ]
 }

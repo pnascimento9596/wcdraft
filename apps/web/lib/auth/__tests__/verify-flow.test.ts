@@ -261,6 +261,53 @@ describe("consumeAndIssueSession (POST) — guarded consume", () => {
     expect(validated.csrfSecret).not.toBe(setup.csrfSecret);
   });
 
+  it("does not burn the token when the downstream session mutation fails", async () => {
+    const now = Date.UTC(2026, 5, 1);
+    const setup = await setupSessionAndToken(now);
+    await env.pg.exec(
+      "ALTER TABLE sessions ADD CONSTRAINT injected_auth_rotation_failure CHECK (user_id IS NULL);",
+    );
+    try {
+      await expect(
+        consumeAndIssueSession(
+          {
+            token: setup.rawToken,
+            next: "/play",
+            csrfFromForm: setup.csrfSecret,
+            csrfFromCookie: setup.csrfSecret,
+            sessionCookieValue: setup.sessionCookieValue,
+            origin: "https://wcdraft.com",
+            referer: null,
+            host: "wcdraft.com",
+          },
+          deps(now + 1),
+        ),
+      ).rejects.toThrow();
+      expect(await tokenIsConsumed(setup.tokenHash)).toBe(false);
+    } finally {
+      await env.pg.exec(
+        "ALTER TABLE sessions DROP CONSTRAINT IF EXISTS injected_auth_rotation_failure;",
+      );
+    }
+
+    await expect(
+      consumeAndIssueSession(
+        {
+          token: setup.rawToken,
+          next: "/play",
+          csrfFromForm: setup.csrfSecret,
+          csrfFromCookie: setup.csrfSecret,
+          sessionCookieValue: setup.sessionCookieValue,
+          origin: "https://wcdraft.com",
+          referer: null,
+          host: "wcdraft.com",
+        },
+        deps(now + 2),
+      ),
+    ).resolves.toMatchObject({ redirectTo: "/play" });
+    expect(await tokenIsConsumed(setup.tokenHash)).toBe(true);
+  });
+
   it("CSRF_MISSING when form csrf is blank", async () => {
     const now = Date.UTC(2026, 5, 1);
     const setup = await setupSessionAndToken(now);

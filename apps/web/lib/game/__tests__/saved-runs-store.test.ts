@@ -15,6 +15,11 @@ import {
   deleteRun,
   claimAnonRuns,
   SAVED_RUNS_CAP,
+  ACCOUNT_SAVED_RUNS_CAP,
+  SAVED_RUNS_BYTE_CAP,
+  SavedRunQuotaError,
+  readSavedRunQuota,
+  setRunPinnedByRunId,
 } from "@/lib/game/saved-runs-store";
 
 let env: Awaited<ReturnType<typeof setupTestDb>>;
@@ -46,6 +51,14 @@ const baseArgs = {
 };
 
 const deps = () => ({ db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, 0) });
+
+function deferred(): { promise: Promise<void>; resolve: () => void } {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+}
 
 // ── Save: per-scope semantics ──────────────────────────────────────────
 describe("saveRun", () => {
@@ -256,6 +269,132 @@ describe("cap + eviction", () => {
     expect(listA).toHaveLength(SAVED_RUNS_CAP + 2);
     expect(listA.map((r) => r.token)).toContain("t1.aa0");
   });
+
+  it("stores the exact persisted payload byte measurement", async () => {
+    await makeSession({ id: "ses-bytes" });
+    const result = await saveRun(
+      {
+        ...baseArgs,
+        token: "t1.utf8-⚽",
+        summary: {
+          team_name: "São Paulo",
+          display_record: "1-0",
+          formation_name: "4-3-3",
+          key_picks: [],
+          is_champion: false,
+          seed: "á",
+        },
+      },
+      { userId: null, sessionId: "ses-bytes" },
+      deps(),
+    );
+    const exact = await env.pg.query<{ bytes: number }>(`
+      SELECT
+        octet_length(convert_to(token, 'UTF8'))
+        + coalesce(octet_length(convert_to(version_anchors::text, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(verified_result::text, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(summary::text, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(run_id, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(parent_seed, 'UTF8')), 0)
+        + octet_length(convert_to(claim_state, 'UTF8')) AS bytes
+      FROM saved_runs WHERE id = '${result.row.id}'
+    `);
+    expect(result.row.payloadBytes).toBe(exact.rows[0]?.bytes);
+  });
+
+  it("evicts deterministically by created_at then id while preserving pinned rows", async () => {
+    const userId = await makeUser("quota@example.com");
+    await makeSession({ id: "ses-quota", userId });
+    const createdAt = new Date(Date.UTC(2026, 5, 1));
+    await env.db.insert(savedRuns).values(
+      Array.from({ length: ACCOUNT_SAVED_RUNS_CAP }, (_, index) => ({
+        id: `00000000-0000-4000-8000-${(index + 1).toString().padStart(12, "0")}`,
+        ownerUserId: userId,
+        token: `seed-${index.toString()}`,
+        versionAnchors: null,
+        runId: `run-${index.toString()}`,
+        payloadBytes: 1,
+        pinnedAt: index === 0 ? createdAt : null,
+        claimState: "claimed",
+        createdAt,
+      })),
+    );
+    const result = await saveRun(
+      { ...baseArgs, token: "t1.newest", runId: "newest" },
+      { userId, sessionId: "ses-quota" },
+      deps(),
+    );
+    expect(result.evicted).toEqual(["00000000-0000-4000-8000-000000000002"]);
+    expect((await readSavedRunQuota({ userId, sessionId: "ses-quota" }, deps())).usedRows).toBe(
+      ACCOUNT_SAVED_RUNS_CAP,
+    );
+    expect(
+      await setRunPinnedByRunId("run-0", false, { userId, sessionId: "ses-quota" }, deps()),
+    ).toMatchObject({
+      updated: 1,
+    });
+  });
+
+  it("serializes pin and save so a newly pinned eviction candidate survives", async () => {
+    const userId = await makeUser("pin-race@example.com");
+    await makeSession({ id: "ses-pin-race", userId });
+    const createdAt = new Date(Date.UTC(2026, 5, 1));
+    await env.db.insert(savedRuns).values(
+      Array.from({ length: ACCOUNT_SAVED_RUNS_CAP }, (_, index) => ({
+        id: `10000000-0000-4000-8000-${(index + 1).toString().padStart(12, "0")}`,
+        ownerUserId: userId,
+        token: `pin-race-${index.toString()}`,
+        runId: `pin-race-${index.toString()}`,
+        payloadBytes: 1,
+        claimState: "claimed",
+        createdAt,
+      })),
+    );
+    const pinHasLock = deferred();
+    const releasePin = deferred();
+    let saveHasLock = false;
+    const ctx = { userId, sessionId: "ses-pin-race" };
+    const pin = setRunPinnedByRunId("pin-race-0", true, ctx, {
+      ...deps(),
+      onScopeLocked: async () => {
+        pinHasLock.resolve();
+        await releasePin.promise;
+      },
+    });
+    await pinHasLock.promise;
+    const save = saveRun({ ...baseArgs, token: "pin-race-new", runId: "pin-race-new" }, ctx, {
+      ...deps(),
+      onScopeLocked: async () => {
+        saveHasLock = true;
+      },
+    });
+    await Promise.resolve();
+    expect(saveHasLock).toBe(false);
+    releasePin.resolve();
+    await Promise.all([pin, save]);
+
+    const rows = await env.db.select().from(savedRuns).where(eq(savedRuns.ownerUserId, userId));
+    expect(rows).toHaveLength(ACCOUNT_SAVED_RUNS_CAP);
+    expect(rows.find((row) => row.runId === "pin-race-0")?.pinnedAt).not.toBeNull();
+    expect(rows.map((row) => row.runId)).not.toContain("pin-race-1");
+  });
+
+  it("rejects atomically when pinned data consumes the 8 MiB quota", async () => {
+    const userId = await makeUser("full@example.com");
+    await makeSession({ id: "ses-full", userId });
+    await env.db.insert(savedRuns).values({
+      ownerUserId: userId,
+      token: "pinned-full",
+      payloadBytes: SAVED_RUNS_BYTE_CAP,
+      pinnedAt: new Date(),
+      claimState: "claimed",
+    });
+    await expect(
+      saveRun({ ...baseArgs, token: "cannot-fit" }, { userId, sessionId: "ses-full" }, deps()),
+    ).rejects.toBeInstanceOf(SavedRunQuotaError);
+    const rows = await env.db.select().from(savedRuns);
+    expect(rows.map((row) => row.token)).toEqual(["pinned-full"]);
+  });
 });
 
 // ── Claim (anon → account) ────────────────────────────────────────────
@@ -271,6 +410,30 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
     expect(owned).toHaveLength(2);
     expect(owned.every((r) => r.claimState === "claimed")).toBe(true);
     expect(owned.every((r) => r.sessionId === null)).toBe(true);
+  });
+
+  it("recomputes exact payload bytes when claim_state changes", async () => {
+    const userId = await makeUser("claim-bytes@example.com");
+    await makeSession({ id: "ses-claim-bytes" });
+    const saved = await saveRun(
+      { ...baseArgs, token: "t1.claim-bytes-⚽" },
+      { userId: null, sessionId: "ses-claim-bytes" },
+      deps(),
+    );
+    await claimAnonRuns({ sessionId: "ses-claim-bytes", userId }, deps());
+    const exact = await env.pg.query<{ bytes: number; payload_bytes: number }>(`
+      SELECT payload_bytes,
+        octet_length(convert_to(token, 'UTF8'))
+        + coalesce(octet_length(convert_to(version_anchors::text, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(verified_result::text, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(summary::text, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(run_id, 'UTF8')), 0)
+        + coalesce(octet_length(convert_to(parent_seed, 'UTF8')), 0)
+        + octet_length(convert_to(claim_state, 'UTF8')) AS bytes
+      FROM saved_runs WHERE id = '${saved.row.id}'
+    `);
+    expect(exact.rows[0]?.payload_bytes).toBe(exact.rows[0]?.bytes);
+    expect(exact.rows[0]?.payload_bytes).toBe(saved.row.payloadBytes - 2);
   });
 
   it("IS IDEMPOTENT: re-running yields zero transfers and zero drops", async () => {

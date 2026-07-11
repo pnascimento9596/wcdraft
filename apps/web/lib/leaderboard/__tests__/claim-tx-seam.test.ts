@@ -44,6 +44,14 @@ function makeFakeDb(failMode: FailMode = "none") {
 
   function makeTx(staged: { runsTransferred: boolean; boardTransferred: boolean }) {
     const execute = async () => ({ rows: [] as { id: string }[] });
+    const select = () => ({
+      from: () => ({
+        where: () => {
+          const result = Promise.resolve([{ count: 1, bytes: 0 }]);
+          return Object.assign(result, { for: async () => [] });
+        },
+      }),
+    });
     const update = (table: unknown) => ({
       set: () => ({
         where: () => ({
@@ -74,7 +82,7 @@ function makeFakeDb(failMode: FailMode = "none") {
         }),
       }),
     });
-    return { execute, update };
+    return { execute, select, update };
   }
 
   const db = {

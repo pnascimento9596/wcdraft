@@ -98,6 +98,7 @@ const INITIAL_ACCOUNT: AccountRunsPage = {
     emailVerified: false,
   },
   runs: [],
+  quota: { maxRows: 500, maxBytes: 8 * 1024 * 1024, usedRows: 0, usedBytes: 0 },
   stats: {
     totalRuns: 0,
     scoredRuns: 0,

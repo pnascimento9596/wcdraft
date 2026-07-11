@@ -47,7 +47,7 @@ export interface RateLimitArgs {
 }
 
 export interface RateLimitDeps {
-  readonly db: Db;
+  readonly db: Pick<Db, "execute">;
   readonly now: () => number;
 }
 

@@ -9,7 +9,12 @@
 import type { NextRequest } from "next/server";
 import { validateSessionCookie } from "@/lib/auth/sessions";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
-import { buildRuntimeDeps, readRequestCookie, type RuntimeDeps } from "@/lib/auth/handler-helpers";
+import {
+  buildRuntimeDeps,
+  ensureMutationSession,
+  readRequestCookie,
+  type RuntimeDeps,
+} from "@/lib/auth/handler-helpers";
 import { AuthError } from "@/lib/auth/errors";
 import type { AuthContext } from "@/lib/game/saved-runs-store";
 
@@ -17,6 +22,7 @@ export interface ResolvedAuth {
   readonly ctx: AuthContext;
   readonly csrfSecret: string;
   readonly deps: RuntimeDeps;
+  readonly freshSession: { readonly cookieValue: string; readonly csrfSecret: string } | null;
 }
 
 /**
@@ -39,5 +45,20 @@ export async function resolveAuth(req: NextRequest): Promise<ResolvedAuth> {
     deps,
     csrfSecret: session.csrfSecret,
     ctx: { userId: session.userId, sessionId: session.id },
+    freshSession: null,
+  };
+}
+
+/** Resolve an anonymous-capable mutation, upgrading a signed bootstrap once. */
+export async function resolveMutationAuth(req: NextRequest): Promise<ResolvedAuth> {
+  const deps = buildRuntimeDeps();
+  const resolved = await ensureMutationSession(req, deps);
+  return {
+    deps,
+    csrfSecret: resolved.session.csrfSecret,
+    ctx: { userId: resolved.session.userId, sessionId: resolved.session.id },
+    freshSession: resolved.fresh
+      ? { cookieValue: resolved.cookieValue, csrfSecret: resolved.session.csrfSecret }
+      : null,
   };
 }

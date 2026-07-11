@@ -150,6 +150,61 @@ marketing 68, web 1,044 passed / 1 skipped, expanded game-flow PASS, and
 responsive 204 metrics / 0 failures (desktop 84, mobile 56, interactions 40,
 mode/setup 24). Fresh exact-SHA RED review and protected credentialed CI remain
 mandatory.
+Audit Season 1 auth and abuse hardening (Unit B6):
+2026-07-11 · RED local implementation on branch
+`ws-f4/audit-s1-auth-abuse`, rebased onto B5-shipped `origin/main`
+`cfcccb52df33246ae5a187e0c9a15b7a4ffcc535`.
+Magic-link request quotas now
+consume the coarse IP bucket before the identifier bucket in one transaction;
+blocked sources cannot poison new email targets. Sign-in delivery failure
+deletes the orphan token, while successful delivery remains usable through a
+status-bookkeeping failure. Password reset never sends to nonexistent accounts,
+uses a shared 8.5-second response target, and records provider success,
+definitive failure, and timeout as `delivered`, `failed`, and `unknown`.
+Resend has an explicit 8-second elapsed request budget. Auth failures now
+use message-free structured logs and allowlisted client errors with correlation
+IDs. Cookie-less CSRF reads use a signed five-minute stateless bootstrap and
+write no durable session until a protected mutation upgrades the nonce exactly
+once. Token consume, user materialization, and authenticated-session mutation
+are atomic, so an injected downstream failure does not burn the token.
+
+Saved-run storage now enforces five anonymous rows and 500 account rows plus
+8 MiB, using exact persisted UTF-8 byte accounting, deterministic oldest-first
+unpinned eviction (`created_at`, then `id`), pin preservation, and atomic
+rejection when no fit exists. Save, pin, and claim mutations share scope-row
+locks; claims use fixed account-before-session ordering, eviction rechecks pin
+state at deletion, and claim re-keying recomputes exact payload bytes. Account
+APIs expose quota state, while history,
+sign-in, account, and Privacy copy state the actual PII, cookies, retention,
+Vercel performance-only vitals, and account/leaderboard deletion behavior.
+Additive migration `0013_audit_s1_auth_abuse` adds delivery truth and quota
+columns, checks, and partial eviction indexes, with linked Drizzle metadata and
+a paired down migration. Full PGlite up/down coverage proves exact multibyte
+backfill, constraints, restored `0012` shape, and row survival.
+
+Exact B5-main post-rebase gates passed uncached: DB 4 files / 161 tests; web 97
+files passed / 1 skipped and 1,065 tests passed / 1 skipped; core 391, data 168
+passed / 9 skipped, and marketing 68. Root typecheck passed 8/8, lint 5/5, test
+8/8 in 7m31.143s, and build 4/4 with 40/40 generated pages. Expanded game-flow
+passed; responsive verification recorded 204 metrics / 0 failures (desktop 84,
+mobile 56, interactions 40, mode/setup 24). Full Prettier and diff checks passed.
+Existing webpack circular-chunk and Edge static-generation warnings remain. The
+detailed evidence and risks are in
+`docs/reports/audit-s1-b6-auth-abuse-2026-07-11.md`. No external email, external
+database, push, PR, merge, deploy, or live check was run. Fresh
+exact-commit independent RED review, protected CI, controlled production
+migration/deploy observation, and live verification remain mandatory.
+
+Protected CI run `29158981632` on frozen head
+`dd80e5d4782ac72733f9dc237f07f3a7eadfc519` returned FAIL in one bootstrap
+tamper test while 1,064 web tests passed. The fixture replaced the final
+base64url HMAC character; for some random signatures that character differs
+only in unused padding bits and decodes to the original bytes, so the runtime
+correctly accepted an effectively unchanged signature. The fix-forward mutates
+the first signature sextet, whose six bits are all significant, and asserts the
+serialized cookie changed. Runtime verification code is unchanged. The failed
+head is not mergeable; focused/full validation, a fresh exact-head RED review,
+and protected CI must repeat on the replacement SHA.
 
 Audit Season 1 shared bounded-request contract (Unit D1):
 2026-07-10 · YELLOW implementation on branch

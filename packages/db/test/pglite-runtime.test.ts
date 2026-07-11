@@ -989,6 +989,55 @@ describe("@wcdraft/db pglite runtime", () => {
   });
 });
 
+describe("@wcdraft/db 0013 audit auth migration runtime", () => {
+  it("backfills exact bytes, enforces checks, and returns to the 0012 shape on down", async () => {
+    const client = new PGlite();
+    try {
+      await applyMigrationsThrough(client, "0012");
+      await client.exec(`
+        INSERT INTO sessions (id, csrf_secret, expires_at)
+        VALUES ('audit-session', 'csrf', now() + interval '1 day');
+        INSERT INTO saved_runs (
+          session_id, token, version_anchors, summary, run_id, parent_seed, claim_state
+        ) VALUES (
+          'audit-session', 'token-⚽', '{"v":"á"}'::jsonb, '{"name":"São"}'::jsonb,
+          'run-a', 'seed-a', 'anonymous'
+        );
+      `);
+      await applyMigrationFile(client, "0013_audit_s1_auth_abuse.sql");
+      const measured = await client.query<{ payload_bytes: number; exact_bytes: number }>(`
+        SELECT payload_bytes,
+          octet_length(convert_to(token, 'UTF8'))
+          + coalesce(octet_length(convert_to(version_anchors::text, 'UTF8')), 0)
+          + coalesce(octet_length(convert_to(verified_result::text, 'UTF8')), 0)
+          + coalesce(octet_length(convert_to(summary::text, 'UTF8')), 0)
+          + coalesce(octet_length(convert_to(run_id, 'UTF8')), 0)
+          + coalesce(octet_length(convert_to(parent_seed, 'UTF8')), 0)
+          + octet_length(convert_to(claim_state, 'UTF8')) AS exact_bytes
+        FROM saved_runs
+      `);
+      expect(measured.rows[0]?.payload_bytes).toBe(measured.rows[0]?.exact_bytes);
+      await expect(client.exec("UPDATE saved_runs SET payload_bytes = -1;")).rejects.toThrow(
+        /saved_runs_payload_bytes_chk|check constraint/i,
+      );
+
+      await applyDownMigrationFile(client, "0013_audit_s1_auth_abuse.down.sql");
+      const columns = await client.query<{ table_name: string; column_name: string }>(`
+        SELECT table_name, column_name FROM information_schema.columns
+        WHERE table_schema = 'public' AND column_name IN (
+          'purpose', 'delivery_status', 'delivery_attempted_at',
+          'delivery_correlation_id', 'payload_bytes', 'pinned_at'
+        ) ORDER BY table_name, column_name
+      `);
+      expect(columns.rows).toEqual([]);
+      const survivor = await client.query<{ token: string }>("SELECT token FROM saved_runs");
+      expect(survivor.rows).toEqual([{ token: "token-⚽" }]);
+    } finally {
+      await client.close();
+    }
+  });
+});
+
 async function applyMigrationsThrough(client: PGlite, lastPrefix: string): Promise<void> {
   const files = readdirSync(MIGRATIONS_DIR)
     .filter((name) => /^\d{4}_.+\.sql$/u.test(name) && !name.endsWith(".down.sql"))

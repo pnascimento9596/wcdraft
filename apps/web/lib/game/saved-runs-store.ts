@@ -24,13 +24,18 @@
 // deleted. Matches the F-1 local-storage cap so the swap-in provider
 // preserves the user-visible behaviour the existing
 // `lib/game/run-record.ts` already documents.
-import { and, asc, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
-import { savedRuns } from "@wcdraft/db";
+import { and, asc, desc, eq, inArray, isNotNull, isNull, sql } from "drizzle-orm";
+import { savedRuns, sessions, users } from "@wcdraft/db";
 import type { Db, SavedRun } from "@wcdraft/db";
 import type { DraftMode } from "@wcdraft/core";
 
-/** Match the local `RUN_RECORD_CAP` so the swap-in provider preserves user-visible behaviour. */
-export const SAVED_RUNS_CAP = 5 as const;
+/** Anonymous history matches the local recent-run cap. */
+export const ANON_SAVED_RUNS_CAP = 5 as const;
+/** Signed-in durable history is bounded for cost and privacy. */
+export const ACCOUNT_SAVED_RUNS_CAP = 500 as const;
+export const SAVED_RUNS_BYTE_CAP = 8 * 1024 * 1024;
+/** Backward-compatible alias for callers that mean anonymous recent history. */
+export const SAVED_RUNS_CAP = ANON_SAVED_RUNS_CAP;
 
 export interface AuthContext {
   /** uuid of the signed-in user, or null for anonymous. */
@@ -91,6 +96,7 @@ export interface SaveRunArgs {
   readonly parentSeed: string | null;
   /** F-3.5 display-ready summary. Null until the client has it. */
   readonly summary: SavedRunSummary | null;
+  readonly pinned?: boolean;
 }
 
 export interface SaveRunResult {
@@ -99,12 +105,31 @@ export interface SaveRunResult {
   readonly evicted: string[];
   /** True when the same scope already had this token — the existing row is returned. */
   readonly idempotent: boolean;
+  readonly quota: SavedRunQuota;
+}
+
+export interface SavedRunQuota {
+  readonly maxRows: number;
+  readonly maxBytes: number;
+  readonly usedRows: number;
+  readonly usedBytes: number;
+}
+
+export class SavedRunQuotaError extends Error {
+  readonly code = "SAVED_RUN_QUOTA_EXCEEDED";
+  readonly status = 409;
+  constructor() {
+    super("Saved-run quota is full and no unpinned run can be evicted.");
+    this.name = "SavedRunQuotaError";
+  }
 }
 
 export interface StoreDeps {
   readonly db: Db;
   /** Epoch milliseconds. Matches the auth-lib `now: () => number` convention. */
   readonly now?: () => number;
+  /** Deterministic concurrency-test seam, called while the scope lock is held. */
+  readonly onScopeLocked?: (scope: { kind: "user" | "session"; id: string }) => Promise<void>;
 }
 
 function nowOf(deps: StoreDeps): Date {
@@ -140,56 +165,165 @@ export async function saveRun(
   ctx: AuthContext,
   deps: StoreDeps,
 ): Promise<SaveRunResult> {
-  const existing = await deps.db
-    .select()
-    .from(savedRuns)
-    .where(and(scopeWhere(ctx), eq(savedRuns.token, args.token)))
-    .limit(1);
-  if (existing[0]) {
-    return { row: existing[0], evicted: [], idempotent: true };
-  }
-  const inserted = await deps.db
-    .insert(savedRuns)
-    .values({
-      ownerUserId: ctx.userId,
-      sessionId: ctx.userId !== null ? null : ctx.sessionId,
-      token: args.token,
-      versionAnchors: args.versionAnchors ?? null,
-      summary: args.summary as unknown,
-      runId: args.runId,
-      parentSeed: args.parentSeed,
-      claimState: ctx.userId !== null ? "claimed" : "anonymous",
-      createdAt: nowOf(deps),
-    })
-    .returning();
-  const row = inserted[0];
-  if (!row) throw new Error("saveRun: INSERT did not return a row");
-  // Enforce the recent-run cap only for anonymous session history. Account
-  // history is the durable full set used by /account, so saves must not evict.
-  if (ctx.userId !== null) {
-    return { row, evicted: [], idempotent: false };
-  }
+  return deps.db.transaction(async (tx) => {
+    const transactionDeps: StoreDeps = { ...deps, db: tx as unknown as Db };
+    await lockScope(ctx, transactionDeps);
+    const existing = await transactionDeps.db
+      .select()
+      .from(savedRuns)
+      .where(and(scopeWhere(ctx), eq(savedRuns.token, args.token)))
+      .limit(1);
+    if (existing[0]) {
+      const quota = await readSavedRunQuota(ctx, transactionDeps);
+      return { row: existing[0], evicted: [], idempotent: true, quota };
+    }
+    const inserted = await transactionDeps.db
+      .insert(savedRuns)
+      .values({
+        ownerUserId: ctx.userId,
+        sessionId: ctx.userId !== null ? null : ctx.sessionId,
+        token: args.token,
+        versionAnchors: args.versionAnchors ?? null,
+        summary: args.summary as unknown,
+        runId: args.runId,
+        parentSeed: args.parentSeed,
+        payloadBytes: 0,
+        pinnedAt: args.pinned === true ? nowOf(deps) : null,
+        claimState: ctx.userId !== null ? "claimed" : "anonymous",
+        createdAt: nowOf(deps),
+      })
+      .returning();
+    const initial = inserted[0];
+    if (!initial) throw new Error("saveRun: INSERT did not return a row");
+    const measured = await transactionDeps.db
+      .update(savedRuns)
+      .set({ payloadBytes: persistedPayloadBytesSql() })
+      .where(eq(savedRuns.id, initial.id))
+      .returning();
+    const row = measured[0];
+    if (!row) throw new Error("saveRun: payload measurement did not return a row");
+    const enforced = await enforceSavedRunQuota(ctx, row.id, transactionDeps);
+    return {
+      row,
+      evicted: enforced.evicted,
+      idempotent: false,
+      quota: enforced.quota,
+    };
+  });
+}
 
-  const ranked = await deps.db
-    .select({ id: savedRuns.id, createdAt: savedRuns.createdAt })
+export async function readSavedRunQuota(ctx: AuthContext, deps: StoreDeps): Promise<SavedRunQuota> {
+  const rows = await deps.db
+    .select({
+      count: sql<number>`count(*)::int`,
+      bytes: sql<number>`coalesce(sum(${savedRuns.payloadBytes}), 0)::int`,
+    })
     .from(savedRuns)
-    .where(scopeWhere(ctx))
-    .orderBy(desc(savedRuns.createdAt));
-  let evicted: string[] = [];
-  if (ranked.length > SAVED_RUNS_CAP) {
-    const overflow = ranked.slice(SAVED_RUNS_CAP);
-    evicted = overflow.map((r) => r.id);
-    await deps.db.delete(savedRuns).where(
-      and(
-        scopeWhere(ctx),
-        sql`${savedRuns.id} IN (${sql.join(
-          evicted.map((id) => sql`${id}`),
-          sql`, `,
-        )})`,
-      ),
-    );
+    .where(scopeWhere(ctx));
+  return {
+    maxRows: ctx.userId === null ? ANON_SAVED_RUNS_CAP : ACCOUNT_SAVED_RUNS_CAP,
+    maxBytes: SAVED_RUNS_BYTE_CAP,
+    usedRows: Number(rows[0]?.count ?? 0),
+    usedBytes: Number(rows[0]?.bytes ?? 0),
+  };
+}
+
+export async function setRunPinnedByRunId(
+  runId: string,
+  pinned: boolean,
+  ctx: AuthContext,
+  deps: StoreDeps,
+): Promise<{ updated: number; quota: SavedRunQuota }> {
+  return deps.db.transaction(async (tx) => {
+    const transactionDeps: StoreDeps = { ...deps, db: tx as unknown as Db };
+    await lockScope(ctx, transactionDeps);
+    const updated = await transactionDeps.db
+      .update(savedRuns)
+      .set({ pinnedAt: pinned ? nowOf(deps) : null })
+      .where(and(scopeWhere(ctx), eq(savedRuns.runId, runId)))
+      .returning({ id: savedRuns.id });
+    return {
+      updated: updated.length,
+      quota: await readSavedRunQuota(ctx, transactionDeps),
+    };
+  });
+}
+
+async function lockScope(ctx: AuthContext, deps: StoreDeps): Promise<void> {
+  if (ctx.userId !== null) {
+    await deps.db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, ctx.userId))
+      .for("update");
+    await deps.onScopeLocked?.({ kind: "user", id: ctx.userId });
+    return;
   }
-  return { row, evicted, idempotent: false };
+  await deps.db
+    .select({ id: sessions.id })
+    .from(sessions)
+    .where(eq(sessions.id, ctx.sessionId))
+    .for("update");
+  await deps.onScopeLocked?.({ kind: "session", id: ctx.sessionId });
+}
+
+async function enforceSavedRunQuota(
+  ctx: AuthContext,
+  insertedId: string | null,
+  deps: StoreDeps,
+): Promise<{ evicted: string[]; quota: SavedRunQuota }> {
+  let quota = await readSavedRunQuota(ctx, deps);
+  if (quota.usedRows <= quota.maxRows && quota.usedBytes <= quota.maxBytes) {
+    return { evicted: [], quota };
+  }
+  const candidates = await deps.db
+    .select({ id: savedRuns.id, payloadBytes: savedRuns.payloadBytes })
+    .from(savedRuns)
+    .where(and(scopeWhere(ctx), isNull(savedRuns.pinnedAt)))
+    .orderBy(asc(savedRuns.createdAt), asc(savedRuns.id));
+  const selected: string[] = [];
+  let rows = quota.usedRows;
+  let bytes = quota.usedBytes;
+  for (const candidate of candidates) {
+    if (rows <= quota.maxRows && bytes <= quota.maxBytes) break;
+    selected.push(candidate.id);
+    rows -= 1;
+    bytes -= candidate.payloadBytes;
+  }
+  if (
+    rows > quota.maxRows ||
+    bytes > quota.maxBytes ||
+    (insertedId !== null && selected.includes(insertedId))
+  ) {
+    throw new SavedRunQuotaError();
+  }
+  let evicted: string[] = [];
+  if (selected.length > 0) {
+    const deleted = await deps.db
+      .delete(savedRuns)
+      .where(and(scopeWhere(ctx), isNull(savedRuns.pinnedAt), inArray(savedRuns.id, selected)))
+      .returning({ id: savedRuns.id });
+    const deletedIds = new Set(deleted.map((row) => row.id));
+    evicted = selected.filter((id) => deletedIds.has(id));
+  }
+  quota = await readSavedRunQuota(ctx, deps);
+  if (quota.usedRows > quota.maxRows || quota.usedBytes > quota.maxBytes) {
+    throw new SavedRunQuotaError();
+  }
+  return { evicted, quota };
+}
+
+function persistedPayloadBytesSql(claimState: "persisted" | "claimed" = "persisted") {
+  const claimStateSql = claimState === "claimed" ? sql`'claimed'` : sql`${savedRuns.claimState}`;
+  return sql<number>`
+    octet_length(convert_to(${savedRuns.token}, 'UTF8'))
+    + coalesce(octet_length(convert_to(${savedRuns.versionAnchors}::text, 'UTF8')), 0)
+    + coalesce(octet_length(convert_to(${savedRuns.verifiedResult}::text, 'UTF8')), 0)
+    + coalesce(octet_length(convert_to(${savedRuns.summary}::text, 'UTF8')), 0)
+    + coalesce(octet_length(convert_to(${savedRuns.runId}, 'UTF8')), 0)
+    + coalesce(octet_length(convert_to(${savedRuns.parentSeed}, 'UTF8')), 0)
+    + octet_length(convert_to(${claimStateSql}, 'UTF8'))
+  `;
 }
 
 // ── List ────────────────────────────────────────────────────────────────
@@ -284,7 +418,14 @@ export async function claimAnonRuns(
   args: { sessionId: string; userId: string },
   deps: StoreDeps,
 ): Promise<ClaimResult> {
-  // Step 1 — drop conflicts. USING-DELETE to pair anon row × account row by token.
+  // This helper deliberately does not open its own transaction: the only
+  // production caller composes it with leaderboard claiming under one outer
+  // transaction, so quota enforcement rolls that entire claim moment back.
+  // Always acquire the account lock before the source-session lock. Saves and
+  // pins take only one of these locks, while competing claims use this same
+  // order, so there is no lock-order cycle.
+  await lockScope({ userId: args.userId, sessionId: args.sessionId }, deps);
+  await lockScope({ userId: null, sessionId: args.sessionId }, deps);
   const dropped = await deps.db.execute<{ id: string }>(sql`
     DELETE FROM ${savedRuns} AS s
     USING ${savedRuns} AS u
@@ -294,18 +435,17 @@ export async function claimAnonRuns(
       AND u.token = s.token
     RETURNING s.id
   `);
-
-  // Step 2 — transfer survivors.
   const transferred = await deps.db
     .update(savedRuns)
     .set({
       ownerUserId: args.userId,
       sessionId: null,
       claimState: "claimed",
+      payloadBytes: persistedPayloadBytesSql("claimed"),
     })
     .where(and(eq(savedRuns.sessionId, args.sessionId), isNull(savedRuns.ownerUserId)))
     .returning({ id: savedRuns.id });
-
+  await enforceSavedRunQuota({ userId: args.userId, sessionId: args.sessionId }, null, deps);
   return { transferred: transferred.length, dropped: dropped.rows.length };
 }
 
