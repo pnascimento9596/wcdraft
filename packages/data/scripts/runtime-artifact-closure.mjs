@@ -84,6 +84,8 @@ function assertSafeBundlePath(bundlePath, label) {
   if (
     typeof bundlePath !== "string" ||
     bundlePath.length === 0 ||
+    bundlePath === "." ||
+    bundlePath.includes("\0") ||
     bundlePath.includes("\\") ||
     path.posix.isAbsolute(bundlePath) ||
     path.posix.normalize(bundlePath) !== bundlePath ||

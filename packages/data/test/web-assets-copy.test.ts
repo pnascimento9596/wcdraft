@@ -299,6 +299,23 @@ describe("copy-web-assets", () => {
     );
   });
 
+  it("rejects manifest paths that could escape the version directory", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "wcdraft-copy-assets-unsafe-path-"));
+    const targetDir = path.join(root, "target");
+    const { sourceDir, retainedDir } = await writeCompleteClosure(root);
+    const manifestPath = path.join(retainedDir, RETAINED_VERSIONS[1], "manifest.json");
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
+      bundles: Record<string, { path: string }>;
+    };
+    manifest.bundles.score_distribution!.path = "../score-distribution.compact.json";
+    await writeFile(manifestPath, JSON.stringify(manifest));
+
+    expect(runCopyFailure(sourceDir, targetDir, retainedDir)).toContain(
+      "path is not a safe relative path",
+    );
+    await expect(stat(targetDir)).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
   it("enforces exactly the two immediately prior schema versions", async () => {
     const root = await mkdtemp(path.join(tmpdir(), "wcdraft-copy-assets-policy-"));
     const targetDir = path.join(root, "target");

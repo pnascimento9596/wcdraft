@@ -517,10 +517,12 @@ desktop measured 84 checks / 0 failures, mobile 56/0, and interaction targets
 40/0. All C3 Next, Playwright, responsive, and Chrome processes were confirmed
 exited after the receipt. No runtime-data, rating, draft, simulation, schema,
 API, or database artifact changed.
+
 Audit S1 C5 retained-runtime closure and server path hygiene:
 2026-07-11 · RED data-delivery implementation on branch
-`ws-f4/audit-s1-retained-runtime`, based on C1/C2-shipped `origin/main`
-`6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc`. Runtime materialization now
+`ws-f4/audit-s1-retained-runtime`, initially based on C1/C2-shipped
+`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` and integrated on C3 commit
+`472f92a85286931e76031e1a3482561662d94b6d`. Runtime materialization now
 derives every current and retained file from that schema's own manifest,
 requires and fingerprints Daily salt-map and score-distribution bundles when
 advertised, validates the complete current-plus-retained closure before any
@@ -584,30 +586,33 @@ Their retained Brotli files measure 2,222,522 and 2,225,295 bytes respectively.
 
 The runtime consumer inventory found leaderboard server data and share-page
 metadata; the first post-removal web pretest also exposed the service-worker
-version generator as a build-time fixed-root filesystem reader. Server and
-share metadata now use the compiled current versioned base. Server validation
-reads the canonical current draft `.br`, decompresses/parses it once per
-process, and memoizes the same bundle object. The generator seam is held for
-integration with C3's active manifest-derived rewrite instead of patching its
-stale base implementation. No fixed unversioned manifest or raw draft is
-copied. The measured static runtime tree fell from 141,520,329 to 7,055,318
-bytes: 130,690,498 bytes of fixed-root current data and 8,452,682 bytes of
-out-of-policy retained data were removed, for 134,465,011 bytes / 95.01% total
-reduction. Current C1 artifact fingerprints, schema `runtime-data-2.9.0`,
-rating, engine, simulation, draft semantics, ETL inputs, and generated bundle
-bytes remain unchanged.
+version generator as a build-time fixed-root filesystem reader. All three now
+use the current versioned tree. Server validation reads the canonical current
+draft `.br`, decompresses/parses it once per process, and memoizes the same
+bundle object. The C3-integrated generator uses the source manifest only to
+locate the current schema, then requires the copied versioned manifest to be
+byte-identical before emitting worker config; a stale fixed-root manifest is
+ignored and copied-manifest drift fails before output mutation. No fixed
+unversioned manifest or raw draft is copied. The measured static runtime tree
+fell from 141,520,329 to 7,055,318 bytes: 130,690,498 bytes of fixed-root
+current data and 8,452,682 bytes of out-of-policy retained data were removed,
+for 134,465,011 bytes / 95.01% total reduction. Current C1 artifact
+fingerprints, schema `runtime-data-2.9.0`, rating, engine, simulation, draft
+semantics, ETL inputs, and generated bundle bytes remain unchanged.
 
-Focused validation currently passes: manifest-derived copy/closure/policy and
-fail-closed tests 7/7; full `@wcdraft/data` suite 164 passed / 9 skipped; server
-path/cache tests 3/3; related non-browser web tests 4 files / 134 tests; data
-and web lint; data and web typecheck; root typecheck 8/8; root lint 5/5; full
-non-browser web Vitest 939 passed / 1 skipped; data goldens 54/54; integration
-goldens 22/22; leaderboard golden 6/6; the ordered compact → score distribution
-→ compact regeneration chain; and forced `check:generated` regeneration with
-no tracked fingerprint drift. Web pretest intentionally remains red only at
-the C3-owned generator seam above; broader build and fresh exact-head review
-wait for that integration. No browser lane was run because C3/D1 own the shared
-browser lifecycle.
+Integrated validation passes: manifest-derived copy/closure/policy and
+fail-closed tests 8/8; generator + server path/cache tests 2 files / 21 tests;
+full `@wcdraft/data` suite 165 passed / 9 skipped; full non-browser web Vitest
+953 passed / 1 skipped; root typecheck 8/8; root lint 5/5; root build 4/4 with
+40/40 pages; data goldens 54/54; integration goldens 22/22; leaderboard golden
+6/6; the ordered compact → score distribution → compact regeneration chain;
+and forced `check:generated` regeneration with no tracked fingerprint drift.
+Web pretest now emits 5 manifest-derived worker entries with data revision
+`e08a2facf9c85830`. The original stale-generator pretest failure is preserved
+as the regression trigger; the same command passes after C3 integration. No
+browser lane was run because C3/D1 own the shared browser lifecycle; fresh
+exact-head independent review remains required before release.
+
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-display-name-on`, initially based on C1-shipped `origin/main`

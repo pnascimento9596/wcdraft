@@ -315,6 +315,26 @@ function readManifest(manifestPath) {
   return { parsed, raw };
 }
 
+function readCurrentCopiedManifest(webRoot, repoRoot) {
+  const sourcePath = join(repoRoot, "packages", "data", "src", "generated", "manifest.json");
+  const source = readManifest(sourcePath);
+  const schema = source.parsed?.schema_version;
+  if (typeof schema !== "string" || !SAFE_SEGMENT_RE.test(schema)) {
+    throw new Error(
+      `generate-sw-version: source manifest at ${sourcePath} has an unsafe schema_version`,
+    );
+  }
+
+  const copiedPath = join(webRoot, "public", "data", "wcdraft", schema, "manifest.json");
+  const copied = readManifest(copiedPath);
+  if (!copied.raw.equals(source.raw)) {
+    throw new Error(
+      `generate-sw-version: copied manifest at ${copiedPath} differs from current source ${sourcePath}`,
+    );
+  }
+  return copied;
+}
+
 /** CLI entrypoint. Writes apps/web/public/sw-version.js. */
 export function run({
   webRoot,
@@ -326,8 +346,10 @@ export function run({
   const here = dirname(fileURLToPath(import.meta.url));
   const resolvedWebRoot = webRoot ?? join(here, "..");
   const resolvedRepoRoot = repoRoot ?? join(resolvedWebRoot, "..", "..");
-  const manifestPath = join(resolvedWebRoot, "public", "data", "wcdraft", "manifest.json");
-  const loaded = manifestOverride === undefined ? readManifest(manifestPath) : null;
+  const loaded =
+    manifestOverride === undefined
+      ? readCurrentCopiedManifest(resolvedWebRoot, resolvedRepoRoot)
+      : null;
   const manifest = manifestOverride ?? loaded.parsed;
   const manifestBytes =
     manifestBytesOverride ?? loaded?.raw ?? Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`);
