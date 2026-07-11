@@ -3,10 +3,13 @@
 ## Outcome
 
 The two numbered defects from the independent review of PR #235 head
-`dd3faa71fcad841608e824fce92f5c1529a8613a` are fixed locally. The branch is
-ready for a new exact-head independent review after push; it is not approved
-for merge yet. The prior FAIL report has SHA-256
-`a24d3259f159b1909090f1862881c67f650e2f964aab762aa13b8903bb928fce`.
+`dd3faa71fcad841608e824fce92f5c1529a8613a`, plus the successful-response
+classification defect found in the review of replacement head
+`411d6af9cdf9a3fda6389f9b410cee5290aa8d74`, are fixed locally. The branch is
+not approved for merge yet. The two FAIL reports have SHA-256
+`a24d3259f159b1909090f1862881c67f650e2f964aab762aa13b8903bb928fce` and
+`6f02364748f8572586c03ba74cc5f14f5cf077442856f49cfc4d0c9d00298cd1`,
+respectively.
 
 ## Defect 1 — unsafe mutation replay
 
@@ -39,6 +42,28 @@ transport-unknown locking, definitive HTTP recovery, changed-operation
 recovery, successful issuance followed by local creation failure, and
 successful issuance followed by a throwing parent handoff.
 
+## Defect 1b — committed success with an unusable response
+
+The ranked-attempt route commits the attempt and returns HTTP 201. A response
+body read or JSON parse failure is therefore not a definitive issuance
+failure: the browser has lost the seed details, but the database write may
+already exist. The same is true when a successful 2xx body parses but fails
+the required attempt contract or does not echo the requested configuration.
+
+`requestRankedAttempt()` now has three explicit outcomes:
+
+- A 2xx with the complete validated attempt contract is accepted.
+- Any 2xx without that usable contract is `outcomeUnknown: true` and remains
+  locked in `FormationSelect`.
+- A non-2xx response is a definitive failure and remains retryable.
+
+Direct client tests cover unreadable and malformed HTTP 201 bodies, unusable
+200/204/299 responses, definitive 400/500 responses, and a valid 201.
+Mounted `FormationSelect` tests cover both unreadable and malformed committed
+201 responses and prove attempted repeats leave the POST count at exactly one,
+with no local run, `onLocked`, or router side effect and with only Account and
+mode-selection alternatives exposed.
+
 ## Defect 2 — mounted first-load evidence
 
 Real ReactDOM mounts now exercise every named state-owning container:
@@ -66,8 +91,9 @@ directly. It does not add a testing-library stack or production runtime code.
 
 ## Validation
 
-- Focused mounted/client regressions: 5 files passed, 25 tests passed.
-- Complete web Vitest suite: 95 files passed / 1 skipped; 969 tests passed / 1
+- Second fix-forward direct/mounted regressions: 2 files passed, 29 tests
+  passed.
+- Complete web Vitest suite: 95 files passed / 1 skipped; 981 tests passed / 1
   skipped.
 - Complete data package suite: 16 files passed / 1 skipped; 168 tests passed /
   9 skipped.
@@ -82,16 +108,19 @@ directly. It does not add a testing-library stack or production runtime code.
 - Full-repository Prettier: passed.
 - `git diff --check`: passed.
 
-An earlier browser run overlapped another lane. Although it exited cleanly, it
-is deliberately not counted. The browser results above are from the later
-exclusive final-source rerun, followed by a process scan confirming that the
-game-flow, responsive, verifier, Next dev, and next-server children exited and
-`next-env.d.ts` was restored.
+An earlier browser run overlapped another lane and was deliberately discarded.
+The next exclusive browser run validated failed head `411d6af` and was
+superseded by the new 2xx classification. The browser results above are from a
+third exclusive run against the final second-fix source, followed by a process
+scan confirming that the game-flow, responsive, verifier, Next dev, and
+next-server children exited and `next-env.d.ts` was restored.
 
 ## Risk and review focus
 
 - Review the mutation latch transitions, especially committed ranked issuance
   and operation-relevant sign-in resets.
+- Review the 2xx/non-2xx classification: every unusable successful body must
+  remain locked, while definitive failures must remain usable.
 - Review that unknown deletion, verification resend, and ranked issuance have
   no local replay path.
 - Review the mounted tests as container evidence rather than helper-only

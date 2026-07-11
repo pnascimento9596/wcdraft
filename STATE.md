@@ -91,6 +91,33 @@ remain unchanged. No schema, migration, rating, simulation, draft semantics,
 runtime-data payload, or server API response contract changed. A fresh
 independent exact-head review and protected CI remain mandatory before merge.
 
+A second fresh independent review of replacement head
+`411d6af9cdf9a3fda6389f9b410cee5290aa8d74` also returned **FAIL** (report
+SHA-256 `6f02364748f8572586c03ba74cc5f14f5cf077442856f49cfc4d0c9d00298cd1`).
+It found one remaining classification gap: the ranked-attempt route commits an
+attempt before returning HTTP 201, but a successful response whose JSON body
+was unreadable or failed the required attempt-shape validation fell through as
+`outcomeUnknown: false`. Formation setup therefore released the latch and
+could mint a second attempt. The second fix-forward now treats every successful
+2xx response without a fully validated issued-attempt contract as
+outcome-unknown. The mounted surface remains permanently locked with Account
+and mode-selection alternatives; definitive non-2xx responses still release
+the latch, and a valid 201 remains accepted. Direct adversarial coverage spans
+unreadable and malformed 201 responses, unusable 200/204/299 boundaries,
+definitive 400/500 responses, and a valid 201. Real mounted Formation coverage
+proves both unreadable and malformed committed 201 responses stay at exactly
+one POST with no `onLocked` or router handoff. Post-fix focused validation
+passed 2/2 files and 29/29 tests; complete web Vitest passed 95 files / 1
+skipped and 981 tests / 1 skipped; complete data Vitest passed 16 files / 1
+skipped and 168 tests / 9 skipped. Forced root typecheck passed 8/8, lint 5/5,
+and build 4/4 with zero cache hits and 40/40 generated pages. The prior
+browser receipt and cancelled protected CI belonged to the failed head and are
+not claimed for this source change. The replacement exact-source browser run
+passed game flow plus responsive desktop 84/0, mobile 56/0, and interaction
+targets 40/0, followed by clean browser/Next teardown and restoration of
+`next-env.d.ts`. Protected CI and a fresh exact-head independent review remain
+mandatory before merge.
+
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-display-name-on`, initially based on C1-shipped `origin/main`

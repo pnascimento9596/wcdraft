@@ -200,9 +200,21 @@ export type RankedAttemptFetchResult =
       readonly status: number | null;
       readonly message: string | null;
       readonly timedOut: boolean;
-      /** No HTTP verdict was received, so issuing another seed is unsafe. */
+      /**
+       * No definitive non-commit verdict was received, or a successful HTTP
+       * response could not be decoded into its issued attempt. Either case
+       * makes issuing another seed unsafe.
+       */
       readonly outcomeUnknown: boolean;
     };
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function isUsableExpiry(value: unknown): value is string {
+  return isNonEmptyString(value) && !Number.isNaN(Date.parse(value));
+}
 
 export async function requestRankedAttempt(input: {
   readonly formationId: string;
@@ -234,10 +246,10 @@ export async function requestRankedAttempt(input: {
     if (
       r.ok &&
       body !== null &&
-      typeof body.attempt_id === "string" &&
-      typeof body.parent_seed === "string" &&
-      typeof body.expires_at === "string" &&
-      typeof body.season_key === "string" &&
+      isNonEmptyString(body.attempt_id) &&
+      isNonEmptyString(body.parent_seed) &&
+      isUsableExpiry(body.expires_at) &&
+      isNonEmptyString(body.season_key) &&
       body.formation_id === input.formationId &&
       body.draft_mode === input.draftMode &&
       body.draft_order === input.draftOrder &&
@@ -259,12 +271,18 @@ export async function requestRankedAttempt(input: {
         },
       };
     }
+    const acceptedWithoutUsableAttempt = r.ok;
     return {
       ok: false,
       status: r.status,
-      message: typeof body?.message === "string" ? body.message : null,
+      message:
+        typeof body?.message === "string"
+          ? body.message
+          : acceptedWithoutUsableAttempt
+            ? "The ranked seed response could not be verified. The attempt may have been issued."
+            : null,
       timedOut: false,
-      outcomeUnknown: false,
+      outcomeUnknown: acceptedWithoutUsableAttempt,
     };
   } catch (error) {
     return {

@@ -368,6 +368,36 @@ describe("mounted ranked seed issuance lock", () => {
     }
   });
 
+  it.each([
+    ["unreadable", "not-json"],
+    ["malformed", JSON.stringify({ attempt_id: "incomplete-attempt" })],
+  ])("never remints after committed HTTP 201 with an %s body", async (_label, responseBody) => {
+    const fetcher = vi.fn(
+      async () =>
+        new Response(responseBody, {
+          status: 201,
+          headers: { "Content-Type": "application/json" },
+        }),
+    );
+    const { view, onLocked, lock } = await mountRankedFormation(fetcher);
+    try {
+      await click(lock);
+      await advanceTime(0);
+      expect(fetcher).toHaveBeenCalledTimes(1);
+      expect(lock.disabled).toBe(true);
+      expect(view.container.textContent).toContain("attempt may have been issued");
+      expect(view.container.textContent).toContain("configuration is locked");
+      expect(view.container.textContent).toContain("Check account");
+      expect(view.container.textContent).toContain("Choose another mode");
+      await click(lock);
+      expect(fetcher).toHaveBeenCalledTimes(1);
+      expect(onLocked).not.toHaveBeenCalled();
+      expect(navigation.replace).not.toHaveBeenCalled();
+    } finally {
+      await view.unmount();
+    }
+  });
+
   it("re-enables issuance after a definitive HTTP failure", async () => {
     const fetcher = vi.fn(
       async () =>
