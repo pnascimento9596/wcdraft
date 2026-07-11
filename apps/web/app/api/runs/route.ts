@@ -33,6 +33,7 @@ import {
   boundedPlainObject,
   nullableBoundedString,
   requireJsonObject,
+  validateJsonRequestMetadata,
 } from "@/lib/http/bounded-body";
 import { RUN_TOKEN_MAX_LEN } from "@/lib/game/run-token";
 
@@ -91,9 +92,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       sessionCsrfSecret: auth.csrfSecret,
     });
 
-    const body = (await requireJsonObject(req, {
+    const bodyOptions = {
       maxBytes: MAX_SAVE_RUN_BODY_BYTES,
       allowedContentTypes: ["application/json"],
+    } as const;
+    validateJsonRequestMetadata(req, bodyOptions);
+    if (auth.ctx.userId !== null) {
+      const quota = await readSavedRunQuota(auth.ctx, auth.deps);
+      if (quota.usedBytes >= quota.maxBytes) {
+        // Identifying an idempotent token would itself require consuming and
+        // parsing the body. At the byte ceiling the cost firewall therefore
+        // rejects every save attempt before body read; saveRun retains the
+        // locked post-parse check for near-cap requests and concurrent writes.
+        throw new SavedRunQuotaError();
+      }
+    }
+
+    const body = (await requireJsonObject(req, {
+      ...bodyOptions,
     })) as SaveBody;
     if (typeof body.token !== "string" || body.token.length < 4) {
       return attachFreshSession(

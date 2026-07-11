@@ -206,6 +206,21 @@ serialized cookie changed. Runtime verification code is unchanged. The failed
 head is not mergeable; focused/full validation, a fresh exact-head RED review,
 and protected CI must repeat on the replacement SHA.
 
+The first independent review of replacement head `3c844ac0` found B6-R1: the
+saved-run route did not perform the specified account byte-quota rejection
+until after bounded body read, JSON parsing, and payload coercion. The
+fix-forward now validates only cheap content-type/content-length metadata,
+then reads authenticated account quota and rejects at the 8 MiB ceiling before
+the request stream is consumed. Anonymous saves still use their five-row
+transactional policy, and the existing locked post-parse enforcement remains
+the race-closing authority for near-cap writes. Because recognizing an
+idempotent token requires parsing it, a full account's duplicate POST receives
+the same quota response; no client-controlled bypass header was introduced.
+The route regression proves zero body reads and zero save calls for a full
+account, while an anonymous request still reads and reaches the transactional
+save path. Exact-head RED re-review and protected CI must repeat after this
+fix-forward.
+
 Audit Season 1 shared bounded-request contract (Unit D1):
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-bounded-requests`, initially based on Wave-A `origin/main`

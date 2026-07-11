@@ -124,6 +124,42 @@ expecting rejection. No runtime code changed. The failed SHA is not promoted as
 evidence; focused/full gates, fresh exact-head review, and protected CI repeat
 on the replacement commit.
 
+## Independent-review fix-forward B6-R1
+
+The first independent review of replacement head `3c844ac0` correctly found
+that `POST /api/runs` reached bounded body read, JSON parsing, and payload
+coercion before checking whether an authenticated account was already at the
+8 MiB byte ceiling. That violated the dispatch's explicit cost-firewall
+ordering even though the locked store transaction still enforced the final
+quota atomically.
+
+The route now applies the existing content-type and declared content-length
+checks as a header-only preflight immediately after auth, Origin, and CSRF.
+For an authenticated account it then reads quota and returns the existing
+`SAVED_RUN_QUOTA_EXCEEDED` 409 response when `usedBytes >= maxBytes`, without
+reading the request stream. Only an allowed request reaches the existing
+bounded read/JSON/coercion and locked transactional enforcement. Anonymous
+saves intentionally skip this account preflight and retain the five-row
+eviction policy.
+
+An already-full account cannot distinguish an idempotent duplicate from a new
+token without parsing the body. The cost firewall therefore rejects both at
+the byte ceiling. This is a narrow behavior change for full accounts and is
+safer than introducing a client-provided idempotency key that would need its
+own authenticated binding and collision contract. Idempotence below the
+ceiling and the transactional race check are unchanged.
+
+Focused regression evidence after the fix-forward:
+
+- Route quota preflight plus bounded-body contract: 2 files, 10/10 tests.
+- The full-account route case observed zero body-reader calls and zero store
+  save calls before the 409 response.
+- The anonymous route case consumed the bounded JSON stream and reached the
+  store with `userId: null`; the account quota reader was not called.
+
+The exact fix-forward SHA still requires fresh independent RED re-review and
+protected CI. Prior PASS counts do not transfer to the changed head.
+
 ## Risks and required review focus
 
 - Migration `0013` backfills every saved run and creates two indexes. Production
