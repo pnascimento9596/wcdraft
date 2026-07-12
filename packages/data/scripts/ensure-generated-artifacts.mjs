@@ -9,6 +9,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { brotliDecompressSync } from "node:zlib";
 
+import {
+  assertManifestVersion,
+  assertRetainedSchemaPolicy,
+  deriveRuntimeArtifactSpecs,
+  validateRuntimeArtifactBytes,
+} from "./runtime-artifact-closure.mjs";
+
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PACKAGE_DIR = path.resolve(SCRIPT_DIR, "..");
 const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
@@ -290,35 +297,48 @@ function validateCompactArtifacts() {
 }
 
 function validateRetainedRuntimeData() {
-  if (!existsSync(RETAINED_RUNTIME_DATA_DIR)) return;
-  for (const entry of readdirSync(RETAINED_RUNTIME_DATA_DIR, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const version = entry.name;
+  const currentManifest = readJson(RUNTIME_MANIFEST_PATH);
+  const entries = existsSync(RETAINED_RUNTIME_DATA_DIR)
+    ? readdirSync(RETAINED_RUNTIME_DATA_DIR, { withFileTypes: true })
+    : [];
+  const retainedVersions = entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+  const expectedVersions = assertRetainedSchemaPolicy(
+    assertManifestVersion(currentManifest),
+    retainedVersions,
+  );
+
+  for (const version of expectedVersions) {
     const dir = path.join(RETAINED_RUNTIME_DATA_DIR, version);
     const manifestPath = path.join(dir, "manifest.json");
-    const scenarioPath = path.join(dir, "scenario-2026.compact.json");
-    const draftBrPath = path.join(dir, "draft-pool.compact.json.br");
     if (!existsSync(manifestPath)) fail(`retained ${version}/manifest.json missing`);
-    if (!existsSync(scenarioPath)) fail(`retained ${version}/scenario-2026.compact.json missing`);
-    if (!existsSync(draftBrPath)) fail(`retained ${version}/draft-pool.compact.json.br missing`);
 
     const manifest = readJson(manifestPath);
-    if (manifest.schema_version !== version) {
+    if (assertManifestVersion(manifest) !== version) {
       fail(
         `retained ${version} directory does not match manifest schema_version ${manifest.schema_version}`,
       );
     }
-    validateFingerprint(scenarioPath, manifest.bundles.scenario_2026, `${version} scenario`);
 
-    const decompressed = brotliDecompressSync(readFileSync(draftBrPath));
-    const actual = { bytes: decompressed.length, sha256: sha256(decompressed) };
-    const expected = manifest.bundles.draft_pool;
-    if (actual.bytes !== expected.bytes || actual.sha256 !== expected.sha256) {
-      fail(
-        `retained ${version} draft-pool.compact.json.br fingerprint mismatch: ` +
-          `got ${actual.bytes} bytes / ${actual.sha256}, ` +
-          `expected ${expected.bytes} bytes / ${expected.sha256}`,
+    const specs = deriveRuntimeArtifactSpecs(manifest);
+    const allowedFiles = new Set(["manifest.json", ...specs.map((spec) => spec.relativePath)]);
+    for (const spec of specs) {
+      const artifactPath = path.join(dir, spec.relativePath);
+      if (!existsSync(artifactPath)) fail(`retained ${version}/${spec.relativePath} missing`);
+      validateRuntimeArtifactBytes(
+        spec,
+        readFileSync(artifactPath),
+        `retained ${version}/${spec.relativePath}`,
       );
+    }
+
+    const unexpected = readdirSync(dir, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && !allowedFiles.has(entry.name))
+      .map((entry) => entry.name)
+      .sort();
+    if (unexpected.length > 0) {
+      fail(`retained ${version} contains unadvertised artifact(s): ${unexpected.join(", ")}`);
     }
   }
 }

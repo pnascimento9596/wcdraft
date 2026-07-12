@@ -518,6 +518,21 @@ desktop measured 84 checks / 0 failures, mobile 56/0, and interaction targets
 exited after the receipt. No runtime-data, rating, draft, simulation, schema,
 API, or database artifact changed.
 
+Audit S1 C5 retained-runtime closure and server path hygiene:
+2026-07-11 · RED data-delivery implementation on branch
+`ws-f4/audit-s1-retained-runtime`, initially based on C1/C2-shipped
+`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` and finally rebased onto
+C3-shipped `origin/main` `87659baef158408cc33b4eeec9b30534deb230ae`. Runtime materialization now
+derives every current and retained file from that schema's own manifest,
+requires and fingerprints Daily salt-map and score-distribution bundles when
+advertised, validates the complete current-plus-retained closure before any
+target mutation, and copies the exact validated bytes. Legacy raw-only
+manifests do not gain invented Brotli variants; C1 canonical Brotli variants
+remain mandatory wherever their exact compressed fingerprint metadata is
+present. Missing files, raw/compressed fingerprint drift, malformed or unsafe
+manifest paths, and an incomplete retention window fail closed while leaving
+an existing good target untouched.
+
 The final rebase composed C3 with D1 rather than choosing either side:
 `loadGameData` selects one service-worker controller before starting any
 revision-bearing request and passes D1's shared 30-second abort signal to the
@@ -554,9 +569,79 @@ rejection; the focused worker/handoff matrix passes 24/24 and the seven-file C3+
 overlap passes 59/59. The fix-forward full gate then passed: generated-artifact
 check, forced typecheck 8/8, lint 5/5, root test 8/8 in 7m53.744s, build 4/4 with
 40/40 pages, responsive 218/0, web 1,123 passed + 1 expected skip, core goldens
-69 + 42, data goldens 54 + 22, and leaderboard golden 6. It still requires CI,
-independent exact-head RED PASS, Ollama Cloud PASS, merge, deployment, and live
-proof.
+69 + 42, data goldens 54 + 22, and leaderboard golden 6. Exact head
+`8a3b01d7458283c6e77b1f66037576a0833f7aba` then received fresh independent
+RED PASS and Ollama Cloud GLM 5.2 max-thinking PASS. PR #249 squash-merged as
+`87659baef158408cc33b4eeec9b30534deb230ae`; exact-main CI `29176415682`
+passed its required aggregate. Production `/api/health` reported that exact
+SHA and DB ready. Two clean-profile Chrome proofs installed the exact five-file
+closure, hashed the 130,545,042-byte decoded pool to `461601c6…487a`, recorded
+one pool URL request and a controlled reread with transfer size 0, and leaked
+no processes. The measured install-time aggregate RSS amplification remains a
+documented non-blocking warning.
+
+The enforced policy constant retains exactly the two immediately prior minor
+runtime schemas on every bump. For current `runtime-data-2.9.0`, source and
+copy output therefore retain 2.7.0 + 2.8.0 instead of the stale 2.3.0–2.6.0
+set. The 2.7 scenario is byte-identical to historical commit
+`7a1ebbfa78ba10ba3f788dface675864cccef1aa`; its recovered draft decompresses
+to 129,711,288 bytes / SHA-256 `976f6ac5…f00`, exactly matching that manifest.
+The 2.8 scenario is byte-identical to historical commit
+`eed5c4e8e7048fc9b78614304394427fd5229f89`; its recovered draft decompresses
+to 130,553,412 bytes / SHA-256 `7d6d06b9…48c`, exactly matching that manifest.
+Their retained Brotli files measure 2,222,522 and 2,225,295 bytes respectively.
+Historical Vercel deployment retrieval proved those committed transport bytes
+are exact: 2.7 SHA-256 `29c9ef3f…2dbcc` and 2.8 SHA-256
+`51ae8115…4d48`. The historical `bytes_brotli` fields were 128-byte privacy
+buckets rather than exact lengths; retained manifests now replace those bucketed
+values with exact compressed length/SHA metadata while preserving the historical
+raw and transport bytes. The closure validator and generated-artifact check now
+fail closed on either retained raw or compressed drift.
+
+The runtime consumer inventory found leaderboard server data and share-page
+metadata; the first post-removal web pretest also exposed the service-worker
+version generator as a build-time fixed-root filesystem reader. All three now
+use the current versioned tree. Server validation reads the canonical current
+draft `.br`, decompresses/parses it once per process, and memoizes the same
+bundle object. The C3-integrated generator uses the source manifest only to
+locate the current schema, then requires the copied versioned manifest to be
+byte-identical before emitting worker config; a stale fixed-root manifest is
+ignored and copied-manifest drift fails before output mutation. No fixed
+unversioned manifest or raw draft is copied. The measured static runtime tree
+fell from 141,520,329 to 7,055,318 bytes: 130,690,498 bytes of fixed-root
+current data and 8,452,682 bytes of out-of-policy retained data were removed,
+for 134,465,011 bytes / 95.01% total reduction. Current C1 artifact
+fingerprints, schema `runtime-data-2.9.0`, rating, engine, simulation, draft
+semantics, ETL inputs, and generated bundle bytes remain unchanged.
+
+Final post-rebase validation passes: manifest-derived copy/closure/policy and
+fail-closed tests 9/9; generator + server path/cache tests 2 files / 21 tests;
+full `@wcdraft/data` suite 171 passed / 9 skipped; full non-browser web Vitest
+1,127 passed / 1 skipped. After rejecting one stale-linked-package bootstrap
+attempt, the forced root test restarted from zero and passed 8/8 tasks with 0
+cache hits in 7m54.087s: core 391, data 171 + 9 expected skips, web 1,127 + 1
+expected skip, game-flow Playwright PASS, and responsive 218/0 (84 desktop, 56
+mobile, 40 interaction, 30 mode/setup, 8 mobile navigation). Forced typecheck
+passed 8/8 in 7.375s, lint 5/5 in 3.464s, and build 4/4 in 19.912s with 40/40
+pages, all 0 cached. Core goldens passed 69 + 42, data goldens 54 + 22, and
+leaderboard golden 6. The ordered compact → score distribution → compact
+regeneration chain, forced `check:generated`, Prettier, and diff checks passed
+with no tracked fingerprint drift. Web pretest emits 5 manifest-derived worker
+entries with data revision `e08a2facf9c85830`; the public runtime tree is
+6.76 MiB / 14 files across current 2.9.0 plus retained 2.7.0 and 2.8.0. Fresh
+exact-head CI and independent RED review remain required before release.
+
+The first fresh exact-head RED review at
+`147c320e5a921a2fcc6703ba8680ab3a1dd086ae` returned FAIL (report SHA-256
+`dfafb92863906cf44b69fda97efd07198ff470c2052c9694f66c5dfc4b60e850`) because
+the retained manifests did not pin compressed identity. Its claim that the
+committed Brotli files differed from historical transport was disproved against
+the exact 2.7 and 2.8 Vercel deployments: both length and SHA-256 matched
+byte-for-byte, while the cited manifest lengths were deliberately rounded
+metadata. The fix-forward nevertheless closes the real validation gap by
+recording exact compressed fingerprints in both retained manifests and adding a
+regression that pins the two deployment hashes. A new exact head, CI, and fresh
+RED re-review are required.
 
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch

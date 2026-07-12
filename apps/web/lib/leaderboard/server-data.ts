@@ -5,8 +5,9 @@
 // `GameData` over the committed static bundles for the submit pipeline, plus
 // the light current-season key for the read routes.
 //
-// This module reads the committed web runtime assets from
-// `public/data/wcdraft/` — SERVER ONLY, never reachable from a client bundle
+// This module reads the committed web runtime assets from the current
+// schema-versioned `public/data/wcdraft/<schema>/` directory — SERVER ONLY,
+// never reachable from a client bundle
 // (the client loads the same files via `@wcdraft/data/client` fetch — see
 // lib/game/data.ts header). Do not import the top-level `@wcdraft/data`
 // bundle exports here: Vercel's function tracer can omit package-side
@@ -18,7 +19,9 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { brotliDecompressSync } from "node:zlib";
 import { buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
+import { DEFAULT_RUNTIME_DATA_BASE_PATH } from "@wcdraft/data/client";
 import type {
   DailySeedSaltMap,
   DraftPoolBundle,
@@ -58,25 +61,37 @@ function buildDataset(draftPool: DraftPoolBundle): DraftDataset {
   };
 }
 
-const RUNTIME_DATA_DIR_CANDIDATES = [
-  join(process.cwd(), "public", "data", "wcdraft"),
-  join(process.cwd(), "apps", "web", "public", "data", "wcdraft"),
-] as const;
+const CURRENT_RUNTIME_DATA_RELATIVE_DIR = DEFAULT_RUNTIME_DATA_BASE_PATH.replace(/^\/+/, "");
 
-function runtimeDataDir(): string {
-  for (const dir of RUNTIME_DATA_DIR_CANDIDATES) {
+/** Resolve from either an `apps/web` cwd or the monorepo root. */
+export function resolveRuntimeDataDir(cwd = process.cwd()): string {
+  const candidates = [
+    join(cwd, "public", CURRENT_RUNTIME_DATA_RELATIVE_DIR),
+    join(cwd, "apps", "web", "public", CURRENT_RUNTIME_DATA_RELATIVE_DIR),
+  ];
+  for (const dir of candidates) {
     if (existsSync(join(dir, "manifest.json"))) return dir;
   }
   throw new Error(
-    `leaderboard server data: public runtime data manifest not found in ${RUNTIME_DATA_DIR_CANDIDATES.join(
-      " or ",
-    )}`,
+    `leaderboard server data: versioned public runtime data manifest not found in ${candidates.join(" or ")}`,
   );
+}
+
+let cachedRuntimeDataDir: string | null = null;
+
+function runtimeDataDir(): string {
+  cachedRuntimeDataDir ??= resolveRuntimeDataDir();
+  return cachedRuntimeDataDir;
 }
 
 function readRuntimeJson<T>(fileName: string): T {
   const filePath = join(runtimeDataDir(), fileName);
   return JSON.parse(readFileSync(filePath, "utf8")) as T;
+}
+
+function readRuntimeBrotliJson<T>(fileName: string): T {
+  const filePath = join(runtimeDataDir(), fileName);
+  return JSON.parse(brotliDecompressSync(readFileSync(filePath)).toString("utf8")) as T;
 }
 
 let cachedManifest: RuntimeDataManifest | null = null;
@@ -90,16 +105,17 @@ function serverManifest(): RuntimeDataManifest {
 }
 
 function serverDraftPool(): DraftPoolBundle {
-  cachedDraftPool ??= readRuntimeJson<DraftPoolBundle>("draft-pool.compact.json");
+  cachedDraftPool ??= readRuntimeBrotliJson<DraftPoolBundle>(
+    `${serverManifest().bundles.draft_pool.path}.br`,
+  );
   return cachedDraftPool;
 }
 
 function serverDailySeedSaltMap(): DailySeedSaltMap | null {
   if (cachedDailySeedSaltMap !== undefined) return cachedDailySeedSaltMap;
+  const fingerprint = serverManifest().bundles.daily_seed_salt_map;
   cachedDailySeedSaltMap =
-    serverManifest().bundles.daily_seed_salt_map === undefined
-      ? null
-      : readRuntimeJson<DailySeedSaltMap>("daily-seed-salt-map.compact.json");
+    fingerprint === undefined ? null : readRuntimeJson<DailySeedSaltMap>(fingerprint.path);
   return cachedDailySeedSaltMap;
 }
 
@@ -128,7 +144,9 @@ export function buildServerGameData(): GameData {
 
 /** The committed 2026 scenario bundle (teams + bracket). */
 export function serverScenarioBundle(): Scenario2026Bundle {
-  cachedScenario2026 ??= readRuntimeJson<Scenario2026Bundle>("scenario-2026.compact.json");
+  cachedScenario2026 ??= readRuntimeJson<Scenario2026Bundle>(
+    serverManifest().bundles.scenario_2026.path,
+  );
   return cachedScenario2026;
 }
 

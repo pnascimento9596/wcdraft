@@ -1,4 +1,7 @@
 import { readFileSync } from "node:fs";
+import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
@@ -9,6 +12,7 @@ import {
   derivePrecacheDataEntries,
   renderSwVersionScript,
   resolveDeployRevisionFromEnv,
+  run,
 } from "../../../scripts/generate-sw-version.mjs";
 
 const REPO_ROOT = new URL("../../../../../", import.meta.url);
@@ -132,6 +136,44 @@ describe("manifest-derived service-worker data config", () => {
         manifestBytes: JSON.stringify({ ...baseManifest, dataset_version: "different" }),
       }),
     ).toThrow(/do not describe/u);
+  });
+});
+
+describe("service-worker generator manifest path", () => {
+  it("binds the current source manifest to its exact versioned copied bytes", async () => {
+    const repoRoot = await mkdtemp(join(tmpdir(), "wcdraft-sw-version-path-"));
+    const webRoot = join(repoRoot, "apps", "web");
+    const sourceDir = join(repoRoot, "packages", "data", "src", "generated");
+    const copiedDir = join(webRoot, "public", "data", "wcdraft", baseManifest.schema_version);
+    const legacyRoot = join(webRoot, "public", "data", "wcdraft");
+    const manifestBytes = `${JSON.stringify(baseManifest, null, 2)}\n`;
+    await mkdir(sourceDir, { recursive: true });
+    await mkdir(copiedDir, { recursive: true });
+    await writeFile(join(sourceDir, "manifest.json"), manifestBytes);
+    await writeFile(join(copiedDir, "manifest.json"), manifestBytes);
+    await writeFile(join(legacyRoot, "manifest.json"), "legacy root must not be read");
+
+    const generated = run({
+      webRoot,
+      repoRoot,
+      env: { WCDRAFT_DEPLOY_REVISION: "c5-versioned-manifest-test" },
+    });
+    expect(generated.config.schema_version).toBe(baseManifest.schema_version);
+    const firstOutput = await readFile(generated.outPath, "utf8");
+    expect(firstOutput).toContain(`/data/wcdraft/${baseManifest.schema_version}/manifest.json`);
+
+    await writeFile(
+      join(copiedDir, "manifest.json"),
+      JSON.stringify({ ...baseManifest, dataset_version: "copied-drift" }),
+    );
+    expect(() =>
+      run({
+        webRoot,
+        repoRoot,
+        env: { WCDRAFT_DEPLOY_REVISION: "c5-versioned-manifest-test" },
+      }),
+    ).toThrow(/copied manifest .* differs from current source/u);
+    await expect(readFile(generated.outPath, "utf8")).resolves.toBe(firstOutput);
   });
 });
 

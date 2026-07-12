@@ -1,5 +1,5 @@
-// Browser-side loaders. Fetches the compact bundles from a runtime path
-// (defaults to `/data/wcdraft/`, where the apps/web copy step lands them)
+// Browser-side loaders. Fetches the compact bundles from a schema-versioned
+// runtime path (where the apps/web copy step lands them)
 // and validates loaded payloads have the expected runtime bundle shape.
 
 import {
@@ -39,7 +39,7 @@ export const DRAFT_POOL_BROTLI_PATH = "draft-pool.compact.json.br" as const;
 
 /** Options accepted by all client loaders. */
 export interface LoaderOptions {
-  /** Override the base path (defaults to `/data/wcdraft`). */
+  /** Override the base path (defaults to the compiled schema-versioned path). */
   basePath?: string;
   /** Override `fetch` (tests); falls back to the global `fetch`. */
   fetch?: typeof fetch;
