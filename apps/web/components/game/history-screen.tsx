@@ -111,6 +111,9 @@ export function HistoryScreen() {
           <Link href={draftHref(null)} className="btn btn--primary">
             Start a new draft
           </Link>
+          <Link href="/" className="btn btn--ghost">
+            Home
+          </Link>
         </div>
       </div>
     );

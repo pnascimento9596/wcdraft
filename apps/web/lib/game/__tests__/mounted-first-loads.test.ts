@@ -98,6 +98,7 @@ interface ScreenCase {
   readonly timeout: string;
   readonly retry: string;
   readonly alternate: string;
+  readonly home?: boolean;
 }
 
 const CASES: readonly ScreenCase[] = [
@@ -120,6 +121,7 @@ const CASES: readonly ScreenCase[] = [
     timeout: "Runtime data took too long to load",
     retry: "Retry",
     alternate: "Choose another mode",
+    home: true,
   },
   {
     name: "HistoryScreen",
@@ -130,6 +132,7 @@ const CASES: readonly ScreenCase[] = [
     timeout: "Runtime data took too long to load",
     retry: "Try again",
     alternate: "Start a new draft",
+    home: true,
   },
   {
     name: "ResultsScreen",
@@ -140,6 +143,7 @@ const CASES: readonly ScreenCase[] = [
     timeout: "Runtime data took too long to load",
     retry: "Retry loading",
     alternate: "Start a new draft",
+    home: true,
   },
   {
     name: "ReviewScreen",
@@ -150,6 +154,7 @@ const CASES: readonly ScreenCase[] = [
     timeout: "Runtime data took too long to load",
     retry: "Retry loading",
     alternate: "Start a new draft",
+    home: true,
   },
   {
     name: "ShareScreen",
@@ -160,6 +165,7 @@ const CASES: readonly ScreenCase[] = [
     timeout: "Runtime data took too long to load",
     retry: "Retry loading",
     alternate: "Start a new draft",
+    home: true,
   },
 ];
 
@@ -182,7 +188,7 @@ afterEach(() => {
 describe("mounted game containers with held-open first reads", () => {
   it.each(CASES)(
     "$name leaves loading at the budget and exposes a safe read Retry + alternate",
-    async ({ component, params, budgetMs, loading, timeout, retry, alternate }) => {
+    async ({ component, params, budgetMs, loading, timeout, retry, alternate, home }) => {
       navigation.params = new URLSearchParams(params);
       const fetcher = vi.fn<typeof fetch>(() => new Promise<Response>(() => undefined));
       vi.stubGlobal("fetch", fetcher);
@@ -197,6 +203,12 @@ describe("mounted game containers with held-open first reads", () => {
 
         expect(view.container.textContent).toContain(timeout);
         expect(view.container.textContent).toContain(alternate);
+        if (home === true) {
+          const homeLink = Array.from(view.container.querySelectorAll("a")).find(
+            (link) => link.textContent?.trim() === "Home",
+          );
+          expect(homeLink?.getAttribute("href")).toBe("/");
+        }
         expect(view.container.textContent).not.toContain(loading);
 
         await click(buttonByText(view.container, retry));

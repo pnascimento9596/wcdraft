@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit",
     "pretest": "pnpm run runtime:materialize && node scripts/generate-sw-version.mjs",
     "test": "vitest run && tsx scripts/game-flow-playwright.mts && tsx scripts/test-responsive-shell-fit.mts",
+    "benchmark:runtime-data-browser": "tsx scripts/benchmark-runtime-data-browser.mts",
     "test:golden:leaderboard": "pnpm run runtime:materialize && vitest run lib/leaderboard/__tests__/validate.golden.test.ts",
     "gen:leaderboard-golden": "tsx scripts/generate-leaderboard-golden.mts",
     "generate:icons": "node scripts/generate-icons.mjs",

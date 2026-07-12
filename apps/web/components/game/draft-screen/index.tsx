@@ -182,6 +182,9 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
           <Link href="/play" className="btn btn--ghost">
             Choose another mode
           </Link>
+          <Link href="/" className="btn btn--ghost">
+            Home
+          </Link>
         </div>
       </div>
     );

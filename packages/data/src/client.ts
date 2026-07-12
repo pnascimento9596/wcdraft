@@ -7,6 +7,7 @@ import {
   RUNTIME_DATA_SCHEMA_VERSION,
   type DailySeedSaltMap,
   type DraftPoolBundle,
+  type RuntimeBundleFingerprint,
   type RuntimeDataManifest,
   type Scenario2026Bundle,
   type ScoreDistribution,
@@ -47,6 +48,29 @@ export interface LoaderOptions {
   signal?: AbortSignal;
   /** Elapsed fetch + parse budget; defaults to the 30s runtime-data budget. */
   timeoutMs?: number;
+}
+
+/** Options for a bundle whose decoded bytes must be bound to its manifest entry. */
+export interface VerifiedBundleLoaderOptions extends LoaderOptions {
+  manifest: RuntimeDataManifest;
+}
+
+export type RuntimeDataIntegrityFailure =
+  | "missing_fingerprint"
+  | "byte_length_mismatch"
+  | "digest_mismatch"
+  | "malformed_payload";
+
+export class RuntimeDataIntegrityError extends Error {
+  readonly failure: RuntimeDataIntegrityFailure;
+  readonly bundleKey: string;
+
+  constructor(failure: RuntimeDataIntegrityFailure, bundleKey: string, detail: string) {
+    super(`@wcdraft/data/client: ${bundleKey} integrity failure (${failure}): ${detail}`);
+    this.name = "RuntimeDataIntegrityError";
+    this.failure = failure;
+    this.bundleKey = bundleKey;
+  }
 }
 
 interface ResolvedOptions {
@@ -100,7 +124,97 @@ async function fetchJson<T>(
       if (!res.ok) {
         throw new Error(`@wcdraft/data/client: ${operation} returned HTTP ${res.status}.`);
       }
-      return parse(await res.json());
+      try {
+        return parse(await res.json());
+      } catch (cause) {
+        throw new RuntimeDataIntegrityError(
+          "malformed_payload",
+          "manifest",
+          cause instanceof Error ? cause.message : String(cause),
+        );
+      }
+    },
+    {
+      operation,
+      timeoutMs: opts.timeoutMs,
+      safety: "safe-read",
+      signal: opts.signal,
+    },
+  );
+}
+
+function toHex(bytes: ArrayBuffer): string {
+  return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function sha256Hex(bytes: ArrayBuffer): Promise<string> {
+  const subtle = globalThis.crypto?.subtle;
+  if (!subtle) throw new Error("@wcdraft/data/client: Web Crypto SHA-256 is unavailable.");
+  return toHex(await subtle.digest("SHA-256", bytes));
+}
+
+function expectedFingerprint(
+  manifest: RuntimeDataManifest,
+  bundleKey: keyof RuntimeDataManifest["bundles"],
+): { bytes: number; sha256: string } {
+  const fingerprint = manifest.bundles[bundleKey] as RuntimeBundleFingerprint | undefined;
+  const sha256 = fingerprint?.raw_sha256 ?? fingerprint?.sha256;
+  if (
+    fingerprint === undefined ||
+    !Number.isSafeInteger(fingerprint.bytes) ||
+    fingerprint.bytes <= 0 ||
+    typeof sha256 !== "string" ||
+    !/^[0-9a-f]{64}$/u.test(sha256)
+  ) {
+    throw new RuntimeDataIntegrityError(
+      "missing_fingerprint",
+      String(bundleKey),
+      "manifest does not contain a usable raw byte length and SHA-256",
+    );
+  }
+  return { bytes: fingerprint.bytes, sha256 };
+}
+
+async function fetchVerifiedJson<T>(
+  url: string,
+  opts: ResolvedOptions,
+  manifest: RuntimeDataManifest,
+  bundleKey: keyof RuntimeDataManifest["bundles"],
+  parse: (value: unknown) => T,
+  operation: string,
+): Promise<T> {
+  const expected = expectedFingerprint(manifest, bundleKey);
+  return boundedRequest(
+    async (signal) => {
+      const res = await opts.fetchImpl(url, { signal });
+      if (!res.ok) {
+        throw new Error(`@wcdraft/data/client: ${operation} returned HTTP ${res.status}.`);
+      }
+      const bytes = await res.arrayBuffer();
+      if (bytes.byteLength !== expected.bytes) {
+        throw new RuntimeDataIntegrityError(
+          "byte_length_mismatch",
+          String(bundleKey),
+          `received ${bytes.byteLength} bytes; manifest requires ${expected.bytes}`,
+        );
+      }
+      const actualSha256 = await sha256Hex(bytes);
+      if (actualSha256 !== expected.sha256) {
+        throw new RuntimeDataIntegrityError(
+          "digest_mismatch",
+          String(bundleKey),
+          `received SHA-256 ${actualSha256}; manifest requires ${expected.sha256}`,
+        );
+      }
+      try {
+        return parse(JSON.parse(new TextDecoder().decode(bytes)) as unknown);
+      } catch (cause) {
+        throw new RuntimeDataIntegrityError(
+          "malformed_payload",
+          String(bundleKey),
+          cause instanceof Error ? cause.message : String(cause),
+        );
+      }
     },
     {
       operation,
@@ -123,22 +237,30 @@ export async function loadDataManifest(opts?: LoaderOptions): Promise<RuntimeDat
 }
 
 /** Load the draft-pool compact bundle (1930–2026). */
-export async function loadDraftPoolBundle(opts?: LoaderOptions): Promise<DraftPoolBundle> {
+export async function loadDraftPoolBundle(
+  opts: VerifiedBundleLoaderOptions,
+): Promise<DraftPoolBundle> {
   const resolved = resolveOptions(opts);
-  return fetchJson<DraftPoolBundle>(
+  return fetchVerifiedJson<DraftPoolBundle>(
     `${resolved.basePath}/${DRAFT_POOL_BROTLI_PATH}`,
     resolved,
+    opts.manifest,
+    "draft_pool",
     parseDraftPoolBundle,
     "runtime draft pool",
   );
 }
 
 /** Load the 2026 scenario compact bundle (teams + bracket). */
-export async function loadScenario2026Bundle(opts?: LoaderOptions): Promise<Scenario2026Bundle> {
+export async function loadScenario2026Bundle(
+  opts: VerifiedBundleLoaderOptions,
+): Promise<Scenario2026Bundle> {
   const resolved = resolveOptions(opts);
-  return fetchJson<Scenario2026Bundle>(
+  return fetchVerifiedJson<Scenario2026Bundle>(
     `${resolved.basePath}/scenario-2026.compact.json`,
     resolved,
+    opts.manifest,
+    "scenario_2026",
     parseScenario2026Bundle,
     "runtime scenario",
   );
@@ -150,22 +272,30 @@ export async function loadScenario2026Bundle(opts?: LoaderOptions): Promise<Scen
  * catch and degrade to "standing unknown" (omit), never fabricate. Older
  * deployed data directories legitimately lack this file (HTTP 404).
  */
-export async function loadScoreDistribution(opts?: LoaderOptions): Promise<ScoreDistribution> {
+export async function loadScoreDistribution(
+  opts: VerifiedBundleLoaderOptions,
+): Promise<ScoreDistribution> {
   const resolved = resolveOptions(opts);
-  return fetchJson<ScoreDistribution>(
+  return fetchVerifiedJson<ScoreDistribution>(
     `${resolved.basePath}/score-distribution.compact.json`,
     resolved,
+    opts.manifest,
+    "score_distribution",
     parseScoreDistribution,
     "runtime score distribution",
   );
 }
 
 /** Load the Daily Draft salt map advertised by the manifest. */
-export async function loadDailySeedSaltMap(opts?: LoaderOptions): Promise<DailySeedSaltMap> {
+export async function loadDailySeedSaltMap(
+  opts: VerifiedBundleLoaderOptions,
+): Promise<DailySeedSaltMap> {
   const resolved = resolveOptions(opts);
-  return fetchJson<DailySeedSaltMap>(
+  return fetchVerifiedJson<DailySeedSaltMap>(
     `${resolved.basePath}/daily-seed-salt-map.compact.json`,
     resolved,
+    opts.manifest,
+    "daily_seed_salt_map",
     parseDailySeedSaltMap,
     "Daily metadata",
   );
@@ -183,8 +313,8 @@ export async function loadRuntimeData(opts?: LoaderOptions): Promise<{
 }> {
   const manifest = await loadDataManifest(opts);
   const [draftPool, scenario2026] = await Promise.all([
-    loadDraftPoolBundle(opts),
-    loadScenario2026Bundle(opts),
+    loadDraftPoolBundle({ ...opts, manifest }),
+    loadScenario2026Bundle({ ...opts, manifest }),
   ]);
   return { manifest, draftPool, scenario2026 };
 }

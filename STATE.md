@@ -4,6 +4,86 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 C4 browser runtime-data digest enforcement:
+2026-07-11–12 · RED implementation on branch
+`ws-f4/audit-s1-runtime-digest`, rebased onto C5-shipped `origin/main`
+`06b5f914dc3253bda17b9ac8fa93cae0fc127b63`. Every browser bundle loader in
+`@wcdraft/data/client` now requires the parsed versioned manifest, reads the
+response as bytes under the existing bounded-request budget, checks exact
+manifest raw byte length and SHA-256, and only then performs UTF-8 decode,
+JSON parse, and bundle-shape validation. This is intentionally a decoded-byte
+check: Fetch transparently decodes the current draft response's
+`Content-Encoding: br`, so page JavaScript sees the 130,545,042-byte body with
+SHA-256 `461601c6…487a`, not the 2,224,859-byte transport representation.
+
+Integrity failures are explicit `RuntimeDataIntegrityError` values for missing
+fingerprint, byte-count mismatch, digest mismatch, or malformed payload. The
+web layer maps them to typed `RuntimeDataLoadError` states (`corrupt`, `timeout`,
+or `unavailable`), logs technical detail, and exposes stable player copy. The
+draft recovery panel retains mode selection and adds Home. C3's final
+single-controller-before-request invariant and D1's shared bounded signal are
+preserved: the selected manifest authorizes the pool and optional Daily map,
+and `GameData`/version anchors are unreachable until all required bundle
+verification succeeds. Deferred scenario and reference-distribution reads use
+the same session manifest. C5 versioned/retained paths and transport bytes stay
+unchanged.
+
+Final local validation at `eca128567a6a18e4dc5e717f6b117092e6434849`
+passes the root test aggregate 8/8 tasks: core 391/391, data 176/176 with nine
+expected opt-in skips, DB 161/161, marketing 68/68, and web 1,131/1,131 with one
+expected benchmark skip (1,927 executed tests total). Game-flow Playwright is
+green, and the widened responsive adjudication passes 218/0 metrics: 84 desktop,
+56 mobile shell, 40 interaction, 30 mode/setup, and 8 opened-mobile-navigation.
+Fresh golden runs pass core 69/69 plus draft 42/42, data 54/54 plus integration
+22/22, and leaderboard 6/6. Root typecheck passes 8/8 tasks (7 cached), lint 5/5
+(4 cached), build 4/4 (3 cached), generated-artifact verification, Prettier, and
+`git diff --check` all pass.
+
+Two earlier root-test attempts are deliberately excluded from release evidence.
+The first exposed a real fixture mismatch: game-flow served minified Daily JSON
+under the committed pretty-body fingerprint; the fixture now derives byte count,
+SHA-256, and `size_hint` from the exact routed body. The next attempt passed all
+unit and game-flow gates but found the same mismatch in the responsive Daily
+fixture. A focused two-theme browser rerun passed 2/0 after the analogous repair,
+followed by the successful full aggregate above. An initial package-filtered
+`check:generated` invocation was invalid because that script is root-only; the
+correct root command subsequently passed. Exact-head independent review/CI,
+merge, deploy, and live proof remain required.
+
+The first fresh exact-head review at
+`929ae522284fb870ab2613f718b60b176fe34aa9` returned FAIL (raw report
+`/tmp/audit-s1-c4-review-929ae52.md`, SHA-256
+`321a67c80d9c0f5fe8a052ef6829fb6717e8264a60f85d7e09dfae84c61d263d`). It
+required a committed browser resource/memory adjudication for the decoded
+130 MB path, explicit Home recovery on every mounted runtime-data error surface,
+and retained typed diagnostics for fail-soft Daily/reference loads. Protected CI
+also rejected a synthetic `bundleKey` expectation as a generic key. Fix-forward
+adds the reproducible Chrome benchmark and 3,000 MiB process-tree RSS / 10-second
+setup thresholds; measured desktop = 1,588 ms, 83 MiB settled JS heap, 2,641 MiB
+peak sampled RSS and mobile-touch under a 1 GiB V8 ceiling = 1,551 ms, 90 MiB,
+2,661 MiB. Both decoded the exact 130,545,042-byte pool. Draft, History, Review,
+Results, and Share now expose mounted Retry + Home recovery; Daily/reference
+remain fail-soft while logging the full typed cause. Focused fix-forward tests
+pass data 11/11 and web 15/15; data/web typechecks and the focused flagged-file
+gitleaks scan pass. WebKit/Safari instrumentation is unavailable and honestly
+NOT RUN. The durable report is
+`docs/reports/audit-s1-c4-browser-integrity-2026-07-12.md`. A new exact-head
+review and replacement protected CI are mandatory. The complete fix-forward
+tree at `4d4ac4d8e2aba644b431d5ca2ab3298983033d29` passes root test 8/8:
+core 391, data 176 with nine expected skips, DB 161, marketing 68, and web 1,133
+with one expected benchmark skip (1,929 executed total), plus game-flow and the
+218/0 responsive matrix. Root typecheck passes 8/8, lint 5/5, build 4/4,
+generated-artifact verification and formatting pass.
+
+The next fresh review at `93bfce16b72543af2f5e80e0c42b091c60693f61`
+independently closed every substantive defect and reproduced desktop/mobile
+benchmark PASS, but returned FAIL solely because `git diff --check` found three
+Markdown hard-break spaces in the C4 report (raw report
+`/tmp/audit-s1-c4-rereview-93bfce1.md`, SHA-256
+`d59a7985c9adf7e642df754e21bcd795894f6c5647d92364600526cae6b29c7b`). The
+spaces are removed fix-forward; the resulting exact head still requires a third
+fresh review.
+
 Audit S1 Wave D boundary review fix-forward:
 2026-07-11 · RED candidate on branch `ws-ux/audit-s1-wave-d-review-fixes`, based on
 post-D5 `origin/main` `7f25ee45d88701830b73f300132c731c423db733`. The Wave D

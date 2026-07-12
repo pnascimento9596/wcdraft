@@ -91,6 +91,25 @@ describe("lightweight Daily availability loader", () => {
     expect(loaders.draftPool).not.toHaveBeenCalled();
   });
 
+  it("fails closed while retaining the typed integrity diagnostic in the console", async () => {
+    const integrityFailure = Object.assign(new Error("received SHA-256 did not match"), {
+      name: "RuntimeDataIntegrityError",
+      failure: "digest_mismatch",
+      bundleKey: "daily_seed_salt_map",
+    });
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    loaders.manifest.mockResolvedValue({ bundles: { daily_seed_salt_map: {} } });
+    loaders.saltMap.mockRejectedValue(integrityFailure);
+
+    await expect(loadDailyAvailability("2026-07-03")).resolves.toBe(false);
+    expect(consoleError).toHaveBeenCalledWith(
+      "[daily] availability metadata failed",
+      integrityFailure,
+    );
+    expect(loaders.draftPool).not.toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
   it("bounds a held-open metadata request and exposes a translated timeout", async () => {
     vi.useFakeTimers();
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);

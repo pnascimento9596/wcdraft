@@ -5,6 +5,8 @@
 // can render a recovery panel with an honest message instead of a `0` or `—`
 // where a real record was expected.
 
+import { isRequestTimeoutError, RuntimeDataIntegrityError } from "@wcdraft/data/client";
+
 /** What kind of join missed. */
 export type MissingRecordKind =
   | "player_card"
@@ -34,20 +36,54 @@ export class MissingRecordError extends GameDataError {
 }
 
 export class RuntimeDataLoadError extends GameDataError {
+  readonly kind: "corrupt" | "timeout" | "unavailable";
   override readonly cause?: unknown;
-  constructor(message: string, cause?: unknown) {
+  constructor(kind: "corrupt" | "timeout" | "unavailable", message: string, cause?: unknown);
+  constructor(message: string, cause?: unknown);
+  constructor(
+    kindOrMessage: "corrupt" | "timeout" | "unavailable" | string,
+    messageOrCause?: string | unknown,
+    explicitCause?: unknown,
+  ) {
+    const explicitKind = ["corrupt", "timeout", "unavailable"].includes(kindOrMessage);
+    const cause = explicitKind ? explicitCause : messageOrCause;
+    const kind = explicitKind
+      ? (kindOrMessage as "corrupt" | "timeout" | "unavailable")
+      : isTimeoutCause(cause)
+        ? "timeout"
+        : "unavailable";
+    const message = explicitKind ? String(messageOrCause) : kindOrMessage;
     super(message);
     this.name = "RuntimeDataLoadError";
+    this.kind = kind;
     this.cause = cause;
   }
 }
 
-export function isRuntimeDataTimeout(error: unknown): boolean {
+function isTimeoutCause(cause: unknown): boolean {
   return (
-    error instanceof RuntimeDataLoadError &&
-    error.cause instanceof Error &&
-    error.cause.name === "RequestTimeoutError"
+    isRequestTimeoutError(cause) ||
+    (cause instanceof Error && ["AbortError", "RequestTimeoutError"].includes(cause.name))
   );
+}
+
+export function isRuntimeDataTimeout(error: unknown): boolean {
+  return error instanceof RuntimeDataLoadError && error.kind === "timeout";
+}
+
+export function toRuntimeDataLoadError(context: string, cause: unknown): RuntimeDataLoadError {
+  if (cause instanceof RuntimeDataLoadError) return cause;
+  const kind =
+    cause instanceof RuntimeDataIntegrityError
+      ? "corrupt"
+      : isTimeoutCause(cause)
+        ? "timeout"
+        : "unavailable";
+  const message =
+    kind === "timeout"
+      ? "Runtime data took too long to load. Retry, or return to mode selection."
+      : `${context}: ${cause instanceof Error ? cause.message : String(cause)}`;
+  return new RuntimeDataLoadError(kind, message, cause);
 }
 
 export class RunRecordError extends GameDataError {
@@ -97,11 +133,18 @@ export function describeGameError(err: unknown): ErrorDisplay {
     };
   }
   if (err instanceof RuntimeDataLoadError) {
-    return {
-      title: "Runtime data unavailable",
+    console.error("[game] runtime data load failed", {
+      kind: err.kind,
       message: err.message,
-      action: "reload",
-    };
+      cause: err.cause,
+    });
+    return err.kind === "timeout"
+      ? { title: "Runtime data unavailable", message: err.message, action: "reload" }
+      : {
+          title: "Player database unavailable",
+          message: "We couldn't load the player database. Please try again.",
+          action: "reload",
+        };
   }
   if (err instanceof DraftTransitionError) {
     return {

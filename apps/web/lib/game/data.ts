@@ -37,7 +37,7 @@ import type {
   RuntimeRating,
 } from "@wcdraft/data";
 
-import { MissingRecordError, RuntimeDataLoadError } from "./errors";
+import { MissingRecordError, RuntimeDataLoadError, toRuntimeDataLoadError } from "./errors";
 import { dailyCoverageForDate } from "./daily";
 import { composeVersions, type RunRecordVersions } from "./versions";
 import { displayNameFromNames, fullDisplayName } from "./display-names";
@@ -82,6 +82,14 @@ export interface GameData {
 let cachedGameData: GameData | null = null;
 let inFlight: Promise<GameData> | null = null;
 
+export interface GameDataLoadDeps {
+  waitForHandoff: () => Promise<unknown>;
+  loadManifest: () => Promise<RuntimeDataManifest>;
+  loadDraftPool: (opts: { manifest: RuntimeDataManifest }) => Promise<DraftPoolBundle>;
+  loadSaltMap: (opts: { manifest: RuntimeDataManifest }) => Promise<DailySeedSaltMap>;
+  build: typeof buildGameData;
+}
+
 /** Test-only — drop the session memo (no production caller). */
 export function clearGameDataCacheForTests(): void {
   cachedGameData = null;
@@ -95,17 +103,19 @@ export function clearGameDataCacheForTests(): void {
  * through). Exported for an executable uncontrolled-page race test.
  */
 export async function loadDraftPoolAfterServiceWorkerHandoff({
+  manifest,
   waitForHandoff = waitForRuntimeDataServiceWorkerHandoff,
   loadDraftPool = loadDraftPoolBundle,
 }: {
+  manifest: RuntimeDataManifest;
   waitForHandoff?: () => Promise<RuntimeDataServiceWorkerHandoff>;
-  loadDraftPool?: () => Promise<DraftPoolBundle>;
-} = {}): Promise<DraftPoolBundle> {
+  loadDraftPool?: (opts: { manifest: RuntimeDataManifest }) => Promise<DraftPoolBundle>;
+}): Promise<DraftPoolBundle> {
   const handoff = await waitForHandoff();
   if (handoff === "timed-out") {
     throw new Error("Runtime-data service-worker promotion timed out");
   }
-  return loadDraftPool();
+  return loadDraftPool({ manifest });
 }
 
 /**
@@ -122,8 +132,8 @@ export async function loadRuntimeDataAfterServiceWorkerHandoff({
 }: {
   waitForHandoff?: () => Promise<RuntimeDataServiceWorkerHandoff>;
   loadManifest?: () => Promise<RuntimeDataManifest>;
-  loadDraftPool?: () => Promise<DraftPoolBundle>;
-  loadDailyMap?: () => Promise<DailySeedSaltMap>;
+  loadDraftPool?: (opts: { manifest: RuntimeDataManifest }) => Promise<DraftPoolBundle>;
+  loadDailyMap?: (opts: { manifest: RuntimeDataManifest }) => Promise<DailySeedSaltMap>;
 } = {}): Promise<{
   manifest: RuntimeDataManifest;
   draftPool: DraftPoolBundle;
@@ -136,8 +146,10 @@ export async function loadRuntimeDataAfterServiceWorkerHandoff({
 
   const manifest = await loadManifest();
   const [draftPool, dailySeedSaltMap] = await Promise.all([
-    loadDraftPool(),
-    manifest.bundles.daily_seed_salt_map === undefined ? Promise.resolve(null) : loadDailyMap(),
+    loadDraftPool({ manifest }),
+    manifest.bundles.daily_seed_salt_map === undefined
+      ? Promise.resolve(null)
+      : loadDailyMap({ manifest }),
   ]);
   return { manifest, draftPool, dailySeedSaltMap };
 }
@@ -158,6 +170,7 @@ export async function loadDailyAvailability(date: string): Promise<boolean> {
         });
         if (manifest.bundles.daily_seed_salt_map === undefined) return false;
         const saltMap = await loadDailySeedSaltMap({
+          manifest,
           signal,
           timeoutMs: REQUEST_BUDGET_MS.dailyMetadata,
         });
@@ -176,10 +189,7 @@ export async function loadDailyAvailability(date: string): Promise<boolean> {
         err,
       );
     }
-    console.error(
-      "[daily] availability metadata failed",
-      err instanceof Error ? err.name : "UnknownError",
-    );
+    console.error("[daily] availability metadata failed", err);
     return false;
   }
 }
@@ -198,26 +208,17 @@ export async function loadGameData(): Promise<GameData> {
         // Select one controller before any revision-bearing request begins.
         // This prevents an old manifest from being combined with a new pool.
         // The D1 signal still binds every fetch to the shared 30-second budget.
-        const { manifest, draftPool, dailySeedSaltMap } =
-          await loadRuntimeDataAfterServiceWorkerHandoff({
-            loadManifest: () => loadDataManifest({ signal }),
-            loadDraftPool: () => loadDraftPoolBundle({ signal }),
-            loadDailyMap: () => loadDailySeedSaltMap({ signal }),
-          });
-        const gd = buildGameData(manifest, draftPool, dailySeedSaltMap);
+        const gd = await loadGameDataUncached({
+          waitForHandoff: waitForRuntimeDataServiceWorkerHandoff,
+          loadManifest: () => loadDataManifest({ signal }),
+          loadDraftPool: ({ manifest }) => loadDraftPoolBundle({ manifest, signal }),
+          loadSaltMap: ({ manifest }) => loadDailySeedSaltMap({ manifest, signal }),
+          build: buildGameData,
+        });
         cachedGameData = gd;
         return gd;
       } catch (err) {
-        if (isRequestTimeoutError(err)) {
-          throw new RuntimeDataLoadError(
-            "Runtime data took too long to load. Retry, or return to mode selection.",
-            err,
-          );
-        }
-        throw new RuntimeDataLoadError(
-          "The runtime data could not be loaded. Retry, or return to mode selection.",
-          err,
-        );
+        throw toRuntimeDataLoadError("Failed to load wcdraft runtime data", err);
       }
     },
     {
@@ -227,22 +228,28 @@ export async function loadGameData(): Promise<GameData> {
     },
   )
     .catch((err: unknown) => {
-      if (err instanceof RuntimeDataLoadError) throw err;
-      if (isRequestTimeoutError(err)) {
-        throw new RuntimeDataLoadError(
-          "Runtime data took too long to load. Retry, or return to mode selection.",
-          err,
-        );
-      }
-      throw new RuntimeDataLoadError(
-        "The runtime data could not be loaded. Retry, or return to mode selection.",
-        err,
-      );
+      throw toRuntimeDataLoadError("Failed to load wcdraft runtime data", err);
     })
     .finally(() => {
       inFlight = null;
     });
   return inFlight;
+}
+
+/** Build/version anchors are unreachable until every bundle passes manifest verification. */
+export async function loadGameDataUncached(deps: GameDataLoadDeps): Promise<GameData> {
+  const handoff = await deps.waitForHandoff();
+  if (handoff === "timed-out") {
+    throw new Error("Runtime-data service-worker promotion timed out");
+  }
+  const manifest = await deps.loadManifest();
+  const [draftPool, dailySeedSaltMap] = await Promise.all([
+    deps.loadDraftPool({ manifest }),
+    manifest.bundles.daily_seed_salt_map === undefined
+      ? Promise.resolve(null)
+      : deps.loadSaltMap({ manifest }),
+  ]);
+  return deps.build(manifest, draftPool, dailySeedSaltMap);
 }
 
 export function buildGameData(
