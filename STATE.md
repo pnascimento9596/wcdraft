@@ -521,8 +521,8 @@ API, or database artifact changed.
 Audit S1 C5 retained-runtime closure and server path hygiene:
 2026-07-11 · RED data-delivery implementation on branch
 `ws-f4/audit-s1-retained-runtime`, initially based on C1/C2-shipped
-`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` and integrated on C3 commit
-`472f92a85286931e76031e1a3482561662d94b6d`. Runtime materialization now
+`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc` and finally rebased onto
+C3-shipped `origin/main` `87659baef158408cc33b4eeec9b30534deb230ae`. Runtime materialization now
 derives every current and retained file from that schema's own manifest,
 requires and fingerprints Daily salt-map and score-distribution bundles when
 advertised, validates the complete current-plus-retained closure before any
@@ -569,9 +569,16 @@ rejection; the focused worker/handoff matrix passes 24/24 and the seven-file C3+
 overlap passes 59/59. The fix-forward full gate then passed: generated-artifact
 check, forced typecheck 8/8, lint 5/5, root test 8/8 in 7m53.744s, build 4/4 with
 40/40 pages, responsive 218/0, web 1,123 passed + 1 expected skip, core goldens
-69 + 42, data goldens 54 + 22, and leaderboard golden 6. It still requires CI,
-independent exact-head RED PASS, Ollama Cloud PASS, merge, deployment, and live
-proof.
+69 + 42, data goldens 54 + 22, and leaderboard golden 6. Exact head
+`8a3b01d7458283c6e77b1f66037576a0833f7aba` then received fresh independent
+RED PASS and Ollama Cloud GLM 5.2 max-thinking PASS. PR #249 squash-merged as
+`87659baef158408cc33b4eeec9b30534deb230ae`; exact-main CI `29176415682`
+passed its required aggregate. Production `/api/health` reported that exact
+SHA and DB ready. Two clean-profile Chrome proofs installed the exact five-file
+closure, hashed the 130,545,042-byte decoded pool to `461601c6…487a`, recorded
+one pool URL request and a controlled reread with transfer size 0, and leaked
+no processes. The measured install-time aggregate RSS amplification remains a
+documented non-blocking warning.
 
 The enforced policy constant retains exactly the two immediately prior minor
 runtime schemas on every bump. For current `runtime-data-2.9.0`, source and
@@ -600,18 +607,22 @@ for 134,465,011 bytes / 95.01% total reduction. Current C1 artifact
 fingerprints, schema `runtime-data-2.9.0`, rating, engine, simulation, draft
 semantics, ETL inputs, and generated bundle bytes remain unchanged.
 
-Integrated validation passes: manifest-derived copy/closure/policy and
+Final post-rebase validation passes: manifest-derived copy/closure/policy and
 fail-closed tests 8/8; generator + server path/cache tests 2 files / 21 tests;
-full `@wcdraft/data` suite 165 passed / 9 skipped; full non-browser web Vitest
-953 passed / 1 skipped; root typecheck 8/8; root lint 5/5; root build 4/4 with
-40/40 pages; data goldens 54/54; integration goldens 22/22; leaderboard golden
-6/6; the ordered compact → score distribution → compact regeneration chain;
-and forced `check:generated` regeneration with no tracked fingerprint drift.
-Web pretest now emits 5 manifest-derived worker entries with data revision
-`e08a2facf9c85830`. The original stale-generator pretest failure is preserved
-as the regression trigger; the same command passes after C3 integration. No
-browser lane was run because C3/D1 own the shared browser lifecycle; fresh
-exact-head independent review remains required before release.
+full `@wcdraft/data` suite 171 passed / 9 skipped; full non-browser web Vitest
+1,127 passed / 1 skipped. After rejecting one stale-linked-package bootstrap
+attempt, the forced root test restarted from zero and passed 8/8 tasks with 0
+cache hits in 7m54.087s: core 391, data 171 + 9 expected skips, web 1,127 + 1
+expected skip, game-flow Playwright PASS, and responsive 218/0 (84 desktop, 56
+mobile, 40 interaction, 30 mode/setup, 8 mobile navigation). Forced typecheck
+passed 8/8 in 7.375s, lint 5/5 in 3.464s, and build 4/4 in 19.912s with 40/40
+pages, all 0 cached. Core goldens passed 69 + 42, data goldens 54 + 22, and
+leaderboard golden 6. The ordered compact → score distribution → compact
+regeneration chain, forced `check:generated`, Prettier, and diff checks passed
+with no tracked fingerprint drift. Web pretest emits 5 manifest-derived worker
+entries with data revision `e08a2facf9c85830`; the public runtime tree is
+6.76 MiB / 14 files across current 2.9.0 plus retained 2.7.0 and 2.8.0. Fresh
+exact-head CI and independent RED review remain required before release.
 
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
