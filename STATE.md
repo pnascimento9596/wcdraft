@@ -4,6 +4,39 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 E1 canonical minified runtime JSON:
+2026-07-12 · local RED implementation on branch
+`ws-f4/audit-s1-minified-runtime`, based on Wave C production HEAD
+`26a6a9ce91e55057d7ac930c07680d3fd3104559`. Runtime schema advances to
+`runtime-data-2.10.0`. Runtime JSON now uses one recursively key-sorted,
+minified `JSON.stringify` form with no trailing newline; the size report stays
+readable. The retained window advances from 2.7/2.8 to 2.8/2.9 with the full
+manifest-derived canonical 2.9 closure.
+
+The draft pool measures 68,380,413 decoded bytes and 1,311,661 canonical
+Brotli bytes, down from 130,545,042 and 2,224,859 (47.6193% decoded reduction).
+The one-byte delta from the dispatch estimate is the additional character in
+the 2.10 schema string. Draft raw SHA is `ae5376c9…8d07`, scenario raw SHA is
+`50c45d0e…66fd`, manifest raw SHA is `d823b6f9…edcc`, and the composed service
+worker data revision is `5b0f2daf98df2038`. Retained 2.9 draft/scenario parse
+deep-equal to current after schema normalization; retained 2.9 tokens surface
+honest version skew; current replay remains byte-identical. Canary regeneration
+produced zero pick flips.
+
+Optimized Chrome mode-to-setup measurements pass: desktop 938 ms / 78 MiB
+settled heap / 2,262 MiB peak process-tree RSS and mobile-touch under a 1 GiB
+V8 ceiling 858 ms / 78 MiB / 2,256 MiB, both decoding exactly 68,380,413 bytes.
+Compared with the same C4 harness baseline, readiness improved 650 ms desktop
+and 693 ms mobile. Safari/WebKit instrumentation remains NOT RUN.
+
+Local gates pass: typecheck 8/8 uncached, lint 5/5, root test 8/8 with core
+391, data 182 / 9 expected skips, DB 161, marketing 68, and web 1,156 / 1
+expected benchmark skip (1,958 executed), game-flow, responsive 218/0, build
+4/4, core goldens 69+42, data goldens 59+22, leaderboard 6, heavy realism 9,
+canary 1 with zero flips, and browser benchmark 2/2. Durable report:
+`docs/reports/audit-s1-e1-minified-runtime-2026-07-12.md`. Exact-head review,
+protected CI, merge, deploy, and live proof remain required.
+
 Audit S1 C6 simulation-worker prewarm and single-winner lifecycle:
 2026-07-11–12 · local RED implementation on branch
 `ws-f4/audit-s1-sim-worker-prewarm`, rebased onto C4-shipped `origin/main`
@@ -62,8 +95,9 @@ listener-cleanup, and watchdog regressions. Review artifact:
 `/tmp/audit-s1-c6-review-1f705b9.md`, SHA-256
 `fd07b75e3b399fce43648c693c8f0cf5425c4ab6b37c4df4c4c95c3b530d5cc1`.
 
-Final local gates pass: focused C6/leaderboard coverage 5 files passed / 1
-benchmark skipped, 86 tests passed / 1 skipped at the final tree; final
+Final local gates pass: implementer-focused C6/leaderboard coverage 5 files
+passed / 1 benchmark skipped, 86 tests passed / 1 skipped at the final tree;
+the fresh reviewer used a broader selection and recorded 98 passed / 1 skipped. Final
 worker-client coverage 14/14; standalone game-flow; opt-in benchmark 1/1;
 root test 8/8 with core 391, data 176 / 9 expected skips, DB 161, marketing 68,
 and web 1,155 / 1 expected benchmark skip (1,951 executed total), plus game-flow

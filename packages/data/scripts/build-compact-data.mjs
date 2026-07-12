@@ -80,7 +80,9 @@ const BROTLI_MODE = "text";
 // runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
-const SCHEMA_VERSION = "runtime-data-2.9.0";
+// runtime-data-2.10.0: runtime JSON is emitted in one canonical minified form.
+// Parsed data and all rating/simulation semantics are unchanged.
+const SCHEMA_VERSION = "runtime-data-2.10.0";
 // manager-attrition: manager_link now drives the reserved manager band and
 // persistent user-path injury attrition is reduced to keep tournament attrition
 // fair while opponents are regenerated fixture-by-fixture.
@@ -166,7 +168,11 @@ async function readJson(filePath) {
  * Arrays preserve order — callers are responsible for canonical-sorting
  * their arrays before passing them in.
  */
-function stableStringify(value) {
+function canonicalRuntimeStringify(value) {
+  return JSON.stringify(value, sortReplacer);
+}
+
+function readableReportStringify(value) {
   return JSON.stringify(value, sortReplacer, 2) + "\n";
 }
 
@@ -1104,8 +1110,8 @@ async function build() {
   );
 
   // ── Serialise bundles and stamp manifest fingerprints ────────────────────
-  const draftPoolBytes = Buffer.from(stableStringify(draftPoolBundle), "utf8");
-  const scenario2026Bytes = Buffer.from(stableStringify(scenario2026Bundle), "utf8");
+  const draftPoolBytes = Buffer.from(canonicalRuntimeStringify(draftPoolBundle), "utf8");
+  const scenario2026Bytes = Buffer.from(canonicalRuntimeStringify(scenario2026Bundle), "utf8");
 
   const previousManifestPath = path.join(outDir, "manifest.json");
   const previousManifest = existsSync(previousManifestPath)
@@ -1147,8 +1153,8 @@ async function build() {
       );
       return null;
     }
-    const bytes = readFileSync(artifactPath);
-    const artifact = JSON.parse(bytes.toString("utf8"));
+    const artifact = JSON.parse(readFileSync(artifactPath, "utf8"));
+    const bytes = Buffer.from(canonicalRuntimeStringify(artifact), "utf8");
     const anchors = artifact?.anchors ?? {};
     const expected = {
       dataset_version: datasetVersion,
@@ -1170,13 +1176,16 @@ async function build() {
       );
       return null;
     }
-    return materializeBrotliBundle({
+    return {
+      ...materializeBrotliBundle({
+        raw: bytes,
+        relativePath: "score-distribution.compact.json",
+        outDir,
+        forceRebuild,
+        previousFingerprint: previousManifest?.bundles?.score_distribution,
+      }),
       raw: bytes,
-      relativePath: "score-distribution.compact.json",
-      outDir,
-      forceRebuild,
-      previousFingerprint: previousManifest?.bundles?.score_distribution,
-    });
+    };
   })();
   const scoreDistributionFingerprint = scoreDistributionMaterialized?.fingerprint ?? null;
 
@@ -1189,8 +1198,8 @@ async function build() {
       );
       return null;
     }
-    const bytes = readFileSync(artifactPath);
-    const artifact = JSON.parse(bytes.toString("utf8"));
+    const artifact = JSON.parse(readFileSync(artifactPath, "utf8"));
+    const bytes = Buffer.from(canonicalRuntimeStringify(artifact), "utf8");
     const anchors = artifact?.anchors ?? {};
     const expected = {
       dataset_version: datasetVersion,
@@ -1212,13 +1221,16 @@ async function build() {
       );
       return null;
     }
-    return materializeBrotliBundle({
+    return {
+      ...materializeBrotliBundle({
+        raw: bytes,
+        relativePath: "daily-seed-salt-map.compact.json",
+        outDir,
+        forceRebuild,
+        previousFingerprint: previousManifest?.bundles?.daily_seed_salt_map,
+      }),
       raw: bytes,
-      relativePath: "daily-seed-salt-map.compact.json",
-      outDir,
-      forceRebuild,
-      previousFingerprint: previousManifest?.bundles?.daily_seed_salt_map,
-    });
+    };
   })();
   const dailySeedSaltMapFingerprint = dailySeedSaltMapMaterialized?.fingerprint ?? null;
 
@@ -1253,7 +1265,7 @@ async function build() {
     attribution,
   };
   validateRuntimeDataManifest(manifestObj);
-  const manifestBytes = Buffer.from(stableStringify(manifestObj), "utf8");
+  const manifestBytes = Buffer.from(canonicalRuntimeStringify(manifestObj), "utf8");
   const previousReportPath = path.join(PACKAGE_DIR, "reports", "compact-size.json");
   const previousReport = existsSync(previousReportPath)
     ? JSON.parse(readFileSync(previousReportPath, "utf8"))
@@ -1285,11 +1297,19 @@ async function build() {
   );
   if (scoreDistributionMaterialized !== null) {
     await writeFile(
+      path.join(outDir, "score-distribution.compact.json"),
+      scoreDistributionMaterialized.raw,
+    );
+    await writeFile(
       path.join(outDir, `score-distribution.compact.json${BROTLI_SUFFIX}`),
       scoreDistributionMaterialized.compressed,
     );
   }
   if (dailySeedSaltMapMaterialized !== null) {
+    await writeFile(
+      path.join(outDir, "daily-seed-salt-map.compact.json"),
+      dailySeedSaltMapMaterialized.raw,
+    );
     await writeFile(
       path.join(outDir, `daily-seed-salt-map.compact.json${BROTLI_SUFFIX}`),
       dailySeedSaltMapMaterialized.compressed,
@@ -1324,7 +1344,7 @@ async function build() {
       draftPoolFingerprint.bytes_gzip +
       scenario2026Fingerprint.bytes_gzip,
   };
-  await writeFile(path.join(reportsDir, "compact-size.json"), stableStringify(sizeReport));
+  await writeFile(path.join(reportsDir, "compact-size.json"), readableReportStringify(sizeReport));
 
   // ── Console summary ──────────────────────────────────────────────────────
   process.stdout.write(

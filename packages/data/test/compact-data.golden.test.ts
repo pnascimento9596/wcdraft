@@ -135,6 +135,20 @@ describe("compact-data golden", () => {
     },
   );
 
+  it.each(FINGERPRINT_FILES)(
+    "emits %s as canonical minified JSON with parsed equality to readable JSON",
+    (file) => {
+      const minified = generated[file]!.toString("utf8");
+      const parsedMinified = JSON.parse(minified) as unknown;
+      const readable = `${JSON.stringify(parsedMinified, null, 2)}\n`;
+      const parsedReadable = JSON.parse(readable) as unknown;
+
+      expect(parsedMinified).toEqual(parsedReadable);
+      expect(minified).toBe(JSON.stringify(parsedMinified));
+      expect(minified.endsWith("\n")).toBe(false);
+    },
+  );
+
   it("manifest fingerprints match the on-disk bundle bytes (no manifest-vs-bundle skew)", () => {
     const manifest = JSON.parse(
       generated["manifest.json"]!.toString("utf8"),

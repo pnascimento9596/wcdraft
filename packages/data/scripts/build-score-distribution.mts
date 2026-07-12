@@ -78,7 +78,18 @@ const artifact: ScoreDistribution = {
   quantiles,
 };
 
-writeFileSync(OUT_PATH, JSON.stringify(artifact, null, 2) + "\n", "utf-8");
+function canonicalRuntimeStringify(value: unknown): string {
+  return JSON.stringify(value, (_key, candidate: unknown) => {
+    if (candidate === null || typeof candidate !== "object" || Array.isArray(candidate)) {
+      return candidate;
+    }
+    return Object.fromEntries(
+      Object.entries(candidate as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)),
+    );
+  });
+}
+
+writeFileSync(OUT_PATH, canonicalRuntimeStringify(artifact), "utf-8");
 const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
 console.log(
   `[SCORE-DIST] wrote ${OUT_PATH} (N=${summary.runs} qualifying=${summary.qualifyingRuns} ` +

@@ -90,13 +90,13 @@ describe("GET /api/health readiness contract", () => {
 
   it("publishes the six data anchors without loading a secret-bearing value", () => {
     expect(DATA_MANIFEST_ANCHOR).toEqual({
-      schema_version: "runtime-data-2.9.0",
+      schema_version: "runtime-data-2.10.0",
       dataset_version: "2026-07-01",
       engine_version: "engine-2026.06.30-manager-attrition",
       rating_version_historical: "wc-perf-6.6.0",
       rating_version_projected: "proj-career-5.6.0",
       ruleset_version: "ruleset-2026.06.04",
-      draft_pool_sha256: "461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a",
+      draft_pool_sha256: "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07",
     });
   });
 });

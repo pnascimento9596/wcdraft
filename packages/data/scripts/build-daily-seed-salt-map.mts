@@ -136,7 +136,7 @@ function parseArgs(argv: readonly string[]): DailySeedSaltMapBuildArgs {
 }
 
 function stableStringify(value: unknown): string {
-  return JSON.stringify(value, sortReplacer, 2) + "\n";
+  return JSON.stringify(value, sortReplacer);
 }
 
 function sortReplacer(_key: string, value: unknown): unknown {

@@ -22,6 +22,8 @@
 //      fixtures/run-token-skew.json (regen: pnpm --filter @wcdraft/web
 //      gen:token-skew on anchor bumps; the tampered case is anchor-stable).
 
+import { readFileSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import type { GameData } from "../data";
@@ -50,6 +52,23 @@ const origin = buildOriginRecord(gameData);
 const builtOriginBody = buildRunTokenBody(origin);
 if (builtOriginBody.v !== 3) throw new Error("expected default fixture to emit a t3 body");
 const originBody: RunTokenV3Body = builtOriginBody;
+const retained29Manifest = JSON.parse(
+  readFileSync(
+    new URL(
+      "../../../../../packages/data/src/retained-runtime-data/runtime-data-2.9.0/manifest.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+) as {
+  schema_version: string;
+  dataset_version: string;
+  rating_version_historical: string;
+  rating_version_projected: string;
+  engine_version: string;
+  ruleset_version: string;
+  bundles: { draft_pool: { sha256: string }; scenario_2026: { sha256: string } };
+};
 
 function encodeBody(body: unknown, prefix: string = RUN_TOKEN_V3_PREFIX): string {
   return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
@@ -344,6 +363,23 @@ describe("encode — pre-DC-1 RunRecord (no config fields) normalizes to default
 // ─── 7. committed PREV skew fixtures (plan §A fixture list) ──────────────────
 
 describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
+  it("treats a token minted on retained runtime-data-2.9.0 as honest version skew", () => {
+    const retainedBody: RunTokenV3Body = {
+      ...originBody,
+      sv: retained29Manifest.schema_version,
+      dv: retained29Manifest.dataset_version,
+      rv: `${retained29Manifest.rating_version_historical}+${retained29Manifest.rating_version_projected}`,
+      ev: retained29Manifest.engine_version,
+      uv: retained29Manifest.ruleset_version,
+      hv: `${retained29Manifest.bundles.draft_pool.sha256}+${retained29Manifest.bundles.scenario_2026.sha256}`,
+    };
+    const decoded = decodeRunToken(encodeBody(retainedBody));
+
+    expect(decoded).not.toBeNull();
+    expect(decoded!.sv).toBe("runtime-data-2.9.0");
+    expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
+  });
+
   it("current-prod t1 token: anchors derive from the shipped manifest and now trip skew", () => {
     const decoded = decodeRunToken(skewFixtures.current_prod_t1.token);
     expect(decoded).not.toBeNull();

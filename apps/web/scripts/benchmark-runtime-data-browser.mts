@@ -5,11 +5,10 @@ import { chromium } from "playwright-core";
 
 const execFileAsync = promisify(execFile);
 const baseUrl = process.env.BASE_URL ?? "http://127.0.0.1:3000";
-const expectedDecodedBytes = 130_545_042;
+const expectedDecodedBytes = 68_380_413;
 const maxReadyMs = 10_000;
 // Includes the browser, renderer, GPU/network helpers, and the benchmark's
-// Node parent. The current 130 MB pretty-JSON artifact is intentionally gated
-// below 3 GiB until E1 halves the decoded representation.
+// Node parent. The canonical minified artifact remains gated below 3 GiB.
 const maxSampledBrowserRssMiB = 3_000;
 
 type BrowserCase = {
