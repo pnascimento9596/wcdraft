@@ -9,19 +9,20 @@
 // Measures `validateSubmission` end-to-end (decode → season → name → replay →
 // re-sim → score check) over N real-bundle submissions synthesized via
 // autoDraft on distinct seeds, mirroring the plan-§0.1 method. The plan's
-// reference numbers: p50 7.6 ms / p95 17.0 ms per submission.
+// Historical plan numbers were p50 7.6 ms / p95 17.0 ms per submission.
+// They are context only. Audit S1 C6 measured p50 5.6 ms / p95 11.4 ms /
+// max 13.6 ms locally on 2026-07-12; this remains telemetry, not a threshold.
 //
 // `performance.now` here is TEST harness telemetry — it never feeds the
 // pipeline (the core stays clock-free).
 
 import { describe, expect, it } from "vitest";
 
-import { encodeRunToken } from "../../game/run-token";
 import { validateSubmission, type ValidationData } from "../validate";
 import {
   buildOriginRecord,
+  buildSubmissionBody,
   buildServerGameData,
-  expectedRunFor,
   serverScenarioBundle,
 } from "./_harness";
 
@@ -47,11 +48,9 @@ function quantile(sorted: number[], q: number): number {
         "classic",
         "Bench XI",
       );
-      return {
-        token: encodeRunToken(record),
-        claimed_score: expectedRunFor(data.gameData, data.scenario, record).score,
-        display_name: "bench_player",
-      };
+      return buildSubmissionBody(data.gameData, data.scenario, record, {
+        display_alias: "bench_player",
+      });
     });
 
     // Warmup (JIT + lazy structures), then timed runs.
@@ -71,7 +70,7 @@ function quantile(sorted: number[], q: number): number {
     console.log(
       `[f4-u2 bench] n=${N} p50=${fmt(quantile(sorted, 0.5))} p95=${fmt(
         quantile(sorted, 0.95),
-      )} max=${fmt(sorted[sorted.length - 1]!)} (plan §0.1 reference: p50 7.6 / p95 17.0)`,
+      )} max=${fmt(sorted[sorted.length - 1]!)} (historical plan reference only: p50 7.6 / p95 17.0)`,
     );
   });
 });

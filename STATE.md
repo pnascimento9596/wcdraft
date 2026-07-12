@@ -4,6 +4,74 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 C6 simulation-worker prewarm and single-winner lifecycle:
+2026-07-11–12 · local RED implementation on branch
+`ws-f4/audit-s1-sim-worker-prewarm`, rebased onto C4-shipped `origin/main`
+`72e9c586e2fb22b70448f1b0bdbc71c6e9903ac2`. The existing simulation worker
+previously belonged to one `runSimulation` call: the click constructed it and
+the first result/error terminated it, so no prewarm was possible. Review now
+prewarms one module-scoped worker immediately after `resolveDisplayRun` makes
+the review surface ready (therefore after C4's runtime-data integrity gate),
+then reuses that exact worker for the run simulation. The worker is terminated
+on review run change/navigation/unmount and after a bounded 120-second idle
+period; a later request recreates it. Spawn, runtime, protocol, and worker-side
+simulation failures retain the existing yielded main-thread failover with an
+explicit warning. Caller cancellation never falls through to main-thread work.
+
+The worker protocol now carries monotonic request IDs. Abort terminates the
+active worker, stale IDs cannot settle a newer request, and the single-worker
+client rejects concurrent requests. Full persisted-simulation and telemetry
+validation prevents malformed same-ID success replies from winning;
+`messageerror` handling plus a bounded 120-second active-request watchdog make
+every explicit or silent protocol failure terminal. The review CTA retains its synchronous ref/state double-click lock
+before the first await, adds one AbortController plus operation identity per
+attempt, and rechecks both before persistence, server mirroring, and results
+navigation. Cancellation after a durable `simulating` mark records its exact
+`updated_seq`. Both result persistence and best-effort recovery require the
+current record to retain that `simulating` status/sequence; an older operation
+conflicts rather than overwriting a later completed run, and no non-complete
+transition may retain a simulation payload. Only the current operation can save
+or hand off a result. The worker path remains byte-identical to
+`runSimulationSync` on the deterministic real-bundle fixture; no core, RNG,
+scoring, scenario, anchor, schema, rating, ETL, or generated-data semantics
+changed.
+
+The opt-in `validate.bench.test.ts` now constructs submissions through the
+same exported test/dev body builder used by route configuration tests,
+including required `draft_mode`. The benchmark remains skipped by default and
+has no timing threshold assertion. Its historical p50 7.6 ms / p95 17.0 ms
+comment is explicitly context rather than a current measurement. The final C6
+tree ran 30 real-bundle submissions: p50 5.6 ms, p95 11.4 ms, max 13.6 ms.
+These are local telemetry, not a threshold.
+
+The first post-rebase validation launch was invalid infrastructure evidence:
+three concurrent pnpm commands raced a stale worktree dependency repair,
+causing `ENOTEMPTY` and stale package-type errors before the focused tests ran.
+A single frozen install repaired the worktree. The next valid root test exposed
+a real browser-only defect: storing unbound default timer functions on the
+worker client made `this.setTimer(...)` use the client as the Web-IDL receiver,
+and game-flow reported `Illegal invocation`. Default timers are now bound to
+`globalThis`; a receiver-strict regression test fails without that binding.
+
+The first independent exact-head review at `1f705b919517e290f4c060979121ba9186d496d0`
+returned FAIL (one critical, two high): unconditional lifecycle rollback could
+invalidate a concurrently completed run; malformed same-ID `done` replies could
+resolve with undefined payloads; and `messageerror` or silent workers could hang.
+All three were fixed-forward with ownership interleaving, full protocol parser,
+listener-cleanup, and watchdog regressions. Review artifact:
+`/tmp/audit-s1-c6-review-1f705b9.md`, SHA-256
+`fd07b75e3b399fce43648c693c8f0cf5425c4ab6b37c4df4c4c95c3b530d5cc1`.
+
+Final local gates pass: focused C6/leaderboard coverage 5 files passed / 1
+benchmark skipped, 86 tests passed / 1 skipped at the final tree; final
+worker-client coverage 14/14; standalone game-flow; opt-in benchmark 1/1;
+root test 8/8 with core 391, data 176 / 9 expected skips, DB 161, marketing 68,
+and web 1,155 / 1 expected benchmark skip (1,951 executed total), plus game-flow
+and the 218/0 responsive matrix. Root typecheck 8/8, lint 5/5, build 4/4,
+formatting, and `git diff --check` pass. The durable report is
+`docs/reports/audit-s1-c6-sim-worker-prewarm-2026-07-12.md`. Exact-head review,
+protected CI, merge, deploy, and live verification remain required.
+
 Audit S1 C4 browser runtime-data digest enforcement:
 2026-07-11–12 · RED implementation on branch
 `ws-f4/audit-s1-runtime-digest`, rebased onto C5-shipped `origin/main`

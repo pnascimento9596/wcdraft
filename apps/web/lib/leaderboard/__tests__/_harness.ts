@@ -27,8 +27,10 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { GameData } from "../../game/data";
 import { getCatalogForEra } from "../../game/data";
 import type { RunRecordV1 } from "../../game/run-record";
+import { buildRunTokenBody } from "../../game/run-token";
 import { buildSimWorldInputs } from "../../game/simulate";
 import { buildServerGameData, serverScenarioBundle } from "../server-data";
+import type { SubmissionBody } from "../validate";
 
 export { buildServerGameData, serverScenarioBundle };
 export type { Scenario2026Bundle };
@@ -128,6 +130,22 @@ export function expectedRunFor(
   });
   const result = runTournamentFull(record.draft, scenario, record.parent_seed, world);
   return { score: result.run.score, score_breakdown: result.run.score_breakdown };
+}
+
+/** Public test/dev builder for the exact validator/route submission shape. */
+export function buildSubmissionBody(
+  gameData: GameData,
+  scenarioBundle: Scenario2026Bundle,
+  record: RunRecordV1,
+  over: Record<string, unknown> = {},
+): SubmissionBody & Record<string, unknown> {
+  return {
+    token: encodeBody(buildRunTokenBody(record)),
+    claimed_score: expectedRunFor(gameData, scenarioBundle, record).score,
+    draft_mode: record.draft.mode,
+    display_alias: "route_tester",
+    ...over,
+  } as SubmissionBody & Record<string, unknown>;
 }
 
 /** Re-encode a (possibly tampered) token body — trust-boundary test helper.

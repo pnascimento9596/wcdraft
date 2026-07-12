@@ -32,6 +32,8 @@ import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { mirrorRunToServer } from "@/lib/game/save-mirror";
 import { runSimulation } from "@/lib/game/simulate";
+import { prewarmSimulationWorker, terminateSimulationWorker } from "@/lib/game/sim-worker-client";
+import { SimulationHandoff } from "@/lib/game/simulation-handoff";
 import { formatNullableNumber, type PitchSlotView } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { ManagerSlot } from "./manager-slot";
@@ -99,6 +101,19 @@ export function ReviewScreen() {
         setMode({ kind: "error", title: d.title, message: d.message });
       });
   }, [retryNonce, runId]);
+
+  useEffect(() => {
+    if (mode.kind !== "ready") return;
+    try {
+      // `resolveDisplayRun` has already passed C4's runtime-data integrity
+      // gate. Start the one reusable module worker while the user reviews.
+      prewarmSimulationWorker();
+    } catch (error) {
+      // The click path retains the main-thread fallback and surfaces a warning.
+      console.warn("[simulation] worker prewarm failed", error);
+    }
+    return () => terminateSimulationWorker();
+  }, [mode.kind, mode.kind === "ready" ? mode.record.run_id : null]);
 
   if (mode.kind === "loading") {
     return (
@@ -481,9 +496,29 @@ function SimulatePanel({
   const router = useRouter();
   const [sim, setSim] = useState<SimState>({ kind: "idle" });
   const simInFlightRef = useRef(false);
+  const handoffRef = useRef(new SimulationHandoff());
+
+  useEffect(
+    () => () => {
+      handoffRef.current.cancel((ownedStatusSequence) => {
+        try {
+          setRunStatus(record.run_id, gameData.versions, "ready", {
+            status: "simulating",
+            updated_seq: ownedStatusSequence,
+          });
+        } catch {
+          // Best-effort durable recovery during navigation/unmount.
+        }
+      });
+      simInFlightRef.current = false;
+    },
+    [gameData.versions, record.run_id],
+  );
 
   const startSim = useCallback(async () => {
     if (!complete || sim.kind === "running" || simInFlightRef.current) return;
+    const attempt = handoffRef.current.begin();
+    if (!attempt) return;
     simInFlightRef.current = true;
     setSim({ kind: "running", note: "Loading 2026 scenario…" });
     // Reflect lifecycle on the persisted record so refreshes don't claim the
@@ -491,6 +526,9 @@ function SimulatePanel({
     try {
       const stat = setRunStatus(record.run_id, gameData.versions, "simulating");
       if (stat.status === "updated" && stat.record) {
+        if (stat.persistence === "durable") {
+          handoffRef.current.markStatusSimulating(attempt, stat.record.updated_seq);
+        }
         onRecordUpdate(stat.record, persistenceWarning);
       }
     } catch {
@@ -498,10 +536,33 @@ function SimulatePanel({
     }
     try {
       const scenarioBundle = await loadScenarioBundle();
+      if (!handoffRef.current.canCommit(attempt)) return;
       setSim({ kind: "running", note: "Simulating the run…" });
-      const result = await runSimulation(gameData, scenarioBundle, record);
-      const persist = setRunSimulation(record.run_id, gameData.versions, result.simulation);
+      const result = await runSimulation(gameData, scenarioBundle, record, {
+        signal: attempt.controller.signal,
+      });
+      if (!handoffRef.current.canCommit(attempt)) return;
+      const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
+      const persist = setRunSimulation(
+        record.run_id,
+        gameData.versions,
+        result.simulation,
+        ownedStatusSequence === null
+          ? undefined
+          : { status: "simulating", updated_seq: ownedStatusSequence },
+      );
       if (persist.status !== "updated" || !persist.record) {
+        if (ownedStatusSequence !== null) {
+          try {
+            setRunStatus(record.run_id, gameData.versions, "ready", {
+              status: "simulating",
+              updated_seq: ownedStatusSequence,
+            });
+          } catch {
+            // Best-effort; the stale/invalid record may no longer be writable.
+          }
+        }
+        handoffRef.current.markStatusRecovered(attempt);
         setSim({
           kind: "error",
           title: "Couldn't save the simulation",
@@ -510,6 +571,7 @@ function SimulatePanel({
         });
         return;
       }
+      handoffRef.current.markResultCommitted(attempt);
       const warningParts: string[] = [];
       if (result.warning) warningParts.push(result.warning);
       if (persist.persistence === "volatile") {
@@ -524,22 +586,39 @@ function SimulatePanel({
       // to transfer at sign-in.
       setSim({ kind: "running", note: "Syncing run to history..." });
       await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
+      if (!handoffRef.current.canCommit(attempt)) return;
       void mirrorRunToServer(gameData, persist.record);
       router.push(resultsHref(persist.record.run_id));
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") {
+        // Navigation/unmount cancellation performs its own ownership-checked
+        // recovery before this aborted continuation resumes.
+        return;
+      }
+      if (!handoffRef.current.canCommit(attempt)) return;
       // Reset record status so the user can retry from a clean state.
-      try {
-        const stat = setRunStatus(record.run_id, gameData.versions, "ready");
-        if (stat.status === "updated" && stat.record) {
-          onRecordUpdate(stat.record, persistenceWarning);
+      const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
+      if (ownedStatusSequence !== null) {
+        try {
+          const stat = setRunStatus(record.run_id, gameData.versions, "ready", {
+            status: "simulating",
+            updated_seq: ownedStatusSequence,
+          });
+          if (stat.status === "updated" && stat.record) {
+            onRecordUpdate(stat.record, persistenceWarning);
+          }
+          handoffRef.current.markStatusRecovered(attempt);
+        } catch {
+          // best-effort
         }
-      } catch {
-        // best-effort
       }
       const d = describeGameError(err);
       setSim({ kind: "error", title: d.title, message: d.message });
     } finally {
-      simInFlightRef.current = false;
+      if (handoffRef.current.canCommit(attempt)) {
+        handoffRef.current.finish(attempt);
+        simInFlightRef.current = false;
+      }
     }
   }, [complete, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
 
