@@ -551,7 +551,7 @@ without launching duplicate direct work. New executed negative cases cover both
 same-length corruption paths, persistence-only fallback, stalled fetch, stalled
 lock, revision-coherent request start, timeout non-fallback, and deletion
 rejection; the focused worker/handoff matrix passes 24/24 and the seven-file C3+D1
-overlap passes 56/56. The fix-forward full gate then passed: generated-artifact
+overlap passes 59/59. The fix-forward full gate then passed: generated-artifact
 check, forced typecheck 8/8, lint 5/5, root test 8/8 in 7m53.744s, build 4/4 with
 40/40 pages, responsive 218/0, web 1,123 passed + 1 expected skip, core goldens
 69 + 42, data goldens 54 + 22, and leaderboard golden 6. It still requires CI,

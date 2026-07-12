@@ -97,7 +97,7 @@ corruption, verified-response/storage-failure separation, never-settling fetch,
 never-acquired origin lock, old-controller/new-controller handoff ordering,
 handoff timeout without direct fallback, and cache-deletion rejection. The
 focused worker/handoff suite passes 2 files / 24 tests; the complete seven-file
-C3+D1 overlap passes 56 tests. The fix-forward full validation then passed:
+C3+D1 overlap passes 59 tests. The fix-forward full validation then passed:
 generated-artifact check; forced typecheck 8/8; forced lint 5/5; forced root test
 8/8 in 7m53.744s with web 1,123 passed + 1 expected skip and responsive 218/0;
 forced build 4/4 with 40/40 pages; core goldens 69 + 42; data goldens 54 + 22;
@@ -109,7 +109,9 @@ remain required for the fix-forward.
 The high-risk surface is service-worker lifecycle ordering: a partial candidate
 must never replace or delete the last complete cache, and UI-only deploys must
 not churn immutable data. Those transitions are executable and fail-closed in
-the lifecycle harness. Availability fallback remains the direct network loader.
+the lifecycle harness. Unsupported browsers and definitive registration
+failures retain the direct network loader; a pending-install timeout rejects to
+avoid duplicate runtime-data work.
 
 No runtime-data payload, rating, draft, simulation, schema, migration, API,
 database, or six-anchor semantic value changed. If a production live check

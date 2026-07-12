@@ -10,8 +10,9 @@
  * a second 2.2 MiB transfer.
  *
  * This is an optimization gate, not an availability gate: unsupported
- * browsers, registration errors, failed installs, and a bounded timeout all
- * fall through to the direct network loader.
+ * browsers and definitive registration failures fall through to the direct
+ * network loader. A bounded pending-install timeout rejects instead of
+ * launching duplicate runtime-data work alongside the service worker.
  */
 
 export const RUNTIME_DATA_SW_HANDOFF_TIMEOUT_MS = 15_000;
