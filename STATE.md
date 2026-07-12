@@ -583,13 +583,20 @@ documented non-blocking warning.
 The enforced policy constant retains exactly the two immediately prior minor
 runtime schemas on every bump. For current `runtime-data-2.9.0`, source and
 copy output therefore retain 2.7.0 + 2.8.0 instead of the stale 2.3.0–2.6.0
-set. The 2.7 manifest/scenario are byte-identical to historical commit
+set. The 2.7 scenario is byte-identical to historical commit
 `7a1ebbfa78ba10ba3f788dface675864cccef1aa`; its recovered draft decompresses
 to 129,711,288 bytes / SHA-256 `976f6ac5…f00`, exactly matching that manifest.
-The 2.8 manifest/scenario are byte-identical to historical commit
+The 2.8 scenario is byte-identical to historical commit
 `eed5c4e8e7048fc9b78614304394427fd5229f89`; its recovered draft decompresses
 to 130,553,412 bytes / SHA-256 `7d6d06b9…48c`, exactly matching that manifest.
 Their retained Brotli files measure 2,222,522 and 2,225,295 bytes respectively.
+Historical Vercel deployment retrieval proved those committed transport bytes
+are exact: 2.7 SHA-256 `29c9ef3f…2dbcc` and 2.8 SHA-256
+`51ae8115…4d48`. The historical `bytes_brotli` fields were 128-byte privacy
+buckets rather than exact lengths; retained manifests now replace those bucketed
+values with exact compressed length/SHA metadata while preserving the historical
+raw and transport bytes. The closure validator and generated-artifact check now
+fail closed on either retained raw or compressed drift.
 
 The runtime consumer inventory found leaderboard server data and share-page
 metadata; the first post-removal web pretest also exposed the service-worker
@@ -608,7 +615,7 @@ fingerprints, schema `runtime-data-2.9.0`, rating, engine, simulation, draft
 semantics, ETL inputs, and generated bundle bytes remain unchanged.
 
 Final post-rebase validation passes: manifest-derived copy/closure/policy and
-fail-closed tests 8/8; generator + server path/cache tests 2 files / 21 tests;
+fail-closed tests 9/9; generator + server path/cache tests 2 files / 21 tests;
 full `@wcdraft/data` suite 171 passed / 9 skipped; full non-browser web Vitest
 1,127 passed / 1 skipped. After rejecting one stale-linked-package bootstrap
 attempt, the forced root test restarted from zero and passed 8/8 tasks with 0
@@ -623,6 +630,18 @@ with no tracked fingerprint drift. Web pretest emits 5 manifest-derived worker
 entries with data revision `e08a2facf9c85830`; the public runtime tree is
 6.76 MiB / 14 files across current 2.9.0 plus retained 2.7.0 and 2.8.0. Fresh
 exact-head CI and independent RED review remain required before release.
+
+The first fresh exact-head RED review at
+`147c320e5a921a2fcc6703ba8680ab3a1dd086ae` returned FAIL (report SHA-256
+`dfafb92863906cf44b69fda97efd07198ff470c2052c9694f66c5dfc4b60e850`) because
+the retained manifests did not pin compressed identity. Its claim that the
+committed Brotli files differed from historical transport was disproved against
+the exact 2.7 and 2.8 Vercel deployments: both length and SHA-256 matched
+byte-for-byte, while the cited manifest lengths were deliberately rounded
+metadata. The fix-forward nevertheless closes the real validation gap by
+recording exact compressed fingerprints in both retained manifests and adding a
+regression that pins the two deployment hashes. A new exact head, CI, and fresh
+RED re-review are required.
 
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch

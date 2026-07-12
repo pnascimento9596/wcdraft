@@ -56,9 +56,18 @@
   "bundles": {
     "draft_pool": {
       "bytes": 130553412,
-      "bytes_brotli": 2225408,
+      "bytes_brotli": 2225295,
       "bytes_gzip": 4671456,
+      "brotli_impl_version": "1.1.0",
+      "compressed_bytes": 2225295,
+      "compressed_sha256": "51ae8115f97e0f83287f4692065762ba808f31e8052f26066eeae18bd0ac4d48",
+      "options": {
+        "mode": "text",
+        "quality": 11,
+        "size_hint": 130553412
+      },
       "path": "draft-pool.compact.json",
+      "raw_sha256": "7d6d06b96084dd6ebf2a1eebc365662064d5ed55535a5825f8ce732210a6d48c",
       "sha256": "7d6d06b96084dd6ebf2a1eebc365662064d5ed55535a5825f8ce732210a6d48c"
     },
     "scenario_2026": {

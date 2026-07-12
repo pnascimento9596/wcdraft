@@ -11,6 +11,7 @@ import { describe, expect, it } from "vitest";
 const SCRIPT_PATH = new URL("../scripts/copy-web-assets.mjs", import.meta.url);
 const POLICY_SCRIPT_PATH = new URL("../scripts/runtime-artifact-closure.mjs", import.meta.url);
 const WEB_PACKAGE_PATH = new URL("../../../apps/web/package.json", import.meta.url);
+const RETAINED_DATA_PATH = new URL("../src/retained-runtime-data/", import.meta.url);
 const CURRENT_VERSION = "runtime-data-2.9.0";
 const RETAINED_VERSIONS = ["runtime-data-2.7.0", "runtime-data-2.8.0"] as const;
 
@@ -179,6 +180,39 @@ async function listFiles(root: string, prefix = ""): Promise<string[]> {
 }
 
 describe("copy-web-assets", () => {
+  it("pins retained draft transport bytes to the historical deployed artifacts", async () => {
+    const expected = {
+      "runtime-data-2.7.0": {
+        bytes: 2_222_522,
+        sha256: "29c9ef3f6c8104a7f881fc8e5360cd0f2a52b952d57b4859a41375a28eb2dbcc",
+      },
+      "runtime-data-2.8.0": {
+        bytes: 2_225_295,
+        sha256: "51ae8115f97e0f83287f4692065762ba808f31e8052f26066eeae18bd0ac4d48",
+      },
+    } as const;
+
+    for (const version of RETAINED_VERSIONS) {
+      const versionDir = new URL(`${version}/`, RETAINED_DATA_PATH);
+      const manifest = JSON.parse(await readFile(new URL("manifest.json", versionDir), "utf8")) as {
+        bundles: {
+          draft_pool: {
+            bytes_brotli: number;
+            compressed_bytes: number;
+            compressed_sha256: string;
+          };
+        };
+      };
+      const compressed = await readFile(new URL("draft-pool.compact.json.br", versionDir));
+
+      expect(compressed.length, version).toBe(expected[version].bytes);
+      expect(sha256(compressed), version).toBe(expected[version].sha256);
+      expect(manifest.bundles.draft_pool.bytes_brotli, version).toBe(compressed.length);
+      expect(manifest.bundles.draft_pool.compressed_bytes, version).toBe(compressed.length);
+      expect(manifest.bundles.draft_pool.compressed_sha256, version).toBe(sha256(compressed));
+    }
+  });
+
   it("routes every web prehook through the fingerprint verifier/copier", async () => {
     const packageJson = JSON.parse(await readFile(WEB_PACKAGE_PATH, "utf8")) as {
       scripts: Record<string, string>;
