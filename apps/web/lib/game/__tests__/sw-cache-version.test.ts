@@ -1,29 +1,3 @@
-/*
- * Service-worker cache-key invariants for ws-ux/mobile-compact-v3.
- *
- * v3 contract (root-cause cure for "I deploy and don't see it"):
- *   - Both the data cache AND the navigation/shell cache include a
- *     per-deploy revision, so EVERY deploy rotates both layers.
- *   - The data cache also includes a content-derived bundle revision,
- *     so a data-only regen rotates the data cache independently of
- *     the deploy revision.
- *   - The committed `apps/web/public/sw.js` carries NO version
- *     literals; it imports them from build-generated `/sw-version.js`.
- *
- * The pre-v3 incidents this guard makes impossible:
- *   - PR #38 (mobile-compact-v2) shipped UI-only changes; CACHE_NAME_SHELL
- *     stayed at "wcdraft-shell-v1" so installed PWAs kept serving the
- *     pre-compaction shell cache.
- *   - commit 5048e34 shipped the wc-perf-2.0.0 / 66-floor recal, but
- *     DATASET_VERSION did not move so the data cache stayed pinned to
- *     the pre-floor bytes.
- *   - PR #40 attempted a hand-bumped BUNDLE_REVISION on the data cache
- *     only - still left the shell cache hardcoded.
- *
- * These tests assert all three failure modes are structurally impossible
- * in v3.
- */
-
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -32,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
   deriveCacheNames,
   deriveDataRevision,
+  derivePrecacheDataEntries,
   renderSwVersionScript,
   resolveDeployRevisionFromEnv,
 } from "../../../scripts/generate-sw-version.mjs";
@@ -39,91 +14,168 @@ import {
 const REPO_ROOT = new URL("../../../../../", import.meta.url);
 const SW_PATH = fileURLToPath(new URL("apps/web/public/sw.js", REPO_ROOT));
 const SW_REGISTER_PATH = fileURLToPath(new URL("apps/web/components/sw-register.tsx", REPO_ROOT));
+const SW_COORDINATOR_PATH = fileURLToPath(new URL("apps/web/lib/service-worker.ts", REPO_ROOT));
 const MANIFEST_PATH = fileURLToPath(
   new URL("packages/data/src/generated/manifest.json", REPO_ROOT),
 );
 
-/* ------------------------------------------------------------------ */
-/* Pure-helper invariants                                              */
-/* ------------------------------------------------------------------ */
-
-describe("deriveDataRevision", () => {
-  const baseManifest = {
-    schema_version: "runtime-data-1.0.0",
-    dataset_version: "2026-06-04",
-    bundles: {
-      draft_pool: { sha256: "a".repeat(64) },
-      scenario_2026: { sha256: "b".repeat(64) },
-    },
+function fingerprint(path: string, rawHex: string, compressedHex: string) {
+  return {
+    path,
+    sha256: rawHex.repeat(64),
+    raw_sha256: rawHex.repeat(64),
+    bytes: 100,
+    compressed_sha256: compressedHex.repeat(64),
+    compressed_bytes: 50,
+    bytes_brotli: 50,
+    brotli_impl_version: "1.1.0",
+    options: { quality: 11 as const, mode: "text" as const, size_hint: 100 },
   };
+}
 
-  it("returns a 16-hex token", () => {
-    const rev = deriveDataRevision(baseManifest);
-    expect(rev).toMatch(/^[0-9a-f]{16}$/);
+const baseManifest = {
+  schema_version: "runtime-data-1.0.0",
+  dataset_version: "2026-06-04",
+  bundles: {
+    daily_seed_salt_map: fingerprint("daily-seed-salt-map.compact.json", "1", "2"),
+    draft_pool: fingerprint("draft-pool.compact.json", "3", "4"),
+    scenario_2026: fingerprint("scenario-2026.compact.json", "5", "6"),
+    score_distribution: fingerprint("score-distribution.compact.json", "7", "8"),
+  },
+};
+
+describe("manifest-derived service-worker data config", () => {
+  it("derives manifest plus every current bundle, with the draft pool using canonical Brotli", () => {
+    const entries = derivePrecacheDataEntries(baseManifest);
+    expect(entries.map((entry) => entry.key)).toEqual([
+      "manifest",
+      "daily_seed_salt_map",
+      "draft_pool",
+      "scenario_2026",
+      "score_distribution",
+    ]);
+    expect(entries.find((entry) => entry.key === "draft_pool")).toMatchObject({
+      url: "/data/wcdraft/runtime-data-1.0.0/draft-pool.compact.json.br",
+      encoding: "brotli",
+      expected_bytes: 100,
+      expected_sha256: "3".repeat(64),
+      transport_bytes: 50,
+      transport_sha256: "4".repeat(64),
+    });
+    expect(entries.find((entry) => entry.key === "daily_seed_salt_map")?.url).toBe(
+      "/data/wcdraft/runtime-data-1.0.0/daily-seed-salt-map.compact.json",
+    );
+    expect(entries.find((entry) => entry.key === "score_distribution")?.url).toBe(
+      "/data/wcdraft/runtime-data-1.0.0/score-distribution.compact.json",
+    );
   });
 
-  it("is deterministic for identical inputs (independent of key order)", () => {
+  it("automatically includes a future manifest bundle instead of relying on a URL list", () => {
+    const manifest = {
+      ...baseManifest,
+      bundles: {
+        ...baseManifest.bundles,
+        tournament_labels: fingerprint("tournament-labels.compact.json", "9", "a"),
+      },
+    };
+    const entry = derivePrecacheDataEntries(manifest).find(
+      (candidate) => candidate.key === "tournament_labels",
+    );
+    expect(entry).toMatchObject({
+      url: "/data/wcdraft/runtime-data-1.0.0/tournament-labels.compact.json",
+      encoding: "identity",
+      expected_sha256: "9".repeat(64),
+      transport_sha256: "9".repeat(64),
+    });
+  });
+
+  it("fails closed on missing required bundles, unsafe paths, or malformed compressed metadata", () => {
+    const missingBundle = {
+      daily_seed_salt_map: baseManifest.bundles.daily_seed_salt_map,
+      draft_pool: baseManifest.bundles.draft_pool,
+      scenario_2026: baseManifest.bundles.scenario_2026,
+    };
+    expect(() => derivePrecacheDataEntries({ ...baseManifest, bundles: missingBundle })).toThrow(
+      /score_distribution is missing/u,
+    );
+
+    expect(() =>
+      derivePrecacheDataEntries({
+        ...baseManifest,
+        bundles: {
+          ...baseManifest.bundles,
+          scenario_2026: {
+            ...baseManifest.bundles.scenario_2026,
+            path: "../scenario-2026.compact.json",
+          },
+        },
+      }),
+    ).toThrow(/scenario_2026 must use/u);
+
+    expect(() =>
+      derivePrecacheDataEntries({
+        ...baseManifest,
+        bundles: {
+          ...baseManifest.bundles,
+          draft_pool: {
+            ...baseManifest.bundles.draft_pool,
+            compressed_sha256: "not-a-sha",
+          },
+        },
+      }),
+    ).toThrow(/compressed_sha256/u);
+  });
+
+  it("rejects manifest bytes that do not describe the supplied object", () => {
+    expect(() =>
+      derivePrecacheDataEntries(baseManifest, {
+        manifestBytes: JSON.stringify({ ...baseManifest, dataset_version: "different" }),
+      }),
+    ).toThrow(/do not describe/u);
+  });
+});
+
+describe("deriveDataRevision", () => {
+  it("is deterministic and independent of object key order", () => {
     const reordered = {
       bundles: {
-        scenario_2026: { sha256: "b".repeat(64) },
-        draft_pool: { sha256: "a".repeat(64) },
+        score_distribution: baseManifest.bundles.score_distribution,
+        scenario_2026: baseManifest.bundles.scenario_2026,
+        draft_pool: baseManifest.bundles.draft_pool,
+        daily_seed_salt_map: baseManifest.bundles.daily_seed_salt_map,
       },
       dataset_version: baseManifest.dataset_version,
       schema_version: baseManifest.schema_version,
     };
     expect(deriveDataRevision(reordered)).toBe(deriveDataRevision(baseManifest));
+    expect(deriveDataRevision(baseManifest)).toMatch(/^[0-9a-f]{16}$/u);
   });
 
-  it("rotates when any bundle sha changes", () => {
-    const mutated = {
+  it("rotates when the served compressed draft bytes change", () => {
+    const changed = {
       ...baseManifest,
       bundles: {
         ...baseManifest.bundles,
-        draft_pool: { sha256: "c".repeat(64) },
+        draft_pool: {
+          ...baseManifest.bundles.draft_pool,
+          compressed_sha256: "f".repeat(64),
+        },
       },
     };
-    expect(deriveDataRevision(mutated)).not.toBe(deriveDataRevision(baseManifest));
+    expect(deriveDataRevision(changed)).not.toBe(deriveDataRevision(baseManifest));
   });
 
-  it("rotates when schema_version or dataset_version changes", () => {
-    const schemaBump = { ...baseManifest, schema_version: "runtime-data-1.0.1" };
-    const datasetBump = { ...baseManifest, dataset_version: "2026-06-08" };
-    expect(deriveDataRevision(schemaBump)).not.toBe(deriveDataRevision(baseManifest));
-    expect(deriveDataRevision(datasetBump)).not.toBe(deriveDataRevision(baseManifest));
-  });
-
-  it("rejects malformed manifests", () => {
-    expect(() =>
-      deriveDataRevision(null as unknown as Parameters<typeof deriveDataRevision>[0]),
-    ).toThrow();
-    expect(() => deriveDataRevision({ ...baseManifest, schema_version: "" })).toThrow();
-    expect(() =>
-      deriveDataRevision({
-        ...baseManifest,
-        bundles: { draft_pool: { sha256: "not-hex" } },
-      }),
-    ).toThrow();
+  it("rotates when exact manifest bytes change even if parsed data is equivalent", () => {
+    const compact = JSON.stringify(baseManifest);
+    const pretty = `${JSON.stringify(baseManifest, null, 2)}\n`;
+    expect(deriveDataRevision(baseManifest, { manifestBytes: compact })).not.toBe(
+      deriveDataRevision(baseManifest, { manifestBytes: pretty }),
+    );
   });
 });
 
 describe("deriveCacheNames", () => {
-  it("embeds BOTH the deploy and data revisions in the data cache name", () => {
-    const names = deriveCacheNames({
-      deployRevision: "0123456789abcdef",
-      dataRevision: "fedcba9876543210",
-    });
-    expect(names.data).toBe("wcdraft-data-d:0123456789abcdef-b:fedcba9876543210");
-  });
-
-  it("embeds ONLY the deploy revision in the shell cache name", () => {
-    const names = deriveCacheNames({
-      deployRevision: "0123456789abcdef",
-      dataRevision: "fedcba9876543210",
-    });
-    expect(names.shell).toBe("wcdraft-shell-d:0123456789abcdef");
-  });
-
-  it("rotates BOTH names when deploy revision rotates (UI-only deploy invariant)", () => {
+  it("keeps the data cache stable for UI-only deploys and rotates only the shell", () => {
     const before = deriveCacheNames({
       deployRevision: "a".repeat(16),
       dataRevision: "b".repeat(16),
@@ -132,11 +184,12 @@ describe("deriveCacheNames", () => {
       deployRevision: "c".repeat(16),
       dataRevision: "b".repeat(16),
     });
-    expect(after.data).not.toBe(before.data);
+    expect(before.data).toBe("wcdraft-data-b:" + "b".repeat(16));
+    expect(after.data).toBe(before.data);
     expect(after.shell).not.toBe(before.shell);
   });
 
-  it("rotates ONLY the data name when data revision rotates (data-only invariant)", () => {
+  it("rotates only the data cache when manifest-derived data changes", () => {
     const before = deriveCacheNames({
       deployRevision: "a".repeat(16),
       dataRevision: "b".repeat(16),
@@ -156,125 +209,108 @@ describe("deriveCacheNames", () => {
   });
 });
 
-describe("resolveDeployRevisionFromEnv priority", () => {
-  it("prefers WCDRAFT_DEPLOY_REVISION over Vercel values", () => {
+describe("version source and script rendering", () => {
+  it("prefers the explicit deploy revision and falls back through Vercel inputs", () => {
     expect(
       resolveDeployRevisionFromEnv({
         WCDRAFT_DEPLOY_REVISION: "explicit",
         VERCEL_URL: "x.vercel.app",
-        VERCEL_DEPLOYMENT_ID: "dep_x",
-        VERCEL_GIT_COMMIT_SHA: "abc",
       }),
     ).toEqual({ source: "WCDRAFT_DEPLOY_REVISION", raw: "explicit" });
-  });
-
-  it("falls back through VERCEL_URL, VERCEL_DEPLOYMENT_ID, VERCEL_GIT_COMMIT_SHA", () => {
-    expect(
-      resolveDeployRevisionFromEnv({
-        VERCEL_URL: "x.vercel.app",
-        VERCEL_GIT_COMMIT_SHA: "abc",
-      }),
-    ).toEqual({ source: "VERCEL_URL", raw: "x.vercel.app" });
     expect(resolveDeployRevisionFromEnv({ VERCEL_GIT_COMMIT_SHA: "abc" })).toEqual({
       source: "VERCEL_GIT_COMMIT_SHA",
       raw: "abc",
     });
-  });
-
-  it("returns null when no source is set (CLI then uses git/epoch)", () => {
     expect(resolveDeployRevisionFromEnv({})).toBeNull();
   });
-});
 
-describe("renderSwVersionScript", () => {
-  it("assigns a frozen config object on self", () => {
+  it("renders the complete config as a frozen worker global", () => {
+    const entries = derivePrecacheDataEntries(baseManifest);
     const script = renderSwVersionScript({
       deploy_revision: "a".repeat(16),
       data_revision: "b".repeat(16),
-      schema_version: "runtime-data-1.0.0",
-      dataset_version: "2026-06-04",
+      schema_version: baseManifest.schema_version,
+      dataset_version: baseManifest.dataset_version,
       runtime_data_base_path: "/data/wcdraft/runtime-data-1.0.0",
-      precache_data_urls: [
-        "/data/wcdraft/runtime-data-1.0.0/manifest.json",
-        "/data/wcdraft/runtime-data-1.0.0/draft-pool.compact.json.br",
-        "/data/wcdraft/runtime-data-1.0.0/scenario-2026.compact.json",
-      ],
-      bundle_hashes: { draft_pool: "a".repeat(64), scenario_2026: "b".repeat(64) },
+      required_bundle_keys: Object.keys(baseManifest.bundles).sort(),
+      precache_data_entries: entries,
+      bundle_hashes: Object.fromEntries(
+        Object.entries(baseManifest.bundles).map(([key, value]) => [
+          key,
+          {
+            raw_sha256: value.raw_sha256,
+            raw_bytes: value.bytes,
+            compressed_sha256: value.compressed_sha256,
+            compressed_bytes: value.compressed_bytes,
+          },
+        ]),
+      ),
       cache_names: {
-        data: "wcdraft-data-d:aaaaaaaaaaaaaaaa-b:bbbbbbbbbbbbbbbb",
+        data: "wcdraft-data-b:bbbbbbbbbbbbbbbb",
         shell: "wcdraft-shell-d:aaaaaaaaaaaaaaaa",
       },
     });
     expect(script).toContain("self.__WCDRAFT_SW_CONFIG__");
     expect(script).toContain("Object.freeze(");
-    expect(script).toContain("wcdraft-data-d:aaaaaaaaaaaaaaaa-b:bbbbbbbbbbbbbbbb");
-    expect(script).toContain("wcdraft-shell-d:aaaaaaaaaaaaaaaa");
-    expect(script).toContain("/data/wcdraft/runtime-data-1.0.0/draft-pool.compact.json.br");
+    expect(script).toContain("daily-seed-salt-map.compact.json");
+    expect(script).toContain("score-distribution.compact.json");
+    expect(script).toContain("draft-pool.compact.json.br");
   });
 });
 
-/* ------------------------------------------------------------------ */
-/* Committed-source invariants (sw.js & sw-register.tsx)               */
-/* ------------------------------------------------------------------ */
+describe("committed service-worker source contract", () => {
+  const swSource = readFileSync(SW_PATH, "utf8");
+  const registerSource = readFileSync(SW_REGISTER_PATH, "utf8");
+  const coordinatorSource = readFileSync(SW_COORDINATOR_PATH, "utf8");
 
-describe("committed sw.js source contract", () => {
-  const swSource = readFileSync(SW_PATH, "utf-8");
-
-  it("imports its cache-name config from /sw-version.js", () => {
+  it("imports generated config and has no hard-coded cache revision", () => {
     expect(swSource).toContain('importScripts("/sw-version.js")');
     expect(swSource).toContain("self.__WCDRAFT_SW_CONFIG__");
+    expect(swSource).not.toMatch(/wcdraft-shell-v1/u);
+    expect(swSource).not.toMatch(/const\s+SCHEMA_VERSION\s*=/u);
   });
 
-  it("declares NO hardcoded cache-version literals", () => {
-    // Hardcoded shell cache from v1/v2 - the exact bug v3 cures.
-    expect(swSource).not.toMatch(/wcdraft-shell-v1/);
-    // Hand-bumped data anchors from the legacy pattern.
-    expect(swSource).not.toMatch(/const\s+SCHEMA_VERSION\s*=/);
-    expect(swSource).not.toMatch(/const\s+DATASET_VERSION\s*=/);
-    expect(swSource).not.toMatch(/const\s+BUNDLE_REVISION\s*=/);
-    // Legacy manual data-cache name template.
-    expect(swSource).not.toMatch(/`wcdraft-data-\$\{SCHEMA_VERSION\}/);
+  it("uses manifest-derived entries, strict install settlement, and pre-delete activation proof", () => {
+    expect(swSource).toContain("config.precache_data_entries");
+    expect(swSource).toContain("Promise.allSettled");
+    expect(swSource).toContain("await verifyRequiredCache();");
+    expect(
+      swSource.indexOf("await verifyRequiredCache();", swSource.indexOf('"activate"')),
+    ).toBeLessThan(
+      swSource.indexOf("const names = await caches.keys();", swSource.indexOf('"activate"')),
+    );
+    expect(swSource).toContain("IN_FLIGHT_REQUIRED_FILLS");
   });
 
-  it("derives the live cache names from SW_CONFIG (not literals)", () => {
-    expect(swSource).toContain("SW_CONFIG.cache_names.data");
-    expect(swSource).toContain("SW_CONFIG.cache_names.shell");
+  it('preserves `updateViaCache: "none"`', () => {
+    expect(`${registerSource}\n${coordinatorSource}`).toMatch(/updateViaCache:\s*"none"/u);
   });
 
-  it("pre-caches generated versioned data URLs and not the raw draft-pool path", () => {
-    expect(swSource).toContain("SW_CONFIG.precache_data_urls");
-    expect(swSource).toContain("const PRECACHE_DATA_URLS = SW_CONFIG.precache_data_urls");
-    expect(swSource).not.toContain("`${DATA_PREFIX}draft-pool.compact.json`");
-    expect(swSource).not.toContain('"/data/wcdraft/draft-pool.compact.json"');
-  });
-
-  it("throws on missing/malformed config so a bad worker never installs", () => {
-    expect(swSource).toMatch(/throw new Error\([^)]*WCDRAFT_SW_CONFIG/);
+  it("defers an uncontrolled page's pool request until controller handoff with a timeout", () => {
+    expect(coordinatorSource).toContain('addEventListener("controllerchange"');
+    expect(coordinatorSource).toContain('finish("timed-out")');
+    expect(swSource).toContain("await self.clients.claim()");
   });
 });
 
-describe("committed sw-register.tsx source contract", () => {
-  const registerSource = readFileSync(SW_REGISTER_PATH, "utf-8");
-
-  it('registers with `updateViaCache: "none"` so /sw-version.js bypasses HTTP cache', () => {
-    // Required for importScripts() update checks to refetch the version
-    // file on every SW update. Without this, browsers may serve the
-    // imported script from HTTP cache and never trigger a new install.
-    expect(registerSource).toMatch(/updateViaCache:\s*"none"/);
-  });
-});
-
-/* ------------------------------------------------------------------ */
-/* Live manifest integration                                           */
-/* ------------------------------------------------------------------ */
-
-describe("live manifest derivation", () => {
-  it("derives a 16-hex data revision from the current generated manifest", () => {
-    const manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
-    const rev = deriveDataRevision(manifest);
-    expect(rev).toMatch(/^[0-9a-f]{16}$/);
-    const names = deriveCacheNames({ deployRevision: "f".repeat(16), dataRevision: rev });
-    expect(names.data).toMatch(/^wcdraft-data-d:f{16}-b:[0-9a-f]{16}$/);
-    expect(names.shell).toBe("wcdraft-shell-d:" + "f".repeat(16));
+describe("live manifest integration", () => {
+  it("derives the exact five current required resources from C1 fingerprint metadata", () => {
+    const manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf8"));
+    const entries = derivePrecacheDataEntries(manifest);
+    expect(entries).toHaveLength(5);
+    expect(entries.map((entry) => entry.key)).toEqual([
+      "manifest",
+      "daily_seed_salt_map",
+      "draft_pool",
+      "scenario_2026",
+      "score_distribution",
+    ]);
+    expect(entries.find((entry) => entry.key === "draft_pool")?.expected_sha256).toBe(
+      manifest.bundles.draft_pool.raw_sha256,
+    );
+    expect(entries.find((entry) => entry.key === "draft_pool")?.transport_sha256).toBe(
+      manifest.bundles.draft_pool.compressed_sha256,
+    );
+    expect(deriveDataRevision(manifest)).toMatch(/^[0-9a-f]{16}$/u);
   });
 });

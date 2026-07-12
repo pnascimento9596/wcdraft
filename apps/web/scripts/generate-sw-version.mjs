@@ -1,40 +1,19 @@
 /*
- * Generates `apps/web/public/sw-version.js` from build-time inputs so that the
- * service worker's cache names rotate automatically on every deploy.
+ * Generates `apps/web/public/sw-version.js`, the fail-closed configuration
+ * consumed by the committed service worker.
  *
- * Why this exists (root-cause cure for "I deploy and don't see it"):
- *   The legacy `public/sw.js` carried two hand-bumped constants
- *   (`DATASET_VERSION`, hardcoded `CACHE_NAME_SHELL`). UI-only deploys
- *   (mobile-compaction CSS, copy edits) never changed those constants,
- *   so installed PWAs kept serving the prior shell+data caches until a
- *   human remembered to bump. Data-only deploys had the same trap.
+ * Cache identity is intentionally split:
+ *   - `wcdraft-shell-d:<deployRev>` rotates for every deploy.
+ *   - `wcdraft-data-b:<dataRev>` depends only on the manifest and the exact
+ *     runtime bytes the browser consumes. A UI-only deploy therefore reuses
+ *     the complete data cache, while any runtime-data change rotates it.
  *
- *   v3 keeps `/sw.js` stable and committed (so the worker logic is
- *   reviewable in one place) and lifts ALL version anchors into a
- *   generated `/sw-version.js` that the worker loads via
- *   `importScripts("/sw-version.js")`. Because `sw.js` registers with
- *   `updateViaCache: "none"`, browsers refetch the imported script on
- *   every SW update check — any change to `sw-version.js` produces a
- *   byte-different worker graph, triggers install + activation, and the
- *   activation handler evicts every cache outside the new
- *   `KNOWN_CACHE_NAMES` set.
- *
- * Cache-name contract (consumed by sw.js):
- *   wcdraft-data-d:<deployRev>-b:<dataRev>
- *   wcdraft-shell-d:<deployRev>
- *
- *   - deployRev rotates EVERY deploy (so UI-only edits invalidate the
- *     shell cache AND the data cache; the small extra data download is
- *     a deliberate trade for stale-cache elimination).
- *   - dataRev rotates whenever the compact bundles change (manifest
- *     `schema_version`, `dataset_version`, or any bundle sha256). It
- *     keeps the data-cache contract observable independently of the
- *     deploy revision.
- *
- * Pure helpers (deriveDataRevision, deriveCacheNames,
- * renderSwVersionScript, resolveDeployRevisionFromEnv) are exported for
- * unit tests. The CLI entrypoint (`run()`) resolves the deploy revision
- * from env/git, reads the copied manifest, and writes the version file.
+ * The precache set is derived by iterating every manifest bundle. The four
+ * runtime-critical bundles are also pinned by key/path so a malformed or
+ * partially generated manifest fails the build instead of silently shipping
+ * an incomplete offline worker. `draft_pool` is delivered as its canonical
+ * Brotli artifact; the other bundles use the raw paths consumed by the client
+ * loaders. All raw and compressed fingerprints are validated before output.
  */
 
 import { createHash } from "node:crypto";
@@ -44,73 +23,233 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SHORT_HEX_LEN = 16;
+const SHA256_RE = /^[0-9a-f]{64}$/u;
+const SAFE_SEGMENT_RE = /^[a-z0-9][a-z0-9._-]*$/u;
+const SAFE_BUNDLE_KEY_RE = /^[a-z0-9][a-z0-9_]*$/u;
+
+export const REQUIRED_RUNTIME_BUNDLE_PATHS = Object.freeze({
+  daily_seed_salt_map: "daily-seed-salt-map.compact.json",
+  draft_pool: "draft-pool.compact.json",
+  scenario_2026: "scenario-2026.compact.json",
+  score_distribution: "score-distribution.compact.json",
+});
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
 
 /** SHA-256 of `value`, lowercase hex, truncated to `SHORT_HEX_LEN` chars. */
 function shortHash(value) {
-  return createHash("sha256").update(String(value)).digest("hex").slice(0, SHORT_HEX_LEN);
+  return sha256(String(value)).slice(0, SHORT_HEX_LEN);
+}
+
+function isRecord(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) return `[${value.map((item) => stableJson(item)).join(",")}]`;
+  if (isRecord(value)) {
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function normalizeManifestBytes(manifest, manifestBytes) {
+  if (manifestBytes === undefined) return Buffer.from(stableJson(manifest), "utf8");
+  const bytes = Buffer.isBuffer(manifestBytes)
+    ? manifestBytes
+    : Buffer.from(manifestBytes instanceof Uint8Array ? manifestBytes : String(manifestBytes));
+  let parsed;
+  try {
+    parsed = JSON.parse(bytes.toString("utf8"));
+  } catch (err) {
+    throw new TypeError("derivePrecacheDataEntries: manifestBytes must contain valid JSON", {
+      cause: err,
+    });
+  }
+  if (stableJson(parsed) !== stableJson(manifest)) {
+    throw new TypeError(
+      "derivePrecacheDataEntries: manifestBytes do not describe the supplied manifest",
+    );
+  }
+  return bytes;
+}
+
+function requirePositiveInteger(value, label) {
+  if (!Number.isSafeInteger(value) || value <= 0) {
+    throw new TypeError(`${label} must be a positive safe integer`);
+  }
+}
+
+function requireSha256(value, label) {
+  if (typeof value !== "string" || !SHA256_RE.test(value)) {
+    throw new TypeError(`${label} must be a lowercase 64-char SHA-256`);
+  }
+}
+
+function validateBundleFingerprint(key, bundle) {
+  const label = `manifest.bundles.${key}`;
+  if (!SAFE_BUNDLE_KEY_RE.test(key) || !isRecord(bundle)) {
+    throw new TypeError(`${label} must be a safely named fingerprint object`);
+  }
+  if (
+    typeof bundle.path !== "string" ||
+    !bundle.path.endsWith(".compact.json") ||
+    bundle.path.split("/").some((segment) => !SAFE_SEGMENT_RE.test(segment)) ||
+    bundle.path.includes("..") ||
+    bundle.path.includes("\\") ||
+    bundle.path.includes("?") ||
+    bundle.path.includes("#")
+  ) {
+    throw new TypeError(`${label}.path must be a safe relative *.compact.json path`);
+  }
+  requireSha256(bundle.sha256, `${label}.sha256`);
+  requireSha256(bundle.raw_sha256, `${label}.raw_sha256`);
+  if (bundle.sha256 !== bundle.raw_sha256) {
+    throw new TypeError(`${label}.sha256 must equal raw_sha256`);
+  }
+  requirePositiveInteger(bundle.bytes, `${label}.bytes`);
+  requireSha256(bundle.compressed_sha256, `${label}.compressed_sha256`);
+  requirePositiveInteger(bundle.compressed_bytes, `${label}.compressed_bytes`);
+  if (bundle.bytes_brotli !== bundle.compressed_bytes) {
+    throw new TypeError(`${label}.bytes_brotli must equal compressed_bytes`);
+  }
+  if (typeof bundle.brotli_impl_version !== "string" || bundle.brotli_impl_version.length === 0) {
+    throw new TypeError(`${label}.brotli_impl_version must be a non-empty string`);
+  }
+  if (
+    !isRecord(bundle.options) ||
+    bundle.options.quality !== 11 ||
+    bundle.options.mode !== "text" ||
+    bundle.options.size_hint !== bundle.bytes
+  ) {
+    throw new TypeError(`${label}.options must describe the canonical q11 text Brotli artifact`);
+  }
 }
 
 /**
- * Pure: derive a cache-safe data revision from manifest anchors. The
- * inputs are the only things that legitimately change the bytes shipped
- * to clients, so hashing them together gives a stable, observable token
- * that rotates exactly when the data does.
+ * Pure: validate the manifest and derive the complete list of bytes required
+ * for an offline-capable current runtime. Every manifest bundle is included;
+ * the explicit required map only prevents removal/renaming of known consumers.
  */
-export function deriveDataRevision(manifest) {
-  if (!manifest || typeof manifest !== "object") {
-    throw new TypeError("deriveDataRevision: manifest must be an object");
+export function derivePrecacheDataEntries(manifest, { manifestBytes } = {}) {
+  if (!isRecord(manifest)) {
+    throw new TypeError("derivePrecacheDataEntries: manifest must be an object");
   }
   const schema = manifest.schema_version;
   const dataset = manifest.dataset_version;
-  const bundles = manifest.bundles;
-  if (typeof schema !== "string" || !schema) {
-    throw new TypeError("deriveDataRevision: manifest.schema_version must be a non-empty string");
+  if (typeof schema !== "string" || !SAFE_SEGMENT_RE.test(schema)) {
+    throw new TypeError(
+      "derivePrecacheDataEntries: manifest.schema_version must be a safe non-empty segment",
+    );
   }
-  if (typeof dataset !== "string" || !dataset) {
-    throw new TypeError("deriveDataRevision: manifest.dataset_version must be a non-empty string");
+  if (typeof dataset !== "string" || dataset.trim().length === 0) {
+    throw new TypeError(
+      "derivePrecacheDataEntries: manifest.dataset_version must be a non-empty string",
+    );
   }
-  if (!bundles || typeof bundles !== "object") {
-    throw new TypeError("deriveDataRevision: manifest.bundles must be an object");
+  if (!isRecord(manifest.bundles)) {
+    throw new TypeError("derivePrecacheDataEntries: manifest.bundles must be an object");
   }
-  // Iterate bundles in sorted-key order so the hash is independent of
-  // manifest property order.
-  const bundleEntries = Object.keys(bundles)
-    .sort()
-    .map((key) => {
-      const sha = bundles[key]?.sha256;
-      if (typeof sha !== "string" || !/^[0-9a-f]{64}$/.test(sha)) {
-        throw new TypeError(
-          `deriveDataRevision: manifest.bundles.${key}.sha256 must be a 64-char hex SHA-256`,
-        );
-      }
-      return `${key}:${sha}`;
+
+  for (const [key, expectedPath] of Object.entries(REQUIRED_RUNTIME_BUNDLE_PATHS)) {
+    if (!isRecord(manifest.bundles[key])) {
+      throw new TypeError(`derivePrecacheDataEntries: required manifest bundle ${key} is missing`);
+    }
+    if (manifest.bundles[key].path !== expectedPath) {
+      throw new TypeError(
+        `derivePrecacheDataEntries: required bundle ${key} must use ${expectedPath}`,
+      );
+    }
+  }
+
+  const sortedBundles = Object.entries(manifest.bundles).sort(([left], [right]) =>
+    left.localeCompare(right),
+  );
+  if (sortedBundles.length === 0) {
+    throw new TypeError("derivePrecacheDataEntries: manifest.bundles must not be empty");
+  }
+  const seenPaths = new Set();
+  for (const [key, bundle] of sortedBundles) {
+    validateBundleFingerprint(key, bundle);
+    if (seenPaths.has(bundle.path)) {
+      throw new TypeError(`derivePrecacheDataEntries: duplicate bundle path ${bundle.path}`);
+    }
+    seenPaths.add(bundle.path);
+  }
+
+  const rawManifest = normalizeManifestBytes(manifest, manifestBytes);
+  const basePath = `/data/wcdraft/${schema}`;
+  const entries = [
+    {
+      key: "manifest",
+      kind: "manifest",
+      url: `${basePath}/manifest.json`,
+      encoding: "identity",
+      expected_bytes: rawManifest.byteLength,
+      expected_sha256: sha256(rawManifest),
+      transport_bytes: rawManifest.byteLength,
+      transport_sha256: sha256(rawManifest),
+    },
+  ];
+
+  for (const [key, bundle] of sortedBundles) {
+    const useCompressedDelivery = key === "draft_pool";
+    entries.push({
+      key,
+      kind: "bundle",
+      url: `${basePath}/${bundle.path}${useCompressedDelivery ? ".br" : ""}`,
+      encoding: useCompressedDelivery ? "brotli" : "identity",
+      // Fetch exposes a Content-Encoding: br response as decoded bytes. The
+      // body proof therefore always uses the raw fingerprint, while the wire
+      // artifact metadata remains part of config validation and data identity.
+      expected_bytes: bundle.bytes,
+      expected_sha256: bundle.raw_sha256,
+      transport_bytes: useCompressedDelivery ? bundle.compressed_bytes : bundle.bytes,
+      transport_sha256: useCompressedDelivery ? bundle.compressed_sha256 : bundle.raw_sha256,
     });
-  const payload = [`schema:${schema}`, `dataset:${dataset}`, ...bundleEntries].join("|");
-  return shortHash(payload);
+  }
+
+  return Object.freeze(entries.map((entry) => Object.freeze(entry)));
 }
 
 /**
- * Pure: build the two cache names from a deploy + data revision. The
- * `d:` / `b:` prefixes make eviction logs human-readable; the
- * `wcdraft-` prefix is required by the activate-handler eviction guard.
+ * Pure: derive the data cache revision from the complete manifest-derived
+ * delivery set, including the compressed draft-pool fingerprint.
  */
+export function deriveDataRevision(manifest, options) {
+  const entries = derivePrecacheDataEntries(manifest, options);
+  const payload = [
+    `schema:${manifest.schema_version}`,
+    `dataset:${manifest.dataset_version}`,
+    ...entries.map(
+      (entry) =>
+        `${entry.key}:${entry.url}:${entry.encoding}:${entry.expected_bytes}:${entry.expected_sha256}:` +
+        `${entry.transport_bytes}:${entry.transport_sha256}`,
+    ),
+  ].join("|");
+  return shortHash(payload);
+}
+
+/** Pure: build split shell/data cache identities. */
 export function deriveCacheNames({ deployRevision, dataRevision }) {
-  if (typeof deployRevision !== "string" || !/^[0-9a-f]+$/.test(deployRevision)) {
+  if (typeof deployRevision !== "string" || !/^[0-9a-f]+$/u.test(deployRevision)) {
     throw new TypeError("deriveCacheNames: deployRevision must be a lowercase hex string");
   }
-  if (typeof dataRevision !== "string" || !/^[0-9a-f]+$/.test(dataRevision)) {
+  if (typeof dataRevision !== "string" || !/^[0-9a-f]+$/u.test(dataRevision)) {
     throw new TypeError("deriveCacheNames: dataRevision must be a lowercase hex string");
   }
   return Object.freeze({
-    data: `wcdraft-data-d:${deployRevision}-b:${dataRevision}`,
+    data: `wcdraft-data-b:${dataRevision}`,
     shell: `wcdraft-shell-d:${deployRevision}`,
   });
 }
 
-/**
- * Pure: render the `/sw-version.js` script body. Frozen object on
- * `self` so the worker can read it without copying.
- */
+/** Pure: render the `/sw-version.js` script body. */
 export function renderSwVersionScript(config) {
   const json = JSON.stringify(config, null, 2);
   return `/* AUTOGENERATED by apps/web/scripts/generate-sw-version.mjs - do not edit by hand.
@@ -120,19 +259,7 @@ self.__WCDRAFT_SW_CONFIG__ = Object.freeze(${json});
 `;
 }
 
-/**
- * Pure: choose the deploy revision source from an env-like object,
- * returning {raw, source}. Callers hash the raw value so the on-disk
- * cache name is always a short hex token.
- *
- * Priority:
- *   1. WCDRAFT_DEPLOY_REVISION - operator override (e.g. CI per-deploy).
- *   2. VERCEL_URL              - build-time, unique per deployment.
- *   3. VERCEL_DEPLOYMENT_ID    - usually runtime, fallback if exposed.
- *   4. VERCEL_GIT_COMMIT_SHA   - same per commit; only safe when the
- *                                CLI combines it with a build-time
- *                                epoch suffix (handled below).
- */
+/** Pure: choose the per-deploy revision source from an env-like object. */
 export function resolveDeployRevisionFromEnv(env) {
   const candidates = [
     ["WCDRAFT_DEPLOY_REVISION", env.WCDRAFT_DEPLOY_REVISION],
@@ -151,26 +278,20 @@ export function resolveDeployRevisionFromEnv(env) {
 function resolveDeployRevisionForCli(env, repoRoot) {
   const fromEnv = resolveDeployRevisionFromEnv(env);
   if (fromEnv) {
-    // VERCEL_GIT_COMMIT_SHA alone repeats across redeploys of the same
-    // commit - combine with a build-time epoch so each build still
-    // rotates. Other sources are deploy-unique on Vercel.
     if (fromEnv.source === "VERCEL_GIT_COMMIT_SHA") {
       return shortHash(`${fromEnv.source}:${fromEnv.raw}:${Date.now()}`);
     }
     return shortHash(`${fromEnv.source}:${fromEnv.raw}`);
   }
-  // Local dev / CI without Vercel: prefer git HEAD + epoch so any rebuild
-  // produces a fresh cache name. Falls back to a pure-epoch sentinel if
-  // git is unavailable (e.g. shallow CI containers).
   try {
-    const sha = execSync("git rev-parse HEAD", {
+    const commit = execSync("git rev-parse HEAD", {
       cwd: repoRoot,
       stdio: ["ignore", "pipe", "ignore"],
       encoding: "utf8",
     }).trim();
-    if (sha) return shortHash(`git:${sha}:${Date.now()}`);
+    if (commit) return shortHash(`git:${commit}:${Date.now()}`);
   } catch {
-    /* ignore - fall through to epoch sentinel */
+    // Fall through for source archives and other non-Git builds.
   }
   return shortHash(`local-dev:${Date.now()}`);
 }
@@ -179,32 +300,43 @@ function readManifest(manifestPath) {
   if (!existsSync(manifestPath)) {
     throw new Error(
       `generate-sw-version: data manifest not found at ${manifestPath}. ` +
-        `Run \`packages/data/scripts/copy-web-assets.mjs\` first.`,
+        "Run `packages/data/scripts/copy-web-assets.mjs` first.",
     );
   }
-  const raw = readFileSync(manifestPath, "utf-8");
+  const raw = readFileSync(manifestPath);
   let parsed;
   try {
-    parsed = JSON.parse(raw);
+    parsed = JSON.parse(raw.toString("utf8"));
   } catch (err) {
     throw new Error(`generate-sw-version: manifest at ${manifestPath} is not valid JSON`, {
       cause: err,
     });
   }
-  return parsed;
+  return { parsed, raw };
 }
 
 /** CLI entrypoint. Writes apps/web/public/sw-version.js. */
-export function run({ webRoot, env = process.env, repoRoot, manifestOverride } = {}) {
+export function run({
+  webRoot,
+  env = process.env,
+  repoRoot,
+  manifestOverride,
+  manifestBytesOverride,
+} = {}) {
   const here = dirname(fileURLToPath(import.meta.url));
   const resolvedWebRoot = webRoot ?? join(here, "..");
   const resolvedRepoRoot = repoRoot ?? join(resolvedWebRoot, "..", "..");
   const manifestPath = join(resolvedWebRoot, "public", "data", "wcdraft", "manifest.json");
-  const manifest = manifestOverride ?? readManifest(manifestPath);
+  const loaded = manifestOverride === undefined ? readManifest(manifestPath) : null;
+  const manifest = manifestOverride ?? loaded.parsed;
+  const manifestBytes =
+    manifestBytesOverride ?? loaded?.raw ?? Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`);
 
-  const dataRevision = deriveDataRevision(manifest);
+  const precacheDataEntries = derivePrecacheDataEntries(manifest, { manifestBytes });
+  const dataRevision = deriveDataRevision(manifest, { manifestBytes });
   const deployRevision = resolveDeployRevisionForCli(env, resolvedRepoRoot);
   const cacheNames = deriveCacheNames({ deployRevision, dataRevision });
+  const requiredBundleKeys = Object.keys(manifest.bundles).sort();
 
   const config = {
     deploy_revision: deployRevision,
@@ -212,31 +344,32 @@ export function run({ webRoot, env = process.env, repoRoot, manifestOverride } =
     schema_version: manifest.schema_version,
     dataset_version: manifest.dataset_version,
     runtime_data_base_path: `/data/wcdraft/${manifest.schema_version}`,
-    precache_data_urls: [
-      `/data/wcdraft/${manifest.schema_version}/manifest.json`,
-      `/data/wcdraft/${manifest.schema_version}/draft-pool.compact.json.br`,
-      `/data/wcdraft/${manifest.schema_version}/scenario-2026.compact.json`,
-    ],
+    required_bundle_keys: requiredBundleKeys,
+    precache_data_entries: precacheDataEntries,
     bundle_hashes: Object.fromEntries(
-      Object.keys(manifest.bundles)
-        .sort()
-        .map((key) => [key, manifest.bundles[key].sha256]),
+      requiredBundleKeys.map((key) => [
+        key,
+        {
+          raw_sha256: manifest.bundles[key].raw_sha256,
+          raw_bytes: manifest.bundles[key].bytes,
+          compressed_sha256: manifest.bundles[key].compressed_sha256,
+          compressed_bytes: manifest.bundles[key].compressed_bytes,
+        },
+      ]),
     ),
     cache_names: { ...cacheNames },
   };
 
   const outPath = join(resolvedWebRoot, "public", "sw-version.js");
   mkdirSync(dirname(outPath), { recursive: true });
-  writeFileSync(outPath, renderSwVersionScript(config), "utf-8");
-
+  writeFileSync(outPath, renderSwVersionScript(config), "utf8");
   console.log(
-    `generate-sw-version: wrote ${outPath} ` + `(data=${dataRevision}, deploy=${deployRevision})`,
+    `generate-sw-version: wrote ${outPath} ` +
+      `(data=${dataRevision}, deploy=${deployRevision}, required=${precacheDataEntries.length})`,
   );
-
   return { outPath, config };
 }
 
-// CLI guard: only run when invoked directly, not when imported by tests.
 if (import.meta.url === `file://${process.argv[1]}`) {
   try {
     run();
