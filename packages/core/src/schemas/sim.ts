@@ -15,6 +15,7 @@ import { z } from "zod";
 import type {
   FoulEvent,
   GoalEvent,
+  AvailabilityEvent,
   InjuryEvent,
   KeyPassEvent,
   MatchEvent,
@@ -35,6 +36,8 @@ import type {
   YellowEvent,
 } from "../types/sim.js";
 import { CardIdSchema, refineCardIdConsistency } from "./identity.js";
+import { TeamStrengthSchema } from "./rating.js";
+import { SynergyResultSchema } from "./synergy.js";
 import {
   IntegerRangeSchema,
   MatchPeriodSchema,
@@ -181,6 +184,22 @@ const InjuryEventSchema = z.object({
   tournament_ending: z.boolean(),
 }) satisfies z.ZodType<InjuryEvent>;
 
+const AvailabilityEventSchema = z.object({
+  ...EventBase,
+  type: z.literal("availability"),
+  minute: z.literal(0),
+  period: z.literal("1H"),
+  card_id: CardIdSchema,
+  player_id: NonEmptyIdSchema,
+  slot_id: NonEmptyIdSchema,
+  position: PositionSchema,
+  reason: z.enum(["knock", "suspension", "tournament_injury"]),
+  duration_matches: z.union([z.literal(1), z.literal(2)]).nullable(),
+  replacement_card_id: CardIdSchema.nullable(),
+  replacement_player_id: NonEmptyIdSchema.nullable(),
+  short_handed: z.boolean(),
+}) satisfies z.ZodType<AvailabilityEvent>;
+
 const SubEventSchema = z.object({
   ...EventBase,
   type: z.literal("sub"),
@@ -217,6 +236,7 @@ export const MatchEventSchema = z.discriminatedUnion("type", [
   YellowEventSchema,
   RedEventSchema,
   InjuryEventSchema,
+  AvailabilityEventSchema,
   SubEventSchema,
   ShootoutKickEventSchema,
 ]) as unknown as z.ZodType<MatchEvent>;
@@ -263,6 +283,40 @@ export const MatchResultSchema = z
     phase: MatchPhaseSchema,
     opponent_team_id: NonEmptyIdSchema,
     pre_match_win_probability: ProbabilitySchema,
+    team_facts: z
+      .object({
+        base_strength: TeamStrengthSchema,
+        active_strength: TeamStrengthSchema,
+        base_synergy: SynergyResultSchema,
+        active_synergy: SynergyResultSchema,
+        unavailable: z.array(
+          z.object({
+            card_id: CardIdSchema,
+            player_id: NonEmptyIdSchema,
+            slot_id: NonEmptyIdSchema,
+            position: PositionSchema,
+            reason: z.enum(["knock", "suspension", "tournament_injury"]),
+            duration_matches: z.union([z.literal(1), z.literal(2)]).nullable(),
+          }),
+        ),
+        bench_activations: z.array(
+          z.object({
+            out_card_id: CardIdSchema,
+            out_player_id: NonEmptyIdSchema,
+            in_card_id: CardIdSchema,
+            in_player_id: NonEmptyIdSchema,
+            slot_id: NonEmptyIdSchema,
+            line: PositionSchema,
+            fit: ProbabilitySchema,
+            internal_score: z.number().finite().min(0).max(100),
+            replacement_score: z.number().finite().min(0).max(100),
+            outgoing_score: z.number().finite().min(0).max(100),
+            line_contribution_delta: z.number().finite().min(-100).max(100),
+          }),
+        ),
+        short_handed_slot_ids: z.array(NonEmptyIdSchema),
+      })
+      .optional(),
     user_goals: NonNegativeIntegerSchema,
     opp_goals: NonNegativeIntegerSchema,
     user_goals_et: NonNegativeIntegerSchema.nullable(),

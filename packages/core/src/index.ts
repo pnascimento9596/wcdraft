@@ -101,11 +101,15 @@ export type {
   YellowEvent,
   RedEvent,
   InjuryEvent,
+  AvailabilityEvent,
   SubEvent,
   ShootoutKickEvent,
   ShootoutKick,
   MatchLineupEntry,
   MatchResult,
+  AvailabilityFact,
+  BenchActivationFact,
+  MatchTeamFacts,
   SimWorld,
   // scoring
   ScoringConfig,
@@ -189,6 +193,8 @@ export {
   positionCompatibility,
   computeSynergy,
   aggregateUserXiStrength,
+  aggregateActiveXiStrength,
+  projectSlotContribution,
   managerBandModifier,
 } from "./api/index.js";
 

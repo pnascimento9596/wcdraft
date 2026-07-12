@@ -145,7 +145,7 @@ describe("sim golden — scenario shapes are what the names claim", () => {
     expect(run.eliminated_in_match_id).toBe(matches[2]!.match_id);
   });
 
-  it("injury-cascade: ≥2 tournament-ending injuries, each persisting out of later lineups", () => {
+  it("injury-cascade: ≥2 tournament-ending absences, each persisting out of later lineups", () => {
     const { matches } = runFor(
       "injury_cascade",
       GOLDEN.find((g) => g.name === "injury_cascade")!.seed,
@@ -153,16 +153,22 @@ describe("sim golden — scenario shapes are what the names claim", () => {
     const ended: Array<{ player_id: string; matchIndex: number }> = [];
     matches.forEach((m, idx) => {
       for (const e of m.events) {
-        if (e.type === "injury" && e.tournament_ending) {
+        if (e.type === "availability" && e.reason === "tournament_injury") {
           ended.push({ player_id: e.player_id, matchIndex: idx });
         }
       }
     });
-    expect(ended.length).toBeGreaterThanOrEqual(2);
-    for (const inj of ended) {
-      for (let later = inj.matchIndex + 1; later < matches.length; later++) {
+    const firstByPlayer = new Map<string, number>();
+    for (const injury of ended) {
+      if (!firstByPlayer.has(injury.player_id)) {
+        firstByPlayer.set(injury.player_id, injury.matchIndex);
+      }
+    }
+    expect(firstByPlayer.size).toBeGreaterThanOrEqual(2);
+    for (const [player_id, matchIndex] of firstByPlayer) {
+      for (let later = matchIndex + 1; later < matches.length; later++) {
         const present = matches[later]!.lineup.some(
-          (l) => l.side === "user" && l.player_id === inj.player_id,
+          (l) => l.side === "user" && l.player_id === player_id,
         );
         expect(present).toBe(false);
       }

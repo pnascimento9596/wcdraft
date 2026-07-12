@@ -19,6 +19,7 @@ import type {
   MatchEvent,
   MatchLineupEntry,
   MatchResult,
+  MatchTeamFacts,
   PenScoredEvent,
   ShootoutKick,
   ShootoutKickEvent,
@@ -31,7 +32,6 @@ import { parseCardId } from "../types/identity.js";
 import {
   CHANCE_OUTCOME,
   INCIDENT,
-  INJURY,
   MINUTES,
   SHOOTOUT,
   activeChances,
@@ -277,6 +277,25 @@ interface MatchBuildContext {
   seq: number;
 }
 
+function neutralTeamFacts(strength: TeamStrength): MatchTeamFacts {
+  const synergy = {
+    overall: 0,
+    nation_clusters: [],
+    linked_pairs: [],
+    manager_link: 0,
+    multiplier: 1,
+  };
+  return {
+    base_strength: strength,
+    active_strength: strength,
+    base_synergy: synergy,
+    active_synergy: synergy,
+    unavailable: [],
+    bench_activations: [],
+    short_handed_slot_ids: [],
+  };
+}
+
 function nextEventId(ctx: MatchBuildContext): string {
   return `${ctx.matchId}.e${ctx.seq++}`;
 }
@@ -429,6 +448,10 @@ export interface CoreMatchInput {
   oppMembers: SimMember[];
   userStrength: TeamStrength;
   oppStrength: TeamStrength;
+  /** Persisted active-XI facts. Tournament path supplies real S1 facts. */
+  teamFacts?: MatchTeamFacts;
+  /** Pre-match mechanical availability events, already canonically ordered. */
+  preMatchEvents?: readonly MatchEvent[];
   /** Structure RNG (match_sim substream) — drives outcome-determining draws. */
   structRng: Rng;
   /** Event RNG (event_gen substream) — drives cosmetic attribution. */
@@ -472,6 +495,8 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
     oppMembers,
     userStrength,
     oppStrength,
+    teamFacts,
+    preMatchEvents,
     structRng,
     eventRng,
   } = input;
@@ -602,7 +627,7 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
   }
 
   // ── Chronological walk to emit goal events + score_after, and non-goal events ──
-  const ctx: MatchBuildContext = { matchId, events: [], seq: 0 };
+  const ctx: MatchBuildContext = { matchId, events: [...(preMatchEvents ?? [])], seq: 0 };
   const allChances = [...userReg, ...oppReg, ...etUser, ...etOpp];
   allChances.sort((a, b) => {
     const pa = PERIOD_ORDER[a.period] - PERIOD_ORDER[b.period];
@@ -681,10 +706,8 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
     }
   }
 
-  // ── Injuries + substitutions (user side; persistence handled by caller) ──
   const matchLength = userGoalsEt !== null ? MINUTES.WITH_EXTRA_TIME : MINUTES.REGULATION;
   const injuredTournamentEnding: string[] = [];
-  applyInjuriesAndSubs(ctx, userMembers, matchLength, structRng, eventRng, injuredTournamentEnding);
 
   // ── Append shootout events last (period 'shootout'). ──
   for (const e of shootoutEvents) ctx.events.push(e);
@@ -709,6 +732,7 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
     phase,
     opponent_team_id: opponentTeamId,
     pre_match_win_probability: preMatchWinProbability,
+    team_facts: teamFacts ?? neutralTeamFacts(userStrength),
     user_goals: userGoalsReg,
     opp_goals: oppGoalsReg,
     user_goals_et: userGoalsEt,
@@ -876,110 +900,6 @@ function runShootout(
   }
 
   return { user: userScore, opp: oppScore, sequence };
-}
-
-// ─── INJURIES / SUBS ──────────────────────────────────────────────────────────
-
-function applyInjuriesAndSubs(
-  ctx: MatchBuildContext,
-  userMembers: readonly SimMember[],
-  matchLength: number,
-  structRng: Rng,
-  eventRng: Rng,
-  injuredTournamentEnding: string[],
-): void {
-  const started = userMembers.filter((m) => m.started);
-  const benchPool = userMembers.filter((m) => !m.started);
-  const usedBench = new Set<string>();
-  const subbedOff = new Set<string>();
-
-  // Injury events: 0..2 per match (structRng decides occurrence + severity).
-  let injuryCount = 0;
-  if (structRng.next() < INJURY.PRIMARY_INJURY_PROB) injuryCount++;
-  if (structRng.next() < INJURY.SECOND_INJURY_PROB) injuryCount++;
-
-  for (let k = 0; k < injuryCount; k++) {
-    const candidate = weightedPick(
-      started.filter((m) => !subbedOff.has(m.player_id)),
-      () => 1,
-      eventRng,
-    );
-    if (!candidate) break;
-    const minute = 20 + Math.floor(eventRng.next() * Math.max(matchLength - 25, 1));
-    const period = periodForMinute(clamp(minute, 1, 120));
-    const tournamentEnding = structRng.next() < INJURY.TOURNAMENT_ENDING_PROB;
-    ctx.events.push({
-      minute: clamp(minute, 1, 120),
-      period,
-      side: "user",
-      event_id: nextEventId(ctx),
-      type: "injury",
-      card_id: candidate.card_id,
-      player_id: candidate.player_id,
-      tournament_ending: tournamentEnding,
-    });
-    if (tournamentEnding) injuredTournamentEnding.push(candidate.player_id);
-
-    // Position-aware injury sub from the bench, if one is available.
-    const replacement = pickBenchReplacement(benchPool, usedBench, candidate.position, eventRng);
-    if (replacement) {
-      usedBench.add(replacement.player_id);
-      subbedOff.add(candidate.player_id);
-      ctx.events.push({
-        minute: clamp(minute, 1, 120),
-        period,
-        side: "user",
-        event_id: nextEventId(ctx),
-        type: "sub",
-        in_card_id: replacement.card_id,
-        in_player_id: replacement.player_id,
-        out_card_id: candidate.card_id,
-        out_player_id: candidate.player_id,
-        reason: "injury",
-      });
-    }
-  }
-
-  // One tactical sub, if a bench player remains.
-  if (structRng.next() < INJURY.TACTICAL_SUB_PROB) {
-    const out = weightedPick(
-      started.filter((m) => !subbedOff.has(m.player_id) && m.position !== "GK"),
-      () => 1,
-      eventRng,
-    );
-    const inb = pickBenchReplacement(benchPool, usedBench, out?.position ?? "MF", eventRng);
-    if (out && inb) {
-      usedBench.add(inb.player_id);
-      subbedOff.add(out.player_id);
-      const minute = 55 + Math.floor(eventRng.next() * Math.max(matchLength - 60, 1));
-      const period = periodForMinute(clamp(minute, 1, 120));
-      ctx.events.push({
-        minute: clamp(minute, 1, 120),
-        period,
-        side: "user",
-        event_id: nextEventId(ctx),
-        type: "sub",
-        in_card_id: inb.card_id,
-        in_player_id: inb.player_id,
-        out_card_id: out.card_id,
-        out_player_id: out.player_id,
-        reason: "tactical",
-      });
-    }
-  }
-}
-
-function pickBenchReplacement(
-  benchPool: readonly SimMember[],
-  used: Set<string>,
-  position: Position,
-  rng: Rng,
-): SimMember | null {
-  const available = benchPool.filter((m) => !used.has(m.player_id));
-  if (available.length === 0) return null;
-  const samePos = available.filter((m) => m.position === position);
-  const pool = samePos.length ? samePos : available;
-  return weightedPick(pool, () => 1, rng);
 }
 
 // ─── LINEUP ─────────────────────────────────────────────────────────────────

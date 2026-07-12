@@ -38,15 +38,15 @@
       "bytes_brotli": 2154,
       "bytes_gzip": 2623,
       "compressed_bytes": 2154,
-      "compressed_sha256": "f9b245c2deee938f2eb841c2c77d41b03bd389d9355193b73b09ede2437ccd6e",
+      "compressed_sha256": "5d765fa761968605bcdf8c101e07f913ba5870848a01e4ef263dbf7430df9eeb",
       "options": {
         "mode": "text",
         "quality": 11,
         "size_hint": 7147
       },
       "path": "manifest.json",
-      "raw_sha256": "d823b6f9a321fb6231cfb3cbdfa24a8e98e26773128f6513fad220810976edcc",
-      "sha256": "d823b6f9a321fb6231cfb3cbdfa24a8e98e26773128f6513fad220810976edcc"
+      "raw_sha256": "d8dbde9a25f8e1b15ae92553bcaf3661c884c5dc4690deb99a905efe5759cff4",
+      "sha256": "d8dbde9a25f8e1b15ae92553bcaf3661c884c5dc4690deb99a905efe5759cff4"
     },
     "scenario_2026": {
       "brotli_impl_version": "1.1.0",
@@ -67,18 +67,18 @@
     "score_distribution": {
       "brotli_impl_version": "1.1.0",
       "bytes": 1224,
-      "bytes_brotli": 593,
-      "bytes_gzip": 729,
-      "compressed_bytes": 593,
-      "compressed_sha256": "65e4cf05a0450f2f632168949295b3c83ebf7c999241568a7e1ac4d7bd0face9",
+      "bytes_brotli": 589,
+      "bytes_gzip": 727,
+      "compressed_bytes": 589,
+      "compressed_sha256": "a1f3237c29309208198a64e90649b2b5b5b7d510579b4319b130b085d00497fe",
       "options": {
         "mode": "text",
         "quality": 11,
         "size_hint": 1224
       },
       "path": "score-distribution.compact.json",
-      "raw_sha256": "52752f4a19a839cf978107d3178c9c85d73803b7f2e846da1895501ac1cfb134",
-      "sha256": "52752f4a19a839cf978107d3178c9c85d73803b7f2e846da1895501ac1cfb134"
+      "raw_sha256": "804c881701acaec4ed315921e8694d9c4ae37e9cafb83d88fb793186e51204ab",
+      "sha256": "804c881701acaec4ed315921e8694d9c4ae37e9cafb83d88fb793186e51204ab"
     }
   },
   "dataset_version": "2026-07-01",

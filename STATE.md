@@ -4,6 +4,30 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Season 2 Squad Depth — Unit S1 availability and bench mechanics:
+2026-07-12 · local RED implementation on `ws-core/season2-s1-depth`, based on
+integration head `59f74d3de68552f9602f9f849e575c2627c0de91`. Seeded pre-match
+knock/suspension/tournament-injury availability now resolves from a new labeled
+RNG stream before unchanged outcome streams. The engine selects the best hard
+family-eligible bench replacement by sim-internal line channel × canonical fit,
+recomputes strength and NATION-only Synergy over the active formation slots,
+and applies an explicit penalty when no eligible replacement exists. Mechanical
+availability events and persisted base/active/activation/short-handed facts
+replace the retired post-hoc flavor substitutions. Legacy MatchResults may omit
+the new facts so honest version-skew handling remains reachable.
+
+Local evidence: core 405/405; focused availability+sim 67/67; core goldens
+69+42; affected data 18/18; data integration 22/22; web simulation/worker/run
+record 52/52; core/data/web typecheck+lint PASS. Heavy realism first exposed
+only the expected exact count/score/distribution drift while every pre-S1 shape
+band passed. A zero-tuning provisional mechanics snapshot plus the required
+compact→score-distribution→compact chain restored the heavy gate to 10/10 (the
+original 9 plus an explicit fixed-center regression). Semantic shape
+centers/widths and goals floor remain unchanged; S3 owns calibrated final locks.
+Durable report:
+`docs/reports/season2-s1-availability-bench-model-2026-07-12.md`. Fresh-context
+review, cross-model spot review, CI, and integration merge remain required.
+
 Audit S1 E1 canonical minified runtime JSON:
 2026-07-12 · local RED implementation on branch
 `ws-f4/audit-s1-minified-runtime`, based on Wave C production HEAD
