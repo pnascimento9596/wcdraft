@@ -68,7 +68,8 @@ import type {
 // basis ratings (`career` + `current`) and the runtime replay shape includes
 // the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
 // array remains the Career alias until the product toggle ships.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.9.0" as const;
+// runtime-data-2.10.0: canonical minified runtime JSON; parsed semantics are unchanged.
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.10.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────

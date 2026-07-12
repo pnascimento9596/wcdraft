@@ -1,24 +1,24 @@
 {
   "$comment": "Compact-bundle size budget. Values are an upper bound on the exact canonical brotli-compressed byte length; the size-budget golden test fails if any committed bundle exceeds its budget. Each budget = measured canonical brotli + 15% headroom, rounded up to 128 bytes. Bump the budget (and document the data-growth justification) in the same PR that grows the source data. Do not invent budgets; always re-measure first.",
-  "schema_version": "runtime-data-2.9.0",
+  "schema_version": "runtime-data-2.10.0",
   "headroom_pct": 15,
   "bundles": {
     "draft_pool": {
-      "max_bytes_brotli": 2558592,
-      "measured_brotli_at_commit": 2224859,
+      "max_bytes_brotli": 1508480,
+      "measured_brotli_at_commit": 1311661,
       "path": "draft-pool.compact.json"
     },
     "scenario_2026": {
-      "max_bytes_brotli": 5120,
-      "measured_brotli_at_commit": 4440,
+      "max_bytes_brotli": 4864,
+      "measured_brotli_at_commit": 4195,
       "path": "scenario-2026.compact.json"
     },
     "manifest": {
       "max_bytes_brotli": 2560,
-      "measured_brotli_at_commit": 2201,
+      "measured_brotli_at_commit": 2154,
       "path": "manifest.json"
     }
   },
-  "total_max_bytes_brotli": 2566272,
-  "total_measured_brotli_at_commit": 2231500
+  "total_max_bytes_brotli": 1515904,
+  "total_measured_brotli_at_commit": 1318010
 }

@@ -40,6 +40,10 @@ function legacyManifest(): JsonRecord {
   return cloneRecord(JSON.parse(LEGACY_MANIFEST_BYTES.toString("utf8")));
 }
 
+function currentSchemaLegacyShapeManifest(): JsonRecord {
+  return { ...legacyManifest(), schema_version: RUNTIME_DATA_MANIFEST.schema_version };
+}
+
 const MATERIALIZATION_FIELDS = [
   "raw_sha256",
   "compressed_sha256",
@@ -55,8 +59,14 @@ describe("runtime manifest materialization compatibility", () => {
     );
   });
 
-  it("parses the exact pre-C1 manifest without fabricating materialization facts", () => {
-    const legacy = legacyManifest();
+  it("rejects the retained 2.9 manifest as honest version skew", () => {
+    expect(() => parseRuntimeDataManifest(legacyManifest())).toThrow(
+      /schema_version mismatch: got "runtime-data-2\.9\.0", expected "runtime-data-2\.10\.0"/u,
+    );
+  });
+
+  it("continues to accept the pre-C1 fingerprint shape for the current schema", () => {
+    const legacy = currentSchemaLegacyShapeManifest();
     const parsed = parseRuntimeDataManifest(legacy);
 
     expect(parsed).toBe(legacy);
@@ -70,12 +80,15 @@ describe("runtime manifest materialization compatibility", () => {
     expect(parsed.bundles.draft_pool.options).toBeUndefined();
   });
 
-  it("loads the exact pre-C1 manifest through the browser-facing loader at the unchanged URL", async () => {
+  it("loads the pre-C1 fingerprint shape through the current browser-facing URL", async () => {
     const calls: string[] = [];
+    const currentSchemaLegacyBytes = Buffer.from(
+      JSON.stringify(currentSchemaLegacyShapeManifest()),
+    );
     const fetchLegacy: typeof fetch = ((input: unknown) => {
       calls.push(String(input));
       return Promise.resolve(
-        new Response(LEGACY_MANIFEST_BYTES, {
+        new Response(currentSchemaLegacyBytes, {
           status: 200,
           headers: { "Content-Type": "application/json" },
         }),
@@ -83,11 +96,11 @@ describe("runtime manifest materialization compatibility", () => {
     }) as typeof fetch;
 
     const parsed = await loadDataManifest({
-      basePath: "/data/wcdraft/runtime-data-2.9.0",
+      basePath: "/data/wcdraft/runtime-data-2.10.0",
       fetch: fetchLegacy,
     });
 
-    expect(calls).toEqual(["/data/wcdraft/runtime-data-2.9.0/manifest.json"]);
+    expect(calls).toEqual(["/data/wcdraft/runtime-data-2.10.0/manifest.json"]);
     expect(parsed.bundles.scenario_2026.sha256).toBe(
       "7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398",
     );
@@ -113,7 +126,7 @@ describe("runtime manifest materialization compatibility", () => {
   );
 
   it("rejects a legacy fingerprint with only one newly introduced field", () => {
-    const partial = legacyManifest();
+    const partial = currentSchemaLegacyShapeManifest();
     const fingerprint = draftFingerprint(partial);
     fingerprint.raw_sha256 = fingerprint.sha256;
 

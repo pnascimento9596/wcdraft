@@ -93,7 +93,7 @@ const { manifest, draftPool, scenario2026 } = await loadRuntimeData();
 // Node (tests, scripts)
 import { loadRuntimeDataFromDisk } from "@wcdraft/data/node";
 const data = await loadRuntimeDataFromDisk({
-  dir: "/abs/path/to/data/wcdraft/runtime-data-2.9.0",
+  dir: "/abs/path/to/data/wcdraft/runtime-data-2.10.0",
 });
 
 // Static import — tests, codegen, dev tooling only. DO NOT use from

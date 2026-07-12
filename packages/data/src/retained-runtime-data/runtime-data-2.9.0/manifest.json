@@ -54,28 +54,69 @@
     ]
   },
   "bundles": {
-    "draft_pool": {
-      "bytes": 129711288,
-      "bytes_brotli": 2222522,
-      "bytes_gzip": 4621954,
+    "daily_seed_salt_map": {
       "brotli_impl_version": "1.1.0",
-      "compressed_bytes": 2222522,
-      "compressed_sha256": "29c9ef3f6c8104a7f881fc8e5360cd0f2a52b952d57b4859a41375a28eb2dbcc",
+      "bytes": 26506,
+      "bytes_brotli": 1777,
+      "bytes_gzip": 2229,
+      "compressed_bytes": 1777,
+      "compressed_sha256": "83fe4752ffdfb940a6728b0903dc8697d8f558273a0ec100b776d2e471cb8009",
       "options": {
         "mode": "text",
         "quality": 11,
-        "size_hint": 129711288
+        "size_hint": 26506
+      },
+      "path": "daily-seed-salt-map.compact.json",
+      "raw_sha256": "42d012d035565b4ff218d890b2ecbd28d0e3ea3c3c30240737d8ba4afc3f5d79",
+      "sha256": "42d012d035565b4ff218d890b2ecbd28d0e3ea3c3c30240737d8ba4afc3f5d79"
+    },
+    "draft_pool": {
+      "brotli_impl_version": "1.1.0",
+      "bytes": 130545042,
+      "bytes_brotli": 2224859,
+      "bytes_gzip": 4669828,
+      "compressed_bytes": 2224859,
+      "compressed_sha256": "053161069c28d441d87857bb199600c15dc2f7299336a4aa140054b45d03f853",
+      "options": {
+        "mode": "text",
+        "quality": 11,
+        "size_hint": 130545042
       },
       "path": "draft-pool.compact.json",
-      "raw_sha256": "976f6ac517b679b02f052606fcc48809df7ae384ee69a6b015559faf9115ff00",
-      "sha256": "976f6ac517b679b02f052606fcc48809df7ae384ee69a6b015559faf9115ff00"
+      "raw_sha256": "461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a",
+      "sha256": "461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a"
     },
     "scenario_2026": {
+      "brotli_impl_version": "1.1.0",
       "bytes": 108775,
-      "bytes_brotli": 4608,
-      "bytes_gzip": 7768,
+      "bytes_brotli": 4440,
+      "bytes_gzip": 7702,
+      "compressed_bytes": 4440,
+      "compressed_sha256": "19290a7d3e1763bc15e7cb02ee9274fa5813e4877f707c3deaf654a7a2e37671",
+      "options": {
+        "mode": "text",
+        "quality": 11,
+        "size_hint": 108775
+      },
       "path": "scenario-2026.compact.json",
-      "sha256": "75214e06dd8f90bd11bbe84b458128d39b8eeaf05b9cbf0ffba4b3b612c499c0"
+      "raw_sha256": "7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398",
+      "sha256": "7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398"
+    },
+    "score_distribution": {
+      "brotli_impl_version": "1.1.0",
+      "bytes": 1856,
+      "bytes_brotli": 617,
+      "bytes_gzip": 767,
+      "compressed_bytes": 617,
+      "compressed_sha256": "d7dd92f04611284aadff7d37f36a96fb59c770dc0d71ff45c9b109695074cec9",
+      "options": {
+        "mode": "text",
+        "quality": 11,
+        "size_hint": 1856
+      },
+      "path": "score-distribution.compact.json",
+      "raw_sha256": "16c01f921455ebd6a47b22e0ee7ee5f7e3d36239bc3df9982d123e155c75b06d",
+      "sha256": "16c01f921455ebd6a47b22e0ee7ee5f7e3d36239bc3df9982d123e155c75b06d"
     }
   },
   "counts": {
@@ -100,10 +141,10 @@
     "ratings": 12219,
     "teams": 48
   },
-  "dataset_version": "2026-06-04",
-  "engine_version": "engine-2026.06.17-merit-v4.5",
-  "rating_version_historical": "wc-perf-6.5.0",
-  "rating_version_projected": "proj-career-5.5.0",
+  "dataset_version": "2026-07-01",
+  "engine_version": "engine-2026.06.30-manager-attrition",
+  "rating_version_historical": "wc-perf-6.6.0",
+  "rating_version_projected": "proj-career-5.6.0",
   "ruleset_version": "ruleset-2026.06.04",
-  "schema_version": "runtime-data-2.7.0"
+  "schema_version": "runtime-data-2.9.0"
 }
