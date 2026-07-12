@@ -1,7 +1,7 @@
 name: CI
 
 # Triggered on `main` AND every long-lived integration branch (engine-*,
-# merit-*, leaderboard-profiles and the placeholder season-* family). Before the merit-v2 season
+# merit-*, leaderboard-profiles, and both season-* and season/** families). Before the merit-v2 season
 # merge the workflow only ran for `main`-targeted PRs, so the entire
 # `engine-v2`/`merit-v2` series shipped CI-dark — a structural risk the
 # post-season gate review flagged. Listing the integration prefixes here
@@ -9,9 +9,9 @@ name: CI
 # PR into main; new integration branches MUST follow the same naming.
 on:
   pull_request:
-    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*"]
+    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*", "season/**"]
   push:
-    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*"]
+    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*", "season/**"]
   workflow_dispatch:
     inputs:
       force_all:
