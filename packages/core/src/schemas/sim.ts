@@ -300,19 +300,32 @@ export const MatchResultSchema = z
           }),
         ),
         bench_activations: z.array(
-          z.object({
-            out_card_id: CardIdSchema,
-            out_player_id: NonEmptyIdSchema,
-            in_card_id: CardIdSchema,
-            in_player_id: NonEmptyIdSchema,
-            slot_id: NonEmptyIdSchema,
-            line: PositionSchema,
-            fit: ProbabilitySchema,
-            internal_score: z.number().finite().min(0).max(100),
-            replacement_score: z.number().finite().min(0).max(100),
-            outgoing_score: z.number().finite().min(0).max(100),
-            line_contribution_delta: z.number().finite().min(-100).max(100),
-          }),
+          z
+            .object({
+              out_card_id: CardIdSchema,
+              out_player_id: NonEmptyIdSchema,
+              in_card_id: CardIdSchema,
+              in_player_id: NonEmptyIdSchema,
+              slot_id: NonEmptyIdSchema,
+              line: PositionSchema,
+              fit: ProbabilitySchema,
+              internal_score: z.number().finite().min(0).max(100),
+              replacement_score: z.number().finite().min(0).max(100),
+              outgoing_score: z.number().finite().min(0).max(100),
+              line_contribution_delta: z.number().finite().min(-100).max(100),
+            })
+            .superRefine((activation, ctx) => {
+              if (
+                activation.line_contribution_delta !==
+                activation.replacement_score - activation.outgoing_score
+              ) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: "line_contribution_delta must equal replacement_score - outgoing_score",
+                  path: ["line_contribution_delta"],
+                });
+              }
+            }),
         ),
         short_handed_slot_ids: z.array(NonEmptyIdSchema),
       })
@@ -335,6 +348,65 @@ export const MatchResultSchema = z
     events: z.array(MatchEventSchema),
   })
   .superRefine((m, ctx) => {
+    if (m.team_facts) {
+      const availabilityEvents = m.events.filter(
+        (event): event is AvailabilityEvent =>
+          event.type === "availability" && event.side === "user",
+      );
+      for (let index = 0; index < m.team_facts.bench_activations.length; index++) {
+        const activation = m.team_facts.bench_activations[index]!;
+        const corresponding = availabilityEvents.filter(
+          (event) => event.player_id === activation.out_player_id,
+        );
+        if (corresponding.length !== 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "bench activation must have exactly one corresponding availability event",
+            path: ["team_facts", "bench_activations", index],
+          });
+          continue;
+        }
+        const event = corresponding[0]!;
+        if (
+          (event.card_id as string) !== (activation.out_card_id as string) ||
+          event.slot_id !== activation.slot_id ||
+          event.position !== activation.line ||
+          (event.replacement_card_id as string | null) !== (activation.in_card_id as string) ||
+          event.replacement_player_id !== activation.in_player_id ||
+          event.short_handed
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "bench activation contradicts its availability event",
+            path: ["team_facts", "bench_activations", index],
+          });
+        }
+      }
+      for (let index = 0; index < availabilityEvents.length; index++) {
+        const event = availabilityEvents[index]!;
+        const corresponding = m.team_facts.bench_activations.filter(
+          (activation) => activation.out_player_id === event.player_id,
+        );
+        const validShortHanded =
+          event.short_handed &&
+          corresponding.length === 0 &&
+          event.replacement_card_id === null &&
+          event.replacement_player_id === null;
+        const validReplacement =
+          !event.short_handed &&
+          corresponding.length === 1 &&
+          event.replacement_card_id !== null &&
+          event.replacement_player_id !== null;
+        if (!validShortHanded && !validReplacement) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "availability event replacement state contradicts bench activations",
+            path: ["events", m.events.indexOf(event)],
+          });
+        }
+      }
+    }
+
     // Phase / round consistency.
     if (isGroupRound(m.round) && m.phase !== "group") {
       ctx.addIssue({

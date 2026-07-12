@@ -84,28 +84,28 @@
     },
     "greedyOverallAutoDraft": {
       "_doc": "Position-blind max-overall NEGATIVE CONTROL. The gate ASSERTS this policy lands OUTSIDE every shape band, so nobody can 'fix' realism by maxing OVR — competent must mean slot-fit-aware, not max-overall.",
-      "qualifying": 502,
-      "matches": 6780,
+    "qualifying": 503,
+    "matches": 6781,
       "groupMatches": 6000,
-      "knockoutMatches": 780,
-      "goalsTotal": 20532,
-      "draws": 1160,
+    "knockoutMatches": 781,
+      "goalsTotal": 20533,
+      "draws": 1159,
       "margin4plus": 718,
-      "koEt": 202,
+      "koEt": 203,
       "koShootout": 118,
       "observed": {
-        "goals_per_game": 3.0283185840707967,
-        "draw_pct": 0.19333333333333333,
-        "margin4plus_pct": 0.10589970501474927,
-        "ko_et_pct": 0.258974358974359,
-        "shootout_pct": 0.15128205128205127
+        "goals_per_game": 3.0280194661554343,
+        "draw_pct": 0.19316666666666665,
+        "margin4plus_pct": 0.1058840878926412,
+        "ko_et_pct": 0.2599231754161332,
+        "shootout_pct": 0.15108834827144688
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.03871078756298188,
-        "draw_pct": 0.010196586211589169,
-        "margin4plus_pct": 0.00747404387557398,
-        "ko_et_pct": 0.0313709518069298,
-        "shootout_pct": 0.025660084961182574
+        "goals_per_game": 0.04226320757746087,
+        "draw_pct": 0.010193243041530192,
+        "margin4plus_pct": 0.007473006935904835,
+        "ko_et_pct": 0.0313881256895556,
+        "shootout_pct": 0.025630153824861415
       },
       "telemetry": {
         "channelMean": {
@@ -152,7 +152,7 @@
     "policy": "strategicAutoDraft",
     "runs": 2000,
     "qualifyingRuns": 1336,
-    "mean": 14.644,
+    "mean": 14.641,
     "median": 9,
     "p95": 62,
     "min": -24,

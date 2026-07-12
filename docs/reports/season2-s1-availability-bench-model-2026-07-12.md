@@ -19,9 +19,11 @@ and integration-branch merge remain orchestrator-owned gates.
 - Added hard bench-replacement eligibility only in the S1 resolver. GK is
   isolated; outfield same/adjacent families are derived from the canonical
   position-compatibility matrix. Missing eligibility fails closed.
-- Added deterministic best-replacement selection using the target line's
-  sim-internal rating channel multiplied by canonical target-slot fit. Ties are
-  broken by canonical card id.
+- Added a complete deterministic assignment across all simultaneous absent
+  slots and eligible bench cards. It maximizes filled slots first, then total
+  target-line internal score × canonical fit, then uses ordered slot/card ids
+  as the stable tie-break. Short-handed state now means no complete eligible
+  assignment can fill that slot, rather than a slot-order greedy miss.
 - Rebuilds the active formation slots for every match, recomputes NATION-only
   Synergy over that active XI, then recomputes strength. A missing replacement
   uses the fixed eleven-slot denominator plus an explicit short-handed
@@ -42,6 +44,24 @@ and integration-branch merge remain orchestrator-owned gates.
 - Kept `team_facts` optional at the persisted schema boundary so legacy records
   still reach honest version-skew handling. Every new tournament simulation
   emits the facts.
+- Enforced persisted activation arithmetic exactly at that boundary and
+  bidirectionally reconciled each activation with its user availability event,
+  including outgoing/incoming identity, slot/line, and short-handed state.
+
+## Fix-forward review defects resolved
+
+1. Replaced greedy multi-absence bench consumption with complete deterministic
+   assignment. The reproduced LB/LW contention now assigns `u13→LB` and
+   `u14→LW` with zero short-handed slots; exhaustive one-to-three-absence
+   coverage independently proves every completely matchable fixture is fully
+   assigned.
+2. Regenerated the Daily salt map from the corrected engine and re-closed the
+   score-distribution, Daily JSON/Brotli, manifest JSON/Brotli, and compact-size
+   artifacts. The forced data golden is byte-identical again.
+3. Added exact `line_contribution_delta = replacement_score − outgoing_score`
+   validation and rejected contradictions between persisted activation facts
+   and their corresponding availability events. Legacy records may still omit
+   the entire `team_facts` object.
 
 ## Reconciliation — Architect-delegated decisions
 
@@ -76,6 +96,10 @@ and integration-branch merge remain orchestrator-owned gates.
    keeps narrative/event facts honest: the unavailable starter never entered
    the mechanical XI, while the replacement is stamped as a starter rather
    than falsely shown as a 60th-minute substitute.
+6. **Per-unit Daily closure.** Architect-delegated sequencing is to regenerate
+   Daily for every engine unit that moves deterministic sim output. S8 will
+   re-close the cumulative engine, but that does not license S1 to carry a red
+   exact-head golden into the season integration branch.
 
 ## Golden delta audit before re-lock
 
@@ -108,8 +132,8 @@ scenario seeds were retained. The real-data generator retained its fixed seed
   `_work` was empty and all recovery/season worktrees were retained.
 - Required bootstrap Actions: runs `29197651416` (CI) and `29197651369` (ETL)
   both completed `success` at integration SHA `59f74d3…`.
-- Focused availability + sim golden: **67/67 passed** across 2 files.
-- Core full test: **405/405 passed** across 27 files.
+- Focused availability + sim golden: **70/70 passed** across 2 files.
+- Core full test: **408/408 passed** across 27 files.
 - Core typecheck and lint: PASS.
 - Core RNG/narrative goldens: **69/69 passed**.
 - Core draft goldens: **42/42 passed**.
@@ -119,6 +143,11 @@ scenario seeds were retained. The real-data generator retained its fixed seed
 - Data typecheck and lint: PASS.
 - Web simulation/worker/run-record focused tests: **52/52 passed** across 5
   files after building the core/data workspace outputs.
+- Forced root test phase: DB **161/161**, data **183 passed** with 9 intentional
+  heavy-gate skips, web **1156 passed** with 1 intentional benchmark skip, and
+  marketing **68/68**. Responsive browser checks passed with 84 desktop, 56
+  mobile, 40 interaction, 30 mode-setup, and 8 mobile-navigation metrics; zero
+  failures.
 - Web typecheck and lint: PASS.
 - Web leaderboard golden: **6/6 passed**.
 - Generated-data determinism: `pnpm check:generated` PASS after explicitly
@@ -136,12 +165,16 @@ scenario seeds were retained. The real-data generator retained its fixed seed
   explicit pre-S1 centers, so current observed telemetry cannot silently
   re-center them; a regression test proves that separation.
 - Required artifact order: `build:compact → build:score-distribution →
-build:compact` PASS. The regenerated distribution is N=2000, qualifying
-  1336, median 9, p95 62, min -24, max 126.
-- Generated artifact scope: current score-distribution JSON+Brotli, manifest
-  JSON+Brotli, and `packages/data/reports/compact-size.json`. Draft pool,
-  scenario, daily salt map, retained bundles, ratings, and rating anchors did
-  not move.
+build:compact → build:daily-seed-salt-map → build:compact` PASS with the
+  runway pinned to 2026-07-10 through 2026-08-23 (45 days), population 128,
+  and maximum eight salt attempts. The regenerated distribution is N=2000,
+  qualifying 1336, mean 14.641, median 9, p95 62, min -24, max 126.
+- Generated artifact scope: score-distribution JSON+Brotli, Daily salt-map
+  JSON+Brotli, manifest JSON+Brotli, and
+  `packages/data/reports/compact-size.json`. The committed Daily raw SHA-256 is
+  `1081ae1c73f52dbbd731677c9b14aec6aeb256266021e8032144be21f750bc62`.
+  Draft pool, scenario, retained bundles, ratings, and rating anchors did not
+  move.
 - Final exact heavy realism: **10/10 passed** (the original 9/9 gates plus the
   fixed-center regression). This provisional mechanics snapshot is not S3
   calibration acceptance; S3 must replace it after tuning against all binding
@@ -153,9 +186,9 @@ Heavy measurements at the S1 head:
 | ---------------------- | ---------: | ------: | ----: | ---: |
 | autoDraft              |   333/2000 |    6472 |  6000 |  472 |
 | strategicAutoDraft     |  1336/2000 |    8866 |  6000 | 2866 |
-| greedyOverallAutoDraft |   502/2000 |    6780 |  6000 |  780 |
+| greedyOverallAutoDraft |   503/2000 |    6781 |  6000 |  781 |
 
-Strategic score population: mean 14.644, median 9, p95 62, min -24, max 126. These are S1 handoff measurements, not a calibration claim.
+Strategic score population: mean 14.641, median 9, p95 62, min -24, max 126. These are S1 handoff measurements, not a calibration claim.
 
 ## Risks and S3/S6 carryovers
 

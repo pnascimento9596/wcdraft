@@ -69,12 +69,11 @@ export interface RankedReplacement {
   replacementScore: number;
 }
 
-/** Deterministically choose the highest sim-internal score × target-slot fit. */
-export function selectBestBenchReplacement(
+function rankBenchReplacements(
   bench: readonly SquadSlot[],
   targetSlotPosition: SlotPosition,
   world: SimWorld,
-): RankedReplacement | null {
+): RankedReplacement[] {
   const target = slotPositionLine(targetSlotPosition);
   const ranked: RankedReplacement[] = [];
   for (const slot of bench) {
@@ -91,12 +90,102 @@ export function selectBestBenchReplacement(
     const internalScore = fit === 0 ? 0 : projection.weighted_channel / fit;
     ranked.push({ slot, fit, internalScore, replacementScore: projection.weighted_channel });
   }
+  return ranked;
+}
+
+/** Deterministically choose the highest sim-internal score × target-slot fit. */
+export function selectBestBenchReplacement(
+  bench: readonly SquadSlot[],
+  targetSlotPosition: SlotPosition,
+  world: SimWorld,
+): RankedReplacement | null {
+  const ranked = rankBenchReplacements(bench, targetSlotPosition, world);
   ranked.sort(
     (a, b) =>
       b.replacementScore - a.replacementScore ||
       (cardId(a.slot) < cardId(b.slot) ? -1 : cardId(a.slot) > cardId(b.slot) ? 1 : 0),
   );
   return ranked[0] ?? null;
+}
+
+/**
+ * Complete deterministic assignment for simultaneous absences.
+ *
+ * Priority is: fill the most slots, maximize total projected contribution,
+ * then choose the lexicographically smallest card assignment for canonically
+ * ordered slot ids. An unfilled slot sorts after every real card id, so the
+ * final tie-break also prefers filling the earliest canonical slot.
+ */
+export function assignBenchReplacements(
+  absentStarters: readonly SquadSlot[],
+  bench: readonly SquadSlot[],
+  world: SimWorld,
+): ReadonlyMap<string, RankedReplacement> {
+  const starters = absentStarters
+    .slice()
+    .sort((a, b) => (a.slot_id < b.slot_id ? -1 : a.slot_id > b.slot_id ? 1 : 0));
+  const candidates = starters.map((starter) =>
+    rankBenchReplacements(bench, starter.slot_position, world).sort((a, b) =>
+      cardId(a.slot) < cardId(b.slot) ? -1 : cardId(a.slot) > cardId(b.slot) ? 1 : 0,
+    ),
+  );
+  let best:
+    | {
+        filled: number;
+        score: number;
+        cardIds: string[];
+        assignments: Map<string, RankedReplacement>;
+      }
+    | undefined;
+
+  const isCanonicalBefore = (left: readonly string[], right: readonly string[]): boolean => {
+    for (let index = 0; index < left.length; index++) {
+      if (left[index] === right[index]) continue;
+      return left[index]! < right[index]!;
+    }
+    return false;
+  };
+  const visit = (
+    index: number,
+    usedCardIds: Set<string>,
+    assignments: Map<string, RankedReplacement>,
+    score: number,
+    cardIds: string[],
+  ): void => {
+    if (index === starters.length) {
+      const candidate = { filled: assignments.size, score, cardIds: cardIds.slice(), assignments };
+      if (
+        !best ||
+        candidate.filled > best.filled ||
+        (candidate.filled === best.filled && candidate.score > best.score) ||
+        (candidate.filled === best.filled &&
+          candidate.score === best.score &&
+          isCanonicalBefore(candidate.cardIds, best.cardIds))
+      ) {
+        best = { ...candidate, assignments: new Map(assignments) };
+      }
+      return;
+    }
+
+    const starter = starters[index]!;
+    for (const replacement of candidates[index]!) {
+      const replacementCardId = cardId(replacement.slot);
+      if (usedCardIds.has(replacementCardId)) continue;
+      usedCardIds.add(replacementCardId);
+      assignments.set(starter.slot_id, replacement);
+      cardIds.push(replacementCardId);
+      visit(index + 1, usedCardIds, assignments, score + replacement.replacementScore, cardIds);
+      cardIds.pop();
+      assignments.delete(starter.slot_id);
+      usedCardIds.delete(replacementCardId);
+    }
+    cardIds.push("\uffff");
+    visit(index + 1, usedCardIds, assignments, score, cardIds);
+    cardIds.pop();
+  };
+
+  visit(0, new Set(), new Map(), 0, []);
+  return best?.assignments ?? new Map();
 }
 
 /** Draw at most one new absence for this match from the isolated availability stream. */
@@ -181,7 +270,11 @@ export function resolveActiveTeam(params: {
     .filter((slot) => slot.is_starter && slot.card_id !== null && slot.player_id !== null)
     .sort((a, b) => (a.slot_id < b.slot_id ? -1 : a.slot_id > b.slot_id ? 1 : 0));
   const bench = draft.squad.filter((slot) => !slot.is_starter && slot.card_id !== null);
-  const usedBench = new Set<string>();
+  const absentStarters = starters.filter((starter) => absentByPlayer.has(starter.player_id!));
+  const replacements = assignBenchReplacements(absentStarters, bench, world);
+  const usedBench = new Set(
+    [...replacements.values()].map((replacement) => cardId(replacement.slot)),
+  );
   const activeStarters: SquadSlot[] = [];
   const activations: BenchActivationFact[] = [];
   const shortHandedSlotIds: string[] = [];
@@ -192,16 +285,11 @@ export function resolveActiveTeam(params: {
       activeStarters.push(starter);
       continue;
     }
-    const replacement = selectBestBenchReplacement(
-      bench.filter((slot) => !usedBench.has(cardId(slot))),
-      starter.slot_position,
-      world,
-    );
+    const replacement = replacements.get(starter.slot_id);
     if (!replacement) {
       shortHandedSlotIds.push(starter.slot_id);
       continue;
     }
-    usedBench.add(cardId(replacement.slot));
     activeStarters.push({
       ...replacement.slot,
       slot_id: starter.slot_id,

@@ -55,17 +55,23 @@ function context(worldOverride?: SimWorld) {
 }
 
 function forcedAbsence(slot: SquadSlot): AvailabilityState {
+  return forcedAbsences([slot]);
+}
+
+function forcedAbsences(slots: readonly SquadSlot[]): AvailabilityState {
   const state = createAvailabilityState();
-  state.absences.set(slot.player_id!, {
-    card_id: slot.card_id!,
-    player_id: slot.player_id!,
-    slot_id: slot.slot_id,
-    position: slotPositionLine(slot.slot_position),
-    reason: "knock",
-    duration_matches: 1,
-    unavailable_through: 0,
-  });
-  state.minorEventCount = 1;
+  for (const slot of slots) {
+    state.absences.set(slot.player_id!, {
+      card_id: slot.card_id!,
+      player_id: slot.player_id!,
+      slot_id: slot.slot_id,
+      position: slotPositionLine(slot.slot_position),
+      reason: "knock",
+      duration_matches: 1,
+      unavailable_through: 0,
+    });
+  }
+  state.minorEventCount = slots.length;
   return state;
 }
 
@@ -222,6 +228,98 @@ describe("S1 active-XI mechanics", () => {
     }
     expect(stronger.midfield).toBeGreaterThan(weaker.midfield);
   });
+
+  it("completely assigns overlapping DF/FW absences before maximizing replacement score", () => {
+    const c = context();
+    const absent = c.draft.squad.filter(
+      (slot) => slot.slot_id === "4-3-3.LB" || slot.slot_id === "4-3-3.LW",
+    );
+    const bench = c.draft.squad.filter((slot) => !slot.is_starter && slot.card_id !== null);
+    const world: SimWorld = {
+      ...c.world,
+      eligiblePositionsByCardId: {
+        ...c.world.eligiblePositionsByCardId,
+        ...Object.fromEntries(bench.map((slot) => [slot.card_id as string, []])),
+        [c.draft.squad.find((slot) => slot.player_id === "u13")!.card_id as string]: ["DF"],
+        [c.draft.squad.find((slot) => slot.player_id === "u14")!.card_id as string]: ["MF"],
+      },
+    };
+    const result = resolveActiveTeam({
+      draft: c.draft,
+      formation: c.formation,
+      world,
+      state: forcedAbsences(absent),
+      managerTournament: c.managerTournament,
+      managerRating: c.managerRating,
+      baseSynergy: c.baseSynergy,
+      baseStrength: c.baseStrength,
+    });
+
+    expect(result.facts.short_handed_slot_ids).toEqual([]);
+    expect(result.facts.bench_activations).toMatchObject([
+      { slot_id: "4-3-3.LB", in_player_id: "u13" },
+      { slot_id: "4-3-3.LW", in_player_id: "u14" },
+    ]);
+  });
+
+  it("produces zero short-handed slots whenever a complete eligible assignment exists", () => {
+    const c = context();
+    const starters = c.draft.squad.filter((slot) => slot.is_starter && slot.card_id !== null);
+    const bench = c.draft.squad.filter((slot) => !slot.is_starter && slot.card_id !== null);
+    const combinations: SquadSlot[][] = [];
+    const collect = (start: number, picked: SquadSlot[]): void => {
+      if (picked.length > 0) combinations.push(picked.slice());
+      if (picked.length === 3) return;
+      for (let index = start; index < starters.length; index++) {
+        picked.push(starters[index]!);
+        collect(index + 1, picked);
+        picked.pop();
+      }
+    };
+    collect(0, []);
+
+    const hasCompleteEligibleAssignment = (absent: readonly SquadSlot[]): boolean => {
+      const visit = (index: number, usedCardIds: Set<string>): boolean => {
+        if (index === absent.length) return true;
+        const starter = absent[index]!;
+        const target = slotPositionLine(starter.slot_position);
+        for (const replacement of bench) {
+          const replacementCardId = replacement.card_id as string;
+          const eligible = c.world.eligiblePositionsByCardId?.[replacementCardId];
+          if (
+            usedCardIds.has(replacementCardId) ||
+            !eligible ||
+            !isHardFamilyEligible(eligible, target)
+          ) {
+            continue;
+          }
+          usedCardIds.add(replacementCardId);
+          if (visit(index + 1, usedCardIds)) return true;
+          usedCardIds.delete(replacementCardId);
+        }
+        return false;
+      };
+      return visit(0, new Set());
+    };
+
+    for (const absent of combinations) {
+      if (!hasCompleteEligibleAssignment(absent)) continue;
+      const result = resolveActiveTeam({
+        draft: c.draft,
+        formation: c.formation,
+        world: c.world,
+        state: forcedAbsences(absent),
+        managerTournament: c.managerTournament,
+        managerRating: c.managerRating,
+        baseSynergy: c.baseSynergy,
+        baseStrength: c.baseStrength,
+      });
+      expect(
+        result.facts.short_handed_slot_ids,
+        absent.map((slot) => slot.slot_id).join(","),
+      ).toEqual([]);
+    }
+  });
 });
 
 describe("S1 deterministic availability lifecycle and persisted facts", () => {
@@ -255,22 +353,91 @@ describe("S1 deterministic availability lifecycle and persisted facts", () => {
     });
   });
 
-  it("accepts negative, zero, and positive signed line-contribution deltas", () => {
+  it("accepts only the exact persisted line-contribution arithmetic", () => {
     const c = context();
     const match = runTournamentFull(c.draft, c.scenario, availabilityGolden.seed, c.world).matches[
       availabilityGolden.match_index
     ]!;
     const activation = match.team_facts!.bench_activations[0]!;
+    expect(activation.line_contribution_delta).toBe(
+      activation.replacement_score - activation.outgoing_score,
+    );
+    expect(MatchResultSchema.safeParse(match).success).toBe(true);
     for (const delta of [-100, 0, 100]) {
       const candidate = {
         ...match,
         team_facts: {
           ...match.team_facts!,
-          bench_activations: [{ ...activation, line_contribution_delta: delta }],
+          bench_activations: match.team_facts!.bench_activations.map((fact, index) =>
+            index === 0
+              ? {
+                  ...fact,
+                  replacement_score: 75,
+                  outgoing_score: 50,
+                  line_contribution_delta: delta,
+                }
+              : fact,
+          ),
         },
       };
-      expect(MatchResultSchema.safeParse(candidate).success).toBe(true);
+      expect(MatchResultSchema.safeParse(candidate).success).toBe(false);
     }
+
+    const validZero = {
+      ...match,
+      team_facts: {
+        ...match.team_facts!,
+        bench_activations: match.team_facts!.bench_activations.map((fact, index) =>
+          index === 0
+            ? {
+                ...fact,
+                replacement_score: 75,
+                outgoing_score: 50,
+                line_contribution_delta: 25,
+              }
+            : fact,
+        ),
+      },
+    };
+    expect(MatchResultSchema.safeParse(validZero).success).toBe(true);
+  });
+
+  it("rejects contradictions between an activation and its availability event", () => {
+    const c = context();
+    const match = runTournamentFull(c.draft, c.scenario, availabilityGolden.seed, c.world).matches[
+      availabilityGolden.match_index
+    ]!;
+    const activation = match.team_facts!.bench_activations[0]!;
+    const eventIndex = match.events.findIndex(
+      (event) => event.type === "availability" && event.player_id === activation.out_player_id,
+    );
+    const event = match.events[eventIndex]!;
+    if (event.type !== "availability") throw new Error("fixture availability event missing");
+
+    const contradictions = [
+      { card_id: activation.in_card_id },
+      { player_id: activation.in_player_id },
+      { slot_id: "4-3-3.RB" },
+      { position: event.position === "DF" ? "MF" : "DF" },
+      { replacement_card_id: activation.out_card_id },
+      { replacement_player_id: activation.out_player_id },
+      { short_handed: true },
+    ] as const;
+    for (const contradiction of contradictions) {
+      const candidate = {
+        ...match,
+        events: match.events.map((item, index) =>
+          index === eventIndex ? { ...item, ...contradiction } : item,
+        ),
+      };
+      expect(MatchResultSchema.safeParse(candidate).success).toBe(false);
+    }
+
+    const missingActivation = {
+      ...match,
+      team_facts: { ...match.team_facts!, bench_activations: [] },
+    };
+    expect(MatchResultSchema.safeParse(missingActivation).success).toBe(false);
   });
 
   it("caps the fixed eight-match draw sequence at three minor events", () => {
