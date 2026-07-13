@@ -23,7 +23,7 @@ while still recording that the neutral channel passed through the outcome
 seam. Forfeits bypass the seam and retain neutral facts with the flag false.
 The MatchResult boundary recomputes and reconciles all four factual channels;
 legacy MatchResults may still omit `team_facts` entirely. Local evidence:
-focused tactical+decoupling+availability 32/32; full core 420/420; core
+focused tactical+decoupling+availability 33/33; full core 421/421; core
 typecheck and lint PASS. The first fresh exact-head review correctly rejected
 candidate `f08b1e406a4537685380accac705f92594ab60f8`: the MatchResult boundary
 accepted a forged full-XI 0-3 shape as a bypassed outcome. Fix-forward now
@@ -43,6 +43,18 @@ must now carry all corresponding cross-channel evidence. The positive forfeit
 fixture contains five unavailable facts/events/short slots for six remaining
 starters; missing all, missing one, or adding an extra slot rejects. This
 schema-only hardening also moves no engine output or artifacts.
+
+The second fresh reviewer correctly failed candidate
+`3d0c5197e19407a6f5ccab86eb394e711c4c7d8f`: count conservation still allowed
+a short-handed fact/event/slot to be moved onto an occupied starter slot or an
+invented ID. Fix-forward now resolves every non-empty short-handed record
+against authoritative `FORMATION_TEMPLATES`; the distinct union of started user
+slot IDs and short-handed slot IDs must equal the exact 11-slot set of one known
+formation, with no overlap or duplicates. Zero-short neutral/direct synthetic
+matches retain count-only validation because their slot IDs need not belong to
+a draft formation. Regressions reject occupied-slot swaps, invented slots, and
+duplicate started slots while the exact canonical set accepts. Prior review and
+cross-model approvals are void; fresh review must target the new exact head.
 
 Candidate-level broader evidence remains core goldens 69+42; forced data golden
 59/59; data integration 22/22; leaderboard golden 6/6; heavy realism 10/10 at

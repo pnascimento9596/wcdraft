@@ -225,6 +225,28 @@ describe("S2 tournament reachability and persisted facts", () => {
     };
   }
 
+  function replaceShortSlot(
+    coherent: ReturnType<typeof coherentBelowFloorForfeitShape>,
+    from: string,
+    to: string,
+  ) {
+    return {
+      ...coherent,
+      team_facts: {
+        ...coherent.team_facts,
+        unavailable: coherent.team_facts.unavailable.map((fact) =>
+          fact.slot_id === from ? { ...fact, slot_id: to } : fact,
+        ),
+        short_handed_slot_ids: coherent.team_facts.short_handed_slot_ids.map((slotId) =>
+          slotId === from ? to : slotId,
+        ),
+      },
+      events: coherent.events.map((event) =>
+        event.slot_id === from ? { ...event, slot_id: to } : event,
+      ),
+    };
+  }
+
   it("keeps the reachable managerless ready/direct-engine path neutral", () => {
     const inputs = buildScenarioInputs("upset");
     expect(inputs.draft.status).toBe("ready");
@@ -339,5 +361,28 @@ describe("S2 tournament reachability and persisted facts", () => {
       },
     };
     expect(MatchResultSchema.safeParse(extra).success).toBe(false);
+  });
+
+  it("rejects occupied, invented, or duplicate slot identities despite conserved counts", () => {
+    const coherent = coherentBelowFloorForfeitShape();
+    const originalShortSlot = coherent.team_facts.short_handed_slot_ids[0]!;
+    const keptStarters = coherent.lineup.filter((entry) => entry.started);
+    const occupiedSlot = keptStarters[0]!.slot_id;
+
+    const movedOntoOccupied = replaceShortSlot(coherent, originalShortSlot, occupiedSlot);
+    expect(MatchResultSchema.safeParse(movedOntoOccupied).success).toBe(false);
+
+    const invented = replaceShortSlot(coherent, originalShortSlot, "forged.formation.slot");
+    expect(MatchResultSchema.safeParse(invented).success).toBe(false);
+
+    const duplicateStarted = {
+      ...coherent,
+      lineup: coherent.lineup.map((entry) =>
+        entry.card_id === keptStarters[1]!.card_id ? { ...entry, slot_id: occupiedSlot } : entry,
+      ),
+    };
+    expect(MatchResultSchema.safeParse(duplicateStarted).success).toBe(false);
+
+    expect(MatchResultSchema.safeParse(coherent).success).toBe(true);
   });
 });

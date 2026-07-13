@@ -103,6 +103,11 @@ completion invariant.
   carries matching unavailable facts and short-handed availability events;
   deleting rows without that evidence, omitting one short slot, or adding an
   extra slot rejects.
+- When short-handed slots exist, the distinct occupied-plus-short slot union
+  must equal the exact 11-slot ID set of one authoritative
+  `FORMATION_TEMPLATES` entry. Moving a short fact/event onto an occupied slot,
+  inventing a slot, or duplicating an occupied slot rejects. Zero-short
+  synthetic neutral matches intentionally skip template-ID matching.
 
 ## Golden delta audit
 
@@ -118,13 +123,13 @@ mechanic, not a calibration claim.
 ## Validation evidence
 
 - `pnpm --filter @wcdraft/core exec vitest run src/engine/manager-tactics.test.ts src/manager-modifier-decoupling.guard.test.ts src/engine/availability.test.ts`
-  — PASS, 3 files / 32 tests at the hardened head.
+  — PASS, 3 files / 33 tests at the second-review fix-forward head.
 - `pnpm --filter @wcdraft/core typecheck` — PASS.
 - `pnpm --filter @wcdraft/core lint` — PASS.
 - `pnpm --filter @wcdraft/core run gen:sim-golden` — PASS; five scenario
   fixtures regenerated with the delta audited above.
-- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 420 tests at the
-  hardened head.
+- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 421 tests at the
+  second-review fix-forward head.
 - Five-step artifact closure (`build:compact` -> `build:score-distribution` ->
   `build:compact` -> pinned `build:daily-seed-salt-map` -> `build:compact`) —
   PASS. Daily parameters: start `2026-07-10`, 45 days, N=128, maximum eight
@@ -180,6 +185,25 @@ remaining starters, while missing-all, missing-one, extra-slot, and opponent-row
 variants reject. Focused 32/32, full core 420/420, core typecheck/lint, forced
 core goldens 69+42, and data integration 22/22 pass with no fixture or artifact
 movement.
+
+The second fresh reviewer then correctly failed candidate
+`3d0c5197e19407a6f5ccab86eb394e711c4c7d8f`. Cardinality conservation alone
+still permitted replacing one short-handed slot consistently across its fact,
+event, and set with either an occupied kept-starter slot or an invented ID. The
+record still counted to eleven but did not describe a real formation.
+
+Fix-forward imports the authoritative `FORMATION_TEMPLATES` registry. Whenever
+`short_handed_slot_ids` is non-empty, the boundary requires the combined
+started-user and short-handed slot IDs to be eleven distinct values and to
+equal every slot ID of one known template. This simultaneously rejects overlap,
+duplicates, invented IDs, mixed formations, and missing canonical slots. The
+check deliberately does not apply template identity when the short set is
+empty, preserving neutral/direct Team2026-vs-Team2026 facts whose synthetic
+slot IDs are not draft formation IDs. Regressions cover occupied-slot swaps,
+invented slots, duplicate started slots, and the exact canonical acceptance
+case. Focused 33/33, full core 421/421, core typecheck/lint, forced core goldens
+69+42, and data integration 22/22 pass without output, fixture, or artifact
+movement. All earlier approvals remain void.
 
 ## Per-unit artifact closure
 

@@ -39,6 +39,7 @@ import { CardIdSchema, refineCardIdConsistency } from "./identity.js";
 import { TeamStrengthSchema } from "./rating.js";
 import { applyManagerTacticalAdjustment } from "../engine/manager-tactics.js";
 import { INJURY } from "../engine/calibration.js";
+import { FORMATION_TEMPLATES } from "../types/formation.js";
 import { SynergyResultSchema } from "./synergy.js";
 import {
   IntegerRangeSchema,
@@ -270,6 +271,24 @@ export const MatchLineupEntrySchema = z
 const KNOCKOUT_ROUNDS = new Set(["R32", "R16", "QF", "SF", "F"] as const);
 const GROUP_ROUNDS = new Set(["G1", "G2", "G3"] as const);
 const CANONICAL_XI_SIZE = 11;
+const KNOWN_FORMATION_SLOT_SETS = Object.values(FORMATION_TEMPLATES).map(
+  (template) => new Set(template.slots.map((slot) => slot.slot_id)),
+);
+
+function accountsForExactKnownFormation(
+  startedUserSlotIds: readonly string[],
+  shortHandedSlotIds: readonly string[],
+): boolean {
+  const accounted = [...startedUserSlotIds, ...shortHandedSlotIds];
+  const accountedSet = new Set(accounted);
+  if (accounted.length !== CANONICAL_XI_SIZE || accountedSet.size !== accounted.length)
+    return false;
+  return KNOWN_FORMATION_SLOT_SETS.some(
+    (formationSlots) =>
+      formationSlots.size === accountedSet.size &&
+      [...formationSlots].every((slotId) => accountedSet.has(slotId)),
+  );
+}
 
 function isKnockoutRound(round: string): boolean {
   return (KNOCKOUT_ROUNDS as ReadonlySet<string>).has(round);
@@ -366,6 +385,21 @@ export const MatchResultSchema = z
             "started user lineup entries plus short_handed_slot_ids must account for the canonical XI",
           path: ["team_facts", "short_handed_slot_ids"],
         });
+      }
+      if (m.team_facts.short_handed_slot_ids.length > 0) {
+        const startedUserSlotIds = m.lineup
+          .filter((entry) => entry.side === "user" && entry.started)
+          .map((entry) => entry.slot_id);
+        if (
+          !accountsForExactKnownFormation(startedUserSlotIds, m.team_facts.short_handed_slot_ids)
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message:
+              "started user slots plus short-handed slots must be the distinct exact slot set of one known formation",
+            path: ["team_facts", "short_handed_slot_ids"],
+          });
+        }
       }
       const expectedTactical = applyManagerTacticalAdjustment(
         m.team_facts.active_strength,
