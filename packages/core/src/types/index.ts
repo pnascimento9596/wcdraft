@@ -113,11 +113,15 @@ export type {
   YellowEvent,
   RedEvent,
   InjuryEvent,
+  AvailabilityEvent,
   SubEvent,
   ShootoutKickEvent,
   ShootoutKick,
   MatchLineupEntry,
   MatchResult,
+  AvailabilityFact,
+  BenchActivationFact,
+  MatchTeamFacts,
   SimWorld,
 } from "./sim.js";
 
