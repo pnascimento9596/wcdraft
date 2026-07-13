@@ -67,6 +67,24 @@ reviewer interleavings plus the stale Draft writer and unsupported/aborted
 paths. The `0453ed5` FAIL remains recorded in the durable report; the next
 commit still requires a fresh exact-head independent review.
 
+Fresh exact-head review of `2aaccd3` found two store-wide blockers. Per-run
+lock names allowed different run IDs to race on the shared index, which could
+erase a successful pin and later evict that pinned record at the cap. New-run
+creation and the exported creation writer also remained outside the lock, so
+simultaneous tabs could collide on one ID, double-succeed an existence/write
+race, or mutate durable storage when Web Locks were unavailable. The fifth
+fix-forward uses one exclusive `wcdraft:run-store:v1` Web Lock for every
+durable counter, record, cap, and index mutation and one global Promise queue
+for volatile storage. Full creation, raw creation checks, existing-record
+transitions, and malformed/stale cleanup delegate to private unlocked helpers
+only after acquiring that seam. Render-time load/list reads are pure; awaited
+startup, resume, and history cleanup owns repair without blocking valid pure
+reads on unsupported browsers. Durable creation without Web Locks fails before
+any key changes and maps to the explicit browser-compatibility message. Quota
+fallback carries the monotonic counter into volatile storage and queued
+requests join the volatile store queue. The `2aaccd3` FAIL is preserved in the
+durable report; the next exact head still requires independent review.
+
 Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
 `mp`. One shared reconciliation path covers all four presence combinations,
 ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
@@ -76,9 +94,10 @@ then challenge ordering. Semantic arrangement defects map to typed
 `ILLEGAL_PICK` HTTP 422 after shallow decode. The paused marketing composer
 fails closed on arranged tokens instead of silently scoring the wrong XI.
 
-Measured closure: focused core token 4/4, focused S4 web 177/177, and fourth
-fix-forward mutation coverage 56/56; root typecheck 8/8, lint 5/5, test 8/8
-(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,208 + 1
+Measured closure: focused core token 4/4, focused S4 web 177/177, fourth
+fix-forward mutation coverage 56/56, and fifth fix-forward store coverage
+147/147; fifth-head root typecheck 8/8, lint 5/5, test 8/8
+(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,221 + 1
 expected benchmark skip), game-flow, responsive 218/0, and build 4/4 with 40
 pages/routes. Forced goldens pass core 69+42, data 59, integration 22, and
 leaderboard 6; canary 1/1 proves zero pick flips; heavy realism passes 10/10 at

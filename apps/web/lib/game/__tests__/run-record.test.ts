@@ -7,9 +7,11 @@ import {
   _setRunMutationLockManagerForTests,
   beginRunSimulation,
   createNewRunRecord,
+  evictStaleRunRecords,
   listRunRecords,
   loadRunRecord,
   RUN_COUNTER_KEY,
+  RUN_INDEX_KEY,
   RUN_MUTATION_LOCK_UNAVAILABLE_WARNING,
   RUN_RECORD_CAP,
   RUN_RECORD_PREFIX,
@@ -40,6 +42,10 @@ function historicalDailyChallenge(date: string, salt = 0): DailyChallenge {
 
 let restoreWindow: (() => void) | null = null;
 let injectOnCounterRead: (() => void) | null = null;
+const storageReadHooks = new Map<string, () => void>();
+let lockDepth = 0;
+let requireStoreLockForMutation = false;
+let forceQuotaOnRecordWrite = false;
 
 beforeEach(() => {
   _resetVolatileStorageForTests();
@@ -53,13 +59,31 @@ function swappedArrangement(record: RunRecordV1): string[] {
   return arrangement;
 }
 
+function recordWithId(runId: string, seed: string): RunRecordV1 {
+  const base = buildOriginRecord(gameData, seed);
+  return {
+    ...base,
+    run_id: runId,
+    draft: { ...base.draft, run_id: runId },
+  };
+}
+
+function storageSnapshot(): string {
+  const entries: Array<[string, string]> = [];
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index);
+    if (key !== null) entries.push([key, localStorage.getItem(key)!]);
+  }
+  return JSON.stringify(entries.sort(([left], [right]) => left.localeCompare(right)));
+}
+
 async function lockedSimulation(seed: string): Promise<{
   created: RunRecordV1;
   locked: RunRecordV1;
   simulation: ReturnType<typeof runSimulationSync>["simulation"];
 }> {
   const created = buildOriginRecord(gameData, seed);
-  saveNewRunRecord(created);
+  await saveNewRunRecord(created);
   const lock = await beginRunSimulation(created.run_id, gameData.versions, created);
   if (lock.status !== "updated" || !lock.record) throw new Error("expected simulation lock");
   const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, lock.record);
@@ -70,19 +94,23 @@ afterEach(() => {
   restoreWindow?.();
   restoreWindow = null;
   injectOnCounterRead = null;
+  storageReadHooks.clear();
+  lockDepth = 0;
+  requireStoreLockForMutation = false;
+  forceQuotaOnRecordWrite = false;
   vi.unstubAllGlobals();
   _resetVolatileStorageForTests();
 });
 
 describe("run-record persisted boundary", () => {
-  it("mixes a per-run creation nonce into first-run seeds and rolled draws", () => {
+  it("mixes a per-run creation nonce into first-run seeds and rolled draws", async () => {
     stubRandomUuids("35502f44-95e8-418e-bfea-80dcfe96c74a", "ffbad4c1-1875-4d4f-ae3c-427c6851d616");
 
     localStorage.clear();
-    const left = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
+    const left = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
 
     localStorage.clear();
-    const right = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
+    const right = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
 
     expect(left.parent_seed).toContain("rn-35502f4495e8418ebfea80dcfe96c74a");
     expect(right.parent_seed).toContain("rn-ffbad4c118754d4fae3c427c6851d616");
@@ -90,33 +118,37 @@ describe("run-record persisted boundary", () => {
     expect(firstDraw(left.draft)).not.toEqual(firstDraw(right.draft));
   });
 
-  it("uses the shared daily seed without the per-device nonce", () => {
+  it("uses the shared daily seed without the per-device nonce", async () => {
     const challenge = historicalDailyChallenge("2026-06-29");
 
     stubRandomUuids("35502f44-95e8-418e-bfea-80dcfe96c74a", "ffbad4c1-1875-4d4f-ae3c-427c6851d616");
     localStorage.clear();
-    const left = createNewRunRecord(gameData, {
-      formation_id: DAILY_DRAFT_CONFIG.formationId,
-      mode: DAILY_DRAFT_CONFIG.mode,
-      team_name: DAILY_DRAFT_CONFIG.teamName,
-      parent_seed: challenge.seed,
-      challenge,
-      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
-      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
-      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
-    }).record;
+    const left = (
+      await createNewRunRecord(gameData, {
+        formation_id: DAILY_DRAFT_CONFIG.formationId,
+        mode: DAILY_DRAFT_CONFIG.mode,
+        team_name: DAILY_DRAFT_CONFIG.teamName,
+        parent_seed: challenge.seed,
+        challenge,
+        draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+        era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+        rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+      })
+    ).record;
 
     localStorage.clear();
-    const right = createNewRunRecord(gameData, {
-      formation_id: DAILY_DRAFT_CONFIG.formationId,
-      mode: DAILY_DRAFT_CONFIG.mode,
-      team_name: DAILY_DRAFT_CONFIG.teamName,
-      parent_seed: challenge.seed,
-      challenge,
-      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
-      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
-      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
-    }).record;
+    const right = (
+      await createNewRunRecord(gameData, {
+        formation_id: DAILY_DRAFT_CONFIG.formationId,
+        mode: DAILY_DRAFT_CONFIG.mode,
+        team_name: DAILY_DRAFT_CONFIG.teamName,
+        parent_seed: challenge.seed,
+        challenge,
+        draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+        era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+        rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+      })
+    ).record;
 
     expect(left.parent_seed).toBe("wcdraft:daily:v1:2026-06-29");
     expect(right.parent_seed).toBe(left.parent_seed);
@@ -124,18 +156,20 @@ describe("run-record persisted boundary", () => {
     expect(left.challenge).toEqual(challenge);
   });
 
-  it("rejects persisted daily challenge metadata when seed/date derivation disagrees", () => {
+  it("rejects persisted daily challenge metadata when seed/date derivation disagrees", async () => {
     const challenge = historicalDailyChallenge("2026-06-29");
-    const created = createNewRunRecord(gameData, {
-      formation_id: DAILY_DRAFT_CONFIG.formationId,
-      mode: DAILY_DRAFT_CONFIG.mode,
-      team_name: DAILY_DRAFT_CONFIG.teamName,
-      parent_seed: challenge.seed,
-      challenge,
-      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
-      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
-      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
-    }).record;
+    const created = (
+      await createNewRunRecord(gameData, {
+        formation_id: DAILY_DRAFT_CONFIG.formationId,
+        mode: DAILY_DRAFT_CONFIG.mode,
+        team_name: DAILY_DRAFT_CONFIG.teamName,
+        parent_seed: challenge.seed,
+        challenge,
+        draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+        era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+        rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+      })
+    ).record;
     const key = recordKey(created.run_id);
     const raw = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
     raw.challenge = { kind: "daily", date: "2026-06-30", seed: challenge.seed };
@@ -145,21 +179,24 @@ describe("run-record persisted boundary", () => {
       status: "invalid",
       record: null,
     });
+    await evictStaleRunRecords(gameData.versions);
     expect(localStorage.getItem(key)).toBeNull();
   });
 
-  it("keeps builder-valid historical salted runs but evicts impossible suffixes", () => {
+  it("keeps builder-valid historical salted runs but evicts impossible suffixes", async () => {
     const challenge = historicalDailyChallenge("2026-06-29", 8);
-    const created = createNewRunRecord(gameData, {
-      formation_id: DAILY_DRAFT_CONFIG.formationId,
-      mode: DAILY_DRAFT_CONFIG.mode,
-      team_name: DAILY_DRAFT_CONFIG.teamName,
-      parent_seed: challenge.seed,
-      challenge,
-      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
-      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
-      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
-    }).record;
+    const created = (
+      await createNewRunRecord(gameData, {
+        formation_id: DAILY_DRAFT_CONFIG.formationId,
+        mode: DAILY_DRAFT_CONFIG.mode,
+        team_name: DAILY_DRAFT_CONFIG.teamName,
+        parent_seed: challenge.seed,
+        challenge,
+        draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+        era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+        rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+      })
+    ).record;
 
     expect(loadRunRecord(created.run_id, gameData.versions).status).toBe("loaded");
 
@@ -177,20 +214,24 @@ describe("run-record persisted boundary", () => {
       status: "invalid",
       record: null,
     });
+    await evictStaleRunRecords(gameData.versions);
+    expect(localStorage.getItem(key)).toBeNull();
   });
 
-  it("persists server-issued ranked attempt metadata with the issued seed", () => {
+  it("persists server-issued ranked attempt metadata with the issued seed", async () => {
     const rankedSeed = "wcdraft:ranked:v1:test-seed";
-    const created = createNewRunRecord(gameData, {
-      formation_id: "4-3-3",
-      parent_seed: rankedSeed,
-      ranked_attempt: {
-        attempt_id: "ranked-attempt-test",
-        season_key: "season-2026-manager-attrition",
+    const created = (
+      await createNewRunRecord(gameData, {
+        formation_id: "4-3-3",
         parent_seed: rankedSeed,
-        expires_at: "2026-06-29T13:00:00.000Z",
-      },
-    }).record;
+        ranked_attempt: {
+          attempt_id: "ranked-attempt-test",
+          season_key: "season-2026-manager-attrition",
+          parent_seed: rankedSeed,
+          expires_at: "2026-06-29T13:00:00.000Z",
+        },
+      })
+    ).record;
 
     const loaded = loadRunRecord(created.run_id, gameData.versions);
     expect(loaded.status).toBe("loaded");
@@ -203,9 +244,9 @@ describe("run-record persisted boundary", () => {
     });
   });
 
-  it("keeps generated-token replay byte-identical from token.ps", () => {
+  it("keeps generated-token replay byte-identical from token.ps", async () => {
     localStorage.clear();
-    const created = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
+    const created = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
     const completed: RunRecordV1 = {
       ...created,
       draft: autoDraft({
@@ -227,8 +268,8 @@ describe("run-record persisted boundary", () => {
     expect(replayed).toEqual(completed.draft);
   });
 
-  it("evicts structurally invalid persisted drafts through the invalid path", () => {
-    const created = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
+  it("evicts structurally invalid persisted drafts through the invalid path", async () => {
+    const created = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
     const key = recordKey(created.run_id);
     const raw = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
     raw.draft = { ...(raw.draft as Record<string, unknown>), spins: [] };
@@ -238,11 +279,12 @@ describe("run-record persisted boundary", () => {
       status: "invalid",
       record: null,
     });
+    await evictStaleRunRecords(gameData.versions);
     expect(localStorage.getItem(key)).toBeNull();
   });
 
-  it("evicts impossible complete records that do not carry simulation", () => {
-    const created = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
+  it("evicts impossible complete records that do not carry simulation", async () => {
+    const created = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
     const key = recordKey(created.run_id);
     const raw = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
     raw.status = "complete";
@@ -250,12 +292,13 @@ describe("run-record persisted boundary", () => {
     localStorage.setItem(key, JSON.stringify(raw));
 
     expect(loadRunRecord(created.run_id, gameData.versions).status).toBe("invalid");
+    await evictStaleRunRecords(gameData.versions);
     expect(localStorage.getItem(key)).toBeNull();
   });
 
   it("evicts non-complete records that carry simulation", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record-schema:non-complete-sim");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
     const persisted = await setRunSimulation(created.run_id, gameData.versions, simulation, {
@@ -271,12 +314,13 @@ describe("run-record persisted boundary", () => {
     localStorage.setItem(key, JSON.stringify(raw));
 
     expect(loadRunRecord(created.run_id, gameData.versions).status).toBe("invalid");
+    await evictStaleRunRecords(gameData.versions);
     expect(localStorage.getItem(key)).toBeNull();
   });
 
   it("loads a complete record with a real persisted simulation payload", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record-schema:test");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
     const persisted = await setRunSimulation(created.run_id, gameData.versions, simulation, {
@@ -293,7 +337,7 @@ describe("run-record persisted boundary", () => {
 
   it("rejects omitted or undefined simulation ownership at the runtime boundary", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:missing-sim-ownership");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, created);
 
     const omitted = (await Reflect.apply(setRunSimulation, undefined, [
@@ -323,7 +367,7 @@ describe("run-record persisted boundary", () => {
 
   it("keeps a concurrently completed run when an older simulation attempts cleanup", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:owned-cleanup");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const operationA = await beginRunSimulation(created.run_id, gameData.versions, created);
     expect(operationA).toMatchObject({ status: "updated", persistence: "durable" });
     const operationB = await beginRunSimulation(
@@ -356,7 +400,7 @@ describe("run-record persisted boundary", () => {
 
   it("locks arrangement mutation once a simulation exists, including stale Review tabs", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:arrangement-lock");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const arranged = [...asDraftedTeamSheet(created.draft)];
     [arranged[0], arranged[11]] = [arranged[11]!, arranged[0]!];
     const savedArrangement = await setRunArrangement(created.run_id, gameData.versions, arranged);
@@ -406,7 +450,7 @@ describe("run-record persisted boundary", () => {
 
   it("merges a stale Review name into the authoritative ready arrangement only", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:team-name-ready-merge");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const staleReview = loadRunRecord(created.run_id, gameData.versions).record!;
     const arrangementB = [...asDraftedTeamSheet(created.draft)];
     [arrangementB[0], arrangementB[11]] = [arrangementB[11]!, arrangementB[0]!];
@@ -422,7 +466,7 @@ describe("run-record persisted boundary", () => {
 
   it("rejects delayed stale team-name writes during and after simulation", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:team-name-lock");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const staleReview = loadRunRecord(created.run_id, gameData.versions).record!;
     const locked = await beginRunSimulation(created.run_id, gameData.versions, staleReview);
     expect(locked.status).toBe("updated");
@@ -449,7 +493,7 @@ describe("run-record persisted boundary", () => {
 
   it("serializes a stale rendered arrangement and simulates only the locked revision", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:atomic-sim-begin");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const rendered = loadRunRecord(created.run_id, gameData.versions).record!;
 
     const arrangementB = [...asDraftedTeamSheet(created.draft)];
@@ -482,7 +526,7 @@ describe("run-record persisted boundary", () => {
     restoreWindow = null;
     _resetVolatileStorageForTests();
     const created = buildOriginRecord(gameData, "wcdraft:run-record:volatile-sim-begin");
-    expect(saveNewRunRecord(created).persistence).toBe("volatile");
+    expect((await saveNewRunRecord(created)).persistence).toBe("volatile");
 
     const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
     expect(locked).toMatchObject({ status: "updated", persistence: "volatile" });
@@ -507,7 +551,7 @@ describe("run-record persisted boundary", () => {
     restoreWindow = null;
     _resetVolatileStorageForTests();
     const created = buildOriginRecord(gameData, "wcdraft:run-record:volatile-team-name");
-    expect(saveNewRunRecord(created).persistence).toBe("volatile");
+    expect((await saveNewRunRecord(created)).persistence).toBe("volatile");
     const arrangementB = [...asDraftedTeamSheet(created.draft)];
     [arrangementB[0], arrangementB[11]] = [arrangementB[11]!, arrangementB[0]!];
     const arranged = await setRunArrangement(created.run_id, gameData.versions, arrangementB);
@@ -526,7 +570,7 @@ describe("run-record persisted boundary", () => {
 
   it("fails closed without Web Locks when durable storage is active", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:no-web-locks");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     _setRunMutationLockManagerForTests(null);
 
     const result = await beginRunSimulation(created.run_id, gameData.versions, created);
@@ -539,9 +583,105 @@ describe("run-record persisted boundary", () => {
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
   });
 
+  it("fails closed before durable creation or raw creation mutates any store key", async () => {
+    _setRunMutationLockManagerForTests(null);
+    const before = storageSnapshot();
+
+    await expect(createNewRunRecord(gameData, { formation_id: "4-3-3" })).rejects.toThrow(
+      RUN_MUTATION_LOCK_UNAVAILABLE_WARNING,
+    );
+    await expect(
+      saveNewRunRecord(recordWithId("no-lock-raw", "wcdraft:run-record:no-lock-raw")),
+    ).rejects.toThrow(RUN_MUTATION_LOCK_UNAVAILABLE_WARNING);
+    expect(storageSnapshot()).toBe(before);
+  });
+
+  it("keeps pure durable reads usable without Web Locks and defers cleanup without mutation", async () => {
+    const created = recordWithId("no-lock-read", "wcdraft:run-record:no-lock-read");
+    await saveNewRunRecord(created);
+    _setRunMutationLockManagerForTests(null);
+    const before = storageSnapshot();
+
+    expect(loadRunRecord(created.run_id, gameData.versions)).toEqual({
+      status: "loaded",
+      record: created,
+    });
+    expect(listRunRecords(gameData.versions).records).toEqual([created]);
+    expect(await evictStaleRunRecords(gameData.versions)).toEqual([
+      RUN_MUTATION_LOCK_UNAVAILABLE_WARNING,
+    ]);
+    expect(storageSnapshot()).toBe(before);
+  });
+
+  it("serializes simultaneous durable creation into distinct IDs without overwrite", async () => {
+    let competing: ReturnType<typeof createNewRunRecord> | null = null;
+    injectOnCounterRead = () => {
+      competing = createNewRunRecord(gameData, { formation_id: "4-3-3" });
+    };
+
+    const primary = await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+    const secondary = await competing!;
+    expect(primary.record.run_id).not.toBe(secondary.record.run_id);
+    expect(loadRunRecord(primary.record.run_id, gameData.versions).record).toEqual(primary.record);
+    expect(loadRunRecord(secondary.record.run_id, gameData.versions).record).toEqual(
+      secondary.record,
+    );
+  });
+
+  it("allows only one serialized raw creation check/write to succeed", async () => {
+    const primary = recordWithId("raw-race", "wcdraft:run-record:raw-primary");
+    const competing = recordWithId("raw-race", "wcdraft:run-record:raw-competing");
+    let queued: Promise<{ ok: true } | { ok: false; error: unknown }> | null = null;
+    storageReadHooks.set(recordKey(primary.run_id), () => {
+      queued = saveNewRunRecord(competing).then(
+        () => ({ ok: true as const }),
+        (error: unknown) => ({ ok: false as const, error }),
+      );
+    });
+
+    await expect(saveNewRunRecord(primary)).resolves.toMatchObject({ persistence: "durable" });
+    const queuedResult = await queued!;
+    expect(queuedResult.ok).toBe(false);
+    if (queuedResult.ok) throw new Error("competing raw creation unexpectedly succeeded");
+    expect(queuedResult.error).toMatchObject({ name: "RunRecordError" });
+    expect(loadRunRecord(primary.run_id, gameData.versions).record).toEqual(primary);
+  });
+
+  it("serializes volatile creation through one store queue", async () => {
+    restoreWindow?.();
+    restoreWindow = null;
+    _resetVolatileStorageForTests();
+
+    const [left, right] = await Promise.all([
+      createNewRunRecord(gameData, { formation_id: "4-3-3" }),
+      createNewRunRecord(gameData, { formation_id: "4-3-3" }),
+    ]);
+    expect(left.persistence).toBe("volatile");
+    expect(right.persistence).toBe("volatile");
+    expect(left.record.run_id).not.toBe(right.record.run_id);
+    expect(listRunRecords(gameData.versions).records.map((record) => record.run_id)).toEqual([
+      right.record.run_id,
+      left.record.run_id,
+    ]);
+  });
+
+  it("keeps quota fallback record/index writes inside the store lock", async () => {
+    requireStoreLockForMutation = true;
+    forceQuotaOnRecordWrite = true;
+
+    const created = await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+    expect(created.persistence).toBe("volatile");
+    expect(localStorage.getItem(recordKey(created.record.run_id))).toBeNull();
+    expect(localStorage.getItem(RUN_INDEX_KEY)).toBeNull();
+    expect(loadRunRecord(created.record.run_id, gameData.versions).record).toEqual(created.record);
+
+    const next = await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+    expect(next.record.run_id).not.toBe(created.record.run_id);
+  });
+
   it("does not mutate when lock acquisition is cancelled", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:cancelled-lock-wait");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const controller = new AbortController();
     controller.abort();
 
@@ -553,6 +693,77 @@ describe("run-record persisted boundary", () => {
     );
     expect(result).toMatchObject({ status: "conflict", persistence: "none" });
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
+  });
+
+  it("cancels a queued durable mutation without poisoning later lock acquisition", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:queued-cancel-recovery");
+    await saveNewRunRecord(created);
+
+    const serialized = createSerializedLockManager();
+    let releaseFirstLock!: () => void;
+    let markFirstLockEntered!: () => void;
+    const firstLockEntered = new Promise<void>((resolve) => {
+      markFirstLockEntered = resolve;
+    });
+    const firstLockRelease = new Promise<void>((resolve) => {
+      releaseFirstLock = resolve;
+    });
+    let holdNextLock = true;
+    _setRunMutationLockManagerForTests({
+      request<T>(
+        name: string,
+        options: { mode: "exclusive"; signal?: AbortSignal },
+        callback: () => T | PromiseLike<T>,
+      ): Promise<T> {
+        return serialized.request(name, options, async () => {
+          if (holdNextLock) {
+            holdNextLock = false;
+            markFirstLockEntered();
+            await firstLockRelease;
+          }
+          return callback();
+        });
+      },
+    });
+
+    const renamedPromise = setRunTeamName(created.run_id, gameData.versions, "Queued XI");
+    await firstLockEntered;
+
+    const controller = new AbortController();
+    const cancelledPromise = beginRunSimulation(
+      created.run_id,
+      gameData.versions,
+      created,
+      controller.signal,
+    );
+    controller.abort();
+    releaseFirstLock();
+
+    const renamed = await renamedPromise;
+    expect(renamed.status).toBe("updated");
+    await expect(cancelledPromise).resolves.toMatchObject({
+      status: "conflict",
+      persistence: "none",
+    });
+
+    const recovered = await beginRunSimulation(created.run_id, gameData.versions, renamed.record!);
+    expect(recovered.status).toBe("updated");
+  });
+
+  it("releases the store queue after a mutation callback throws", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:callback-failure-recovery");
+    await saveNewRunRecord(created);
+
+    await expect(
+      updateRunRecord(created.run_id, gameData.versions, created, () => {
+        throw new Error("injected updater failure");
+      }),
+    ).rejects.toThrow("injected updater failure");
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
+
+    const recovered = await setRunTeamName(created.run_id, gameData.versions, "Recovered XI");
+    expect(recovered).toMatchObject({ status: "updated", persistence: "durable" });
+    expect(recovered.record?.draft.team_name).toBe("Recovered XI");
   });
 
   it("does not mutate a volatile run when acquisition is already cancelled", async () => {
@@ -560,7 +771,7 @@ describe("run-record persisted boundary", () => {
     restoreWindow = null;
     _resetVolatileStorageForTests();
     const created = buildOriginRecord(gameData, "wcdraft:run-record:cancelled-volatile-lock-wait");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const controller = new AbortController();
     controller.abort();
 
@@ -574,21 +785,21 @@ describe("run-record persisted boundary", () => {
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
   });
 
-  it("refuses the raw new-record boundary for an existing authority", () => {
+  it("refuses the raw new-record boundary for an existing authority", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:no-raw-overwrite");
-    saveNewRunRecord(created);
-    expect(() =>
+    await saveNewRunRecord(created);
+    await expect(
       saveNewRunRecord({
         ...created,
         draft: { ...created.draft, team_name: "Stale overwrite" },
       }),
-    ).toThrow(/already exists; use a locked mutation boundary/u);
+    ).rejects.toThrow(/already exists; use a locked mutation boundary/u);
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
   });
 
   it("serializes a delayed team-name write behind simulation begin", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:race-name-after-lock");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     let rename: ReturnType<typeof setRunTeamName> | null = null;
     injectOnCounterRead = () => {
       rename = setRunTeamName(created.run_id, gameData.versions, "Stale tab name");
@@ -603,7 +814,7 @@ describe("run-record persisted boundary", () => {
 
   it("serializes a delayed arrangement write behind simulation begin", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:race-arrangement-after-lock");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const arrangementB = swappedArrangement(created);
     let arrangement: ReturnType<typeof setRunArrangement> | null = null;
     injectOnCounterRead = () => {
@@ -619,7 +830,7 @@ describe("run-record persisted boundary", () => {
 
   it("serializes stale simulation begin behind arrangement B", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:race-lock-after-arrangement");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     const arrangementB = swappedArrangement(created);
     let begin: ReturnType<typeof beginRunSimulation> | null = null;
     injectOnCounterRead = () => {
@@ -702,7 +913,7 @@ describe("run-record persisted boundary", () => {
 
   it("rejects a stale DraftScreen whole-record transition queued after Review lock", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:race-draft-after-lock");
-    saveNewRunRecord(created);
+    await saveNewRunRecord(created);
     let draftWrite: ReturnType<typeof updateRunRecord> | null = null;
     injectOnCounterRead = () => {
       draftWrite = updateRunRecord(created.run_id, gameData.versions, created, (current) => ({
@@ -718,12 +929,61 @@ describe("run-record persisted boundary", () => {
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(locked.record);
   });
 
+  it("serializes distinct-run index writes and preserves a queued pin past the cap", async () => {
+    const indexA = recordWithId("index-a", "wcdraft:run-record:index-a");
+    const indexB = recordWithId("index-b", "wcdraft:run-record:index-b");
+    await saveNewRunRecord(indexA);
+    await saveNewRunRecord(indexB);
+    let pinB: ReturnType<typeof setRunPinned> | null = null;
+    storageReadHooks.set(RUN_INDEX_KEY, () => {
+      pinB = setRunPinned(indexB.run_id, gameData.versions, true);
+    });
+
+    const updatedA = await setRunTeamName(indexA.run_id, gameData.versions, "Index A updated");
+    const pinnedB = await pinB!;
+    expect(updatedA.status).toBe("updated");
+    expect(pinnedB).toMatchObject({ status: "updated", persistence: "durable" });
+    const index = JSON.parse(localStorage.getItem(RUN_INDEX_KEY)!) as {
+      entries: Array<{ run_id: string; updated_seq: number; pinned?: boolean }>;
+    };
+    expect(index.entries.find((entry) => entry.run_id === indexB.run_id)).toMatchObject({
+      updated_seq: pinnedB.record!.updated_seq,
+      pinned: true,
+    });
+
+    for (let count = 0; count < RUN_RECORD_CAP - 1; count += 1) {
+      await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+    }
+    expect(loadRunRecord(indexB.run_id, gameData.versions).record).toEqual(pinnedB.record);
+    expect(
+      listRunRecords(gameData.versions).records.some((record) => record.run_id === indexB.run_id),
+    ).toBe(true);
+  });
+
+  it("keeps list pure and lets locked cleanup remove malformed warnings once", async () => {
+    const created = recordWithId("cleanup-owner", "wcdraft:run-record:cleanup-owner");
+    await saveNewRunRecord(created);
+    const key = recordKey(created.run_id);
+    localStorage.setItem(key, "{malformed");
+    const beforeCleanup = storageSnapshot();
+
+    expect(listRunRecords(gameData.versions).warnings).toEqual([
+      `history: ignored malformed record '${created.run_id}' pending cleanup`,
+    ]);
+    expect(storageSnapshot()).toBe(beforeCleanup);
+    expect(await evictStaleRunRecords(gameData.versions)).toEqual([
+      `history: evicted malformed record '${created.run_id}'`,
+    ]);
+    expect(listRunRecords(gameData.versions).warnings).toEqual([]);
+    expect(localStorage.getItem(key)).toBeNull();
+  });
+
   it("keeps pinned runs past the five-record recent cap", async () => {
-    const pinned = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
+    const pinned = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
     expect((await setRunPinned(pinned.run_id, gameData.versions, true)).status).toBe("updated");
 
     for (let i = 0; i < RUN_RECORD_CAP + 2; i += 1) {
-      createNewRunRecord(gameData, { formation_id: "4-3-3" });
+      await createNewRunRecord(gameData, { formation_id: "4-3-3" });
     }
 
     expect(loadRunRecord(pinned.run_id, gameData.versions).status).toBe("loaded");
@@ -772,18 +1032,29 @@ function installLocalStorage(): () => void {
     },
     clear: () => store.clear(),
     getItem: (key) => {
+      const captured = store.get(key) ?? null;
       if (key === RUN_COUNTER_KEY && injectOnCounterRead) {
         const inject = injectOnCounterRead;
         injectOnCounterRead = null;
         inject();
       }
-      return store.get(key) ?? null;
+      const hook = storageReadHooks.get(key);
+      if (hook) {
+        storageReadHooks.delete(key);
+        hook();
+      }
+      return captured;
     },
     key: (index) => Array.from(store.keys())[index] ?? null,
     removeItem: (key) => {
+      assertStoreMutationLocked(key);
       store.delete(key);
     },
     setItem: (key, value) => {
+      assertStoreMutationLocked(key);
+      if (forceQuotaOnRecordWrite && key.startsWith(RUN_RECORD_PREFIX)) {
+        throw new DOMException("Quota exceeded", "QuotaExceededError");
+      }
       store.set(key, String(value));
     },
   };
@@ -815,6 +1086,16 @@ function installLocalStorage(): () => void {
   };
 }
 
+function assertStoreMutationLocked(key: string): void {
+  if (
+    requireStoreLockForMutation &&
+    (key === RUN_COUNTER_KEY || key === RUN_INDEX_KEY || key.startsWith(RUN_RECORD_PREFIX)) &&
+    lockDepth === 0
+  ) {
+    throw new Error(`store mutation escaped the global lock: ${key}`);
+  }
+}
+
 function createSerializedLockManager() {
   const tails = new Map<string, Promise<void>>();
   return {
@@ -824,9 +1105,14 @@ function createSerializedLockManager() {
       callback: () => T | PromiseLike<T>,
     ): Promise<T> {
       const previous = tails.get(name) ?? Promise.resolve();
-      const run = previous.then(() => {
+      const run = previous.then(async () => {
         if (options.signal?.aborted) throw new DOMException("Aborted", "AbortError");
-        return callback();
+        lockDepth += 1;
+        try {
+          return await callback();
+        } finally {
+          lockDepth -= 1;
+        }
       });
       const tail = run.then(
         () => undefined,

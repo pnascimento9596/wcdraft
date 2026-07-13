@@ -33,7 +33,12 @@ import {
 import type { GameData, RunRecordVersions } from "./data";
 import { getCatalogForEra } from "./data";
 import { isDailyChallengeDate, isDailySeedForDate, type DailyChallenge } from "./daily";
-import { RunRecordError, StorageQuotaError, StorageUnavailableError } from "./errors";
+import {
+  RunRecordError,
+  RunStoreCoordinationError,
+  StorageQuotaError,
+  StorageUnavailableError,
+} from "./errors";
 import { parsePersistedSimulation, type PersistedSimulation } from "./simulation-payload";
 import { verifyTeamSheetArrangement, type TeamSheetArrangement } from "./team-sheet";
 export type {
@@ -140,11 +145,11 @@ interface RunMutationLockManager {
 }
 
 let mutationLockManagerOverride: RunMutationLockManager | null | undefined;
-const volatileMutationTails = new Map<string, Promise<void>>();
+let volatileMutationTail = Promise.resolve();
 
-export const RUN_MUTATION_LOCK_PREFIX = "wcdraft:run-mutation:v1:" as const;
+export const RUN_STORE_LOCK_NAME = "wcdraft:run-store:v1" as const;
 export const RUN_MUTATION_LOCK_UNAVAILABLE_WARNING =
-  "This browser cannot safely coordinate run changes across tabs. Update your browser or continue in a single tab." as const;
+  "This browser cannot safely coordinate saved-run changes. Update your browser to continue; existing runs remain readable." as const;
 
 function getStorage(): StorageBackend {
   if (volatileMode) return memoryBackend;
@@ -173,7 +178,7 @@ export function _resetVolatileStorageForTests(): void {
   memoryMap.clear();
   volatileMode = false;
   mutationLockManagerOverride = undefined;
-  volatileMutationTails.clear();
+  volatileMutationTail = Promise.resolve();
 }
 
 /** Test seam for deterministic independent-agent lock scheduling. */
@@ -192,42 +197,32 @@ function getRunMutationLockManager(): RunMutationLockManager | null {
   }
 }
 
-async function withRunMutationLock<T>(
-  run_id: string,
+async function withRunStoreLock<T>(
   unavailable: () => T,
-  mutation: () => T | PromiseLike<T>,
+  mutation: () => T,
   signal?: AbortSignal,
 ): Promise<T> {
   const storage = getStorage();
-  const lockName = `${RUN_MUTATION_LOCK_PREFIX}${run_id}`;
-  if (storage.isVolatile) {
-    const previous = volatileMutationTails.get(lockName) ?? Promise.resolve();
-    let release!: () => void;
-    const current = new Promise<void>((resolve) => {
-      release = resolve;
-    });
-    volatileMutationTails.set(lockName, current);
-    await previous.catch(() => undefined);
-    try {
-      if (signal?.aborted) return unavailable();
-      return await mutation();
-    } finally {
-      release();
-      if (volatileMutationTails.get(lockName) === current) volatileMutationTails.delete(lockName);
-    }
-  }
+  if (storage.isVolatile) return withVolatileStoreLock(unavailable, mutation, signal);
 
   const manager = getRunMutationLockManager();
   if (!manager) return unavailable();
   let outcome: { kind: "value"; value: T } | { kind: "mutation-error"; error: unknown };
   try {
-    outcome = await manager.request(lockName, { mode: "exclusive", signal }, async () => {
-      try {
-        return { kind: "value" as const, value: await mutation() };
-      } catch (error) {
-        return { kind: "mutation-error" as const, error };
-      }
-    });
+    outcome = await manager.request(
+      RUN_STORE_LOCK_NAME,
+      { mode: "exclusive", signal },
+      async () => {
+        try {
+          const value = getStorage().isVolatile
+            ? await withVolatileStoreLock(unavailable, mutation, signal)
+            : await mutation();
+          return { kind: "value" as const, value };
+        } catch (error) {
+          return { kind: "mutation-error" as const, error };
+        }
+      },
+    );
   } catch {
     // The lock callback captures mutation failures as values, so a request
     // rejection means the browser could not establish the durable lock.
@@ -235,6 +230,27 @@ async function withRunMutationLock<T>(
   }
   if (outcome.kind === "mutation-error") throw outcome.error;
   return outcome.value;
+}
+
+async function withVolatileStoreLock<T>(
+  unavailable: () => T,
+  mutation: () => T,
+  signal?: AbortSignal,
+): Promise<T> {
+  const previous = volatileMutationTail;
+  let release!: () => void;
+  const current = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  volatileMutationTail = current;
+  await previous.catch(() => undefined);
+  try {
+    if (signal?.aborted) return unavailable();
+    return await mutation();
+  } finally {
+    release();
+    if (volatileMutationTail === current) volatileMutationTail = Promise.resolve();
+  }
 }
 
 /**
@@ -308,15 +324,23 @@ function saveIndex(storage: StorageBackend, idx: RunRecordIndexV1): void {
 
 function updateIndexEntry(idx: RunRecordIndexV1, rec: RunRecordV1): RunRecordIndexV1 {
   const entries = idx.entries.filter((e) => e.run_id !== rec.run_id);
-  entries.push({
+  entries.push(indexEntryFromRecord(rec));
+  entries.sort((a, b) => {
+    if (a.updated_seq !== b.updated_seq) return a.updated_seq - b.updated_seq;
+    if (a.created_seq !== b.created_seq) return a.created_seq - b.created_seq;
+    return a.run_id.localeCompare(b.run_id);
+  });
+  return { record_version: RUN_RECORD_SCHEMA_VERSION, entries };
+}
+
+function indexEntryFromRecord(rec: RunRecordV1): RunRecordIndexEntry {
+  return {
     run_id: rec.run_id,
     created_seq: rec.created_seq,
     updated_seq: rec.updated_seq,
     versions: rec.versions,
     ...(rec.pinned === true ? { pinned: true } : {}),
-  });
-  entries.sort((a, b) => a.updated_seq - b.updated_seq);
-  return { record_version: RUN_RECORD_SCHEMA_VERSION, entries };
+  };
 }
 
 function recordKey(run_id: string): string {
@@ -385,6 +409,18 @@ export interface SaveRunRecordResult {
 export function createNewRunRecord(
   gameData: GameData,
   params: CreateRunRecordParams,
+): Promise<CreateRunRecordResult> {
+  return withRunStoreLock(
+    () => {
+      throw new RunStoreCoordinationError(RUN_MUTATION_LOCK_UNAVAILABLE_WARNING);
+    },
+    () => createNewRunRecordUnlocked(gameData, params),
+  );
+}
+
+function createNewRunRecordUnlocked(
+  gameData: GameData,
+  params: CreateRunRecordParams,
 ): CreateRunRecordResult {
   const storage = getStorage();
   const warnings: string[] = [];
@@ -421,7 +457,7 @@ export function createNewRunRecord(
         ...(params.challenge === undefined ? {} : { challenge: params.challenge }),
         ...(params.ranked_attempt === undefined ? {} : { ranked_attempt: params.ranked_attempt }),
       };
-      const save = saveNewRunRecord(record);
+      const save = saveNewRunRecordUnlocked(record);
       warnings.push(...save.warnings);
       return { record, persistence: save.persistence, warnings };
     } catch (err) {
@@ -442,21 +478,29 @@ export function createNewRunRecord(
   );
 }
 
-/** Load a `RunRecord`. Stale on any version-anchor mismatch — the record is evicted. */
+/** Pure read. Stale/invalid cleanup is owned by the awaited store repair boundary. */
 export function loadRunRecord(
   run_id: string,
   currentVersions: RunRecordVersions,
+): LoadRunRecordResult {
+  return loadRunRecordUnlocked(run_id, currentVersions, false);
+}
+
+function loadRunRecordUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  cleanupInvalidOrStale: boolean,
 ): LoadRunRecordResult {
   const storage = getStorage();
   const raw = storage.getItem(recordKey(run_id));
   if (!raw) return { status: "missing", record: null };
   const parsed = parseStoredRunRecord(raw, run_id);
   if (!parsed) {
-    evictRunRecord(storage, run_id);
+    if (cleanupInvalidOrStale) evictRunRecordUnlocked(storage, run_id);
     return { status: "invalid", record: null };
   }
   if (!versionsMatch(parsed.versions, currentVersions)) {
-    evictRunRecord(storage, run_id);
+    if (cleanupInvalidOrStale) evictRunRecordUnlocked(storage, run_id);
     return { status: "stale", record: null };
   }
   return { status: "loaded", record: parsed };
@@ -466,16 +510,25 @@ export function loadRunRecord(
  * Persist a newly-created authority. Existing records must use a serialized
  * mutation boundary; accepting them here would bypass cross-tab ownership.
  */
-export function saveNewRunRecord(record: RunRecordV1): SaveRunRecordResult {
+export function saveNewRunRecord(record: RunRecordV1): Promise<SaveRunRecordResult> {
+  return withRunStoreLock(
+    () => {
+      throw new RunStoreCoordinationError(RUN_MUTATION_LOCK_UNAVAILABLE_WARNING);
+    },
+    () => saveNewRunRecordUnlocked(record),
+  );
+}
+
+function saveNewRunRecordUnlocked(record: RunRecordV1): SaveRunRecordResult {
   const storage = getStorage();
   if (storage.getItem(recordKey(record.run_id)) !== null) {
     throw new RunRecordError(`Run ${record.run_id} already exists; use a locked mutation boundary`);
   }
-  return saveRunRecord(record);
+  return saveRunRecordUnlocked(record);
 }
 
-/** Internal whole-record write; callers must already own creation or the per-run mutation lock. */
-function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
+/** Internal whole-record write; callers must already own the store-wide mutation lock. */
+function saveRunRecordUnlocked(record: RunRecordV1): SaveRunRecordResult {
   const warnings: string[] = [];
   let storage = getStorage();
   const key = recordKey(record.run_id);
@@ -489,15 +542,18 @@ function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
       if (idx.entries.length > 0) {
         const oldest = idx.entries[0]!;
         if (oldest.run_id !== record.run_id) {
-          evictRunRecord(storage, oldest.run_id);
+          evictRunRecordUnlocked(storage, oldest.run_id);
           try {
             storage.setItem(key, payload);
           } catch (retryErr) {
             if (isQuotaError(retryErr)) {
-              volatileMode = true;
-              storage = memoryBackend;
-              storage.setItem(key, payload);
-              warnings.push("storage quota exhausted: draft saved to this tab only");
+              storage = persistRecordInVolatileFallback(
+                storage,
+                key,
+                payload,
+                record.updated_seq,
+                warnings,
+              );
             } else {
               throw new StorageQuotaError(
                 `Failed to persist run record after eviction retry: ${String(retryErr)}`,
@@ -505,16 +561,22 @@ function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
             }
           }
         } else {
-          volatileMode = true;
-          storage = memoryBackend;
-          storage.setItem(key, payload);
-          warnings.push("storage quota exhausted: draft saved to this tab only");
+          storage = persistRecordInVolatileFallback(
+            storage,
+            key,
+            payload,
+            record.updated_seq,
+            warnings,
+          );
         }
       } else {
-        volatileMode = true;
-        storage = memoryBackend;
-        storage.setItem(key, payload);
-        warnings.push("storage quota exhausted: draft saved to this tab only");
+        storage = persistRecordInVolatileFallback(
+          storage,
+          key,
+          payload,
+          record.updated_seq,
+          warnings,
+        );
       }
     } else {
       throw new StorageUnavailableError(`Failed to persist run record: ${String(err)}`);
@@ -542,6 +604,27 @@ function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
     }
   }
   return { persistence: storage.isVolatile ? "volatile" : "durable", warnings };
+}
+
+function persistRecordInVolatileFallback(
+  durableStorage: StorageBackend,
+  key: string,
+  payload: string,
+  minimumCounter: number,
+  warnings: string[],
+): StorageBackend {
+  const durableCounter = Number.parseInt(durableStorage.getItem(RUN_COUNTER_KEY) ?? "0", 10);
+  const volatileCounter = Number.parseInt(memoryBackend.getItem(RUN_COUNTER_KEY) ?? "0", 10);
+  const counter = Math.max(
+    Number.isFinite(durableCounter) ? durableCounter : 0,
+    Number.isFinite(volatileCounter) ? volatileCounter : 0,
+    minimumCounter,
+  );
+  volatileMode = true;
+  memoryBackend.setItem(RUN_COUNTER_KEY, counter.toString());
+  memoryBackend.setItem(key, payload);
+  warnings.push("storage quota exhausted: draft saved to this tab only");
+  return memoryBackend;
 }
 
 export interface UpdateRunRecordResult {
@@ -573,7 +656,7 @@ export function setRunArrangement(
   currentVersions: RunRecordVersions,
   arrangement: TeamSheetArrangement,
 ): Promise<UpdateRunRecordResult> {
-  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
     setRunArrangementUnlocked(run_id, currentVersions, arrangement),
   );
 }
@@ -583,7 +666,7 @@ function setRunArrangementUnlocked(
   currentVersions: RunRecordVersions,
   arrangement: TeamSheetArrangement,
 ): UpdateRunRecordResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
@@ -607,7 +690,7 @@ function setRunArrangementUnlocked(
     updated_seq: nextCounter(storage),
     arrangement: verified,
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -629,7 +712,7 @@ export function setRunTeamName(
   currentVersions: RunRecordVersions,
   teamName: string,
 ): Promise<UpdateRunRecordResult> {
-  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
     setRunTeamNameUnlocked(run_id, currentVersions, teamName),
   );
 }
@@ -639,7 +722,7 @@ function setRunTeamNameUnlocked(
   currentVersions: RunRecordVersions,
   teamName: string,
 ): UpdateRunRecordResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
@@ -672,7 +755,7 @@ function setRunTeamNameUnlocked(
     updated_seq: nextCounter(storage),
     draft: { ...current.draft, team_name: nextTeamName },
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -687,7 +770,7 @@ export type BeginRunSimulationExpected = Pick<
 >;
 
 /**
- * Under the shared per-run mutation lock, compare the exact rendered
+ * Under the shared store mutation lock, compare the exact rendered
  * team-sheet revision and transition it to `simulating`. The returned record
  * is the only record the caller may simulate: it is the same arrangement that
  * now owns the lifecycle sequence.
@@ -698,8 +781,7 @@ export function beginRunSimulation(
   expected: BeginRunSimulationExpected,
   signal?: AbortSignal,
 ): Promise<SetSimulationResult> {
-  return withRunMutationLock(
-    run_id,
+  return withRunStoreLock(
     mutationLockUnavailableResult,
     () => beginRunSimulationUnlocked(run_id, currentVersions, expected),
     signal,
@@ -711,7 +793,7 @@ function beginRunSimulationUnlocked(
   currentVersions: RunRecordVersions,
   expected: BeginRunSimulationExpected,
 ): SetSimulationResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
@@ -736,7 +818,7 @@ function beginRunSimulationUnlocked(
     updated_seq: nextCounter(storage),
     status: "simulating",
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -755,7 +837,7 @@ function sameArrangement(
 
 /**
  * Apply a draft transition to the exact rendered ready revision while holding
- * the same per-run lock as Review and simulation lifecycle mutations.
+ * the same store lock as Review and simulation lifecycle mutations.
  */
 export type UpdateRunDraftExpected = Pick<RunRecordV1, "updated_seq" | "status">;
 
@@ -765,7 +847,7 @@ export function updateRunRecord(
   expected: UpdateRunDraftExpected,
   updater: (current: RunRecordV1) => DraftState,
 ): Promise<UpdateRunRecordResult> {
-  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
     updateRunRecordUnlocked(run_id, currentVersions, expected, updater),
   );
 }
@@ -776,7 +858,7 @@ function updateRunRecordUnlocked(
   expected: UpdateRunDraftExpected,
   updater: (current: RunRecordV1) => DraftState,
 ): UpdateRunRecordResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
@@ -803,7 +885,7 @@ function updateRunRecordUnlocked(
     updated_seq: nextSeq,
     draft: updater(current),
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -838,8 +920,7 @@ export function setRunSimulation(
   ownership: SimulationOwnership,
   signal?: AbortSignal,
 ): Promise<SetSimulationResult> {
-  return withRunMutationLock(
-    run_id,
+  return withRunStoreLock(
     mutationLockUnavailableResult,
     () => setRunSimulationUnlocked(run_id, currentVersions, simulation, ownership),
     signal,
@@ -852,7 +933,7 @@ function setRunSimulationUnlocked(
   simulation: PersistedSimulation,
   ownership: SimulationOwnership,
 ): SetSimulationResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
@@ -880,7 +961,7 @@ function setRunSimulationUnlocked(
     manager_presence_band: managerPresenceBand,
     simulation,
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -901,7 +982,7 @@ export function setRunStatus(
   status: "ready",
   ownership: SimulationOwnership,
 ): Promise<SetSimulationResult> {
-  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
     setRunStatusUnlocked(run_id, currentVersions, status, ownership),
   );
 }
@@ -912,7 +993,7 @@ function setRunStatusUnlocked(
   status: "ready",
   ownership: SimulationOwnership,
 ): SetSimulationResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const s = loaded.status as "missing" | "stale" | "invalid";
     return { status: s, record: null, persistence: "none", warnings: [] };
@@ -931,7 +1012,7 @@ function setRunStatusUnlocked(
     updated_seq: nextSeq,
     status,
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -949,7 +1030,7 @@ export function setRunPinned(
   currentVersions: RunRecordVersions,
   pinned: boolean,
 ): Promise<SetSimulationResult> {
-  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
     setRunPinnedUnlocked(run_id, currentVersions, pinned),
   );
 }
@@ -959,7 +1040,7 @@ function setRunPinnedUnlocked(
   currentVersions: RunRecordVersions,
   pinned: boolean,
 ): SetSimulationResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const s = loaded.status as "missing" | "stale" | "invalid";
     return { status: s, record: null, persistence: "none", warnings: [] };
@@ -971,7 +1052,7 @@ function setRunPinnedUnlocked(
   };
   if (pinned) next.pinned = true;
   else delete next.pinned;
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -998,9 +1079,8 @@ export interface ListRunRecordsResult {
 
 /**
  * Return the persisted `RunRecordV1`s for the current `currentVersions`,
- * newest first. Mismatched-version or otherwise-invalid records are evicted
- * in-place (mirrors `loadRunRecord` honest-state behavior); the index is
- * repaired in a single pass so subsequent reads stay clean.
+ * newest first. This render-safe read is pure; startup/history explicitly
+ * await `evictStaleRunRecords` to perform store-wide cleanup under the lock.
  *
  * This is the foundation under `lib/game/history.ts` — the UI never touches
  * `RUN_RECORD_PREFIX`/`RUN_INDEX_KEY` directly.
@@ -1013,8 +1093,28 @@ export function listRunRecords(
   const storage = getStorage();
   const idx = loadIndex(storage);
 
-  // Newest first — `saveIndex` sorts ascending by `updated_seq`, so reverse.
-  const sorted = [...idx.entries].sort((a, b) => {
+  const candidates: RunRecordV1[] = [];
+  const warnings: string[] = [];
+  const seen = new Set<string>();
+
+  for (const entry of idx.entries) {
+    if (seen.has(entry.run_id)) continue;
+    seen.add(entry.run_id);
+    const raw = storage.getItem(recordKey(entry.run_id));
+    if (!raw) {
+      warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
+      continue;
+    }
+    const parsed = parseStoredRunRecord(raw, entry.run_id);
+    if (!parsed) {
+      warnings.push(`history: ignored malformed record '${entry.run_id}' pending cleanup`);
+      continue;
+    }
+    if (!versionsMatch(parsed.versions, currentVersions)) continue;
+    candidates.push(parsed);
+  }
+
+  candidates.sort((a, b) => {
     if (b.updated_seq !== a.updated_seq) return b.updated_seq - a.updated_seq;
     if (b.created_seq !== a.created_seq) return b.created_seq - a.created_seq;
     return b.run_id.localeCompare(a.run_id);
@@ -1022,51 +1122,12 @@ export function listRunRecords(
 
   const records: RunRecordV1[] = [];
   let unpinnedReturned = 0;
-  const warnings: string[] = [];
-  const survivingIds = new Set<string>();
-  let indexDirty = false;
-
-  for (const entry of sorted) {
-    const raw = storage.getItem(recordKey(entry.run_id));
-    if (!raw) {
-      indexDirty = true;
-      warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
-      continue;
-    }
-    const parsed = parseStoredRunRecord(raw, entry.run_id);
-    if (!parsed) {
-      storage.removeItem(recordKey(entry.run_id));
-      indexDirty = true;
-      warnings.push(`history: evicted malformed record '${entry.run_id}'`);
-      continue;
-    }
-    if (!versionsMatch(parsed.versions, currentVersions)) {
-      storage.removeItem(recordKey(entry.run_id));
-      indexDirty = true;
-      continue;
-    }
+  for (const parsed of candidates) {
     if (parsed.pinned !== true && unpinnedReturned >= limit) {
-      survivingIds.add(entry.run_id);
       continue;
     }
     records.push(parsed);
     if (parsed.pinned !== true) unpinnedReturned += 1;
-    survivingIds.add(entry.run_id);
-  }
-
-  if (indexDirty) {
-    const repaired: RunRecordIndexV1 = {
-      record_version: RUN_RECORD_SCHEMA_VERSION,
-      entries: idx.entries
-        .filter((e) => survivingIds.has(e.run_id))
-        .sort((a, b) => a.updated_seq - b.updated_seq),
-    };
-    try {
-      saveIndex(storage, repaired);
-    } catch {
-      // Best-effort: a failure to write the repaired index just means the
-      // next read repeats the cleanup. Do not surface as a user-facing error.
-    }
   }
 
   return {
@@ -1076,24 +1137,53 @@ export function listRunRecords(
   };
 }
 
-/** Drop every record whose version anchors don't match `currentVersions`. */
-export function evictStaleRunRecords(currentVersions: RunRecordVersions): void {
-  const storage = getStorage();
-  const idx = loadIndex(storage);
-  const fresh: RunRecordIndexEntry[] = [];
-  for (const entry of idx.entries) {
-    if (versionsMatch(entry.versions, currentVersions)) {
-      fresh.push(entry);
-    } else {
-      storage.removeItem(recordKey(entry.run_id));
-    }
-  }
-  if (fresh.length !== idx.entries.length) {
-    saveIndex(storage, { record_version: RUN_RECORD_SCHEMA_VERSION, entries: fresh });
-  }
+/** Repair malformed/missing/stale history while holding the store-wide lock. */
+export function evictStaleRunRecords(currentVersions: RunRecordVersions): Promise<string[]> {
+  return withRunStoreLock(
+    () => [RUN_MUTATION_LOCK_UNAVAILABLE_WARNING],
+    () => evictStaleRunRecordsUnlocked(currentVersions),
+  );
 }
 
-function evictRunRecord(storage: StorageBackend, run_id: string): void {
+function evictStaleRunRecordsUnlocked(currentVersions: RunRecordVersions): string[] {
+  const storage = getStorage();
+  const idx = loadIndex(storage);
+  const repaired: RunRecordIndexEntry[] = [];
+  const warnings: string[] = [];
+  const seen = new Set<string>();
+  for (const entry of idx.entries) {
+    if (seen.has(entry.run_id)) continue;
+    seen.add(entry.run_id);
+    const raw = storage.getItem(recordKey(entry.run_id));
+    if (!raw) {
+      warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
+      continue;
+    }
+    const record = parseStoredRunRecord(raw, entry.run_id);
+    if (!record) {
+      storage.removeItem(recordKey(entry.run_id));
+      warnings.push(`history: evicted malformed record '${entry.run_id}'`);
+      continue;
+    }
+    if (!versionsMatch(record.versions, currentVersions)) {
+      storage.removeItem(recordKey(entry.run_id));
+      continue;
+    }
+    repaired.push(indexEntryFromRecord(record));
+  }
+  repaired.sort((a, b) => {
+    if (a.updated_seq !== b.updated_seq) return a.updated_seq - b.updated_seq;
+    if (a.created_seq !== b.created_seq) return a.created_seq - b.created_seq;
+    return a.run_id.localeCompare(b.run_id);
+  });
+  const next = { record_version: RUN_RECORD_SCHEMA_VERSION, entries: repaired } as const;
+  if (JSON.stringify(next) !== JSON.stringify(idx)) {
+    saveIndex(storage, next);
+  }
+  return warnings;
+}
+
+function evictRunRecordUnlocked(storage: StorageBackend, run_id: string): void {
   storage.removeItem(recordKey(run_id));
   const idx = loadIndex(storage);
   const next = idx.entries.filter((e) => e.run_id !== run_id);

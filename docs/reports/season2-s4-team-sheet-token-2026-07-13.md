@@ -188,6 +188,44 @@ unsupported durable browsers, cancelled durable and volatile acquisition, and
 the raw-writer restriction. The `0453ed5` review remains a FAIL; a new exact-
 head review must independently re-execute the RED gates before merge.
 
+Fresh exact-head review of `2aaccd373f01d6e096204b968e942477c625c725`
+returned FAIL with two store-wide blockers. The review inventory is
+`/tmp/season2-s4-lock-review-2aaccd3.md`, SHA-256
+`b0ef7b023ca4d18c965ea632eedca06d404b6715c2972ab0e2bdc2ee8c64719a`.
+The independent probe source is
+`/private/tmp/season2-s4-lock-probe-2aaccd3.ts` and its output is
+`/tmp/season2-s4-lock-probe-2aaccd3.out`. First, different run IDs acquired
+different lock names while every save still rewrote one shared index. The
+probe raced a team-name update against pinning another run, left the record
+pinned but its index entry stale/unpinned, and then demonstrated physical
+eviction of that pinned record at the five-run cap. Second, creation still
+read/wrote the global counter, record namespace, and index outside Web Locks.
+The probe reproduced a simultaneous run-ID collision, two successful raw
+creation check/write calls for one ID with silent overwrite, and durable
+creation mutating storage when Web Locks were explicitly unavailable.
+
+The fifth fix-forward replaces per-run lock identities with one store-wide
+exclusive `wcdraft:run-store:v1` Web Lock and one global volatile Promise
+queue. The critical section covers existence/load, lifecycle or revision
+validation, global counter allocation, record persistence, cap eviction, and
+the shared index write. `createNewRunRecord` and `saveNewRunRecord` are now
+asynchronous locked boundaries; both production creation callers await them,
+and private unlocked helpers avoid nested acquisition. Durable creation fails
+before mutation when Web Locks are unavailable and the setup error maps to the
+same explicit compatibility language as existing-record conflicts. Volatile
+creation remains usable and serialized. Pure load/list paths no longer repair
+storage during render; awaited startup, resume, and history cleanup owns
+malformed, missing, stale, and stale-index-metadata repair under the store
+lock. Valid pure reads remain available without Web Locks, while unsupported
+cleanup defers with an explicit warning and zero mutation. Quota fallback
+copies the monotonic counter into memory, writes no durable record/index after
+the switch, and makes pre-switch queued requests join the global volatile
+queue. Deterministic tests cover the cross-run pin/index/cap race, simultaneous
+creation, raw creation single-winner behavior, no-lock zero mutation, volatile
+creation, pure no-lock resume, one-owner cleanup, quota continuity, the prior
+six same-run races, and cancellation/recovery. The `2aaccd3` review remains a
+FAIL; a fresh exact-head review is mandatory.
+
 ## Validation evidence
 
 - Integration-tip floor at `98c0e07`: generated check, typecheck 8/8, lint
@@ -244,6 +282,22 @@ head review must independently re-execute the RED gates before merge.
   10/10 at N=2000 x three policies in 38.20s. `pnpm check:generated` passed,
   and `git diff --exit-code -- packages/data etl` confirmed no generated, ETL,
   or rating-data drift. Logs: `/tmp/s4-fourth-*.log`.
+- Fifth fix-forward focused validation: 12 store, creation, resume, setup,
+  Review, and team-sheet files passed 147/147. A separate seven-file
+  history/results/setup compatibility selection passed 92/92. Web typecheck
+  and web lint passed. After disk headroom reached the required 30 GiB
+  threshold, the fifth-fix tree independently passed root typecheck 8/8, lint
+  5/5, tests 8/8 in 9m18.195s (core 423, data 183 plus 9 expected skips, DB
+  161, marketing 69, web 1,221 plus one expected benchmark skip), game-flow,
+  responsive 218/0, and build 4/4 with 40 routes/pages. Forced goldens passed
+  core 69+42, data/integration 59+22, and leaderboard 6; the isolated
+  strategic-pick canary passed 1/1 with zero pick flips; heavy realism passed
+  10/10 at N=2000 x three policies in 50.31s. `pnpm check:generated`, agent
+  contracts, repository Prettier, and `git diff --check` passed. The pinned
+  five-step Daily closure was rerun at 2026-07-10 / 45 days / population 128 /
+  max attempts 8; all three recorded SHA-256 values remained unchanged and
+  `git diff --exit-code -- packages/data etl` stayed empty. Fifth-fix logs:
+  `/tmp/s4-fifth-*.log`.
 - Final root build: 4/4 tasks, 40 routes/pages. The pre-existing webpack
   circular-chunk and edge-runtime static-generation warnings remain; there was
   no build failure. Logs: `/tmp/s4-root-build.log`,

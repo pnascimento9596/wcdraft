@@ -2,7 +2,12 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import { loadGameData, type GameData } from "./data";
 import type { RunParam } from "./navigation";
-import { loadRunRecord, type RunRecordV1, type LoadRunRecordResult } from "./run-record";
+import {
+  evictStaleRunRecords,
+  loadRunRecord,
+  type RunRecordV1,
+  type LoadRunRecordResult,
+} from "./run-record";
 import { loadScenarioBundle } from "./scenario-data";
 import {
   decodeRunToken,
@@ -53,6 +58,7 @@ export interface ResolveDisplayRunDeps {
     runId: string,
     currentVersions: GameData["versions"],
   ) => LoadRunRecordResult;
+  readonly evictStaleRunRecords: typeof evictStaleRunRecords;
   readonly runSimulation: typeof runSimulation;
 }
 
@@ -60,6 +66,7 @@ export const defaultResolveDisplayRunDeps: ResolveDisplayRunDeps = {
   loadGameData,
   loadScenarioBundle,
   loadRunRecord,
+  evictStaleRunRecords,
   runSimulation,
 };
 
@@ -86,6 +93,7 @@ export async function resolveDisplayRun(
   }
 
   if (parsed.kind === "id") {
+    await resolvedDeps.evictStaleRunRecords(gameData.versions);
     const loaded = resolvedDeps.loadRunRecord(parsed.run_id, gameData.versions);
     if (loaded.status === "stale") return { kind: "stale", runId: parsed.run_id };
     if (loaded.status !== "loaded" || !loaded.record) {

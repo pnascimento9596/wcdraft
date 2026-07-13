@@ -11,7 +11,12 @@
 // screen already enforces.
 
 import type { GameData } from "./data";
-import { listRunRecords, RUN_RECORD_CAP, type RunRecordV1 } from "./run-record";
+import {
+  evictStaleRunRecords,
+  listRunRecords,
+  RUN_RECORD_CAP,
+  type RunRecordV1,
+} from "./run-record";
 import { encodeRunToken, RunTokenError } from "./run-token";
 import { resultsHref, shareHref } from "./navigation";
 import { buildShareView } from "./share-adapters";
@@ -117,6 +122,7 @@ function buildHistoryEntry(
 
 export const localRunHistoryProvider: RunHistoryProvider = {
   async listCompletedRuns(gameData: GameData): Promise<HistoryListResult> {
+    const cleanupWarnings = await evictStaleRunRecords(gameData.versions);
     const list = listRunRecords(gameData.versions, { limit: RUN_RECORD_CAP });
     // A completed run is one with `simulation` attached — relying on
     // `status === "complete"` would silently drop older records whose
@@ -130,7 +136,7 @@ export const localRunHistoryProvider: RunHistoryProvider = {
     return {
       entries,
       persistence: list.persistence,
-      warnings: list.warnings,
+      warnings: [...cleanupWarnings, ...list.warnings],
     };
   },
 };

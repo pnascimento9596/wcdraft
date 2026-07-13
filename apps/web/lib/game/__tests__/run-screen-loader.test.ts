@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { encodeRunTokenBody } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
@@ -16,6 +16,7 @@ function deps(overrides: Partial<ResolveDisplayRunDeps> = {}): ResolveDisplayRun
     loadGameData: async () => gameData,
     loadScenarioBundle: async () => SCENARIO_2026_BUNDLE,
     loadRunRecord: () => ({ status: "missing", record: null }),
+    evictStaleRunRecords: async () => [],
     runSimulation,
     ...overrides,
   };
@@ -64,6 +65,22 @@ describe("resolveDisplayRun", () => {
     );
     expect(editable.kind).toBe("ready");
     expect(editable.kind === "ready" ? editable.record : null).toBe(record);
+  });
+
+  it("resumes a valid pure-read record when unsupported cleanup defers without mutation", async () => {
+    const record = buildOriginRecord(gameData, "wcdraft:run-screen:no-lock-resume");
+    const cleanup = vi.fn(async () => ["browser coordination unavailable"]);
+
+    const state = await resolveDisplayRun(
+      { kind: "id", run_id: record.run_id },
+      { allowUnsimulatedLocalRun: true },
+      deps({
+        loadRunRecord: () => ({ status: "loaded", record }),
+        evictStaleRunRecords: cleanup,
+      }),
+    );
+    expect(state).toMatchObject({ kind: "ready", record });
+    expect(cleanup).toHaveBeenCalledOnce();
   });
 
   it("returns ready for a local completed run and loads scenario only when requested", async () => {
