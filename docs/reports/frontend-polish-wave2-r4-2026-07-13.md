@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Implemented the collision-safe prose sweep on `ws-ux/prose-em-dash-r4` from Gate 0 base `2add71b2e5daf0e7305350e8144b9860e8cb67c2`. Eleven U+2014 occurrences were rewritten across landing, mode selection, contact, how-to-play, metadata/manifest, the site-header accessibility label, and the magic-link interstitial. A TypeScript-AST guard now rejects new em dashes in the cleaned prose surfaces while allowing the exact honest-state null token `—`.
+Implemented the collision-safe prose sweep on `ws-ux/prose-em-dash-r4` from Gate 0 base `2add71b2e5daf0e7305350e8144b9860e8cb67c2`. Eleven U+2014 occurrences were rewritten across landing, mode selection, contact, how-to-play, metadata/manifest, the site-header accessibility label, and the magic-link interstitial. A TypeScript-AST guard now rejects every new em dash in the cleaned prose surfaces; legitimate honest-state null tokens remain protected on the explicitly deferred surfaces.
 
 The scan is deliberately syntax-aware. It classifies string literals, template fragments, and JSX text in shipped TS/TSX source; comments are not user-facing copy. Non-code assets were scanned separately. En dashes such as `1930–2026` were not matched or changed.
 
@@ -34,33 +34,31 @@ The actual rewrite count is 11 U+2014 code points. The HTML entity in `here&rsqu
 
 Every listed occurrence remains unchanged. Unless stated otherwise, each line contains one exact `—` null token. Multiple line numbers in a row are separate classified occurrences.
 
-| File and occurrence lines after rewrite                                            | Decision                                                |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| `app/account/account-client.tsx:183,625,675,683`                                   | Preserve exact null placeholders.                       |
-| `app/account/account-client.tsx:660`                                               | Preserve `Squad summary —` empty-state token.           |
-| `components/game/candidate-card.tsx:43,143,179,187,249,350`                        | Preserve unknown rating/provenance display tokens.      |
-| `components/game/draft-screen/index.tsx:1031`; `draft-screen/setup.tsx:378`        | Preserve hidden/unknown display tokens.                 |
-| `components/game/local-progress-band.tsx:65,100`; `lib/game/local-progress.ts:136` | Preserve unknown streak/record/best-score tokens.       |
-| `components/game/pitch.tsx:222`                                                    | Preserve exact empty-slot token.                        |
-| `components/game/pitch.tsx:223`                                                    | Preserve functional `— empty slot` accessibility token. |
-| `components/game/results-screen.tsx:374`                                           | Preserve `Daily field: —` honest-state placeholder.     |
-| `components/game/results-screen.tsx:701`                                           | Preserve exact unknown result token.                    |
-| `components/game/share-screen.tsx:633,957,1102,1134,1183,1351,1585`                | Preserve exact unknown share-card/result tokens.        |
-| `components/game/slot-machine.tsx:182,240,244,249`                                 | Preserve unrevealed spin tokens.                        |
-| `components/game/squad-header-flag.tsx:40`                                         | Preserve missing flag/name token.                       |
-| `components/game/synergy-bar.tsx:103,149,155,166`                                  | Preserve hidden/unknown Synergy tokens.                 |
-| `components/leaderboard/board-views.tsx:239,240,394`                               | Preserve unknown rank/score/card tokens.                |
-| `lib/account/run-format.ts:10,11,12`                                               | Preserve null W-D-L tokens.                             |
-| `lib/account/runs.ts:188,190,199,212,277,282,287`                                  | Preserve missing run-summary values.                    |
-| `lib/game/display-names.ts:26,31`                                                  | Preserve missing display names.                         |
-| `lib/game/memory-reveal-model.ts:54`                                               | Preserve missing nation code.                           |
-| `lib/game/results-adapters.ts:132,488`                                             | Preserve absent summary/narrative tokens.               |
-| `lib/game/run-og-image.tsx:481` (two occurrences), `580`                           | Preserve OG unknown-value tokens.                       |
-| `lib/game/server-history-provider.ts:220,222,223,232`                              | Preserve missing historical summary values.             |
-| `lib/game/share-adapters.ts:305,315,323`                                           | Preserve missing share model values.                    |
-| `lib/game/slot-reveal.ts:155`                                                      | Preserve unrevealed value token.                        |
-| `lib/game/view-models.ts:288,294`                                                  | Preserve unknown view-model values.                     |
-| `lib/leaderboard/board-view.ts:69,71`                                              | Preserve unknown relative-time values.                  |
+| File and occurrence lines after rewrite                                                                     | Decision                                                |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `app/account/account-client.tsx:183,625,675,683`                                                            | Preserve exact null placeholders.                       |
+| `app/account/account-client.tsx:660`                                                                        | Preserve `Squad summary —` empty-state token.           |
+| `components/game/candidate-card.tsx:43,143,179,187,249,350`                                                 | Preserve unknown rating/provenance display tokens.      |
+| `components/game/draft-screen/index.tsx:1031`                                                               | Preserve hidden/unknown display token.                  |
+| `components/game/local-progress-band.tsx:65,100` (placeholder occurrence); `lib/game/local-progress.ts:136` | Preserve unknown streak/record/best-score tokens.       |
+| `components/game/pitch.tsx:223`                                                                             | Preserve functional `— empty slot` accessibility token. |
+| `components/game/results-screen.tsx:374`                                                                    | Preserve `Daily field: —` honest-state placeholder.     |
+| `components/game/results-screen.tsx:701`                                                                    | Preserve exact unknown result token.                    |
+| `components/game/share-screen.tsx:1102,1134,1351,1585`                                                      | Preserve exact unknown share-card/result tokens.        |
+| `components/game/slot-machine.tsx:182,240,244,249`                                                          | Preserve unrevealed spin tokens.                        |
+| `components/game/squad-header-flag.tsx:40`                                                                  | Preserve missing flag/name token.                       |
+| `components/game/synergy-bar.tsx:103,149,155,166`                                                           | Preserve hidden/unknown Synergy tokens.                 |
+| `components/leaderboard/board-views.tsx:239,240,394`                                                        | Preserve unknown rank/score/card tokens.                |
+| `lib/account/run-format.ts:10,11,12`                                                                        | Preserve null W-D-L tokens.                             |
+| `lib/account/runs.ts:188,190,199,212,277,282,287`                                                           | Preserve missing run-summary values.                    |
+| `lib/game/display-names.ts:26,31`                                                                           | Preserve missing display names.                         |
+| `lib/game/memory-reveal-model.ts:54`                                                                        | Preserve missing nation code.                           |
+| `lib/game/results-adapters.ts:132`                                                                          | Preserve absent summary token.                          |
+| `lib/game/run-og-image.tsx:481` (two occurrences), `580`                                                    | Preserve OG unknown-value tokens.                       |
+| `lib/game/server-history-provider.ts:220,222,223,232`                                                       | Preserve missing historical summary values.             |
+| `lib/game/slot-reveal.ts:155`                                                                               | Preserve unrevealed value token.                        |
+| `lib/game/view-models.ts:288,294`                                                                           | Preserve unknown view-model values.                     |
+| `lib/leaderboard/board-view.ts:69,71`                                                                       | Preserve unknown relative-time values.                  |
 
 ## Season 2 and player-surface deferrals
 
@@ -73,13 +71,14 @@ Every occurrence below is prose, but editing it would violate the dispatch bound
 | `components/game/candidate-card.tsx`            | 131, 324, 355, 360                                             |
 | `components/game/draft-screen/constants.ts`     | 9                                                              |
 | `components/game/draft-screen/index.tsx`        | 521, 682, 761, 768, 778, 866, 903, 940, 1048, 1141             |
-| `components/game/draft-screen/setup.tsx`        | 136, 195, 340, 373                                             |
-| `components/game/local-progress-band.tsx`       | 100, 118; shared with Draft/Results                            |
+| `components/game/draft-screen/setup.tsx`        | 136, 195, 340, 373, 378                                        |
+| `components/game/local-progress-band.tsx`       | 100 (prose occurrence), 118; shared with Draft/Results         |
 | `components/game/manager-slot.tsx`              | 47, 49, 50, 72, 77, 86                                         |
 | `components/game/memory-reveal.tsx`             | 70                                                             |
+| `components/game/pitch.tsx`                     | 222; team-sheet accessibility label                            |
 | `components/game/results-screen.tsx`            | 106, 120, 153, 587                                             |
 | `components/game/review-screen.tsx`             | 70, 91, 286, 340, 578, 626                                     |
-| `components/game/share-screen.tsx`              | 90, 104, 136, 659, 687, 868, 1148, 1375                        |
+| `components/game/share-screen.tsx`              | 90, 104, 136, 633, 659, 687, 868, 957, 1148, 1183, 1375        |
 | `components/game/slot-machine.tsx`              | 127                                                            |
 | `components/game/synergy-bar.tsx`               | 112                                                            |
 | `components/leaderboard/submit-panel-views.tsx` | 246, 262; result-submission surface owned with Results copy    |
@@ -87,8 +86,9 @@ Every occurrence below is prose, but editing it would violate the dispatch bound
 | `lib/game/errors.ts`                            | 174, 182, 189; player recovery copy shared by reserved screens |
 | `lib/game/local-progress.ts`                    | 20; shared label consumed by Results and Share adapters        |
 | `lib/game/reference-standing.ts`                | 29; shared player-surface explainer                            |
-| `lib/game/results-adapters.ts`                  | 486, 487, 491, 492, 493, 494, 495, 497                         |
+| `lib/game/results-adapters.ts`                  | 486, 487, 488, 491, 492, 493, 494, 495, 497                    |
 | `lib/game/run-og-image.tsx`                     | 359; OG/game-share art copy                                    |
+| `lib/game/share-adapters.ts`                    | 305, 315, 323; shared Share caption copy                       |
 | `lib/game/slot-reveal.ts`                       | 92                                                             |
 | `lib/leaderboard/submit-copy.ts`                | 45, 61, 98; result-submission copy                             |
 
@@ -109,7 +109,7 @@ Every occurrence below is prose, but editing it would violate the dispatch bound
 
 ## Guard and grep proof
 
-`prose-em-dash.test.ts` parses the nine cleaned TS/TSX surfaces with the TypeScript AST and fails on U+2014 inside string/template/JSX nodes unless the trimmed value is exactly the protected `—` token. Comments are intentionally outside the guard. The focused guard passed 1/1 after formatting.
+`prose-em-dash.test.ts` parses the nine cleaned TS/TSX surfaces with the TypeScript AST and fails on every U+2014 inside string/template/JSX nodes. Those cleaned surfaces contain no legitimate null-placeholder token, so the guard does not need an exception that could also hide a rendered separator. Mutation cases cover template expressions, JSX expressions, and `&mdash;`. Comments are intentionally outside the guard.
 
 Post-edit AST inventory reports 145 remaining production-string occurrences. This report classifies all 145 as protected placeholders, Season 2/player-surface deferrals, or non-user-facing code diagnostics. The cleaned-surface guard reports zero prose violations. The numeric range `1930–2026` remains unchanged.
 
