@@ -4,6 +4,12 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+iOS M1a Unit P3 (app icon + splash pipeline):
+2026-07-12 · YELLOW branch `ws-mobile/m1a-p3-icons`. Deterministic generator
+`apps/mobile/scripts/generate-ios-assets.mjs` builds opaque 1024 app icon +
+dark splash from `apps/web/assets/brand/medallion-badge-master.webp` (1087px
+source ceiling). Store-format validated (PNG, no alpha). No engine touches.
+
 iOS M1a Unit P2 (native shell correctness):
 2026-07-12 · YELLOW branch `ws-mobile/m1a-p2-shell` stacked on P1. Portrait
 orientation lock + light status bar style in Info.plist; `viewport-fit=cover`
