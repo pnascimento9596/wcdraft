@@ -756,7 +756,8 @@
   }
 
   .modeCardTop {
-    padding-right: 36px;
+    /* Reserve the ghost numeral's full painted width plus a quiet gutter. */
+    padding-right: 50px;
   }
 
   .modeName {
@@ -809,11 +810,12 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 3px;
-    padding-right: 26px;
+    padding-right: 0;
   }
 
   .modeCard:not(.modeCardFeatured) .modeTag {
-    max-width: 100%;
+    /* The tag alone shares the numeral row; titles below keep the full card width. */
+    max-width: calc(100% - 40px);
     padding: 3px 6px;
     font-size: 8.5px;
     line-height: 1.2;

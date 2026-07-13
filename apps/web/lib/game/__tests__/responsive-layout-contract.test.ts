@@ -17,6 +17,10 @@ const responsiveHarness = readFileSync(
   fileURLToPath(new URL("../../../scripts/verify-responsive-layout-browser.mts", import.meta.url)),
   "utf8",
 );
+const sharedGameCss = readFileSync(
+  fileURLToPath(new URL("../../../components/game/game-styles/shared.module.css", import.meta.url)),
+  "utf8",
+);
 
 function metric(
   overrides: Partial<ResponsiveMetricForAdjudication> = {},
@@ -180,5 +184,16 @@ describe("responsive layout contract", () => {
 
   it("keeps null as the valid non-dev overlay sentinel", () => {
     expect(responsiveMetricFailures(metric({ devOverlay: null }))).toEqual([]);
+  });
+
+  it("reserves the compact mode pill track without narrowing the title below it", () => {
+    const compactTopRule =
+      /\.modeCard:not\(\.modeCardFeatured\) \.modeCardTop \{[^}]*\}/u.exec(sharedGameCss)?.[0] ??
+      "";
+    const compactTagRule =
+      /\.modeCard:not\(\.modeCardFeatured\) \.modeTag \{[^}]*\}/u.exec(sharedGameCss)?.[0] ?? "";
+
+    expect(compactTopRule).toContain("padding-right: 0");
+    expect(compactTagRule).toContain("max-width: calc(100% - 40px)");
   });
 });
