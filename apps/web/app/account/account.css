@@ -296,7 +296,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: min(34rem, 58vw);
+  /* Narrow phones: leave room for the action control on the same row. */
+  max-width: min(34rem, 48vw);
+}
+
+@media (max-width: 430px) {
+  .account-run__foot code {
+    max-width: min(12rem, 42vw);
+  }
 }
 
 .account-load-more {

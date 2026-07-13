@@ -558,8 +558,10 @@ async function verifyModeSelectCompactBoard(browser: Browser, baseUrl: string): 
         .trim()
         .toLowerCase();
       assert(
-        copy.includes("ranked-capable") && copy.includes("casual by default"),
-        `${viewport.name} ${label} did not show ranked-capable / casual-default copy: ${copy}`,
+        // Compact mode-select tags: "Ranked · casual default" (and chip "Ranked-capable").
+        (copy.includes("ranked-capable") || copy.includes("ranked · casual default")) &&
+          (copy.includes("casual by default") || copy.includes("casual default")),
+        `${viewport.name} ${label} did not show ranked / casual-default copy: ${copy}`,
       );
     }
 
