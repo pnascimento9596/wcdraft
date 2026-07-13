@@ -230,6 +230,27 @@ describe("GET /api/leaderboard — board page", () => {
     expect(body.entries[0]!.rank).toBe(1);
   });
 
+  it("null-name rows (no display_alias and no username) never surface on the board", async () => {
+    // Account row can satisfy leaderboard_entries_public_name_chk via user_id
+    // while still having COALESCE(display_alias, username) IS NULL when the
+    // user has no username. The board query must still exclude those rows.
+    const [u] = await db
+      .insert(users)
+      .values({ email: "null-name@example.com", username: null })
+      .returning();
+    await seed({
+      score: 99,
+      userId: u!.id,
+      displayAlias: null,
+      at: 1,
+    });
+    await seed({ score: 50, displayAlias: "named_player", at: 2 });
+    const { body } = await getBoard();
+    expect(body.entries.map((e) => e.display_name)).toEqual(["named_player"]);
+    expect(body.entries).toHaveLength(1);
+    expect(body.entries[0]!.rank).toBe(1);
+  });
+
   it("defaults to the current season; explicit ?season= reads an old board", async () => {
     await seed({ score: 90, seasonKey: "season-old" });
     await seed({ score: 70 });
