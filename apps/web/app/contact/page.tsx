@@ -12,7 +12,7 @@ export default function ContactPage() {
         <span className="eyebrow">Say hello</span>
         <h1 className="display">Contact</h1>
         <p className="lede">
-          Questions, bug reports, feedback, or press — here&rsquo;s how to reach the wcdraft team.
+          Questions, bug reports, feedback, or press: here&rsquo;s how to reach the wcdraft team.
         </p>
       </header>
 

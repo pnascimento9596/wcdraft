@@ -1,6 +1,6 @@
-export const SITE_TITLE = "wcdraft — draft your all-time World Cup XI";
+export const SITE_TITLE = "wcdraft: draft your all-time World Cup XI";
 export const SITE_DESCRIPTION =
-  "Draft your all-time World Cup XI. 17 spins, one squad, the full 2026 bracket — free in your browser.";
+  "Draft your all-time World Cup XI. 17 spins, one squad, the full 2026 bracket. Free in your browser.";
 
 export const SITE_NAME = "wcdraft";
 export const OG_DEFAULT_IMAGE = "/brand/marketing/og-default.png";

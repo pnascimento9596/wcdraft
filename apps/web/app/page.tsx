@@ -88,9 +88,7 @@ export default async function HomePage() {
               How to play
             </Link>
           </div>
-          <p className="hero__daily">
-            One shared draft for everyone today — a new one drops daily.
-          </p>
+          <p className="hero__daily">One shared draft for everyone today. A new one drops daily.</p>
 
           <div className="hero__meta">
             <div className="stat">
