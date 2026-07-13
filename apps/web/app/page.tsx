@@ -39,7 +39,7 @@ export default async function HomePage() {
     ],
   };
   return (
-    <section className="hero">
+    <section className={`hero ${heroStyles.hero}`}>
       <script
         nonce={nonce}
         suppressHydrationWarning

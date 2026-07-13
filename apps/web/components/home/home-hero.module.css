@@ -36,6 +36,10 @@
 }
 
 @media (max-width: 760px) {
+  .hero:global(.hero) {
+    min-block-size: calc(100svh - 3.35rem - 1px - env(safe-area-inset-top, 0px));
+  }
+
   .heroInner {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
@@ -62,12 +66,86 @@
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 430px) {
+  .hero:global(.hero) {
+    padding-block: 0.5rem;
+  }
+
+  .heroInner {
+    gap: 0.5rem;
+  }
+
   .copy {
-    gap: 0.65rem;
+    gap: 0.48rem;
+  }
+
+  .copy :global(.eyebrow) {
+    font-size: 0.64rem;
+    line-height: 1.25;
+    letter-spacing: 0.22em;
+  }
+
+  .copy :global(.display) {
+    margin-block: 0;
+    font-size: clamp(2.25rem, 10.5vw, 2.6rem);
+    line-height: 0.9;
+  }
+
+  .copy :global(.hero__sub) {
+    font-size: 0.92rem;
+    line-height: 1.38;
+  }
+
+  .copy :global(.hero__daily) {
+    margin-top: -0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.32;
+  }
+
+  .copy :global(.hero__meta) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-top: 0;
+    padding-top: 0.55rem;
+  }
+
+  .copy :global(.stat) {
+    align-content: start;
+    min-width: 0;
+  }
+
+  .copy :global(.stat:first-child) {
+    grid-column: 1 / -1;
+  }
+
+  .copy :global(.stat__num) {
+    font-size: 1.45rem;
+  }
+
+  .copy :global(.stat__label) {
+    font-size: 0.6rem;
+    line-height: 1.25;
+    letter-spacing: 0.1em;
+  }
+
+  .copy :global(.hero__live) {
+    gap: 0.42rem;
+    font-size: 0.74rem;
+    line-height: 1.32;
   }
 
   .actions {
     gap: 0.45rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .copy {
+    gap: 0.42rem;
+  }
+
+  .actions {
+    gap: 0.4rem;
   }
 }
