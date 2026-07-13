@@ -122,6 +122,7 @@ export type {
   AvailabilityFact,
   BenchActivationFact,
   MatchTeamFacts,
+  ManagerTacticalBand,
   SimWorld,
 } from "./sim.js";
 

@@ -2797,6 +2797,16 @@
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
+        "manager_tactical_band": 0,
+        "manager_tactical_multiplier": 1,
+        "post_tactical_strength": {
+          "attack": 31,
+          "midfield": 36,
+          "defense": 33,
+          "goalkeeping": 15,
+          "coverage": 0.8874545454545455
+        },
+        "tactical_applied_to_outcome": true,
         "base_synergy": {
           "overall": 0,
           "nation_clusters": [],
@@ -4808,6 +4818,16 @@
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
+        "manager_tactical_band": 0,
+        "manager_tactical_multiplier": 1,
+        "post_tactical_strength": {
+          "attack": 31,
+          "midfield": 36,
+          "defense": 33,
+          "goalkeeping": 15,
+          "coverage": 0.8874545454545455
+        },
+        "tactical_applied_to_outcome": true,
         "base_synergy": {
           "overall": 0,
           "nation_clusters": [],
@@ -6912,6 +6932,16 @@
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
+        "manager_tactical_band": 0,
+        "manager_tactical_multiplier": 1,
+        "post_tactical_strength": {
+          "attack": 30,
+          "midfield": 35,
+          "defense": 30,
+          "goalkeeping": 15,
+          "coverage": 0.8874545454545455
+        },
+        "tactical_applied_to_outcome": true,
         "base_synergy": {
           "overall": 0,
           "nation_clusters": [],
@@ -9013,6 +9043,16 @@
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
+        "manager_tactical_band": 0,
+        "manager_tactical_multiplier": 1,
+        "post_tactical_strength": {
+          "attack": 30,
+          "midfield": 35,
+          "defense": 30,
+          "goalkeeping": 15,
+          "coverage": 0.8874545454545455
+        },
+        "tactical_applied_to_outcome": true,
         "base_synergy": {
           "overall": 0,
           "nation_clusters": [],
