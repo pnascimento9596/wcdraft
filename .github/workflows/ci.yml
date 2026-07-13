@@ -240,7 +240,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Ensure Playwright Chromium is installed
-        run: pnpm --filter @wcdraft/web exec playwright install chromium
+        run: pnpm --filter @wcdraft/web exec playwright-core install chromium
 
       - name: Generated data determinism
         run: pnpm run check:generated

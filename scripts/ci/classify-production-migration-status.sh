@@ -28,7 +28,8 @@ esac
 [[ "$expected_tag" =~ ^[0-9]{4}_[a-z0-9_]+$ ]] || fail "expected migration tag is malformed"
 
 [ -f "$receipt" ] && [ ! -L "$receipt" ] || fail "protected receipt is missing or not a regular file"
-receipt_mode="$(stat -f '%Lp' "$receipt" 2>/dev/null || stat -c '%a' "$receipt")"
+# Portable mode bits (macOS BSD stat -f vs GNU stat -f = --file-system).
+receipt_mode="$(node -e 'process.stdout.write((require("fs").statSync(process.argv[1]).mode & 0o777).toString(8))' "$receipt")"
 [ "$receipt_mode" = 600 ] || fail "protected receipt mode must be 600"
 
 # The raw receipt is deliberately never printed: a driver error may include a
