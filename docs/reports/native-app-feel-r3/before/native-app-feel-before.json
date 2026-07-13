@@ -1,0 +1,2090 @@
+{
+  "phase": "before",
+  "browserEngine": "Chromium via Playwright (mobile emulation, not Mobile Safari)",
+  "generatedAt": "2026-07-13T21:52:46.465Z",
+  "metrics": [
+    {
+      "control": "PLAY DAILY",
+      "route": "/",
+      "viewport": "390x844",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 606.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(245, 182, 42)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 607.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "matrix(1, 0, 0, 1, 0, 1)",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(37, 176, 124)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 606.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.963608 0.744784 0.257882)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 606.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.963608 0.744784 0.257882)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": true,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto"
+      ]
+    },
+    {
+      "control": "PLAY DAILY MODE CARD",
+      "route": "/play",
+      "viewport": "390x844",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    },
+    {
+      "control": "START DRAFTING MODE CARD",
+      "route": "/play",
+      "viewport": "390x844",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(251, 248, 240)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(251, 248, 240)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 171.65625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 172
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 171.65625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 172
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": true,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style",
+        "layout metrics changed during press/focus"
+      ]
+    },
+    {
+      "control": "MOBILE NAV PLAY",
+      "route": "/",
+      "viewport": "390x844",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    },
+    {
+      "control": "PLAY DAILY",
+      "route": "/",
+      "viewport": "390x844",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 606.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(245, 182, 42)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 607.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "matrix(1, 0, 0, 1, 0, 1)",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(38, 182, 129)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 606.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.855843 0.638431 0.156235)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 606.796875,
+          "width": 370.8125,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 296,
+          "offsetWidth": 371,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.855843 0.638431 0.156235)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": true,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto"
+      ]
+    },
+    {
+      "control": "PLAY DAILY MODE CARD",
+      "route": "/play",
+      "viewport": "390x844",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 257.890625,
+          "width": 370.8125,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 203,
+          "offsetWidth": 371,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    },
+    {
+      "control": "START DRAFTING MODE CARD",
+      "route": "/play",
+      "viewport": "390x844",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(22, 22, 24)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(22, 22, 24)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 171.65625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 172
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 395.828125,
+          "width": 181.90625,
+          "height": 171.65625
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 341,
+          "offsetWidth": 182,
+          "offsetHeight": 172
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": true,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style",
+        "layout metrics changed during press/focus"
+      ]
+    },
+    {
+      "control": "MOBILE NAV PLAY",
+      "route": "/",
+      "viewport": "390x844",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 390,
+        "viewportWidth": 390,
+        "rect": {
+          "x": 9.59375,
+          "y": 63.1875,
+          "width": 370.8125,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 10,
+          "offsetTop": 63,
+          "offsetWidth": 371,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    },
+    {
+      "control": "PLAY DAILY",
+      "route": "/",
+      "viewport": "360x800",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 585.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(245, 182, 42)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 586.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "matrix(1, 0, 0, 1, 0, 1)",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(37, 176, 124)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 585.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.963608 0.744784 0.257882)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 585.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.963608 0.744784 0.257882)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": true,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto"
+      ]
+    },
+    {
+      "control": "PLAY DAILY MODE CARD",
+      "route": "/play",
+      "viewport": "360x800",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    },
+    {
+      "control": "START DRAFTING MODE CARD",
+      "route": "/play",
+      "viewport": "360x800",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(251, 248, 240)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(251, 248, 240)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 185.40625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 185
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 185.40625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 185
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": true,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style",
+        "layout metrics changed during press/focus"
+      ]
+    },
+    {
+      "control": "MOBILE NAV PLAY",
+      "route": "/",
+      "viewport": "360x800",
+      "theme": "light",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    },
+    {
+      "control": "PLAY DAILY",
+      "route": "/",
+      "viewport": "360x800",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 585.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(245, 182, 42)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 586.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "matrix(1, 0, 0, 1, 0, 1)",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(38, 182, 129)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 585.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.855843 0.638431 0.156235)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 585.5625,
+          "width": 344,
+          "height": 44
+        },
+        "layout": {
+          "offsetLeft": 0,
+          "offsetTop": 301,
+          "offsetWidth": 344,
+          "offsetHeight": 44
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "color(srgb 0.855843 0.638431 0.156235)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": true,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto"
+      ]
+    },
+    {
+      "control": "PLAY DAILY MODE CARD",
+      "route": "/play",
+      "viewport": "360x800",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 256.28125,
+          "width": 344,
+          "height": 130.9375
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 202,
+          "offsetWidth": 344,
+          "offsetHeight": 131
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    },
+    {
+      "control": "START DRAFTING MODE CARD",
+      "route": "/play",
+      "viewport": "360x800",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(22, 22, 24)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 157.90625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 158
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(22, 22, 24)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 185.40625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 185
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 394.21875,
+          "width": 168.5,
+          "height": 185.40625
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 340,
+          "offsetWidth": 169,
+          "offsetHeight": 185
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgb(30, 30, 33)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": true,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style",
+        "layout metrics changed during press/focus"
+      ]
+    },
+    {
+      "control": "MOBILE NAV PLAY",
+      "route": "/",
+      "viewport": "360x800",
+      "theme": "dark",
+      "before": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "active": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "focused": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "after": {
+        "scrollX": 0,
+        "scrollY": 0,
+        "documentWidth": 360,
+        "viewportWidth": 360,
+        "rect": {
+          "x": 8,
+          "y": 63.1875,
+          "width": 344,
+          "height": 45.296875
+        },
+        "layout": {
+          "offsetLeft": 8,
+          "offsetTop": 63,
+          "offsetWidth": 344,
+          "offsetHeight": 45
+        },
+        "css": {
+          "tapHighlight": "rgba(51, 181, 229, 0.4)",
+          "touchAction": "auto",
+          "userSelect": "auto",
+          "transform": "none",
+          "filter": "none",
+          "opacity": "1",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "transitionDuration": "1e-06s"
+        }
+      },
+      "activeStateChanged": false,
+      "horizontalShiftPx": 0,
+      "layoutShift": false,
+      "scrollStable": true,
+      "horizontalOverflow": false,
+      "failures": [
+        "tap highlight=rgba(51, 181, 229, 0.4)",
+        "touch-action=auto",
+        "user-select=auto",
+        "no instantaneous active-state style"
+      ]
+    }
+  ],
+  "pageFailures": [
+    "390x844 light: shell overscroll=auto",
+    "390x844 light: body overscroll=auto",
+    "390x844 light: html overscroll=auto",
+    "390x844 dark: shell overscroll=auto",
+    "390x844 dark: body overscroll=auto",
+    "390x844 dark: html overscroll=auto",
+    "360x800 light: shell overscroll=auto",
+    "360x800 light: body overscroll=auto",
+    "360x800 light: html overscroll=auto",
+    "360x800 dark: shell overscroll=auto",
+    "360x800 dark: body overscroll=auto",
+    "360x800 dark: html overscroll=auto"
+  ],
+  "summary": {
+    "contexts": 4,
+    "presses": 16,
+    "failures": 76
+  }
+}
