@@ -73,9 +73,9 @@ describe("broadcast tactics UI source contract", () => {
     expect(playPage).toContain("<ModeSelect />");
     expect(modeSelect).toContain('role="radiogroup"');
     expect(modeSelect).toContain("router.push(selected.href)");
-    expect(modeSelect).toContain('tag: "Ranked-capable · casual by default"');
-    expect(modeSelect).toContain("RANKED-CAPABLE · CASUAL BY DEFAULT");
-    expect(modeSelect).toContain('"Ranked-capable · casual by default"');
+    expect(modeSelect).toContain('tag: "Ranked · casual default"');
+    expect(modeSelect).toContain("RANKED · CASUAL DEFAULT");
+    expect(modeSelect).toContain('"Ranked-capable"');
 
     expect(setup).toContain("const [open, setOpen] = useState(true)");
     expect(setup).toContain('aria-label="Play type"');

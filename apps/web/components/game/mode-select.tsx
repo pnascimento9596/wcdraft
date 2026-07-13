@@ -49,10 +49,11 @@ const MODE_COPY: Record<
   classic: {
     index: "01",
     title: DRAFT_MODE_COPY.classic.label,
-    tag: "Ranked-capable · casual by default",
+    // Short tags/chips so 360–390px cards do not clip mid-phrase (Q5 craft).
+    tag: "Ranked · casual default",
     desc: DRAFT_MODE_COPY.classic.description,
-    preview: "CLASSIC · RANKED-CAPABLE · CASUAL BY DEFAULT",
-    chips: ["3 choices", "Ranked-capable · casual by default", "Synergy"],
+    preview: "CLASSIC · RANKED · CASUAL DEFAULT",
+    chips: ["3 choices", "Ranked-capable", "Synergy"],
     cta: "Start drafting",
     href: "/play/draft",
   },
@@ -69,10 +70,10 @@ const MODE_COPY: Record<
   hidden: {
     index: "03",
     title: DRAFT_MODE_COPY.hidden.label,
-    tag: "Ranked-capable · casual by default",
+    tag: "Ranked · casual default",
     desc: DRAFT_MODE_COPY.hidden.description,
-    preview: "MEMORY · RANKED-CAPABLE · CASUAL BY DEFAULT",
-    chips: ["Ratings hidden", "3 choices", "Ranked-capable · casual by default"],
+    preview: "MEMORY · RANKED · CASUAL DEFAULT",
+    chips: ["Ratings hidden", "3 choices", "Ranked-capable"],
     cta: "Draft from memory",
     href: "/play/draft?mode=hidden",
     secondary: true,
