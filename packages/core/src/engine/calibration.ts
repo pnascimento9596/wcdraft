@@ -324,7 +324,7 @@ export const INCIDENT = Object.freeze({
 // ─── INJURIES / SUBSTITUTIONS / FORFEIT ───────────────────────────────────────
 export const INJURY = Object.freeze({
   /** S2/S3 calibration seam: probability of one pre-match availability event. */
-  AVAILABILITY_EVENT_PROB: 0.09,
+  AVAILABILITY_EVENT_PROB: 0.125,
   /**
    * Probability a given injury ends the player's tournament (persists across
    * the run). Lowered for the engine-season attrition pass because persistent
@@ -335,11 +335,13 @@ export const INJURY = Object.freeze({
   /** Conditional probability that a minor event is a knock rather than a suspension. */
   MINOR_KNOCK_PROB: 0.65,
   /** Conditional probability that a minor event lasts two matches instead of one. */
-  MINOR_TWO_MATCH_PROB: 0.35,
+  MINOR_TWO_MATCH_PROB: 0.05,
   /** Hard per-run cap for minor availability events. */
-  MAX_MINOR_EVENTS_PER_RUN: 3,
+  MAX_MINOR_EVENTS_PER_RUN: 2,
+  /** S3 depth-pressure calibration; scales only the active incoming replacement contribution. */
+  BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER: 0.7,
   /** Extra all-channel penalty per unfilled formation slot. S3 owns the final value. */
-  SHORT_HANDED_STRENGTH_MULTIPLIER: 0.92,
+  SHORT_HANDED_STRENGTH_MULTIPLIER: 0.72,
   /**
    * Fieldable floor: if fewer than this many user players remain available for
    * a match (after persistent tournament-ending injuries), the user FORFEITS
@@ -435,7 +437,7 @@ export const SYNERGY = Object.freeze({
 
 export const MANAGER_MODIFIER = Object.freeze({
   /** Positive manager-link bonus band: modifier ∈ [1.0, 1 + BAND]; manager_link 0 -> 1.0. */
-  BAND: 0.1,
+  BAND: 0.06,
 });
 
 /**
@@ -445,10 +447,10 @@ export const MANAGER_MODIFIER = Object.freeze({
  * manager-sensitivity calibration.
  */
 export const MANAGER_TACTICAL = Object.freeze({
-  /** Canonical persisted internal tiers are +0, +1, and +2. */
-  MAX_BAND: 2,
+  /** Presence +1 composes with the preserved S2 manager-link +0/+1/+2 tier. */
+  MAX_BAND: 3,
   /** Maximum multiplicative uplift at MAX_BAND. S3 is the sole tuning owner. */
-  WIDTH: 0.01,
+  WIDTH: 0.02,
 });
 
 /** Clamp a number into an inclusive range. */

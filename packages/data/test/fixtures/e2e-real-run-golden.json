@@ -1643,17 +1643,17 @@
             "assists": 0,
             "shots": 0,
             "shots_on_target": 0,
-            "key_passes": 1,
-            "fouls_committed": 1,
+            "key_passes": 0,
+            "fouls_committed": 0,
             "fouls_suffered": 0,
-            "offsides": 1,
+            "offsides": 0,
             "yellows": 0,
             "reds": 0,
             "saves": 0,
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
-            "minutes": 90,
+            "minutes": 0,
             "subbed_on": false,
             "subbed_off": false,
             "injured": false
@@ -1712,17 +1712,17 @@
           "assists": 0,
           "shots": 1,
           "shots_on_target": 1,
-          "key_passes": 1,
-          "fouls_committed": 3,
+          "key_passes": 0,
+          "fouls_committed": 2,
           "fouls_suffered": 1,
-          "offsides": 1,
+          "offsides": 0,
           "yellows": 0,
           "reds": 0,
           "saves": 0,
           "pens_won": 0,
           "pens_scored": 0,
           "pens_missed": 0,
-          "minutes": 180
+          "minutes": 90
         },
         "rating_at_draft": 86
       },
@@ -2703,6 +2703,30 @@
             "player_id": "P-84486",
             "card_id": "P-84486:2014",
             "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m1",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 1,
+            "fouls_committed": 1,
+            "fouls_suffered": 0,
+            "offsides": 1,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-84486",
+            "card_id": "P-84486:2014",
+            "tournament_id": 2014,
             "match_id": "e2e-real-run-golden.m2",
             "goals": 0,
             "assists": 0,
@@ -2753,17 +2777,17 @@
           "assists": 0,
           "shots": 5,
           "shots_on_target": 3,
-          "key_passes": 4,
-          "fouls_committed": 1,
+          "key_passes": 5,
+          "fouls_committed": 2,
           "fouls_suffered": 0,
-          "offsides": 0,
+          "offsides": 1,
           "yellows": 0,
           "reds": 0,
           "saves": 0,
           "pens_won": 1,
           "pens_scored": 1,
           "pens_missed": 0,
-          "minutes": 180
+          "minutes": 270
         },
         "rating_at_draft": 75
       }
@@ -2781,7 +2805,7 @@
       "round": "G1",
       "phase": "group",
       "opponent_team_id": "WC2026-C1",
-      "pre_match_win_probability": 0.0952,
+      "pre_match_win_probability": 0.0831,
       "team_facts": {
         "base_strength": {
           "attack": 30,
@@ -2791,19 +2815,22 @@
           "coverage": 0.8874545454545455
         },
         "active_strength": {
-          "attack": 31,
-          "midfield": 36,
-          "defense": 33,
+          "attack": 30,
+          "midfield": 35,
+          "defense": 32,
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
-        "manager_tactical_band": 0,
-        "manager_tactical_multiplier": 1,
+        "manager_present": true,
+        "manager_presence_band": 1,
+        "manager_link_band": 0,
+        "manager_tactical_band": 1,
+        "manager_tactical_multiplier": 1.0066666666666666,
         "post_tactical_strength": {
-          "attack": 31,
-          "midfield": 36,
-          "defense": 33,
-          "goalkeeping": 15,
+          "attack": 30.2,
+          "midfield": 35.233333,
+          "defense": 32.213333,
+          "goalkeeping": 15.1,
           "coverage": 0.8874545454545455
         },
         "tactical_applied_to_outcome": true,
@@ -3226,7 +3253,7 @@
             "slot_id": "4-3-3.RB",
             "position": "DF",
             "reason": "knock",
-            "duration_matches": 2
+            "duration_matches": 1
           }
         ],
         "bench_activations": [
@@ -3239,9 +3266,10 @@
             "line": "DF",
             "fit": 1,
             "internal_score": 57,
-            "replacement_score": 57,
+            "replacement_contribution_multiplier": 0.7,
+            "replacement_score": 39.9,
             "outgoing_score": 25.5,
-            "line_contribution_delta": 31.5
+            "line_contribution_delta": 14.399999999999999
           }
         ],
         "short_handed_slot_ids": []
@@ -3678,7 +3706,7 @@
           "slot_id": "4-3-3.RB",
           "position": "DF",
           "reason": "knock",
-          "duration_matches": 2,
+          "duration_matches": 1,
           "replacement_card_id": "P-79380:2002",
           "replacement_player_id": "P-79380",
           "short_handed": false
@@ -4802,7 +4830,7 @@
       "round": "G2",
       "phase": "group",
       "opponent_team_id": "WC2026-C2",
-      "pre_match_win_probability": 0.1675,
+      "pre_match_win_probability": 0.1429,
       "team_facts": {
         "base_strength": {
           "attack": 30,
@@ -4812,19 +4840,22 @@
           "coverage": 0.8874545454545455
         },
         "active_strength": {
-          "attack": 31,
-          "midfield": 36,
-          "defense": 33,
+          "attack": 30,
+          "midfield": 35,
+          "defense": 30,
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
-        "manager_tactical_band": 0,
-        "manager_tactical_multiplier": 1,
+        "manager_present": true,
+        "manager_presence_band": 1,
+        "manager_link_band": 0,
+        "manager_tactical_band": 1,
+        "manager_tactical_multiplier": 1.0066666666666666,
         "post_tactical_strength": {
-          "attack": 31,
-          "midfield": 36,
-          "defense": 33,
-          "goalkeeping": 15,
+          "attack": 30.2,
+          "midfield": 35.233333,
+          "defense": 30.2,
+          "goalkeeping": 15.1,
           "coverage": 0.8874545454545455
         },
         "tactical_applied_to_outcome": true,
@@ -5240,31 +5271,8 @@
           "manager_link": 0,
           "multiplier": 1
         },
-        "unavailable": [
-          {
-            "card_id": "P-84486:2014",
-            "player_id": "P-84486",
-            "slot_id": "4-3-3.RB",
-            "position": "DF",
-            "reason": "knock",
-            "duration_matches": 2
-          }
-        ],
-        "bench_activations": [
-          {
-            "out_card_id": "P-84486:2014",
-            "out_player_id": "P-84486",
-            "in_card_id": "P-79380:2002",
-            "in_player_id": "P-79380",
-            "slot_id": "4-3-3.RB",
-            "line": "DF",
-            "fit": 1,
-            "internal_score": 57,
-            "replacement_score": 57,
-            "outgoing_score": 25.5,
-            "line_contribution_delta": 31.5
-          }
-        ],
+        "unavailable": [],
+        "bench_activations": [],
         "short_handed_slot_ids": []
       },
       "user_goals": 1,
@@ -5338,9 +5346,9 @@
         },
         {
           "side": "user",
-          "card_id": "P-79380:2002",
-          "player_id": "P-79380",
-          "tournament_id": 2002,
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486",
+          "tournament_id": 2014,
           "slot_id": "4-3-3.RB",
           "position": "DF",
           "started": true,
@@ -5393,6 +5401,16 @@
           "tournament_id": 2002,
           "slot_id": "bench.0",
           "position": "GK",
+          "started": false,
+          "minutes": 0
+        },
+        {
+          "side": "user",
+          "card_id": "P-79380:2002",
+          "player_id": "P-79380",
+          "tournament_id": 2002,
+          "slot_id": "bench.1",
+          "position": "DF",
           "started": false,
           "minutes": 0
         },
@@ -5689,22 +5707,6 @@
       ],
       "events": [
         {
-          "event_id": "e2e-real-run-golden.m1.availability.0",
-          "minute": 0,
-          "period": "1H",
-          "side": "user",
-          "type": "availability",
-          "card_id": "P-84486:2014",
-          "player_id": "P-84486",
-          "slot_id": "4-3-3.RB",
-          "position": "DF",
-          "reason": "knock",
-          "duration_matches": 2,
-          "replacement_card_id": "P-79380:2002",
-          "replacement_player_id": "P-79380",
-          "short_handed": false
-        },
-        {
           "minute": 1,
           "period": "1H",
           "side": "user",
@@ -5897,8 +5899,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m1.e19",
           "type": "foul",
-          "committed_by_card_id": "P-79380:2002",
-          "committed_by_player_id": "P-79380",
+          "committed_by_card_id": "P-84486:2014",
+          "committed_by_player_id": "P-84486",
           "suffered_by_card_id": "P-88869:2026",
           "suffered_by_player_id": "P-88869"
         },
@@ -6414,8 +6416,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m1.e71",
           "type": "offside",
-          "card_id": "P-79380:2002",
-          "player_id": "P-79380"
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486"
         },
         {
           "minute": 54,
@@ -6683,8 +6685,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m1.e98",
           "type": "key_pass",
-          "card_id": "P-79380:2002",
-          "player_id": "P-79380",
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486",
           "for_event_id": null
         },
         {
@@ -6916,7 +6918,7 @@
       "round": "G3",
       "phase": "group",
       "opponent_team_id": "WC2026-C4",
-      "pre_match_win_probability": 0.1388,
+      "pre_match_win_probability": 0.1417,
       "team_facts": {
         "base_strength": {
           "attack": 30,
@@ -6932,13 +6934,16 @@
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
-        "manager_tactical_band": 0,
-        "manager_tactical_multiplier": 1,
+        "manager_present": true,
+        "manager_presence_band": 1,
+        "manager_link_band": 0,
+        "manager_tactical_band": 1,
+        "manager_tactical_multiplier": 1.0066666666666666,
         "post_tactical_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
+          "attack": 30.2,
+          "midfield": 35.233333,
+          "defense": 30.2,
+          "goalkeeping": 15.1,
           "coverage": 0.8874545454545455
         },
         "tactical_applied_to_outcome": true,
@@ -9027,7 +9032,7 @@
       "round": "R32",
       "phase": "knockout",
       "opponent_team_id": "WC2026-F3",
-      "pre_match_win_probability": 0.2626,
+      "pre_match_win_probability": 0.2662,
       "team_facts": {
         "base_strength": {
           "attack": 30,
@@ -9043,13 +9048,16 @@
           "goalkeeping": 15,
           "coverage": 0.8874545454545455
         },
-        "manager_tactical_band": 0,
-        "manager_tactical_multiplier": 1,
+        "manager_present": true,
+        "manager_presence_band": 1,
+        "manager_link_band": 0,
+        "manager_tactical_band": 1,
+        "manager_tactical_multiplier": 1.0066666666666666,
         "post_tactical_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
+          "attack": 30.2,
+          "midfield": 35.233333,
+          "defense": 30.2,
+          "goalkeeping": 15.1,
           "coverage": 0.8874545454545455
         },
         "tactical_applied_to_outcome": true,

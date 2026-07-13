@@ -27,6 +27,7 @@ import {
   type DraftFlow,
   type EraPresetId,
   type RatingBasis,
+  type ManagerPresenceBand,
 } from "@wcdraft/core";
 
 import type { GameData, RunRecordVersions } from "./data";
@@ -63,6 +64,8 @@ export interface RunRecordV1 {
   updated_seq: number;
   versions: RunRecordVersions;
   draft: DraftState;
+  /** Stable drafted-manager presence tier; absent on legacy/pre-simulation records. */
+  manager_presence_band?: ManagerPresenceBand;
   /** Lifecycle status; older records without this field default to "ready". */
   status?: RunRecordStatus;
   /** Optional challenge metadata. Daily runs use a shared date-derived seed. */
@@ -516,10 +519,19 @@ export function setRunSimulation(
   }
   const storage = getStorage();
   const nextSeq = nextCounter(storage);
+  const managerPresenceBand: ManagerPresenceBand = loaded.record.draft.manager_card_id ? 1 : 0;
+  if (
+    simulation.matches.some(
+      (match) => match.team_facts?.manager_presence_band !== managerPresenceBand,
+    )
+  ) {
+    return { status: "invalid", record: loaded.record, persistence: "none", warnings: [] };
+  }
   const next: RunRecordV1 = {
     ...loaded.record,
     updated_seq: nextSeq,
     status: "complete",
+    manager_presence_band: managerPresenceBand,
     simulation,
   };
   const save = saveRunRecord(next);
@@ -764,6 +776,22 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
   }
   if (status === "complete" && simulation === undefined) return null;
   if (simulation !== undefined && status !== "complete") return null;
+  const managerPresenceBand =
+    value.manager_presence_band === undefined
+      ? undefined
+      : value.manager_presence_band === 0 || value.manager_presence_band === 1
+        ? value.manager_presence_band
+        : "invalid";
+  if (managerPresenceBand === "invalid") return null;
+  if (
+    managerPresenceBand !== undefined &&
+    (managerPresenceBand !== (draft.data.manager_card_id ? 1 : 0) ||
+      simulation?.matches.some(
+        (match) => match.team_facts?.manager_presence_band !== managerPresenceBand,
+      ))
+  ) {
+    return null;
+  }
 
   const challenge = parseRunChallenge(value.challenge, parent_seed);
   if (challenge === "invalid") return null;
@@ -780,6 +808,7 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     updated_seq,
     versions,
     draft: draft.data,
+    ...(managerPresenceBand === undefined ? {} : { manager_presence_band: managerPresenceBand }),
     ...(status === undefined ? {} : { status }),
     ...(challenge === undefined ? {} : { challenge }),
     ...(rankedAttempt === undefined ? {} : { ranked_attempt: rankedAttempt }),
