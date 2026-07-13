@@ -238,10 +238,28 @@ export function drawAvailabilityForMatch(
   });
 }
 
-function contribution(slot: SquadSlot, world: SimWorld): StarterContribution {
+function contribution(
+  slot: SquadSlot,
+  world: SimWorld,
+  replacementMultiplier = 1,
+): StarterContribution {
+  if (!(replacementMultiplier > 0 && replacementMultiplier <= 1)) {
+    throw new RangeError("replacement contribution multiplier must be in (0, 1]");
+  }
+  const source = ratingFor(slot, world);
+  const rating =
+    replacementMultiplier === 1
+      ? source
+      : {
+          ...source,
+          attack: source.attack * replacementMultiplier,
+          midfield: source.midfield * replacementMultiplier,
+          defense: source.defense * replacementMultiplier,
+          goalkeeping: source.goalkeeping * replacementMultiplier,
+        };
   return {
     slot_id: slot.slot_id,
-    rating: ratingFor(slot, world),
+    rating,
     position_compatibility: slot.position_compatibility,
   };
 }
@@ -310,6 +328,9 @@ export function resolveActiveTeam(params: {
       slot_position: starter.slot_position,
     });
     const outgoingScore = outgoingProjection.weighted_channel;
+    const replacementMultiplier = INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER;
+    const effectiveReplacementScore =
+      replacement.internalScore * replacement.fit * replacementMultiplier;
     activations.push({
       out_card_id: starter.card_id!,
       out_player_id: starter.player_id!,
@@ -319,9 +340,10 @@ export function resolveActiveTeam(params: {
       line: outgoingProjection.line,
       fit: replacement.fit,
       internal_score: replacement.internalScore,
-      replacement_score: replacement.replacementScore,
+      replacement_contribution_multiplier: replacementMultiplier,
+      replacement_score: effectiveReplacementScore,
       outgoing_score: outgoingScore,
-      line_contribution_delta: replacement.replacementScore - outgoingScore,
+      line_contribution_delta: effectiveReplacementScore - outgoingScore,
     });
   }
 
@@ -336,12 +358,24 @@ export function resolveActiveTeam(params: {
   const activeStrength =
     activeStarters.length === 11
       ? aggregateUserXiStrength(
-          activeStarters.map((slot) => contribution(slot, world)),
+          activeStarters.map((slot) =>
+            contribution(
+              slot,
+              world,
+              replacements.has(slot.slot_id) ? INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER : 1,
+            ),
+          ),
           activeSynergy,
           managerRating,
         )
       : aggregateActiveXiStrength(
-          activeStarters.map((slot) => contribution(slot, world)),
+          activeStarters.map((slot) =>
+            contribution(
+              slot,
+              world,
+              replacements.has(slot.slot_id) ? INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER : 1,
+            ),
+          ),
           activeSynergy,
           managerRating,
           INJURY.SHORT_HANDED_STRENGTH_MULTIPLIER,
@@ -367,7 +401,12 @@ export function resolveActiveTeam(params: {
       // Availability resolution precedes the match outcome. The match engine
       // replaces these neutral facts when it actually applies the S2 seam;
       // forfeits retain them and therefore never claim a tactical effect.
-      ...applyManagerTacticalAdjustment(activeStrength, activeSynergy.manager_link, false),
+      ...applyManagerTacticalAdjustment(
+        activeStrength,
+        draft.manager_card_id !== null,
+        activeSynergy.manager_link,
+        false,
+      ),
       base_synergy: baseSynergy,
       active_synergy: activeSynergy,
       unavailable,

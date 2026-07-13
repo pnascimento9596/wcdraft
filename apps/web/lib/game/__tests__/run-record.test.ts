@@ -228,6 +228,7 @@ describe("run-record persisted boundary", () => {
     saveRunRecord(created);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, created);
     const persisted = setRunSimulation(created.run_id, gameData.versions, simulation);
+    expect(persisted.record?.manager_presence_band).toBe(1);
     expect(persisted.status).toBe("updated");
 
     const key = recordKey(created.run_id);

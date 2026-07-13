@@ -131,7 +131,7 @@ function firstVacantSlot(
   };
 }
 
-interface Scored {
+export interface ScoredPolicyCandidate {
   cardId: CardId;
   primary: number;
   overall: number;
@@ -161,7 +161,7 @@ interface Scored {
  *   REQUIRED before the realism golden may be re-locked. See
  *   SIM_CALIBRATION.md › "Decoupling guards".
  */
-function pickBest(candidates: readonly Scored[]): Scored {
+function pickBest(candidates: readonly ScoredPolicyCandidate[]): ScoredPolicyCandidate {
   let best = candidates[0]!;
   for (let i = 1; i < candidates.length; i++) {
     const c = candidates[i]!;
@@ -180,6 +180,30 @@ function pickBest(candidates: readonly Scored[]): Scored {
   return best;
 }
 
+/**
+ * Rank the exact player offer for a slot under the strategic policy. This is
+ * exported for the Season 2 calibration harness so its runner-up
+ * counterfactual uses the same policy ordering as the baseline pick, instead
+ * of inventing a post-draft "weakest player" heuristic.
+ */
+export function rankStrategicCandidatesForSlot(
+  cardIds: readonly CardId[],
+  slotPositionFine: SlotPosition,
+  ctx: PolicyContext,
+): ScoredPolicyCandidate[] {
+  const line = slotPositionLine(slotPositionFine);
+  return cardIds
+    .map((cardId) => {
+      const score = strategicScore(cardId, line, slotPositionFine, ctx);
+      return { cardId, primary: score.primary, overall: score.overall };
+    })
+    .sort((left, right) => {
+      if (left.primary !== right.primary) return right.primary - left.primary;
+      if (left.overall !== right.overall) return right.overall - left.overall;
+      return left.cardId < right.cardId ? -1 : left.cardId > right.cardId ? 1 : 0;
+    });
+}
+
 /** Pick the next player card for the active spin under the chosen policy. */
 function selectPlayerCard(
   state: DraftState,
@@ -196,7 +220,7 @@ function selectPlayerCard(
     throw new RangeError(`selectPlayerCard: no vacant slot for a player at spin ${active.index}`);
   }
 
-  const scored: Scored[] = active.rolled_card_ids.map((cardId) => {
+  const scored: ScoredPolicyCandidate[] = active.rolled_card_ids.map((cardId) => {
     if (mode === "strategic") {
       const s = strategicScore(cardId, slot.line, slot.slot_position, ctx);
       return { cardId, primary: s.primary, overall: s.overall };

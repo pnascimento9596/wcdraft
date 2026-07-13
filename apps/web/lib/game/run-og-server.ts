@@ -11,6 +11,7 @@ import type { ValidationData } from "../leaderboard/validate";
 import {
   decodeRunToken,
   reconstructDraftFromToken,
+  runTokenManagerPresenceAgrees,
   versionsAgree,
   type RunTokenOgSummary,
   type RunTokenV3Body,
@@ -75,6 +76,9 @@ export function verifyRunTokenForOg(
       ruleset_version: data.gameData.versions.ruleset_version,
     });
     const result = runTournamentFull(draft, scenario, token.ps, world);
+    if (!runTokenManagerPresenceAgrees(token, result.matches)) {
+      return { status: "rejected", reason: "ILLEGAL_PICK" };
+    }
     const narrativeLabels = buildNarrativeLabels(data.gameData, data.scenario, draft);
     const narrative = buildNarrative(result.run, [...result.matches], narrativeLabels).filled_text;
     const summary: RunTokenOgSummary = {

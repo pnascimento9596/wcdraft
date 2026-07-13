@@ -111,6 +111,8 @@ export type {
   BenchActivationFact,
   MatchTeamFacts,
   ManagerTacticalBand,
+  ManagerPresenceBand,
+  ManagerLinkBand,
   SimWorld,
   // scoring
   ScoringConfig,

@@ -367,21 +367,32 @@ export interface BenchActivationFact {
   line: Position;
   fit: number;
   internal_score: number;
+  /** S3 calibration factor applied only after canonical replacement selection. */
+  replacement_contribution_multiplier: number;
+  /** Effective incoming slot contribution after the calibration factor. */
   replacement_score: number;
   outgoing_score: number;
   line_contribution_delta: number;
 }
 
-export type ManagerTacticalBand = 0 | 1 | 2;
+export type ManagerTacticalBand = 0 | 1 | 2 | 3;
+export type ManagerPresenceBand = 0 | 1;
+export type ManagerLinkBand = 0 | 1 | 2;
 
 export interface MatchTeamFacts {
   base_strength: TeamStrength;
   active_strength: TeamStrength;
-  /** Discrete +0/+1/+2 internal tier actually applied at the match lambda seam. */
+  /** Drafted-manager presence, persisted rather than inferred by recap consumers. */
+  manager_present: boolean;
+  /** Internal competent-manager presence contribution. Production currently resolves all managers to +1. */
+  manager_presence_band: ManagerPresenceBand;
+  /** Preserved S2 +0/+1/+2 contribution: round(clamp(manager_link) * 2). */
+  manager_link_band: ManagerLinkBand;
+  /** Bounded sum of manager_presence_band + the preserved S2 +0/+1/+2 link tier. */
   manager_tactical_band: ManagerTacticalBand;
   /** Bounded multiplier corresponding exactly to manager_tactical_band. */
   manager_tactical_multiplier: number;
-  /** Active strength after the tactical multiplier and channel-domain rounding. */
+  /** Continuous factual projection of active strength under the tactical multiplier. */
   post_tactical_strength: TeamStrength;
   /** Whether post_tactical_strength mechanically fed the match outcome. */
   tactical_applied_to_outcome: boolean;

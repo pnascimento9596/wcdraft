@@ -120,6 +120,7 @@ jobs:
               - 'packages/data/scripts/build-daily-seed-salt-map.mts'
               - 'packages/data/scripts/build-score-distribution.mts'
               - 'packages/data/scripts/fit-calibration.mjs'
+              - 'packages/data/scripts/measure-squad-depth-calibration.mts'
               - 'packages/data/scripts/regen-asym-golden.mts'
               - 'packages/data/test/daily-seed-salt-map.golden.test.ts'
               - 'packages/data/test/realism/**'
@@ -390,7 +391,11 @@ jobs:
             fi
             sed "s/^/[${policy}] /" "$RUNNER_TEMP/realism-$policy.log"
           done
-          exit "$failed"
+          if (( failed != 0 )); then
+            exit "$failed"
+          fi
+
+          pnpm --filter @wcdraft/data test:calibration:squad-depth
 
   etl:
     name: ingest · identity-QA · determinism

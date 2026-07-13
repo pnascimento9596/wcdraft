@@ -36,7 +36,7 @@ import { describe, it, expect } from "vitest";
 import { aggregateUserXiStrength, managerBandModifier } from "./engine/team-strength.js";
 import { buildScenarioInputs } from "../test/fixtures/sim-fixtures.js";
 import { runTournamentFull } from "./engine/tournament.js";
-import { MANAGER_TACTICAL } from "./engine/calibration.js";
+import { MANAGER_MODIFIER, MANAGER_TACTICAL } from "./engine/calibration.js";
 import type { StarterContribution } from "./api/team-strength.js";
 import { buildManagerCardId } from "./types/manager.js";
 import type { ManagerRating } from "./types/manager.js";
@@ -219,7 +219,7 @@ describe("decoupling guard — manager band never reads ManagerRating.overall", 
     const highResult = runTournamentFull(high.draft, high.scenario, "s2-display-guard", highWorld);
     expect(lowResult).toEqual(highResult);
     expect(lowResult.matches[0]!.team_facts).toMatchObject({
-      manager_tactical_band: 2,
+      manager_tactical_band: 3,
       manager_tactical_multiplier: 1 + MANAGER_TACTICAL.WIDTH,
       tactical_applied_to_outcome: true,
     });
@@ -233,8 +233,8 @@ describe("decoupling guard — manager band never reads ManagerRating.overall", 
     const boostedHighDisplay = aggregateUserXiStrength(starters(60), linked, makeRating(99));
 
     expect(managerBandModifier(neutral, makeRating(99))).toBe(1);
-    expect(managerBandModifier(linked, makeRating(0))).toBe(1.1);
-    expect(managerBandModifier(linked, null)).toBe(1.1);
+    expect(managerBandModifier(linked, makeRating(0))).toBe(1 + MANAGER_MODIFIER.BAND);
+    expect(managerBandModifier(linked, null)).toBe(1 + MANAGER_MODIFIER.BAND);
     expect(boostedLowDisplay).toEqual(boostedHighDisplay);
     expect(boostedLowDisplay.attack).toBeGreaterThan(base.attack);
     expect(boostedLowDisplay.midfield).toBeGreaterThan(base.midfield);

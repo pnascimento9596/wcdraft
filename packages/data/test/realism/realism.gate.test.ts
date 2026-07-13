@@ -214,8 +214,8 @@ function inShapeBand(key: ShapeKey, observed: number): boolean {
   return Math.abs(observed - center) <= half;
 }
 
-describe("provisional S1 realism snapshot keeps semantic shape centers fixed", () => {
-  it("does not derive band centers from the newly observed mechanics telemetry", () => {
+describe("Season 2 S3 final realism lock keeps semantic shape centers fixed", () => {
+  it("does not derive acceptance centers from the newly observed mechanics telemetry", () => {
     for (const key of SHAPE_KEYS) {
       const cfg = GOLDEN.shape_bands[key];
       expect(bandFor(key).center).toBe(cfg.center);
