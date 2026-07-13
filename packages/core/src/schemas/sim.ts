@@ -463,7 +463,7 @@ export const MatchResultSchema = z
         m.lineup.filter((entry) => entry.side === "user" && entry.started).length <
           INJURY.FIELDABLE_FLOOR &&
         m.lineup.every((entry) => entry.minutes === 0) &&
-        m.events.every((event) => event.type === "availability");
+        m.events.every((event) => event.type === "availability" && event.side === "user");
       if (
         (m.team_facts.tactical_applied_to_outcome && m.pre_match_win_probability <= 0) ||
         (!m.team_facts.tactical_applied_to_outcome && !honestBypassedOutcome)
@@ -475,9 +475,18 @@ export const MatchResultSchema = z
           path: ["team_facts", "tactical_applied_to_outcome"],
         });
       }
-      const availabilityEvents = m.events.filter(
-        (event): event is AvailabilityEvent =>
-          event.type === "availability" && event.side === "user",
+      const allAvailabilityEvents = m.events.filter(
+        (event): event is AvailabilityEvent => event.type === "availability",
+      );
+      if (allAvailabilityEvents.some((event) => event.side !== "user")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "availability events in user team facts must be user-side",
+          path: ["events"],
+        });
+      }
+      const availabilityEvents = allAvailabilityEvents.filter(
+        (event): event is AvailabilityEvent => event.side === "user",
       );
       for (let index = 0; index < m.team_facts.unavailable.length; index++) {
         const unavailable = m.team_facts.unavailable[index]!;
@@ -562,6 +571,21 @@ export const MatchResultSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "bench activation contradicts its availability event",
+            path: ["team_facts", "bench_activations", index],
+          });
+        }
+        const activeReplacement = m.lineup.filter(
+          (entry) => entry.side === "user" && entry.started && entry.slot_id === activation.slot_id,
+        );
+        if (
+          activeReplacement.length !== 1 ||
+          (activeReplacement[0]!.card_id as string) !== (activation.in_card_id as string) ||
+          activeReplacement[0]!.player_id !== activation.in_player_id ||
+          activeReplacement[0]!.position !== activation.line
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "bench activation must match the active replacement in the lineup",
             path: ["team_facts", "bench_activations", index],
           });
         }

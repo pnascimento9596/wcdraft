@@ -8,7 +8,7 @@ Base: `7123d3d7182852715b0006aedd3a001e3b22855f` (`season/squad-depth`)
 
 Risk: RED (match outcome semantics)
 
-Status: local implementation and third-review fix-forward complete; fresh
+Status: local implementation and substitute-review fix-forward complete; fresh
 independent and cross-model reviews, CI, and integration merge remain pending
 
 ## Outcome
@@ -98,6 +98,10 @@ completion invariant.
 - Schema probes forge each persisted tactical channel independently.
 - A full-XI forged bypass rejects, while a user-only lineup with exactly
   `FIELDABLE_FLOOR - 1` starters accepts false/neutral facts.
+- Availability events on factual user matches must be user-side. Every bench
+  activation must name the exact started replacement card/player occupying its
+  slot and line; mutually consistent invented facts cannot describe a
+  replacement that the lineup did not use.
 - Every factual match conserves the canonical formation: started user lineup
   entries plus `short_handed_slot_ids` must equal 11. The positive forfeit
   carries matching unavailable facts and short-handed availability events;
@@ -124,13 +128,13 @@ mechanic, not a calibration claim.
 ## Validation evidence
 
 - `pnpm --filter @wcdraft/core exec vitest run src/engine/manager-tactics.test.ts src/manager-modifier-decoupling.guard.test.ts src/engine/availability.test.ts`
-  — PASS, 3 files / 33 tests at the third-review fix-forward worktree.
+  — PASS, 3 files / 34 tests at the substitute-review fix-forward worktree.
 - `pnpm --filter @wcdraft/core typecheck` — PASS.
 - `pnpm --filter @wcdraft/core lint` — PASS.
 - `pnpm --filter @wcdraft/core run gen:sim-golden` — PASS; five scenario
   fixtures regenerated with the delta audited above.
-- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 421 tests at the
-  third-review fix-forward worktree.
+- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 422 tests at the
+  substitute-review fix-forward worktree.
 - Five-step artifact closure (`build:compact` -> `build:score-distribution` ->
   `build:compact` -> pinned `build:daily-seed-salt-map` -> `build:compact`) —
   PASS. Daily parameters: start `2026-07-10`, 45 days, N=128, maximum eight
@@ -224,6 +228,29 @@ fixture, RNG, or generated-artifact movement. The third-review FAIL report is
 `/tmp/season2-s2-exact-review-10c33b4.md` (SHA-256
 `d31cd6317073c091a574668214c6b8150151756df32a52e27b6efe8de46e5714`). A new
 exact-head review is mandatory.
+
+Both configured cross-model transports then failed without a verdict at exact
+head `3ce84cfd7c0044808d6fe42ee6b03d0624d9ea0f`: two
+`ollama-cloud/glm-5.2` max-reasoning attempts and the `xai/grok-4.5` fallback
+each terminated during inspection. Per the season contract, a second
+independent fresh-context substitute reviewer was dispatched. It correctly
+returned FAIL: the false tactical flag still accepted a mutually consistent
+invented unavailability/replacement fact, activation, and event on an occupied
+slot even though the lineup retained the original occupant. It also accepted
+opponent-side availability noise, which the user availability engine cannot
+emit.
+
+Fix-forward now requires every availability event on a factual user match to
+be user-side and reconciles each activation to exactly one started user lineup
+entry at the same slot, with the incoming card/player and canonical line. The
+exact fabricated occupied-slot replacement and opponent-noise regressions now
+reject. Focused tactical/decoupling/availability coverage is 34/34; focused
+plus sim goldens is 92/92; full core is 422/422; core typecheck/lint, forced
+core goldens 69+42, forced integration 22/22, formatting, and diff check pass.
+The substitute FAIL is `/tmp/season2-crossmodel-s2.md` (SHA-256
+`ec4c395fde731f8707691d69895927fbfa02165f69805a51403cbf152a886914`). This
+schema/test-only correction moves no simulation output, RNG, fixture, or
+generated artifact; all verdicts on `3ce84cf` are void.
 
 ## Per-unit artifact closure
 

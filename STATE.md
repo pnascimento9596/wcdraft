@@ -23,7 +23,7 @@ while still recording that the neutral channel passed through the outcome
 seam. Forfeits bypass the seam and retain neutral facts with the flag false.
 The MatchResult boundary recomputes and reconciles all four factual channels;
 legacy MatchResults may still omit `team_facts` entirely. Local evidence:
-focused tactical+decoupling+availability 33/33; full core 421/421; core
+focused tactical+decoupling+availability 34/34; full core 422/422; core
 typecheck and lint PASS. The first fresh exact-head review correctly rejected
 candidate `f08b1e406a4537685380accac705f92594ab60f8`: the MatchResult boundary
 accepted a forged full-XI 0-3 shape as a bypassed outcome. Fix-forward now
@@ -70,6 +70,24 @@ moves no engine output, fixture, RNG, or generated artifact. The third-review
 FAIL is `/tmp/season2-s2-exact-review-10c33b4.md` (SHA-256
 `d31cd6317073c091a574668214c6b8150151756df32a52e27b6efe8de46e5714`). Its
 approval boundary is void; fresh review must target the replacement exact head.
+
+The required cross-model route then transport-failed twice on
+`ollama-cloud/glm-5.2` and once on fallback `xai/grok-4.5`, each ending during
+inspection without a verdict. The contract-mandated second fresh-context
+substitute reviewer correctly failed exact head
+`3ce84cfd7c0044808d6fe42ee6b03d0624d9ea0f`: a false tactical flag still
+accepted a mutually consistent invented unavailability/replacement fact,
+activation, and event on an occupied slot even though the lineup retained its
+original occupant; opponent-side availability noise also parsed. Fix-forward
+now requires factual availability events to be user-side and reconciles every
+activation to the exact started incoming card/player, slot, and line in the
+lineup. Both reproductions reject. Focused coverage is 34/34, focused plus sim
+goldens 92/92, full core 422/422, core typecheck/lint, forced core goldens
+69+42, and forced integration 22/22 pass. No engine output, RNG, fixture, or
+generated artifact moved. The substitute FAIL is
+`/tmp/season2-crossmodel-s2.md` (SHA-256
+`ec4c395fde731f8707691d69895927fbfa02165f69805a51403cbf152a886914`); all
+verdicts on that head are void.
 
 Candidate-level broader evidence remains core goldens 69+42; forced data golden
 59/59; data integration 22/22; leaderboard golden 6/6; heavy realism 10/10 at

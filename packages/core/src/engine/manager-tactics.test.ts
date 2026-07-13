@@ -329,6 +329,69 @@ describe("S2 tournament reachability and persisted facts", () => {
     expect(parsed.success).toBe(true);
   });
 
+  it("rejects noncanonical forfeit replacement facts and opponent availability noise", () => {
+    const coherent = coherentBelowFloorForfeitShape();
+    const occupied = coherent.lineup.find((entry) => entry.started)!;
+    const bench = coherent.lineup.find((entry) => !entry.started)!;
+    const spoofFact = {
+      card_id: "spoof:14" as typeof occupied.card_id,
+      player_id: "spoof",
+      slot_id: occupied.slot_id,
+      position: occupied.position,
+      reason: "knock" as const,
+      duration_matches: 1 as const,
+    };
+    const spoofActivation = {
+      out_card_id: spoofFact.card_id,
+      out_player_id: spoofFact.player_id,
+      in_card_id: bench.card_id,
+      in_player_id: bench.player_id,
+      slot_id: occupied.slot_id,
+      line: occupied.position,
+      fit: 1,
+      internal_score: 50,
+      replacement_score: 50,
+      outgoing_score: 50,
+      line_contribution_delta: 0,
+    };
+    const spoofEvent = {
+      event_id: `${coherent.match_id}.spoof-replacement`,
+      minute: 0 as const,
+      period: "1H" as const,
+      side: "user" as const,
+      type: "availability" as const,
+      ...spoofFact,
+      replacement_card_id: bench.card_id,
+      replacement_player_id: bench.player_id,
+      short_handed: false,
+    };
+    expect(
+      MatchResultSchema.safeParse({
+        ...coherent,
+        team_facts: {
+          ...coherent.team_facts,
+          unavailable: [...coherent.team_facts.unavailable, spoofFact],
+          bench_activations: [spoofActivation],
+        },
+        events: [...coherent.events, spoofEvent],
+      }).success,
+    ).toBe(false);
+
+    expect(
+      MatchResultSchema.safeParse({
+        ...coherent,
+        events: [
+          ...coherent.events,
+          {
+            ...coherent.events[0]!,
+            event_id: `${coherent.match_id}.opponent-availability-noise`,
+            side: "opp" as const,
+          },
+        ],
+      }).success,
+    ).toBe(false);
+  });
+
   it("rejects deleted lineup rows without the exact short-handed slot set", () => {
     const coherent = coherentBelowFloorForfeitShape();
     const missingAll = {
