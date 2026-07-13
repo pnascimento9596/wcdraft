@@ -8,22 +8,28 @@ Season 2 Squad Depth — Unit S1 availability and bench mechanics:
 2026-07-12 · local RED implementation on `ws-core/season2-s1-depth`, based on
 integration head `59f74d3de68552f9602f9f849e575c2627c0de91`. Seeded pre-match
 knock/suspension/tournament-injury availability now resolves from a new labeled
-RNG stream before unchanged outcome streams. The engine selects the best hard
-family-eligible bench replacement by sim-internal line channel × canonical fit,
-recomputes strength and NATION-only Synergy over the active formation slots,
-and applies an explicit penalty when no eligible replacement exists. Mechanical
+RNG stream before unchanged outcome streams. The engine completes a
+deterministic hard-family-eligible assignment across all simultaneous absent
+slots and bench cards, maximizing filled slots before total sim-internal line
+channel × canonical fit and canonical slot/card tie-breaks. It then recomputes
+strength and NATION-only Synergy over the active formation slots and applies an
+explicit penalty only where no optimal assignment can fill a slot. Mechanical
 availability events and persisted base/active/activation/short-handed facts
-replace the retired post-hoc flavor substitutions. Legacy MatchResults may omit
-the new facts so honest version-skew handling remains reachable.
+replace the retired post-hoc flavor substitutions. The persisted boundary
+enforces exact signed activation arithmetic and bidirectional activation/event
+identity agreement; legacy MatchResults may still omit the whole facts object.
 
-Local evidence: core 405/405; focused availability+sim 67/67; core goldens
-69+42; affected data 18/18; data integration 22/22; web simulation/worker/run
-record 52/52; core/data/web typecheck+lint PASS. Heavy realism first exposed
-only the expected exact count/score/distribution drift while every pre-S1 shape
-band passed. A zero-tuning provisional mechanics snapshot plus the required
-compact→score-distribution→compact chain restored the heavy gate to 10/10 (the
-original 9 plus an explicit fixed-center regression). Semantic shape
-centers/widths and goals floor remain unchanged; S3 owns calibrated final locks.
+Local fix-forward evidence: core 408/408; focused availability+sim 70/70; core
+goldens 69+42; forced data golden 59/59; data integration 22/22; leaderboard
+golden 6/6; root typecheck+lint+test+build PASS. The complete assignment moved
+the strategic score mean to 14.641 and greedy-control counts to 503/2000,
+6781 matches, and 781 knockouts while every unchanged pre-S1 shape band passed.
+The five-step compact→score-distribution→compact→Daily→compact closure restored
+Daily byte identity for the fixed 2026-07-10 + 44-day runway; committed Daily
+raw SHA-256 is
+`1081ae1c73f52dbbd731677c9b14aec6aeb256266021e8032144be21f750bc62`.
+Heavy realism is 10/10 with no constant or semantic-band tuning; S3 owns the
+calibrated final locks.
 Durable report:
 `docs/reports/season2-s1-availability-bench-model-2026-07-12.md`. Fresh-context
 review, cross-model spot review, CI, and integration merge remain required.

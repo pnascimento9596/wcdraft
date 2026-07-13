@@ -62,6 +62,10 @@ and integration-branch merge remain orchestrator-owned gates.
    validation and rejected contradictions between persisted activation facts
    and their corresponding availability events. Legacy records may still omit
    the entire `team_facts` object.
+4. Fresh exact-head review caught stale pre-fix-forward counts and greedy
+   replacement wording in `STATE.md`. The measured-truth entry now records the
+   complete assignment, persisted-boundary checks, 70/70 focused and 408/408
+   core counts, five-step Daily closure, and final Daily hash.
 
 ## Reconciliation — Architect-delegated decisions
 
