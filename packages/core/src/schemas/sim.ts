@@ -66,6 +66,14 @@ const ProbabilitySchema = z
   .max(1)
   .refine(Number.isFinite, { message: "probability must be finite" });
 
+const ContinuousTacticalStrengthSchema = z.object({
+  attack: z.number().finite().min(0).max(100),
+  midfield: z.number().finite().min(0).max(100),
+  defense: z.number().finite().min(0).max(100),
+  goalkeeping: z.number().finite().min(0).max(100),
+  coverage: ProbabilitySchema,
+});
+
 const EventBase = {
   event_id: NonEmptyIdSchema,
   minute: MinuteSchema,
@@ -320,9 +328,12 @@ export const MatchResultSchema = z
       .object({
         base_strength: TeamStrengthSchema,
         active_strength: TeamStrengthSchema,
-        manager_tactical_band: z.number().int().min(0).max(2),
+        manager_present: z.boolean(),
+        manager_presence_band: z.union([z.literal(0), z.literal(1)]),
+        manager_link_band: z.union([z.literal(0), z.literal(1), z.literal(2)]),
+        manager_tactical_band: z.number().int().min(0).max(3),
         manager_tactical_multiplier: z.number().finite().min(1),
-        post_tactical_strength: TeamStrengthSchema,
+        post_tactical_strength: ContinuousTacticalStrengthSchema,
         tactical_applied_to_outcome: z.boolean(),
         base_synergy: SynergyResultSchema,
         active_synergy: SynergyResultSchema,
@@ -347,11 +358,34 @@ export const MatchResultSchema = z
               line: PositionSchema,
               fit: ProbabilitySchema,
               internal_score: z.number().finite().min(0).max(100),
+              replacement_contribution_multiplier: z.number().finite().gt(0).max(1),
               replacement_score: z.number().finite().min(0).max(100),
               outgoing_score: z.number().finite().min(0).max(100),
               line_contribution_delta: z.number().finite().min(-100).max(100),
             })
             .superRefine((activation, ctx) => {
+              if (
+                activation.replacement_contribution_multiplier !==
+                INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER
+              ) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: "replacement contribution multiplier must match the calibrated engine constant",
+                  path: ["replacement_contribution_multiplier"],
+                });
+              }
+              if (
+                activation.replacement_score !==
+                activation.internal_score *
+                  activation.fit *
+                  activation.replacement_contribution_multiplier
+              ) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: "replacement_score must equal internal_score * fit * contribution multiplier",
+                  path: ["replacement_score"],
+                });
+              }
               if (
                 activation.line_contribution_delta !==
                 activation.replacement_score - activation.outgoing_score
@@ -418,9 +452,20 @@ export const MatchResultSchema = z
       }
       const expectedTactical = applyManagerTacticalAdjustment(
         m.team_facts.active_strength,
+        m.team_facts.manager_present,
         m.team_facts.active_synergy.manager_link,
         m.team_facts.tactical_applied_to_outcome,
       );
+      if (
+        m.team_facts.manager_presence_band !== expectedTactical.manager_presence_band ||
+        m.team_facts.manager_link_band !== expectedTactical.manager_link_band
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "manager presence/link bands must reconcile with persisted manager facts",
+          path: ["team_facts", "manager_presence_band"],
+        });
+      }
       if (m.team_facts.manager_tactical_band !== expectedTactical.manager_tactical_band) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

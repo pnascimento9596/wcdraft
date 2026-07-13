@@ -34,7 +34,11 @@ function members(side: "user" | "opp", strength: TeamStrength): SimMember[] {
   }));
 }
 
-function facts(strength: TeamStrength, managerLink: number): MatchTeamFacts {
+function facts(
+  strength: TeamStrength,
+  managerLink: number,
+  managerPresent = true,
+): MatchTeamFacts {
   const synergy = {
     overall: managerLink * 100,
     nation_clusters: [],
@@ -45,7 +49,7 @@ function facts(strength: TeamStrength, managerLink: number): MatchTeamFacts {
   return {
     base_strength: strength,
     active_strength: strength,
-    ...applyManagerTacticalAdjustment(strength, managerLink, false),
+    ...applyManagerTacticalAdjustment(strength, managerPresent, managerLink, false),
     base_synergy: synergy,
     active_synergy: synergy,
     unavailable: [],
@@ -84,34 +88,36 @@ function coreInput(
 }
 
 describe("S2 manager tactical tier", () => {
-  it("maps the bounded manager-link channel to canonical +0/+1/+2 tiers", () => {
-    expect(managerTacticalBand(0)).toBe(0);
-    expect(managerTacticalBand(0.24)).toBe(0);
-    expect(managerTacticalBand(0.25)).toBe(1);
-    expect(managerTacticalBand(0.74)).toBe(1);
-    expect(managerTacticalBand(0.75)).toBe(2);
-    expect(managerTacticalBand(1)).toBe(2);
+  it("composes +1 presence with the preserved +0/+1/+2 manager-link tier", () => {
+    expect(managerTacticalBand(false, 0)).toBe(0);
+    expect(managerTacticalBand(false, 1)).toBe(0);
+    expect(managerTacticalBand(true, 0)).toBe(1);
+    expect(managerTacticalBand(true, 0.24)).toBe(1);
+    expect(managerTacticalBand(true, 0.25)).toBe(2);
+    expect(managerTacticalBand(true, 0.74)).toBe(2);
+    expect(managerTacticalBand(true, 0.75)).toBe(3);
+    expect(managerTacticalBand(true, 1)).toBe(3);
   });
 
   it("fails bounded and neutral for malformed or out-of-range helper inputs", () => {
-    expect(managerTacticalBand(Number.NaN)).toBe(0);
-    expect(managerTacticalBand(Number.POSITIVE_INFINITY)).toBe(0);
-    expect(managerTacticalBand(-100)).toBe(0);
-    expect(managerTacticalBand(100)).toBe(2);
+    expect(managerTacticalBand(true, Number.NaN)).toBe(1);
+    expect(managerTacticalBand(true, Number.POSITIVE_INFINITY)).toBe(1);
+    expect(managerTacticalBand(true, -100)).toBe(1);
+    expect(managerTacticalBand(true, 100)).toBe(3);
   });
 
   it("applies one conservative bounded multiplier uniformly and deterministically", () => {
-    const first = applyManagerTacticalAdjustment(STRENGTH, 1);
-    const second = applyManagerTacticalAdjustment(STRENGTH, 1);
+    const first = applyManagerTacticalAdjustment(STRENGTH, true, 1);
+    const second = applyManagerTacticalAdjustment(STRENGTH, true, 1);
 
     expect(first).toEqual(second);
-    expect(first.manager_tactical_band).toBe(2);
+    expect(first.manager_tactical_band).toBe(3);
     expect(first.manager_tactical_multiplier).toBe(1 + MANAGER_TACTICAL.WIDTH);
     expect(first.manager_tactical_multiplier).toBeLessThanOrEqual(1 + MANAGER_TACTICAL.WIDTH);
     expect(first.post_tactical_strength).toEqual({
-      attack: 61,
-      midfield: 71,
-      defense: 81,
+      attack: Number((60 * (1 + MANAGER_TACTICAL.WIDTH)).toFixed(6)),
+      midfield: Number((70 * (1 + MANAGER_TACTICAL.WIDTH)).toFixed(6)),
+      defense: Number((80 * (1 + MANAGER_TACTICAL.WIDTH)).toFixed(6)),
       goalkeeping: 100,
       coverage: 0.75,
     });
@@ -119,8 +125,11 @@ describe("S2 manager tactical tier", () => {
   });
 
   it("records a fully neutral channel when the outcome bypasses simulation", () => {
-    expect(applyManagerTacticalAdjustment(STRENGTH, 1, false)).toEqual({
-      manager_tactical_band: 0,
+    expect(applyManagerTacticalAdjustment(STRENGTH, true, 1, false)).toEqual({
+      manager_present: true,
+      manager_presence_band: 1,
+      manager_link_band: 2,
+      manager_tactical_band: 3,
       manager_tactical_multiplier: 1,
       post_tactical_strength: STRENGTH,
       tactical_applied_to_outcome: false,
@@ -135,15 +144,12 @@ describe("S2 manager tactical tier", () => {
       goalkeeping: 60,
       coverage: 1,
     };
-    const post = applyManagerTacticalAdjustment(base, 1).post_tactical_strength;
-    expect(post.attack).toBe(61);
+    const post = applyManagerTacticalAdjustment(base, true, 1).post_tactical_strength;
+    expect(post.attack).toBe(Number((60 * (1 + MANAGER_TACTICAL.WIDTH)).toFixed(6)));
 
     const linked = simulateMatchCore(coreInput("same-seed", base, facts(base, 1)));
-    const alreadyAdjusted = simulateMatchCore(coreInput("same-seed", post));
-    expect(linked.pre_match_win_probability).toBe(alreadyAdjusted.pre_match_win_probability);
-    expect(linked.user_goals).toBe(alreadyAdjusted.user_goals);
-    expect(linked.opp_goals).toBe(alreadyAdjusted.opp_goals);
-    expect(linked.events).toEqual(alreadyAdjusted.events);
+    const neutral = simulateMatchCore(coreInput("same-seed", base));
+    expect(linked.pre_match_win_probability).toBeGreaterThan(neutral.pre_match_win_probability);
     expect(linked.team_facts!.post_tactical_strength).toEqual(post);
   });
 });
@@ -165,6 +171,7 @@ describe("S2 tournament reachability and persisted facts", () => {
         ...sourceFacts,
         ...applyManagerTacticalAdjustment(
           sourceFacts.active_strength,
+          sourceFacts.manager_present,
           sourceFacts.active_synergy.manager_link,
           false,
         ),
@@ -257,6 +264,9 @@ describe("S2 tournament reachability and persisted facts", () => {
     expect(first).toEqual(second);
     for (const match of first.matches) {
       expect(match.team_facts).toMatchObject({
+        manager_present: false,
+        manager_presence_band: 0,
+        manager_link_band: 0,
         manager_tactical_band: 0,
         manager_tactical_multiplier: 1,
         tactical_applied_to_outcome: true,
@@ -273,11 +283,14 @@ describe("S2 tournament reachability and persisted facts", () => {
     for (const match of result.matches) {
       const facts = match.team_facts!;
       expect(facts.active_synergy.manager_link).toBe(1);
-      expect(facts.manager_tactical_band).toBe(2);
+      expect(facts.manager_present).toBe(true);
+      expect(facts.manager_presence_band).toBe(1);
+      expect(facts.manager_link_band).toBe(2);
+      expect(facts.manager_tactical_band).toBe(3);
       expect(facts.manager_tactical_multiplier).toBe(1 + MANAGER_TACTICAL.WIDTH);
       expect(facts.tactical_applied_to_outcome).toBe(true);
       expect(facts.post_tactical_strength.attack).toBe(
-        Math.round(Math.min(100, facts.active_strength.attack * (1 + MANAGER_TACTICAL.WIDTH))),
+        Number(Math.min(100, facts.active_strength.attack * (1 + MANAGER_TACTICAL.WIDTH)).toFixed(6)),
       );
       expect(MatchResultSchema.safeParse(match).success).toBe(true);
     }
@@ -350,8 +363,9 @@ describe("S2 tournament reachability and persisted facts", () => {
       line: occupied.position,
       fit: 1,
       internal_score: 50,
-      replacement_score: 50,
-      outgoing_score: 50,
+      replacement_contribution_multiplier: INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER,
+      replacement_score: 50 * INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER,
+      outgoing_score: 50 * INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER,
       line_contribution_delta: 0,
     };
     const spoofEvent = {

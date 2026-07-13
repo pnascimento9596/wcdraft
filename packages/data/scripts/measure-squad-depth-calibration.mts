@@ -456,7 +456,7 @@ if (!REPORT_ONLY) {
 }
 
 const output = {
-  schema_version: "squad-depth-calibration-2.0.0-preregistration",
+  schema_version: "squad-depth-calibration-2.0.0",
   seed_prefix: SEED_PREFIX,
   runs_per_policy: N,
   mean_abs_delta_denominator: "all_runs",

@@ -61,6 +61,7 @@ import {
   type RunTokenPickV4,
   type RunTokenV3Body,
   type RunTokenV4Body,
+  type MatchResult,
 } from "@wcdraft/core";
 
 import type { GameData } from "./data";
@@ -151,6 +152,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
       ev: record.versions.engine_version,
       uv: record.versions.ruleset_version,
       hv: record.versions.data_bundle_hash,
+      ...(record.manager_presence_band === undefined ? {} : { mp: record.manager_presence_band }),
       ...(record.challenge?.kind === "daily"
         ? { ch: { k: "daily" as const, d: record.challenge.date, s: record.challenge.seed } }
         : {}),
@@ -199,10 +201,25 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
     ev: record.versions.engine_version,
     uv: record.versions.ruleset_version,
     hv: record.versions.data_bundle_hash,
+    ...(record.manager_presence_band === undefined ? {} : { mp: record.manager_presence_band }),
     ...(record.challenge?.kind === "daily"
       ? { ch: { k: "daily" as const, d: record.challenge.date, s: record.challenge.seed } }
       : {}),
   };
+}
+
+/** Single verification seam shared by OG and leaderboard deterministic re-sim. */
+export function runTokenManagerPresenceAgrees(
+  token: RunTokenBody,
+  matches: readonly MatchResult[],
+): boolean {
+  if (token.v !== 3 && token.v !== 4) return true;
+  const derived = matches[0]?.team_facts?.manager_presence_band;
+  if (derived === undefined || matches.some((match) => match.team_facts?.manager_presence_band !== derived)) {
+    return false;
+  }
+  // Legacy tokens omit mp and derive honestly under their version anchors.
+  return token.mp === undefined || token.mp === derived;
 }
 
 /** Extract the completed-run OG summary, if the record has already simulated. */

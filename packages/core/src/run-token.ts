@@ -9,7 +9,7 @@ import {
   type RatingBasis,
 } from "./types/draft-config.js";
 import type { DraftMode, OpenDraftMode } from "./types/draft.js";
-import type { MatchRound } from "./types/index.js";
+import type { ManagerPresenceBand, MatchRound } from "./types/index.js";
 
 /** Legacy `t1.` prefix - decode-compatible forever; encode no longer emits it. */
 export const RUN_TOKEN_PREFIX = "t1." as const;
@@ -120,6 +120,8 @@ export interface RunTokenV3Body {
   ev: string;
   uv: string;
   hv: string;
+  /** Stable drafted-manager presence tier; absent on legacy tokens and derived on replay. */
+  mp?: ManagerPresenceBand;
   ch?: RunTokenDailyChallenge;
 }
 
@@ -141,6 +143,8 @@ export interface RunTokenV4Body {
   ev: string;
   uv: string;
   hv: string;
+  /** Stable drafted-manager presence tier; absent on legacy tokens and derived on replay. */
+  mp?: ManagerPresenceBand;
   ch?: RunTokenDailyChallenge;
 }
 
@@ -357,6 +361,7 @@ function isRunTokenV3Body(x: unknown): x is RunTokenV3Body {
   if (typeof o.ev !== "string") return false;
   if (typeof o.uv !== "string") return false;
   if (typeof o.hv !== "string") return false;
+  if (o.mp !== undefined && o.mp !== 0 && o.mp !== 1) return false;
   if (!isDailyChallenge(o.ch, o.ps)) return false;
   return true;
 }
@@ -386,6 +391,7 @@ function isRunTokenV4Body(x: unknown): x is RunTokenV4Body {
   if (typeof o.ev !== "string") return false;
   if (typeof o.uv !== "string") return false;
   if (typeof o.hv !== "string") return false;
+  if (o.mp !== undefined && o.mp !== 0 && o.mp !== 1) return false;
   if (!isDailyChallenge(o.ch, o.ps)) return false;
   return true;
 }

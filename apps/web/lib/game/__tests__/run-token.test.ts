@@ -78,6 +78,10 @@ function encodeV4Body(body: RunTokenV4Body): string {
   return RUN_TOKEN_V4_PREFIX + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }
 
+function encodeRawV3Body(body: unknown): string {
+  return RUN_TOKEN_V3_PREFIX + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
+}
+
 function cloneV4(body: RunTokenV4Body): RunTokenV4Body {
   return JSON.parse(JSON.stringify(body)) as RunTokenV4Body;
 }
@@ -138,6 +142,15 @@ describe("run-token — encode / decode round-trip", () => {
     expect(body.ev).toBe(gameData.versions.engine_version);
     expect(body.uv).toBe(gameData.versions.ruleset_version);
     expect(body.hv).toBe(gameData.versions.data_bundle_hash);
+  });
+
+  it("round-trips the stable manager-presence tier and rejects an out-of-domain value", () => {
+    const record = { ...origin, manager_presence_band: 1 as const };
+    const body = buildRunTokenBody(record);
+    expect(body.mp).toBe(1);
+    expect(decodeRunToken(encodeRunToken(record))).toMatchObject({ v: 3, mp: 1 });
+    const forged = { ...body, mp: 2 };
+    expect(decodeRunToken(encodeRawV3Body(forged))).toBeNull();
   });
 });
 

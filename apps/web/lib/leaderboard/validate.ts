@@ -43,6 +43,7 @@ import {
   tokenDraftConfig,
   versionsAgree,
   reconstructDraftFromToken,
+  runTokenManagerPresenceAgrees,
   type RunTokenBody,
 } from "../game/run-token";
 import { buildSimWorldInputs } from "../game/simulate";
@@ -390,6 +391,9 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
       ruleset_version: data.gameData.versions.ruleset_version,
     });
     const result = runTournamentFull(draft, scenario, token.ps, world);
+    if (!runTokenManagerPresenceAgrees(token, result.matches)) {
+      return rejected("ILLEGAL_PICK", "manager tactical tier does not match deterministic re-sim");
+    }
     run = result.run;
   } catch (err) {
     return rejected("SIM_FAILURE", err instanceof Error ? err.message : String(err));

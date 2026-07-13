@@ -4,6 +4,63 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Season 2 Squad Depth — Unit S3 Option A final calibration:
+2026-07-13 · local RED implementation on
+`ws-core/season2-s3-calibration`, based on exact integration head
+`de019efa3d2d2acd04c7505d8f93c352bf9d99d4`. The N=2000 calibration
+construction and magnitude ceilings were frozen in immutable preregistration
+commit `a59b50093672a4851ddd640c1e46ad46f4168179` before any production tuning.
+The honest stable manager signal is drafted-manager presence `0/1`: runtime
+ships no per-card ManagerRating rows or sim-legal quality field. Presence +1
+composes with S2's preserved manager-link +0/+1/+2 tier into a match-dynamic
+0..3 tactical band. Its maximum 2% continuous post-availability uplift is
+applied to all four team channels before both sides of `lambdaForFour`, exactly
+once; managerless remains neutral. Existing t3/t4 run tokens optionally persist
+compact `mp:0|1`, with shared run-record, OG, and leaderboard replay
+reconciliation and version-anchored legacy derivation.
+
+The final S3 availability constants are event probability .125,
+tournament-ending conditional probability .12, two-match minor probability
+.05, minor-event cap 2, short-handed multiplier .72, and incoming replacement
+contribution multiplier .70. The replacement multiplier acts only after the
+canonical hard-family/fit assignment, so identity, fit, assignment, RNG, and
+Synergy are unchanged; persisted facts lock exact effective contribution and
+delta arithmetic. The final strategic N=2000 row is 1338/2000 qualifying
+(66.90%), mean 14.8365, bench activation 839/2000 (41.95%), bench final-score
+sensitivity 763/2000 (38.15%) with same-fixture mean absolute win-probability
+movement .0394470, manager sensitivity 566/2000 (28.30%) with movement
+.0101751, and offer-faithful XI sensitivity 953/2000 (47.65%). These pass the
+frozen >=35%, 40-55%, <=.0500, >=25%, <=.0150, XI-hierarchy, 64-68%, and
+14.0-15.0 gates. The all-policy harness also passed N=2000 for canonical auto,
+strategic, and greedy controls.
+
+The asymmetric N=2000 x three-policy realism re-lock deliberately preserves
+the pre-S3 semantic shape centers/widths because the final strategic landing
+still passes every band; exact mechanics counts, telemetry, Wilson evidence,
+and score populations are updated. Policy qualifying/mean/median/p95 are:
+auto 336/-7.7955/-8.5/10; strategic 1338/14.8365/9/62; greedy
+508/-4.0295/-6/21. Lambda, scoring, progression, rating display-to-channel
+mapping, and strategic-pick canary picks are unchanged; canary regeneration is
+byte-identical (zero flips). The required compact -> score-distribution ->
+compact -> pinned Daily -> compact closure produced score-distribution raw
+SHA-256 `3fcbb10d679a23d9d306c9c9021e530df8f33d631d4116bd68ce55a0704d0df3`
+and Daily raw SHA-256
+`5946ea685d1bc6e8a530e083ea43ec6c771143fbe0edaa3ff3d1210c0cf245a3`.
+An uncached pinned Daily rebuild reproduced Daily raw/Brotli and manifest
+raw/Brotli bytes exactly.
+
+Measured local closure so far: focused token/record/OG/leaderboard 116/116;
+focused availability/manager/schema 71/71; core goldens 69+42; data goldens
+59/59; data integration 22/22; leaderboard golden 6/6; asymmetric heavy
+realism 10/10; root typecheck 8/8; lint 5/5; and test 8/8 with core 422,
+data 183 / 9 expected skips, DB 161, marketing 68, and web 1,158 / 1 expected
+benchmark skip, plus game-flow and the 218/0 responsive matrix. Durable
+calibration report: `docs/reports/season2-s3-calibration-lock-2026-07-13.md`.
+The direct display-mapping contract passes 13/13, the CI-form strategic
+calibration command passes N=2000, and root build passes 4/4 with 40 pages.
+Exact-head fresh-context review, required cross-model spot review, PR CI, and
+integration merge remain required.
+
 Season 2 Squad Depth — Unit S2 manager tactical band:
 2026-07-12 · local RED implementation on
 `ws-core/season2-s2-manager-tactics`, based on verified integration head

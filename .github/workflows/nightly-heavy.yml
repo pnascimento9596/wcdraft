@@ -370,7 +370,11 @@ jobs:
             fi
             sed "s/^/[${policy}] /" "$RUNNER_TEMP/realism-$policy.log"
           done
-          exit "$failed"
+          if (( failed != 0 )); then
+            exit "$failed"
+          fi
+
+          pnpm --filter @wcdraft/data test:calibration:squad-depth
 
   rating-lock-matrix:
     name: rating lock · Python ${{ matrix.python-version }} (nightly)

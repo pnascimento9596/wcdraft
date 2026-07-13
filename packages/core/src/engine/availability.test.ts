@@ -18,6 +18,7 @@ import {
   type AvailabilityState,
 } from "./availability.js";
 import { runTournamentFull } from "./tournament.js";
+import { INJURY } from "./calibration.js";
 
 function context(worldOverride?: SimWorld) {
   const inputs = buildScenarioInputs("upset");
@@ -140,7 +141,7 @@ describe("S1 active-XI mechanics", () => {
     expect(resolved.facts.active_synergy).toEqual(c.baseSynergy);
   });
 
-  it("uses the shared line projection to rank the best eligible replacement", () => {
+  it("the calibration multiplier leaves canonical replacement identity and fit unchanged", () => {
     const c = context();
     const target = c.draft.squad.find(
       (slot) => slot.is_starter && slotPositionLine(slot.slot_position) === "MF",
@@ -157,6 +158,17 @@ describe("S1 active-XI mechanics", () => {
     expect(picked.replacementScore).toBe(projected.weighted_channel);
     expect(picked.fit).toBe(projected.compatibility);
     const resolved = resolveForced("MF").result.facts.bench_activations[0]!;
+    expect(resolved.in_card_id).toBe(picked.slot.card_id);
+    expect(resolved.in_player_id).toBe(picked.slot.player_id);
+    expect(resolved.fit).toBe(picked.fit);
+    expect(resolved.replacement_contribution_multiplier).toBe(
+      INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER,
+    );
+    expect(resolved.replacement_contribution_multiplier).toBeGreaterThan(0);
+    expect(resolved.replacement_contribution_multiplier).toBeLessThanOrEqual(1);
+    expect(resolved.replacement_score).toBe(
+      resolved.internal_score * resolved.fit * resolved.replacement_contribution_multiplier,
+    );
     expect(resolved.line_contribution_delta).toBe(
       resolved.replacement_score - resolved.outgoing_score,
     );
@@ -179,7 +191,7 @@ describe("S1 active-XI mechanics", () => {
     );
   });
 
-  it("short-handed is strictly weaker than every eligible replacement fixture", () => {
+  it("a filled calibrated replacement strictly beats the equivalent short-handed result", () => {
     const initial = context();
     const withoutEligibility: SimWorld = { ...initial.world, eligiblePositionsByCardId: {} };
     const shortHanded = resolveForced("MF", withoutEligibility).result.facts.active_strength;
@@ -208,7 +220,7 @@ describe("S1 active-XI mechanics", () => {
     expect(result.activeSquad.filter((candidate) => candidate.is_starter)).toHaveLength(10);
   });
 
-  it("a strictly better bench never lowers active strength for the same absence", () => {
+  it("a higher canonical replacement remains monotonic under the same multiplier", () => {
     const initial = context();
     const mfBench = initial.draft.squad.find((slot) => slot.slot_id === "bench.2")!;
     const makeWorld = (midfield: number): SimWorld => ({
@@ -389,11 +401,10 @@ describe("S1 deterministic availability lifecycle and persisted facts", () => {
         ...match.team_facts!,
         bench_activations: match.team_facts!.bench_activations.map((fact, index) =>
           index === 0
-            ? {
-                ...fact,
-                replacement_score: 75,
-                outgoing_score: 50,
-                line_contribution_delta: 25,
+              ? {
+                  ...fact,
+                  outgoing_score: fact.replacement_score,
+                  line_contribution_delta: 0,
               }
             : fact,
         ),
@@ -472,13 +483,13 @@ describe("S1 deterministic availability lifecycle and persisted facts", () => {
     expect(MatchResultSchema.safeParse(falseShortHandedSlot).success).toBe(false);
   });
 
-  it("caps the fixed eight-match draw sequence at three minor events", () => {
+  it("caps the fixed eight-match draw sequence at the calibrated minor-event maximum", () => {
     const { draft } = context();
     const state = createAvailabilityState();
     for (let matchIndex = 0; matchIndex < 8; matchIndex++) {
       drawAvailabilityForMatch(draft, "cap-28", matchIndex, state);
     }
-    expect(state.minorEventCount).toBe(3);
+    expect(state.minorEventCount).toBe(INJURY.MAX_MINOR_EVENTS_PER_RUN);
   });
 
   it("accepts a legacy persisted match with no team_facts", () => {
