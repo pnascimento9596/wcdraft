@@ -398,6 +398,9 @@ export const MatchResultSchema = z
         m.outcome === "L" &&
         !m.counts_as_run_win &&
         !m.advanced &&
+        m.lineup.every((entry) => entry.side === "user") &&
+        m.lineup.filter((entry) => entry.side === "user" && entry.started).length <
+          INJURY.FIELDABLE_FLOOR &&
         m.lineup.every((entry) => entry.minutes === 0) &&
         m.events.every((event) => event.type === "availability");
       if (

@@ -23,10 +23,20 @@ while still recording that the neutral channel passed through the outcome
 seam. Forfeits bypass the seam and retain neutral facts with the flag false.
 The MatchResult boundary recomputes and reconciles all four factual channels;
 legacy MatchResults may still omit `team_facts` entirely. Local evidence:
-focused tactical+decoupling+availability 30/30; full core 418/418; core goldens
-69+42; forced data golden 59/59; data integration 22/22; leaderboard golden
-6/6; heavy realism 10/10 at N=2000 x 3; root typecheck 8/8, lint 5/5, test 8/8,
-and build 4/4 (40 pages). The intentional core sim golden delta is confined to
+focused tactical+decoupling+availability 31/31; full core 419/419; core
+typecheck and lint PASS. The first fresh exact-head review correctly rejected
+candidate `f08b1e406a4537685380accac705f92594ab60f8`: the MatchResult boundary
+accepted a forged full-XI 0-3 shape as a bypassed outcome. Fix-forward now
+requires a canonical forfeit lineup to contain user entries only and fewer
+started user entries than `INJURY.FIELDABLE_FLOOR`; adversarial tests reject 11
+starters and accept exactly floor-minus-one. This schema-only correction moves
+no engine output or golden fixture; the prior approval is void and fresh review
+is required.
+
+Candidate-level broader evidence remains core goldens 69+42; forced data golden
+59/59; data integration 22/22; leaderboard golden 6/6; heavy realism 10/10 at
+N=2000 x 3; root typecheck 8/8, lint 5/5, test 8/8, and build 4/4 (40 pages).
+The intentional core sim golden delta is confined to
 the manager-linked `draw_into_pens` fixture at the same seed: outcome/path
 remain stable while score moves 88 -> 85 from one additional yellow and one
 missed penalty. The real-run integration golden adds the four factual fields

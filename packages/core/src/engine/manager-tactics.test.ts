@@ -6,7 +6,7 @@ import { createRng, deriveSubseed } from "../rng.js";
 import type { Position } from "../types/primitives.js";
 import type { TeamStrength } from "../types/rating.js";
 import type { MatchTeamFacts } from "../types/sim.js";
-import { MANAGER_TACTICAL } from "./calibration.js";
+import { INJURY, MANAGER_TACTICAL } from "./calibration.js";
 import { applyManagerTacticalAdjustment, managerTacticalBand } from "./manager-tactics.js";
 import { runTournamentFull } from "./tournament.js";
 import { simulateMatchCore, type CoreMatchInput, type SimMember } from "./match.js";
@@ -149,6 +149,42 @@ describe("S2 manager tactical tier", () => {
 });
 
 describe("S2 tournament reachability and persisted facts", () => {
+  function forgedBypassShape() {
+    const inputs = buildScenarioInputs("group_elimination");
+    const source = runTournamentFull(
+      inputs.draft,
+      inputs.scenario,
+      "s2-forfeit-shape",
+      inputs.world,
+    ).matches[0]!;
+    const sourceFacts = source.team_facts!;
+    return {
+      ...source,
+      pre_match_win_probability: 0,
+      team_facts: {
+        ...sourceFacts,
+        ...applyManagerTacticalAdjustment(
+          sourceFacts.active_strength,
+          sourceFacts.active_synergy.manager_link,
+          false,
+        ),
+      },
+      user_goals: 0,
+      opp_goals: INJURY.FORFEIT_OPP_GOALS,
+      user_goals_et: null,
+      opp_goals_et: null,
+      shootout: null,
+      outcome: "L" as const,
+      counts_as_run_win: false,
+      advanced: false,
+      // A real forfeit record contains only the available user lineup.
+      lineup: source.lineup
+        .filter((entry) => entry.side === "user")
+        .map((entry) => ({ ...entry, minutes: 0 })),
+      events: source.events.filter((event) => event.type === "availability"),
+    };
+  }
+
   it("keeps the reachable managerless ready/direct-engine path neutral", () => {
     const inputs = buildScenarioInputs("upset");
     expect(inputs.draft.status).toBe("ready");
@@ -207,37 +243,33 @@ describe("S2 tournament reachability and persisted facts", () => {
     }
   });
 
-  it("accepts honest false/neutral facts when a forfeit bypasses the outcome sim", () => {
-    const inputs = buildScenarioInputs("group_elimination");
-    const source = runTournamentFull(
-      inputs.draft,
-      inputs.scenario,
-      "s2-forfeit-shape",
-      inputs.world,
-    ).matches[0]!;
-    const sourceFacts = source.team_facts!;
+  it("rejects false tactical facts on a forged full-XI forfeit shape", () => {
+    const forged = forgedBypassShape();
+    expect(forged.lineup.filter((entry) => entry.started)).toHaveLength(11);
+    expect(MatchResultSchema.safeParse(forged).success).toBe(false);
+  });
+
+  it("accepts false/neutral facts only with a truly below-floor user lineup", () => {
+    const source = forgedBypassShape();
+    let startersKept = 0;
     const bypassed = {
       ...source,
-      pre_match_win_probability: 0,
-      team_facts: {
-        ...sourceFacts,
-        ...applyManagerTacticalAdjustment(
-          sourceFacts.active_strength,
-          sourceFacts.active_synergy.manager_link,
-          false,
-        ),
-      },
-      user_goals: 0,
-      opp_goals: 3,
-      user_goals_et: null,
-      opp_goals_et: null,
-      shootout: null,
-      outcome: "L" as const,
-      counts_as_run_win: false,
-      advanced: false,
-      lineup: source.lineup.map((entry) => ({ ...entry, minutes: 0 })),
-      events: source.events.filter((event) => event.type === "availability"),
+      lineup: source.lineup.filter((entry) => {
+        if (!entry.started) return true;
+        if (startersKept >= INJURY.FIELDABLE_FLOOR - 1) return false;
+        startersKept++;
+        return true;
+      }),
     };
+    expect(bypassed.lineup.filter((entry) => entry.started)).toHaveLength(
+      INJURY.FIELDABLE_FLOOR - 1,
+    );
+    expect(
+      MatchResultSchema.safeParse({
+        ...bypassed,
+        lineup: [...bypassed.lineup, { ...bypassed.lineup[0]!, side: "opp" as const }],
+      }).success,
+    ).toBe(false);
     const parsed = MatchResultSchema.safeParse(bypassed);
     if (!parsed.success) {
       throw new Error(JSON.stringify(parsed.error.issues, null, 2));

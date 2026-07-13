@@ -8,8 +8,8 @@ Base: `7123d3d7182852715b0006aedd3a001e3b22855f` (`season/squad-depth`)
 
 Risk: RED (match outcome semantics)
 
-Status: local implementation complete; independent and cross-model reviews,
-CI, and integration merge remain pending
+Status: local implementation and first-review fix-forward complete; fresh
+independent and cross-model reviews, CI, and integration merge remain pending
 
 ## Outcome
 
@@ -71,7 +71,10 @@ remains optional, preserving legacy records that predate factual channels.
 by normal outcome simulation. That is true even for a neutral tier: it records
 which mechanical path ran, not whether integer rounding changed a channel.
 Forfeits bypass outcome simulation, so they preserve neutral applied facts and
-set the flag false rather than claiming a tactical effect.
+set the flag false rather than claiming a tactical effect. The boundary accepts
+that false flag only for the canonical engine shape: 0-3 walkover, no extra
+time/shootout, zero minutes, availability-only events, a user-only lineup, and
+fewer started user entries than `INJURY.FIELDABLE_FLOOR`.
 
 ## Managerless reachability
 
@@ -93,7 +96,8 @@ completion invariant.
 - Bounds cover tier thresholds and malformed/out-of-range direct helper inputs.
 - Determinism covers pure adjustment output and repeated full managerless runs.
 - Schema probes forge each persisted tactical channel independently.
-- A bypassed-outcome shape proves false/neutral facts parse honestly.
+- A full-XI forged bypass rejects, while a user-only lineup with exactly
+  `FIELDABLE_FLOOR - 1` starters accepts false/neutral facts.
 
 ## Golden delta audit
 
@@ -109,12 +113,13 @@ mechanic, not a calibration claim.
 ## Validation evidence
 
 - `pnpm --filter @wcdraft/core exec vitest run src/engine/manager-tactics.test.ts src/manager-modifier-decoupling.guard.test.ts src/engine/availability.test.ts`
-  — PASS, 3 files / 30 tests.
+  — PASS, 3 files / 31 tests at the fix-forward head.
 - `pnpm --filter @wcdraft/core typecheck` — PASS.
 - `pnpm --filter @wcdraft/core lint` — PASS.
 - `pnpm --filter @wcdraft/core run gen:sim-golden` — PASS; five scenario
   fixtures regenerated with the delta audited above.
-- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 418 tests.
+- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 419 tests at the
+  fix-forward head.
 - Five-step artifact closure (`build:compact` -> `build:score-distribution` ->
   `build:compact` -> pinned `build:daily-seed-salt-map` -> `build:compact`) —
   PASS. Daily parameters: start `2026-07-10`, 45 days, N=128, maximum eight
@@ -133,6 +138,30 @@ mechanic, not a calibration claim.
   responsive-shell audits (218 metrics, zero failures).
 - `pnpm build` — PASS, 4/4 tasks; Next generated 40 pages. Existing webpack
   circular-chunk warnings remain warnings, not failures.
+
+The broad root/golden/heavy evidence above was executed on the first candidate
+before the schema-only review fix. The fix-forward head re-ran focused coverage,
+the complete core suite, core typecheck, core lint, data integration goldens,
+and diff checks. Because the fix changes only boundary validation plus tests and
+documentation, it does not alter simulation, RNG, generated artifacts, or
+locked RunResult bytes; fresh reviewers must nevertheless treat all approval
+verdicts on the earlier SHA as void.
+
+## Fresh-review defect and resolution
+
+The first independent review correctly failed candidate
+`f08b1e406a4537685380accac705f92594ab60f8`. Its canonical-forfeit check locked
+the 0-3 score, null extra-time/shootout fields, zero lineup minutes, and
+availability-only events, but omitted the engine's actual trigger:
+`isBelowFieldableFloor(activeStarterCount)`. The accompanying acceptance test
+therefore constructed and accepted an impossible 11-user-starter forfeit.
+
+Fix-forward adds the missing trust-boundary invariant directly from the shared
+`INJURY.FIELDABLE_FLOOR` calibration constant. A false tactical application
+flag now requires fewer than that many started user lineup entries and rejects
+any opponent lineup entries. Separate regressions prove the former 11-starter
+spoof rejects and the exact `FIELDABLE_FLOOR - 1` boundary accepts. No engine
+output code changed, so core and real-run golden fixtures remain byte-stable.
 
 ## Per-unit artifact closure
 
