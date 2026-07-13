@@ -353,6 +353,64 @@ export const MatchResultSchema = z
         (event): event is AvailabilityEvent =>
           event.type === "availability" && event.side === "user",
       );
+      for (let index = 0; index < m.team_facts.unavailable.length; index++) {
+        const unavailable = m.team_facts.unavailable[index]!;
+        const corresponding = availabilityEvents.filter(
+          (event) => event.player_id === unavailable.player_id,
+        );
+        if (corresponding.length !== 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "unavailable fact must have exactly one corresponding availability event",
+            path: ["team_facts", "unavailable", index],
+          });
+          continue;
+        }
+        const event = corresponding[0]!;
+        if (
+          (event.card_id as string) !== (unavailable.card_id as string) ||
+          event.slot_id !== unavailable.slot_id ||
+          event.position !== unavailable.position ||
+          event.reason !== unavailable.reason ||
+          event.duration_matches !== unavailable.duration_matches
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "unavailable fact contradicts its availability event",
+            path: ["team_facts", "unavailable", index],
+          });
+        }
+      }
+      for (const event of availabilityEvents) {
+        const corresponding = m.team_facts.unavailable.filter(
+          (unavailable) => unavailable.player_id === event.player_id,
+        );
+        if (corresponding.length !== 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "availability event must have exactly one corresponding unavailable fact",
+            path: ["events", m.events.indexOf(event)],
+          });
+        }
+      }
+
+      const actualShortHanded = m.team_facts.short_handed_slot_ids.slice().sort();
+      const eventShortHanded = availabilityEvents
+        .filter((event) => event.short_handed)
+        .map((event) => event.slot_id)
+        .sort();
+      if (
+        new Set(actualShortHanded).size !== actualShortHanded.length ||
+        actualShortHanded.length !== eventShortHanded.length ||
+        actualShortHanded.some((slotId, index) => slotId !== eventShortHanded[index])
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "short_handed_slot_ids must equal the short-handed availability event slots",
+          path: ["team_facts", "short_handed_slot_ids"],
+        });
+      }
+
       for (let index = 0; index < m.team_facts.bench_activations.length; index++) {
         const activation = m.team_facts.bench_activations[index]!;
         const corresponding = availabilityEvents.filter(

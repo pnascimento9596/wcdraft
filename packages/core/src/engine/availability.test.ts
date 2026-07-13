@@ -419,6 +419,8 @@ describe("S1 deterministic availability lifecycle and persisted facts", () => {
       { player_id: activation.in_player_id },
       { slot_id: "4-3-3.RB" },
       { position: event.position === "DF" ? "MF" : "DF" },
+      { reason: event.reason === "knock" ? "suspension" : "knock" },
+      { duration_matches: event.duration_matches === 1 ? 2 : 1 },
       { replacement_card_id: activation.out_card_id },
       { replacement_player_id: activation.out_player_id },
       { short_handed: true },
@@ -438,6 +440,36 @@ describe("S1 deterministic availability lifecycle and persisted facts", () => {
       team_facts: { ...match.team_facts!, bench_activations: [] },
     };
     expect(MatchResultSchema.safeParse(missingActivation).success).toBe(false);
+
+    const spoofedShortHanded = {
+      ...match,
+      team_facts: {
+        ...match.team_facts!,
+        bench_activations: match.team_facts!.bench_activations.filter(
+          (fact) => fact.out_player_id !== activation.out_player_id,
+        ),
+      },
+      events: match.events.map((item, index) =>
+        index === eventIndex
+          ? {
+              ...item,
+              replacement_card_id: null,
+              replacement_player_id: null,
+              short_handed: true,
+            }
+          : item,
+      ),
+    };
+    expect(MatchResultSchema.safeParse(spoofedShortHanded).success).toBe(false);
+
+    const falseShortHandedSlot = {
+      ...match,
+      team_facts: {
+        ...match.team_facts!,
+        short_handed_slot_ids: [event.slot_id],
+      },
+    };
+    expect(MatchResultSchema.safeParse(falseShortHandedSlot).success).toBe(false);
   });
 
   it("caps the fixed eight-match draw sequence at three minor events", () => {

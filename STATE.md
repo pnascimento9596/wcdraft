@@ -16,8 +16,10 @@ strength and NATION-only Synergy over the active formation slots and applies an
 explicit penalty only where no optimal assignment can fill a slot. Mechanical
 availability events and persisted base/active/activation/short-handed facts
 replace the retired post-hoc flavor substitutions. The persisted boundary
-enforces exact signed activation arithmetic and bidirectional activation/event
-identity agreement; legacy MatchResults may still omit the whole facts object.
+enforces exact signed activation arithmetic; bidirectional unavailable/event
+identity, reason, and duration agreement; activation/event replacement
+agreement; and exact short-handed slot/event-set equality. Legacy MatchResults
+may still omit the whole facts object.
 
 Local fix-forward evidence: core 408/408; focused availability+sim 70/70; core
 goldens 69+42; forced data golden 59/59; data integration 22/22; leaderboard

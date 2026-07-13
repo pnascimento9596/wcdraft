@@ -45,8 +45,9 @@ and integration-branch merge remain orchestrator-owned gates.
   still reach honest version-skew handling. Every new tournament simulation
   emits the facts.
 - Enforced persisted activation arithmetic exactly at that boundary and
-  bidirectionally reconciled each activation with its user availability event,
-  including outgoing/incoming identity, slot/line, and short-handed state.
+  bidirectionally reconciled unavailable and activation facts with user
+  availability events, including reason/duration, outgoing/incoming identity,
+  slot/line, and the exact short-handed slot set.
 
 ## Fix-forward review defects resolved
 
@@ -66,6 +67,12 @@ and integration-branch merge remain orchestrator-owned gates.
    replacement wording in `STATE.md`. The measured-truth entry now records the
    complete assignment, persisted-boundary checks, 70/70 focused and 408/408
    core counts, five-step Daily closure, and final Daily hash.
+5. The next fresh review caught a persisted-boundary spoof: deleting an
+   activation and flipping its event to short-handed could parse while
+   `short_handed_slot_ids` contradicted it, and event reason/duration could
+   contradict `unavailable`. The schema now reconciles unavailable facts and
+   events bidirectionally and requires the short-handed slot list to equal the
+   short-handed event-slot set exactly; targeted spoof mutations reject.
 
 ## Reconciliation — Architect-delegated decisions
 
