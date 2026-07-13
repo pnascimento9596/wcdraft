@@ -4,6 +4,11 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+iOS M1a Unit P4 (simulator smoke + capability matrix):
+2026-07-12 · evidence on `ws-mobile/m1a-p3-icons` / report path
+`docs/reports/m1a-ios-native-scaffold/`. Debug sim build SUCCEEDED;
+screenshots on iPhone 17 + SE; M1b handoff written. Free tooling only.
+
 iOS M1a Unit P3 (app icon + splash pipeline):
 2026-07-12 · YELLOW branch `ws-mobile/m1a-p3-icons`. Deterministic generator
 `apps/mobile/scripts/generate-ios-assets.mjs` builds opaque 1024 app icon +
