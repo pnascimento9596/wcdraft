@@ -87,8 +87,11 @@ jobs:
             ci_config:
               - '.github/**'
               - 'turbo.json'
+            # apps/mobile is free-tier Capacitor only; it must NOT appear under
+            # core_data or realism_inputs (those stay engine-scoped).
             js:
-              - 'apps/**'
+              - 'apps/web/**'
+              - 'apps/mobile/**'
               - 'packages/**'
               - 'scripts/**'
               - 'package.json'

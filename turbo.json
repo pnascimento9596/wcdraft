@@ -181,6 +181,16 @@
     "db:branch:delete": {
       "cache": false,
       "env": ["NEON_API_KEY", "NEON_PROJECT_ID", "NEON_EPHEMERAL_BRANCH_ID"]
+    },
+    "mobile:sync": {
+      "cache": false,
+      "dependsOn": [],
+      "outputs": ["ios/**", "www/**"]
+    },
+    "mobile:build": {
+      "dependsOn": [],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": ["www/**"]
     }
   }
 }

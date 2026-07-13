@@ -78,3 +78,9 @@ prompt-exports/
 # brand/marketing icons (apps/web/public/**) and review captures under
 # docs/screenshots/** stay tracked. Keep durable shots under docs/, not here.
 /*.png
+
+# Capacitor iOS local pods / user state (project source stays tracked).
+apps/mobile/ios/App/Pods/
+apps/mobile/ios/DerivedData/
+apps/mobile/ios/**/xcuserdata/
+apps/mobile/www/

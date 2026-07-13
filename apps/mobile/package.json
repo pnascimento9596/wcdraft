@@ -1,0 +1,28 @@
+{
+  "name": "@wcdraft/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Capacitor iOS native wrapper for the wcdraft PWA (M1a scaffold).",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "echo 'no lint targets in @wcdraft/mobile yet'",
+    "test": "node --test scripts/config.test.mjs",
+    "build": "node scripts/prepare-www.mjs",
+    "sync": "node scripts/prepare-www.mjs && npx cap sync ios",
+    "open": "npx cap open ios",
+    "cap:sync": "npx cap sync ios",
+    "cap:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/app": "^8.0.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/ios": "^8.4.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.1",
+    "typescript": "~6.0.3"
+  }
+}
