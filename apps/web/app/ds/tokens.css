@@ -21,7 +21,8 @@
   --ink-100: #edecf2; /* hi */
   --ink-200: #c5c3d4;
   --ink-300: #9695a8; /* mid */
-  --ink-400: #828195; /* low, AA on dark canvas/card */
+  /* low body ink — AA ≥4.5 on canvas (--bg-850), cards (--bg-800), and raised (--bg-750) */
+  --ink-400: #8a899c;
   --ink-500: #424153; /* faint / disabled */
 
   /* ---- Duotone v2 — CYAN (primary brand + action + structure) + GOLD (precious: the draft
