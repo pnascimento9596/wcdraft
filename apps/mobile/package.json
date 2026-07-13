@@ -7,12 +7,13 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "echo 'no lint targets in @wcdraft/mobile yet'",
-    "test": "node --test scripts/config.test.mjs",
+    "test": "node --test scripts/config.test.mjs scripts/assets.test.mjs",
     "build": "node scripts/prepare-www.mjs",
-    "sync": "node scripts/prepare-www.mjs && npx cap sync ios",
+    "sync": "node scripts/prepare-www.mjs && node scripts/generate-ios-assets.mjs && npx cap sync ios",
     "open": "npx cap open ios",
     "cap:sync": "npx cap sync ios",
-    "cap:open": "npx cap open ios"
+    "cap:open": "npx cap open ios",
+    "generate:assets": "node scripts/generate-ios-assets.mjs"
   },
   "dependencies": {
     "@capacitor/app": "^8.0.1",
