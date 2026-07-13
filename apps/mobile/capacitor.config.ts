@@ -28,7 +28,9 @@ const config: CapacitorConfig = {
     allowNavigation: ["wcdraft.com", "*.wcdraft.com", "www.wcdraft.com"],
   },
   ios: {
-    contentInset: "automatic",
+    // CSS owns safe-area insets (viewport-fit=cover); avoid WKWebView
+    // double-padding with automatic contentInset.
+    contentInset: "never",
     preferredContentMode: "mobile",
     scheme: "Wcdraft",
     // Portrait matches PWA manifest orientation.

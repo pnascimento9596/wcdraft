@@ -31,7 +31,10 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: SITE_NAME,
-    statusBarStyle: "default",
+    // black-translucent + viewport-fit=cover lets the emerald/dark shell
+    // paint edge-to-edge under the status bar; safe-area insets in CSS keep
+    // chrome clear of notch / Dynamic Island / home indicator (M1a P2).
+    statusBarStyle: "black-translucent",
   },
   openGraph: {
     title: SITE_TITLE,
@@ -72,6 +75,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  // Required for env(safe-area-inset-*) to be non-zero on iOS (PWA + Capacitor).
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f1ecdf" },
     { media: "(prefers-color-scheme: dark)", color: "#080809" },
