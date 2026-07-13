@@ -77,11 +77,20 @@ interface BuildParams {
 /** Build the user squad (11 starters from the 4-3-3 template + 5 bench). */
 function buildUserSquad(
   channel: number,
-): { squad: SquadSlot[]; ratings: Record<string, Rating>; nationByCardId: Record<string, string> } {
+): {
+  squad: SquadSlot[];
+  ratings: Record<string, Rating>;
+  nationByCardId: Record<string, string>;
+  eligiblePositionsByCardId: Record<string, readonly import("../../src/index.js").Position[]>;
+} {
   const template = FORMATION_TEMPLATES[FORMATION_ID]!;
   const squad: SquadSlot[] = [];
   const ratings: Record<string, Rating> = {};
   const nationByCardId: Record<string, string> = {};
+  const eligiblePositionsByCardId: Record<
+    string,
+    readonly import("../../src/index.js").Position[]
+  > = {};
   let p = 0;
 
   const place = (slot_id: string, slot_position: import("../../src/index.js").SlotPosition, is_starter: boolean): void => {
@@ -103,6 +112,7 @@ function buildUserSquad(
     ratings[card_id as string] = rating(card_id, player_id, USER_TID, channel);
     // All user starters share one nation so Synergy clusters/links fire.
     nationByCardId[card_id as string] = "userland";
+    eligiblePositionsByCardId[card_id as string] = eligible;
   };
 
   for (const s of template.slots) place(s.slot_id, s.slot_position, true);
@@ -113,7 +123,7 @@ function buildUserSquad(
   place("bench.3", "ST", false);
   place("bench.4", "RB", false);
 
-  return { squad, ratings, nationByCardId };
+  return { squad, ratings, nationByCardId, eligiblePositionsByCardId };
 }
 
 function teamStrength(v: number): TeamStrength {
@@ -143,7 +153,9 @@ function buildOpponent(index: number, strength: number): Team2026 {
 }
 
 function buildInputs(name: string, params: BuildParams): ScenarioInputs {
-  const { squad, ratings, nationByCardId } = buildUserSquad(params.userChannel);
+  const { squad, ratings, nationByCardId, eligiblePositionsByCardId } = buildUserSquad(
+    params.userChannel,
+  );
 
   const opponents: Record<string, Team2026> = {};
   const oppList: Team2026[] = params.oppStrengths.map((s, i) => buildOpponent(i, s));
@@ -213,6 +225,7 @@ function buildInputs(name: string, params: BuildParams): ScenarioInputs {
 
   const world: SimWorld = {
     ratings,
+    eligiblePositionsByCardId,
     opponents,
     managerTournaments,
     managerRatings,

@@ -35,6 +35,7 @@ import {
   runTournamentFull,
   type Bracket2026,
   type ManagerTournament,
+  type Position,
   type Rating,
   type RunScenario,
   type SimWorld,
@@ -102,6 +103,7 @@ export function buildSimWorldInputs(
   // only: the basis decision changes the sim inputs.
   const useCurrent = draft.rating_basis === "current";
   const ratings: Record<string, Rating> = {};
+  const eligiblePositionsByCardId: Record<string, readonly Position[]> = {};
   for (const slot of draft.squad) {
     if (slot.card_id === null) continue;
     const cardId = slot.card_id as string;
@@ -110,6 +112,15 @@ export function buildSimWorldInputs(
       throw new MissingRecordError("rating", cardId, `for drafted squad slot ${slot.slot_id}`);
     }
     ratings[cardId] = useCurrent ? r.basis_ratings.current : r;
+    const card = gameData.indexes.playerByCardId.get(cardId);
+    if (!card || card.eligible_positions.length === 0) {
+      throw new MissingRecordError(
+        "player_card",
+        cardId,
+        `eligibility for drafted squad slot ${slot.slot_id}`,
+      );
+    }
+    eligiblePositionsByCardId[cardId] = card.eligible_positions;
   }
 
   // Opponents = every Team2026 in the scenario bundle (sim only walks the
@@ -149,6 +160,7 @@ export function buildSimWorldInputs(
 
   const world: SimWorld = {
     ratings,
+    eligiblePositionsByCardId,
     opponents,
     managerTournaments,
     nationByCardId: gameData.nationByCardId,
@@ -189,14 +201,18 @@ function narrowWorldForWorker(world: SimWorld, record: RunRecordV1): SimWorld {
   }
 
   const nationByCardId: Record<string, string> = {};
+  const eligiblePositionsByCardId: Record<string, readonly Position[]> = {};
   for (const cardId of neededNationCardIds) {
     const nation = world.nationByCardId?.[cardId];
     if (nation !== undefined) nationByCardId[cardId] = nation;
+    const eligible = world.eligiblePositionsByCardId?.[cardId];
+    if (eligible !== undefined) eligiblePositionsByCardId[cardId] = eligible;
   }
 
   return {
     ...world,
     nationByCardId,
+    eligiblePositionsByCardId,
   };
 }
 

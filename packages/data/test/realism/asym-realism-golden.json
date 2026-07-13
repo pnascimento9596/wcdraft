@@ -1,6 +1,6 @@
 {
-  "$schema_doc": "manager-attrition asymmetric realism gate -- the gate sims the default/Career basis after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Rating anchors remain merit-v4.6 because no additional high-confidence owner rows resolved in this season lane. Runtime engine_version is engine-2026.06.30-manager-attrition.",
-  "engine_anchor": "manager-link band wiring plus lower persistent user-path injury attrition plus U5 choose-from-3 soft-floor spread",
+  "$schema_doc": "PROVISIONAL Season 2 S1 mechanics snapshot. Exact N=2000x3 lock after mechanical pre-match availability and active-XI bench replacement landed, with zero constant tuning and unchanged semantic band widths. S3 must replace this snapshot with the target-calibrated final realism lock.",
+  "engine_anchor": "PROVISIONAL squad-depth S1 pre-match availability plus active-XI bench replacement",
   "engine_version": "engine-2026.06.30-manager-attrition",
   "ensemble": {
     "seed_prefix": "wcdraft:realism:e3a:v1",
@@ -10,28 +10,28 @@
   "policies": {
     "strategicAutoDraft": {
       "_doc": "PASS-gate measurement target. Slot-fit best-available: for each spin, scan rolled_card_ids and pick max(positionCompatibility(eligible, slot_position) * rating[channel_for_slot]); tiebreak by overall DESC then card_id ASC. Manager-first flow + first-vacant slot order unchanged from canonical autoDraft.",
-      "qualifying": 1329,
-      "matches": 8846,
+      "qualifying": 1336,
+      "matches": 8866,
       "groupMatches": 6000,
-      "knockoutMatches": 2846,
-      "goalsTotal": 23716,
-      "draws": 1501,
-      "margin4plus": 368,
-      "koEt": 910,
-      "koShootout": 564,
+      "knockoutMatches": 2866,
+      "goalsTotal": 23779,
+      "draws": 1513,
+      "margin4plus": 375,
+      "koEt": 928,
+      "koShootout": 574,
       "observed": {
-        "goals_per_game": 2.6809857562740222,
-        "draw_pct": 0.25016666666666665,
-        "margin4plus_pct": 0.04160072349084332,
-        "ko_et_pct": 0.31974701335207306,
-        "shootout_pct": 0.19817287420941673
+        "goals_per_game": 2.682043762688924,
+        "draw_pct": 0.25216666666666665,
+        "margin4plus_pct": 0.0422964132641552,
+        "ko_et_pct": 0.32379623168178645,
+        "shootout_pct": 0.2002791346824843
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.03481799683472756,
-        "draw_pct": 0.011182823303488125,
-        "margin4plus_pct": 0.004246002138538209,
-        "ko_et_pct": 0.01748441172227628,
-        "shootout_pct": 0.014944280965397004
+        "goals_per_game": 0.03385189541768936,
+        "draw_pct": 0.011212452568131229,
+        "margin4plus_pct": 0.004274973820752855,
+        "ko_et_pct": 0.017481012809195486,
+        "shootout_pct": 0.014951300470353994
       },
       "telemetry": {
         "channelMean": {
@@ -47,28 +47,28 @@
     },
     "autoDraft": {
       "_doc": "Canonical first-card autoDraft — TELEMETRY ONLY. Production engine fixture (byte-stable for goldens); a measurement artifact when used as the realism population (see docs/investigations/engine-v2-asymmetric-realism-2026-06-07.md).",
-      "qualifying": 326,
-      "matches": 6454,
+      "qualifying": 333,
+      "matches": 6472,
       "groupMatches": 6000,
-      "knockoutMatches": 454,
-      "goalsTotal": 17994,
-      "draws": 1150,
-      "margin4plus": 780,
-      "koEt": 117,
-      "koShootout": 65,
+      "knockoutMatches": 472,
+      "goalsTotal": 18009,
+      "draws": 1152,
+      "margin4plus": 771,
+      "koEt": 125,
+      "koShootout": 73,
       "observed": {
-        "goals_per_game": 2.7880384257824606,
-        "draw_pct": 0.19166666666666668,
-        "margin4plus_pct": 0.12085528354508832,
-        "ko_et_pct": 0.2577092511013216,
-        "shootout_pct": 0.14317180616740088
+        "goals_per_game": 2.782601977750309,
+        "draw_pct": 0.192,
+        "margin4plus_pct": 0.11912855377008652,
+        "ko_et_pct": 0.2648305084745763,
+        "shootout_pct": 0.15466101694915255
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.04156855162891595,
-        "draw_pct": 0.010163023026493497,
-        "margin4plus_pct": 0.00811481309084975,
-        "ko_et_pct": 0.04105386952074781,
-        "shootout_pct": 0.032875903375962086
+        "goals_per_game": 0.03962119770763362,
+        "draw_pct": 0.010169759092525252,
+        "margin4plus_pct": 0.00805331974200426,
+        "ko_et_pct": 0.04061970281038518,
+        "shootout_pct": 0.0332862503788442
       },
       "telemetry": {
         "channelMean": {
@@ -84,28 +84,28 @@
     },
     "greedyOverallAutoDraft": {
       "_doc": "Position-blind max-overall NEGATIVE CONTROL. The gate ASSERTS this policy lands OUTSIDE every shape band, so nobody can 'fix' realism by maxing OVR — competent must mean slot-fit-aware, not max-overall.",
-      "qualifying": 500,
-      "matches": 6780,
+    "qualifying": 503,
+    "matches": 6781,
       "groupMatches": 6000,
-      "knockoutMatches": 780,
-      "goalsTotal": 20518,
-      "draws": 1153,
-      "margin4plus": 724,
-      "koEt": 207,
+    "knockoutMatches": 781,
+      "goalsTotal": 20533,
+      "draws": 1159,
+      "margin4plus": 718,
+      "koEt": 203,
       "koShootout": 118,
       "observed": {
-        "goals_per_game": 3.0262536873156343,
-        "draw_pct": 0.19216666666666668,
-        "margin4plus_pct": 0.10678466076696165,
-        "ko_et_pct": 0.2653846153846154,
-        "shootout_pct": 0.15128205128205127
+        "goals_per_game": 3.0280194661554343,
+        "draw_pct": 0.19316666666666665,
+        "margin4plus_pct": 0.1058840878926412,
+        "ko_et_pct": 0.2599231754161332,
+        "shootout_pct": 0.15108834827144688
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.04225399869238353,
-        "draw_pct": 0.010173122722444958,
-        "margin4plus_pct": 0.007501492358578337,
-        "ko_et_pct": 0.03161917799267053,
-        "shootout_pct": 0.025660084961182574
+        "goals_per_game": 0.04226320757746087,
+        "draw_pct": 0.010193243041530192,
+        "margin4plus_pct": 0.007473006935904835,
+        "ko_et_pct": 0.0313881256895556,
+        "shootout_pct": 0.025630153824861415
       },
       "telemetry": {
         "channelMean": {
@@ -121,21 +121,25 @@
     }
   },
   "shape_bands": {
-    "_doc": "manager-attrition relock: shape bands centered on strategicAutoDraft after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).",
+    "_doc": "PROVISIONAL S1 updates exact mechanics telemetry while preserving the pre-S1 manager-attrition semantic centers and widths explicitly below. Current S1 observations pass those unchanged bands. S3 owns the deliberate calibrated final centers and locks.",
     "draw_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.25016666666666665,
       "half_width": 0.015
     },
     "margin4plus_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.04160072349084332,
       "half_width": 0.015
     },
     "ko_et_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.31974701335207306,
       "half_width": 0.01748441172227628
     },
     "shootout_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.19817287420941673,
       "half_width": 0.015
     }
   },
@@ -147,8 +151,8 @@
     "_doc": "StrategicAutoDraft score distribution measured over the same locked N and seed_prefix as the asymmetric realism gate. Median and p95 use nearest-rank quantiles over sorted run.score values.",
     "policy": "strategicAutoDraft",
     "runs": 2000,
-    "qualifyingRuns": 1329,
-    "mean": 14.4785,
+    "qualifyingRuns": 1336,
+    "mean": 14.641,
     "median": 9,
     "p95": 62,
     "min": -24,
