@@ -323,10 +323,8 @@ export const INCIDENT = Object.freeze({
 
 // ─── INJURIES / SUBSTITUTIONS / FORFEIT ───────────────────────────────────────
 export const INJURY = Object.freeze({
-  /** Probability of a FIRST injury event in a match. */
-  PRIMARY_INJURY_PROB: 0.5,
-  /** Probability of a SECOND injury event in the same match (0..2 injuries/match). */
-  SECOND_INJURY_PROB: 0.2,
+  /** S2/S3 calibration seam: probability of one pre-match availability event. */
+  AVAILABILITY_EVENT_PROB: 0.09,
   /**
    * Probability a given injury ends the player's tournament (persists across
    * the run). Lowered for the engine-season attrition pass because persistent
@@ -334,8 +332,14 @@ export const INJURY = Object.freeze({
    * regenerated per fixture rather than tracked as a full tournament roster.
    */
   TOURNAMENT_ENDING_PROB: 0.12,
-  /** Probability a tactical substitution is made in a match (in addition to injury subs). */
-  TACTICAL_SUB_PROB: 0.7,
+  /** Conditional probability that a minor event is a knock rather than a suspension. */
+  MINOR_KNOCK_PROB: 0.65,
+  /** Conditional probability that a minor event lasts two matches instead of one. */
+  MINOR_TWO_MATCH_PROB: 0.35,
+  /** Hard per-run cap for minor availability events. */
+  MAX_MINOR_EVENTS_PER_RUN: 3,
+  /** Extra all-channel penalty per unfilled formation slot. S3 owns the final value. */
+  SHORT_HANDED_STRENGTH_MULTIPLIER: 0.92,
   /**
    * Fieldable floor: if fewer than this many user players remain available for
    * a match (after persistent tournament-ending injuries), the user FORFEITS

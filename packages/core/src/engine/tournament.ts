@@ -29,7 +29,13 @@ import type { ManagerRating, ManagerTournament } from "../types/manager.js";
 import type { TeamStrength } from "../types/rating.js";
 import type { CardId } from "../types/identity.js";
 import type { MatchPhase, MatchRound, KnockoutRound } from "../types/primitives.js";
-import type { MatchLineupEntry, MatchResult, SimWorld } from "../types/sim.js";
+import type {
+  AvailabilityEvent,
+  MatchLineupEntry,
+  MatchResult,
+  MatchTeamFacts,
+  SimWorld,
+} from "../types/sim.js";
 import type { RoundResult, RunResult } from "../types/run.js";
 import type { RunScenario, Team2026 } from "../types/tournament.js";
 import type { GroupStageResult } from "../types/group-stage.js";
@@ -39,19 +45,18 @@ import { FORMATION_TEMPLATES, slotPositionLine } from "../types/formation.js";
 import { createRng, deriveSubseed } from "../rng.js";
 import { computeSynergy } from "./synergy.js";
 import { aggregateUserXiStrength } from "./team-strength.js";
-import {
-  simulateMatchCore,
-  membersFromTeam2026,
-  stripInternal,
-  tournamentEndingInjuries,
-  type SimMember,
-} from "./match.js";
+import { simulateMatchCore, membersFromTeam2026, stripInternal, type SimMember } from "./match.js";
 import { buildNarrative } from "../narrative/select.js";
 import { deriveUserPlayerRunStats } from "./stats.js";
 import { computeScore, resolveTopScorer } from "./scoring.js";
 import { DEFAULT_SCORING_CONFIG, INJURY } from "./calibration.js";
 import { buildGroupStageResult, simulateOtherGroupMatches } from "./group-stage.js";
 import { selectKnockoutLadderAfterGroup, type KnockoutLadderMeta } from "./opponent-selection.js";
+import {
+  createAvailabilityState,
+  drawAvailabilityForMatch,
+  resolveActiveTeam,
+} from "./availability.js";
 
 const GROUP_ROUNDS: ReadonlyArray<"G1" | "G2" | "G3"> = ["G1", "G2", "G3"];
 
@@ -69,9 +74,9 @@ function strengthScalar(s: TeamStrength): number {
 void strengthScalar;
 
 /** Build the user SimMembers (starters + bench) from the draft squad + ratings. */
-function userMembersFromDraft(draft: DraftState, world: SimWorld): SimMember[] {
+function userMembersFromSquad(squad: DraftState["squad"], world: SimWorld): SimMember[] {
   const members: SimMember[] = [];
-  for (const slot of draft.squad) {
+  for (const slot of squad) {
     if (slot.card_id === null || slot.player_id === null || slot.tournament_id === null) continue;
     const rating = world.ratings[slot.card_id as string];
     if (!rating) {
@@ -123,6 +128,8 @@ function makeForfeitMatch(
   phase: MatchPhase,
   opponentTeamId: string,
   availableUser: readonly SimMember[],
+  teamFacts: MatchTeamFacts,
+  availabilityEvents: readonly AvailabilityEvent[],
 ): MatchResult {
   const lineup: MatchLineupEntry[] = availableUser.map((m) => ({
     side: "user",
@@ -141,6 +148,7 @@ function makeForfeitMatch(
     phase,
     opponent_team_id: opponentTeamId,
     pre_match_win_probability: 0,
+    team_facts: teamFacts,
     user_goals: 0,
     opp_goals: INJURY.FORFEIT_OPP_GOALS,
     user_goals_et: null,
@@ -150,8 +158,33 @@ function makeForfeitMatch(
     counts_as_run_win: false,
     advanced: false,
     lineup,
-    events: [],
+    events: [...availabilityEvents],
   };
+}
+
+function buildAvailabilityEvents(matchId: string, facts: MatchTeamFacts): AvailabilityEvent[] {
+  const activationByOut = new Map(
+    facts.bench_activations.map((fact) => [fact.out_player_id, fact]),
+  );
+  return facts.unavailable.map((fact, index) => {
+    const activation = activationByOut.get(fact.player_id);
+    return {
+      event_id: `${matchId}.availability.${index}`,
+      minute: 0,
+      period: "1H",
+      side: "user",
+      type: "availability",
+      card_id: fact.card_id,
+      player_id: fact.player_id,
+      slot_id: fact.slot_id,
+      position: fact.position,
+      reason: fact.reason,
+      duration_matches: fact.duration_matches,
+      replacement_card_id: activation?.in_card_id ?? null,
+      replacement_player_id: activation?.in_player_id ?? null,
+      short_handed: !activation,
+    };
+  });
 }
 
 /** Result of the engine-internal `runTournamentFull` orchestrator. */
@@ -200,10 +233,7 @@ export function runTournamentFull(
     : null;
   const synergy = computeSynergy(draft.squad, formation, managerTournament, world.nationByCardId);
   const userStrength = aggregateUserXiStrength(starters, synergy, managerRating);
-
-  // The core consumes draft-derived members directly (real slot positions),
-  // never the distilled UserXiSimView — runTournament has the richer source.
-  const baseUserMembers = userMembersFromDraft(draft, world);
+  const availabilityState = createAvailabilityState();
 
   // ── Resolve group opponents. ──
   const groupOpponents: Team2026[] = scenario.group_opponent_team_ids.map((tid) => {
@@ -216,7 +246,6 @@ export function runTournamentFull(
   }
 
   const matches: MatchResult[] = [];
-  const injuredOut = new Set<string>();
 
   // ── Group stage: play G1/G2/G3. ──
   // The match-index space for `match:N` substream scopes spans the entire user
@@ -228,12 +257,36 @@ export function runTournamentFull(
     const opponent = groupOpponents[i]!;
     const round = GROUP_ROUNDS[i]!;
     const matchId = `${draft.run_id}.m${idx}`;
-    const available = baseUserMembers.filter((m) => !injuredOut.has(m.player_id));
+    drawAvailabilityForMatch(draft, seed, idx, availabilityState);
+    const active = resolveActiveTeam({
+      draft,
+      formation,
+      world,
+      state: availabilityState,
+      managerTournament,
+      managerRating,
+      baseSynergy: synergy,
+      baseStrength: userStrength,
+    });
+    const available = userMembersFromSquad(active.activeSquad, world);
+    const availabilityEvents = buildAvailabilityEvents(matchId, active.facts);
+    const activeStarterCount = active.activeSquad.filter((slot) => slot.is_starter).length;
 
-    if (isBelowFieldableFloor(available.length)) {
+    if (isBelowFieldableFloor(activeStarterCount)) {
       // Synthesize a forfeit for the remaining group match(es) so the table
       // always has exactly three user fixtures. Injuries do NOT regenerate.
-      matches.push(makeForfeitMatch(matchId, idx, round, "group", opponent.team_id, available));
+      matches.push(
+        makeForfeitMatch(
+          matchId,
+          idx,
+          round,
+          "group",
+          opponent.team_id,
+          available,
+          active.facts,
+          availabilityEvents,
+        ),
+      );
       idx++;
       continue;
     }
@@ -248,12 +301,13 @@ export function runTournamentFull(
       opponentTeamId: opponent.team_id,
       userMembers: available,
       oppMembers: membersFromTeam2026(opponent),
-      userStrength,
+      userStrength: active.facts.active_strength,
       oppStrength: opponent.aggregate_rating,
+      teamFacts: active.facts,
+      preMatchEvents: availabilityEvents,
       structRng,
       eventRng,
     });
-    for (const pid of tournamentEndingInjuries(core)) injuredOut.add(pid);
     matches.push(stripInternal(core));
     idx++;
   }
@@ -299,10 +353,34 @@ export function runTournamentFull(
     const opponent = ladderResult.ladder[k]!;
     const round = knockoutRounds[k]!;
     const matchId = `${draft.run_id}.m${idx}`;
-    const available = baseUserMembers.filter((m) => !injuredOut.has(m.player_id));
+    drawAvailabilityForMatch(draft, seed, idx, availabilityState);
+    const active = resolveActiveTeam({
+      draft,
+      formation,
+      world,
+      state: availabilityState,
+      managerTournament,
+      managerRating,
+      baseSynergy: synergy,
+      baseStrength: userStrength,
+    });
+    const available = userMembersFromSquad(active.activeSquad, world);
+    const availabilityEvents = buildAvailabilityEvents(matchId, active.facts);
+    const activeStarterCount = active.activeSquad.filter((slot) => slot.is_starter).length;
 
-    if (isBelowFieldableFloor(available.length)) {
-      matches.push(makeForfeitMatch(matchId, idx, round, "knockout", opponent.team_id, available));
+    if (isBelowFieldableFloor(activeStarterCount)) {
+      matches.push(
+        makeForfeitMatch(
+          matchId,
+          idx,
+          round,
+          "knockout",
+          opponent.team_id,
+          available,
+          active.facts,
+          availabilityEvents,
+        ),
+      );
       break;
     }
 
@@ -316,12 +394,13 @@ export function runTournamentFull(
       opponentTeamId: opponent.team_id,
       userMembers: available,
       oppMembers: membersFromTeam2026(opponent),
-      userStrength,
+      userStrength: active.facts.active_strength,
       oppStrength: opponent.aggregate_rating,
+      teamFacts: active.facts,
+      preMatchEvents: availabilityEvents,
       structRng,
       eventRng,
     });
-    for (const pid of tournamentEndingInjuries(core)) injuredOut.add(pid);
     matches.push(stripInternal(core));
     idx++;
 
