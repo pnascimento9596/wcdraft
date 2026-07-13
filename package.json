@@ -17,7 +17,10 @@
     "test": "turbo run test",
     "test:golden:integration": "turbo run test:golden:integration",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "mobile:sync": "pnpm --filter @wcdraft/mobile sync",
+    "mobile:build": "pnpm --filter @wcdraft/mobile build",
+    "mobile:open": "pnpm --filter @wcdraft/mobile open"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

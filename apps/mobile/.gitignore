@@ -1,0 +1,12 @@
+# Capacitor / Xcode local artifacts
+ios/App/Pods/
+ios/App/Podfile.lock
+ios/App/App/public/
+ios/DerivedData/
+ios/capacitor-cordova-ios-plugins/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+
+# Generated webDir placeholder (rebuilt by scripts/prepare-www.mjs)
+www/

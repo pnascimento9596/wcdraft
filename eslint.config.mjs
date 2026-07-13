@@ -25,6 +25,8 @@ export default tseslint.config(
       "**/coverage/**",
       "**/next-env.d.ts",
       "apps/web/public/sw-version.js",
+      "apps/mobile/ios/**",
+      "apps/mobile/www/**",
     ],
   },
   js.configs.recommended,

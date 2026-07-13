@@ -29,3 +29,7 @@ docs/validation/**/*.json
 # Python
 .venv
 __pycache__
+
+# Capacitor / Xcode native project — not Prettier targets.
+apps/mobile/ios/
+apps/mobile/www/

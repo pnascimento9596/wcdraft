@@ -4,6 +4,17 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+iOS M1a Unit P1 (Capacitor workspace):
+2026-07-12 · YELLOW branch `ws-mobile/m1a-p1-capacitor` off `origin/main`
+`0955b1f9424f0be1c8ce5d2001155048607eeb67`. Adds free OSS `@wcdraft/mobile`
+Capacitor 8 iOS shell under `apps/mobile` with hybrid load of
+`https://www.wcdraft.com` (Next SSR is not a static export — server routes
+required). Root scripts `mobile:sync` / `mobile:build` / `mobile:open`.
+CocoaPods not required (SPM via Capacitor 8). No engine/data/db/game-surface
+touches. Validation: package typecheck; node:test 3/3; `npx cap sync ios`
+succeeds; iOS Xcode project generated. Simulator runtime download is a free
+host prerequisite (see M1a report).
+
 Audit S1 E1 canonical minified runtime JSON:
 2026-07-12 · local RED implementation on branch
 `ws-f4/audit-s1-minified-runtime`, based on Wave C production HEAD
