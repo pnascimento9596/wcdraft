@@ -17,7 +17,6 @@ import {
   validateSquad,
   type CardId,
   type DraftMode,
-  type DraftState,
   type ManagerCardId,
   type Position,
   type SquadSlot,
@@ -42,7 +41,7 @@ import {
   reviewHref,
   type DailyDraftContext,
 } from "@/lib/game/navigation";
-import { saveRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
+import { updateRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import {
   compatLabel,
   compatTier,
@@ -501,20 +500,23 @@ function DraftBoard({
   // blocking honest notice and the user picks a different target.
   const [targetDeadEnd, setTargetDeadEnd] = useState<string | null>(null);
   const handleSelectTarget = useCallback(
-    (target: string) => {
+    async (target: string) => {
       if (committing) return;
       setCommitting(true);
       setTargetDeadEnd(null);
       setTransitionError(null);
       try {
-        const catalog = getCatalogForEra(gameData, draft.era_preset ?? "all_time");
-        const nextDraft = selectDraftTarget(catalog, draft, target);
-        const updated: RunRecordV1 = {
-          ...record,
-          updated_seq: record.updated_seq + 1,
-          draft: nextDraft,
-        };
-        const save = saveRunRecord(updated);
+        const save = await updateRunRecord(record.run_id, gameData.versions, record, (current) => {
+          const catalog = getCatalogForEra(gameData, current.draft.era_preset ?? "all_time");
+          return selectDraftTarget(catalog, current.draft, target);
+        });
+        if (save.status !== "updated" || !save.record) {
+          if (save.record) onRecordUpdate(save.record, save.warnings[0] ?? null);
+          setTransitionError(
+            save.warnings[0] ?? "This draft changed in another tab. Review it before continuing.",
+          );
+          return;
+        }
         const warning =
           save.persistence === "volatile" || save.warnings.length > 0
             ? save.warnings.join(" · ") ||
@@ -522,7 +524,7 @@ function DraftBoard({
             : null;
         setPhase("spin");
         setAnim("idle");
-        onRecordUpdate(updated, warning ?? persistenceWarning);
+        onRecordUpdate(save.record, warning ?? persistenceWarning);
       } catch (err) {
         if (err instanceof DraftTargetDeadEndError) {
           setTargetDeadEnd(err.message);
@@ -651,31 +653,31 @@ function DraftBoard({
     slotReveal !== null ? `${slotReveal.result.nationName} ${slotReveal.result.yearLabel}` : null;
 
   // Lock pick → call core engine → save record.
-  const handleLock = useCallback(() => {
+  const handleLock = useCallback(async () => {
     if (!sel || committing) return;
     setCommitting(true);
     setTransitionError(null);
     try {
-      let nextDraft: DraftState;
-      // DC-2: picks must run against the SAME era-bounded catalog the draft
-      // was created from — pending-spin rebuilds redraw from this pool.
-      const catalog = getCatalogForEra(gameData, draft.era_preset ?? "all_time");
-      if (sel.kind === "player") {
-        if (!selSlot) {
-          setCommitting(false);
-          setTransitionError("Pick a slot for this player.");
-          return;
-        }
-        nextDraft = pickPlayer(catalog, draft, sel.card.card_id as CardId, selSlot);
-      } else {
-        nextDraft = pickManager(catalog, draft, sel.card.manager_card_id as ManagerCardId);
+      if (sel.kind === "player" && !selSlot) {
+        setCommitting(false);
+        setTransitionError("Pick a slot for this player.");
+        return;
       }
-      const updated: RunRecordV1 = {
-        ...record,
-        updated_seq: record.updated_seq + 1,
-        draft: nextDraft,
-      };
-      const save = saveRunRecord(updated);
+      const save = await updateRunRecord(record.run_id, gameData.versions, record, (current) => {
+        // DC-2: picks must run against the SAME era-bounded catalog the draft
+        // was created from — pending-spin rebuilds redraw from this pool.
+        const catalog = getCatalogForEra(gameData, current.draft.era_preset ?? "all_time");
+        return sel.kind === "player"
+          ? pickPlayer(catalog, current.draft, sel.card.card_id as CardId, selSlot!)
+          : pickManager(catalog, current.draft, sel.card.manager_card_id as ManagerCardId);
+      });
+      if (save.status !== "updated" || !save.record) {
+        if (save.record) onRecordUpdate(save.record, save.warnings[0] ?? null);
+        setTransitionError(
+          save.warnings[0] ?? "This draft changed in another tab. Review it before continuing.",
+        );
+        return;
+      }
       const warning =
         save.persistence === "volatile" || save.warnings.length > 0
           ? save.warnings.join(" · ") ||
@@ -689,7 +691,7 @@ function DraftBoard({
       justLockedRef.current = true;
       setPhase("spin");
       setAnim("idle");
-      onRecordUpdate(updated, warning ?? persistenceWarning);
+      onRecordUpdate(save.record, warning ?? persistenceWarning);
     } catch (err) {
       const wrapped =
         err instanceof DraftTransitionError

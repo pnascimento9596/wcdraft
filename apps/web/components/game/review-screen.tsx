@@ -241,7 +241,7 @@ function ReviewBoard({
     record.status !== "complete";
 
   const swapSheetSlot = useCallback(
-    (slotId: string) => {
+    async (slotId: string) => {
       if (!arrangementMutable) return;
       if (selectedSheetSlot === null) {
         setSelectedSheetSlot(slotId);
@@ -260,15 +260,23 @@ function ReviewBoard({
       }
       const nextArrangement = [...arrangement];
       [nextArrangement[from], nextArrangement[to]] = [nextArrangement[to]!, nextArrangement[from]!];
-      const save = setRunArrangement(record.run_id, gameData.versions, nextArrangement);
+      const save = await setRunArrangement(record.run_id, gameData.versions, nextArrangement).catch(
+        () => null,
+      );
+      if (!save) {
+        setSelectedSheetSlot(null);
+        onRecordUpdate(record, "Couldn't save the team-sheet arrangement safely.");
+        return;
+      }
       if (save.status !== "updated" || !save.record) {
         setSelectedSheetSlot(null);
         const authoritative = save.record ?? record;
         onRecordUpdate(
           authoritative,
-          save.status === "conflict"
-            ? "Team-sheet arrangement is locked because this run has already simulated."
-            : "Couldn't save the team-sheet arrangement. Reload Review and try again.",
+          save.warnings[0] ??
+            (save.status === "conflict"
+              ? "Team-sheet arrangement is locked because this run has already simulated."
+              : "Couldn't save the team-sheet arrangement. Reload Review and try again."),
         );
         return;
       }
@@ -343,10 +351,19 @@ function ReviewBoard({
   }, []);
 
   const persistTeamName = useCallback(
-    (value: string) => {
+    async (value: string) => {
       if (!arrangementMutable) return;
-      const update = setRunTeamName(record.run_id, gameData.versions, value);
-      if (!update.record) return;
+      const update = await setRunTeamName(record.run_id, gameData.versions, value).catch(
+        () => null,
+      );
+      if (!update) {
+        onRecordUpdate(record, "Couldn't save the team name safely.");
+        return;
+      }
+      if (!update.record) {
+        onRecordUpdate(record, update.warnings[0] ?? "Couldn't save the team name safely.");
+        return;
+      }
       const warning =
         update.persistence === "volatile" || update.warnings.length > 0
           ? update.warnings.join(" · ") ||
@@ -354,7 +371,7 @@ function ReviewBoard({
           : persistenceWarning;
       onRecordUpdate(update.record, warning ?? null);
     },
-    [arrangementMutable, record.run_id, gameData.versions, persistenceWarning, onRecordUpdate],
+    [arrangementMutable, record, gameData.versions, persistenceWarning, onRecordUpdate],
   );
 
   function onTeamNameChange(value: string) {
@@ -362,7 +379,7 @@ function ReviewBoard({
     clearTeamNameDebounce();
     debounceRef.current = setTimeout(() => {
       debounceRef.current = null;
-      persistTeamName(value);
+      void persistTeamName(value);
     }, 300);
   }
 
@@ -398,7 +415,7 @@ function ReviewBoard({
             onChange={(e) => onTeamNameChange(e.target.value)}
             onBlur={(e) => {
               clearTeamNameDebounce();
-              persistTeamName(e.target.value);
+              void persistTeamName(e.target.value);
             }}
             placeholder="Your XI"
             disabled={!arrangementMutable}
@@ -577,14 +594,12 @@ function SimulatePanel({
   useEffect(
     () => () => {
       handoffRef.current.cancel((ownedStatusSequence) => {
-        try {
-          setRunStatus(record.run_id, gameData.versions, "ready", {
-            status: "simulating",
-            updated_seq: ownedStatusSequence,
-          });
-        } catch {
+        void setRunStatus(record.run_id, gameData.versions, "ready", {
+          status: "simulating",
+          updated_seq: ownedStatusSequence,
+        }).catch(() => {
           // Best-effort durable recovery during navigation/unmount.
-        }
+        });
       });
       simInFlightRef.current = false;
     },
@@ -603,13 +618,28 @@ function SimulatePanel({
       // the returned record—not the stale React prop—so arrangement and score
       // are owned by the same lifecycle sequence across tabs and in volatile
       // storage.
-      const lock = beginRunSimulation(record.run_id, gameData.versions, record);
+      const lock = await beginRunSimulation(
+        record.run_id,
+        gameData.versions,
+        record,
+        attempt.controller.signal,
+      );
+      if (!handoffRef.current.canCommit(attempt)) {
+        if (lock.status === "updated" && lock.record?.status === "simulating") {
+          await setRunStatus(record.run_id, gameData.versions, "ready", {
+            status: "simulating",
+            updated_seq: lock.record.updated_seq,
+          });
+        }
+        return;
+      }
       if (lock.status !== "updated" || !lock.record) {
         if (lock.record) onRecordUpdate(lock.record, persistenceWarning);
         setSim({
           kind: "error",
           title: "Team sheet changed",
           message:
+            lock.warnings[0] ??
             "This team sheet changed before simulation could start. Review the current lineup and try again.",
         });
         return;
@@ -637,13 +667,19 @@ function SimulatePanel({
       if (ownedStatusSequence === null) {
         throw new Error("simulation lifecycle ownership was lost before persistence");
       }
-      const persist = setRunSimulation(record.run_id, gameData.versions, result.simulation, {
-        status: "simulating",
-        updated_seq: ownedStatusSequence,
-      });
+      const persist = await setRunSimulation(
+        record.run_id,
+        gameData.versions,
+        result.simulation,
+        {
+          status: "simulating",
+          updated_seq: ownedStatusSequence,
+        },
+        attempt.controller.signal,
+      );
       if (persist.status !== "updated" || !persist.record) {
         try {
-          setRunStatus(record.run_id, gameData.versions, "ready", {
+          await setRunStatus(record.run_id, gameData.versions, "ready", {
             status: "simulating",
             updated_seq: ownedStatusSequence,
           });
@@ -688,7 +724,7 @@ function SimulatePanel({
       const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
       if (ownedStatusSequence !== null) {
         try {
-          const stat = setRunStatus(record.run_id, gameData.versions, "ready", {
+          const stat = await setRunStatus(record.run_id, gameData.versions, "ready", {
             status: "simulating",
             updated_seq: ownedStatusSequence,
           });

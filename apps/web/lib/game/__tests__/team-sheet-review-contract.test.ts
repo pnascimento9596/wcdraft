@@ -40,8 +40,9 @@ describe("team-sheet review contract", () => {
     expect(SOURCE).not.toContain("saveRunRecord(next)");
   });
 
-  it("simulates only the atomically locked record with mandatory ownership", () => {
-    expect(SOURCE).toContain("beginRunSimulation(record.run_id, gameData.versions, record)");
+  it("simulates only the serialized locked record with mandatory ownership", () => {
+    expect(SOURCE).toContain("const lock = await beginRunSimulation(");
+    expect(SOURCE).toContain("attempt.controller.signal");
     expect(SOURCE).toContain("runSimulation(gameData, scenarioBundle, lockedRecord");
     expect(SOURCE).toContain("simulation lifecycle ownership was lost before persistence");
   });

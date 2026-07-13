@@ -158,6 +158,36 @@ cover stale ready-arrangement merge safety, delayed writes during and after
 simulation, and volatile preservation/locking. The `03c107d` review remains a
 FAIL; the next commit requires a fresh exact-head review.
 
+Fresh exact-head review of `0453ed51bb71fd8a7c1fa6787922f153eb1af5b0`
+returned FAIL with one architectural blocker. The review inventory is
+`/tmp/season2-s4-ownership-review-0453ed5.md`, SHA-256
+`c386d611b6d8bffd31948434ebfa8cf714cb575bfeb9f9efdb7f38eaba0fd6eb`.
+Although each boundary reloaded before writing, durable localStorage still had
+no atomic read/guard/counter/save transaction across browser agent clusters.
+The reviewer-only `/tmp/season2-s4-race-probe.ts` reproduced all six permitted
+interleavings: delayed team name and arrangement each erased a simulation
+lock; a stale lock erased arrangement B; a result committed after ownership
+cleanup; cleanup erased a completed result; and pinning erased a completed
+result while regressing `updated_seq`. The affected inventory included every
+existing-record write, both DraftScreen raw saves, and the public raw writer.
+
+The fourth fix-forward routes every existing-record mutation through one
+asynchronous per-run seam. Durable storage requests an exclusive Web Lock and
+holds it across authoritative load, lifecycle/revision validation, counter
+advance, record save, and index update. If durable storage is active but Web
+Locks are unavailable or acquisition is cancelled, the boundary fails closed
+with no mutation and an explicit browser-coordination warning. Volatile
+storage uses a module-local per-run Promise queue and also checks cancellation
+before entering its mutation. DraftScreen recomputes each target/pick
+transition from the authoritative record inside the seam; Review, Results,
+simulation result/cleanup, arrangement, name, and pin callers all await the
+same boundary. The whole-record writer is private, while `saveNewRunRecord`
+refuses to overwrite an existing authority. Executable interleaving tests
+cover the six reviewer cases, a stale Draft write queued after Review lock,
+unsupported durable browsers, cancelled durable and volatile acquisition, and
+the raw-writer restriction. The `0453ed5` review remains a FAIL; a new exact-
+head review must independently re-execute the RED gates before merge.
+
 ## Validation evidence
 
 - Integration-tip floor at `98c0e07`: generated check, typecheck 8/8, lint
@@ -198,6 +228,22 @@ FAIL; the next commit requires a fresh exact-head review.
   skip. Game-flow passed; responsive remained 218/0 with 84 desktop, 56 mobile
   shell, 40 interaction, 30 mode/setup, and 8 opened-navigation checks. Root
   build passed 4/4 with 40 routes/pages. Full-repository Prettier passed.
+- Fourth fix-forward focused coverage: five run-record, mutation-seam, Review
+  contract, and team-sheet files passed 56/56. This includes all six
+  deterministic reviewer interleavings plus durable unsupported-browser,
+  durable/volatile cancellation, raw-writer, and stale Draft transition
+  regressions. Web typecheck, web lint, full-repository Prettier, and
+  `git diff --check` passed before broad RED validation.
+- Fourth fix-forward full validation: root typecheck passed 8/8 and lint passed
+  5/5. Root tests passed 8/8 in 7m39.162s: core 423/423, data 183 passed with 9
+  expected skips, DB 161/161, marketing 69/69, and web 1,208 passed with one
+  expected benchmark skip. Game-flow passed; responsive passed 218/0 with 84
+  desktop, 56 mobile shell, 40 interaction, 30 mode/setup, and 8 mobile-
+  navigation checks. Root build passed 4/4 with 40 routes/pages. Forced core
+  goldens passed 69+42, data/integration passed 59+22, and leaderboard passed 6. The strategic-pick canary passed 1/1 with zero flips; heavy realism passed
+  10/10 at N=2000 x three policies in 38.20s. `pnpm check:generated` passed,
+  and `git diff --exit-code -- packages/data etl` confirmed no generated, ETL,
+  or rating-data drift. Logs: `/tmp/s4-fourth-*.log`.
 - Final root build: 4/4 tasks, 40 routes/pages. The pre-existing webpack
   circular-chunk and edge-runtime static-generation warnings remain; there was
   no build failure. Logs: `/tmp/s4-root-build.log`,

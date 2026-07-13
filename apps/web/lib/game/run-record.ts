@@ -131,6 +131,21 @@ const memoryBackend: StorageBackend = {
 
 let volatileMode = false;
 
+interface RunMutationLockManager {
+  request<T>(
+    name: string,
+    options: { mode: "exclusive"; signal?: AbortSignal },
+    callback: () => T | PromiseLike<T>,
+  ): Promise<T>;
+}
+
+let mutationLockManagerOverride: RunMutationLockManager | null | undefined;
+const volatileMutationTails = new Map<string, Promise<void>>();
+
+export const RUN_MUTATION_LOCK_PREFIX = "wcdraft:run-mutation:v1:" as const;
+export const RUN_MUTATION_LOCK_UNAVAILABLE_WARNING =
+  "This browser cannot safely coordinate run changes across tabs. Update your browser or continue in a single tab." as const;
+
 function getStorage(): StorageBackend {
   if (volatileMode) return memoryBackend;
   if (typeof window === "undefined") return memoryBackend;
@@ -157,6 +172,69 @@ function getStorage(): StorageBackend {
 export function _resetVolatileStorageForTests(): void {
   memoryMap.clear();
   volatileMode = false;
+  mutationLockManagerOverride = undefined;
+  volatileMutationTails.clear();
+}
+
+/** Test seam for deterministic independent-agent lock scheduling. */
+export function _setRunMutationLockManagerForTests(manager: RunMutationLockManager | null): void {
+  mutationLockManagerOverride = manager;
+}
+
+function getRunMutationLockManager(): RunMutationLockManager | null {
+  if (mutationLockManagerOverride !== undefined) return mutationLockManagerOverride;
+  if (typeof navigator === "undefined") return null;
+  try {
+    const locks = navigator.locks as RunMutationLockManager | undefined;
+    return locks && typeof locks.request === "function" ? locks : null;
+  } catch {
+    return null;
+  }
+}
+
+async function withRunMutationLock<T>(
+  run_id: string,
+  unavailable: () => T,
+  mutation: () => T | PromiseLike<T>,
+  signal?: AbortSignal,
+): Promise<T> {
+  const storage = getStorage();
+  const lockName = `${RUN_MUTATION_LOCK_PREFIX}${run_id}`;
+  if (storage.isVolatile) {
+    const previous = volatileMutationTails.get(lockName) ?? Promise.resolve();
+    let release!: () => void;
+    const current = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    volatileMutationTails.set(lockName, current);
+    await previous.catch(() => undefined);
+    try {
+      if (signal?.aborted) return unavailable();
+      return await mutation();
+    } finally {
+      release();
+      if (volatileMutationTails.get(lockName) === current) volatileMutationTails.delete(lockName);
+    }
+  }
+
+  const manager = getRunMutationLockManager();
+  if (!manager) return unavailable();
+  let outcome: { kind: "value"; value: T } | { kind: "mutation-error"; error: unknown };
+  try {
+    outcome = await manager.request(lockName, { mode: "exclusive", signal }, async () => {
+      try {
+        return { kind: "value" as const, value: await mutation() };
+      } catch (error) {
+        return { kind: "mutation-error" as const, error };
+      }
+    });
+  } catch {
+    // The lock callback captures mutation failures as values, so a request
+    // rejection means the browser could not establish the durable lock.
+    return unavailable();
+  }
+  if (outcome.kind === "mutation-error") throw outcome.error;
+  return outcome.value;
 }
 
 /**
@@ -343,7 +421,7 @@ export function createNewRunRecord(
         ...(params.challenge === undefined ? {} : { challenge: params.challenge }),
         ...(params.ranked_attempt === undefined ? {} : { ranked_attempt: params.ranked_attempt }),
       };
-      const save = saveRunRecord(record);
+      const save = saveNewRunRecord(record);
       warnings.push(...save.warnings);
       return { record, persistence: save.persistence, warnings };
     } catch (err) {
@@ -384,8 +462,20 @@ export function loadRunRecord(
   return { status: "loaded", record: parsed };
 }
 
-/** Persist a record. Best-effort durable; falls back to in-memory on quota / blocked storage. */
-export function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
+/**
+ * Persist a newly-created authority. Existing records must use a serialized
+ * mutation boundary; accepting them here would bypass cross-tab ownership.
+ */
+export function saveNewRunRecord(record: RunRecordV1): SaveRunRecordResult {
+  const storage = getStorage();
+  if (storage.getItem(recordKey(record.run_id)) !== null) {
+    throw new RunRecordError(`Run ${record.run_id} already exists; use a locked mutation boundary`);
+  }
+  return saveRunRecord(record);
+}
+
+/** Internal whole-record write; callers must already own creation or the per-run mutation lock. */
+function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
   const warnings: string[] = [];
   let storage = getStorage();
   const key = recordKey(record.run_id);
@@ -461,6 +551,15 @@ export interface UpdateRunRecordResult {
   warnings: string[];
 }
 
+function mutationLockUnavailableResult(): UpdateRunRecordResult {
+  return {
+    status: "conflict",
+    record: null,
+    persistence: "none",
+    warnings: [RUN_MUTATION_LOCK_UNAVAILABLE_WARNING],
+  };
+}
+
 /**
  * Persist an arrangement only while the run is pre-simulation.
  *
@@ -470,6 +569,16 @@ export interface UpdateRunRecordResult {
  * changing only `a` would pair a stale score with a different XI.
  */
 export function setRunArrangement(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  arrangement: TeamSheetArrangement,
+): Promise<UpdateRunRecordResult> {
+  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+    setRunArrangementUnlocked(run_id, currentVersions, arrangement),
+  );
+}
+
+function setRunArrangementUnlocked(
   run_id: string,
   currentVersions: RunRecordVersions,
   arrangement: TeamSheetArrangement,
@@ -516,6 +625,16 @@ export function setRunArrangement(
  * Once simulation starts, even a pending debounce is rejected.
  */
 export function setRunTeamName(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  teamName: string,
+): Promise<UpdateRunRecordResult> {
+  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+    setRunTeamNameUnlocked(run_id, currentVersions, teamName),
+  );
+}
+
+function setRunTeamNameUnlocked(
   run_id: string,
   currentVersions: RunRecordVersions,
   teamName: string,
@@ -568,12 +687,26 @@ export type BeginRunSimulationExpected = Pick<
 >;
 
 /**
- * Atomically compare the exact rendered team-sheet revision and lock it for
- * simulation. The returned record is the only record the caller may
- * simulate: it is the same arrangement that now owns the `simulating`
- * lifecycle sequence.
+ * Under the shared per-run mutation lock, compare the exact rendered
+ * team-sheet revision and transition it to `simulating`. The returned record
+ * is the only record the caller may simulate: it is the same arrangement that
+ * now owns the lifecycle sequence.
  */
 export function beginRunSimulation(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  expected: BeginRunSimulationExpected,
+  signal?: AbortSignal,
+): Promise<SetSimulationResult> {
+  return withRunMutationLock(
+    run_id,
+    mutationLockUnavailableResult,
+    () => beginRunSimulationUnlocked(run_id, currentVersions, expected),
+    signal,
+  );
+}
+
+function beginRunSimulationUnlocked(
   run_id: string,
   currentVersions: RunRecordVersions,
   expected: BeginRunSimulationExpected,
@@ -621,12 +754,26 @@ function sameArrangement(
 }
 
 /**
- * Read-modify-write the record. The updater returns the next `DraftState`; we
- * stamp `updated_seq` and persist.
+ * Apply a draft transition to the exact rendered ready revision while holding
+ * the same per-run lock as Review and simulation lifecycle mutations.
  */
+export type UpdateRunDraftExpected = Pick<RunRecordV1, "updated_seq" | "status">;
+
 export function updateRunRecord(
   run_id: string,
   currentVersions: RunRecordVersions,
+  expected: UpdateRunDraftExpected,
+  updater: (current: RunRecordV1) => DraftState,
+): Promise<UpdateRunRecordResult> {
+  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+    updateRunRecordUnlocked(run_id, currentVersions, expected, updater),
+  );
+}
+
+function updateRunRecordUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  expected: UpdateRunDraftExpected,
   updater: (current: RunRecordV1) => DraftState,
 ): UpdateRunRecordResult {
   const loaded = loadRunRecord(run_id, currentVersions);
@@ -634,12 +781,27 @@ export function updateRunRecord(
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
   }
+  const current = loaded.record;
+  if (
+    current.simulation !== undefined ||
+    current.status === "simulating" ||
+    current.status === "complete" ||
+    current.updated_seq !== expected.updated_seq ||
+    (current.status ?? "ready") !== (expected.status ?? "ready")
+  ) {
+    return {
+      status: "conflict",
+      record: current,
+      persistence: "none",
+      warnings: ["The draft changed before this pick could lock it."],
+    };
+  }
   const storage = getStorage();
   const nextSeq = nextCounter(storage);
   const next: RunRecordV1 = {
-    ...loaded.record,
+    ...current,
     updated_seq: nextSeq,
-    draft: updater(loaded.record),
+    draft: updater(current),
   };
   const save = saveRunRecord(next);
   return {
@@ -670,6 +832,21 @@ export interface SimulationOwnership extends RunStatusOwnership {
 }
 
 export function setRunSimulation(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  simulation: PersistedSimulation,
+  ownership: SimulationOwnership,
+  signal?: AbortSignal,
+): Promise<SetSimulationResult> {
+  return withRunMutationLock(
+    run_id,
+    mutationLockUnavailableResult,
+    () => setRunSimulationUnlocked(run_id, currentVersions, simulation, ownership),
+    signal,
+  );
+}
+
+function setRunSimulationUnlocked(
   run_id: string,
   currentVersions: RunRecordVersions,
   simulation: PersistedSimulation,
@@ -721,21 +898,30 @@ export interface RunStatusOwnership {
 export function setRunStatus(
   run_id: string,
   currentVersions: RunRecordVersions,
-  status: RunRecordStatus,
-  ownership?: RunStatusOwnership,
+  status: "ready",
+  ownership: SimulationOwnership,
+): Promise<SetSimulationResult> {
+  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+    setRunStatusUnlocked(run_id, currentVersions, status, ownership),
+  );
+}
+
+function setRunStatusUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  status: "ready",
+  ownership: SimulationOwnership,
 ): SetSimulationResult {
   const loaded = loadRunRecord(run_id, currentVersions);
   if (loaded.status !== "loaded" || !loaded.record) {
     const s = loaded.status as "missing" | "stale" | "invalid";
     return { status: s, record: null, persistence: "none", warnings: [] };
   }
-  if (ownership && !ownsRunStatus(loaded.record, ownership)) {
+  if (!ownership || ownership.status !== "simulating" || !ownsRunStatus(loaded.record, ownership)) {
     return { status: "conflict", record: loaded.record, persistence: "none", warnings: [] };
   }
-  // A simulation payload and any non-complete status form an invalid record.
-  // Refuse that transition even without ownership evidence so cleanup can
-  // never corrupt a completed result.
-  if (status !== "complete" && loaded.record.simulation !== undefined) {
+  // Cleanup can never remove an already-committed simulation payload.
+  if (loaded.record.simulation !== undefined) {
     return { status: "conflict", record: loaded.record, persistence: "none", warnings: [] };
   }
   const storage = getStorage();
@@ -762,13 +948,27 @@ export function setRunPinned(
   run_id: string,
   currentVersions: RunRecordVersions,
   pinned: boolean,
+): Promise<SetSimulationResult> {
+  return withRunMutationLock(run_id, mutationLockUnavailableResult, () =>
+    setRunPinnedUnlocked(run_id, currentVersions, pinned),
+  );
+}
+
+function setRunPinnedUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  pinned: boolean,
 ): SetSimulationResult {
   const loaded = loadRunRecord(run_id, currentVersions);
   if (loaded.status !== "loaded" || !loaded.record) {
     const s = loaded.status as "missing" | "stale" | "invalid";
     return { status: s, record: null, persistence: "none", warnings: [] };
   }
-  const next: RunRecordV1 = { ...loaded.record };
+  const storage = getStorage();
+  const next: RunRecordV1 = {
+    ...loaded.record,
+    updated_seq: nextCounter(storage),
+  };
   if (pinned) next.pinned = true;
   else delete next.pinned;
   const save = saveRunRecord(next);

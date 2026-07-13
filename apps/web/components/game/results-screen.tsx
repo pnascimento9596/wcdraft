@@ -434,10 +434,16 @@ function ResultsBody({
     };
   }, [dailyDate, isReplayedFromToken, record, sim.run.score, standingRefresh]);
 
-  function togglePinned() {
+  async function togglePinned() {
     if (isReplayedFromToken) return;
     const nextPinned = !pinned;
-    const result = setRunPinned(record.run_id, gameData.versions, nextPinned);
+    const result = await setRunPinned(record.run_id, gameData.versions, nextPinned).catch(
+      () => null,
+    );
+    if (!result) {
+      setPinWarning("Could not update the local pin for this run.");
+      return;
+    }
     if (result.status === "updated" && result.record) {
       setPinned(result.record.pinned === true);
       setPinWarning(result.warnings[0] ?? null);
@@ -445,7 +451,7 @@ function ResultsBody({
       void mirrorRunPinToServer(record.run_id, result.record.pinned === true);
       return;
     }
-    setPinWarning("Could not update the local pin for this run.");
+    setPinWarning(result.warnings[0] ?? "Could not update the local pin for this run.");
   }
 
   async function copyFullSeed() {

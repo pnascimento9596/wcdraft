@@ -4,18 +4,22 @@ import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import {
   _resetVolatileStorageForTests,
+  _setRunMutationLockManagerForTests,
   beginRunSimulation,
   createNewRunRecord,
   listRunRecords,
   loadRunRecord,
+  RUN_COUNTER_KEY,
+  RUN_MUTATION_LOCK_UNAVAILABLE_WARNING,
   RUN_RECORD_CAP,
   RUN_RECORD_PREFIX,
-  saveRunRecord,
+  saveNewRunRecord,
   setRunArrangement,
   setRunPinned,
   setRunSimulation,
   setRunStatus,
   setRunTeamName,
+  updateRunRecord,
   type RunRecordV1,
 } from "../run-record";
 import { asDraftedTeamSheet } from "../team-sheet";
@@ -35,15 +39,37 @@ function historicalDailyChallenge(date: string, salt = 0): DailyChallenge {
 }
 
 let restoreWindow: (() => void) | null = null;
+let injectOnCounterRead: (() => void) | null = null;
 
 beforeEach(() => {
   _resetVolatileStorageForTests();
   restoreWindow = installLocalStorage();
+  _setRunMutationLockManagerForTests(createSerializedLockManager());
 });
+
+function swappedArrangement(record: RunRecordV1): string[] {
+  const arrangement = [...asDraftedTeamSheet(record.draft)];
+  [arrangement[0], arrangement[11]] = [arrangement[11]!, arrangement[0]!];
+  return arrangement;
+}
+
+async function lockedSimulation(seed: string): Promise<{
+  created: RunRecordV1;
+  locked: RunRecordV1;
+  simulation: ReturnType<typeof runSimulationSync>["simulation"];
+}> {
+  const created = buildOriginRecord(gameData, seed);
+  saveNewRunRecord(created);
+  const lock = await beginRunSimulation(created.run_id, gameData.versions, created);
+  if (lock.status !== "updated" || !lock.record) throw new Error("expected simulation lock");
+  const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, lock.record);
+  return { created, locked: lock.record, simulation };
+}
 
 afterEach(() => {
   restoreWindow?.();
   restoreWindow = null;
+  injectOnCounterRead = null;
   vi.unstubAllGlobals();
   _resetVolatileStorageForTests();
 });
@@ -227,12 +253,12 @@ describe("run-record persisted boundary", () => {
     expect(localStorage.getItem(key)).toBeNull();
   });
 
-  it("evicts non-complete records that carry simulation", () => {
+  it("evicts non-complete records that carry simulation", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record-schema:non-complete-sim");
-    saveRunRecord(created);
-    const locked = beginRunSimulation(created.run_id, gameData.versions, created);
+    saveNewRunRecord(created);
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
-    const persisted = setRunSimulation(created.run_id, gameData.versions, simulation, {
+    const persisted = await setRunSimulation(created.run_id, gameData.versions, simulation, {
       status: "simulating",
       updated_seq: locked.record!.updated_seq,
     });
@@ -248,12 +274,12 @@ describe("run-record persisted boundary", () => {
     expect(localStorage.getItem(key)).toBeNull();
   });
 
-  it("loads a complete record with a real persisted simulation payload", () => {
+  it("loads a complete record with a real persisted simulation payload", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record-schema:test");
-    saveRunRecord(created);
-    const locked = beginRunSimulation(created.run_id, gameData.versions, created);
+    saveNewRunRecord(created);
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
-    const persisted = setRunSimulation(created.run_id, gameData.versions, simulation, {
+    const persisted = await setRunSimulation(created.run_id, gameData.versions, simulation, {
       status: "simulating",
       updated_seq: locked.record!.updated_seq,
     });
@@ -265,52 +291,56 @@ describe("run-record persisted boundary", () => {
     expect(loaded.record?.simulation?.matches).toHaveLength(simulation.matches.length);
   });
 
-  it("rejects omitted or undefined simulation ownership at the runtime boundary", () => {
+  it("rejects omitted or undefined simulation ownership at the runtime boundary", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:missing-sim-ownership");
-    saveRunRecord(created);
+    saveNewRunRecord(created);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, created);
 
-    const omitted = Reflect.apply(setRunSimulation, undefined, [
+    const omitted = (await Reflect.apply(setRunSimulation, undefined, [
       created.run_id,
       gameData.versions,
       simulation,
-    ]) as ReturnType<typeof setRunSimulation>;
+    ])) as Awaited<ReturnType<typeof setRunSimulation>>;
     expect(omitted).toMatchObject({ status: "conflict", persistence: "none" });
 
-    const explicitUndefined = Reflect.apply(setRunSimulation, undefined, [
+    const explicitUndefined = (await Reflect.apply(setRunSimulation, undefined, [
       created.run_id,
       gameData.versions,
       simulation,
       undefined,
-    ]) as ReturnType<typeof setRunSimulation>;
+    ])) as Awaited<ReturnType<typeof setRunSimulation>>;
     expect(explicitUndefined).toMatchObject({ status: "conflict", persistence: "none" });
 
-    const readyOwnership = Reflect.apply(setRunSimulation, undefined, [
+    const readyOwnership = (await Reflect.apply(setRunSimulation, undefined, [
       created.run_id,
       gameData.versions,
       simulation,
       { status: "ready", updated_seq: created.updated_seq },
-    ]) as ReturnType<typeof setRunSimulation>;
+    ])) as Awaited<ReturnType<typeof setRunSimulation>>;
     expect(readyOwnership).toMatchObject({ status: "conflict", persistence: "none" });
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
   });
 
-  it("keeps a concurrently completed run when an older simulation attempts cleanup", () => {
+  it("keeps a concurrently completed run when an older simulation attempts cleanup", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:owned-cleanup");
-    saveRunRecord(created);
-    const operationA = setRunStatus(created.run_id, gameData.versions, "simulating");
+    saveNewRunRecord(created);
+    const operationA = await beginRunSimulation(created.run_id, gameData.versions, created);
     expect(operationA).toMatchObject({ status: "updated", persistence: "durable" });
-    const operationB = setRunStatus(created.run_id, gameData.versions, "simulating");
+    const operationB = await beginRunSimulation(
+      created.run_id,
+      gameData.versions,
+      operationA.record!,
+    );
     expect(operationB).toMatchObject({ status: "updated", persistence: "durable" });
 
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, created);
-    const completed = setRunSimulation(created.run_id, gameData.versions, simulation, {
+    const completed = await setRunSimulation(created.run_id, gameData.versions, simulation, {
       status: "simulating",
       updated_seq: operationB.record!.updated_seq,
     });
     expect(completed.status).toBe("updated");
 
-    const staleCleanup = setRunStatus(created.run_id, gameData.versions, "ready", {
+    const staleCleanup = await setRunStatus(created.run_id, gameData.versions, "ready", {
       status: "simulating",
       updated_seq: operationA.record!.updated_seq,
     });
@@ -324,15 +354,19 @@ describe("run-record persisted boundary", () => {
     expect(loaded.record?.simulation).toEqual(simulation);
   });
 
-  it("locks arrangement mutation once a simulation exists, including stale Review tabs", () => {
+  it("locks arrangement mutation once a simulation exists, including stale Review tabs", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:arrangement-lock");
-    saveRunRecord(created);
+    saveNewRunRecord(created);
     const arranged = [...asDraftedTeamSheet(created.draft)];
     [arranged[0], arranged[11]] = [arranged[11]!, arranged[0]!];
-    const savedArrangement = setRunArrangement(created.run_id, gameData.versions, arranged);
+    const savedArrangement = await setRunArrangement(created.run_id, gameData.versions, arranged);
     expect(savedArrangement).toMatchObject({ status: "updated", persistence: "durable" });
 
-    const simulating = setRunStatus(created.run_id, gameData.versions, "simulating");
+    const simulating = await beginRunSimulation(
+      created.run_id,
+      gameData.versions,
+      savedArrangement.record!,
+    );
     expect(simulating.status).toBe("updated");
     const midSimulationArrangement = [...arranged];
     [midSimulationArrangement[1], midSimulationArrangement[12]] = [
@@ -340,7 +374,7 @@ describe("run-record persisted boundary", () => {
       midSimulationArrangement[1]!,
     ];
     expect(
-      setRunArrangement(created.run_id, gameData.versions, midSimulationArrangement),
+      await setRunArrangement(created.run_id, gameData.versions, midSimulationArrangement),
     ).toMatchObject({ status: "conflict", persistence: "none" });
 
     const { simulation } = runSimulationSync(
@@ -348,7 +382,7 @@ describe("run-record persisted boundary", () => {
       SCENARIO_2026_BUNDLE,
       savedArrangement.record!,
     );
-    const completed = setRunSimulation(created.run_id, gameData.versions, simulation, {
+    const completed = await setRunSimulation(created.run_id, gameData.versions, simulation, {
       status: "simulating",
       updated_seq: simulating.record!.updated_seq,
     });
@@ -359,74 +393,82 @@ describe("run-record persisted boundary", () => {
       staleTabArrangement[12]!,
       staleTabArrangement[1]!,
     ];
-    const rejected = setRunArrangement(created.run_id, gameData.versions, staleTabArrangement);
+    const rejected = await setRunArrangement(
+      created.run_id,
+      gameData.versions,
+      staleTabArrangement,
+    );
     expect(rejected).toMatchObject({ status: "conflict", persistence: "none" });
     expect(rejected.record?.arrangement).toEqual(arranged);
     expect(rejected.record?.simulation).toEqual(simulation);
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(completed.record);
   });
 
-  it("merges a stale Review name into the authoritative ready arrangement only", () => {
+  it("merges a stale Review name into the authoritative ready arrangement only", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:team-name-ready-merge");
-    saveRunRecord(created);
+    saveNewRunRecord(created);
     const staleReview = loadRunRecord(created.run_id, gameData.versions).record!;
     const arrangementB = [...asDraftedTeamSheet(created.draft)];
     [arrangementB[0], arrangementB[11]] = [arrangementB[11]!, arrangementB[0]!];
-    const tabB = setRunArrangement(created.run_id, gameData.versions, arrangementB);
+    const tabB = await setRunArrangement(created.run_id, gameData.versions, arrangementB);
     expect(tabB.status).toBe("updated");
 
-    const renamed = setRunTeamName(staleReview.run_id, gameData.versions, "  Current XI  ");
+    const renamed = await setRunTeamName(staleReview.run_id, gameData.versions, "  Current XI  ");
     expect(renamed).toMatchObject({ status: "updated", persistence: "durable" });
     expect(renamed.record?.draft).toEqual({ ...tabB.record!.draft, team_name: "Current XI" });
     expect(renamed.record?.arrangement).toEqual(arrangementB);
     expect(renamed.record?.updated_seq).toBeGreaterThan(tabB.record!.updated_seq);
   });
 
-  it("rejects delayed stale team-name writes during and after simulation", () => {
+  it("rejects delayed stale team-name writes during and after simulation", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:team-name-lock");
-    saveRunRecord(created);
+    saveNewRunRecord(created);
     const staleReview = loadRunRecord(created.run_id, gameData.versions).record!;
-    const locked = beginRunSimulation(created.run_id, gameData.versions, staleReview);
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, staleReview);
     expect(locked.status).toBe("updated");
 
-    const delayedDuring = setRunTeamName(staleReview.run_id, gameData.versions, "Stale timer");
+    const delayedDuring = await setRunTeamName(
+      staleReview.run_id,
+      gameData.versions,
+      "Stale timer",
+    );
     expect(delayedDuring).toMatchObject({ status: "conflict", persistence: "none" });
     expect(delayedDuring.record).toEqual(locked.record);
 
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
-    const completed = setRunSimulation(created.run_id, gameData.versions, simulation, {
+    const completed = await setRunSimulation(created.run_id, gameData.versions, simulation, {
       status: "simulating",
       updated_seq: locked.record!.updated_seq,
     });
     expect(completed.status).toBe("updated");
-    const delayedAfter = setRunTeamName(staleReview.run_id, gameData.versions, "Still stale");
+    const delayedAfter = await setRunTeamName(staleReview.run_id, gameData.versions, "Still stale");
     expect(delayedAfter).toMatchObject({ status: "conflict", persistence: "none" });
     expect(delayedAfter.record).toEqual(completed.record);
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(completed.record);
   });
 
-  it("atomically rejects a stale rendered arrangement and simulates only the locked revision", () => {
+  it("serializes a stale rendered arrangement and simulates only the locked revision", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:atomic-sim-begin");
-    saveRunRecord(created);
+    saveNewRunRecord(created);
     const rendered = loadRunRecord(created.run_id, gameData.versions).record!;
 
     const arrangementB = [...asDraftedTeamSheet(created.draft)];
     [arrangementB[0], arrangementB[11]] = [arrangementB[11]!, arrangementB[0]!];
-    const tabB = setRunArrangement(created.run_id, gameData.versions, arrangementB);
+    const tabB = await setRunArrangement(created.run_id, gameData.versions, arrangementB);
     expect(tabB.status).toBe("updated");
 
-    const staleBegin = beginRunSimulation(created.run_id, gameData.versions, rendered);
+    const staleBegin = await beginRunSimulation(created.run_id, gameData.versions, rendered);
     expect(staleBegin).toMatchObject({ status: "conflict", persistence: "none" });
     expect(staleBegin.record?.arrangement).toEqual(arrangementB);
     expect(staleBegin.record?.status).not.toBe("simulating");
     expect(staleBegin.record?.simulation).toBeUndefined();
 
-    const locked = beginRunSimulation(created.run_id, gameData.versions, tabB.record!);
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, tabB.record!);
     expect(locked).toMatchObject({ status: "updated", persistence: "durable" });
     expect(locked.record?.status).toBe("simulating");
     expect(locked.record?.arrangement).toEqual(arrangementB);
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
-    const persisted = setRunSimulation(created.run_id, gameData.versions, simulation, {
+    const persisted = await setRunSimulation(created.run_id, gameData.versions, simulation, {
       status: "simulating",
       updated_seq: locked.record!.updated_seq,
     });
@@ -435,24 +477,24 @@ describe("run-record persisted boundary", () => {
     expect(persisted.record?.simulation).toEqual(simulation);
   });
 
-  it("keeps atomic simulation ownership in volatile storage", () => {
+  it("keeps serialized simulation ownership in volatile storage", async () => {
     restoreWindow?.();
     restoreWindow = null;
     _resetVolatileStorageForTests();
     const created = buildOriginRecord(gameData, "wcdraft:run-record:volatile-sim-begin");
-    expect(saveRunRecord(created).persistence).toBe("volatile");
+    expect(saveNewRunRecord(created).persistence).toBe("volatile");
 
-    const locked = beginRunSimulation(created.run_id, gameData.versions, created);
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
     expect(locked).toMatchObject({ status: "updated", persistence: "volatile" });
     const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
-    const omittedOwnership = Reflect.apply(setRunSimulation, undefined, [
+    const omittedOwnership = (await Reflect.apply(setRunSimulation, undefined, [
       created.run_id,
       gameData.versions,
       simulation,
-    ]) as ReturnType<typeof setRunSimulation>;
+    ])) as Awaited<ReturnType<typeof setRunSimulation>>;
     expect(omittedOwnership).toMatchObject({ status: "conflict", persistence: "none" });
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(locked.record);
-    const persisted = setRunSimulation(created.run_id, gameData.versions, simulation, {
+    const persisted = await setRunSimulation(created.run_id, gameData.versions, simulation, {
       status: "simulating",
       updated_seq: locked.record!.updated_seq,
     });
@@ -460,31 +502,225 @@ describe("run-record persisted boundary", () => {
     expect(persisted.record?.simulation).toEqual(simulation);
   });
 
-  it("preserves authoritative arrangement and team-name locks in volatile storage", () => {
+  it("preserves authoritative arrangement and team-name locks in volatile storage", async () => {
     restoreWindow?.();
     restoreWindow = null;
     _resetVolatileStorageForTests();
     const created = buildOriginRecord(gameData, "wcdraft:run-record:volatile-team-name");
-    expect(saveRunRecord(created).persistence).toBe("volatile");
+    expect(saveNewRunRecord(created).persistence).toBe("volatile");
     const arrangementB = [...asDraftedTeamSheet(created.draft)];
     [arrangementB[0], arrangementB[11]] = [arrangementB[11]!, arrangementB[0]!];
-    const arranged = setRunArrangement(created.run_id, gameData.versions, arrangementB);
+    const arranged = await setRunArrangement(created.run_id, gameData.versions, arrangementB);
     expect(arranged.persistence).toBe("volatile");
 
-    const renamed = setRunTeamName(created.run_id, gameData.versions, "Volatile XI");
+    const renamed = await setRunTeamName(created.run_id, gameData.versions, "Volatile XI");
     expect(renamed).toMatchObject({ status: "updated", persistence: "volatile" });
     expect(renamed.record?.arrangement).toEqual(arrangementB);
-    const locked = beginRunSimulation(created.run_id, gameData.versions, renamed.record!);
-    expect(setRunTeamName(created.run_id, gameData.versions, "Late XI")).toMatchObject({
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, renamed.record!);
+    expect(await setRunTeamName(created.run_id, gameData.versions, "Late XI")).toMatchObject({
       status: "conflict",
       persistence: "none",
       record: locked.record,
     });
   });
 
-  it("keeps pinned runs past the five-record recent cap", () => {
+  it("fails closed without Web Locks when durable storage is active", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:no-web-locks");
+    saveNewRunRecord(created);
+    _setRunMutationLockManagerForTests(null);
+
+    const result = await beginRunSimulation(created.run_id, gameData.versions, created);
+    expect(result).toEqual({
+      status: "conflict",
+      record: null,
+      persistence: "none",
+      warnings: [RUN_MUTATION_LOCK_UNAVAILABLE_WARNING],
+    });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
+  });
+
+  it("does not mutate when lock acquisition is cancelled", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:cancelled-lock-wait");
+    saveNewRunRecord(created);
+    const controller = new AbortController();
+    controller.abort();
+
+    const result = await beginRunSimulation(
+      created.run_id,
+      gameData.versions,
+      created,
+      controller.signal,
+    );
+    expect(result).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
+  });
+
+  it("does not mutate a volatile run when acquisition is already cancelled", async () => {
+    restoreWindow?.();
+    restoreWindow = null;
+    _resetVolatileStorageForTests();
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:cancelled-volatile-lock-wait");
+    saveNewRunRecord(created);
+    const controller = new AbortController();
+    controller.abort();
+
+    const result = await beginRunSimulation(
+      created.run_id,
+      gameData.versions,
+      created,
+      controller.signal,
+    );
+    expect(result).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
+  });
+
+  it("refuses the raw new-record boundary for an existing authority", () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:no-raw-overwrite");
+    saveNewRunRecord(created);
+    expect(() =>
+      saveNewRunRecord({
+        ...created,
+        draft: { ...created.draft, team_name: "Stale overwrite" },
+      }),
+    ).toThrow(/already exists; use a locked mutation boundary/u);
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(created);
+  });
+
+  it("serializes a delayed team-name write behind simulation begin", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:race-name-after-lock");
+    saveNewRunRecord(created);
+    let rename: ReturnType<typeof setRunTeamName> | null = null;
+    injectOnCounterRead = () => {
+      rename = setRunTeamName(created.run_id, gameData.versions, "Stale tab name");
+    };
+
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
+    const renameResult = await rename!;
+    expect(locked.status).toBe("updated");
+    expect(renameResult).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(locked.record);
+  });
+
+  it("serializes a delayed arrangement write behind simulation begin", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:race-arrangement-after-lock");
+    saveNewRunRecord(created);
+    const arrangementB = swappedArrangement(created);
+    let arrangement: ReturnType<typeof setRunArrangement> | null = null;
+    injectOnCounterRead = () => {
+      arrangement = setRunArrangement(created.run_id, gameData.versions, arrangementB);
+    };
+
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
+    const arrangementResult = await arrangement!;
+    expect(locked.status).toBe("updated");
+    expect(arrangementResult).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(locked.record);
+  });
+
+  it("serializes stale simulation begin behind arrangement B", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:race-lock-after-arrangement");
+    saveNewRunRecord(created);
+    const arrangementB = swappedArrangement(created);
+    let begin: ReturnType<typeof beginRunSimulation> | null = null;
+    injectOnCounterRead = () => {
+      begin = beginRunSimulation(created.run_id, gameData.versions, created);
+    };
+
+    const arranged = await setRunArrangement(created.run_id, gameData.versions, arrangementB);
+    const beginResult = await begin!;
+    expect(arranged.status).toBe("updated");
+    expect(beginResult).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(arranged.record);
+  });
+
+  it("rejects a result queued after ownership cleanup", async () => {
+    const { created, locked, simulation } = await lockedSimulation(
+      "wcdraft:run-record:race-result-after-cleanup",
+    );
+    let result: ReturnType<typeof setRunSimulation> | null = null;
+    injectOnCounterRead = () => {
+      result = setRunSimulation(created.run_id, gameData.versions, simulation, {
+        status: "simulating",
+        updated_seq: locked.updated_seq,
+      });
+    };
+
+    const cleanup = await setRunStatus(created.run_id, gameData.versions, "ready", {
+      status: "simulating",
+      updated_seq: locked.updated_seq,
+    });
+    const resultCommit = await result!;
+    expect(cleanup.status).toBe("updated");
+    expect(resultCommit).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(cleanup.record);
+  });
+
+  it("rejects cleanup queued after a completed result", async () => {
+    const { created, locked, simulation } = await lockedSimulation(
+      "wcdraft:run-record:race-cleanup-after-result",
+    );
+    let cleanup: ReturnType<typeof setRunStatus> | null = null;
+    injectOnCounterRead = () => {
+      cleanup = setRunStatus(created.run_id, gameData.versions, "ready", {
+        status: "simulating",
+        updated_seq: locked.updated_seq,
+      });
+    };
+
+    const completed = await setRunSimulation(created.run_id, gameData.versions, simulation, {
+      status: "simulating",
+      updated_seq: locked.updated_seq,
+    });
+    const cleanupResult = await cleanup!;
+    expect(completed.status).toBe("updated");
+    expect(cleanupResult).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(completed.record);
+  });
+
+  it("preserves a completed result when pin is queued behind it", async () => {
+    const { created, locked, simulation } = await lockedSimulation(
+      "wcdraft:run-record:race-pin-after-result",
+    );
+    let pin: ReturnType<typeof setRunPinned> | null = null;
+    injectOnCounterRead = () => {
+      pin = setRunPinned(created.run_id, gameData.versions, true);
+    };
+
+    const completed = await setRunSimulation(created.run_id, gameData.versions, simulation, {
+      status: "simulating",
+      updated_seq: locked.updated_seq,
+    });
+    const pinned = await pin!;
+    expect(completed.status).toBe("updated");
+    expect(pinned).toMatchObject({ status: "updated", persistence: "durable" });
+    expect(pinned.record?.status).toBe("complete");
+    expect(pinned.record?.simulation).toEqual(simulation);
+    expect(pinned.record?.pinned).toBe(true);
+    expect(pinned.record!.updated_seq).toBeGreaterThan(completed.record!.updated_seq);
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(pinned.record);
+  });
+
+  it("rejects a stale DraftScreen whole-record transition queued after Review lock", async () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:race-draft-after-lock");
+    saveNewRunRecord(created);
+    let draftWrite: ReturnType<typeof updateRunRecord> | null = null;
+    injectOnCounterRead = () => {
+      draftWrite = updateRunRecord(created.run_id, gameData.versions, created, (current) => ({
+        ...current.draft,
+        team_name: "Stale draft tab",
+      }));
+    };
+
+    const locked = await beginRunSimulation(created.run_id, gameData.versions, created);
+    const draftResult = await draftWrite!;
+    expect(locked.status).toBe("updated");
+    expect(draftResult).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(locked.record);
+  });
+
+  it("keeps pinned runs past the five-record recent cap", async () => {
     const pinned = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
-    expect(setRunPinned(pinned.run_id, gameData.versions, true).status).toBe("updated");
+    expect((await setRunPinned(pinned.run_id, gameData.versions, true)).status).toBe("updated");
 
     for (let i = 0; i < RUN_RECORD_CAP + 2; i += 1) {
       createNewRunRecord(gameData, { formation_id: "4-3-3" });
@@ -535,7 +771,14 @@ function installLocalStorage(): () => void {
       return store.size;
     },
     clear: () => store.clear(),
-    getItem: (key) => store.get(key) ?? null,
+    getItem: (key) => {
+      if (key === RUN_COUNTER_KEY && injectOnCounterRead) {
+        const inject = injectOnCounterRead;
+        injectOnCounterRead = null;
+        inject();
+      }
+      return store.get(key) ?? null;
+    },
     key: (index) => Array.from(store.keys())[index] ?? null,
     removeItem: (key) => {
       store.delete(key);
@@ -569,5 +812,30 @@ function installLocalStorage(): () => void {
         value: originalLocalStorage,
       });
     }
+  };
+}
+
+function createSerializedLockManager() {
+  const tails = new Map<string, Promise<void>>();
+  return {
+    request<T>(
+      name: string,
+      options: { mode: "exclusive"; signal?: AbortSignal },
+      callback: () => T | PromiseLike<T>,
+    ): Promise<T> {
+      const previous = tails.get(name) ?? Promise.resolve();
+      const run = previous.then(() => {
+        if (options.signal?.aborted) throw new DOMException("Aborted", "AbortError");
+        return callback();
+      });
+      const tail = run.then(
+        () => undefined,
+        () => undefined,
+      );
+      tails.set(name, tail);
+      return run.finally(() => {
+        if (tails.get(name) === tail) tails.delete(name);
+      });
+    },
   };
 }

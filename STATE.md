@@ -48,6 +48,25 @@ merge safety, delayed cross-tab writes, and durable/volatile locks. The
 `03c107d` FAIL and its two-finding inventory remain recorded in the durable
 report; review must run again on the next exact head.
 
+Fresh exact-head review of `0453ed5` invalidated the third fix-forward with one
+architectural blocker: every durable mutation still performed an unlocked
+localStorage read/counter/write sequence, so browser agent clusters could
+interleave stale whole-record commits. The reviewer reproduced six losses:
+team name or arrangement erasing a simulation lock, a lock erasing a newer
+arrangement, a result committing after cleanup, cleanup erasing a result, and
+pinning erasing a result while regressing its sequence. All existing-record
+writes now share one asynchronous per-run exclusive mutation seam. Durable
+storage holds a Web Lock across load, ownership/revision checks, counter, and
+record/index persistence; browsers without Web Locks fail closed with an
+explicit warning and no mutation. Volatile storage uses a module-local per-run
+Promise queue, including abort-before-mutation checks. Draft, Review, Results,
+simulation result/cleanup, team-name, arrangement, and pin callers await this
+seam; the raw whole-record writer is private and the exported creation writer
+refuses an existing authority. Deterministic regressions replay all six
+reviewer interleavings plus the stale Draft writer and unsupported/aborted
+paths. The `0453ed5` FAIL remains recorded in the durable report; the next
+commit still requires a fresh exact-head independent review.
+
 Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
 `mp`. One shared reconciliation path covers all four presence combinations,
 ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
@@ -57,12 +76,13 @@ then challenge ordering. Semantic arrangement defects map to typed
 `ILLEGAL_PICK` HTTP 422 after shallow decode. The paused marketing composer
 fails closed on arranged tokens instead of silently scoring the wrong XI.
 
-Measured closure: focused core token 4/4 and focused web 177/177; root
-typecheck 8/8, lint 5/5, test 8/8 (core 423, data 183 + 9 expected skips, DB
-161, marketing 69, web 1,192 + 1 expected benchmark skip), game-flow, responsive
-218/0, and build 4/4 with 40 pages/routes. Forced goldens pass core 69+42,
-data 59, integration 22, and leaderboard 6; canary 1/1 proves zero pick flips;
-heavy realism passes 10/10 at N=2000 x three policies. Generated check and the
+Measured closure: focused core token 4/4, focused S4 web 177/177, and fourth
+fix-forward mutation coverage 56/56; root typecheck 8/8, lint 5/5, test 8/8
+(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,208 + 1
+expected benchmark skip), game-flow, responsive 218/0, and build 4/4 with 40
+pages/routes. Forced goldens pass core 69+42, data 59, integration 22, and
+leaderboard 6; canary 1/1 proves zero pick flips; heavy realism passes 10/10 at
+N=2000 x three policies. Generated check and the
 pinned 2026-07-10 / 45-day / population-128 / max-attempts-8 five-step Daily
 closure pass with score-distribution, Daily-map, and manifest bytes unchanged.
 Durable report: `docs/reports/season2-s4-team-sheet-token-2026-07-13.md`.
