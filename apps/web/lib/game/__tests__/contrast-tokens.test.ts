@@ -72,7 +72,12 @@ describe("design tokens — AA body text contrast", () => {
       "--pos-fwd",
     ] as const;
     for (const fg of tokenTextVars) {
-      expectContrast(lightTokens, fg, lightTokens, ["--bg-900", "--bg-800", "--bg-void", "--bg-750"]);
+      expectContrast(lightTokens, fg, lightTokens, [
+        "--bg-900",
+        "--bg-800",
+        "--bg-void",
+        "--bg-750",
+      ]);
     }
 
     const globalTextVars = [
@@ -105,16 +110,18 @@ describe("design tokens — AA body text contrast", () => {
     expect(requireVar(lightTokens, "--teal")).not.toBe(BRAND_SOLID_LARGE_ONLY.emerald);
     expect(requireVar(lightTokens, "--gold")).not.toBe(BRAND_SOLID_LARGE_ONLY.gold);
     // Deepened text accents still clear body AA (covered above); brand solids do not.
-    expect(contrastRatio(BRAND_SOLID_LARGE_ONLY.emerald, requireVar(lightGlobals, "--s0"))).toBeLessThan(
-      AA_BODY,
-    );
+    expect(
+      contrastRatio(BRAND_SOLID_LARGE_ONLY.emerald, requireVar(lightGlobals, "--s0")),
+    ).toBeLessThan(AA_BODY);
 
     // On the dark canvas the same solids clear large-text AA (mark / solid CTAs).
     for (const solid of Object.values(BRAND_SOLID_LARGE_ONLY)) {
       for (const bgName of ["--s0", "--s1"] as const) {
         const bg = requireVar(darkGlobals, bgName);
         const ratio = contrastRatio(solid, bg);
-        expect(ratio, `${solid} large-text on dark ${bgName} ${bg}`).toBeGreaterThanOrEqual(AA_LARGE);
+        expect(ratio, `${solid} large-text on dark ${bgName} ${bg}`).toBeGreaterThanOrEqual(
+          AA_LARGE,
+        );
       }
     }
   });
