@@ -37,6 +37,9 @@ import type {
 } from "../types/sim.js";
 import { CardIdSchema, refineCardIdConsistency } from "./identity.js";
 import { TeamStrengthSchema } from "./rating.js";
+import { applyManagerTacticalAdjustment } from "../engine/manager-tactics.js";
+import { INJURY } from "../engine/calibration.js";
+import { FORMATION_TEMPLATES, slotPositionLine } from "../types/formation.js";
 import { SynergyResultSchema } from "./synergy.js";
 import {
   IntegerRangeSchema,
@@ -267,6 +270,36 @@ export const MatchLineupEntrySchema = z
 
 const KNOCKOUT_ROUNDS = new Set(["R32", "R16", "QF", "SF", "F"] as const);
 const GROUP_ROUNDS = new Set(["G1", "G2", "G3"] as const);
+const CANONICAL_XI_SIZE = 11;
+
+function accountsForExactKnownFormation(
+  startedUserEntries: readonly Pick<MatchLineupEntry, "slot_id" | "position">[],
+  shortHandedSlotIds: readonly string[],
+  unavailable: readonly { slot_id: string; position: MatchLineupEntry["position"] }[],
+): boolean {
+  const shortHandedEntries = shortHandedSlotIds.map((slotId) => {
+    const facts = unavailable.filter((entry) => entry.slot_id === slotId);
+    return facts.length === 1 ? { slot_id: slotId, position: facts[0]!.position } : null;
+  });
+  if (shortHandedEntries.some((entry) => entry === null)) return false;
+  const accounted = [...startedUserEntries, ...shortHandedEntries];
+  const accountedSlotIds = accounted.map((entry) => entry!.slot_id);
+  const accountedSet = new Set(accountedSlotIds);
+  if (accounted.length !== CANONICAL_XI_SIZE || accountedSet.size !== accounted.length)
+    return false;
+  return Object.values(FORMATION_TEMPLATES).some((template) => {
+    const expectedPositions = new Map(
+      template.slots.map((slot) => [slot.slot_id, slotPositionLine(slot.slot_position)]),
+    );
+    return (
+      expectedPositions.size === accountedSet.size &&
+      [...expectedPositions].every(([slotId]) => accountedSet.has(slotId)) &&
+      accounted.every(
+        (entry) => entry !== null && expectedPositions.get(entry.slot_id) === entry.position,
+      )
+    );
+  });
+}
 
 function isKnockoutRound(round: string): boolean {
   return (KNOCKOUT_ROUNDS as ReadonlySet<string>).has(round);
@@ -287,6 +320,10 @@ export const MatchResultSchema = z
       .object({
         base_strength: TeamStrengthSchema,
         active_strength: TeamStrengthSchema,
+        manager_tactical_band: z.number().int().min(0).max(2),
+        manager_tactical_multiplier: z.number().finite().min(1),
+        post_tactical_strength: TeamStrengthSchema,
+        tactical_applied_to_outcome: z.boolean(),
         base_synergy: SynergyResultSchema,
         active_synergy: SynergyResultSchema,
         unavailable: z.array(
@@ -349,9 +386,107 @@ export const MatchResultSchema = z
   })
   .superRefine((m, ctx) => {
     if (m.team_facts) {
-      const availabilityEvents = m.events.filter(
-        (event): event is AvailabilityEvent =>
-          event.type === "availability" && event.side === "user",
+      const userStartedCount = m.lineup.filter(
+        (entry) => entry.side === "user" && entry.started,
+      ).length;
+      if (userStartedCount + m.team_facts.short_handed_slot_ids.length !== CANONICAL_XI_SIZE) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "started user lineup entries plus short_handed_slot_ids must account for the canonical XI",
+          path: ["team_facts", "short_handed_slot_ids"],
+        });
+      }
+      if (m.team_facts.short_handed_slot_ids.length > 0) {
+        const startedUserEntries = m.lineup.filter(
+          (entry) => entry.side === "user" && entry.started,
+        );
+        if (
+          !accountsForExactKnownFormation(
+            startedUserEntries,
+            m.team_facts.short_handed_slot_ids,
+            m.team_facts.unavailable,
+          )
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message:
+              "started user and short-handed slots must match the identities and coarse positions of one known formation",
+            path: ["team_facts", "short_handed_slot_ids"],
+          });
+        }
+      }
+      const expectedTactical = applyManagerTacticalAdjustment(
+        m.team_facts.active_strength,
+        m.team_facts.active_synergy.manager_link,
+        m.team_facts.tactical_applied_to_outcome,
+      );
+      if (m.team_facts.manager_tactical_band !== expectedTactical.manager_tactical_band) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "manager_tactical_band must reconcile with active manager link and application",
+          path: ["team_facts", "manager_tactical_band"],
+        });
+      }
+      if (
+        m.team_facts.manager_tactical_multiplier !== expectedTactical.manager_tactical_multiplier
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "manager_tactical_multiplier must reconcile with the applied tactical band",
+          path: ["team_facts", "manager_tactical_multiplier"],
+        });
+      }
+      for (const channel of ["attack", "midfield", "defense", "goalkeeping", "coverage"] as const) {
+        if (
+          m.team_facts.post_tactical_strength[channel] !==
+          expectedTactical.post_tactical_strength[channel]
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `post_tactical_strength.${channel} must reconcile with active strength and multiplier`,
+            path: ["team_facts", "post_tactical_strength", channel],
+          });
+        }
+      }
+      const honestBypassedOutcome =
+        m.pre_match_win_probability === 0 &&
+        m.user_goals === 0 &&
+        m.opp_goals === INJURY.FORFEIT_OPP_GOALS &&
+        m.user_goals_et === null &&
+        m.opp_goals_et === null &&
+        m.shootout === null &&
+        m.outcome === "L" &&
+        !m.counts_as_run_win &&
+        !m.advanced &&
+        m.lineup.every((entry) => entry.side === "user") &&
+        m.lineup.filter((entry) => entry.side === "user" && entry.started).length <
+          INJURY.FIELDABLE_FLOOR &&
+        m.lineup.every((entry) => entry.minutes === 0) &&
+        m.events.every((event) => event.type === "availability" && event.side === "user");
+      if (
+        (m.team_facts.tactical_applied_to_outcome && m.pre_match_win_probability <= 0) ||
+        (!m.team_facts.tactical_applied_to_outcome && !honestBypassedOutcome)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "tactical_applied_to_outcome must be true for simulated matches and false only for canonical forfeits",
+          path: ["team_facts", "tactical_applied_to_outcome"],
+        });
+      }
+      const allAvailabilityEvents = m.events.filter(
+        (event): event is AvailabilityEvent => event.type === "availability",
+      );
+      if (allAvailabilityEvents.some((event) => event.side !== "user")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "availability events in user team facts must be user-side",
+          path: ["events"],
+        });
+      }
+      const availabilityEvents = allAvailabilityEvents.filter(
+        (event): event is AvailabilityEvent => event.side === "user",
       );
       for (let index = 0; index < m.team_facts.unavailable.length; index++) {
         const unavailable = m.team_facts.unavailable[index]!;
@@ -436,6 +571,21 @@ export const MatchResultSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "bench activation contradicts its availability event",
+            path: ["team_facts", "bench_activations", index],
+          });
+        }
+        const activeReplacement = m.lineup.filter(
+          (entry) => entry.side === "user" && entry.started && entry.slot_id === activation.slot_id,
+        );
+        if (
+          activeReplacement.length !== 1 ||
+          (activeReplacement[0]!.card_id as string) !== (activation.in_card_id as string) ||
+          activeReplacement[0]!.player_id !== activation.in_player_id ||
+          activeReplacement[0]!.position !== activation.line
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "bench activation must match the active replacement in the lineup",
             path: ["team_facts", "bench_activations", index],
           });
         }

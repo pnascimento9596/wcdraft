@@ -4,6 +4,112 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Season 2 Squad Depth — Unit S2 manager tactical band:
+2026-07-12 · local RED implementation on
+`ws-core/season2-s2-manager-tactics`, based on verified integration head
+`7123d3d7182852715b0006aedd3a001e3b22855f`. A second manager channel now
+maps active per-match `SynergyResult.manager_link` into a discrete internal
+`+0/+1/+2` tactical tier. It applies a conservative S3-owned maximum width of
+1% uniformly to attack, midfield, defense, and goalkeeping exactly once before
+the four-channel lambda map; the same post-tactical user strength is consumed
+as the attacking side and the defending side. The existing aggregate-time
+`managerBandModifier` remains unchanged and display-only `ManagerRating.overall`
+remains unread.
+
+Each simulated match persists the applied tier, multiplier,
+post-tactical strength, and an explicit `tactical_applied_to_outcome=true`.
+Managerless ready/direct-engine inputs are reachable and persist a neutral tier
+while still recording that the neutral channel passed through the outcome
+seam. Forfeits bypass the seam and retain neutral facts with the flag false.
+The MatchResult boundary recomputes and reconciles all four factual channels;
+legacy MatchResults may still omit `team_facts` entirely. Local evidence:
+focused tactical+decoupling+availability 34/34; full core 422/422; core
+typecheck and lint PASS. The first fresh exact-head review correctly rejected
+candidate `f08b1e406a4537685380accac705f92594ab60f8`: the MatchResult boundary
+accepted a forged full-XI 0-3 shape as a bypassed outcome. Fix-forward now
+requires a canonical forfeit lineup to contain user entries only and fewer
+started user entries than `INJURY.FIELDABLE_FLOOR`; adversarial tests reject 11
+starters and accept exactly floor-minus-one. This schema-only correction moves
+no engine output or golden fixture; the prior approval is void and fresh review
+is required.
+
+Root adversarial hardening before fresh review closed a second deletion spoof:
+reducing lineup rows below the floor was not sufficient evidence that formation
+slots were actually unfilled. The boundary now enforces the conservation
+equation `started user entries + short_handed_slot_ids = 11` for every factual
+match. Because S1 already reconciles the short slot set exactly against
+short-handed availability events and unavailable facts, deleted lineup rows
+must now carry all corresponding cross-channel evidence. The positive forfeit
+fixture contains five unavailable facts/events/short slots for six remaining
+starters; missing all, missing one, or adding an extra slot rejects. This
+schema-only hardening also moves no engine output or artifacts.
+
+The second fresh reviewer correctly failed candidate
+`3d0c5197e19407a6f5ccab86eb394e711c4c7d8f`: count conservation still allowed
+a short-handed fact/event/slot to be moved onto an occupied starter slot or an
+invented ID. Fix-forward now resolves every non-empty short-handed record
+against authoritative `FORMATION_TEMPLATES`; the distinct union of started user
+slot IDs and short-handed slot IDs must equal the exact 11-slot set of one known
+formation, with no overlap or duplicates. Zero-short neutral/direct synthetic
+matches retain count-only validation because their slot IDs need not belong to
+a draft formation. Regressions reject occupied-slot swaps, invented slots, and
+duplicate started slots while the exact canonical set accepts. Prior review and
+cross-model approvals are void; fresh review must target the new exact head.
+
+The third fresh reviewer correctly failed candidate
+`10c33b4c78d5f43f0977a04a64de2913144b344e`: canonical slot-set equality still
+allowed a coordinated occupied/short cross-line swap. An MF starter could be
+relabelled onto the missing RB slot while the unavailable DF fact/event/short
+set claimed the formerly occupied CDM slot, preserving the same eleven IDs.
+Fix-forward now validates the selected authoritative template as a slot-ID to
+coarse-position mapping. Every started-user lineup row and short-handed
+unavailable fact must agree with that mapping, so the coordinated spoof
+rejects. Focused 33/33, full core 421/421, core typecheck/lint, forced core
+goldens 69+42, and forced data integration 22/22 pass; this schema/test change
+moves no engine output, fixture, RNG, or generated artifact. The third-review
+FAIL is `/tmp/season2-s2-exact-review-10c33b4.md` (SHA-256
+`d31cd6317073c091a574668214c6b8150151756df32a52e27b6efe8de46e5714`). Its
+approval boundary is void; fresh review must target the replacement exact head.
+
+The required cross-model route then transport-failed twice on
+`ollama-cloud/glm-5.2` and once on fallback `xai/grok-4.5`, each ending during
+inspection without a verdict. The contract-mandated second fresh-context
+substitute reviewer correctly failed exact head
+`3ce84cfd7c0044808d6fe42ee6b03d0624d9ea0f`: a false tactical flag still
+accepted a mutually consistent invented unavailability/replacement fact,
+activation, and event on an occupied slot even though the lineup retained its
+original occupant; opponent-side availability noise also parsed. Fix-forward
+now requires factual availability events to be user-side and reconciles every
+activation to the exact started incoming card/player, slot, and line in the
+lineup. Both reproductions reject. Focused coverage is 34/34, focused plus sim
+goldens 92/92, full core 422/422, core typecheck/lint, forced core goldens
+69+42, and forced integration 22/22 pass. No engine output, RNG, fixture, or
+generated artifact moved. The substitute FAIL is
+`/tmp/season2-crossmodel-s2.md` (SHA-256
+`ec4c395fde731f8707691d69895927fbfa02165f69805a51403cbf152a886914`); all
+verdicts on that head are void.
+
+Candidate-level broader evidence remains core goldens 69+42; forced data golden
+59/59; data integration 22/22; leaderboard golden 6/6; heavy realism 10/10 at
+N=2000 x 3; root typecheck 8/8, lint 5/5, test 8/8, and build 4/4 (40 pages).
+The intentional core sim golden delta is confined to
+the manager-linked `draw_into_pens` fixture at the same seed: outcome/path
+remain stable while score moves 88 -> 85 from one additional yellow and one
+missed penalty. The real-run integration golden adds the four factual fields
+with no outcome delta.
+
+The mandatory five-step compact -> score-distribution -> compact -> Daily ->
+compact closure completed with the fixed 2026-07-10 + 44-day runway. Both
+output artifacts are byte-identical to S1: score-distribution raw SHA-256
+`2ef76e41bae2ca70c38da5586cab5b7506a44b212b10769119386850805fc219`
+and Daily raw SHA-256
+`1081ae1c73f52dbbd731677c9b14aec6aeb256266021e8032144be21f750bc62`.
+Heavy policy counts and strategic score population are also unchanged. S3 owns
+the final calibration, production engine-anchor rollover, combined manager
+sensitivity, and cumulative artifact re-close. Durable report:
+`docs/reports/season2-s2-manager-tactical-band-2026-07-12.md`. Fresh-context
+review, cross-model spot review, CI, and integration merge remain required.
+
 Season 2 Squad Depth — Unit S1 availability and bench mechanics:
 2026-07-12 · local RED implementation on `ws-core/season2-s1-depth`, based on
 integration head `59f74d3de68552f9602f9f849e575c2627c0de91`. Seeded pre-match
