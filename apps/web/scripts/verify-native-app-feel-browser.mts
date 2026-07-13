@@ -117,30 +117,33 @@ async function startServer(): Promise<{ baseUrl: string; stop: () => Promise<voi
   };
   proc.stdout.on("data", append);
   proc.stderr.on("data", append);
-  const deadline = Date.now() + 120_000;
-  while (Date.now() < deadline) {
-    if (proc.exitCode !== null)
-      throw new Error(`Next dev exited ${proc.exitCode.toString()}\n${logs}`);
-    try {
-      const response = await fetch(baseUrl, { signal: AbortSignal.timeout(2_000) });
-      if (response.status < 500) break;
-    } catch {
-      // Keep polling until the bounded deadline.
-    }
-    await delay(500);
-  }
-  if (Date.now() >= deadline) {
+  let stopped = false;
+  const stop = async () => {
+    if (stopped) return;
+    stopped = true;
     await stopProcess(proc);
-    throw new Error(`timed out waiting for Next dev\n${logs}`);
-  }
-  return {
-    baseUrl,
-    stop: async () => {
-      await stopProcess(proc);
-      if (nextEnv === null) await rm(nextEnvPath, { force: true });
-      else await writeFile(nextEnvPath, nextEnv);
-    },
+    if (nextEnv === null) await rm(nextEnvPath, { force: true });
+    else await writeFile(nextEnvPath, nextEnv);
   };
+  try {
+    const deadline = Date.now() + 120_000;
+    while (Date.now() < deadline) {
+      if (proc.exitCode !== null)
+        throw new Error(`Next dev exited ${proc.exitCode.toString()}\n${logs}`);
+      try {
+        const response = await fetch(baseUrl, { signal: AbortSignal.timeout(2_000) });
+        if (response.status < 500) break;
+      } catch {
+        // Keep polling until the bounded deadline.
+      }
+      await delay(500);
+    }
+    if (Date.now() >= deadline) throw new Error(`timed out waiting for Next dev\n${logs}`);
+    return { baseUrl, stop };
+  } catch (error) {
+    await stop();
+    throw error;
+  }
 }
 
 async function readState(target: Locator): Promise<ElementState> {

@@ -27,6 +27,7 @@
     "verify:open-draft-browser": "tsx scripts/verify-open-draft-browser-proof.mts",
     "test:responsive:shell": "tsx scripts/test-responsive-shell-fit.mts",
     "verify:responsive-layout": "tsx scripts/verify-responsive-layout-browser.mts",
+    "preverify:native-app-feel": "pnpm exec turbo run build --filter=@wcdraft/web^...",
     "verify:native-app-feel": "tsx scripts/verify-native-app-feel-browser.mts"
   },
   "dependencies": {
