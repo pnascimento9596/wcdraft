@@ -2,13 +2,8 @@
   "phase": "after",
   "baseUrl": "http://127.0.0.1:3032",
   "axeSource": "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js",
-  "surfaces": [
-    "mode-select-available"
-  ],
-  "viewports": [
-    "390x844",
-    "360x800"
-  ],
+  "surfaces": ["mode-select-available"],
+  "viewports": ["390x844", "360x800"],
   "generatedAt": "2026-07-13T21:51:14.809Z",
   "metrics": [
     {
