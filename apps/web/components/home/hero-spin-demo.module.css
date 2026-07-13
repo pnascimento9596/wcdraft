@@ -390,9 +390,64 @@
   }
 }
 
+@media (max-width: 430px) {
+  .demoShell {
+    min-block-size: 10.75rem;
+  }
+
+  .demo,
+  .poster {
+    gap: 0.38rem;
+    padding: 0.5rem;
+  }
+
+  .pickBadge,
+  .posterBadge {
+    min-block-size: 1.65rem;
+    padding-inline: 0.5rem;
+    font-size: 0.68rem;
+  }
+
+  .statusTitle,
+  .posterTitle {
+    font-size: 0.64rem;
+  }
+
+  .drum,
+  .posterPitch {
+    min-block-size: 4.7rem;
+  }
+
+  .posterCard {
+    padding: 0.4rem 0.48rem;
+  }
+
+  .posterFlag {
+    inline-size: 2rem;
+    block-size: 1.3rem;
+  }
+
+  .resultName,
+  .posterName {
+    font-size: 1.08rem;
+  }
+
+  .resultMeta,
+  .posterMeta {
+    font-size: 0.7rem;
+    line-height: 1.25;
+  }
+
+  .posterPosition {
+    min-inline-size: 1.9rem;
+    block-size: 1.9rem;
+    font-size: 0.82rem;
+  }
+}
+
 @media (max-width: 380px) {
   .demoShell {
-    min-block-size: 12.25rem;
+    min-block-size: 10.25rem;
   }
 
   .demo {
