@@ -383,6 +383,34 @@ describe("S2 tournament reachability and persisted facts", () => {
     };
     expect(MatchResultSchema.safeParse(duplicateStarted).success).toBe(false);
 
+    const crossLinePair = coherent.team_facts.short_handed_slot_ids
+      .map((slotId) => ({
+        slotId,
+        fact: coherent.team_facts.unavailable.find((entry) => entry.slot_id === slotId),
+      }))
+      .flatMap(({ slotId, fact }) =>
+        fact
+          ? keptStarters
+              .filter((entry) => entry.position !== fact.position)
+              .map((entry) => ({ slotId, entry }))
+          : [],
+      )[0];
+    expect(crossLinePair).toBeDefined();
+    const coordinatedSwapBase = replaceShortSlot(
+      coherent,
+      crossLinePair!.slotId,
+      crossLinePair!.entry.slot_id,
+    );
+    const coordinatedOccupiedShortSwap = {
+      ...coordinatedSwapBase,
+      lineup: coordinatedSwapBase.lineup.map((entry) =>
+        entry.card_id === crossLinePair!.entry.card_id
+          ? { ...entry, slot_id: crossLinePair!.slotId }
+          : entry,
+      ),
+    };
+    expect(MatchResultSchema.safeParse(coordinatedOccupiedShortSwap).success).toBe(false);
+
     expect(MatchResultSchema.safeParse(coherent).success).toBe(true);
   });
 });

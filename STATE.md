@@ -56,6 +56,21 @@ a draft formation. Regressions reject occupied-slot swaps, invented slots, and
 duplicate started slots while the exact canonical set accepts. Prior review and
 cross-model approvals are void; fresh review must target the new exact head.
 
+The third fresh reviewer correctly failed candidate
+`10c33b4c78d5f43f0977a04a64de2913144b344e`: canonical slot-set equality still
+allowed a coordinated occupied/short cross-line swap. An MF starter could be
+relabelled onto the missing RB slot while the unavailable DF fact/event/short
+set claimed the formerly occupied CDM slot, preserving the same eleven IDs.
+Fix-forward now validates the selected authoritative template as a slot-ID to
+coarse-position mapping. Every started-user lineup row and short-handed
+unavailable fact must agree with that mapping, so the coordinated spoof
+rejects. Focused 33/33, full core 421/421, core typecheck/lint, forced core
+goldens 69+42, and forced data integration 22/22 pass; this schema/test change
+moves no engine output, fixture, RNG, or generated artifact. The third-review
+FAIL is `/tmp/season2-s2-exact-review-10c33b4.md` (SHA-256
+`d31cd6317073c091a574668214c6b8150151756df32a52e27b6efe8de46e5714`). Its
+approval boundary is void; fresh review must target the replacement exact head.
+
 Candidate-level broader evidence remains core goldens 69+42; forced data golden
 59/59; data integration 22/22; leaderboard golden 6/6; heavy realism 10/10 at
 N=2000 x 3; root typecheck 8/8, lint 5/5, test 8/8, and build 4/4 (40 pages).

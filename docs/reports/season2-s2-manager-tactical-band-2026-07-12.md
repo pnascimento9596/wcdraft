@@ -8,7 +8,7 @@ Base: `7123d3d7182852715b0006aedd3a001e3b22855f` (`season/squad-depth`)
 
 Risk: RED (match outcome semantics)
 
-Status: local implementation and first-review fix-forward complete; fresh
+Status: local implementation and third-review fix-forward complete; fresh
 independent and cross-model reviews, CI, and integration merge remain pending
 
 ## Outcome
@@ -103,11 +103,12 @@ completion invariant.
   carries matching unavailable facts and short-handed availability events;
   deleting rows without that evidence, omitting one short slot, or adding an
   extra slot rejects.
-- When short-handed slots exist, the distinct occupied-plus-short slot union
-  must equal the exact 11-slot ID set of one authoritative
-  `FORMATION_TEMPLATES` entry. Moving a short fact/event onto an occupied slot,
-  inventing a slot, or duplicating an occupied slot rejects. Zero-short
-  synthetic neutral matches intentionally skip template-ID matching.
+- When short-handed slots exist, the occupied-plus-short rows must match both
+  the exact 11 slot IDs and each slot's canonical coarse position from one
+  authoritative `FORMATION_TEMPLATES` entry. Moving a short fact/event onto an
+  occupied slot, inventing or duplicating a slot, or coordinating an
+  occupied/short cross-line slot swap rejects. Zero-short synthetic neutral
+  matches intentionally skip template matching.
 
 ## Golden delta audit
 
@@ -123,13 +124,13 @@ mechanic, not a calibration claim.
 ## Validation evidence
 
 - `pnpm --filter @wcdraft/core exec vitest run src/engine/manager-tactics.test.ts src/manager-modifier-decoupling.guard.test.ts src/engine/availability.test.ts`
-  — PASS, 3 files / 33 tests at the second-review fix-forward head.
+  — PASS, 3 files / 33 tests at the third-review fix-forward worktree.
 - `pnpm --filter @wcdraft/core typecheck` — PASS.
 - `pnpm --filter @wcdraft/core lint` — PASS.
 - `pnpm --filter @wcdraft/core run gen:sim-golden` — PASS; five scenario
   fixtures regenerated with the delta audited above.
 - `pnpm --filter @wcdraft/core test` — PASS, 28 files / 421 tests at the
-  second-review fix-forward head.
+  third-review fix-forward worktree.
 - Five-step artifact closure (`build:compact` -> `build:score-distribution` ->
   `build:compact` -> pinned `build:daily-seed-salt-map` -> `build:compact`) —
   PASS. Daily parameters: start `2026-07-10`, 45 days, N=128, maximum eight
@@ -204,6 +205,25 @@ invented slots, duplicate started slots, and the exact canonical acceptance
 case. Focused 33/33, full core 421/421, core typecheck/lint, forced core goldens
 69+42, and data integration 22/22 pass without output, fixture, or artifact
 movement. All earlier approvals remain void.
+
+The third fresh reviewer then correctly failed candidate
+`10c33b4c78d5f43f0977a04a64de2913144b344e`. Set equality still allowed a
+coordinated occupied/short swap: a kept MF starter could claim the missing RB
+slot while the unavailable DF fact/event/short set claimed the formerly
+occupied CDM slot. The union remained the canonical eleven IDs, but the record
+no longer described the template's slot-to-line mapping.
+
+Fix-forward now resolves the matching authoritative template as a mapping from
+slot ID to canonical coarse position. Every started-user row and every
+short-handed unavailable fact must match that mapping, in addition to the
+existing distinct-ID, conservation, and bidirectional event checks. The exact
+coordinated cross-line swap regression now rejects. This remains a schema/test
+only correction: focused 33/33, full core 421/421, core typecheck/lint, forced
+core goldens 69+42, and forced data integration 22/22 pass with no engine,
+fixture, RNG, or generated-artifact movement. The third-review FAIL report is
+`/tmp/season2-s2-exact-review-10c33b4.md` (SHA-256
+`d31cd6317073c091a574668214c6b8150151756df32a52e27b6efe8de46e5714`). A new
+exact-head review is mandatory.
 
 ## Per-unit artifact closure
 
