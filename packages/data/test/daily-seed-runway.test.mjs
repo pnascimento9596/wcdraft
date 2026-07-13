@@ -345,13 +345,21 @@ describe("actual workflow mutation contract", () => {
     ).toThrow(/cleanup_git_auth/u);
   });
 
-  it("fails when the A0 self-hosted runner or trust boundary drifts", () => {
+  it("fails when the A0 runner binding or trust boundary drifts", () => {
+    // Nightly remains self-hosted (out of scope for hosted CI migration).
     expect(() =>
       validateDailyRefreshWorkflowContract(
         nightly.replace("runs-on: [self-hosted, macOS, ARM64, wcdraft]", "runs-on: ubuntu-latest"),
         ci,
       ),
     ).toThrow(/self-hosted macOS ARM64/u);
+    // Required-gate CI must stay on ubuntu-latest.
+    expect(() =>
+      validateDailyRefreshWorkflowContract(
+        nightly,
+        ci.replaceAll("runs-on: ubuntu-latest", "runs-on: [self-hosted, macOS, ARM64, wcdraft]"),
+      ),
+    ).toThrow(/ubuntu-latest/u);
     expect(() =>
       validateDailyRefreshWorkflowContract(
         nightly,

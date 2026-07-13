@@ -344,12 +344,35 @@ function validateSelfHostedWorkflowContract(source, { jobs, label }) {
   requireWorkflowFragment(source, "cancel-in-progress: true", `${label} concurrency`);
 }
 
+/** Required-gate CI runs on GitHub-hosted ubuntu-latest (no persistent-runner hygiene). */
+function validateHostedCiWorkflowContract(source, { jobs, label }) {
+  const exactRunsOn = "    runs-on: ubuntu-latest";
+  const runsOnLines = source.match(/^ {4}runs-on:.*$/gmu) ?? [];
+  if (runsOnLines.length !== jobs || runsOnLines.some((line) => line !== exactRunsOn)) {
+    fail(`${label} must bind all ${jobs} jobs to ubuntu-latest`);
+  }
+  for (const [fragment, fragmentLabel] of [
+    ["uses: actions/checkout@", "pinned checkout"],
+    ["          clean: true", "clean checkout"],
+    ["          persist-credentials: false", "non-persistent checkout credentials"],
+  ]) {
+    requireWorkflowFragmentCount(source, fragment, jobs, `${label} ${fragmentLabel}`);
+  }
+  if (source.includes("uses: ./.github/actions/self-hosted-runner-hygiene")) {
+    fail(`${label} must not use self-hosted-runner-hygiene on github-hosted runners`);
+  }
+  if (source.includes("scripts/ci/self-hosted-runner-hygiene.test.sh")) {
+    fail(`${label} must not run the self-hosted-runner-hygiene probe on github-hosted runners`);
+  }
+  requireWorkflowFragment(source, "cancel-in-progress: true", `${label} concurrency`);
+}
+
 /** Bind the actual workflow files to every state-changing helper decision. */
 export function validateDailyRefreshWorkflowContract(nightlySource, ciSource) {
   if (typeof nightlySource !== "string" || typeof ciSource !== "string") {
     fail("nightly and CI workflow sources must be strings");
   }
-  validateSelfHostedWorkflowContract(ciSource, { jobs: 10, label: "CI workflow" });
+  validateHostedCiWorkflowContract(ciSource, { jobs: 10, label: "CI workflow" });
   validateSelfHostedWorkflowContract(nightlySource, { jobs: 3, label: "nightly workflow" });
   requireWorkflowFragment(
     nightlySource,
@@ -363,7 +386,7 @@ export function validateDailyRefreshWorkflowContract(nightlySource, ciSource) {
     "name: ${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}",
     "if: ${{ always() && github.actor != 'dependabot[bot]' }}",
   ]) {
-    requireWorkflowFragment(ciSource, fragment, "CI self-hosted trust boundary");
+    requireWorkflowFragment(ciSource, fragment, "CI dependabot trust boundary");
   }
   validateWorkflowBuilderInvocation(nightlySource);
   requireWorkflowOrder(
