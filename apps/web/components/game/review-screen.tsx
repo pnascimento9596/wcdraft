@@ -24,6 +24,7 @@ import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { draftHref, resultsHref } from "@/lib/game/navigation";
 import {
   saveRunRecord,
+  setRunArrangement,
   setRunSimulation,
   setRunStatus,
   type RunRecordV1,
@@ -233,9 +234,14 @@ function ReviewBoard({
   const validation = useMemo(() => validateSquad(draft), [draft]);
   const [warningsExpanded, setWarningsExpanded] = useState(false);
   const [selectedSheetSlot, setSelectedSheetSlot] = useState<string | null>(null);
+  const arrangementMutable =
+    record.simulation === undefined &&
+    record.status !== "simulating" &&
+    record.status !== "complete";
 
   const swapSheetSlot = useCallback(
     (slotId: string) => {
+      if (!arrangementMutable) return;
       if (selectedSheetSlot === null) {
         setSelectedSheetSlot(slotId);
         return;
@@ -253,21 +259,36 @@ function ReviewBoard({
       }
       const nextArrangement = [...arrangement];
       [nextArrangement[from], nextArrangement[to]] = [nextArrangement[to]!, nextArrangement[from]!];
-      const next: RunRecordV1 = {
-        ...record,
-        updated_seq: record.updated_seq + 1,
-        arrangement: nextArrangement,
-      };
-      const save = saveRunRecord(next);
+      const save = setRunArrangement(record.run_id, gameData.versions, nextArrangement);
+      if (save.status !== "updated" || !save.record) {
+        setSelectedSheetSlot(null);
+        const authoritative = save.record ?? record;
+        onRecordUpdate(
+          authoritative,
+          save.status === "conflict"
+            ? "Team-sheet arrangement is locked because this run has already simulated."
+            : "Couldn't save the team-sheet arrangement. Reload Review and try again.",
+        );
+        return;
+      }
       const warning =
         save.persistence === "volatile" || save.warnings.length > 0
           ? save.warnings.join(" · ") ||
             "Team sheet is saved in this tab only — browser storage is unavailable."
           : persistenceWarning;
       setSelectedSheetSlot(null);
-      onRecordUpdate(next, warning ?? null);
+      onRecordUpdate(save.record, warning ?? null);
     },
-    [arrangement, onRecordUpdate, persistenceWarning, record, selectedSheetSlot, sourceDraft],
+    [
+      arrangement,
+      arrangementMutable,
+      gameData.versions,
+      onRecordUpdate,
+      persistenceWarning,
+      record,
+      selectedSheetSlot,
+      sourceDraft,
+    ],
   );
 
   // Memory / Blind Open preserve blind picks, then reveal the complete factual
@@ -396,7 +417,11 @@ function ReviewBoard({
               Current
             </span>
           ) : null}
-          <span className={s.panelMeta}>Tap two players to swap · fit never blocks</span>
+          <span className={s.panelMeta}>
+            {arrangementMutable
+              ? "Tap two players to swap · fit never blocks"
+              : "Team sheet locked during and after simulation"}
+          </span>
         </div>
         <div className={s.squadStage}>
           <Pitch
@@ -405,9 +430,9 @@ function ReviewBoard({
             linkedPairs={synergy.linked_pairs}
             showInactiveEdges
             selectedSlotId={selectedSheetSlot}
-            onSlotSelect={swapSheetSlot}
-            interactive
-            filledSlotInteraction
+            onSlotSelect={arrangementMutable ? swapSheetSlot : undefined}
+            interactive={arrangementMutable}
+            filledSlotInteraction={arrangementMutable}
           />
           <ManagerSlot manager={manager} />
         </div>
@@ -423,8 +448,11 @@ function ReviewBoard({
                   selectedSheetSlot === b.slot_id ? s.slotSelected : ""
                 }`}
                 aria-pressed={selectedSheetSlot === b.slot_id}
-                aria-label={`${b.slot_position} bench — ${b.card?.name ?? "open"}; select to swap`}
+                aria-label={`${b.slot_position} bench — ${b.card?.name ?? "open"}; ${
+                  arrangementMutable ? "select to swap" : "arrangement locked"
+                }`}
                 onClick={() => swapSheetSlot(b.slot_id)}
+                disabled={!arrangementMutable}
               >
                 <span className={s.benchSlotTop}>
                   <span className={s.slotPos}>{b.slot_position}</span>
@@ -559,6 +587,7 @@ function SimulatePanel({
 
   const startSim = useCallback(async () => {
     if (!complete || sim.kind === "running" || simInFlightRef.current) return;
+    if (record.simulation !== undefined || record.status === "complete") return;
     const attempt = handoffRef.current.begin();
     if (!attempt) return;
     simInFlightRef.current = true;
@@ -664,7 +693,10 @@ function SimulatePanel({
     }
   }, [complete, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
 
-  const note = !complete
+  const simulationLocked = record.simulation !== undefined || record.status === "complete";
+  const note = simulationLocked
+    ? "This completed run is read-only. Its team sheet and simulation stay paired."
+    : !complete
     ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
     : sim.kind === "running"
       ? sim.note
@@ -685,12 +717,18 @@ function SimulatePanel({
       )}
       <button
         type="button"
-        className={`btn btn--primary${!complete || sim.kind === "running" ? " btn--disabled" : ""}`}
+        className={`btn btn--primary${
+          !complete || simulationLocked || sim.kind === "running" ? " btn--disabled" : ""
+        }`}
         onClick={startSim}
-        disabled={!complete || sim.kind === "running"}
-        aria-disabled={!complete || sim.kind === "running"}
+        disabled={!complete || simulationLocked || sim.kind === "running"}
+        aria-disabled={!complete || simulationLocked || sim.kind === "running"}
       >
-        {sim.kind === "running" ? "Simulating…" : "Confirm team sheet & simulate"}
+        {simulationLocked
+          ? "Simulation complete"
+          : sim.kind === "running"
+            ? "Simulating…"
+            : "Confirm team sheet & simulate"}
       </button>
       <button
         type="button"

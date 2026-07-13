@@ -47,7 +47,7 @@ import { managerTournamentFor } from "./adapters";
 import type { GameData } from "./data";
 import { MissingRecordError } from "./errors";
 import { runWithSimulationWorker, SimulationWorkerBusyError } from "./sim-worker-client";
-import { materializeTeamSheetDraft } from "./team-sheet";
+import { projectTeamSheetDraft } from "./team-sheet";
 import type {
   PersistedKnockoutLadderMeta,
   PersistedKnockoutLadderRoundMeta,
@@ -412,11 +412,12 @@ async function runSimulationAsync(
 
 function prepareTeamSheetRecord(gameData: GameData, record: RunRecordV1): RunRecordV1 {
   if (record.arrangement === undefined) return record;
-  const { arrangement, ...withoutArrangement } = record;
-  return {
-    ...withoutArrangement,
-    draft: materializeTeamSheetDraft(gameData, record.draft, arrangement),
+  const projected: RunRecordV1 = {
+    ...record,
+    draft: projectTeamSheetDraft(gameData, record),
   };
+  delete projected.arrangement;
+  return projected;
 }
 
 async function runMainThread(

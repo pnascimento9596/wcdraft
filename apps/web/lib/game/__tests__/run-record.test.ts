@@ -10,11 +10,13 @@ import {
   RUN_RECORD_CAP,
   RUN_RECORD_PREFIX,
   saveRunRecord,
+  setRunArrangement,
   setRunPinned,
   setRunSimulation,
   setRunStatus,
   type RunRecordV1,
 } from "../run-record";
+import { asDraftedTeamSheet } from "../team-sheet";
 import { DAILY_DRAFT_CONFIG, type DailyChallenge } from "../daily";
 import { runSimulationSync } from "../simulate";
 import { decodeRunToken, encodeRunToken, reconstructDraftFromToken } from "../run-token";
@@ -280,6 +282,52 @@ describe("run-record persisted boundary", () => {
       updated_seq: completed.record!.updated_seq,
     });
     expect(loaded.record?.simulation).toEqual(simulation);
+  });
+
+  it("locks arrangement mutation once a simulation exists, including stale Review tabs", () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:arrangement-lock");
+    saveRunRecord(created);
+    const arranged = [...asDraftedTeamSheet(created.draft)];
+    [arranged[0], arranged[11]] = [arranged[11]!, arranged[0]!];
+    const savedArrangement = setRunArrangement(created.run_id, gameData.versions, arranged);
+    expect(savedArrangement).toMatchObject({ status: "updated", persistence: "durable" });
+
+    const simulating = setRunStatus(created.run_id, gameData.versions, "simulating");
+    expect(simulating.status).toBe("updated");
+    const midSimulationArrangement = [...arranged];
+    [midSimulationArrangement[1], midSimulationArrangement[12]] = [
+      midSimulationArrangement[12]!,
+      midSimulationArrangement[1]!,
+    ];
+    expect(
+      setRunArrangement(created.run_id, gameData.versions, midSimulationArrangement),
+    ).toMatchObject({ status: "conflict", persistence: "none" });
+
+    const { simulation } = runSimulationSync(
+      gameData,
+      SCENARIO_2026_BUNDLE,
+      savedArrangement.record!,
+    );
+    const completed = setRunSimulation(created.run_id, gameData.versions, simulation, {
+      status: "simulating",
+      updated_seq: simulating.record!.updated_seq,
+    });
+    expect(completed.status).toBe("updated");
+
+    const staleTabArrangement = [...arranged];
+    [staleTabArrangement[1], staleTabArrangement[12]] = [
+      staleTabArrangement[12]!,
+      staleTabArrangement[1]!,
+    ];
+    const rejected = setRunArrangement(
+      created.run_id,
+      gameData.versions,
+      staleTabArrangement,
+    );
+    expect(rejected).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(rejected.record?.arrangement).toEqual(arranged);
+    expect(rejected.record?.simulation).toEqual(simulation);
+    expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(completed.record);
   });
 
   it("keeps pinned runs past the five-record recent cap", () => {

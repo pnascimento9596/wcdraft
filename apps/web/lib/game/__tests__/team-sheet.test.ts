@@ -7,6 +7,7 @@ import {
   decodeTeamSheetArrangement,
   encodeTeamSheetArrangement,
   materializeTeamSheetDraft,
+  projectTeamSheetDraft,
   TeamSheetError,
   verifyTeamSheetArrangement,
 } from "../team-sheet";
@@ -19,6 +20,8 @@ import {
   virtualRecordFromToken,
 } from "../run-token";
 import type { RunRecordV1 } from "../run-record";
+import { buildShareView, topStars } from "../share-adapters";
+import { buildSavedRunSummary } from "../save-mirror";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 
 const gameData = buildGameDataFromBundles();
@@ -114,6 +117,40 @@ describe("team-sheet arrangement and shared mp+a reconciliation", () => {
     expect(replay.matches.every((match) => match.team_facts?.base_synergy !== undefined)).toBe(
       true,
     );
+  });
+
+  it("projects arranged facts consistently for local share, history/server summaries, and results", () => {
+    const record = swappedRecord("wcdraft:review:postcomplete:1");
+    const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, record);
+    const completed: RunRecordV1 = { ...record, status: "complete", simulation };
+    const projected = projectTeamSheetDraft(gameData, completed);
+    const view = buildShareView(gameData, completed, SCENARIO_2026_BUNDLE)!;
+    const summary = buildSavedRunSummary(gameData, completed)!;
+
+    expect(completed.draft.squad[0]!.card_id).not.toBe(completed.arrangement![0]);
+    expect(projected.squad[0]!.card_id).toBe(completed.arrangement![0]);
+    expect(view.stars).toEqual(topStars(gameData, projected, 3));
+    expect(summary.key_picks).toEqual(
+      topStars(gameData, projected, 3).map((star) => ({
+        name: star.name,
+        nation_code: star.nation_code,
+      })),
+    );
+  });
+
+  it("retains base draft, arrangement, and manager presence across an exact re-share", () => {
+    const record: RunRecordV1 = {
+      ...swappedRecord("wcdraft:team-sheet:reshare"),
+      manager_presence_band: 1,
+    };
+    const original = encodeRunToken(record);
+    const decoded = decodeRunToken(original)!;
+    const virtual = virtualRecordFromToken(decoded, gameData);
+
+    expect(virtual.draft).toEqual(record.draft);
+    expect(virtual.arrangement).toEqual(record.arrangement);
+    expect(virtual.manager_presence_band).toBe(1);
+    expect(encodeRunToken(virtual)).toBe(original);
   });
 
   it("rejects a forged mp through the same reconciliation used for arrangement", () => {

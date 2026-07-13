@@ -17,8 +17,15 @@ describe("team-sheet review contract", () => {
 
   it("persists only base draft plus arrangement and exposes tap-to-swap controls", () => {
     expect(SOURCE).toContain("materializeTeamSheetDraft(gameData, sourceDraft, arrangement)");
-    expect(SOURCE).toContain("arrangement: nextArrangement");
+    expect(SOURCE).toContain("setRunArrangement(record.run_id, gameData.versions, nextArrangement)");
     expect(SOURCE).toContain("filledSlotInteraction");
     expect(SOURCE).toContain("Confirm team sheet & simulate");
+  });
+
+  it("locks team-sheet edits and re-simulation for completed records", () => {
+    expect(SOURCE).toContain('record.status !== "simulating"');
+    expect(SOURCE).toContain('record.status !== "complete"');
+    expect(SOURCE).toContain("Team sheet locked during and after simulation");
+    expect(SOURCE).toContain("This completed run is read-only");
   });
 });

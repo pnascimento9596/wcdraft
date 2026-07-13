@@ -455,10 +455,56 @@ export function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
 }
 
 export interface UpdateRunRecordResult {
-  status: "updated" | "missing" | "stale" | "invalid";
+  status: "updated" | "missing" | "stale" | "invalid" | "conflict";
   record: RunRecordV1 | null;
   persistence: "durable" | "volatile" | "none";
   warnings: string[];
+}
+
+/**
+ * Persist an arrangement only while the run is pre-simulation.
+ *
+ * This read-modify-write boundary protects against both revisiting Review
+ * after completion and another tab completing the run between render and
+ * tap. A completed simulation is immutable evidence for its arrangement;
+ * changing only `a` would pair a stale score with a different XI.
+ */
+export function setRunArrangement(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  arrangement: TeamSheetArrangement,
+): UpdateRunRecordResult {
+  const loaded = loadRunRecord(run_id, currentVersions);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const status = loaded.status as "missing" | "stale" | "invalid";
+    return { status, record: null, persistence: "none", warnings: [] };
+  }
+  if (
+    loaded.record.simulation !== undefined ||
+    loaded.record.status === "simulating" ||
+    loaded.record.status === "complete"
+  ) {
+    return {
+      status: "conflict",
+      record: loaded.record,
+      persistence: "none",
+      warnings: ["Team-sheet arrangement is locked during and after simulation."],
+    };
+  }
+  const verified = verifyTeamSheetArrangement(loaded.record.draft, arrangement);
+  const storage = getStorage();
+  const next: RunRecordV1 = {
+    ...loaded.record,
+    updated_seq: nextCounter(storage),
+    arrangement: verified,
+  };
+  const save = saveRunRecord(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
 }
 
 /**

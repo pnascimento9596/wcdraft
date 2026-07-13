@@ -392,9 +392,20 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
  * URL is a viewer, not the originator).
  */
 export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData): RunRecordV1 {
-  const draft = reconcileRunToken(token, gameData);
+  // Validate through the same shared seam as OG/leaderboard, but retain the
+  // legal-pick draft as the record authority. The decoded arrangement is a
+  // separate fact; simulation/presentation project it ephemerally. This is
+  // essential for exact re-share round trips (projecting into `draft` here
+  // would make a subsequent encoder conclude that `a` is absent).
+  reconcileRunToken(token, gameData);
+  if (token.v !== 3 && token.v !== 4) {
+    throw new RunTokenError("legacy token version cannot materialize a current run record");
+  }
+  const draft = reconstructPickedDraftFromToken(token, gameData);
+  const arrangement =
+    token.a === undefined ? undefined : decodeTeamSheetArrangement(draft, token.a);
   const challenge =
-    (token.v === 3 || token.v === 4) && token.ch?.k === "daily"
+    token.ch?.k === "daily"
       ? isDailySeedForDate(token.ch.d, token.ch.s, gameData.dailySeedSaltMap)
         ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
         : undefined
@@ -407,6 +418,8 @@ export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData):
     updated_seq: 0,
     versions: gameData.versions,
     draft,
+    ...(arrangement === undefined ? {} : { arrangement }),
+    ...(token.mp === undefined ? {} : { manager_presence_band: token.mp }),
     status: "ready",
     ...(challenge === undefined ? {} : { challenge }),
   };

@@ -90,6 +90,35 @@ arranged token; S4 does not consolidate marketing into web replay authority.
    as drafted, while the explicitly out-of-scope shared marketing replay
    consolidation remains untouched.
 
+## Exact-review fix-forward
+
+The first independent exact-head review of `9b4dd658bd38042c712a3ad0b19e6101f8e45eb8`
+returned FAIL with three replay-integrity defects. The fix-forward keeps the
+same persistence authority (legal-pick `draft` plus optional `arrangement`) and
+closes the consumer gaps instead of persisting a projected draft:
+
+1. `projectTeamSheetDraft` is now the explicit ephemeral seam shared by
+   simulation and presentation. Results narratives, share stars/reveal,
+   Memory reveal, local history, and the saved-run server summary all resolve
+   the arranged XI/bench from it, so an arranged simulation can no longer be
+   displayed with as-drafted lineup facts.
+2. `setRunArrangement` performs an authoritative read-modify-write and returns
+   `conflict` while a simulation is active or complete. Completed Review is
+   visibly read-only, its starter/bench controls and simulation CTA are
+   disabled, and a stale tab cannot swap only the arrangement beneath an
+   existing result.
+3. `virtualRecordFromToken` validates through `reconcileRunToken` but retains
+   the reconstructed base draft plus decoded `arrangement` and `mp` facts.
+   Re-sharing that virtual record therefore reproduces the original canonical
+   token bytes, including `a`, rather than encoding the projected draft and
+   silently dropping the arrangement.
+
+Targeted regression coverage pins the exact re-share, the local presentation
+projection used by history/server summaries, completed and mid-simulation
+mutation conflicts, and the completed-Review browser contract. A fresh
+exact-head reviewer and cross-model spot review remain required on the new
+fix-forward SHA; the earlier FAIL is not represented as a pass.
+
 ## Validation evidence
 
 - Integration-tip floor at `98c0e07`: generated check, typecheck 8/8, lint
@@ -104,9 +133,14 @@ arranged token; S4 does not consolidate marketing into web replay authority.
   skips, DB 161/161, marketing 69/69, and web 1,179 passed with one
   expected benchmark skip. Game-flow passed. The responsive harness passed
   218/0 metrics: 84 desktop, 56 mobile shell, 40 interaction, 30 mode/setup,
-  and 8 opened-mobile-navigation. Logs: `/tmp/s4-root-test.log`; responsive
-  artifacts: `/tmp/wcdraft-ci-*-*` from the recorded run. Final exact-tree
-  aggregate log: `/tmp/s4-final-root-test.log`.
+  and 8 opened-mobile-navigation. The fix-forward head adds five web
+  regressions (t3/t4 exact re-share, projection consistency, lifecycle lock,
+  and Review contract), taking the final web count to 1,184 passed with one
+  expected benchmark skip; all other package counts remain unchanged. The
+  final root test passed 8/8 Turbo tasks in 7m33.352s. Logs:
+  `/tmp/s4-root-test.log`; responsive artifacts: `/tmp/wcdraft-ci-*-*` from
+  the recorded run. Final exact-tree aggregate log:
+  `/tmp/s4-final-root-test.log`.
 - Final root build: 4/4 tasks, 40 routes/pages. The pre-existing webpack
   circular-chunk and edge-runtime static-generation warnings remain; there was
   no build failure. Logs: `/tmp/s4-root-build.log`,
@@ -132,6 +166,13 @@ arranged token; S4 does not consolidate marketing into web replay authority.
   historically tolerated vestigial `og` field. This was fixed by preserving it
   explicitly as untrusted/non-authoritative; focused marketing parity and
   replay tests then passed 11/11. No failed result is presented as a pass.
+- The first fix-forward browser run correctly failed 12 desktop Review metrics:
+  its completed-run fixture still searched for the now-forbidden simulation
+  CTA. The harness contract was corrected to require the read-only
+  `Simulation complete` action. A clean standalone rerun and the final root
+  rerun each passed 218/0 (84 desktop, 56 mobile, 40 interaction, 30
+  mode/setup, 8 navigation). The failed run remains recorded at
+  `/var/folders/pj/s14bjlyn1376qj7pkcvxnn_c0000gn/T/wcdraft-ci-desktop-shell-Eyk8AD`.
 
 ## Risks and carryovers
 

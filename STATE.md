@@ -15,6 +15,15 @@ the arranged draft is ephemeral and feeds S1 availability/bench selection,
 Synergy, manager tactics, local/worker simulation, OG, ranked validation, and
 the lineup inspector.
 
+First exact-head review exposed three replay-integrity gaps, now fixed forward:
+one `projectTeamSheetDraft` seam supplies arranged facts to local Results,
+Share, Memory reveal, history, saved-run summaries, and simulation; Review
+atomically refuses arrangement changes while simulation is active or complete;
+and token-loaded virtual records retain the authoritative base draft plus
+decoded `a`/`mp`, so a re-share preserves canonical token bytes. The first
+review FAIL remains recorded in the durable report; a fresh review is required
+on the fix-forward head.
+
 Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
 `mp`. One shared reconciliation path covers all four presence combinations,
 ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
@@ -26,7 +35,7 @@ fails closed on arranged tokens instead of silently scoring the wrong XI.
 
 Measured closure: focused core token 4/4 and focused web 177/177; root
 typecheck 8/8, lint 5/5, test 8/8 (core 423, data 183 + 9 expected skips, DB
-161, marketing 69, web 1,179 + 1 expected benchmark skip), game-flow, responsive
+161, marketing 69, web 1,184 + 1 expected benchmark skip), game-flow, responsive
 218/0, and build 4/4 with 40 pages/routes. Forced goldens pass core 69+42,
 data 59, integration 22, and leaderboard 6; canary 1/1 proves zero pick flips;
 heavy realism passes 10/10 at N=2000 x three policies. Generated check and the

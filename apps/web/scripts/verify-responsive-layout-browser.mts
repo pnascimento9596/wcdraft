@@ -764,7 +764,10 @@ function surfaceCases(): readonly SurfaceCase[] {
       label: "squad-review",
       path: `/play/review?run=${completeA.run_id}`,
       shellRule: true,
-      primaryAction: { role: "button", name: /Confirm team sheet & simulate/u },
+      // The persisted fixture is complete, so Review must expose the
+      // read-only lifecycle state instead of an affordance that can pair a
+      // new arrangement with the old simulation.
+      primaryAction: { role: "button", name: /Simulation complete/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /4-3-3/u }).first().waitFor();
       },

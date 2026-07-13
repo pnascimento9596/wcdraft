@@ -9,6 +9,7 @@ import {
 } from "@wcdraft/core";
 
 import type { GameData } from "./data";
+import type { RunRecordV1 } from "./run-record";
 
 export const TEAM_SHEET_PLAYER_COUNT = 16 as const;
 export const TEAM_SHEET_STARTER_COUNT = 11 as const;
@@ -172,6 +173,23 @@ export function materializeTeamSheetDraft(
     } satisfies SquadSlot;
   });
   return { ...draft, squad };
+}
+
+/**
+ * The single ephemeral projection seam for record consumers.
+ *
+ * `record.draft` remains the immutable legal-pick authority used by token
+ * encoding and persistence. Simulation and every presentation surface call
+ * this helper so an arranged score can never be paired with the as-drafted
+ * XI/bench.
+ */
+export function projectTeamSheetDraft(
+  gameData: GameData,
+  record: Pick<RunRecordV1, "draft" | "arrangement">,
+): DraftState {
+  return record.arrangement === undefined
+    ? record.draft
+    : materializeTeamSheetDraft(gameData, record.draft, record.arrangement);
 }
 
 function fitWarnings(
