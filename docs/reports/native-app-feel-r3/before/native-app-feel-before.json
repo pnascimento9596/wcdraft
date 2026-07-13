@@ -125,11 +125,7 @@
       "layoutShift": false,
       "scrollStable": true,
       "horizontalOverflow": false,
-      "failures": [
-        "tap highlight=rgba(51, 181, 229, 0.4)",
-        "touch-action=auto",
-        "user-select=auto"
-      ]
+      "failures": ["tap highlight=rgba(51, 181, 229, 0.4)", "touch-action=auto", "user-select=auto"]
     },
     {
       "control": "PLAY DAILY MODE CARD",
@@ -641,11 +637,7 @@
       "layoutShift": false,
       "scrollStable": true,
       "horizontalOverflow": false,
-      "failures": [
-        "tap highlight=rgba(51, 181, 229, 0.4)",
-        "touch-action=auto",
-        "user-select=auto"
-      ]
+      "failures": ["tap highlight=rgba(51, 181, 229, 0.4)", "touch-action=auto", "user-select=auto"]
     },
     {
       "control": "PLAY DAILY MODE CARD",
@@ -1157,11 +1149,7 @@
       "layoutShift": false,
       "scrollStable": true,
       "horizontalOverflow": false,
-      "failures": [
-        "tap highlight=rgba(51, 181, 229, 0.4)",
-        "touch-action=auto",
-        "user-select=auto"
-      ]
+      "failures": ["tap highlight=rgba(51, 181, 229, 0.4)", "touch-action=auto", "user-select=auto"]
     },
     {
       "control": "PLAY DAILY MODE CARD",
@@ -1673,11 +1661,7 @@
       "layoutShift": false,
       "scrollStable": true,
       "horizontalOverflow": false,
-      "failures": [
-        "tap highlight=rgba(51, 181, 229, 0.4)",
-        "touch-action=auto",
-        "user-select=auto"
-      ]
+      "failures": ["tap highlight=rgba(51, 181, 229, 0.4)", "touch-action=auto", "user-select=auto"]
     },
     {
       "control": "PLAY DAILY MODE CARD",
