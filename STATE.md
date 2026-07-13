@@ -100,6 +100,32 @@ abort and callback-failure recovery coverage remains green. The `2320e56`
 FAIL is preserved in the durable report and the next exact head requires a new
 independent review.
 
+Fresh exact-head review of `53f0b2f` found a separate coherent-store blocker:
+record payload and counter writes could succeed, cap eviction could delete old
+payloads, and a quota failure on the final shared-index write was swallowed as
+durable success. The seventh fix-forward makes the already-serialized queue
+turn and store-wide Web Lock own one snapshot-backed logical transaction. It
+captures prior counter, raw index, indexed payloads, and the explicit target;
+all record, counter, cap, pin, cleanup, and index writes are tracked. A quota
+failure in a record save restores the durable bytes before hydrating the
+complete indexed authority into the tab-local store and replaying the save
+there. Cleanup and non-quota failures restore and throw rather than leaving a
+partial commit. Existing durable history is therefore not silently discarded.
+Rollback failure reports no success, blocks later mutation,
+serves pure reads from the last coherent snapshot, and retries exact durable
+recovery under the next locked turn. A quota
+failure on the storage capability probe remains on the readable durable path
+so the transaction can snapshot before failover. Focused regressions cover
+actual and raw creation, counter and record writes, existing pin/index writes,
+cap deletion followed by index failure, byte-identical durable rollback, and
+rollback-failure recovery while retaining the sixth-fix FIFO and one-level Web
+Lock contracts. The locked turn also reuses its admitted storage backend so a
+nested capability probe cannot bypass the snapshot. Draft creation re-resolves
+that active backend on each retry, preventing a post-quota retry from writing
+through a stale durable adapter. The `53f0b2f` FAIL is
+preserved in the durable report; the seventh-fix candidate still requires fresh
+exact-head independent review.
+
 Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
 `mp`. One shared reconciliation path covers all four presence combinations,
 ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
@@ -111,9 +137,10 @@ fails closed on arranged tokens instead of silently scoring the wrong XI.
 
 Measured closure: focused core token 4/4, focused S4 web 177/177, fourth
 fix-forward mutation coverage 56/56, and fifth fix-forward store coverage
-147/147; sixth fix-forward store coverage 148/148; sixth-head root typecheck
-8/8, lint 5/5, test 8/8
-(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,222 + 1
+147/147; sixth fix-forward store coverage 148/148; seventh-fix narrow store
+coverage 57/57 and changed-S4 web coverage 192/192 across 14 files; seventh-fix
+web typecheck passes. Seventh-fix root typecheck 8/8, lint 5/5, test 8/8
+(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,233 + 1
 expected benchmark skip), game-flow, responsive 218/0, and build 4/4 with 40
 pages/routes. Forced goldens pass core 69+42, data 59, integration 22, and
 leaderboard 6; canary 1/1 proves zero pick flips; heavy realism passes 10/10 at

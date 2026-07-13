@@ -136,6 +136,26 @@ const memoryBackend: StorageBackend = {
 
 let volatileMode = false;
 
+interface DurableStoreSnapshot {
+  readonly values: Map<string, string | null>;
+}
+
+interface StoreMutationTransaction {
+  storage: StorageBackend;
+  readonly durableSnapshot: DurableStoreSnapshot | null;
+  readonly mutatedDurableKeys: Set<string>;
+  readonly warnings: string[];
+}
+
+interface PendingDurableRecovery {
+  readonly storage: StorageBackend;
+  readonly snapshot: DurableStoreSnapshot;
+  readonly mutatedKeys: Set<string>;
+}
+
+let activeStoreMutation: StoreMutationTransaction | null = null;
+let pendingDurableRecovery: PendingDurableRecovery | null = null;
+
 interface RunMutationLockManager {
   request<T>(
     name: string,
@@ -153,20 +173,55 @@ export const RUN_MUTATION_LOCK_UNAVAILABLE_WARNING =
 
 function getStorage(): StorageBackend {
   if (volatileMode) return memoryBackend;
+  // Once a locked mutation has established its authority and snapshot, every
+  // nested store lookup in that turn must reuse the same backend. Re-probing
+  // localStorage here could independently fail and bypass the transaction by
+  // switching to an empty volatile map.
+  if (activeStoreMutation) return activeStoreMutation.storage;
+  if (pendingDurableRecovery && activeStoreMutation === null) {
+    const recovery = pendingDurableRecovery;
+    return {
+      getItem: (key) =>
+        recovery.snapshot.values.has(key)
+          ? (recovery.snapshot.values.get(key) ?? null)
+          : recovery.storage.getItem(key),
+      setItem: () => {
+        throw new StorageUnavailableError("Pending durable recovery is read-only");
+      },
+      removeItem: () => {
+        throw new StorageUnavailableError("Pending durable recovery is read-only");
+      },
+      isVolatile: true,
+    };
+  }
   if (typeof window === "undefined") return memoryBackend;
   try {
     const ls = window.localStorage;
     if (!ls) return memoryBackend;
-    // Probe — Safari private mode + restrictive iframes throw on set.
-    const probe = "__wcdraft_probe__";
-    ls.setItem(probe, "1");
-    ls.removeItem(probe);
-    return {
+    const durableBackend: StorageBackend = {
       getItem: (k) => ls.getItem(k),
       setItem: (k, v) => ls.setItem(k, v),
       removeItem: (k) => ls.removeItem(k),
       isVolatile: false,
     };
+    // Probe — Safari private mode + restrictive iframes throw on set.
+    const probe = "__wcdraft_probe__";
+    try {
+      ls.setItem(probe, "1");
+      ls.removeItem(probe);
+    } catch (error) {
+      if (isQuotaError(error)) {
+        try {
+          ls.removeItem(probe);
+        } catch {
+          // The transaction's first authoritative write will fail closed if
+          // storage is no longer writable; existing bytes remain readable.
+        }
+        return durableBackend;
+      }
+      throw error;
+    }
+    return durableBackend;
   } catch {
     volatileMode = true;
     return memoryBackend;
@@ -177,6 +232,8 @@ function getStorage(): StorageBackend {
 export function _resetVolatileStorageForTests(): void {
   memoryMap.clear();
   volatileMode = false;
+  activeStoreMutation = null;
+  pendingDurableRecovery = null;
   mutationLockManagerOverride = undefined;
   storeMutationTail = Promise.resolve();
 }
@@ -205,7 +262,11 @@ async function withRunStoreLock<T>(
   return withStoreMutationQueue(
     unavailable,
     async () => {
-      if (getStorage().isVolatile) return mutation();
+      const hasPendingRecovery = pendingDurableRecovery !== null;
+      const admittedStorage = getStorage();
+      if (!hasPendingRecovery && admittedStorage.isVolatile) {
+        return executeStoreMutation(mutation, admittedStorage);
+      }
 
       const manager = getRunMutationLockManager();
       if (!manager) return unavailable();
@@ -213,10 +274,17 @@ async function withRunStoreLock<T>(
       try {
         outcome = await manager.request(RUN_STORE_LOCK_NAME, { mode: "exclusive", signal }, () => {
           try {
-            // Storage may become volatile while this queue turn waits for
-            // or holds the Web Lock. The page queue already owns request
-            // order, so execute once without entering another queue.
-            return { kind: "value" as const, value: mutation() };
+            // The page queue owns this turn from storage admission through the
+            // Web Lock callback, so reuse that authority without a second
+            // capability probe. Pending recovery is the exception: it must be
+            // restored before a fresh durable backend is selected.
+            return {
+              kind: "value" as const,
+              value: executeStoreMutation(
+                mutation,
+                hasPendingRecovery ? undefined : admittedStorage,
+              ),
+            };
           } catch (error) {
             return { kind: "mutation-error" as const, error };
           }
@@ -231,6 +299,35 @@ async function withRunStoreLock<T>(
     },
     signal,
   );
+}
+
+function executeStoreMutation<T>(mutation: () => T, admittedStorage?: StorageBackend): T {
+  if (activeStoreMutation) {
+    throw new RunRecordError("Nested run-store mutations are not supported");
+  }
+  recoverDurableAuthorityOrThrow();
+  const storage = admittedStorage ?? getStorage();
+  const transaction: StoreMutationTransaction = {
+    storage,
+    durableSnapshot: storage.isVolatile ? null : captureDurableStoreSnapshot(storage),
+    mutatedDurableKeys: new Set<string>(),
+    warnings: [],
+  };
+  activeStoreMutation = transaction;
+  try {
+    return mutation();
+  } catch (error) {
+    if (
+      transaction.durableSnapshot &&
+      transaction.mutatedDurableKeys.size > 0 &&
+      pendingDurableRecovery === null
+    ) {
+      restoreDurableTransactionOrThrow(transaction);
+    }
+    throw error;
+  } finally {
+    activeStoreMutation = null;
+  }
 }
 
 async function withStoreMutationQueue<T>(
@@ -272,14 +369,13 @@ function nextCounter(storage: StorageBackend): number {
   const prev = raw ? Number.parseInt(raw, 10) : 0;
   const next = Number.isFinite(prev) && prev >= 0 ? prev + 1 : 1;
   try {
-    storage.setItem(RUN_COUNTER_KEY, String(next));
+    setStoreItem(storage, RUN_COUNTER_KEY, String(next));
   } catch (err) {
-    if (isQuotaError(err)) {
-      volatileMode = true;
-      memoryBackend.setItem(RUN_COUNTER_KEY, String(next));
-    } else {
-      throw err;
+    if (!isQuotaError(err)) {
+      throw new StorageUnavailableError(`Failed to advance run counter: ${String(err)}`);
     }
+    const fallback = switchActiveMutationToVolatile(next);
+    fallback.setItem(RUN_COUNTER_KEY, String(next));
   }
   return next;
 }
@@ -320,7 +416,7 @@ function loadIndex(storage: StorageBackend): RunRecordIndexV1 {
 }
 
 function saveIndex(storage: StorageBackend, idx: RunRecordIndexV1): void {
-  storage.setItem(RUN_INDEX_KEY, JSON.stringify(idx));
+  setStoreItem(storage, RUN_INDEX_KEY, JSON.stringify(idx));
 }
 
 function updateIndexEntry(idx: RunRecordIndexV1, rec: RunRecordV1): RunRecordIndexV1 {
@@ -358,6 +454,137 @@ function isQuotaError(err: unknown): boolean {
     name === "NS_ERROR_DOM_QUOTA_REACHED" ||
     /quota/i.test(err.message)
   );
+}
+
+function captureDurableStoreSnapshot(storage: StorageBackend): DurableStoreSnapshot {
+  const values = new Map<string, string | null>();
+  values.set(RUN_COUNTER_KEY, storage.getItem(RUN_COUNTER_KEY));
+  const rawIndex = storage.getItem(RUN_INDEX_KEY);
+  values.set(RUN_INDEX_KEY, rawIndex);
+  if (rawIndex) {
+    try {
+      const parsed = JSON.parse(rawIndex) as { entries?: Array<{ run_id?: unknown }> };
+      if (Array.isArray(parsed.entries)) {
+        for (const entry of parsed.entries) {
+          if (typeof entry?.run_id !== "string") continue;
+          const key = recordKey(entry.run_id);
+          if (!values.has(key)) values.set(key, storage.getItem(key));
+        }
+      }
+    } catch {
+      // Preserve malformed index bytes exactly. Without trustworthy run IDs,
+      // there is no honest record authority to infer beyond explicit targets.
+    }
+  }
+  return { values };
+}
+
+function ensureDurableSnapshotKey(transaction: StoreMutationTransaction, key: string): void {
+  if (!transaction.durableSnapshot || transaction.durableSnapshot.values.has(key)) return;
+  transaction.durableSnapshot.values.set(key, transaction.storage.getItem(key));
+}
+
+function setStoreItem(storage: StorageBackend, key: string, value: string): void {
+  const transaction = activeStoreMutation;
+  if (transaction && !transaction.storage.isVolatile && !storage.isVolatile) {
+    ensureDurableSnapshotKey(transaction, key);
+    transaction.mutatedDurableKeys.add(key);
+  }
+  storage.setItem(key, value);
+}
+
+function removeStoreItem(storage: StorageBackend, key: string): void {
+  const transaction = activeStoreMutation;
+  if (transaction && !transaction.storage.isVolatile && !storage.isVolatile) {
+    ensureDurableSnapshotKey(transaction, key);
+    transaction.mutatedDurableKeys.add(key);
+  }
+  storage.removeItem(key);
+}
+
+function restoreDurableValues(
+  storage: StorageBackend,
+  snapshot: DurableStoreSnapshot,
+  mutatedKeys: Set<string>,
+): void {
+  const absentKeys = [...mutatedKeys].filter((key) => snapshot.values.get(key) == null);
+  const presentKeys = [...mutatedKeys].filter(
+    (key) => typeof snapshot.values.get(key) === "string" && key !== RUN_INDEX_KEY,
+  );
+  const indexWasMutated = mutatedKeys.has(RUN_INDEX_KEY);
+
+  for (const key of absentKeys) restoreDurableValue(storage, key, null);
+  for (const key of presentKeys) restoreDurableValue(storage, key, snapshot.values.get(key)!);
+  if (indexWasMutated) {
+    restoreDurableValue(storage, RUN_INDEX_KEY, snapshot.values.get(RUN_INDEX_KEY) ?? null);
+  }
+}
+
+function restoreDurableValue(
+  storage: StorageBackend,
+  key: string,
+  priorValue: string | null,
+): void {
+  const currentValue = storage.getItem(key);
+  if (currentValue === priorValue) return;
+  if (priorValue === null) storage.removeItem(key);
+  else storage.setItem(key, priorValue);
+}
+
+function restoreDurableTransactionOrThrow(transaction: StoreMutationTransaction): void {
+  const snapshot = transaction.durableSnapshot;
+  if (!snapshot || transaction.mutatedDurableKeys.size === 0) return;
+  try {
+    restoreDurableValues(transaction.storage, snapshot, transaction.mutatedDurableKeys);
+    transaction.mutatedDurableKeys.clear();
+  } catch (error) {
+    pendingDurableRecovery = {
+      storage: transaction.storage,
+      snapshot,
+      mutatedKeys: new Set(transaction.mutatedDurableKeys),
+    };
+    throw new StorageUnavailableError(
+      `Run-store rollback failed; durable mutations are blocked until recovery succeeds: ${String(error)}`,
+    );
+  }
+}
+
+function recoverDurableAuthorityOrThrow(): void {
+  const recovery = pendingDurableRecovery;
+  if (!recovery) return;
+  try {
+    restoreDurableValues(recovery.storage, recovery.snapshot, recovery.mutatedKeys);
+    pendingDurableRecovery = null;
+  } catch (error) {
+    throw new StorageUnavailableError(
+      `Run-store recovery is still blocked; no mutation was attempted: ${String(error)}`,
+    );
+  }
+}
+
+function hydrateVolatileAuthority(snapshot: DurableStoreSnapshot): void {
+  memoryMap.clear();
+  for (const [key, value] of snapshot.values) {
+    if (value !== null) memoryMap.set(key, value);
+  }
+}
+
+function switchActiveMutationToVolatile(minimumCounter: number): StorageBackend {
+  const transaction = activeStoreMutation;
+  if (!transaction || !transaction.durableSnapshot || transaction.storage.isVolatile) {
+    throw new StorageQuotaError("Storage quota was exhausted outside a durable store transaction");
+  }
+  restoreDurableTransactionOrThrow(transaction);
+  hydrateVolatileAuthority(transaction.durableSnapshot);
+  const priorCounter = Number.parseInt(memoryBackend.getItem(RUN_COUNTER_KEY) ?? "0", 10);
+  const counter = Math.max(Number.isFinite(priorCounter) ? priorCounter : 0, minimumCounter);
+  memoryBackend.setItem(RUN_COUNTER_KEY, counter.toString());
+  volatileMode = true;
+  transaction.storage = memoryBackend;
+  if (!transaction.warnings.includes("storage quota exhausted: draft saved to this tab only")) {
+    transaction.warnings.push("storage quota exhausted: draft saved to this tab only");
+  }
+  return memoryBackend;
 }
 
 // ─── Public API ──────────────────────────────────────────────────────────────
@@ -423,11 +650,15 @@ function createNewRunRecordUnlocked(
   gameData: GameData,
   params: CreateRunRecordParams,
 ): CreateRunRecordResult {
-  const storage = getStorage();
   const warnings: string[] = [];
 
   let lastErr: unknown = null;
   for (let attempt = 0; attempt < CREATE_RETRY_LIMIT; attempt += 1) {
+    // A counter-quota failure can switch the active transaction from durable
+    // storage to the coherent volatile snapshot. Re-resolve the transaction's
+    // backend on every draft retry so a later attempt cannot retain and write
+    // through the stale durable adapter.
+    const storage = getStorage();
     const seq = nextCounter(storage);
     const run_id = buildRunId(seq);
     const parent_seed =
@@ -530,59 +761,29 @@ function saveNewRunRecordUnlocked(record: RunRecordV1): SaveRunRecordResult {
 
 /** Internal whole-record write; callers must already own the store-wide mutation lock. */
 function saveRunRecordUnlocked(record: RunRecordV1): SaveRunRecordResult {
-  const warnings: string[] = [];
+  const warnings = activeStoreMutation?.warnings ?? [];
   let storage = getStorage();
   const key = recordKey(record.run_id);
   const payload = JSON.stringify(record);
   try {
-    storage.setItem(key, payload);
+    applyRunRecordSavePlan(storage, record, key, payload);
   } catch (err) {
-    if (isQuotaError(err)) {
-      // Try evicting oldest records and retry once before going volatile.
-      const idx = loadIndex(storage);
-      if (idx.entries.length > 0) {
-        const oldest = idx.entries[0]!;
-        if (oldest.run_id !== record.run_id) {
-          evictRunRecordUnlocked(storage, oldest.run_id);
-          try {
-            storage.setItem(key, payload);
-          } catch (retryErr) {
-            if (isQuotaError(retryErr)) {
-              storage = persistRecordInVolatileFallback(
-                storage,
-                key,
-                payload,
-                record.updated_seq,
-                warnings,
-              );
-            } else {
-              throw new StorageQuotaError(
-                `Failed to persist run record after eviction retry: ${String(retryErr)}`,
-              );
-            }
-          }
-        } else {
-          storage = persistRecordInVolatileFallback(
-            storage,
-            key,
-            payload,
-            record.updated_seq,
-            warnings,
-          );
-        }
-      } else {
-        storage = persistRecordInVolatileFallback(
-          storage,
-          key,
-          payload,
-          record.updated_seq,
-          warnings,
-        );
-      }
-    } else {
+    if (!isQuotaError(err)) {
       throw new StorageUnavailableError(`Failed to persist run record: ${String(err)}`);
     }
+    storage = switchActiveMutationToVolatile(record.updated_seq);
+    applyRunRecordSavePlan(storage, record, key, payload);
   }
+  return { persistence: storage.isVolatile ? "volatile" : "durable", warnings: [...warnings] };
+}
+
+function applyRunRecordSavePlan(
+  storage: StorageBackend,
+  record: RunRecordV1,
+  key: string,
+  payload: string,
+): void {
+  setStoreItem(storage, key, payload);
   const idx = loadIndex(storage);
   const nextIdx = updateIndexEntry(idx, record);
   let unpinnedCount = nextIdx.entries.filter((entry) => entry.pinned !== true).length;
@@ -592,40 +793,10 @@ function saveRunRecordUnlocked(record: RunRecordV1): SaveRunRecordResult {
     );
     if (dropIndex === -1) break;
     const [drop] = nextIdx.entries.splice(dropIndex, 1);
-    if (drop) storage.removeItem(recordKey(drop.run_id));
+    if (drop) removeStoreItem(storage, recordKey(drop.run_id));
     unpinnedCount -= 1;
   }
-  try {
-    saveIndex(storage, nextIdx);
-  } catch (err) {
-    if (isQuotaError(err)) {
-      warnings.push("index update failed under quota");
-    } else {
-      throw err;
-    }
-  }
-  return { persistence: storage.isVolatile ? "volatile" : "durable", warnings };
-}
-
-function persistRecordInVolatileFallback(
-  durableStorage: StorageBackend,
-  key: string,
-  payload: string,
-  minimumCounter: number,
-  warnings: string[],
-): StorageBackend {
-  const durableCounter = Number.parseInt(durableStorage.getItem(RUN_COUNTER_KEY) ?? "0", 10);
-  const volatileCounter = Number.parseInt(memoryBackend.getItem(RUN_COUNTER_KEY) ?? "0", 10);
-  const counter = Math.max(
-    Number.isFinite(durableCounter) ? durableCounter : 0,
-    Number.isFinite(volatileCounter) ? volatileCounter : 0,
-    minimumCounter,
-  );
-  volatileMode = true;
-  memoryBackend.setItem(RUN_COUNTER_KEY, counter.toString());
-  memoryBackend.setItem(key, payload);
-  warnings.push("storage quota exhausted: draft saved to this tab only");
-  return memoryBackend;
+  saveIndex(storage, nextIdx);
 }
 
 export interface UpdateRunRecordResult {
@@ -1162,12 +1333,12 @@ function evictStaleRunRecordsUnlocked(currentVersions: RunRecordVersions): strin
     }
     const record = parseStoredRunRecord(raw, entry.run_id);
     if (!record) {
-      storage.removeItem(recordKey(entry.run_id));
+      removeStoreItem(storage, recordKey(entry.run_id));
       warnings.push(`history: evicted malformed record '${entry.run_id}'`);
       continue;
     }
     if (!versionsMatch(record.versions, currentVersions)) {
-      storage.removeItem(recordKey(entry.run_id));
+      removeStoreItem(storage, recordKey(entry.run_id));
       continue;
     }
     repaired.push(indexEntryFromRecord(record));
@@ -1185,7 +1356,7 @@ function evictStaleRunRecordsUnlocked(currentVersions: RunRecordVersions): strin
 }
 
 function evictRunRecordUnlocked(storage: StorageBackend, run_id: string): void {
-  storage.removeItem(recordKey(run_id));
+  removeStoreItem(storage, recordKey(run_id));
   const idx = loadIndex(storage);
   const next = idx.entries.filter((e) => e.run_id !== run_id);
   if (next.length !== idx.entries.length) {

@@ -95,4 +95,30 @@ describe("run mutation serialization contract", () => {
     expect(listSource).not.toContain("removeItem");
     expect(listSource).not.toContain("saveIndex");
   });
+
+  it("uses one snapshot-backed coherent save seam and never swallows index quota", () => {
+    expect(RUN_RECORD_SOURCE).toContain("function captureDurableStoreSnapshot");
+    expect(RUN_RECORD_SOURCE).toContain("function restoreDurableTransactionOrThrow");
+    expect(RUN_RECORD_SOURCE).toContain("function switchActiveMutationToVolatile");
+    expect(RUN_RECORD_SOURCE).toContain("function applyRunRecordSavePlan");
+    expect(RUN_RECORD_SOURCE).not.toContain("index update failed under quota");
+    expect(RUN_RECORD_SOURCE).not.toContain("persistRecordInVolatileFallback");
+  });
+
+  it("re-resolves transaction storage for every create retry after quota failover", () => {
+    const retryLoop = RUN_RECORD_SOURCE.slice(
+      RUN_RECORD_SOURCE.indexOf("for (let attempt = 0; attempt < CREATE_RETRY_LIMIT"),
+      RUN_RECORD_SOURCE.indexOf(
+        "throw new RunRecordError(",
+        RUN_RECORD_SOURCE.indexOf("for (let attempt = 0; attempt < CREATE_RETRY_LIMIT"),
+      ),
+    );
+    expect(retryLoop).toContain("const storage = getStorage();");
+    expect(
+      RUN_RECORD_SOURCE.slice(
+        RUN_RECORD_SOURCE.indexOf("function createNewRunRecordUnlocked"),
+        RUN_RECORD_SOURCE.indexOf("for (let attempt = 0; attempt < CREATE_RETRY_LIMIT"),
+      ),
+    ).not.toContain("const storage = getStorage();");
+  });
 });

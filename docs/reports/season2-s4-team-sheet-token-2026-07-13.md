@@ -256,6 +256,52 @@ pre-turn abort, queued cancellation, callback failure, and later recovery
 tests protect queue release behavior. A new exact-head independent review is
 still mandatory.
 
+Fresh exact-head review of
+`53f0b2f6014f7fc36f3a43432edc041de666a8b1` returned FAIL for one additional
+coherence blocker. The complete review is
+`/tmp/season2-s4-store-review-53f0b2f.md`, SHA-256
+`60ed26e8ea11b9b9af45903a6da3c324af3a8922e9ef54e6a4c7f3b7a8401023`.
+Its independent production-API probe forced `QuotaExceededError` only on the
+index write after successful counter and record writes. The candidate returned
+`persistence: durable`, left the payload directly loadable, omitted it from
+history, and could not repair it through locked cleanup. Probe source SHA-256:
+`b477580e3eb4dde906b4cb6587e3f83e3b84cd994f1830f739d25635f2016fb4`;
+reproducing output SHA-256:
+`438ed12f95d41cc7dce342d9c3f9eb17509239592cf94c7935112cf11c9e5a32`.
+
+The seventh fix-forward establishes a transaction snapshot at the outer
+store-mutation boundary, before any counter advance. The snapshot retains the
+raw counter and index bytes, every indexed record payload, and any explicit
+mutation target. Record, counter, cap-eviction, pin, cleanup, and index writes
+are tracked against it. A quota failure during a record save first restores the
+complete durable pre-state byte-for-byte, then hydrates that full authority
+into the page-local volatile store and replays the planned save coherently.
+Locked cleanup and non-quota failures restore and throw rather than leaving a
+partial commit. Normal durable success keeps the existing payload/index/cap ordering. A quota
+failure on the storage capability probe no longer jumps to an empty volatile
+map; readable durable authority reaches the locked transaction snapshot.
+Once admitted, the locked turn reuses that exact backend rather than probing
+again inside the mutation and risking a snapshot bypass.
+Draft creation also re-resolves the transaction backend on every retry, so a
+retry after counter-quota failover cannot retain the old durable adapter.
+Non-quota failures restore and throw. If rollback itself fails, no success is
+returned: durable mutation remains fail-closed, and the next locked turn must
+restore the retained snapshot before it can execute any new mutation. Until
+then, pure reads use the retained coherent snapshot and identify it as
+tab-local rather than exposing torn durable bytes.
+
+The adapted independent probe at
+`/tmp/season2-s4-index-quota-coherence-probe.ts` returns `NOT_REPRODUCED`:
+the durable counter, record, and index all return to their absent pre-state;
+the result is honestly `volatile`; history contains the run before and after
+cleanup; one Web Lock is requested with maximum depth one. Source SHA-256:
+`2757de9d3b4095350e0507a36843ba87a0aa13b1c25d1d41ebaf798074c8a03d`;
+output SHA-256:
+`21634c8256caca325c93fbcc3b1f8dc08d39e445ecfdff98ad414d8f8671b57d`.
+This is pre-review implementer/root evidence from the evolving seventh-fix
+candidate, not an exact-head review verdict; a fresh independent RED review
+remains mandatory after commit.
+
 ## Validation evidence
 
 - Integration-tip floor at `98c0e07`: generated check, typecheck 8/8, lint
@@ -342,6 +388,23 @@ still mandatory.
   128 / max attempts 8 with score-distribution, Daily-map, and manifest hashes
   unchanged and an empty `packages/data` + `etl` diff. Logs:
   `/tmp/s4-sixth-*.log`.
+- Seventh fix-forward narrow validation: the two required run-record/store
+  contract files passed 57/57. The complete changed-S4 web selection passed
+  192/192 across 14 files, including creation/resume, Review, token,
+  team-sheet, leaderboard, configuration, and mounted mutation contracts.
+  `pnpm --filter @wcdraft/web typecheck` passed after materializing and
+  verifying 19 manifest-derived public runtime files. The adapted index-quota
+  probe returned `NOT_REPRODUCED` with one Web Lock and maximum depth one.
+  Root then passed `check:generated`, typecheck 8/8, lint 5/5, tests 8/8 (core
+  423, data 183 plus 9 expected skips, DB 161, marketing 69, web 1,233 plus one
+  expected benchmark skip), game-flow, responsive 218/0, and build 4/4 with 40
+  routes/pages. Cache-bypassed goldens passed core 69+42, data/integration
+  59+22, and leaderboard 6. The strategic-pick canary passed 1/1 with zero pick
+  flips; heavy realism passed 10/10 at N=2000 x three policies in 41.61s. The
+  pinned five-step Daily closure passed at 2026-07-10 / 45 days / population
+  128 / max attempts 8 with the recorded score-distribution, Daily-map, and
+  manifest hashes unchanged and an empty `packages/data` + `etl` diff. Logs:
+  `/tmp/s4-seventh-*.log`.
 - Final root build: 4/4 tasks, 40 routes/pages. The pre-existing webpack
   circular-chunk and edge-runtime static-generation warnings remain; there was
   no build failure. Logs: `/tmp/s4-root-build.log`,

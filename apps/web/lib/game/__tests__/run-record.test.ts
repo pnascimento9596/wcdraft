@@ -47,6 +47,7 @@ let lockDepth = 0;
 let requireStoreLockForMutation = false;
 let forceQuotaOnRecordWrite = false;
 let onForcedQuota: (() => void) | null = null;
+let storageWriteHook: ((key: string, value: string) => void) | null = null;
 
 beforeEach(() => {
   _resetVolatileStorageForTests();
@@ -100,6 +101,7 @@ afterEach(() => {
   requireStoreLockForMutation = false;
   forceQuotaOnRecordWrite = false;
   onForcedQuota = null;
+  storageWriteHook = null;
   vi.unstubAllGlobals();
   _resetVolatileStorageForTests();
 });
@@ -738,6 +740,200 @@ describe("run-record persisted boundary", () => {
     ]);
   });
 
+  it("rolls back record and counter bytes before coherent volatile create on index quota", async () => {
+    const durableBefore = storageSnapshot();
+    let failed = false;
+    storageWriteHook = (key) => {
+      if (key === RUN_INDEX_KEY && !failed) {
+        failed = true;
+        throw new DOMException("index quota after record and counter", "QuotaExceededError");
+      }
+    };
+
+    const created = await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+
+    expect(created).toMatchObject({
+      persistence: "volatile",
+      warnings: ["storage quota exhausted: draft saved to this tab only"],
+    });
+    expect(storageSnapshot()).toBe(durableBefore);
+    expect(localStorage.getItem(RUN_COUNTER_KEY)).toBeNull();
+    expect(localStorage.getItem(recordKey(created.record.run_id))).toBeNull();
+    expect(listRunRecords(gameData.versions)).toMatchObject({
+      persistence: "volatile",
+      records: [created.record],
+    });
+  });
+
+  it("preserves prior durable history when raw creation falls back on index quota", async () => {
+    const prior = recordWithId("raw-prior", "wcdraft:run-record:raw-prior");
+    await saveNewRunRecord(prior);
+    const durableBefore = storageSnapshot();
+    let failed = false;
+    storageWriteHook = (key) => {
+      if (key === RUN_INDEX_KEY && !failed) {
+        failed = true;
+        throw new DOMException("raw-create index quota", "QuotaExceededError");
+      }
+    };
+    const added = recordWithId("raw-added", "wcdraft:run-record:raw-added");
+
+    await expect(saveNewRunRecord(added)).resolves.toMatchObject({ persistence: "volatile" });
+
+    expect(storageSnapshot()).toBe(durableBefore);
+    const history = listRunRecords(gameData.versions);
+    expect(history.persistence).toBe("volatile");
+    expect(history.records).toEqual(expect.arrayContaining([prior, added]));
+    expect(history.records).toHaveLength(2);
+  });
+
+  it("keeps an existing durable record byte-identical when its payload write hits quota", async () => {
+    const prior = recordWithId("update-quota", "wcdraft:run-record:update-quota");
+    await saveNewRunRecord(prior);
+    const durableBefore = storageSnapshot();
+    let failed = false;
+    storageWriteHook = (key) => {
+      if (key === recordKey(prior.run_id) && !failed) {
+        failed = true;
+        throw new DOMException("existing record quota", "QuotaExceededError");
+      }
+    };
+
+    const renamed = await setRunTeamName(prior.run_id, gameData.versions, "Volatile update");
+
+    expect(renamed).toMatchObject({ status: "updated", persistence: "volatile" });
+    expect(renamed.record?.draft.team_name).toBe("Volatile update");
+    expect(storageSnapshot()).toBe(durableBefore);
+    expect(loadRunRecord(prior.run_id, gameData.versions).record).toEqual(renamed.record);
+  });
+
+  it("keeps pin payload and index coherent when an existing pin hits index quota", async () => {
+    const prior = recordWithId("pin-index-quota", "wcdraft:run-record:pin-index-quota");
+    await saveNewRunRecord(prior);
+    const durableBefore = storageSnapshot();
+    let failed = false;
+    storageWriteHook = (key) => {
+      if (key === RUN_INDEX_KEY && !failed) {
+        failed = true;
+        throw new DOMException("pin index quota", "QuotaExceededError");
+      }
+    };
+
+    const pinned = await setRunPinned(prior.run_id, gameData.versions, true);
+
+    expect(pinned).toMatchObject({ status: "updated", persistence: "volatile" });
+    expect(pinned.record?.pinned).toBe(true);
+    expect(storageSnapshot()).toBe(durableBefore);
+    expect(listRunRecords(gameData.versions).records).toEqual([pinned.record]);
+  });
+
+  it("restores cap-evicted durable payloads before applying the cap coherently in volatile", async () => {
+    const pinned = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
+    await setRunPinned(pinned.run_id, gameData.versions, true);
+    const unpinned: RunRecordV1[] = [];
+    for (let index = 0; index < RUN_RECORD_CAP; index += 1) {
+      unpinned.push((await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record);
+    }
+    const durableBefore = storageSnapshot();
+    let failed = false;
+    storageWriteHook = (key) => {
+      if (key === RUN_INDEX_KEY && !failed) {
+        failed = true;
+        throw new DOMException("index quota after cap eviction", "QuotaExceededError");
+      }
+    };
+
+    const added = await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+
+    expect(added.persistence).toBe("volatile");
+    expect(storageSnapshot()).toBe(durableBefore);
+    const history = listRunRecords(gameData.versions, { limit: RUN_RECORD_CAP }).records;
+    expect(history).toHaveLength(RUN_RECORD_CAP + 1);
+    expect(history.some((record) => record.run_id === pinned.run_id && record.pinned)).toBe(true);
+    expect(history.some((record) => record.run_id === added.record.run_id)).toBe(true);
+    expect(history.some((record) => record.run_id === unpinned[0]!.run_id)).toBe(false);
+  });
+
+  it("mirrors prior authority before counter-quota fallback and keeps the counter monotonic", async () => {
+    const prior = await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+    const durableBefore = storageSnapshot();
+    let failed = false;
+    storageWriteHook = (key) => {
+      if (key === "__wcdraft_probe__") {
+        throw new DOMException("probe quota", "QuotaExceededError");
+      }
+      if (key === RUN_COUNTER_KEY && !failed) {
+        failed = true;
+        throw new DOMException("counter quota", "QuotaExceededError");
+      }
+    };
+
+    const added = await createNewRunRecord(gameData, { formation_id: "4-3-3" });
+
+    expect(added.persistence).toBe("volatile");
+    expect(added.record.created_seq).toBeGreaterThan(prior.record.created_seq);
+    expect(storageSnapshot()).toBe(durableBefore);
+    expect(listRunRecords(gameData.versions).records.map((record) => record.run_id)).toEqual([
+      added.record.run_id,
+      prior.record.run_id,
+    ]);
+  });
+
+  it("reuses the snapshotted durable backend instead of re-probing inside a mutation", async () => {
+    const prior = recordWithId("stable-backend", "wcdraft:run-record:stable-backend");
+    await saveNewRunRecord(prior);
+    let probeWrites = 0;
+    storageWriteHook = (key) => {
+      if (key !== "__wcdraft_probe__") return;
+      probeWrites += 1;
+      if (probeWrites > 1) {
+        throw new DOMException("unexpected nested capability probe", "SecurityError");
+      }
+    };
+
+    const added = recordWithId("stable-backend-added", "wcdraft:run-record:stable-backend-added");
+    const saved = await saveNewRunRecord(added);
+
+    expect(saved).toMatchObject({ persistence: "durable", warnings: [] });
+    expect(probeWrites).toBe(1);
+    storageWriteHook = null;
+    expect(listRunRecords(gameData.versions).records).toEqual(
+      expect.arrayContaining([prior, added]),
+    );
+  });
+
+  it("fails closed on rollback failure and restores prior bytes before a later mutation", async () => {
+    const prior = recordWithId("rollback-recovery", "wcdraft:run-record:rollback-recovery");
+    await saveNewRunRecord(prior);
+    const durableBefore = storageSnapshot();
+    let recordWrites = 0;
+    let indexFailed = false;
+    storageWriteHook = (key) => {
+      if (key === recordKey(prior.run_id)) {
+        recordWrites += 1;
+        if (recordWrites === 2) throw new DOMException("rollback payload blocked", "SecurityError");
+      }
+      if (key === RUN_INDEX_KEY && !indexFailed) {
+        indexFailed = true;
+        throw new DOMException("index quota before rollback", "QuotaExceededError");
+      }
+    };
+
+    await expect(
+      setRunTeamName(prior.run_id, gameData.versions, "Must not report success"),
+    ).rejects.toMatchObject({ name: "StorageUnavailableError" });
+
+    expect(listRunRecords(gameData.versions)).toMatchObject({
+      persistence: "volatile",
+      records: [prior],
+    });
+
+    storageWriteHook = null;
+    await expect(evictStaleRunRecords(gameData.versions)).resolves.toEqual([]);
+    expect(storageSnapshot()).toBe(durableBefore);
+    expect(loadRunRecord(prior.run_id, gameData.versions).record).toEqual(prior);
+  });
+
   it("does not mutate when lock acquisition is cancelled", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:cancelled-lock-wait");
     await saveNewRunRecord(created);
@@ -1037,6 +1233,31 @@ describe("run-record persisted boundary", () => {
     expect(localStorage.getItem(key)).toBeNull();
   });
 
+  it("rolls back locked cleanup when its final index write hits quota", async () => {
+    const created = recordWithId("cleanup-index-quota", "wcdraft:run-record:cleanup-index-quota");
+    await saveNewRunRecord(created);
+    const key = recordKey(created.run_id);
+    localStorage.setItem(key, "{malformed");
+    const durableBefore = storageSnapshot();
+    let failed = false;
+    storageWriteHook = (storageKey) => {
+      if (storageKey === RUN_INDEX_KEY && !failed) {
+        failed = true;
+        throw new DOMException("cleanup index quota", "QuotaExceededError");
+      }
+    };
+
+    await expect(evictStaleRunRecords(gameData.versions)).rejects.toMatchObject({
+      name: "QuotaExceededError",
+    });
+
+    expect(storageSnapshot()).toBe(durableBefore);
+    storageWriteHook = null;
+    expect(listRunRecords(gameData.versions).warnings).toEqual([
+      `history: ignored malformed record '${created.run_id}' pending cleanup`,
+    ]);
+  });
+
   it("keeps pinned runs past the five-record recent cap", async () => {
     const pinned = (await createNewRunRecord(gameData, { formation_id: "4-3-3" })).record;
     expect((await setRunPinned(pinned.run_id, gameData.versions, true)).status).toBe("updated");
@@ -1111,6 +1332,7 @@ function installLocalStorage(): () => void {
     },
     setItem: (key, value) => {
       assertStoreMutationLocked(key);
+      storageWriteHook?.(key, String(value));
       if (forceQuotaOnRecordWrite && key.startsWith(RUN_RECORD_PREFIX)) {
         onForcedQuota?.();
         onForcedQuota = null;
