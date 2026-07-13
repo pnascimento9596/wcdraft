@@ -438,6 +438,19 @@ export const MANAGER_MODIFIER = Object.freeze({
   BAND: 0.1,
 });
 
+/**
+ * S2 per-match tactical channel. S3 owns the final WIDTH calibration; S2
+ * intentionally starts at a conservative one-percent maximum so the new
+ * channel is reachable and measurable without pre-empting the combined
+ * manager-sensitivity calibration.
+ */
+export const MANAGER_TACTICAL = Object.freeze({
+  /** Canonical persisted internal tiers are +0, +1, and +2. */
+  MAX_BAND: 2,
+  /** Maximum multiplicative uplift at MAX_BAND. S3 is the sole tuning owner. */
+  WIDTH: 0.01,
+});
+
 /** Clamp a number into an inclusive range. */
 export function clamp(value: number, min: number, max: number): number {
   if (value < min) return min;

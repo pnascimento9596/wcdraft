@@ -34,6 +34,9 @@ import path from "node:path";
 import { describe, it, expect } from "vitest";
 
 import { aggregateUserXiStrength, managerBandModifier } from "./engine/team-strength.js";
+import { buildScenarioInputs } from "../test/fixtures/sim-fixtures.js";
+import { runTournamentFull } from "./engine/tournament.js";
+import { MANAGER_TACTICAL } from "./engine/calibration.js";
 import type { StarterContribution } from "./api/team-strength.js";
 import { buildManagerCardId } from "./types/manager.js";
 import type { ManagerRating } from "./types/manager.js";
@@ -189,6 +192,37 @@ describe("decoupling guard — manager band never reads ManagerRating.overall", 
       const out = aggregateUserXiStrength(starters(60), neutral, makeRating(c.overall));
       expect(out, `ManagerRating.overall must be ignored for ${c.label}`).toEqual(base);
     }
+  });
+
+  it("the per-match tactical channel and complete match output ignore display overall", () => {
+    const low = buildScenarioInputs("blowout");
+    const high = buildScenarioInputs("blowout");
+    const managerCardId = low.draft.manager_card_id as string;
+    const lowRating = low.world.managerRatings![managerCardId]!;
+    const highRating = high.world.managerRatings![managerCardId]!;
+    const lowWorld = {
+      ...low.world,
+      managerRatings: {
+        ...low.world.managerRatings,
+        [managerCardId]: { ...lowRating, overall: 0 },
+      },
+    };
+    const highWorld = {
+      ...high.world,
+      managerRatings: {
+        ...high.world.managerRatings,
+        [managerCardId]: { ...highRating, overall: 99 },
+      },
+    };
+
+    const lowResult = runTournamentFull(low.draft, low.scenario, "s2-display-guard", lowWorld);
+    const highResult = runTournamentFull(high.draft, high.scenario, "s2-display-guard", highWorld);
+    expect(lowResult).toEqual(highResult);
+    expect(lowResult.matches[0]!.team_facts).toMatchObject({
+      manager_tactical_band: 2,
+      manager_tactical_multiplier: 1 + MANAGER_TACTICAL.WIDTH,
+      tactical_applied_to_outcome: true,
+    });
   });
 
   it("reserved manager band is driven by synergy.manager_link", () => {

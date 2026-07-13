@@ -13,6 +13,7 @@ import type {
 import type { SynergyResult } from "../types/synergy.js";
 import { createRng, deriveSubseed } from "../rng.js";
 import { INJURY } from "./calibration.js";
+import { applyManagerTacticalAdjustment } from "./manager-tactics.js";
 import { computeSynergy } from "./synergy.js";
 import {
   aggregateActiveXiStrength,
@@ -363,6 +364,10 @@ export function resolveActiveTeam(params: {
     facts: {
       base_strength: baseStrength,
       active_strength: activeStrength,
+      // Availability resolution precedes the match outcome. The match engine
+      // replaces these neutral facts when it actually applies the S2 seam;
+      // forfeits retain them and therefore never claim a tactical effect.
+      ...applyManagerTacticalAdjustment(activeStrength, activeSynergy.manager_link, false),
       base_synergy: baseSynergy,
       active_synergy: activeSynergy,
       unavailable,

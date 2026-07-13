@@ -4,6 +4,46 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Season 2 Squad Depth — Unit S2 manager tactical band:
+2026-07-12 · local RED implementation on
+`ws-core/season2-s2-manager-tactics`, based on verified integration head
+`7123d3d7182852715b0006aedd3a001e3b22855f`. A second manager channel now
+maps active per-match `SynergyResult.manager_link` into a discrete internal
+`+0/+1/+2` tactical tier. It applies a conservative S3-owned maximum width of
+1% uniformly to attack, midfield, defense, and goalkeeping exactly once before
+the four-channel lambda map; the same post-tactical user strength is consumed
+as the attacking side and the defending side. The existing aggregate-time
+`managerBandModifier` remains unchanged and display-only `ManagerRating.overall`
+remains unread.
+
+Each simulated match persists the applied tier, multiplier,
+post-tactical strength, and an explicit `tactical_applied_to_outcome=true`.
+Managerless ready/direct-engine inputs are reachable and persist a neutral tier
+while still recording that the neutral channel passed through the outcome
+seam. Forfeits bypass the seam and retain neutral facts with the flag false.
+The MatchResult boundary recomputes and reconciles all four factual channels;
+legacy MatchResults may still omit `team_facts` entirely. Local evidence:
+focused tactical+decoupling+availability 30/30; full core 418/418; core goldens
+69+42; forced data golden 59/59; data integration 22/22; leaderboard golden
+6/6; heavy realism 10/10 at N=2000 x 3; root typecheck 8/8, lint 5/5, test 8/8,
+and build 4/4 (40 pages). The intentional core sim golden delta is confined to
+the manager-linked `draw_into_pens` fixture at the same seed: outcome/path
+remain stable while score moves 88 -> 85 from one additional yellow and one
+missed penalty. The real-run integration golden adds the four factual fields
+with no outcome delta.
+
+The mandatory five-step compact -> score-distribution -> compact -> Daily ->
+compact closure completed with the fixed 2026-07-10 + 44-day runway. Both
+output artifacts are byte-identical to S1: score-distribution raw SHA-256
+`2ef76e41bae2ca70c38da5586cab5b7506a44b212b10769119386850805fc219`
+and Daily raw SHA-256
+`1081ae1c73f52dbbd731677c9b14aec6aeb256266021e8032144be21f750bc62`.
+Heavy policy counts and strategic score population are also unchanged. S3 owns
+the final calibration, production engine-anchor rollover, combined manager
+sensitivity, and cumulative artifact re-close. Durable report:
+`docs/reports/season2-s2-manager-tactical-band-2026-07-12.md`. Fresh-context
+review, cross-model spot review, CI, and integration merge remain required.
+
 Season 2 Squad Depth — Unit S1 availability and bench mechanics:
 2026-07-12 · local RED implementation on `ws-core/season2-s1-depth`, based on
 integration head `59f74d3de68552f9602f9f849e575c2627c0de91`. Seeded pre-match

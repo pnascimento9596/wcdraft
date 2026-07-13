@@ -372,9 +372,19 @@ export interface BenchActivationFact {
   line_contribution_delta: number;
 }
 
+export type ManagerTacticalBand = 0 | 1 | 2;
+
 export interface MatchTeamFacts {
   base_strength: TeamStrength;
   active_strength: TeamStrength;
+  /** Discrete +0/+1/+2 internal tier actually applied at the match lambda seam. */
+  manager_tactical_band: ManagerTacticalBand;
+  /** Bounded multiplier corresponding exactly to manager_tactical_band. */
+  manager_tactical_multiplier: number;
+  /** Active strength after the tactical multiplier and channel-domain rounding. */
+  post_tactical_strength: TeamStrength;
+  /** Whether post_tactical_strength mechanically fed the match outcome. */
+  tactical_applied_to_outcome: boolean;
   base_synergy: SynergyResult;
   active_synergy: SynergyResult;
   unavailable: AvailabilityFact[];
