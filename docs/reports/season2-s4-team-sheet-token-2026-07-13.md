@@ -119,6 +119,22 @@ mutation conflicts, and the completed-Review browser contract. A fresh
 exact-head reviewer and cross-model spot review remain required on the new
 fix-forward SHA; the earlier FAIL is not represented as a pass.
 
+The next head, `c781891ae47e5e1ce4f10b73c3aa8d8dc6b00bf1`, was also not
+review-eligible: static CI failed because Prettier rejected three touched web
+files, and the fallback review was stopped without a verdict after exposing a
+real cross-tab start-simulation race. A rendered arrangement A could become B
+in another tab before the old best-effort status write; the status lock owned B
+while the stale React closure still simulated A. `beginRunSimulation` now
+compares normalized lifecycle status, `updated_seq`, and arrangement before a
+synchronous lock. The UI requires that lock, simulates only its returned
+record, and persists or cancels with its ownership sequence in both durable and
+volatile storage. Conflict stops before simulation and refreshes Review with
+the authoritative record. Completed or simulating Review also disables the
+team-name field, making the surface fully read-only rather than treating name
+edits as a cosmetic exception. Executable durable and volatile tests pin both
+the conflict and successful ownership paths. No review verdict at `c781891`
+is represented as a pass.
+
 ## Validation evidence
 
 - Integration-tip floor at `98c0e07`: generated check, typecheck 8/8, lint
@@ -141,6 +157,15 @@ fix-forward SHA; the earlier FAIL is not represented as a pass.
   `/tmp/s4-root-test.log`; responsive artifacts: `/tmp/wcdraft-ci-*-*` from
   the recorded run. Final exact-tree aggregate log:
   `/tmp/s4-final-root-test.log`.
+- Second fix-forward exact-tree coverage: the five focused run-record,
+  simulation-handoff, Review contract, team-sheet, and loader files passed
+  43/43. Root typecheck passed 8/8, lint 5/5, and tests 8/8 in 7m31.153s:
+  core 423/423, data 183 passed with 9 expected skips, DB 161/161, marketing
+  69/69, and web 1,187 passed with one expected benchmark skip. Game-flow
+  passed; responsive remained 218/0 with the same 84 desktop, 56 mobile shell,
+  40 interaction, 30 mode/setup, and 8 opened-navigation split. Root build
+  passed 4/4 with 40 routes/pages. Full-repository Prettier passed after the
+  three prior failures were corrected.
 - Final root build: 4/4 tasks, 40 routes/pages. The pre-existing webpack
   circular-chunk and edge-runtime static-generation warnings remain; there was
   no build failure. Logs: `/tmp/s4-root-build.log`,
@@ -149,6 +174,12 @@ fix-forward SHA; the earlier FAIL is not represented as a pass.
   pick canary 1/1 remains byte-stable with zero pick flips. Heavy realism
   passed 10/10 at N=2000 x three policies. Logs: `/tmp/s4-*-golden*.log`,
   `/tmp/s4-canary.log`, `/tmp/s4-heavy-realism.log`.
+- Second fix-forward forced rerun: core 69+42, data 59, integration 22, and
+  leaderboard 6 all passed with cache bypassed. The strategic-pick canary
+  passed 1/1 with its zero-flip fixture unchanged; heavy realism passed 10/10
+  at N=2000 x three policies in 37.63s. `pnpm check:generated` passed, and
+  `git diff --exit-code -- packages/data etl` confirmed no generated, ETL, or
+  rating-data drift.
 - `pnpm check:generated` passed. The exact pinned five-step Daily closure also
   passed: compact → score distribution → compact → Daily → compact, with Daily
   pinned to 2026-07-10, 45 days, population 128, and maximum 8 salt attempts.

@@ -4,6 +4,7 @@ import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import {
   _resetVolatileStorageForTests,
+  beginRunSimulation,
   createNewRunRecord,
   listRunRecords,
   loadRunRecord,
@@ -319,15 +320,59 @@ describe("run-record persisted boundary", () => {
       staleTabArrangement[12]!,
       staleTabArrangement[1]!,
     ];
-    const rejected = setRunArrangement(
-      created.run_id,
-      gameData.versions,
-      staleTabArrangement,
-    );
+    const rejected = setRunArrangement(created.run_id, gameData.versions, staleTabArrangement);
     expect(rejected).toMatchObject({ status: "conflict", persistence: "none" });
     expect(rejected.record?.arrangement).toEqual(arranged);
     expect(rejected.record?.simulation).toEqual(simulation);
     expect(loadRunRecord(created.run_id, gameData.versions).record).toEqual(completed.record);
+  });
+
+  it("atomically rejects a stale rendered arrangement and simulates only the locked revision", () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:atomic-sim-begin");
+    saveRunRecord(created);
+    const rendered = loadRunRecord(created.run_id, gameData.versions).record!;
+
+    const arrangementB = [...asDraftedTeamSheet(created.draft)];
+    [arrangementB[0], arrangementB[11]] = [arrangementB[11]!, arrangementB[0]!];
+    const tabB = setRunArrangement(created.run_id, gameData.versions, arrangementB);
+    expect(tabB.status).toBe("updated");
+
+    const staleBegin = beginRunSimulation(created.run_id, gameData.versions, rendered);
+    expect(staleBegin).toMatchObject({ status: "conflict", persistence: "none" });
+    expect(staleBegin.record?.arrangement).toEqual(arrangementB);
+    expect(staleBegin.record?.status).not.toBe("simulating");
+    expect(staleBegin.record?.simulation).toBeUndefined();
+
+    const locked = beginRunSimulation(created.run_id, gameData.versions, tabB.record!);
+    expect(locked).toMatchObject({ status: "updated", persistence: "durable" });
+    expect(locked.record?.status).toBe("simulating");
+    expect(locked.record?.arrangement).toEqual(arrangementB);
+    const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
+    const persisted = setRunSimulation(created.run_id, gameData.versions, simulation, {
+      status: "simulating",
+      updated_seq: locked.record!.updated_seq,
+    });
+    expect(persisted.status).toBe("updated");
+    expect(persisted.record?.arrangement).toEqual(arrangementB);
+    expect(persisted.record?.simulation).toEqual(simulation);
+  });
+
+  it("keeps atomic simulation ownership in volatile storage", () => {
+    restoreWindow?.();
+    restoreWindow = null;
+    _resetVolatileStorageForTests();
+    const created = buildOriginRecord(gameData, "wcdraft:run-record:volatile-sim-begin");
+    expect(saveRunRecord(created).persistence).toBe("volatile");
+
+    const locked = beginRunSimulation(created.run_id, gameData.versions, created);
+    expect(locked).toMatchObject({ status: "updated", persistence: "volatile" });
+    const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, locked.record!);
+    const persisted = setRunSimulation(created.run_id, gameData.versions, simulation, {
+      status: "simulating",
+      updated_seq: locked.record!.updated_seq,
+    });
+    expect(persisted).toMatchObject({ status: "updated", persistence: "volatile" });
+    expect(persisted.record?.simulation).toEqual(simulation);
   });
 
   it("keeps pinned runs past the five-record recent cap", () => {

@@ -23,6 +23,7 @@ import { describeGameError } from "@/lib/game/errors";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { draftHref, resultsHref } from "@/lib/game/navigation";
 import {
+  beginRunSimulation,
   saveRunRecord,
   setRunArrangement,
   setRunSimulation,
@@ -338,6 +339,7 @@ function ReviewBoard({
 
   const persistTeamName = useCallback(
     (value: string) => {
+      if (!arrangementMutable) return;
       const trimmed = value.trim().slice(0, 32);
       if (trimmed === record.draft.team_name) return;
       const nextDraft = { ...record.draft, team_name: trimmed || "Your XI" };
@@ -354,7 +356,7 @@ function ReviewBoard({
           : persistenceWarning;
       onRecordUpdate(next, warning ?? null);
     },
-    [record, persistenceWarning, onRecordUpdate],
+    [arrangementMutable, record, persistenceWarning, onRecordUpdate],
   );
 
   function onTeamNameChange(value: string) {
@@ -386,7 +388,7 @@ function ReviewBoard({
         <span className={s.eyebrowAccent}>Squad review</span>
         <div className={s.teamNameRow}>
           <label className={s.teamNameLabel} htmlFor="team-name">
-            Name your team
+            {arrangementMutable ? "Name your team" : "Team name"}
           </label>
           <input
             id="team-name"
@@ -396,6 +398,7 @@ function ReviewBoard({
             onChange={(e) => onTeamNameChange(e.target.value)}
             onBlur={(e) => persistTeamName(e.target.value)}
             placeholder="Your XI"
+            disabled={!arrangementMutable}
           />
         </div>
       </header>
@@ -592,46 +595,57 @@ function SimulatePanel({
     if (!attempt) return;
     simInFlightRef.current = true;
     setSim({ kind: "running", note: "Loading 2026 scenario…" });
-    // Reflect lifecycle on the persisted record so refreshes don't claim the
-    // run is "ready" mid-simulation. Best-effort — proceed on failure.
     try {
-      const stat = setRunStatus(record.run_id, gameData.versions, "simulating");
-      if (stat.status === "updated" && stat.record) {
-        if (stat.persistence === "durable") {
-          handoffRef.current.markStatusSimulating(attempt, stat.record.updated_seq);
-        }
-        onRecordUpdate(stat.record, persistenceWarning);
+      // Compare-and-lock the exact rendered revision. The simulation must use
+      // the returned record—not the stale React prop—so arrangement and score
+      // are owned by the same lifecycle sequence across tabs and in volatile
+      // storage.
+      const lock = beginRunSimulation(record.run_id, gameData.versions, record);
+      if (lock.status !== "updated" || !lock.record) {
+        if (lock.record) onRecordUpdate(lock.record, persistenceWarning);
+        setSim({
+          kind: "error",
+          title: "Team sheet changed",
+          message:
+            "This team sheet changed before simulation could start. Review the current lineup and try again.",
+        });
+        return;
       }
-    } catch {
-      // Non-fatal: a quota error here doesn't block the actual sim.
-    }
-    try {
+      const lockedRecord = lock.record;
+      handoffRef.current.markStatusSimulating(attempt, lockedRecord.updated_seq);
+      const lockWarnings = [...lock.warnings];
+      if (lock.persistence === "volatile") {
+        lockWarnings.push(
+          "Simulation is locked in this tab only — browser storage is unavailable.",
+        );
+      }
+      onRecordUpdate(
+        lockedRecord,
+        lockWarnings.length > 0 ? lockWarnings.join(" · ") : persistenceWarning,
+      );
       const scenarioBundle = await loadScenarioBundle();
       if (!handoffRef.current.canCommit(attempt)) return;
       setSim({ kind: "running", note: "Simulating the run…" });
-      const result = await runSimulation(gameData, scenarioBundle, record, {
+      const result = await runSimulation(gameData, scenarioBundle, lockedRecord, {
         signal: attempt.controller.signal,
       });
       if (!handoffRef.current.canCommit(attempt)) return;
       const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
-      const persist = setRunSimulation(
-        record.run_id,
-        gameData.versions,
-        result.simulation,
-        ownedStatusSequence === null
-          ? undefined
-          : { status: "simulating", updated_seq: ownedStatusSequence },
-      );
+      if (ownedStatusSequence === null) {
+        throw new Error("simulation lifecycle ownership was lost before persistence");
+      }
+      const persist = setRunSimulation(record.run_id, gameData.versions, result.simulation, {
+        status: "simulating",
+        updated_seq: ownedStatusSequence,
+      });
       if (persist.status !== "updated" || !persist.record) {
-        if (ownedStatusSequence !== null) {
-          try {
-            setRunStatus(record.run_id, gameData.versions, "ready", {
-              status: "simulating",
-              updated_seq: ownedStatusSequence,
-            });
-          } catch {
-            // Best-effort; the stale/invalid record may no longer be writable.
-          }
+        try {
+          setRunStatus(record.run_id, gameData.versions, "ready", {
+            status: "simulating",
+            updated_seq: ownedStatusSequence,
+          });
+        } catch {
+          // Best-effort; the stale/invalid record may no longer be writable.
         }
         handoffRef.current.markStatusRecovered(attempt);
         setSim({
@@ -697,10 +711,10 @@ function SimulatePanel({
   const note = simulationLocked
     ? "This completed run is read-only. Its team sheet and simulation stay paired."
     : !complete
-    ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
-    : sim.kind === "running"
-      ? sim.note
-      : "Your team sheet is ready. Confirm it to play the 8-match run.";
+      ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
+      : sim.kind === "running"
+        ? sim.note
+        : "Your team sheet is ready. Confirm it to play the 8-match run.";
 
   return (
     <section className={`${s.panel} ${s.simPanel} ${s.reviewSimPanel}`}>

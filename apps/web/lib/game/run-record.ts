@@ -507,6 +507,64 @@ export function setRunArrangement(
   };
 }
 
+export type BeginRunSimulationExpected = Pick<
+  RunRecordV1,
+  "updated_seq" | "status" | "arrangement"
+>;
+
+/**
+ * Atomically compare the exact rendered team-sheet revision and lock it for
+ * simulation. The returned record is the only record the caller may
+ * simulate: it is the same arrangement that now owns the `simulating`
+ * lifecycle sequence.
+ */
+export function beginRunSimulation(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  expected: BeginRunSimulationExpected,
+): SetSimulationResult {
+  const loaded = loadRunRecord(run_id, currentVersions);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const status = loaded.status as "missing" | "stale" | "invalid";
+    return { status, record: null, persistence: "none", warnings: [] };
+  }
+  const current = loaded.record;
+  if (
+    current.simulation !== undefined ||
+    (current.status ?? "ready") !== (expected.status ?? "ready") ||
+    current.updated_seq !== expected.updated_seq ||
+    !sameArrangement(current.arrangement, expected.arrangement)
+  ) {
+    return {
+      status: "conflict",
+      record: current,
+      persistence: "none",
+      warnings: ["The team sheet changed before simulation could lock it."],
+    };
+  }
+  const storage = getStorage();
+  const next: RunRecordV1 = {
+    ...current,
+    updated_seq: nextCounter(storage),
+    status: "simulating",
+  };
+  const save = saveRunRecord(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
+function sameArrangement(
+  left: TeamSheetArrangement | undefined,
+  right: TeamSheetArrangement | undefined,
+): boolean {
+  if (left === undefined || right === undefined) return left === right;
+  return left.length === right.length && left.every((cardId, index) => cardId === right[index]);
+}
+
 /**
  * Read-modify-write the record. The updater returns the next `DraftState`; we
  * stamp `updated_seq` and persist.

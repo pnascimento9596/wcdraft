@@ -24,6 +24,16 @@ decoded `a`/`mp`, so a re-share preserves canonical token bytes. The first
 review FAIL remains recorded in the durable report; a fresh review is required
 on the fix-forward head.
 
+The subsequent `c781891` head was invalidated before review: static CI found
+three Prettier failures, and an aborted fallback review identified a cross-tab
+TOCTOU at simulation start. Review now uses `beginRunSimulation` to compare and
+lock the exact rendered status, revision, and arrangement, then simulates only
+the returned locked record with mandatory ownership in durable and volatile
+storage. A conflict attaches no simulation. Completed Review is fully
+read-only, including team name; the same field and arrangement controls remain
+locked while simulation is active. The durable report preserves this failure
+history; exact-head review must target the next fix-forward commit.
+
 Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
 `mp`. One shared reconciliation path covers all four presence combinations,
 ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
@@ -35,7 +45,7 @@ fails closed on arranged tokens instead of silently scoring the wrong XI.
 
 Measured closure: focused core token 4/4 and focused web 177/177; root
 typecheck 8/8, lint 5/5, test 8/8 (core 423, data 183 + 9 expected skips, DB
-161, marketing 69, web 1,184 + 1 expected benchmark skip), game-flow, responsive
+161, marketing 69, web 1,187 + 1 expected benchmark skip), game-flow, responsive
 218/0, and build 4/4 with 40 pages/routes. Forced goldens pass core 69+42,
 data 59, integration 22, and leaderboard 6; canary 1/1 proves zero pick flips;
 heavy realism passes 10/10 at N=2000 x three policies. Generated check and the
