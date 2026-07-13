@@ -19,6 +19,14 @@ once; managerless remains neutral. Existing t3/t4 run tokens optionally persist
 compact `mp:0|1`, with shared run-record, OG, and leaderboard replay
 reconciliation and version-anchored legacy derivation.
 
+S3 also deliberately retunes the pre-existing aggregate manager-link uplift
+`MANAGER_MODIFIER.BAND` from `.10` to `.06` while raising the separate
+per-match tactical maximum from `.01` to `.02`. This keeps the combined
+presence-plus-link channel inside the frozen manager magnitude ceiling while
+meeting its reach floor. The `SYNERGY.*` weights/multiplier formula, manager-link
+derivation and +0/+1/+2 discretization, λ tuple, and RNG consumption are
+unchanged; `.10 -> .06` is a disclosed season calibration, not a target change.
+
 The final S3 availability constants are event probability .125,
 tournament-ending conditional probability .12, two-match minor probability
 .05, minor-event cap 2, short-handed multiplier .72, and incoming replacement

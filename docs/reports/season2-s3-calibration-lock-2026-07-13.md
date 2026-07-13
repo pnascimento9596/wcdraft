@@ -112,20 +112,23 @@ before the manager-presence mechanic or any season constant is changed.
 
 ## Final calibration table
 
-The final candidate retains the λ tuple, scoring, progression semantics,
-Synergy formula, and S2 manager-link discretization. Its S3-owned constants
-are:
+The final candidate retains the λ tuple, scoring and progression semantics,
+the `SYNERGY.*` weights/multiplier formula, and S2's manager-link derivation and
+`+0/+1/+2` discretization. The separate aggregate manager-link uplift is an
+engine calibration constant, not a `SYNERGY.*` weight; S3 deliberately retunes
+it below and records that change explicitly. All final S3 constants are:
 
-| Constant | Final value | Mechanical scope |
-| --- | ---: | --- |
-| `INJURY.AVAILABILITY_EVENT_PROB` | `0.125` | At most one seeded pre-match availability draw per fixture |
-| `INJURY.TOURNAMENT_ENDING_PROB` | `0.12` | Existing persistent-absence split; unchanged |
-| `INJURY.MINOR_TWO_MATCH_PROB` | `0.05` | Conditional minor-event duration |
-| `INJURY.MAX_MINOR_EVENTS_PER_RUN` | `2` | Minor-event run cap |
-| `INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER` | `0.70` | Scales only the incoming canonical replacement's active contribution |
-| `INJURY.SHORT_HANDED_STRENGTH_MULTIPLIER` | `0.72` | Existing all-channel short-handed path |
-| `MANAGER_TACTICAL.MAX_BAND` | `3` | Presence `+1` plus preserved link `+0/+1/+2` |
-| `MANAGER_TACTICAL.WIDTH` | `0.020` | Maximum continuous post-aggregation tactical uplift |
+| Constant                                           | Previous value | Final value | Mechanical scope                                                                      |
+| -------------------------------------------------- | -------------: | ----------: | ------------------------------------------------------------------------------------- |
+| `INJURY.AVAILABILITY_EVENT_PROB`                   |         `0.09` |     `0.125` | At most one seeded pre-match availability draw per fixture                            |
+| `INJURY.TOURNAMENT_ENDING_PROB`                    |         `0.12` |      `0.12` | Existing persistent-absence split; unchanged                                          |
+| `INJURY.MINOR_TWO_MATCH_PROB`                      |         `0.35` |      `0.05` | Conditional minor-event duration                                                      |
+| `INJURY.MAX_MINOR_EVENTS_PER_RUN`                  |            `3` |         `2` | Minor-event run cap                                                                   |
+| `INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER` |            n/a |      `0.70` | Scales only the incoming canonical replacement's active contribution                  |
+| `INJURY.SHORT_HANDED_STRENGTH_MULTIPLIER`          |         `0.92` |      `0.72` | Existing all-channel short-handed path                                                |
+| `MANAGER_MODIFIER.BAND`                            |         `0.10` |      `0.06` | Pre-existing aggregate manager-link uplift; retuned for the combined manager envelope |
+| `MANAGER_TACTICAL.MAX_BAND`                        |            `2` |         `3` | Presence `+1` plus preserved link `+0/+1/+2`                                          |
+| `MANAGER_TACTICAL.WIDTH`                           |        `0.010` |     `0.020` | Maximum continuous post-aggregation tactical uplift                                   |
 
 The `0.70` bench multiplier is a deliberately narrow calibration seam. Exact
 constant sweeps showed that raising event frequency alone could make an
@@ -149,14 +152,27 @@ before both sides of `lambdaForFour`, exactly once. A managerless draft is
 strictly neutral. No manager placement, match count, or display overall is
 repurposed as fabricated tactical quality.
 
+S2 already used `manager_link` in two distinct seams: the continuous
+aggregate `MANAGER_MODIFIER.BAND` uplift and the discretized per-match tactical
+channel. Option A preserves that architecture and the link signal's derivation,
+but the new universal presence contribution increases the combined manager
+envelope. S3 therefore retunes the aggregate link band from `0.10` to `0.06`
+while raising the tactical maximum from `0.010` to `0.020`. This is an
+architect-authorized season-constant calibration, not a target reduction: at
+the final constants the literal no-manager reach is `28.30%` and its paired
+per-match movement is `0.0101751`, simultaneously passing the preregistered
+`>=25%` reach and `<=0.0150` magnitude gates. The `SYNERGY.*` weights and
+multiplier formula, manager-link calculation/discretization, λ tuple, and RNG
+consumption remain unchanged.
+
 Final N=2000 all-policy calibration evidence uses the frozen seed prefix and
 exact paired-fixture construction:
 
-| Policy | Qualifying | Mean score | Bench activation | Bench sensitivity | Bench mean paired win-p delta | Manager sensitivity | Manager mean paired win-p delta | XI runner-up sensitivity |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `autoDraft` | 336/2000 (16.80%) | -7.7955 | 683/2000 (34.15%) | 548/2000 (27.40%) | 0.0141595 | 305/2000 (15.25%) | 0.0043829 | 584/2000 (29.20%) |
-| `strategicAutoDraft` | 1338/2000 (**66.90%**) | **14.8365** | 839/2000 (**41.95%**) | 763/2000 (**38.15%**) | **0.0394470** | 566/2000 (**28.30%**) | **0.0101751** | 953/2000 (**47.65%**) |
-| `greedyOverallAutoDraft` | 508/2000 (25.40%) | -4.0295 | 690/2000 (34.50%) | 578/2000 (28.90%) | 0.0201437 | 349/2000 (17.45%) | 0.0056550 | 730/2000 (36.50%) |
+| Policy                   |             Qualifying |  Mean score |      Bench activation |     Bench sensitivity | Bench mean paired win-p delta |   Manager sensitivity | Manager mean paired win-p delta | XI runner-up sensitivity |
+| ------------------------ | ---------------------: | ----------: | --------------------: | --------------------: | ----------------------------: | --------------------: | ------------------------------: | -----------------------: |
+| `autoDraft`              |      336/2000 (16.80%) |     -7.7955 |     683/2000 (34.15%) |     548/2000 (27.40%) |                     0.0141595 |     305/2000 (15.25%) |                       0.0043829 |        584/2000 (29.20%) |
+| `strategicAutoDraft`     | 1338/2000 (**66.90%**) | **14.8365** | 839/2000 (**41.95%**) | 763/2000 (**38.15%**) |                 **0.0394470** | 566/2000 (**28.30%**) |                   **0.0101751** |    953/2000 (**47.65%**) |
+| `greedyOverallAutoDraft` |      508/2000 (25.40%) |     -4.0295 |     690/2000 (34.50%) |     578/2000 (28.90%) |                     0.0201437 |     349/2000 (17.45%) |                       0.0056550 |        730/2000 (36.50%) |
 
 For the binding strategic row, exact paired-fixture denominators are 8,340
 bench pairs with 543 post-divergence fixtures excluded, and 8,707 manager
@@ -175,11 +191,11 @@ shape-band centers and widths. This is deliberate, not a silent weakening:
 the new strategic landing passes all four existing bands, so recentering them
 around the new observation would reduce the gate's independence.
 
-| Policy | Qualifying | Mean | Median | p95 | Min | Max |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `autoDraft` | 336/2000 (16.80%) | -7.7955 | -8.5 | 10 | -41 | 59 |
-| `strategicAutoDraft` | 1338/2000 (66.90%) | 14.8365 | 9 | 62 | -26 | 126 |
-| `greedyOverallAutoDraft` | 508/2000 (25.40%) | -4.0295 | -6 | 21 | -34 | 118 |
+| Policy                   |         Qualifying |    Mean | Median | p95 | Min | Max |
+| ------------------------ | -----------------: | ------: | -----: | --: | --: | --: |
+| `autoDraft`              |  336/2000 (16.80%) | -7.7955 |   -8.5 |  10 | -41 |  59 |
+| `strategicAutoDraft`     | 1338/2000 (66.90%) | 14.8365 |      9 |  62 | -26 | 126 |
+| `greedyOverallAutoDraft` |  508/2000 (25.40%) | -4.0295 |     -6 |  21 | -34 | 118 |
 
 Final strategic shape observations are goals/game `2.6813014`, group draw
 `0.2468333`, margin-at-least-four `0.0434538`, knockout-to-extra-time
@@ -221,11 +237,11 @@ pinned 45-day daily salt-map regeneration and one final `build:compact` so
 manifest metadata describes the final bytes. The score-distribution reference
 population is the final strategic N=2000 row above. Artifact hashes are:
 
-| Artifact | Raw SHA-256 | Brotli SHA-256 |
-| --- | --- | --- |
-| `score-distribution.compact.json` | `3fcbb10d679a23d9d306c9c9021e530df8f33d631d4116bd68ce55a0704d0df3` | `59cad09592860dbcd62dc40a4fe23d6f49620f5043887665dd3b026326c441b9` |
+| Artifact                           | Raw SHA-256                                                        | Brotli SHA-256                                                     |
+| ---------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `score-distribution.compact.json`  | `3fcbb10d679a23d9d306c9c9021e530df8f33d631d4116bd68ce55a0704d0df3` | `59cad09592860dbcd62dc40a4fe23d6f49620f5043887665dd3b026326c441b9` |
 | `daily-seed-salt-map.compact.json` | `5946ea685d1bc6e8a530e083ea43ec6c771143fbe0edaa3ff3d1210c0cf245a3` | `67e138f1cd1fc498d3794c11c09cf9c28e46d4dc954ec2d38dcbedfccb4756c8` |
-| `manifest.json` | `a99bcc6fce78a29209ff6e9536c03d96de119df68cb1e45139b389dcccd97996` | `075df51055eaadead47e59a85a13e70767543557dc38dbfc5ee7e00c70551c3d` |
+| `manifest.json`                    | `a99bcc6fce78a29209ff6e9536c03d96de119df68cb1e45139b389dcccd97996` | `075df51055eaadead47e59a85a13e70767543557dc38dbfc5ee7e00c70551c3d` |
 
 The pinned daily build was then rerun uncached and followed by another compact
 build. `cmp` proved byte identity for Daily raw (`18,982` bytes), Daily Brotli
