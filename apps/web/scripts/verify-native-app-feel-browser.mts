@@ -5,7 +5,7 @@ import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
-import { chromium, type Locator, type Page } from "playwright-core";
+import { chromium, type Browser, type Locator, type Page } from "playwright-core";
 
 const require = createRequire(import.meta.url);
 const appRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -320,14 +320,15 @@ async function assertPageContracts(page: Page, viewportHeight: number): Promise<
 }
 
 const server = await startServer();
-const browser = await chromium.launch({
-  channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
-  headless: true,
-});
+let browser: Browser | null = null;
 const metrics: PressMetric[] = [];
 const pageFailures: string[] = [];
-await mkdir(path.join(outDir, "screenshots"), { recursive: true });
 try {
+  browser = await chromium.launch({
+    channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
+    headless: true,
+  });
+  await mkdir(path.join(outDir, "screenshots"), { recursive: true });
   for (const viewport of viewports) {
     for (const theme of themes) {
       const context = await browser.newContext({
@@ -406,8 +407,11 @@ try {
     }
   }
 } finally {
-  await browser.close();
-  await server.stop();
+  try {
+    await browser?.close();
+  } finally {
+    await server.stop();
+  }
 }
 
 const failures = [...pageFailures, ...metrics.flatMap((metric) => metric.failures)];
