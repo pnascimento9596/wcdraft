@@ -289,7 +289,7 @@ function neutralTeamFacts(strength: TeamStrength): MatchTeamFacts {
   return {
     base_strength: strength,
     active_strength: strength,
-    ...applyManagerTacticalAdjustment(strength, 0, false),
+    ...applyManagerTacticalAdjustment(strength, false, 0, false),
     base_synergy: synergy,
     active_synergy: synergy,
     unavailable: [],
@@ -513,6 +513,7 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
   const preTacticalFacts = teamFacts ?? neutralTeamFacts(userStrength);
   const tactical = applyManagerTacticalAdjustment(
     userStrength,
+    preTacticalFacts.manager_present,
     preTacticalFacts.active_synergy.manager_link,
   );
   const effectiveTeamFacts: MatchTeamFacts = { ...preTacticalFacts, ...tactical };

@@ -284,6 +284,16 @@ describe("dynamic run OG tokens", () => {
 });
 
 describe("dynamic run OG metadata decision", () => {
+  it("rejects a token whose persisted manager-presence tier disagrees with deterministic re-sim", () => {
+    const completed = { ...complete(), manager_presence_band: 1 as const };
+    const body = decodeV3(encodeRunToken(completed));
+    const verified = verifyRunTokenForOg(encodeBody({ ...body, mp: 0 }), {
+      gameData,
+      scenario: SCENARIO_2026_BUNDLE,
+    });
+    expect(verified).toEqual({ status: "rejected", reason: "ILLEGAL_PICK" });
+  });
+
   it("uses the static default for malformed, legacy, pre-summary, unsigned, and foreign-build tokens", () => {
     const completed = complete();
     const completedToken = encodeRunToken(completed);
