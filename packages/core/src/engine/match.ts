@@ -40,6 +40,7 @@ import {
   lambdaDispersionMultiplier,
   lambdaForFour,
 } from "./calibration.js";
+import { applyManagerTacticalAdjustment } from "./manager-tactics.js";
 
 // Display-only Skellam/Poisson-difference mass from the already-computed λs.
 // The match sampler below remains the locked fixed-chance model and this block
@@ -288,6 +289,7 @@ function neutralTeamFacts(strength: TeamStrength): MatchTeamFacts {
   return {
     base_strength: strength,
     active_strength: strength,
+    ...applyManagerTacticalAdjustment(strength, 0, false),
     base_synergy: synergy,
     active_synergy: synergy,
     unavailable: [],
@@ -508,6 +510,14 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
   const userKeeper = keeperOf(userStarted);
   const oppKeeper = keeperOf(oppStarted);
 
+  const preTacticalFacts = teamFacts ?? neutralTeamFacts(userStrength);
+  const tactical = applyManagerTacticalAdjustment(
+    userStrength,
+    preTacticalFacts.active_synergy.manager_link,
+  );
+  const effectiveTeamFacts: MatchTeamFacts = { ...preTacticalFacts, ...tactical };
+  const postTacticalUserStrength = tactical.post_tactical_strength;
+
   // E-3a four-channel λ map — see calibration.ts:lambdaForFour. Opponent's
   // DEFENSE + GOALKEEPING fold into a single defResist; MIDFIELD modulates as
   // a bounded multiplier. This is the SQUAD's four channels + Synergy (already
@@ -522,8 +532,11 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
   // intact because both sides are scaled by the same factor (legibility
   // preserved; D4 monotonicity / elite-ceiling tests still pass).
   const phaseLambdaFactor = phase === "knockout" ? activeLambda().KO_LAMBDA_FACTOR : 1;
-  const lambdaUserRaw = lambdaForFour(userStrength, oppStrength) * phaseLambdaFactor;
-  const lambdaOppRaw = lambdaForFour(oppStrength, userStrength) * phaseLambdaFactor;
+  // S2 exact-once tactical seam: the same uniformly adjusted user strength is
+  // used as the attacking side and the defending side. This is deliberately
+  // distinct from the aggregate-time managerBandModifier and consumes no RNG.
+  const lambdaUserRaw = lambdaForFour(postTacticalUserStrength, oppStrength) * phaseLambdaFactor;
+  const lambdaOppRaw = lambdaForFour(oppStrength, postTacticalUserStrength) * phaseLambdaFactor;
 
   // E-3a refit (D1) — phase-specific match-level λ dispersion. The helper
   // `lambdaDispersionMultiplier` consumes EXACTLY ONE seeded `structRng.next()`
@@ -732,7 +745,7 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
     phase,
     opponent_team_id: opponentTeamId,
     pre_match_win_probability: preMatchWinProbability,
-    team_facts: teamFacts ?? neutralTeamFacts(userStrength),
+    team_facts: effectiveTeamFacts,
     user_goals: userGoalsReg,
     opp_goals: oppGoalsReg,
     user_goals_et: userGoalsEt,
