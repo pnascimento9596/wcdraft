@@ -401,10 +401,10 @@ describe("S1 deterministic availability lifecycle and persisted facts", () => {
         ...match.team_facts!,
         bench_activations: match.team_facts!.bench_activations.map((fact, index) =>
           index === 0
-              ? {
-                  ...fact,
-                  outgoing_score: fact.replacement_score,
-                  line_contribution_delta: 0,
+            ? {
+                ...fact,
+                outgoing_score: fact.replacement_score,
+                line_contribution_delta: 0,
               }
             : fact,
         ),

@@ -34,11 +34,7 @@ function members(side: "user" | "opp", strength: TeamStrength): SimMember[] {
   }));
 }
 
-function facts(
-  strength: TeamStrength,
-  managerLink: number,
-  managerPresent = true,
-): MatchTeamFacts {
+function facts(strength: TeamStrength, managerLink: number, managerPresent = true): MatchTeamFacts {
   const synergy = {
     overall: managerLink * 100,
     nation_clusters: [],
@@ -290,7 +286,9 @@ describe("S2 tournament reachability and persisted facts", () => {
       expect(facts.manager_tactical_multiplier).toBe(1 + MANAGER_TACTICAL.WIDTH);
       expect(facts.tactical_applied_to_outcome).toBe(true);
       expect(facts.post_tactical_strength.attack).toBe(
-        Number(Math.min(100, facts.active_strength.attack * (1 + MANAGER_TACTICAL.WIDTH)).toFixed(6)),
+        Number(
+          Math.min(100, facts.active_strength.attack * (1 + MANAGER_TACTICAL.WIDTH)).toFixed(6),
+        ),
       );
       expect(MatchResultSchema.safeParse(match).success).toBe(true);
     }

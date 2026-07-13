@@ -362,9 +362,7 @@ export function resolveActiveTeam(params: {
             contribution(
               slot,
               world,
-              replacements.has(slot.slot_id)
-                ? INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER
-                : 1,
+              replacements.has(slot.slot_id) ? INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER : 1,
             ),
           ),
           activeSynergy,
@@ -375,9 +373,7 @@ export function resolveActiveTeam(params: {
             contribution(
               slot,
               world,
-              replacements.has(slot.slot_id)
-                ? INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER
-                : 1,
+              replacements.has(slot.slot_id) ? INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER : 1,
             ),
           ),
           activeSynergy,

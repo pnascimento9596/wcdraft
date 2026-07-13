@@ -215,7 +215,10 @@ export function runTokenManagerPresenceAgrees(
 ): boolean {
   if (token.v !== 3 && token.v !== 4) return true;
   const derived = matches[0]?.team_facts?.manager_presence_band;
-  if (derived === undefined || matches.some((match) => match.team_facts?.manager_presence_band !== derived)) {
+  if (
+    derived === undefined ||
+    matches.some((match) => match.team_facts?.manager_presence_band !== derived)
+  ) {
     return false;
   }
   // Legacy tokens omit mp and derive honestly under their version anchors.

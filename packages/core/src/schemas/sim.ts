@@ -370,7 +370,8 @@ export const MatchResultSchema = z
               ) {
                 ctx.addIssue({
                   code: z.ZodIssueCode.custom,
-                  message: "replacement contribution multiplier must match the calibrated engine constant",
+                  message:
+                    "replacement contribution multiplier must match the calibrated engine constant",
                   path: ["replacement_contribution_multiplier"],
                 });
               }
@@ -382,7 +383,8 @@ export const MatchResultSchema = z
               ) {
                 ctx.addIssue({
                   code: z.ZodIssueCode.custom,
-                  message: "replacement_score must equal internal_score * fit * contribution multiplier",
+                  message:
+                    "replacement_score must equal internal_score * fit * contribution multiplier",
                   path: ["replacement_score"],
                 });
               }
