@@ -4,6 +4,38 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Season 2 Squad Depth — Unit S4 team-sheet and reconciled token contract:
+2026-07-13 · local RED implementation on `ws-f4/season2-s4-team-sheet`, based
+on exact integration head `98c0e07abd992b624cf44e500ad6b2199c5a25d3`.
+Post-pick Review is now an interactive 11-starter + 5-bench team sheet with an
+as-drafted default, tap-to-swap, full-info post-pick reveal for Memory/Blind
+Open, graduated fit warnings, and structural-only legality. The persisted
+authority is base legal-pick `DraftState` plus optional canonical arrangement;
+the arranged draft is ephemeral and feeds S1 availability/bench selection,
+Synergy, manager tactics, local/worker simulation, OG, ranked validation, and
+the lineup inspector.
+
+Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
+`mp`. One shared reconciliation path covers all four presence combinations,
+ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
+remains exact as drafted; absent `mp` derives from deterministic matches.
+Canonical token encoding is insertion-order independent with stable `mp`, `a`,
+then challenge ordering. Semantic arrangement defects map to typed
+`ILLEGAL_PICK` HTTP 422 after shallow decode. The paused marketing composer
+fails closed on arranged tokens instead of silently scoring the wrong XI.
+
+Measured closure: focused core token 4/4 and focused web 177/177; root
+typecheck 8/8, lint 5/5, test 8/8 (core 423, data 183 + 9 expected skips, DB
+161, marketing 69, web 1,179 + 1 expected benchmark skip), game-flow, responsive
+218/0, and build 4/4 with 40 pages/routes. Forced goldens pass core 69+42,
+data 59, integration 22, and leaderboard 6; canary 1/1 proves zero pick flips;
+heavy realism passes 10/10 at N=2000 x three policies. Generated check and the
+pinned 2026-07-10 / 45-day / population-128 / max-attempts-8 five-step Daily
+closure pass with score-distribution, Daily-map, and manifest bytes unchanged.
+Durable report: `docs/reports/season2-s4-team-sheet-token-2026-07-13.md`.
+No merge or ship has occurred; exact-head independent/cross-model review, PR
+CI, and integration merge remain required.
+
 Season 2 Squad Depth — Unit S3 Option A final calibration:
 2026-07-13 · local RED implementation on
 `ws-core/season2-s3-calibration`, based on exact integration head

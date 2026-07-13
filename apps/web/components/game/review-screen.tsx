@@ -32,6 +32,11 @@ import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { mirrorRunToServer } from "@/lib/game/save-mirror";
 import { runSimulation } from "@/lib/game/simulate";
+import {
+  canonicalTeamSheetSlots,
+  materializeTeamSheetDraft,
+  verifyTeamSheetArrangement,
+} from "@/lib/game/team-sheet";
 import { prewarmSimulationWorker, terminateSimulationWorker } from "@/lib/game/sim-worker-client";
 import { SimulationHandoff } from "@/lib/game/simulation-handoff";
 import { formatNullableNumber, type PitchSlotView } from "@/lib/game/view-models";
@@ -213,24 +218,69 @@ function ReviewBoard({
   onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
   onBack: () => void;
 }) {
-  const draft = record.draft;
+  const sourceDraft = record.draft;
+  const arrangement = useMemo(
+    () => verifyTeamSheetArrangement(sourceDraft, record.arrangement),
+    [sourceDraft, record.arrangement],
+  );
+  // Ephemeral only: projected slots deliberately never replace persisted pick
+  // evidence. The record remains base DraftState + optional arrangement.
+  const draft = useMemo(
+    () => materializeTeamSheetDraft(gameData, sourceDraft, arrangement),
+    [arrangement, gameData, sourceDraft],
+  );
   const formation = FORMATION_TEMPLATES[draft.formation_id]!;
   const validation = useMemo(() => validateSquad(draft), [draft]);
   const [warningsExpanded, setWarningsExpanded] = useState(false);
+  const [selectedSheetSlot, setSelectedSheetSlot] = useState<string | null>(null);
 
-  // Blind modes hide every rating SIGNAL (OVRs, channels, legend
-  // gold, provenance hue, Synergy numerics, line strengths) until the
-  // post-Simulate reveal. DISPLAY-ONLY: the engine still consumes the real
-  // channels; identities, shapes, flags and synergy LINK LINES stay visible.
-  const blind = isBlindDraftMode(draft.mode);
+  const swapSheetSlot = useCallback(
+    (slotId: string) => {
+      if (selectedSheetSlot === null) {
+        setSelectedSheetSlot(slotId);
+        return;
+      }
+      if (selectedSheetSlot === slotId) {
+        setSelectedSheetSlot(null);
+        return;
+      }
+      const slots = canonicalTeamSheetSlots(sourceDraft);
+      const from = slots.findIndex((slot) => slot.slot_id === selectedSheetSlot);
+      const to = slots.findIndex((slot) => slot.slot_id === slotId);
+      if (from < 0 || to < 0) {
+        setSelectedSheetSlot(null);
+        return;
+      }
+      const nextArrangement = [...arrangement];
+      [nextArrangement[from], nextArrangement[to]] = [nextArrangement[to]!, nextArrangement[from]!];
+      const next: RunRecordV1 = {
+        ...record,
+        updated_seq: record.updated_seq + 1,
+        arrangement: nextArrangement,
+      };
+      const save = saveRunRecord(next);
+      const warning =
+        save.persistence === "volatile" || save.warnings.length > 0
+          ? save.warnings.join(" · ") ||
+            "Team sheet is saved in this tab only — browser storage is unavailable."
+          : persistenceWarning;
+      setSelectedSheetSlot(null);
+      onRecordUpdate(next, warning ?? null);
+    },
+    [arrangement, onRecordUpdate, persistenceWarning, record, selectedSheetSlot, sourceDraft],
+  );
+
+  // Memory / Blind Open preserve blind picks, then reveal the complete factual
+  // card information before this arrangement decision.
+  const hiddenModeRevealed = isBlindDraftMode(draft.mode);
   const blindModeLabel = DRAFT_MODE_COPY[draft.mode].label;
   // Rating basis the squad was drafted on — every card/aggregate view resolves
   // from it (Current reads basis_ratings.current); the CURRENT chip rides it.
   const basis = draft.rating_basis;
 
   const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind, basis }),
-    [gameData, draft, blind, basis],
+    () => pitchSlotViews(gameData.indexes, draft, { basis }),
+    [gameData, draft, basis],
   );
 
   const manager = draft.manager_card_id
@@ -245,17 +295,13 @@ function ReviewBoard({
     [draft.squad, formation, managerTournament, gameData.nationByCardId],
   );
 
-  // Blinding rides the adapter opts (same as pitchSlotViews / squadAverageOverall)
-  // so the masked nulls come out of the `blindCardRatingView` seam, never a screen
-  // branch. Under blind, per-line `value` is null but `count` still reports the
-  // filled-starter count so the row labels can render unconditionally.
   const lineRatings = useMemo(
-    () => lineStrengthViews(gameData.indexes, draft, { blindRatings: blind, basis }),
-    [gameData, draft, blind, basis],
+    () => lineStrengthViews(gameData.indexes, draft, { basis }),
+    [gameData, draft, basis],
   );
   const squadAvg = useMemo(
-    () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind, basis }),
-    [gameData, draft, blind, basis],
+    () => squadAverageOverall(gameData.indexes, draft, { basis }),
+    [gameData, draft, basis],
   );
   const squadWarnings = useMemo(
     () => buildPlainSquadWarnings(validation.warnings, [...starters, ...bench]),
@@ -334,10 +380,10 @@ function ReviewBoard({
       </header>
 
       <section className={`${s.panel} ${s.reviewMainPanel}`} aria-label="Final XI">
-        <SynergyBar result={synergy} active={true} blind={blind} />
-        {blind ? (
+        <SynergyBar result={synergy} active={true} blind={false} />
+        {hiddenModeRevealed ? (
           <p className={s.memoryModeNote} role="note">
-            {blindModeLabel} — hidden values reveal after you simulate.
+            {blindModeLabel} reveal complete — arrange with full card information.
           </p>
         ) : null}
         <div className={s.panelHead}>
@@ -350,7 +396,7 @@ function ReviewBoard({
               Current
             </span>
           ) : null}
-          <span className={s.panelMeta}>Locked · no rearranging</span>
+          <span className={s.panelMeta}>Tap two players to swap · fit never blocks</span>
         </div>
         <div className={s.squadStage}>
           <Pitch
@@ -358,6 +404,10 @@ function ReviewBoard({
             starters={starters}
             linkedPairs={synergy.linked_pairs}
             showInactiveEdges
+            selectedSlotId={selectedSheetSlot}
+            onSlotSelect={swapSheetSlot}
+            interactive
+            filledSlotInteraction
           />
           <ManagerSlot manager={manager} />
         </div>
@@ -366,11 +416,15 @@ function ReviewBoard({
           <span className={s.benchLabel}>Bench</span>
           <div className={s.benchSlots}>
             {bench.map((b) => (
-              <div
+              <button
+                type="button"
                 key={b.slot_id}
                 className={`${s.benchSlot} ${b.card ? s.benchFilled : ""} ${
-                  b.card ? s.slotLocked : ""
+                  selectedSheetSlot === b.slot_id ? s.slotSelected : ""
                 }`}
+                aria-pressed={selectedSheetSlot === b.slot_id}
+                aria-label={`${b.slot_position} bench — ${b.card?.name ?? "open"}; select to swap`}
+                onClick={() => swapSheetSlot(b.slot_id)}
               >
                 <span className={s.benchSlotTop}>
                   <span className={s.slotPos}>{b.slot_position}</span>
@@ -384,7 +438,7 @@ function ReviewBoard({
                   ) : null}
                 </span>
                 <span className={s.slotName}>{b.card ? b.card.name : "Open"}</span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -392,33 +446,21 @@ function ReviewBoard({
 
       <section className={`${s.panel} ${s.reviewMetricsPanel}`}>
         <div className={s.panelHead}>
-          <h2 className={s.panelTitle}>{blind ? "Line strengths hidden" : "Rating by line"}</h2>
-          {blind ? (
-            <span className={s.squadAvg}>Hidden</span>
-          ) : (
-            <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
-          )}
+          <h2 className={s.panelTitle}>Rating by line</h2>
+          <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
         </div>
-        {blind ? (
-          <p className={s.memoryModeNote} role="note">
-            {blindModeLabel} keeps line strengths hidden until you simulate.
-          </p>
-        ) : (
-          <>
-            <p className={s.lineCaption}>line strength · sim scale 0–100</p>
-            <div className={s.lineRatings}>
-              {lineRatings.map((l) => (
-                <div key={l.line} className={s.lineRow}>
-                  <span className={s.lineName}>{l.label}</span>
-                  <span className={s.lineTrack}>
-                    <span className={s.lineFill} style={{ width: `${l.value ?? 0}%` }} />
-                  </span>
-                  <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
-                </div>
-              ))}
+        <p className={s.lineCaption}>line strength · sim scale 0–100</p>
+        <div className={s.lineRatings}>
+          {lineRatings.map((l) => (
+            <div key={l.line} className={s.lineRow}>
+              <span className={s.lineName}>{l.label}</span>
+              <span className={s.lineTrack}>
+                <span className={s.lineFill} style={{ width: `${l.value ?? 0}%` }} />
+              </span>
+              <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
             </div>
-          </>
-        )}
+          ))}
+        </div>
       </section>
 
       {squadWarnings.length > 0 ? (
@@ -626,7 +668,7 @@ function SimulatePanel({
     ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
     : sim.kind === "running"
       ? sim.note
-      : "Your draft is complete. Hit simulate to play the 8-match run.";
+      : "Your team sheet is ready. Confirm it to play the 8-match run.";
 
   return (
     <section className={`${s.panel} ${s.simPanel} ${s.reviewSimPanel}`}>
@@ -648,7 +690,7 @@ function SimulatePanel({
         disabled={!complete || sim.kind === "running"}
         aria-disabled={!complete || sim.kind === "running"}
       >
-        {sim.kind === "running" ? "Simulating…" : "Simulate the run"}
+        {sim.kind === "running" ? "Simulating…" : "Confirm team sheet & simulate"}
       </button>
       <button
         type="button"

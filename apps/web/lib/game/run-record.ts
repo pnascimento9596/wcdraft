@@ -35,6 +35,7 @@ import { getCatalogForEra } from "./data";
 import { isDailyChallengeDate, isDailySeedForDate, type DailyChallenge } from "./daily";
 import { RunRecordError, StorageQuotaError, StorageUnavailableError } from "./errors";
 import { parsePersistedSimulation, type PersistedSimulation } from "./simulation-payload";
+import { verifyTeamSheetArrangement, type TeamSheetArrangement } from "./team-sheet";
 export type {
   PersistedKnockoutLadderMeta,
   PersistedKnockoutLadderRoundMeta,
@@ -64,6 +65,8 @@ export interface RunRecordV1 {
   updated_seq: number;
   versions: RunRecordVersions;
   draft: DraftState;
+  /** Optional canonical sheet; absent means the immutable as-drafted assignment. */
+  arrangement?: TeamSheetArrangement;
   /** Stable drafted-manager presence tier; absent on legacy/pre-simulation records. */
   manager_presence_band?: ManagerPresenceBand;
   /** Lifecycle status; older records without this field default to "ready". */
@@ -768,6 +771,21 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     return null;
   }
 
+  let arrangement: TeamSheetArrangement | undefined;
+  if (value.arrangement !== undefined) {
+    if (
+      !Array.isArray(value.arrangement) ||
+      !value.arrangement.every((entry) => typeof entry === "string")
+    ) {
+      return null;
+    }
+    try {
+      arrangement = verifyTeamSheetArrangement(draft.data, value.arrangement);
+    } catch {
+      return null;
+    }
+  }
+
   let simulation: PersistedSimulation | undefined;
   if (value.simulation !== undefined) {
     const parsedSimulation = parsePersistedSimulation(value.simulation);
@@ -808,6 +826,7 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     updated_seq,
     versions,
     draft: draft.data,
+    ...(arrangement === undefined ? {} : { arrangement }),
     ...(managerPresenceBand === undefined ? {} : { manager_presence_band: managerPresenceBand }),
     ...(status === undefined ? {} : { status }),
     ...(challenge === undefined ? {} : { challenge }),

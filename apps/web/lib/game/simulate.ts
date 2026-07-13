@@ -47,6 +47,7 @@ import { managerTournamentFor } from "./adapters";
 import type { GameData } from "./data";
 import { MissingRecordError } from "./errors";
 import { runWithSimulationWorker, SimulationWorkerBusyError } from "./sim-worker-client";
+import { materializeTeamSheetDraft } from "./team-sheet";
 import type {
   PersistedKnockoutLadderMeta,
   PersistedKnockoutLadderRoundMeta,
@@ -251,7 +252,8 @@ export function runSimulationSync(
   record: RunRecordV1,
   opts: SimulationOptions = {},
 ): SyncSimulationResult {
-  const { world, teams, bracket } = buildSimWorldInputs(gameData, scenario, record);
+  const prepared = prepareTeamSheetRecord(gameData, record);
+  const { world, teams, bracket } = buildSimWorldInputs(gameData, scenario, prepared);
   const clock = opts.clock ?? defaultClock();
 
   const t0 = clock ? clock() : null;
@@ -264,7 +266,7 @@ export function runSimulationSync(
   });
   void scenarioMeta; // scenario_seed already on `runScenario.scenario_seed`
 
-  const result = runTournamentFull(record.draft, runScenario, record.parent_seed, world);
+  const result = runTournamentFull(prepared.draft, runScenario, prepared.parent_seed, world);
 
   const t1 = clock ? clock() : null;
   const duration_ms = t0 !== null && t1 !== null ? t1 - t0 : null;
@@ -374,11 +376,12 @@ async function runSimulationAsync(
   runWorker: typeof runWithSimulationWorker = runWithSimulationWorker,
 ): Promise<RunSimulationResult> {
   if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
-  const inputs = buildWorkerSimInputs(gameData, scenario, record);
+  const prepared = prepareTeamSheetRecord(gameData, record);
+  const inputs = buildWorkerSimInputs(gameData, scenario, prepared);
   const input: Omit<WorkerInput, "request_id"> = {
     kind: "run",
-    draft: record.draft,
-    parent_seed: record.parent_seed,
+    draft: prepared.draft,
+    parent_seed: prepared.parent_seed,
     world: inputs.world,
     scenario: inputs.scenario,
   };
@@ -400,11 +403,20 @@ async function runSimulationAsync(
     return runMainThread(
       gameData,
       scenario,
-      record,
+      prepared,
       `simulation worker failed (${error instanceof Error ? error.message : String(error)}); ran on main thread`,
       signal,
     );
   }
+}
+
+function prepareTeamSheetRecord(gameData: GameData, record: RunRecordV1): RunRecordV1 {
+  if (record.arrangement === undefined) return record;
+  const { arrangement, ...withoutArrangement } = record;
+  return {
+    ...withoutArrangement,
+    draft: materializeTeamSheetDraft(gameData, record.draft, arrangement),
+  };
 }
 
 async function runMainThread(

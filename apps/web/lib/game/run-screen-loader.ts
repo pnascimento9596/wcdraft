@@ -7,6 +7,7 @@ import { loadScenarioBundle } from "./scenario-data";
 import {
   decodeRunToken,
   isNewerRunTokenVersion,
+  reconcileRunToken,
   RunTokenError,
   type RunTokenBody,
   versionsAgree,
@@ -114,6 +115,9 @@ export async function resolveDisplayRun(
   try {
     const virtual = virtualRecordFromToken(decoded.token, gameData);
     const { simulation } = await resolvedDeps.runSimulation(gameData, scenario, virtual);
+    // Shared mp+a reconciliation is authoritative for ordinary Results/Share
+    // replay too; a forged in-domain presence fact must not bypass OG/ranked.
+    reconcileRunToken(decoded.token, gameData, simulation.matches);
     return {
       kind: "ready",
       gameData,

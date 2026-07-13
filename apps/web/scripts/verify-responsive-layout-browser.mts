@@ -764,7 +764,7 @@ function surfaceCases(): readonly SurfaceCase[] {
       label: "squad-review",
       path: `/play/review?run=${completeA.run_id}`,
       shellRule: true,
-      primaryAction: { role: "button", name: /Simulate the run/u },
+      primaryAction: { role: "button", name: /Confirm team sheet & simulate/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /4-3-3/u }).first().waitFor();
       },
