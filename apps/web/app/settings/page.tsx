@@ -23,7 +23,7 @@ export default function SettingsPage() {
       <div className="setting">
         <div className="setting__label">
           <b>Theme</b>
-          <span>Switch between light and dark.</span>
+          <span>System follows the OS; Light and Dark save an explicit override.</span>
         </div>
         <div className="setting__control">
           <ThemeSetting />

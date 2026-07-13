@@ -1,15 +1,16 @@
 "use client";
 
 import { useTheme } from "./theme-provider";
-import type { Theme } from "./theme-provider";
+import type { ThemePreference } from "./theme-provider";
 
-const OPTIONS: { value: Theme; label: string }[] = [
+const OPTIONS: { value: ThemePreference; label: string }[] = [
+  { value: "system", label: "System" },
   { value: "light", label: "Light" },
   { value: "dark", label: "Dark" },
 ];
 
 export function ThemeSetting() {
-  const { theme, setTheme } = useTheme();
+  const { preference, setPreference } = useTheme();
 
   return (
     <div className="segmented" role="group" aria-label="Theme">
@@ -17,8 +18,8 @@ export function ThemeSetting() {
         <button
           key={opt.value}
           type="button"
-          aria-pressed={theme === opt.value}
-          onClick={() => setTheme(opt.value)}
+          aria-pressed={preference === opt.value}
+          onClick={() => setPreference(opt.value)}
         >
           {opt.label}
         </button>
