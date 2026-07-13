@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">WC Draft medallion</title>
+  <desc id="desc">A dark-green and gold football medallion with a cup, WC Draft lettering, laurels, and a pitch.</desc>
+  <defs>
+    <linearGradient id="field" x1="180" y1="60" x2="850" y2="940" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#084536"/>
+      <stop offset=".48" stop-color="#052d24"/>
+      <stop offset="1" stop-color="#021c17"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="260" y1="110" x2="790" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe19a"/>
+      <stop offset=".35" stop-color="#f5b62a"/>
+      <stop offset=".72" stop-color="#d28a0b"/>
+      <stop offset="1" stop-color="#ffd774"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="26%" r="72%">
+      <stop stop-color="#2ecf92" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#2ecf92" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="medallion">
+      <circle cx="512" cy="512" r="462"/>
+    </clipPath>
+  </defs>
+
+  <circle cx="512" cy="512" r="500" fill="#0a0e13"/>
+  <circle cx="512" cy="512" r="488" fill="url(#gold)"/>
+  <circle cx="512" cy="512" r="472" fill="#071d18"/>
+  <circle cx="512" cy="512" r="460" fill="url(#field)" stroke="#f5b62a" stroke-width="4"/>
+  <circle cx="512" cy="512" r="445" fill="none" stroke="#f7ce70" stroke-width="2" opacity=".78"/>
+  <circle cx="512" cy="512" r="430" fill="url(#glow)"/>
+
+  <g clip-path="url(#medallion)">
+    <path d="M154 518H870M186 338H838M208 700H816" fill="none" stroke="#2ecf92" stroke-width="2" opacity=".12"/>
+    <path d="M512 70V954M292 118 732 906M732 118 292 906" fill="none" stroke="#2ecf92" stroke-width="2" opacity=".08"/>
+  </g>
+
+  <!-- Architect-delegated interpretation: a geometric cup replaces the degraded source's unreadable detail. -->
+  <g transform="translate(128 15) scale(.75)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M455 139H569L558 207C552 246 535 269 512 281C489 269 472 246 466 207Z" fill="#0a0e13" stroke-width="13"/>
+    <path d="M460 159H426V176C426 211 446 230 478 235M564 159H598V176C598 211 578 230 546 235" stroke-width="11"/>
+    <path d="M512 281V310M474 326H550M489 307H535" stroke-width="13"/>
+    <path d="M480 167 544 225M544 167 480 225" stroke-width="5" opacity=".8"/>
+  </g>
+  <g fill="url(#gold)">
+    <path d="m512 83 9 19 21 3-15 15 4 21-19-10-19 10 4-21-15-15 21-3Z"/>
+    <path d="m430 112 6 13 15 2-11 10 3 15-13-7-13 7 3-15-11-10 15-2Z"/>
+    <path d="m594 112 6 13 15 2-11 10 3 15-13-7-13 7 3-15-11-10 15-2Z"/>
+  </g>
+
+  <!-- Space Grotesk 700 outlines: stable in browsers and rasterizers without a font-loading race. -->
+  <g fill="#f8ce72" transform="translate(307 430) scale(.266 -0.266)">
+    <path transform="translate(0)" d="M122 0 30 700H161L229 92H247L335 700H563L651 92H669L737 700H868L776 0H548L458 622H440L350 0Z"/>
+    <path transform="translate(898)" d="M332 -14Q202 -14 126 58.5Q50 131 50 266V434Q50 569 126 641.5Q202 714 332 714Q461 714 531.5 643.5Q602 573 602 450V444H472V454Q472 516 437.5 556Q403 596 332 596Q262 596 222 553Q182 510 182 436V264Q182 191 222 147.5Q262 104 332 104Q403 104 437.5 144.5Q472 185 472 246V264H602V250Q602 127 531.5 56.5Q461 -14 332 -14Z"/>
+  </g>
+  <g fill="url(#gold)" transform="translate(201 620) scale(.204 -0.204)">
+    <path transform="translate(0)" d="M46 0V116H138V584H46V700H334Q475 700 548.5 628.5Q622 557 622 416V284Q622 143 548.5 71.5Q475 0 334 0ZM270 120H336Q416 120 453 162Q490 204 490 280V420Q490 497 453 538.5Q416 580 336 580H270Z"/>
+    <path transform="translate(666)" d="M66 0V700H370Q436 700 485 677Q534 654 561 612Q588 570 588 513V501Q588 438 558 399Q528 360 484 342V324Q524 322 546 296.5Q568 271 568 229V0H436V210Q436 234 423.5 249Q411 264 382 264H198V0ZM198 384H356Q403 384 429.5 409.5Q456 435 456 477V487Q456 529 430 554.5Q404 580 356 580H198Z"/>
+    <path transform="translate(1298)" d="M18 0 202 700H432L616 0H480L442 154H192L154 0ZM223 276H411L326 617H308Z"/>
+    <path transform="translate(1932)" d="M66 0V700H506V580H198V411H482V291H198V0Z"/>
+    <path transform="translate(2466)" d="M228 0V580H24V700H564V580H360V0Z"/>
+  </g>
+  <path d="M333 654H691" stroke="#f5b62a" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="512" cy="654" r="5" fill="#2ecf92"/>
+
+  <g fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="11">
+      <path d="M268 820C205 768 180 687 196 603"/>
+      <path d="M756 820C819 768 844 687 828 603"/>
+    </g>
+    <g stroke-width="8">
+      <path d="M205 739c-29-4-45-22-49-53 30 2 50 20 54 48M194 692c-27-10-39-31-36-62 29 8 45 29 43 59M195 643c-23-16-30-40-19-69 26 15 36 38 27 66M215 780c-3-29 9-50 37-65 5 30-7 52-35 66M188 736c-9-28-1-51 23-72 11 28 3 52-20 71M181 687c-15-25-12-50 7-75 17 25 15 49-4 74"/>
+      <path d="M819 739c29-4 45-22 49-53-30 2-50 20-54 48M830 692c27-10 39-31 36-62-29 8-45 29-43 59M829 643c23-16 30-40 19-69-26 15-36 38-27 66M809 780c3-29-9-50-37-65-5 30 7 52 35 66M836 736c9-28 1-51-23-72-11 28-3 52 20 71M843 687c15-25 12-50-7-75-17 25-15 49 4 74"/>
+    </g>
+  </g>
+
+  <g fill="none" stroke="#f5b62a" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M309 704H715L761 905H263Z" stroke-width="8"/>
+    <path d="M512 704V905M309 805H715" stroke-width="5" opacity=".9"/>
+    <circle cx="512" cy="805" r="52" stroke-width="5"/>
+    <path d="M415 704V756H609V704M416 905V859H608V905" stroke-width="5"/>
+    <circle cx="512" cy="805" r="6" fill="#2ecf92" stroke="none"/>
+  </g>
+
+  <circle cx="512" cy="512" r="460" fill="none" stroke="#f5b62a" stroke-width="4"/>
+</svg>

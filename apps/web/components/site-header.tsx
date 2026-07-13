@@ -52,7 +52,7 @@ export function SiteHeader({
         {/* Canonical header mark: medallion badge + separate wordmark text. */}
         <Link href="/" className="wordmark" aria-label="wcdraft — home">
           <Image
-            src="/brand/logo-header.png"
+            src="/brand/medallion-badge.svg"
             alt="WCDraft"
             width={48}
             height={48}

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Deterministic iOS App Icon + Splash generator from the shipped medallion.
+ * Deterministic iOS App Icon + Splash generator from the shipped vector medallion.
  *
- * Source (do not restyle):
- *   apps/web/assets/brand/medallion-badge-master.webp (1087×1087)
+ * Source:
+ *   apps/web/assets/brand/medallion-badge.svg (resolution-independent)
  *
  * Outputs (written under apps/mobile/ios/...):
  *   - AppIcon.appiconset/AppIcon-1024.png  (opaque RGB, no alpha — store-safe)
@@ -11,8 +11,7 @@
  *
  * Re-run: `pnpm --filter @wcdraft/mobile generate:assets`
  *
- * Resolution ceiling: master is 1087px; 1024 icon is downscale (no upscale).
- * Larger store marketing assets beyond 1024 are out of M1a scope.
+ * The SVG is the single source for web/PWA and iOS assets; no raster is upscaled.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -22,7 +21,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const mobileRoot = join(here, "..");
 const repoRoot = join(mobileRoot, "..", "..");
-const masterPath = join(repoRoot, "apps/web/assets/brand/medallion-badge-master.webp");
+const masterPath = join(repoRoot, "apps/web/assets/brand/medallion-badge.svg");
 
 const BG = { r: 10, g: 14, b: 19 }; // #0a0e13 — PWA manifest background_color
 const ACCENT_RING = { r: 46, g: 207, b: 146 }; // unused — mark already gold-bordered
@@ -62,7 +61,7 @@ async function writeAppIcon() {
   // Pad mark slightly so gold border isn't clipped at the mask edge.
   const markSize = Math.round(size * 0.92);
   const mark = await sharp(masterPath)
-    .resize(markSize, markSize, { fit: "contain", kernel: "lanczos3" })
+    .resize(markSize, markSize, { fit: "contain" })
     .png()
     .toBuffer();
 
@@ -145,7 +144,7 @@ async function writeSplash() {
   const canvas = 2732;
   const markSize = Math.round(canvas * 0.28);
   const mark = await sharp(masterPath)
-    .resize(markSize, markSize, { fit: "contain", kernel: "lanczos3" })
+    .resize(markSize, markSize, { fit: "contain" })
     .png()
     .toBuffer();
 
@@ -208,6 +207,6 @@ const masterBytes = readFileSync(masterPath);
 console.log(
   "source master bytes:",
   masterBytes.length,
-  "path: apps/web/assets/brand/medallion-badge-master.webp",
+  "path: apps/web/assets/brand/medallion-badge.svg",
 );
 console.log("generate-ios-assets: ok");
