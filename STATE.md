@@ -34,6 +34,20 @@ read-only, including team name; the same field and arrangement controls remain
 locked while simulation is active. The durable report preserves this failure
 history; exact-head review must target the next fix-forward commit.
 
+Fresh exact-head review of `03c107d` found two remaining persistence blockers.
+`setRunSimulation` still accepted omitted ownership at its runtime boundary,
+and Review's delayed team-name save still spread a stale React record directly
+over authoritative storage. Result persistence now requires literal
+`simulating` ownership at both the type and runtime boundaries, including
+volatile storage. Team-name writes now reload the authoritative record, merge
+only the normalized name plus sequence while ready, and reject any active or
+completed simulation; Review clears pending debounce work on blur, lock, and
+unmount, and refreshes from the authoritative record on conflict. Focused
+regressions cover missing/undefined/wrong-status ownership, stale-arrangement
+merge safety, delayed cross-tab writes, and durable/volatile locks. The
+`03c107d` FAIL and its two-finding inventory remain recorded in the durable
+report; review must run again on the next exact head.
+
 Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
 `mp`. One shared reconciliation path covers all four presence combinations,
 ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
@@ -45,7 +59,7 @@ fails closed on arranged tokens instead of silently scoring the wrong XI.
 
 Measured closure: focused core token 4/4 and focused web 177/177; root
 typecheck 8/8, lint 5/5, test 8/8 (core 423, data 183 + 9 expected skips, DB
-161, marketing 69, web 1,187 + 1 expected benchmark skip), game-flow, responsive
+161, marketing 69, web 1,192 + 1 expected benchmark skip), game-flow, responsive
 218/0, and build 4/4 with 40 pages/routes. Forced goldens pass core 69+42,
 data 59, integration 22, and leaderboard 6; canary 1/1 proves zero pick flips;
 heavy realism passes 10/10 at N=2000 x three policies. Generated check and the

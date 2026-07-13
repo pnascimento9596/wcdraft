@@ -507,6 +507,61 @@ export function setRunArrangement(
   };
 }
 
+/**
+ * Persist a Review team name against the current authoritative record.
+ *
+ * The caller may be a delayed debounce from a stale React render, so this
+ * boundary deliberately reloads storage and only replaces `draft.team_name`.
+ * Arrangement and every other run fact come from the authoritative record.
+ * Once simulation starts, even a pending debounce is rejected.
+ */
+export function setRunTeamName(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  teamName: string,
+): UpdateRunRecordResult {
+  const loaded = loadRunRecord(run_id, currentVersions);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const status = loaded.status as "missing" | "stale" | "invalid";
+    return { status, record: null, persistence: "none", warnings: [] };
+  }
+  const current = loaded.record;
+  if (
+    current.simulation !== undefined ||
+    current.status === "simulating" ||
+    current.status === "complete"
+  ) {
+    return {
+      status: "conflict",
+      record: current,
+      persistence: "none",
+      warnings: ["Team name is locked during and after simulation."],
+    };
+  }
+  const nextTeamName = teamName.trim().slice(0, 32) || "Your XI";
+  const storage = getStorage();
+  if (nextTeamName === current.draft.team_name) {
+    return {
+      status: "updated",
+      record: current,
+      persistence: storage.isVolatile ? "volatile" : "durable",
+      warnings: [],
+    };
+  }
+  const next: RunRecordV1 = {
+    ...current,
+    updated_seq: nextCounter(storage),
+    draft: { ...current.draft, team_name: nextTeamName },
+  };
+  const save = saveRunRecord(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
 export type BeginRunSimulationExpected = Pick<
   RunRecordV1,
   "updated_seq" | "status" | "arrangement"
@@ -610,18 +665,25 @@ export interface SetSimulationResult {
   warnings: string[];
 }
 
+export interface SimulationOwnership extends RunStatusOwnership {
+  readonly status: "simulating";
+}
+
 export function setRunSimulation(
   run_id: string,
   currentVersions: RunRecordVersions,
   simulation: PersistedSimulation,
-  ownership?: RunStatusOwnership,
+  ownership: SimulationOwnership,
 ): SetSimulationResult {
   const loaded = loadRunRecord(run_id, currentVersions);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
   }
-  if (ownership && !ownsRunStatus(loaded.record, ownership)) {
+  // The explicit nullish check is intentional: JavaScript callers can omit a
+  // TypeScript-required argument. No result may persist without proving it
+  // owns the exact `simulating` lifecycle sequence.
+  if (!ownership || ownership.status !== "simulating" || !ownsRunStatus(loaded.record, ownership)) {
     return { status: "conflict", record: loaded.record, persistence: "none", warnings: [] };
   }
   const storage = getStorage();

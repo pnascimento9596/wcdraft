@@ -33,6 +33,13 @@ describe("team-sheet review contract", () => {
     expect(SOURCE).toContain("if (!arrangementMutable) return;");
   });
 
+  it("routes delayed team-name writes through the authoritative lock boundary", () => {
+    expect(SOURCE).toContain("setRunTeamName(record.run_id, gameData.versions, value)");
+    expect(SOURCE).toContain("if (!arrangementMutable) clearTeamNameDebounce()");
+    expect(SOURCE).toContain("clearTeamNameDebounce();");
+    expect(SOURCE).not.toContain("saveRunRecord(next)");
+  });
+
   it("simulates only the atomically locked record with mandatory ownership", () => {
     expect(SOURCE).toContain("beginRunSimulation(record.run_id, gameData.versions, record)");
     expect(SOURCE).toContain("runSimulation(gameData, scenarioBundle, lockedRecord");

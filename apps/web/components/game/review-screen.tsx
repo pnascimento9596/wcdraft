@@ -24,10 +24,10 @@ import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { draftHref, resultsHref } from "@/lib/game/navigation";
 import {
   beginRunSimulation,
-  saveRunRecord,
   setRunArrangement,
   setRunSimulation,
   setRunStatus,
+  setRunTeamName,
   type RunRecordV1,
 } from "@/lib/game/run-record";
 import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
@@ -337,40 +337,40 @@ function ReviewBoard({
   useEffect(() => setTeamName(draft.team_name), [draft.team_name]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const clearTeamNameDebounce = useCallback(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = null;
+  }, []);
+
   const persistTeamName = useCallback(
     (value: string) => {
       if (!arrangementMutable) return;
-      const trimmed = value.trim().slice(0, 32);
-      if (trimmed === record.draft.team_name) return;
-      const nextDraft = { ...record.draft, team_name: trimmed || "Your XI" };
-      const next: RunRecordV1 = {
-        ...record,
-        updated_seq: record.updated_seq + 1,
-        draft: nextDraft,
-      };
-      const save = saveRunRecord(next);
+      const update = setRunTeamName(record.run_id, gameData.versions, value);
+      if (!update.record) return;
       const warning =
-        save.persistence === "volatile" || save.warnings.length > 0
-          ? save.warnings.join(" · ") ||
+        update.persistence === "volatile" || update.warnings.length > 0
+          ? update.warnings.join(" · ") ||
             "Draft is saved in this tab only — browser storage is unavailable."
           : persistenceWarning;
-      onRecordUpdate(next, warning ?? null);
+      onRecordUpdate(update.record, warning ?? null);
     },
-    [arrangementMutable, record, persistenceWarning, onRecordUpdate],
+    [arrangementMutable, record.run_id, gameData.versions, persistenceWarning, onRecordUpdate],
   );
 
   function onTeamNameChange(value: string) {
     setTeamName(value);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => persistTeamName(value), 300);
+    clearTeamNameDebounce();
+    debounceRef.current = setTimeout(() => {
+      debounceRef.current = null;
+      persistTeamName(value);
+    }, 300);
   }
 
-  useEffect(
-    () => () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    },
-    [],
-  );
+  useEffect(() => {
+    if (!arrangementMutable) clearTeamNameDebounce();
+  }, [arrangementMutable, clearTeamNameDebounce]);
+
+  useEffect(() => () => clearTeamNameDebounce(), [clearTeamNameDebounce]);
 
   // I3.7 fix-pass #2 (PR #18 BLOCKER): the Simulate gate must be DRAFT
   // COMPLETION (all 17 spins → full XI + 5 bench + 1 manager), NOT mere
@@ -396,7 +396,10 @@ function ReviewBoard({
             value={teamName}
             maxLength={32}
             onChange={(e) => onTeamNameChange(e.target.value)}
-            onBlur={(e) => persistTeamName(e.target.value)}
+            onBlur={(e) => {
+              clearTeamNameDebounce();
+              persistTeamName(e.target.value);
+            }}
             placeholder="Your XI"
             disabled={!arrangementMutable}
           />

@@ -135,6 +135,29 @@ edits as a cosmetic exception. Executable durable and volatile tests pin both
 the conflict and successful ownership paths. No review verdict at `c781891`
 is represented as a pass.
 
+Fresh exact-head review of `03c107d82247d3857f9f99795a9a8ed070915285`
+returned FAIL with exactly two blockers and no additional product defect. The
+review inventory is `/tmp/season2-s4-final-review-03c107d.md`, SHA-256
+`578a3fbbf7f0d23043b9e494d0da0e760ad2b8af367bfe118751f533cbfe3083`.
+First, `setRunSimulation` still made ownership optional and therefore allowed a
+JavaScript caller to persist a result without owning the `simulating` sequence.
+Second, the debounced team-name path directly saved a stale React record, so a
+delayed tab could overwrite a newer arrangement or drop a simulating/completed
+status and its simulation payload.
+
+The third fix-forward makes `SimulationOwnership` a required type with literal
+`status: "simulating"` and independently rejects missing, undefined,
+wrong-status, or stale ownership at runtime. This applies equally to durable
+and volatile persistence. New `setRunTeamName` reloads the authoritative
+record synchronously, rejects active/completed simulation, and changes only
+the normalized name and sequence while preserving the current draft,
+arrangement, manager facts, challenge, and all other record state. Review uses
+that boundary, refreshes from its authoritative conflict record, and clears
+pending debounce work on blur, simulation lock, and unmount. Executable tests
+cover stale ready-arrangement merge safety, delayed writes during and after
+simulation, and volatile preservation/locking. The `03c107d` review remains a
+FAIL; the next commit requires a fresh exact-head review.
+
 ## Validation evidence
 
 - Integration-tip floor at `98c0e07`: generated check, typecheck 8/8, lint
@@ -166,6 +189,15 @@ is represented as a pass.
   40 interaction, 30 mode/setup, and 8 opened-navigation split. Root build
   passed 4/4 with 40 routes/pages. Full-repository Prettier passed after the
   three prior failures were corrected.
+- Third fix-forward exact-tree coverage: the same five focused files passed
+  48/48, including missing/undefined/wrong-status result ownership,
+  stale-ready name merge, delayed active/completed writes, and volatile
+  ownership/name-lock regressions. Root typecheck passed 8/8, lint 5/5, and
+  tests 8/8 in 7m39.372s: core 423/423, data 183 passed with 9 expected skips,
+  DB 161/161, marketing 69/69, and web 1,192 passed with one expected benchmark
+  skip. Game-flow passed; responsive remained 218/0 with 84 desktop, 56 mobile
+  shell, 40 interaction, 30 mode/setup, and 8 opened-navigation checks. Root
+  build passed 4/4 with 40 routes/pages. Full-repository Prettier passed.
 - Final root build: 4/4 tasks, 40 routes/pages. The pre-existing webpack
   circular-chunk and edge-runtime static-generation warnings remain; there was
   no build failure. Logs: `/tmp/s4-root-build.log`,
@@ -180,6 +212,11 @@ is represented as a pass.
   at N=2000 x three policies in 37.63s. `pnpm check:generated` passed, and
   `git diff --exit-code -- packages/data etl` confirmed no generated, ETL, or
   rating-data drift.
+- Third fix-forward forced rerun: core 69+42, data 59, integration 22, and
+  leaderboard 6 passed with cache bypassed. The strategic-pick canary passed
+  1/1 with zero flips; heavy realism passed 10/10 at N=2000 x three policies in
+  40.43s. `pnpm check:generated` passed, and the scoped packages/data + ETL diff
+  remained empty.
 - `pnpm check:generated` passed. The exact pinned five-step Daily closure also
   passed: compact → score distribution → compact → Daily → compact, with Daily
   pinned to 2026-07-10, 45 days, population 128, and maximum 8 salt attempts.
