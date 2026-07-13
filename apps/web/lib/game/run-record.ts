@@ -145,7 +145,7 @@ interface RunMutationLockManager {
 }
 
 let mutationLockManagerOverride: RunMutationLockManager | null | undefined;
-let volatileMutationTail = Promise.resolve();
+let storeMutationTail = Promise.resolve();
 
 export const RUN_STORE_LOCK_NAME = "wcdraft:run-store:v1" as const;
 export const RUN_MUTATION_LOCK_UNAVAILABLE_WARNING =
@@ -178,7 +178,7 @@ export function _resetVolatileStorageForTests(): void {
   memoryMap.clear();
   volatileMode = false;
   mutationLockManagerOverride = undefined;
-  volatileMutationTail = Promise.resolve();
+  storeMutationTail = Promise.resolve();
 }
 
 /** Test seam for deterministic independent-agent lock scheduling. */
@@ -202,54 +202,55 @@ async function withRunStoreLock<T>(
   mutation: () => T,
   signal?: AbortSignal,
 ): Promise<T> {
-  const storage = getStorage();
-  if (storage.isVolatile) return withVolatileStoreLock(unavailable, mutation, signal);
+  return withStoreMutationQueue(
+    unavailable,
+    async () => {
+      if (getStorage().isVolatile) return mutation();
 
-  const manager = getRunMutationLockManager();
-  if (!manager) return unavailable();
-  let outcome: { kind: "value"; value: T } | { kind: "mutation-error"; error: unknown };
-  try {
-    outcome = await manager.request(
-      RUN_STORE_LOCK_NAME,
-      { mode: "exclusive", signal },
-      async () => {
-        try {
-          const value = getStorage().isVolatile
-            ? await withVolatileStoreLock(unavailable, mutation, signal)
-            : await mutation();
-          return { kind: "value" as const, value };
-        } catch (error) {
-          return { kind: "mutation-error" as const, error };
-        }
-      },
-    );
-  } catch {
-    // The lock callback captures mutation failures as values, so a request
-    // rejection means the browser could not establish the durable lock.
-    return unavailable();
-  }
-  if (outcome.kind === "mutation-error") throw outcome.error;
-  return outcome.value;
+      const manager = getRunMutationLockManager();
+      if (!manager) return unavailable();
+      let outcome: { kind: "value"; value: T } | { kind: "mutation-error"; error: unknown };
+      try {
+        outcome = await manager.request(RUN_STORE_LOCK_NAME, { mode: "exclusive", signal }, () => {
+          try {
+            // Storage may become volatile while this queue turn waits for
+            // or holds the Web Lock. The page queue already owns request
+            // order, so execute once without entering another queue.
+            return { kind: "value" as const, value: mutation() };
+          } catch (error) {
+            return { kind: "mutation-error" as const, error };
+          }
+        });
+      } catch {
+        // The lock callback captures mutation failures as values, so a
+        // request rejection means the durable Web Lock was not established.
+        return unavailable();
+      }
+      if (outcome.kind === "mutation-error") throw outcome.error;
+      return outcome.value;
+    },
+    signal,
+  );
 }
 
-async function withVolatileStoreLock<T>(
+async function withStoreMutationQueue<T>(
   unavailable: () => T,
-  mutation: () => T,
+  operation: () => T | PromiseLike<T>,
   signal?: AbortSignal,
 ): Promise<T> {
-  const previous = volatileMutationTail;
+  const previous = storeMutationTail;
   let release!: () => void;
   const current = new Promise<void>((resolve) => {
     release = resolve;
   });
-  volatileMutationTail = current;
+  storeMutationTail = current;
   await previous.catch(() => undefined);
   try {
     if (signal?.aborted) return unavailable();
-    return await mutation();
+    return await operation();
   } finally {
     release();
-    if (volatileMutationTail === current) volatileMutationTail = Promise.resolve();
+    if (storeMutationTail === current) storeMutationTail = Promise.resolve();
   }
 }
 

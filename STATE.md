@@ -85,6 +85,21 @@ fallback carries the monotonic counter into volatile storage and queued
 requests join the volatile store queue. The `2aaccd3` FAIL is preserved in the
 durable report; the next exact head still requires independent review.
 
+Fresh exact-head review of `2320e56` found that the fifth fix still split
+same-page admission across two queues at the durable-to-volatile quota
+boundary. An earlier request already waiting for the Web Lock could be
+overtaken by a later request that observed volatile mode and entered the
+Promise queue directly, reversing raw-creation single-winner authority. The
+sixth fix-forward makes one module-global FIFO Promise queue the outer
+boundary for every mutation. Each queue turn then inspects storage: volatile
+mutations execute directly, while durable mutations require the one
+store-wide Web Lock. A quota switch while waiting or granted stays inside the
+already-held page turn without nested acquisition. The reviewer-v2 regression
+now proves the earlier request wins and the later duplicate rejects; existing
+abort and callback-failure recovery coverage remains green. The `2320e56`
+FAIL is preserved in the durable report and the next exact head requires a new
+independent review.
+
 Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
 `mp`. One shared reconciliation path covers all four presence combinations,
 ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
@@ -96,8 +111,9 @@ fails closed on arranged tokens instead of silently scoring the wrong XI.
 
 Measured closure: focused core token 4/4, focused S4 web 177/177, fourth
 fix-forward mutation coverage 56/56, and fifth fix-forward store coverage
-147/147; fifth-head root typecheck 8/8, lint 5/5, test 8/8
-(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,221 + 1
+147/147; sixth fix-forward store coverage 148/148; sixth-head root typecheck
+8/8, lint 5/5, test 8/8
+(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,222 + 1
 expected benchmark skip), game-flow, responsive 218/0, and build 4/4 with 40
 pages/routes. Forced goldens pass core 69+42, data 59, integration 22, and
 leaderboard 6; canary 1/1 proves zero pick flips; heavy realism passes 10/10 at

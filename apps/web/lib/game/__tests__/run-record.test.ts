@@ -46,6 +46,7 @@ const storageReadHooks = new Map<string, () => void>();
 let lockDepth = 0;
 let requireStoreLockForMutation = false;
 let forceQuotaOnRecordWrite = false;
+let onForcedQuota: (() => void) | null = null;
 
 beforeEach(() => {
   _resetVolatileStorageForTests();
@@ -98,6 +99,7 @@ afterEach(() => {
   lockDepth = 0;
   requireStoreLockForMutation = false;
   forceQuotaOnRecordWrite = false;
+  onForcedQuota = null;
   vi.unstubAllGlobals();
   _resetVolatileStorageForTests();
 });
@@ -679,6 +681,63 @@ describe("run-record persisted boundary", () => {
     expect(next.record.run_id).not.toBe(created.record.run_id);
   });
 
+  it("preserves page FIFO when quota fallback occurs ahead of an earlier durable request", async () => {
+    const events: string[] = [];
+    _setRunMutationLockManagerForTests(createAsyncFifoLockManager(events));
+    forceQuotaOnRecordWrite = true;
+    onForcedQuota = () => events.push("A:quota-switch");
+
+    const recordA = recordWithId("quota-a", "wcdraft:run-record:quota-a");
+    const recordB = recordWithId("quota-shared", "wcdraft:run-record:quota-b-first");
+    const recordC = {
+      ...recordB,
+      parent_seed: "wcdraft:run-record:quota-c-later",
+      draft: { ...recordB.draft, team_name: "C later request" },
+    };
+
+    const aPromise = saveNewRunRecord(recordA).then((result) => {
+      events.push(`A:done:${result.persistence}`);
+      return result;
+    });
+    const bPromise = saveNewRunRecord(recordB).then(
+      (result) => {
+        events.push(`B:won:${result.persistence}`);
+        return { status: "won" as const, result };
+      },
+      (error: unknown) => {
+        events.push(`B:lost:${error instanceof Error ? error.message : String(error)}`);
+        return { status: "lost" as const, error };
+      },
+    );
+
+    expect((await aPromise).persistence).toBe("volatile");
+
+    const cPromise = saveNewRunRecord(recordC).then(
+      (result) => {
+        events.push(`C:won:${result.persistence}`);
+        return { status: "won" as const, result };
+      },
+      (error: unknown) => {
+        events.push(`C:lost:${error instanceof Error ? error.message : String(error)}`);
+        return { status: "lost" as const, error };
+      },
+    );
+
+    const [b, c] = await Promise.all([bPromise, cPromise]);
+    expect(b.status).toBe("won");
+    expect(c.status).toBe("lost");
+    expect(loadRunRecord(recordB.run_id, gameData.versions).record).toEqual(recordB);
+    expect(events).toEqual([
+      "web-lock:A:queued",
+      "web-lock:A:enter",
+      "A:quota-switch",
+      "web-lock:A:released",
+      "A:done:volatile",
+      "B:won:volatile",
+      `C:lost:Run ${recordB.run_id} already exists; use a locked mutation boundary`,
+    ]);
+  });
+
   it("does not mutate when lock acquisition is cancelled", async () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record:cancelled-lock-wait");
     await saveNewRunRecord(created);
@@ -1053,6 +1112,8 @@ function installLocalStorage(): () => void {
     setItem: (key, value) => {
       assertStoreMutationLocked(key);
       if (forceQuotaOnRecordWrite && key.startsWith(RUN_RECORD_PREFIX)) {
+        onForcedQuota?.();
+        onForcedQuota = null;
         throw new DOMException("Quota exceeded", "QuotaExceededError");
       }
       store.set(key, String(value));
@@ -1122,6 +1183,39 @@ function createSerializedLockManager() {
       return run.finally(() => {
         if (tails.get(name) === tail) tails.delete(name);
       });
+    },
+  };
+}
+
+function createAsyncFifoLockManager(events: string[]) {
+  let requestNumber = 0;
+  let tail = Promise.resolve();
+  return {
+    request<T>(
+      _name: string,
+      options: { mode: "exclusive"; signal?: AbortSignal },
+      callback: () => T | PromiseLike<T>,
+    ): Promise<T> {
+      const label = String.fromCharCode("A".charCodeAt(0) + requestNumber);
+      requestNumber += 1;
+      events.push(`web-lock:${label}:queued`);
+      const run = tail.then(async () => {
+        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+        if (options.signal?.aborted) throw new DOMException("Aborted", "AbortError");
+        events.push(`web-lock:${label}:enter`);
+        lockDepth += 1;
+        try {
+          return await callback();
+        } finally {
+          lockDepth -= 1;
+          events.push(`web-lock:${label}:released`);
+        }
+      });
+      tail = run.then(
+        () => undefined,
+        () => undefined,
+      );
+      return run;
     },
   };
 }

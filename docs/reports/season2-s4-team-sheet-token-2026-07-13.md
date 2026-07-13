@@ -226,6 +226,36 @@ creation, pure no-lock resume, one-owner cleanup, quota continuity, the prior
 six same-run races, and cancellation/recovery. The `2aaccd3` review remains a
 FAIL; a fresh exact-head review is mandatory.
 
+Fresh exact-head review of
+`2320e56a796f40d33cbadcfda6dadb93dae6457f` returned FAIL for one remaining
+ordering split. The complete review is
+`/tmp/season2-s4-store-review-2320e56.md`, SHA-256
+`bd72e6e96bb138f19af4660e0ae0704034b71e1de341435082c4cacdcaaf25fd`.
+Its primary v2 probe queued A and B while storage was durable, forced A through
+the real quota fallback, and then submitted later duplicate C. Because B was
+waiting in Web Locks while C entered the volatile Promise queue directly, C
+overtook B and became the wrong single winner. Probe source SHA-256:
+`6f1970f792f361469c16aa6259c35e4e21a305572495c9f6a9189b5604c5cc21`;
+reproducing output SHA-256:
+`1d22e3ea35b15c0a010ccac701e1bd5b65da8a582aa194b88a878b6f675e60b1`.
+
+The sixth fix-forward makes one module-global FIFO Promise queue the outer
+admission boundary for every same-page mutation. Inside that queue turn,
+volatile storage mutates directly and durable storage requires the single
+store-wide Web Lock. If storage changes while the Web Lock is waiting or
+granted, the mutation executes once inside the already-owned page turn without
+nested queue or lock acquisition. Private unlocked helpers remain the only
+internal composition path, so no public mutation can re-enter the queue. The
+adapted independent v2 probe now returns `NOT_REPRODUCED`: A switches to
+volatile, earlier B wins, and later C rejects. Adapted source SHA-256:
+`b40bf17bc12da5f966c7260256cf7a5812e8025ced299d9b4e1701a68638abb6`;
+output SHA-256:
+`a30da0bccea764353194eb7779bac94df30bc8bb43fd902629b23c423eb8344a`.
+The in-repo regression asserts the same exact order while the existing
+pre-turn abort, queued cancellation, callback failure, and later recovery
+tests protect queue release behavior. A new exact-head independent review is
+still mandatory.
+
 ## Validation evidence
 
 - Integration-tip floor at `98c0e07`: generated check, typecheck 8/8, lint
@@ -298,6 +328,20 @@ FAIL; a fresh exact-head review is mandatory.
   max attempts 8; all three recorded SHA-256 values remained unchanged and
   `git diff --exit-code -- packages/data etl` stayed empty. Fifth-fix logs:
   `/tmp/s4-fifth-*.log`.
+- Sixth fix-forward focused validation: the 12-file store, creation, resume,
+  setup, Review, and team-sheet selection passed 148/148. Web typecheck and
+  lint passed; repository Prettier and `git diff --check` passed after a
+  mechanical format correction. Full root typecheck passed 8/8, lint 5/5,
+  tests 8/8 in 8m11.908s (core 423, data 183 plus 9 expected skips, DB 161,
+  marketing 69, web 1,222 plus one expected benchmark skip), game-flow, and
+  responsive 218/0. Root build passed 4/4 with 40 routes/pages. Forced goldens
+  passed core 69+42, data/integration 59+22, and leaderboard 6; the isolated
+  canary passed 1/1 with zero pick flips; heavy realism passed 10/10 at N=2000
+  x three policies in 40.80s. `pnpm check:generated` passed. The exact pinned
+  five-step Daily closure passed again at 2026-07-10 / 45 days / population
+  128 / max attempts 8 with score-distribution, Daily-map, and manifest hashes
+  unchanged and an empty `packages/data` + `etl` diff. Logs:
+  `/tmp/s4-sixth-*.log`.
 - Final root build: 4/4 tasks, 40 routes/pages. The pre-existing webpack
   circular-chunk and edge-runtime static-generation warnings remain; there was
   no build failure. Logs: `/tmp/s4-root-build.log`,

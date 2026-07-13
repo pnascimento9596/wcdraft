@@ -51,7 +51,10 @@ describe("run mutation serialization contract", () => {
 
   it("fails closed for durable browsers without Web Locks and queues volatile mutations", () => {
     expect(RUN_RECORD_SOURCE).toContain("if (!manager) return unavailable()");
-    expect(RUN_RECORD_SOURCE).toContain("const previous = volatileMutationTail");
+    expect(RUN_RECORD_SOURCE).toContain("const previous = storeMutationTail");
+    expect(RUN_RECORD_SOURCE.indexOf("withStoreMutationQueue(")).toBeLessThan(
+      RUN_RECORD_SOURCE.indexOf("manager.request("),
+    );
     expect(RUN_RECORD_SOURCE).toContain("RUN_MUTATION_LOCK_UNAVAILABLE_WARNING");
   });
 
