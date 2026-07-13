@@ -115,8 +115,8 @@ Post-edit AST inventory reports 145 remaining production-string occurrences. Thi
 
 ## Validation
 
-- focused prose/local-progress/reference-standing tests: 4 files, 31/31 passed;
-- full web Vitest: 112 files passed, 1 skipped; 1,169 tests passed, 1 skipped;
+- focused prose/local-progress/reference-standing tests: 4 files, 34/34 passed;
+- full web Vitest: 112 files passed, 1 skipped; 1,172 tests passed, 1 skipped;
 - full game-flow Playwright: passed across mode select, setup, draft, review, results, and share;
 - strict responsive shell: 218 metrics, 0 failures (desktop 84, mobile 56, interaction targets 40, mode/setup 30, mobile navigation 8);
 - web typecheck: passed after building the Core, Data, and DB workspace dependencies;
