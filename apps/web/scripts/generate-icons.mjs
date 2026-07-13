@@ -1,12 +1,13 @@
 /*
- * Resizes the committed transparent medallion master into the favicon, PWA,
+ * Rasterizes the committed vector medallion master into the favicon, PWA,
  * app-router icon, and header badge assets the app references.
  *
  * Input:
- *   - assets/brand/medallion-badge-master.webp
+ *   - assets/brand/medallion-badge.svg
  *
  * Outputs:
- *   - public/brand/logo-header.png
+ *   - public/brand/medallion-badge.svg
+ *   - public/brand/logo-header.png (legacy raster fallback for game surfaces)
  *   - public/icons/icon-32.png
  *   - public/icons/icon-64.png
  *   - public/icons/icon-120.png
@@ -21,7 +22,7 @@
  *
  * Run from anywhere: `node apps/web/scripts/generate-icons.mjs`
  */
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -32,7 +33,7 @@ const publicDir = join(webRoot, "public");
 const iconsOutDir = join(publicDir, "icons");
 const brandDir = join(publicDir, "brand");
 const appDir = join(webRoot, "app");
-const masterPath = join(webRoot, "assets", "brand", "medallion-badge-master.webp");
+const masterPath = join(webRoot, "assets", "brand", "medallion-badge.svg");
 
 mkdirSync(iconsOutDir, { recursive: true });
 mkdirSync(brandDir, { recursive: true });
@@ -63,9 +64,12 @@ if (!existsSync(masterPath)) {
 
 const sharp = await loadSharp();
 
+copyFileSync(masterPath, join(brandDir, "medallion-badge.svg"));
+console.log("wrote", "public/brand/medallion-badge.svg");
+
 async function badgePng(size) {
   return sharp(masterPath)
-    .resize(size, size, { fit: "contain", kernel: "lanczos3" })
+    .resize(size, size, { fit: "contain" })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .toBuffer();
 }

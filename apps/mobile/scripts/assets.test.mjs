@@ -15,6 +15,7 @@ const contentsPath = join(
   mobileRoot,
   "ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json",
 );
+const vectorPath = join(mobileRoot, "..", "web", "assets", "brand", "medallion-badge.svg");
 
 describe("iOS assets from medallion", () => {
   it("ships an opaque 1024 PNG app icon", async () => {
@@ -49,5 +50,12 @@ describe("iOS assets from medallion", () => {
 
   it("generator script is committed", () => {
     assert.equal(existsSync(join(mobileRoot, "scripts/generate-ios-assets.mjs")), true);
+  });
+
+  it("uses the resolution-independent medallion source", () => {
+    assert.equal(existsSync(vectorPath), true);
+    const vector = readFileSync(vectorPath, "utf8");
+    assert.match(vector, /viewBox="0 0 1024 1024"/u);
+    assert.match(vector, /Space Grotesk 700 outlines/u);
   });
 });
