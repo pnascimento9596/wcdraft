@@ -21,6 +21,9 @@ is unchanged for production browsers and the hybrid native container.
 3. A cold launch with **no** prior cache and **no** network shows the remote
    load failure (or the local `www` placeholder if `server.url` is unset), not
    a fabricated offline app. Honest state.
+4. **WebKit note:** iOS may evict SW registrations for remote origins in
+   WKWebView after prolonged non-use (order of days/weeks). Re-launch online
+   reinstalls the SW — same recovery path as a cold PWA.
 
 ## What we do not do
 

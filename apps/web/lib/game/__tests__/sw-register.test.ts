@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   serviceWorkerNativeShellPolicy,
   serviceWorkerRegistrationPlan,
+  usesRemoteDocumentUrl,
 } from "../../../components/sw-register";
 
 describe("service worker registration timing", () => {
@@ -53,5 +54,12 @@ describe("service worker native shell coexistence (M1a)", () => {
     expect(serviceWorkerNativeShellPolicy({ usesRemoteServerUrl: false })).toBe(
       "disable-local-file",
     );
+  });
+
+  it("treats http(s) document protocols as remote and file: as local", () => {
+    expect(usesRemoteDocumentUrl("https:")).toBe(true);
+    expect(usesRemoteDocumentUrl("http:")).toBe(true);
+    expect(usesRemoteDocumentUrl("file:")).toBe(false);
+    expect(usesRemoteDocumentUrl("capacitor:")).toBe(false);
   });
 });

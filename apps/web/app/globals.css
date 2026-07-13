@@ -386,8 +386,12 @@ p a:hover {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  /* Horizontal safe areas only — vertical insets are applied on sticky
-     masthead / bottom action rows so 100svh game shells stay viewport-true. */
+  box-sizing: border-box;
+  /* Horizontal safe areas only. Vertical insets live on sticky masthead
+     (top) and existing bottom action rows — NOT extra height on this
+     column — so body:has([data-draft-anchored]) height:100svh stays
+     viewport-true under viewport-fit=cover (100svh already spans the
+     full layout viewport including notch regions). */
   padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
 }
 
