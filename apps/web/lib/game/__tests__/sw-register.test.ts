@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { serviceWorkerRegistrationPlan } from "../../../components/sw-register";
+import {
+  serviceWorkerNativeShellPolicy,
+  serviceWorkerRegistrationPlan,
+} from "../../../components/sw-register";
 
 describe("service worker registration timing", () => {
   it("registers immediately when hydration runs after the load event", () => {
@@ -38,5 +41,17 @@ describe("service worker registration timing", () => {
         documentReadyState: "complete",
       }),
     ).toBe("disabled");
+  });
+});
+
+describe("service worker native shell coexistence (M1a)", () => {
+  it("keeps the PWA SW when Capacitor loads the remote production origin", () => {
+    expect(serviceWorkerNativeShellPolicy({ usesRemoteServerUrl: true })).toBe("register-as-pwa");
+  });
+
+  it("would disable SW only for a local file:// shell (not used in M1a)", () => {
+    expect(serviceWorkerNativeShellPolicy({ usesRemoteServerUrl: false })).toBe(
+      "disable-local-file",
+    );
   });
 });

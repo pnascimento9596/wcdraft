@@ -4,6 +4,13 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+iOS M1a Unit P2 (native shell correctness):
+2026-07-12 · YELLOW branch `ws-mobile/m1a-p2-shell` stacked on P1. Portrait
+orientation lock + light status bar style in Info.plist; `viewport-fit=cover`
+and masthead/shell safe-area insets in apps/web; SW coexistence policy
+documents keep-PWA-SW for hybrid remote Capacitor load. No engine/data/db
+changes.
+
 iOS M1a Unit P1 (Capacitor workspace):
 2026-07-12 · YELLOW branch `ws-mobile/m1a-p1-capacitor` off `origin/main`
 `0955b1f9424f0be1c8ce5d2001155048607eeb67`. Adds free OSS `@wcdraft/mobile`

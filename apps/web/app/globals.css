@@ -386,6 +386,9 @@ p a:hover {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+  /* Horizontal safe areas only — vertical insets are applied on sticky
+     masthead / bottom action rows so 100svh game shells stay viewport-true. */
+  padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
 }
 
 /* ws-ux/tap-stability-2 — when the anchored draft layout is on screen (the
@@ -567,6 +570,8 @@ main {
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: saturate(140%) blur(10px);
   border-bottom: 1px solid var(--line);
+  /* Notch / Dynamic Island clearance when viewport-fit=cover (PWA + native). */
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .masthead__inner {

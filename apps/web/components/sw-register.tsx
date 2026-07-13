@@ -6,6 +6,25 @@ import { registerWcdraftServiceWorker } from "@/lib/service-worker";
 
 export type ServiceWorkerRegistrationPlan = "disabled" | "register-now" | "register-on-load";
 
+/**
+ * M1a Capacitor coexistence policy.
+ *
+ * The native shell loads the production HTTPS origin (`server.url`), so the
+ * Season-1 atomic SW lifecycle remains the single offline owner — same as the
+ * installable PWA. We deliberately keep registration enabled in the native
+ * WKWebView. A pure local `file://` / bundled-www shell (not used in M1a)
+ * would disable the SW to avoid double-managing asset caches with Capacitor.
+ */
+export type ServiceWorkerNativeShellPolicy = "register-as-pwa" | "disable-local-file";
+
+export function serviceWorkerNativeShellPolicy({
+  usesRemoteServerUrl,
+}: {
+  usesRemoteServerUrl: boolean;
+}): ServiceWorkerNativeShellPolicy {
+  return usesRemoteServerUrl ? "register-as-pwa" : "disable-local-file";
+}
+
 export function serviceWorkerRegistrationPlan({
   nodeEnv,
   hasServiceWorker,
