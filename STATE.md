@@ -23,7 +23,7 @@ while still recording that the neutral channel passed through the outcome
 seam. Forfeits bypass the seam and retain neutral facts with the flag false.
 The MatchResult boundary recomputes and reconciles all four factual channels;
 legacy MatchResults may still omit `team_facts` entirely. Local evidence:
-focused tactical+decoupling+availability 31/31; full core 419/419; core
+focused tactical+decoupling+availability 32/32; full core 420/420; core
 typecheck and lint PASS. The first fresh exact-head review correctly rejected
 candidate `f08b1e406a4537685380accac705f92594ab60f8`: the MatchResult boundary
 accepted a forged full-XI 0-3 shape as a bypassed outcome. Fix-forward now
@@ -32,6 +32,17 @@ started user entries than `INJURY.FIELDABLE_FLOOR`; adversarial tests reject 11
 starters and accept exactly floor-minus-one. This schema-only correction moves
 no engine output or golden fixture; the prior approval is void and fresh review
 is required.
+
+Root adversarial hardening before fresh review closed a second deletion spoof:
+reducing lineup rows below the floor was not sufficient evidence that formation
+slots were actually unfilled. The boundary now enforces the conservation
+equation `started user entries + short_handed_slot_ids = 11` for every factual
+match. Because S1 already reconciles the short slot set exactly against
+short-handed availability events and unavailable facts, deleted lineup rows
+must now carry all corresponding cross-channel evidence. The positive forfeit
+fixture contains five unavailable facts/events/short slots for six remaining
+starters; missing all, missing one, or adding an extra slot rejects. This
+schema-only hardening also moves no engine output or artifacts.
 
 Candidate-level broader evidence remains core goldens 69+42; forced data golden
 59/59; data integration 22/22; leaderboard golden 6/6; heavy realism 10/10 at

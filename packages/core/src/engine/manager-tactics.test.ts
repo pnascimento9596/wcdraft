@@ -185,6 +185,46 @@ describe("S2 tournament reachability and persisted facts", () => {
     };
   }
 
+  function coherentBelowFloorForfeitShape() {
+    const source = forgedBypassShape();
+    const starters = source.lineup.filter((entry) => entry.started);
+    const keptStarters = starters.slice(0, INJURY.FIELDABLE_FLOOR - 1);
+    const keptIds = new Set(keptStarters.map((entry) => entry.card_id as string));
+    const removedStarters = starters.filter((entry) => !keptIds.has(entry.card_id as string));
+    const unavailable = removedStarters.map((entry) => ({
+      card_id: entry.card_id,
+      player_id: entry.player_id,
+      slot_id: entry.slot_id,
+      position: entry.position,
+      reason: "tournament_injury" as const,
+      duration_matches: null,
+    }));
+    const events = unavailable.map((fact, index) => ({
+      event_id: `${source.match_id}.short.${index}`,
+      minute: 0 as const,
+      period: "1H" as const,
+      side: "user" as const,
+      type: "availability" as const,
+      ...fact,
+      replacement_card_id: null,
+      replacement_player_id: null,
+      short_handed: true,
+    }));
+    return {
+      ...source,
+      lineup: source.lineup.filter(
+        (entry) => !entry.started || keptIds.has(entry.card_id as string),
+      ),
+      team_facts: {
+        ...source.team_facts,
+        unavailable,
+        bench_activations: [],
+        short_handed_slot_ids: removedStarters.map((entry) => entry.slot_id).sort(),
+      },
+      events,
+    };
+  }
+
   it("keeps the reachable managerless ready/direct-engine path neutral", () => {
     const inputs = buildScenarioInputs("upset");
     expect(inputs.draft.status).toBe("ready");
@@ -250,17 +290,7 @@ describe("S2 tournament reachability and persisted facts", () => {
   });
 
   it("accepts false/neutral facts only with a truly below-floor user lineup", () => {
-    const source = forgedBypassShape();
-    let startersKept = 0;
-    const bypassed = {
-      ...source,
-      lineup: source.lineup.filter((entry) => {
-        if (!entry.started) return true;
-        if (startersKept >= INJURY.FIELDABLE_FLOOR - 1) return false;
-        startersKept++;
-        return true;
-      }),
-    };
+    const bypassed = coherentBelowFloorForfeitShape();
     expect(bypassed.lineup.filter((entry) => entry.started)).toHaveLength(
       INJURY.FIELDABLE_FLOOR - 1,
     );
@@ -275,5 +305,39 @@ describe("S2 tournament reachability and persisted facts", () => {
       throw new Error(JSON.stringify(parsed.error.issues, null, 2));
     }
     expect(parsed.success).toBe(true);
+  });
+
+  it("rejects deleted lineup rows without the exact short-handed slot set", () => {
+    const coherent = coherentBelowFloorForfeitShape();
+    const missingAll = {
+      ...coherent,
+      team_facts: {
+        ...coherent.team_facts,
+        unavailable: [],
+        short_handed_slot_ids: [],
+      },
+      events: [],
+    };
+    expect(MatchResultSchema.safeParse(missingAll).success).toBe(false);
+
+    const missingOne = {
+      ...coherent,
+      team_facts: {
+        ...coherent.team_facts,
+        unavailable: coherent.team_facts.unavailable.slice(1),
+        short_handed_slot_ids: coherent.team_facts.short_handed_slot_ids.slice(1),
+      },
+      events: coherent.events.slice(1),
+    };
+    expect(MatchResultSchema.safeParse(missingOne).success).toBe(false);
+
+    const extra = {
+      ...coherent,
+      team_facts: {
+        ...coherent.team_facts,
+        short_handed_slot_ids: [...coherent.team_facts.short_handed_slot_ids, "forged.extra"],
+      },
+    };
+    expect(MatchResultSchema.safeParse(extra).success).toBe(false);
   });
 });

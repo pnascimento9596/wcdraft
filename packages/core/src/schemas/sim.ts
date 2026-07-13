@@ -269,6 +269,7 @@ export const MatchLineupEntrySchema = z
 
 const KNOCKOUT_ROUNDS = new Set(["R32", "R16", "QF", "SF", "F"] as const);
 const GROUP_ROUNDS = new Set(["G1", "G2", "G3"] as const);
+const CANONICAL_XI_SIZE = 11;
 
 function isKnockoutRound(round: string): boolean {
   return (KNOCKOUT_ROUNDS as ReadonlySet<string>).has(round);
@@ -355,6 +356,17 @@ export const MatchResultSchema = z
   })
   .superRefine((m, ctx) => {
     if (m.team_facts) {
+      const userStartedCount = m.lineup.filter(
+        (entry) => entry.side === "user" && entry.started,
+      ).length;
+      if (userStartedCount + m.team_facts.short_handed_slot_ids.length !== CANONICAL_XI_SIZE) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "started user lineup entries plus short_handed_slot_ids must account for the canonical XI",
+          path: ["team_facts", "short_handed_slot_ids"],
+        });
+      }
       const expectedTactical = applyManagerTacticalAdjustment(
         m.team_facts.active_strength,
         m.team_facts.active_synergy.manager_link,

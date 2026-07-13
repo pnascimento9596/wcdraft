@@ -98,6 +98,11 @@ completion invariant.
 - Schema probes forge each persisted tactical channel independently.
 - A full-XI forged bypass rejects, while a user-only lineup with exactly
   `FIELDABLE_FLOOR - 1` starters accepts false/neutral facts.
+- Every factual match conserves the canonical formation: started user lineup
+  entries plus `short_handed_slot_ids` must equal 11. The positive forfeit
+  carries matching unavailable facts and short-handed availability events;
+  deleting rows without that evidence, omitting one short slot, or adding an
+  extra slot rejects.
 
 ## Golden delta audit
 
@@ -113,13 +118,13 @@ mechanic, not a calibration claim.
 ## Validation evidence
 
 - `pnpm --filter @wcdraft/core exec vitest run src/engine/manager-tactics.test.ts src/manager-modifier-decoupling.guard.test.ts src/engine/availability.test.ts`
-  — PASS, 3 files / 31 tests at the fix-forward head.
+  — PASS, 3 files / 32 tests at the hardened head.
 - `pnpm --filter @wcdraft/core typecheck` — PASS.
 - `pnpm --filter @wcdraft/core lint` — PASS.
 - `pnpm --filter @wcdraft/core run gen:sim-golden` — PASS; five scenario
   fixtures regenerated with the delta audited above.
-- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 419 tests at the
-  fix-forward head.
+- `pnpm --filter @wcdraft/core test` — PASS, 28 files / 420 tests at the
+  hardened head.
 - Five-step artifact closure (`build:compact` -> `build:score-distribution` ->
   `build:compact` -> pinned `build:daily-seed-salt-map` -> `build:compact`) —
   PASS. Daily parameters: start `2026-07-10`, 45 days, N=128, maximum eight
@@ -162,6 +167,19 @@ flag now requires fewer than that many started user lineup entries and rejects
 any opponent lineup entries. Separate regressions prove the former 11-starter
 spoof rejects and the exact `FIELDABLE_FLOOR - 1` boundary accepts. No engine
 output code changed, so core and real-run golden fixtures remain byte-stable.
+
+Before dispatching fresh review, a root adversarial pass found one remaining
+cross-channel gap: an attacker could delete five user lineup rows and satisfy
+the below-floor count while leaving `short_handed_slot_ids`, unavailable facts,
+and events empty. The final hardening adds the conservation equation
+`userStartedCount + short_handed_slot_ids.length === 11` to every factual
+MatchResult. Existing S1 bidirectional reconciliation then forces every missing
+body to have the exact unavailable fact and short-handed availability event.
+The positive regression now constructs those five facts/events/slots for six
+remaining starters, while missing-all, missing-one, extra-slot, and opponent-row
+variants reject. Focused 32/32, full core 420/420, core typecheck/lint, forced
+core goldens 69+42, and data integration 22/22 pass with no fixture or artifact
+movement.
 
 ## Per-unit artifact closure
 
