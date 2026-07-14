@@ -86,7 +86,7 @@ const SCHEMA_VERSION = "runtime-data-2.10.0";
 // manager-attrition: manager_link now drives the reserved manager band and
 // persistent user-path injury attrition is reduced to keep tournament attrition
 // fair while opponents are regenerated fixture-by-fixture.
-const ENGINE_VERSION = "engine-2026.06.30-manager-attrition";
+const ENGINE_VERSION = "engine-2026.07.14-squad-depth";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
 // merit-v4.6 model (wc-perf-6.6.0 historical; proj-career-5.6.0 projected).

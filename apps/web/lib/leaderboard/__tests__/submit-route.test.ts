@@ -42,6 +42,7 @@ import {
 import type { SubmissionBody, ValidationData } from "../validate";
 import { buildOriginRecord, buildSubmissionBody, encodeBody, expectedRunFor } from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
+import skewFixtures from "../../game/__tests__/fixtures/run-token-skew.json" with { type: "json" };
 
 const GOLDEN = fixtureJson as unknown as {
   season_key: string;
@@ -460,6 +461,18 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     const body = await errorOf(res);
     expect(body.error).toBe("WRONG_SEASON");
     expect(body.mismatched_anchors).toEqual(["engine_version"]);
+  });
+
+  it("the real pre-Season-2 production token cannot submit into the new season", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: validBody({ token: skewFixtures.shipped_pre_s2_t3.token }) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(409);
+    const body = await errorOf(res);
+    expect(body.error).toBe("WRONG_SEASON");
+    expect(body.mismatched_anchors).toEqual(["engine_version"]);
+    expect(await allRows()).toHaveLength(0);
   });
 
   it("pre-V6 leaderboard token anchors → 409 WRONG_SEASON, never persisted", async () => {

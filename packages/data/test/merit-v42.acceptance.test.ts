@@ -83,14 +83,14 @@ function maxDuplicateOverall(rows: RuntimeRating[]): number {
 }
 
 describe("merit-v4.6 ratings-coverage acceptance probes", () => {
-  it("bumps every shipped replay/data/version anchor for the manager-attrition season", () => {
+  it("keeps frozen rating/data anchors while rolling the squad-depth engine", () => {
     expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.10.0");
     expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.10.0");
     expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.10.0");
     expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.10.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.6.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.6.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.30-manager-attrition");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.07.14-squad-depth");
   });
 
   it("keeps the pre-registered elite European anchors unchanged", () => {

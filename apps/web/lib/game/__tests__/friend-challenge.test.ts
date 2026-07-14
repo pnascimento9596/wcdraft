@@ -27,6 +27,7 @@ import { runSimulationSync } from "../simulate";
 import { verifyRunTokenForOg } from "../run-og-server";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 import { handleChallengeVerifyPost } from "../../../app/api/challenge/verify/route";
+import skewFixtures from "./fixtures/run-token-skew.json" with { type: "json" };
 
 const gameData = buildGameDataFromBundles();
 const validation = { gameData, scenario: SCENARIO_2026_BUNDLE };
@@ -240,6 +241,24 @@ describe("same-seed friend challenge contract", () => {
       challenge: expect.objectContaining({
         status: "DIFFERENT_BUILD",
         parentSeed: "wcdraft:friend:skew",
+        challengerDisplay: "a friend",
+        challengerScore: null,
+      }),
+    });
+  });
+
+  it("surfaces the real pre-Season-2 production token as DIFFERENT_BUILD", async () => {
+    const token = skewFixtures.shipped_pre_s2_t3.token;
+    const result = await verifyFriendChallengeForPlay(
+      token,
+      await proofFor(token),
+      validation,
+      SECRET,
+    );
+    expect(result).toEqual({
+      status: "accepted",
+      challenge: expect.objectContaining({
+        status: "DIFFERENT_BUILD",
         challengerDisplay: "a friend",
         challengerScore: null,
       }),

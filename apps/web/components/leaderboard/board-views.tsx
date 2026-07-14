@@ -25,10 +25,12 @@ import {
   ADVANCED_BOARD_CONFIG_OPTIONS,
   BOARD_LANE_OPEN_ENTRY_THRESHOLD,
   CANONICAL_SEASON_BOARD_FILTER,
+  FEATURED_MEMORY_BOARD_FILTER,
   boardConfigKey,
   configLabel,
   draftModeLaneLabel,
   isCanonicalSeasonBoardFilter,
+  isFeaturedMemorySeasonBoardFilter,
 } from "@/lib/leaderboard/config";
 
 import s from "./leaderboard.module.css";
@@ -74,12 +76,19 @@ export function LeaderboardClosed() {
 
 export function BoardHead({
   currentSeasonKey,
+  boardSeasonKey = currentSeasonKey,
+  archivedSeasonKeys = [],
   filter,
+  onSeasonChange,
 }: {
   currentSeasonKey: string;
+  boardSeasonKey?: string;
+  archivedSeasonKeys?: readonly string[];
   filter?: BoardFilter;
+  onSeasonChange?: (seasonKey: string) => void;
 }) {
-  const season = seasonDisplay(currentSeasonKey);
+  const season = seasonDisplay(boardSeasonKey);
+  const seasonClosed = boardSeasonKey !== currentSeasonKey;
   if (filter?.challenge === "daily") {
     const playHref = dailyDraftHref(null, filter.challengeDate);
     return (
@@ -103,6 +112,7 @@ export function BoardHead({
     <header className="page-head">
       <span className="eyebrow">Season · {season.label}</span>
       <h1 className="display">Leaderboard</h1>
+      {seasonClosed ? <p className={s.seasonClosed}>Season closed</p> : null}
       <p className="lede">
         Daily is the default board. Advanced boards keep Classic and Memory runs in separate lanes.
       </p>
@@ -113,12 +123,33 @@ export function BoardHead({
       <code className={s.seasonKey} title={season.rawKey}>
         {season.evidenceLabel}
       </code>
+      <nav className={s.seasonNav} aria-label="Leaderboard seasons">
+        {seasonClosed ? (
+          <Link
+            href="/leaderboard?challenge=season"
+            onNavigate={() => onSeasonChange?.(currentSeasonKey)}
+          >
+            View current season
+          </Link>
+        ) : null}
+        {archivedSeasonKeys.map((seasonKey) => (
+          <Link
+            key={seasonKey}
+            href={`/leaderboard?challenge=season&season=${encodeURIComponent(seasonKey)}`}
+            aria-current={seasonKey === boardSeasonKey ? "page" : undefined}
+            onNavigate={() => onSeasonChange?.(seasonKey)}
+          >
+            {seasonDisplay(seasonKey).label} archive
+          </Link>
+        ))}
+      </nav>
     </header>
   );
 }
 
 export function BoardToolbar({
   filter,
+  seasonClosed = false,
   onFilter,
   advancedOpen = false,
   advancedPhase = "idle",
@@ -126,6 +157,7 @@ export function BoardToolbar({
   onAdvancedOpenChange,
 }: {
   filter: BoardFilter;
+  seasonClosed?: boolean;
   onFilter: (f: BoardFilter) => void;
   advancedOpen?: boolean;
   advancedPhase?: "idle" | "loading" | "ready" | "error";
@@ -135,28 +167,31 @@ export function BoardToolbar({
   const update = (patch: Partial<BoardFilter>) => onFilter({ ...filter, ...patch });
   const dailyDate = filter.challengeDate ?? new Date().toISOString().slice(0, 10);
   const seasonActive = filter.challenge === "season" && isCanonicalSeasonBoardFilter(filter);
+  const memoryActive = filter.challenge === "season" && isFeaturedMemorySeasonBoardFilter(filter);
   return (
     <div className={s.toolbar}>
       <div className={s.laneTabs} role="tablist" aria-label="Leaderboard view">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={filter.challenge === "daily"}
-          className={filter.challenge === "daily" ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
-          onClick={() =>
-            update({
-              challenge: "daily",
-              challengeDate: dailyDate,
-              lane: "casual",
-              draftMode: "classic",
-              draftOrder: "squad_first",
-              era: "all_time",
-              ratingBasis: "career",
-            })
-          }
-        >
-          Daily
-        </button>
+        {!seasonClosed ? (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={filter.challenge === "daily"}
+            className={filter.challenge === "daily" ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
+            onClick={() =>
+              update({
+                challenge: "daily",
+                challengeDate: dailyDate,
+                lane: "casual",
+                draftMode: "classic",
+                draftOrder: "squad_first",
+                era: "all_time",
+                ratingBasis: "career",
+              })
+            }
+          >
+            Daily
+          </button>
+        ) : null}
         <button
           type="button"
           role="tab"
@@ -164,7 +199,16 @@ export function BoardToolbar({
           className={seasonActive ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
           onClick={() => onFilter({ ...CANONICAL_SEASON_BOARD_FILTER, challengeDate: null })}
         >
-          Season
+          Classic
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={memoryActive}
+          className={memoryActive ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
+          onClick={() => onFilter({ ...FEATURED_MEMORY_BOARD_FILTER, challengeDate: null })}
+        >
+          Memory
         </button>
       </div>
       {filter.challenge === "daily" ? (
@@ -430,7 +474,13 @@ function ScoreBreakdown({ lines }: { lines: BoardRowView["breakdown"] }) {
   );
 }
 
-export function EmptyBoard({ filter }: { filter: BoardFilter }) {
+export function EmptyBoard({
+  filter,
+  seasonClosed = false,
+}: {
+  filter: BoardFilter;
+  seasonClosed?: boolean;
+}) {
   const playHref =
     filter.challenge === "daily"
       ? dailyDraftHref(null, filter.challengeDate)
@@ -441,13 +491,15 @@ export function EmptyBoard({ filter }: { filter: BoardFilter }) {
         {filter.challenge === "daily" ? "No daily runs yet" : "No runs yet for this board"}
       </p>
       <p>
-        {filter.challenge === "daily"
-          ? "Be the first to post a verified score for today's shared draft."
-          : filter.lane === "ranked"
-            ? `${draftModeLaneLabel(filter.draftMode)} ranked runs for this exact config will appear here after server verification.`
-            : `${draftModeLaneLabel(filter.draftMode)} casual runs for this exact config will appear here after server verification.`}
+        {seasonClosed
+          ? "This archived board is read-only. Its verified standings remain viewable, but new runs cannot be submitted."
+          : filter.challenge === "daily"
+            ? "Be the first to post a verified score for today's shared draft."
+            : filter.lane === "ranked"
+              ? `${draftModeLaneLabel(filter.draftMode)} ranked runs for this exact config will appear here after server verification.`
+              : `${draftModeLaneLabel(filter.draftMode)} casual runs for this exact config will appear here after server verification.`}
       </p>
-      {filter.challenge === "daily" ? (
+      {seasonClosed ? null : filter.challenge === "daily" ? (
         <Link href={playHref} className="btn btn--primary">
           Play today&apos;s draft →
         </Link>
