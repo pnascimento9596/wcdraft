@@ -65,8 +65,10 @@ export function LeaderboardSubmitPanel({
   const publicUsername = isSignedIn ? (session?.username ?? null) : null;
   const emailVerified = isSignedIn ? (session?.emailVerified ?? false) : false;
   const dailyChallenge = record.challenge?.kind === "daily" ? record.challenge : null;
+  const friendChallenge = record.friend_challenge ?? null;
   const rankedAttemptId = record.ranked_attempt?.attempt_id ?? null;
-  const effectiveSubmitMode: SubmitBoardMode = dailyChallenge === null ? submitMode : "casual";
+  const effectiveSubmitMode: SubmitBoardMode =
+    dailyChallenge === null && friendChallenge === null ? submitMode : "casual";
   const dailyOpen = dailyChallenge === null || dailyChallenge.date === utcDateString();
 
   useEffect(() => {
@@ -167,6 +169,7 @@ export function LeaderboardSubmitPanel({
       publicUsername={publicUsername}
       emailVerified={emailVerified}
       challengeKind={dailyChallenge === null ? "season" : "daily"}
+      casualOnly={friendChallenge !== null}
       dailyOpen={dailyOpen}
       leaderboardHref={leaderboardHref}
       name={name}
@@ -174,6 +177,7 @@ export function LeaderboardSubmitPanel({
       phase={phase}
       retryRemaining={retryRemaining}
       onModeChange={(mode) => {
+        if (friendChallenge !== null) return;
         setTouched(false);
         setSubmitMode(mode);
       }}

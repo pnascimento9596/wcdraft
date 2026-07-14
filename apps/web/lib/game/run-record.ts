@@ -28,6 +28,7 @@ import {
   type EraPresetId,
   type RatingBasis,
   type ManagerPresenceBand,
+  RUN_TOKEN_MAX_LEN,
 } from "@wcdraft/core";
 
 import type { GameData, RunRecordVersions } from "./data";
@@ -41,6 +42,7 @@ import {
 } from "./errors";
 import { parsePersistedSimulation, type PersistedSimulation } from "./simulation-payload";
 import { verifyTeamSheetArrangement, type TeamSheetArrangement } from "./team-sheet";
+import { isLikelySignedFriendChallenge, SIGNED_FRIEND_CHALLENGE_MAX_LEN } from "./run-og-signing";
 export type {
   PersistedKnockoutLadderMeta,
   PersistedKnockoutLadderRoundMeta,
@@ -62,6 +64,11 @@ export interface RankedAttemptRunMetadata {
   readonly expires_at: string;
 }
 
+export interface FriendChallengeRunMetadata {
+  readonly token: string;
+  readonly proof: string;
+}
+
 export interface RunRecordV1 {
   record_version: typeof RUN_RECORD_SCHEMA_VERSION;
   run_id: string;
@@ -80,6 +87,8 @@ export interface RunRecordV1 {
   challenge?: DailyChallenge;
   /** Local marker for a server-issued ranked seed. Not included in share tokens. */
   ranked_attempt?: RankedAttemptRunMetadata;
+  /** Signed parent run reference. Never encoded into the recipient run token. */
+  friend_challenge?: FriendChallengeRunMetadata;
   /** Local-only preservation flag; pinned records are not evicted by the recent-run cap. */
   pinned?: boolean;
   /** Persisted simulation result; present only when status === "complete". */
@@ -599,6 +608,8 @@ export interface CreateRunRecordParams {
   challenge?: DailyChallenge;
   /** Optional ranked-attempt metadata for server-issued ranked seeds. */
   ranked_attempt?: RankedAttemptRunMetadata;
+  /** Same-seed friend challenges are local casual runs by construction. */
+  friend_challenge?: FriendChallengeRunMetadata;
   /**
    * DC-2 era preset (default `all_time` = today's pool). The draft is
    * created against the matching era-filtered catalog via `getCatalogForEra`.
@@ -652,6 +663,10 @@ function createNewRunRecordUnlocked(
 ): CreateRunRecordResult {
   const warnings: string[] = [];
 
+  if (params.friend_challenge !== undefined && params.ranked_attempt !== undefined) {
+    throw new RunRecordError("friend challenge runs cannot carry a ranked attempt");
+  }
+
   let lastErr: unknown = null;
   for (let attempt = 0; attempt < CREATE_RETRY_LIMIT; attempt += 1) {
     // A counter-quota failure can switch the active transaction from durable
@@ -688,6 +703,9 @@ function createNewRunRecordUnlocked(
         draft,
         ...(params.challenge === undefined ? {} : { challenge: params.challenge }),
         ...(params.ranked_attempt === undefined ? {} : { ranked_attempt: params.ranked_attempt }),
+        ...(params.friend_challenge === undefined
+          ? {}
+          : { friend_challenge: params.friend_challenge }),
       };
       const save = saveNewRunRecordUnlocked(record);
       warnings.push(...save.warnings);
@@ -1443,6 +1461,9 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
   if (challenge === "invalid") return null;
   const rankedAttempt = parseRankedAttempt(value.ranked_attempt, parent_seed);
   if (rankedAttempt === "invalid") return null;
+  const friendChallenge = parseFriendChallenge(value.friend_challenge);
+  if (friendChallenge === "invalid") return null;
+  if (rankedAttempt !== undefined && friendChallenge !== undefined) return null;
   const pinned = parseOptionalBoolean(value.pinned);
   if (pinned === "invalid") return null;
 
@@ -1459,6 +1480,7 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     ...(status === undefined ? {} : { status }),
     ...(challenge === undefined ? {} : { challenge }),
     ...(rankedAttempt === undefined ? {} : { ranked_attempt: rankedAttempt }),
+    ...(friendChallenge === undefined ? {} : { friend_challenge: friendChallenge }),
     ...(pinned === undefined ? {} : { pinned }),
     ...(simulation === undefined ? {} : { simulation }),
   };
@@ -1516,6 +1538,21 @@ function parseRankedAttempt(
     parent_seed: seed,
     expires_at: expiresAt,
   };
+}
+
+function parseFriendChallenge(value: unknown): FriendChallengeRunMetadata | undefined | "invalid" {
+  if (value === undefined) return undefined;
+  if (!isPlainObject(value)) return "invalid";
+  const token = boundedString(value.token, RUN_TOKEN_MAX_LEN);
+  const proof = boundedString(value.proof, SIGNED_FRIEND_CHALLENGE_MAX_LEN);
+  if (
+    token === null ||
+    !/^t\d{1,4}\./u.test(token) ||
+    proof === null ||
+    !isLikelySignedFriendChallenge(proof)
+  )
+    return "invalid";
+  return { token, proof };
 }
 
 function parseRunRecordVersions(value: unknown): RunRecordVersions | null {

@@ -195,3 +195,12 @@ event detail, providing a real target for the recap's event-log links.
 
 Carryover: arranged-XI starter fit remains unavailable until a future versioned
 persisted fact exists. This is surfaced explicitly rather than recomputed.
+
+## Integration closure
+
+PR #273 was squash-merged into `season/squad-depth` as exact SHA
+`71a4408482b2cb7f619dac9ad4f83a1716935c6c` on 2026-07-14 UTC. GitHub Actions
+run `29302919688` completed successfully at that exact SHA. This supersedes the
+earlier pending-review wording without erasing the authoritative `04758ad`
+review failure and its subsequent focus fix-forward. No merge to `main`, Vercel
+deployment, or production verification is claimed for S6.

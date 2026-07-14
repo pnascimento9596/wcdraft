@@ -1236,6 +1236,27 @@
   composes: formationSelect from "./game-styles/draft-shell.module.css";
   composes: formationSelect from "./game-styles/draft-polish.module.css";
 }
+.friendChallengeSetup {
+  composes: friendChallengeSetup from "./game-styles/challenge.module.css";
+}
+.friendChallengeKicker {
+  composes: friendChallengeKicker from "./game-styles/challenge.module.css";
+}
+.friendChallengeConfig {
+  composes: friendChallengeConfig from "./game-styles/challenge.module.css";
+}
+.friendChallengeBuildNote {
+  composes: friendChallengeBuildNote from "./game-styles/challenge.module.css";
+}
+.friendHeadToHead {
+  composes: friendHeadToHead from "./game-styles/challenge.module.css";
+}
+.friendScoreGrid {
+  composes: friendScoreGrid from "./game-styles/challenge.module.css";
+}
+.friendVerifyNote {
+  composes: friendVerifyNote from "./game-styles/challenge.module.css";
+}
 .formationHead {
   composes: formationHead from "./game-styles/draft-shell.module.css";
   composes: formationHead from "./game-styles/draft-polish.module.css";
