@@ -60,8 +60,8 @@ function v1BodyFrom(b: RunTokenV3Body, record: RunRecordV1): RunTokenV1Body {
   };
 }
 
-function completePositionFirstModernRun(): RunRecordV1 {
-  const created = createNewRunRecord(gameData, {
+async function completePositionFirstModernRun(): Promise<RunRecordV1> {
+  const created = await createNewRunRecord(gameData, {
     formation_id: "4-3-3",
     mode: "classic",
     draft_flow: "position_first",
@@ -110,8 +110,8 @@ describe("run config badges", () => {
     expect(configBadgesFromReplayToken(t1)).toEqual([]);
   });
 
-  it("renders only non-default axes in era, draft-flow, rating-basis order", () => {
-    const record = completePositionFirstModernRun();
+  it("renders only non-default axes in era, draft-flow, rating-basis order", async () => {
+    const record = await completePositionFirstModernRun();
     const expected = [
       { axis: "era_preset", label: "Modern (2018–26)" },
       { axis: "draft_flow", label: "Position First" },
@@ -122,8 +122,8 @@ describe("run config badges", () => {
 });
 
 describe("position-first lock-bar copy", () => {
-  it("names the committed target slot instead of using generic slot-pick copy", () => {
-    const record = completePositionFirstModernRun();
+  it("names the committed target slot instead of using generic slot-pick copy", async () => {
+    const record = await completePositionFirstModernRun();
     const target = record.draft.spins.find(
       (s) => s.target_slot_id && s.target_slot_id !== "manager",
     )!.target_slot_id!;

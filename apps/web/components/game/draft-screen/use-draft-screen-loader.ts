@@ -97,7 +97,7 @@ export function useDraftScreenLoader(
           return;
         }
         const gd = initial.gameData;
-        evictStaleRunRecords(gd.versions);
+        if (!requestRunId) await evictStaleRunRecords(gd.versions);
         if (requestRunId) {
           const resolved = await resolveDisplayRun(
             { kind: "id", run_id: requestRunId },
@@ -135,7 +135,7 @@ export function useDraftScreenLoader(
             return;
           }
           const challenge = dailyChallengeForDate(dailyDate, gd.dailySeedSaltMap);
-          const created = createNewRunRecord(gd, {
+          const created = await createNewRunRecord(gd, {
             formation_id: DAILY_DRAFT_CONFIG.formationId,
             mode: DAILY_DRAFT_CONFIG.mode,
             team_name: DAILY_DRAFT_CONFIG.teamName,

@@ -59,6 +59,7 @@ import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
 import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
 import { encodeRunToken } from "@/lib/game/run-token";
 import { listRunRecords, setRunPinned } from "@/lib/game/run-record";
+import { projectTeamSheetDraft } from "@/lib/game/team-sheet";
 import { mirrorRunPinToServer } from "@/lib/game/save-mirror";
 import s from "./game.module.css";
 
@@ -299,6 +300,10 @@ function ResultsBody({
   const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
   const [referenceStanding, setReferenceStanding] = useState<ReferenceStanding | null>(null);
   const [seedCopied, setSeedCopied] = useState(false);
+  const presentationDraft = useMemo(
+    () => projectTeamSheetDraft(gameData, record),
+    [gameData, record],
+  );
 
   // Reference standing: computed locally from the shipped quantile table.
   // Null (chip omitted) when the table is unavailable or its anchors do not
@@ -318,21 +323,21 @@ function ResultsBody({
   }, [record]);
 
   const narrativeLabels = useMemo(
-    () => buildNarrativeLabels(gameData, scenario, record.draft),
-    [gameData, scenario, record.draft],
+    () => buildNarrativeLabels(gameData, scenario, presentationDraft),
+    [gameData, scenario, presentationDraft],
   );
 
   const summary: RunSummaryView = useMemo(
     () =>
       buildRunSummary(
         gameData,
-        record.draft.team_name,
+        presentationDraft.team_name,
         sim.run,
         sim.matches,
         eliminatedInGroup,
         narrativeLabels,
       ),
-    [gameData, record.draft, sim.run, sim.matches, eliminatedInGroup, narrativeLabels],
+    [gameData, presentationDraft, sim.run, sim.matches, eliminatedInGroup, narrativeLabels],
   );
 
   const matchCards: MatchCardView[] = useMemo(
@@ -429,10 +434,16 @@ function ResultsBody({
     };
   }, [dailyDate, isReplayedFromToken, record, sim.run.score, standingRefresh]);
 
-  function togglePinned() {
+  async function togglePinned() {
     if (isReplayedFromToken) return;
     const nextPinned = !pinned;
-    const result = setRunPinned(record.run_id, gameData.versions, nextPinned);
+    const result = await setRunPinned(record.run_id, gameData.versions, nextPinned).catch(
+      () => null,
+    );
+    if (!result) {
+      setPinWarning("Could not update the local pin for this run.");
+      return;
+    }
     if (result.status === "updated" && result.record) {
       setPinned(result.record.pinned === true);
       setPinWarning(result.warnings[0] ?? null);
@@ -440,7 +451,7 @@ function ResultsBody({
       void mirrorRunPinToServer(record.run_id, result.record.pinned === true);
       return;
     }
-    setPinWarning("Could not update the local pin for this run.");
+    setPinWarning(result.warnings[0] ?? "Could not update the local pin for this run.");
   }
 
   async function copyFullSeed() {
@@ -510,7 +521,7 @@ function ResultsBody({
         <LocalProgressBand summary={progressSummary} compact />
       </div>
 
-      {!isBlindDraftMode(record.draft.mode) ? <MemoryProgressionPanel /> : null}
+      {!isBlindDraftMode(presentationDraft.mode) ? <MemoryProgressionPanel /> : null}
 
       {/* ── Memory-mode reveal ────────────────────────────────────────────
           Blind-mode runs blind every rating signal through draft + review;
@@ -518,7 +529,7 @@ function ResultsBody({
           covers SHARED blind runs — a token replay reconstructs the
           draft (mode rides the token's `md`) and reveals the same way.
           Sighted runs render nothing extra. */}
-      {isBlindDraftMode(record.draft.mode) ? (
+      {isBlindDraftMode(presentationDraft.mode) ? (
         <MemoryReveal gameData={gameData} record={record} />
       ) : null}
 
