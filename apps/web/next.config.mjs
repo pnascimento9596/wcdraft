@@ -1,6 +1,18 @@
+import {
+  SERVER_RUNTIME_DATA_TRACE_PATTERN,
+  SERVER_RUNTIME_DATA_TRACE_ROUTES,
+} from "./scripts/runtime-data-trace-contract.mjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // `lib/leaderboard/server-data.ts` resolves the current runtime bundle from
+  // `process.cwd()` at request time. That dynamic filesystem path is invisible
+  // to Next's static tracer, so explicitly attach the versioned public assets
+  // to the two server routes that validate friend-challenge payloads.
+  outputFileTracingIncludes: Object.fromEntries(
+    SERVER_RUNTIME_DATA_TRACE_ROUTES.map((route) => [route, [SERVER_RUNTIME_DATA_TRACE_PATTERN]]),
+  ),
   /**
    * Belt-and-suspenders for the service-worker cache-bust contract:
    * the SW + its imported version script must never be served from

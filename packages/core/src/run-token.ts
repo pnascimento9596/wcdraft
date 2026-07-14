@@ -9,7 +9,7 @@ import {
   type RatingBasis,
 } from "./types/draft-config.js";
 import type { DraftMode, OpenDraftMode } from "./types/draft.js";
-import type { MatchRound } from "./types/index.js";
+import type { ManagerPresenceBand, MatchRound } from "./types/index.js";
 
 /** Legacy `t1.` prefix - decode-compatible forever; encode no longer emits it. */
 export const RUN_TOKEN_PREFIX = "t1." as const;
@@ -44,6 +44,8 @@ export interface RunTokenV1Body {
   ev: string;
   uv: string;
   hv: string;
+  /** Vestigial untrusted summary retained for wire compatibility; never authoritative. */
+  og?: unknown;
 }
 
 /** `t2.` pick log entry. */
@@ -100,6 +102,8 @@ export interface RunTokenV2Body {
   uv: string;
   hv: string;
   ch?: RunTokenDailyChallenge;
+  /** Vestigial untrusted summary retained for wire compatibility; never authoritative. */
+  og?: unknown;
 }
 
 /** Spin-agency config-bearing token body. */
@@ -120,7 +124,13 @@ export interface RunTokenV3Body {
   ev: string;
   uv: string;
   hv: string;
+  /** Stable drafted-manager presence tier; absent on legacy tokens and derived on replay. */
+  mp?: ManagerPresenceBand;
+  /** Optional team-sheet permutation. Destinations are canonical; values index drafted cards. */
+  a?: number[];
   ch?: RunTokenDailyChallenge;
+  /** Vestigial untrusted summary retained for wire compatibility; never authoritative. */
+  og?: unknown;
 }
 
 /** Open-pick-space config-bearing token body. */
@@ -141,7 +151,13 @@ export interface RunTokenV4Body {
   ev: string;
   uv: string;
   hv: string;
+  /** Stable drafted-manager presence tier; absent on legacy tokens and derived on replay. */
+  mp?: ManagerPresenceBand;
+  /** Optional team-sheet permutation. Destinations are canonical; values index drafted cards. */
+  a?: number[];
   ch?: RunTokenDailyChallenge;
+  /** Vestigial untrusted summary retained for wire compatibility; never authoritative. */
+  og?: unknown;
 }
 
 /** Every decodable token body. */
@@ -206,7 +222,133 @@ export function encodeRunTokenBody(body: RunTokenBody): string {
         : body.v === 3
           ? RUN_TOKEN_V3_PREFIX
           : RUN_TOKEN_V4_PREFIX;
-  return prefix + base64UrlEncode(JSON.stringify(body));
+  return prefix + base64UrlEncode(JSON.stringify(canonicalRunTokenBody(body)));
+}
+
+/**
+ * Rebuild every supported body in one stable property order before encoding.
+ * Callers may construct objects through spreads/insertion orders that differ;
+ * token bytes must not. Keep the established pre-S4 order, with the two
+ * optional replay facts adjacent as `mp`, then `a`, then `ch`.
+ */
+function canonicalRunTokenBody(body: RunTokenBody): RunTokenBody {
+  if (body.v === 1) {
+    return {
+      v: 1,
+      rid: body.rid,
+      fid: body.fid,
+      ps: body.ps,
+      tn: body.tn,
+      md: body.md,
+      pl: body.pl.map(canonicalPickV1),
+      sv: body.sv,
+      dv: body.dv,
+      rv: body.rv,
+      ev: body.ev,
+      uv: body.uv,
+      hv: body.hv,
+      ...(body.og === undefined ? {} : { og: body.og }),
+    };
+  }
+  if (body.v === 2) {
+    return {
+      v: 2,
+      rid: body.rid,
+      fid: body.fid,
+      ps: body.ps,
+      tn: body.tn,
+      md: body.md,
+      df: body.df,
+      rb: body.rb,
+      ef: { id: body.ef.id, min: body.ef.min, max: body.ef.max },
+      pl: body.pl.map(canonicalPickV2),
+      sv: body.sv,
+      dv: body.dv,
+      rv: body.rv,
+      ev: body.ev,
+      uv: body.uv,
+      hv: body.hv,
+      ...(body.ch === undefined ? {} : { ch: canonicalDailyChallenge(body.ch) }),
+      ...(body.og === undefined ? {} : { og: body.og }),
+    };
+  }
+  if (body.v === 3) {
+    return {
+      v: 3,
+      rid: body.rid,
+      fid: body.fid,
+      ps: body.ps,
+      tn: body.tn,
+      md: body.md,
+      df: body.df,
+      rb: body.rb,
+      ef: { id: body.ef.id, min: body.ef.min, max: body.ef.max },
+      pl: body.pl.map(canonicalPickV3),
+      sv: body.sv,
+      dv: body.dv,
+      rv: body.rv,
+      ev: body.ev,
+      uv: body.uv,
+      hv: body.hv,
+      ...(body.mp === undefined ? {} : { mp: body.mp }),
+      ...(body.a === undefined ? {} : { a: [...body.a] }),
+      ...(body.ch === undefined ? {} : { ch: canonicalDailyChallenge(body.ch) }),
+      ...(body.og === undefined ? {} : { og: body.og }),
+    };
+  }
+  return {
+    v: 4,
+    rid: body.rid,
+    fid: body.fid,
+    ps: body.ps,
+    tn: body.tn,
+    md: body.md,
+    df: body.df,
+    rb: body.rb,
+    ef: { id: body.ef.id, min: body.ef.min, max: body.ef.max },
+    pl: body.pl.map(canonicalPickV4),
+    sv: body.sv,
+    dv: body.dv,
+    rv: body.rv,
+    ev: body.ev,
+    uv: body.uv,
+    hv: body.hv,
+    ...(body.mp === undefined ? {} : { mp: body.mp }),
+    ...(body.a === undefined ? {} : { a: [...body.a] }),
+    ...(body.ch === undefined ? {} : { ch: canonicalDailyChallenge(body.ch) }),
+    ...(body.og === undefined ? {} : { og: body.og }),
+  };
+}
+
+function canonicalPickV1(pick: RunTokenPick): RunTokenPick {
+  return pick.k === "m" ? { k: "m" } : { k: "p", c: pick.c, s: pick.s };
+}
+
+function canonicalPickV2(pick: RunTokenPickV2): RunTokenPickV2 {
+  if (pick.k === "m") return pick.ts === undefined ? { k: "m" } : { k: "m", ts: pick.ts };
+  return pick.ts === undefined
+    ? { k: "p", c: pick.c, s: pick.s }
+    : { k: "p", c: pick.c, s: pick.s, ts: pick.ts };
+}
+
+function canonicalPickV3(pick: RunTokenPickV3): RunTokenPickV3 {
+  if (pick.k === "m") return pick.ts === undefined ? { k: "m" } : { k: "m", ts: pick.ts };
+  return pick.ts === undefined
+    ? { k: "p", ci: pick.ci, s: pick.s }
+    : { k: "p", ci: pick.ci, s: pick.s, ts: pick.ts };
+}
+
+function canonicalPickV4(pick: RunTokenPickV4): RunTokenPickV4 {
+  if (pick.k === "m") {
+    return pick.ts === undefined ? { k: "m", mc: pick.mc } : { k: "m", mc: pick.mc, ts: pick.ts };
+  }
+  return pick.ts === undefined
+    ? { k: "p", c: pick.c, s: pick.s }
+    : { k: "p", c: pick.c, s: pick.s, ts: pick.ts };
+}
+
+function canonicalDailyChallenge(challenge: RunTokenDailyChallenge): RunTokenDailyChallenge {
+  return { k: "daily", d: challenge.d, s: challenge.s };
 }
 
 export function tokenDraftConfig(token: RunTokenBody): DraftConfig & { md: DraftMode } {
@@ -357,6 +499,8 @@ function isRunTokenV3Body(x: unknown): x is RunTokenV3Body {
   if (typeof o.ev !== "string") return false;
   if (typeof o.uv !== "string") return false;
   if (typeof o.hv !== "string") return false;
+  if (o.mp !== undefined && o.mp !== 0 && o.mp !== 1) return false;
+  if (!isEncodedArrangement(o.a)) return false;
   if (!isDailyChallenge(o.ch, o.ps)) return false;
   return true;
 }
@@ -386,8 +530,18 @@ function isRunTokenV4Body(x: unknown): x is RunTokenV4Body {
   if (typeof o.ev !== "string") return false;
   if (typeof o.uv !== "string") return false;
   if (typeof o.hv !== "string") return false;
+  if (o.mp !== undefined && o.mp !== 0 && o.mp !== 1) return false;
+  if (!isEncodedArrangement(o.a)) return false;
   if (!isDailyChallenge(o.ch, o.ps)) return false;
   return true;
+}
+
+function isEncodedArrangement(value: unknown): value is number[] | undefined {
+  if (value === undefined) return true;
+  // Count, uniqueness and range depend on the reconstructed legal pick log.
+  // Keep them in replay reconciliation so semantic defects map to typed 422
+  // ILLEGAL_PICK instead of being blurred into malformed-token transport.
+  return Array.isArray(value) && value.every((entry) => Number.isSafeInteger(entry));
 }
 
 const DAILY_DATE_RE = /^\d{4}-\d{2}-\d{2}$/u;

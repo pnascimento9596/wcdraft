@@ -1,0 +1,138 @@
+.friendChallengeSetup {
+  width: min(100%, 640px);
+  margin-inline: auto;
+  gap: 18px;
+}
+
+.friendChallengeKicker {
+  width: fit-content;
+  padding: 6px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--s1));
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.friendChallengeConfig {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--line);
+}
+
+.friendChallengeConfig > div {
+  min-width: 0;
+  padding: 12px;
+  background: var(--s1);
+}
+
+.friendChallengeConfig dt {
+  color: var(--tx2);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.friendChallengeConfig dd {
+  margin: 3px 0 0;
+  color: var(--tx);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.friendChallengeBuildNote {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--gold);
+  background: color-mix(in srgb, var(--gold) 10%, var(--s1));
+  color: var(--tx2);
+}
+
+.friendHeadToHead {
+  position: relative;
+  overflow: hidden;
+}
+
+.friendHeadToHead::after {
+  position: absolute;
+  inset: 0 0 auto auto;
+  width: 96px;
+  height: 96px;
+  border-radius: 0 0 0 100%;
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  content: "";
+  pointer-events: none;
+}
+
+.friendScoreGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.friendScoreGrid > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 3px 8px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--s2);
+}
+
+.friendScoreGrid > div > span {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--tx2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.friendScoreGrid strong {
+  color: var(--tx);
+  font-size: clamp(2rem, 9vw, 3rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.friendScoreGrid small,
+.friendScoreGrid > span {
+  color: var(--tx2);
+  font-weight: 600;
+}
+
+.friendVerifyNote {
+  margin: 12px 0 0;
+  color: var(--tx2);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 380px) {
+  .friendChallengeConfig {
+    grid-template-columns: 1fr;
+  }
+
+  .friendScoreGrid {
+    gap: 7px;
+  }
+
+  .friendScoreGrid > div {
+    padding: 10px;
+  }
+}

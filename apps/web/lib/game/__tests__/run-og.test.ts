@@ -39,6 +39,7 @@ import { handleRunOgSignPost, POST as runOgSignRoutePost } from "../../../app/ap
 import { setupTestDb } from "../../auth/__tests__/_test-db";
 
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
+import skewFixtures from "./fixtures/run-token-skew.json" with { type: "json" };
 
 const gameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
@@ -284,6 +285,16 @@ describe("dynamic run OG tokens", () => {
 });
 
 describe("dynamic run OG metadata decision", () => {
+  it("rejects a token whose persisted manager-presence tier disagrees with deterministic re-sim", () => {
+    const completed = { ...complete(), manager_presence_band: 1 as const };
+    const body = decodeV3(encodeRunToken(completed));
+    const verified = verifyRunTokenForOg(encodeBody({ ...body, mp: 0 }), {
+      gameData,
+      scenario: SCENARIO_2026_BUNDLE,
+    });
+    expect(verified).toEqual({ status: "rejected", reason: "ILLEGAL_PICK" });
+  });
+
   it("uses the static default for malformed, legacy, pre-summary, unsigned, and foreign-build tokens", () => {
     const completed = complete();
     const completedToken = encodeRunToken(completed);
@@ -356,6 +367,15 @@ describe("dynamic run OG metadata decision", () => {
 });
 
 describe("dynamic run OG model and image", () => {
+  it("reports the real pre-Season-2 production token as wrong-season skew", () => {
+    expect(
+      verifyRunTokenForOg(skewFixtures.shipped_pre_s2_t3.token, {
+        gameData,
+        scenario: SCENARIO_2026_BUNDLE,
+      }),
+    ).toEqual({ status: "rejected", reason: "WRONG_SEASON" });
+  });
+
   it("builds the image model only from a trusted server-derived summary", () => {
     const token = encodeRunToken(complete());
     const decoded = decodeV3(token);
@@ -630,13 +650,15 @@ describe("trusted run OG signing", () => {
 
     const first = await handleRunOgSignPost(request(), ogSignDeps(allowOnce));
     expect(first.status).toBe(200);
-    const firstBody = (await first.json()) as { signed?: unknown };
+    const firstBody = (await first.json()) as { signed?: unknown; challenge_proof?: unknown };
     expect(typeof firstBody.signed).toBe("string");
+    expect(firstBody.challenge_proof).toMatch(/^fc1\.[0-9a-f]{64}\.[A-Za-z0-9_-]{43}$/u);
 
     const second = await handleRunOgSignPost(request(), ogSignDeps(denyIfCalled));
     expect(second.status).toBe(200);
-    const secondBody = (await second.json()) as { signed?: unknown };
+    const secondBody = (await second.json()) as { signed?: unknown; challenge_proof?: unknown };
     expect(secondBody.signed).toBe(firstBody.signed);
+    expect(secondBody.challenge_proof).toBe(firstBody.challenge_proof);
     expect(quotaCalls).toBe(1);
   });
 

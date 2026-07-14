@@ -1,16 +1,16 @@
 name: ETL
 
 # Triggered on `main` AND the same integration-branch family CI watches
-# (engine-*, merit-*, season-*). The merit-v2 series shipped CI-dark
+# (engine-*, merit-*, season-*, season/**). The merit-v2 series shipped CI-dark
 # because the triggers were main-only; widening here keeps the ETL gate
 # (ingest · identity-QA · determinism) honest on every long-lived
 # integration branch and brings the two workflows back into agreement.
 on:
   pull_request:
-    branches: [main, "engine-*", "merit-*", "season-*"]
+    branches: [main, "engine-*", "merit-*", "season-*", "season/**"]
     paths: ["etl/**", ".github/**", "turbo.json"]
   push:
-    branches: [main, "engine-*", "merit-*", "season-*"]
+    branches: [main, "engine-*", "merit-*", "season-*", "season/**"]
     paths: ["etl/**", ".github/**", "turbo.json"]
 
 permissions:

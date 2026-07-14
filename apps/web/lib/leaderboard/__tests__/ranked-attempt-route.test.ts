@@ -13,7 +13,7 @@ import {
 
 const SECRET = testCookieSecret("ranked-attempt-route");
 const NOW = Date.UTC(2026, 5, 29, 12);
-const CURRENT_SEASON = "season-2026-manager-attrition";
+const CURRENT_SEASON = "season-2026-squad-depth";
 
 const { db, pg, reset } = await setupTestDb();
 afterAll(async () => pg.close());

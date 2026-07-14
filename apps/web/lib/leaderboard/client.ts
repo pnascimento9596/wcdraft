@@ -27,6 +27,7 @@ export async function fetchBoardPage(opts: {
   filter: BoardFilter;
   cursor: string | null;
   limit?: number;
+  seasonKey?: string;
 }): Promise<BoardFetchResult> {
   try {
     return await boundedRequest(
@@ -66,6 +67,7 @@ export interface MyBoardPresence {
  */
 export async function fetchMyPresence(opts: {
   filter: BoardFilter;
+  seasonKey?: string;
 }): Promise<MyBoardPresence | null> {
   try {
     return await boundedRequest(

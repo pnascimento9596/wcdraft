@@ -53,6 +53,12 @@ export type {
 /** Replay the token's pick log against a fresh createDraft. Throws on any incoherence. */
 export function reconstructDraftFromToken(token: RunTokenBody, gd: MarketingGameData): DraftState {
   const config = tokenDraftConfig(token);
+  if ((token.v === 3 || token.v === 4) && token.a !== undefined) {
+    // Marketing replay is intentionally paused outside the web's S4 shared
+    // reconciliation seam. Fail closed instead of silently scoring the
+    // as-drafted XI for a token that explicitly carries an arranged sheet.
+    throw new Error("arranged team-sheet tokens are not supported by the marketing composer");
+  }
   if (isOpenDraftMode(token.md)) {
     // Marketing result posts currently simulate only Classic/Memory shares.
     // Open-pick-space t4 tokens carry manager card ids and full-roster card picks;

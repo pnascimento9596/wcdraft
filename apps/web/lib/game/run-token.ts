@@ -61,12 +61,18 @@ import {
   type RunTokenPickV4,
   type RunTokenV3Body,
   type RunTokenV4Body,
+  type MatchResult,
 } from "@wcdraft/core";
 
 import type { GameData } from "./data";
 import { getCatalogForEra } from "./data";
 import { isDailySeedForDate } from "./daily";
 import type { RunRecordV1 } from "./run-record";
+import {
+  decodeTeamSheetArrangement,
+  encodeTeamSheetArrangement,
+  materializeTeamSheetDraft,
+} from "./team-sheet";
 
 export {
   RUN_TOKEN_PREFIX,
@@ -134,6 +140,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
       }
       throw new RunTokenError(`spin ${i}: pick is unresolved (status=${spin.status ?? "?"})`);
     });
+    const arrangement = encodeTeamSheetArrangement(record.draft, record.arrangement);
     return {
       v: 4,
       rid: record.run_id,
@@ -151,6 +158,8 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
       ev: record.versions.engine_version,
       uv: record.versions.ruleset_version,
       hv: record.versions.data_bundle_hash,
+      ...(record.manager_presence_band === undefined ? {} : { mp: record.manager_presence_band }),
+      ...(arrangement === undefined ? {} : { a: arrangement }),
       ...(record.challenge?.kind === "daily"
         ? { ch: { k: "daily" as const, d: record.challenge.date, s: record.challenge.seed } }
         : {}),
@@ -182,6 +191,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
     }
     throw new RunTokenError(`spin ${i}: pick is unresolved (status=${spin.status ?? "?"})`);
   });
+  const arrangement = encodeTeamSheetArrangement(record.draft, record.arrangement);
   return {
     v: 3,
     rid: record.run_id,
@@ -199,6 +209,8 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
     ev: record.versions.engine_version,
     uv: record.versions.ruleset_version,
     hv: record.versions.data_bundle_hash,
+    ...(record.manager_presence_band === undefined ? {} : { mp: record.manager_presence_band }),
+    ...(arrangement === undefined ? {} : { a: arrangement }),
     ...(record.challenge?.kind === "daily"
       ? { ch: { k: "daily" as const, d: record.challenge.date, s: record.challenge.seed } }
       : {}),
@@ -234,7 +246,7 @@ export function encodeRunToken(record: RunRecordV1): string {
  * catalog is the receiving site's, so the spin pool the picks reference is
  * only meaningful when versions agree.
  */
-export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameData): DraftState {
+function reconstructPickedDraftFromToken(token: RunTokenBody, gameData: GameData): DraftState {
   if (token.v !== 3 && token.v !== 4) {
     throw new RunTokenError("legacy token version cannot replay under the current draft engine");
   }
@@ -329,15 +341,71 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
 }
 
 /**
+ * The one replay reconciliation path for the optional `mp` and `a` facts.
+ * Arrangement is applied to an ephemeral projection after legal-pick replay;
+ * when deterministic matches are supplied, manager presence is co-validated
+ * in the same pass. Absent `a` preserves the exact as-drafted state; absent
+ * `mp` derives honestly from the version-anchored simulation.
+ */
+export function reconcileRunToken(
+  token: RunTokenBody,
+  gameData: GameData,
+  matches?: readonly MatchResult[],
+): DraftState {
+  const picked = reconstructPickedDraftFromToken(token, gameData);
+  if (token.v !== 3 && token.v !== 4) {
+    throw new RunTokenError("legacy token version cannot replay under the current draft engine");
+  }
+  let draft: DraftState;
+  try {
+    draft =
+      token.a === undefined
+        ? picked
+        : materializeTeamSheetDraft(gameData, picked, decodeTeamSheetArrangement(picked, token.a));
+  } catch (error) {
+    throw new RunTokenError(
+      `team sheet reconciliation failed: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+  if (matches !== undefined) {
+    const derived = matches[0]?.team_facts?.manager_presence_band;
+    if (
+      derived === undefined ||
+      matches.some((match) => match.team_facts?.manager_presence_band !== derived) ||
+      (token.mp !== undefined && token.mp !== derived)
+    ) {
+      throw new RunTokenError("manager tactical tier does not match deterministic re-sim");
+    }
+  }
+  return draft;
+}
+
+/** Ordinary replay also consumes arrangement through the shared reconciliation seam. */
+export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameData): DraftState {
+  return reconcileRunToken(token, gameData);
+}
+
+/**
  * Wrap a reconstructed draft as an in-memory `RunRecordV1`. Callers use this
  * to render results / share screens without persisting the run locally
  * (token-loaded runs are ephemeral session state — the user receiving the
  * URL is a viewer, not the originator).
  */
 export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData): RunRecordV1 {
-  const draft = reconstructDraftFromToken(token, gameData);
+  // Validate through the same shared seam as OG/leaderboard, but retain the
+  // legal-pick draft as the record authority. The decoded arrangement is a
+  // separate fact; simulation/presentation project it ephemerally. This is
+  // essential for exact re-share round trips (projecting into `draft` here
+  // would make a subsequent encoder conclude that `a` is absent).
+  reconcileRunToken(token, gameData);
+  if (token.v !== 3 && token.v !== 4) {
+    throw new RunTokenError("legacy token version cannot materialize a current run record");
+  }
+  const draft = reconstructPickedDraftFromToken(token, gameData);
+  const arrangement =
+    token.a === undefined ? undefined : decodeTeamSheetArrangement(draft, token.a);
   const challenge =
-    (token.v === 3 || token.v === 4) && token.ch?.k === "daily"
+    token.ch?.k === "daily"
       ? isDailySeedForDate(token.ch.d, token.ch.s, gameData.dailySeedSaltMap)
         ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
         : undefined
@@ -350,6 +418,8 @@ export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData):
     updated_seq: 0,
     versions: gameData.versions,
     draft,
+    ...(arrangement === undefined ? {} : { arrangement }),
+    ...(token.mp === undefined ? {} : { manager_presence_band: token.mp }),
     status: "ready",
     ...(challenge === undefined ? {} : { challenge }),
   };

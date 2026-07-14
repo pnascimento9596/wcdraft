@@ -27,13 +27,22 @@ import {
   type DraftFlow,
   type EraPresetId,
   type RatingBasis,
+  type ManagerPresenceBand,
+  RUN_TOKEN_MAX_LEN,
 } from "@wcdraft/core";
 
 import type { GameData, RunRecordVersions } from "./data";
 import { getCatalogForEra } from "./data";
 import { isDailyChallengeDate, isDailySeedForDate, type DailyChallenge } from "./daily";
-import { RunRecordError, StorageQuotaError, StorageUnavailableError } from "./errors";
+import {
+  RunRecordError,
+  RunStoreCoordinationError,
+  StorageQuotaError,
+  StorageUnavailableError,
+} from "./errors";
 import { parsePersistedSimulation, type PersistedSimulation } from "./simulation-payload";
+import { verifyTeamSheetArrangement, type TeamSheetArrangement } from "./team-sheet";
+import { isLikelySignedFriendChallenge, SIGNED_FRIEND_CHALLENGE_MAX_LEN } from "./run-og-signing";
 export type {
   PersistedKnockoutLadderMeta,
   PersistedKnockoutLadderRoundMeta,
@@ -55,6 +64,11 @@ export interface RankedAttemptRunMetadata {
   readonly expires_at: string;
 }
 
+export interface FriendChallengeRunMetadata {
+  readonly token: string;
+  readonly proof: string;
+}
+
 export interface RunRecordV1 {
   record_version: typeof RUN_RECORD_SCHEMA_VERSION;
   run_id: string;
@@ -63,12 +77,18 @@ export interface RunRecordV1 {
   updated_seq: number;
   versions: RunRecordVersions;
   draft: DraftState;
+  /** Optional canonical sheet; absent means the immutable as-drafted assignment. */
+  arrangement?: TeamSheetArrangement;
+  /** Stable drafted-manager presence tier; absent on legacy/pre-simulation records. */
+  manager_presence_band?: ManagerPresenceBand;
   /** Lifecycle status; older records without this field default to "ready". */
   status?: RunRecordStatus;
   /** Optional challenge metadata. Daily runs use a shared date-derived seed. */
   challenge?: DailyChallenge;
   /** Local marker for a server-issued ranked seed. Not included in share tokens. */
   ranked_attempt?: RankedAttemptRunMetadata;
+  /** Signed parent run reference. Never encoded into the recipient run token. */
+  friend_challenge?: FriendChallengeRunMetadata;
   /** Local-only preservation flag; pinned records are not evicted by the recent-run cap. */
   pinned?: boolean;
   /** Persisted simulation result; present only when status === "complete". */
@@ -125,22 +145,92 @@ const memoryBackend: StorageBackend = {
 
 let volatileMode = false;
 
+interface DurableStoreSnapshot {
+  readonly values: Map<string, string | null>;
+}
+
+interface StoreMutationTransaction {
+  storage: StorageBackend;
+  readonly durableSnapshot: DurableStoreSnapshot | null;
+  readonly mutatedDurableKeys: Set<string>;
+  readonly warnings: string[];
+}
+
+interface PendingDurableRecovery {
+  readonly storage: StorageBackend;
+  readonly snapshot: DurableStoreSnapshot;
+  readonly mutatedKeys: Set<string>;
+}
+
+let activeStoreMutation: StoreMutationTransaction | null = null;
+let pendingDurableRecovery: PendingDurableRecovery | null = null;
+
+interface RunMutationLockManager {
+  request<T>(
+    name: string,
+    options: { mode: "exclusive"; signal?: AbortSignal },
+    callback: () => T | PromiseLike<T>,
+  ): Promise<T>;
+}
+
+let mutationLockManagerOverride: RunMutationLockManager | null | undefined;
+let storeMutationTail = Promise.resolve();
+
+export const RUN_STORE_LOCK_NAME = "wcdraft:run-store:v1" as const;
+export const RUN_MUTATION_LOCK_UNAVAILABLE_WARNING =
+  "This browser cannot safely coordinate saved-run changes. Update your browser to continue; existing runs remain readable." as const;
+
 function getStorage(): StorageBackend {
   if (volatileMode) return memoryBackend;
+  // Once a locked mutation has established its authority and snapshot, every
+  // nested store lookup in that turn must reuse the same backend. Re-probing
+  // localStorage here could independently fail and bypass the transaction by
+  // switching to an empty volatile map.
+  if (activeStoreMutation) return activeStoreMutation.storage;
+  if (pendingDurableRecovery && activeStoreMutation === null) {
+    const recovery = pendingDurableRecovery;
+    return {
+      getItem: (key) =>
+        recovery.snapshot.values.has(key)
+          ? (recovery.snapshot.values.get(key) ?? null)
+          : recovery.storage.getItem(key),
+      setItem: () => {
+        throw new StorageUnavailableError("Pending durable recovery is read-only");
+      },
+      removeItem: () => {
+        throw new StorageUnavailableError("Pending durable recovery is read-only");
+      },
+      isVolatile: true,
+    };
+  }
   if (typeof window === "undefined") return memoryBackend;
   try {
     const ls = window.localStorage;
     if (!ls) return memoryBackend;
-    // Probe — Safari private mode + restrictive iframes throw on set.
-    const probe = "__wcdraft_probe__";
-    ls.setItem(probe, "1");
-    ls.removeItem(probe);
-    return {
+    const durableBackend: StorageBackend = {
       getItem: (k) => ls.getItem(k),
       setItem: (k, v) => ls.setItem(k, v),
       removeItem: (k) => ls.removeItem(k),
       isVolatile: false,
     };
+    // Probe — Safari private mode + restrictive iframes throw on set.
+    const probe = "__wcdraft_probe__";
+    try {
+      ls.setItem(probe, "1");
+      ls.removeItem(probe);
+    } catch (error) {
+      if (isQuotaError(error)) {
+        try {
+          ls.removeItem(probe);
+        } catch {
+          // The transaction's first authoritative write will fail closed if
+          // storage is no longer writable; existing bytes remain readable.
+        }
+        return durableBackend;
+      }
+      throw error;
+    }
+    return durableBackend;
   } catch {
     volatileMode = true;
     return memoryBackend;
@@ -151,6 +241,123 @@ function getStorage(): StorageBackend {
 export function _resetVolatileStorageForTests(): void {
   memoryMap.clear();
   volatileMode = false;
+  activeStoreMutation = null;
+  pendingDurableRecovery = null;
+  mutationLockManagerOverride = undefined;
+  storeMutationTail = Promise.resolve();
+}
+
+/** Test seam for deterministic independent-agent lock scheduling. */
+export function _setRunMutationLockManagerForTests(manager: RunMutationLockManager | null): void {
+  mutationLockManagerOverride = manager;
+}
+
+function getRunMutationLockManager(): RunMutationLockManager | null {
+  if (mutationLockManagerOverride !== undefined) return mutationLockManagerOverride;
+  if (typeof navigator === "undefined") return null;
+  try {
+    const locks = navigator.locks as RunMutationLockManager | undefined;
+    return locks && typeof locks.request === "function" ? locks : null;
+  } catch {
+    return null;
+  }
+}
+
+async function withRunStoreLock<T>(
+  unavailable: () => T,
+  mutation: () => T,
+  signal?: AbortSignal,
+): Promise<T> {
+  return withStoreMutationQueue(
+    unavailable,
+    async () => {
+      const hasPendingRecovery = pendingDurableRecovery !== null;
+      const admittedStorage = getStorage();
+      if (!hasPendingRecovery && admittedStorage.isVolatile) {
+        return executeStoreMutation(mutation, admittedStorage);
+      }
+
+      const manager = getRunMutationLockManager();
+      if (!manager) return unavailable();
+      let outcome: { kind: "value"; value: T } | { kind: "mutation-error"; error: unknown };
+      try {
+        outcome = await manager.request(RUN_STORE_LOCK_NAME, { mode: "exclusive", signal }, () => {
+          try {
+            // The page queue owns this turn from storage admission through the
+            // Web Lock callback, so reuse that authority without a second
+            // capability probe. Pending recovery is the exception: it must be
+            // restored before a fresh durable backend is selected.
+            return {
+              kind: "value" as const,
+              value: executeStoreMutation(
+                mutation,
+                hasPendingRecovery ? undefined : admittedStorage,
+              ),
+            };
+          } catch (error) {
+            return { kind: "mutation-error" as const, error };
+          }
+        });
+      } catch {
+        // The lock callback captures mutation failures as values, so a
+        // request rejection means the durable Web Lock was not established.
+        return unavailable();
+      }
+      if (outcome.kind === "mutation-error") throw outcome.error;
+      return outcome.value;
+    },
+    signal,
+  );
+}
+
+function executeStoreMutation<T>(mutation: () => T, admittedStorage?: StorageBackend): T {
+  if (activeStoreMutation) {
+    throw new RunRecordError("Nested run-store mutations are not supported");
+  }
+  recoverDurableAuthorityOrThrow();
+  const storage = admittedStorage ?? getStorage();
+  const transaction: StoreMutationTransaction = {
+    storage,
+    durableSnapshot: storage.isVolatile ? null : captureDurableStoreSnapshot(storage),
+    mutatedDurableKeys: new Set<string>(),
+    warnings: [],
+  };
+  activeStoreMutation = transaction;
+  try {
+    return mutation();
+  } catch (error) {
+    if (
+      transaction.durableSnapshot &&
+      transaction.mutatedDurableKeys.size > 0 &&
+      pendingDurableRecovery === null
+    ) {
+      restoreDurableTransactionOrThrow(transaction);
+    }
+    throw error;
+  } finally {
+    activeStoreMutation = null;
+  }
+}
+
+async function withStoreMutationQueue<T>(
+  unavailable: () => T,
+  operation: () => T | PromiseLike<T>,
+  signal?: AbortSignal,
+): Promise<T> {
+  const previous = storeMutationTail;
+  let release!: () => void;
+  const current = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  storeMutationTail = current;
+  await previous.catch(() => undefined);
+  try {
+    if (signal?.aborted) return unavailable();
+    return await operation();
+  } finally {
+    release();
+    if (storeMutationTail === current) storeMutationTail = Promise.resolve();
+  }
 }
 
 /**
@@ -171,14 +378,13 @@ function nextCounter(storage: StorageBackend): number {
   const prev = raw ? Number.parseInt(raw, 10) : 0;
   const next = Number.isFinite(prev) && prev >= 0 ? prev + 1 : 1;
   try {
-    storage.setItem(RUN_COUNTER_KEY, String(next));
+    setStoreItem(storage, RUN_COUNTER_KEY, String(next));
   } catch (err) {
-    if (isQuotaError(err)) {
-      volatileMode = true;
-      memoryBackend.setItem(RUN_COUNTER_KEY, String(next));
-    } else {
-      throw err;
+    if (!isQuotaError(err)) {
+      throw new StorageUnavailableError(`Failed to advance run counter: ${String(err)}`);
     }
+    const fallback = switchActiveMutationToVolatile(next);
+    fallback.setItem(RUN_COUNTER_KEY, String(next));
   }
   return next;
 }
@@ -219,20 +425,28 @@ function loadIndex(storage: StorageBackend): RunRecordIndexV1 {
 }
 
 function saveIndex(storage: StorageBackend, idx: RunRecordIndexV1): void {
-  storage.setItem(RUN_INDEX_KEY, JSON.stringify(idx));
+  setStoreItem(storage, RUN_INDEX_KEY, JSON.stringify(idx));
 }
 
 function updateIndexEntry(idx: RunRecordIndexV1, rec: RunRecordV1): RunRecordIndexV1 {
   const entries = idx.entries.filter((e) => e.run_id !== rec.run_id);
-  entries.push({
+  entries.push(indexEntryFromRecord(rec));
+  entries.sort((a, b) => {
+    if (a.updated_seq !== b.updated_seq) return a.updated_seq - b.updated_seq;
+    if (a.created_seq !== b.created_seq) return a.created_seq - b.created_seq;
+    return a.run_id.localeCompare(b.run_id);
+  });
+  return { record_version: RUN_RECORD_SCHEMA_VERSION, entries };
+}
+
+function indexEntryFromRecord(rec: RunRecordV1): RunRecordIndexEntry {
+  return {
     run_id: rec.run_id,
     created_seq: rec.created_seq,
     updated_seq: rec.updated_seq,
     versions: rec.versions,
     ...(rec.pinned === true ? { pinned: true } : {}),
-  });
-  entries.sort((a, b) => a.updated_seq - b.updated_seq);
-  return { record_version: RUN_RECORD_SCHEMA_VERSION, entries };
+  };
 }
 
 function recordKey(run_id: string): string {
@@ -251,6 +465,137 @@ function isQuotaError(err: unknown): boolean {
   );
 }
 
+function captureDurableStoreSnapshot(storage: StorageBackend): DurableStoreSnapshot {
+  const values = new Map<string, string | null>();
+  values.set(RUN_COUNTER_KEY, storage.getItem(RUN_COUNTER_KEY));
+  const rawIndex = storage.getItem(RUN_INDEX_KEY);
+  values.set(RUN_INDEX_KEY, rawIndex);
+  if (rawIndex) {
+    try {
+      const parsed = JSON.parse(rawIndex) as { entries?: Array<{ run_id?: unknown }> };
+      if (Array.isArray(parsed.entries)) {
+        for (const entry of parsed.entries) {
+          if (typeof entry?.run_id !== "string") continue;
+          const key = recordKey(entry.run_id);
+          if (!values.has(key)) values.set(key, storage.getItem(key));
+        }
+      }
+    } catch {
+      // Preserve malformed index bytes exactly. Without trustworthy run IDs,
+      // there is no honest record authority to infer beyond explicit targets.
+    }
+  }
+  return { values };
+}
+
+function ensureDurableSnapshotKey(transaction: StoreMutationTransaction, key: string): void {
+  if (!transaction.durableSnapshot || transaction.durableSnapshot.values.has(key)) return;
+  transaction.durableSnapshot.values.set(key, transaction.storage.getItem(key));
+}
+
+function setStoreItem(storage: StorageBackend, key: string, value: string): void {
+  const transaction = activeStoreMutation;
+  if (transaction && !transaction.storage.isVolatile && !storage.isVolatile) {
+    ensureDurableSnapshotKey(transaction, key);
+    transaction.mutatedDurableKeys.add(key);
+  }
+  storage.setItem(key, value);
+}
+
+function removeStoreItem(storage: StorageBackend, key: string): void {
+  const transaction = activeStoreMutation;
+  if (transaction && !transaction.storage.isVolatile && !storage.isVolatile) {
+    ensureDurableSnapshotKey(transaction, key);
+    transaction.mutatedDurableKeys.add(key);
+  }
+  storage.removeItem(key);
+}
+
+function restoreDurableValues(
+  storage: StorageBackend,
+  snapshot: DurableStoreSnapshot,
+  mutatedKeys: Set<string>,
+): void {
+  const absentKeys = [...mutatedKeys].filter((key) => snapshot.values.get(key) == null);
+  const presentKeys = [...mutatedKeys].filter(
+    (key) => typeof snapshot.values.get(key) === "string" && key !== RUN_INDEX_KEY,
+  );
+  const indexWasMutated = mutatedKeys.has(RUN_INDEX_KEY);
+
+  for (const key of absentKeys) restoreDurableValue(storage, key, null);
+  for (const key of presentKeys) restoreDurableValue(storage, key, snapshot.values.get(key)!);
+  if (indexWasMutated) {
+    restoreDurableValue(storage, RUN_INDEX_KEY, snapshot.values.get(RUN_INDEX_KEY) ?? null);
+  }
+}
+
+function restoreDurableValue(
+  storage: StorageBackend,
+  key: string,
+  priorValue: string | null,
+): void {
+  const currentValue = storage.getItem(key);
+  if (currentValue === priorValue) return;
+  if (priorValue === null) storage.removeItem(key);
+  else storage.setItem(key, priorValue);
+}
+
+function restoreDurableTransactionOrThrow(transaction: StoreMutationTransaction): void {
+  const snapshot = transaction.durableSnapshot;
+  if (!snapshot || transaction.mutatedDurableKeys.size === 0) return;
+  try {
+    restoreDurableValues(transaction.storage, snapshot, transaction.mutatedDurableKeys);
+    transaction.mutatedDurableKeys.clear();
+  } catch (error) {
+    pendingDurableRecovery = {
+      storage: transaction.storage,
+      snapshot,
+      mutatedKeys: new Set(transaction.mutatedDurableKeys),
+    };
+    throw new StorageUnavailableError(
+      `Run-store rollback failed; durable mutations are blocked until recovery succeeds: ${String(error)}`,
+    );
+  }
+}
+
+function recoverDurableAuthorityOrThrow(): void {
+  const recovery = pendingDurableRecovery;
+  if (!recovery) return;
+  try {
+    restoreDurableValues(recovery.storage, recovery.snapshot, recovery.mutatedKeys);
+    pendingDurableRecovery = null;
+  } catch (error) {
+    throw new StorageUnavailableError(
+      `Run-store recovery is still blocked; no mutation was attempted: ${String(error)}`,
+    );
+  }
+}
+
+function hydrateVolatileAuthority(snapshot: DurableStoreSnapshot): void {
+  memoryMap.clear();
+  for (const [key, value] of snapshot.values) {
+    if (value !== null) memoryMap.set(key, value);
+  }
+}
+
+function switchActiveMutationToVolatile(minimumCounter: number): StorageBackend {
+  const transaction = activeStoreMutation;
+  if (!transaction || !transaction.durableSnapshot || transaction.storage.isVolatile) {
+    throw new StorageQuotaError("Storage quota was exhausted outside a durable store transaction");
+  }
+  restoreDurableTransactionOrThrow(transaction);
+  hydrateVolatileAuthority(transaction.durableSnapshot);
+  const priorCounter = Number.parseInt(memoryBackend.getItem(RUN_COUNTER_KEY) ?? "0", 10);
+  const counter = Math.max(Number.isFinite(priorCounter) ? priorCounter : 0, minimumCounter);
+  memoryBackend.setItem(RUN_COUNTER_KEY, counter.toString());
+  volatileMode = true;
+  transaction.storage = memoryBackend;
+  if (!transaction.warnings.includes("storage quota exhausted: draft saved to this tab only")) {
+    transaction.warnings.push("storage quota exhausted: draft saved to this tab only");
+  }
+  return memoryBackend;
+}
+
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 export interface CreateRunRecordParams {
@@ -263,6 +608,8 @@ export interface CreateRunRecordParams {
   challenge?: DailyChallenge;
   /** Optional ranked-attempt metadata for server-issued ranked seeds. */
   ranked_attempt?: RankedAttemptRunMetadata;
+  /** Same-seed friend challenges are local casual runs by construction. */
+  friend_challenge?: FriendChallengeRunMetadata;
   /**
    * DC-2 era preset (default `all_time` = today's pool). The draft is
    * created against the matching era-filtered catalog via `getCatalogForEra`.
@@ -301,12 +648,32 @@ export interface SaveRunRecordResult {
 export function createNewRunRecord(
   gameData: GameData,
   params: CreateRunRecordParams,
+): Promise<CreateRunRecordResult> {
+  return withRunStoreLock(
+    () => {
+      throw new RunStoreCoordinationError(RUN_MUTATION_LOCK_UNAVAILABLE_WARNING);
+    },
+    () => createNewRunRecordUnlocked(gameData, params),
+  );
+}
+
+function createNewRunRecordUnlocked(
+  gameData: GameData,
+  params: CreateRunRecordParams,
 ): CreateRunRecordResult {
-  const storage = getStorage();
   const warnings: string[] = [];
+
+  if (params.friend_challenge !== undefined && params.ranked_attempt !== undefined) {
+    throw new RunRecordError("friend challenge runs cannot carry a ranked attempt");
+  }
 
   let lastErr: unknown = null;
   for (let attempt = 0; attempt < CREATE_RETRY_LIMIT; attempt += 1) {
+    // A counter-quota failure can switch the active transaction from durable
+    // storage to the coherent volatile snapshot. Re-resolve the transaction's
+    // backend on every draft retry so a later attempt cannot retain and write
+    // through the stale durable adapter.
+    const storage = getStorage();
     const seq = nextCounter(storage);
     const run_id = buildRunId(seq);
     const parent_seed =
@@ -336,8 +703,11 @@ export function createNewRunRecord(
         draft,
         ...(params.challenge === undefined ? {} : { challenge: params.challenge }),
         ...(params.ranked_attempt === undefined ? {} : { ranked_attempt: params.ranked_attempt }),
+        ...(params.friend_challenge === undefined
+          ? {}
+          : { friend_challenge: params.friend_challenge }),
       };
-      const save = saveRunRecord(record);
+      const save = saveNewRunRecordUnlocked(record);
       warnings.push(...save.warnings);
       return { record, persistence: save.persistence, warnings };
     } catch (err) {
@@ -358,72 +728,80 @@ export function createNewRunRecord(
   );
 }
 
-/** Load a `RunRecord`. Stale on any version-anchor mismatch — the record is evicted. */
+/** Pure read. Stale/invalid cleanup is owned by the awaited store repair boundary. */
 export function loadRunRecord(
   run_id: string,
   currentVersions: RunRecordVersions,
+): LoadRunRecordResult {
+  return loadRunRecordUnlocked(run_id, currentVersions, false);
+}
+
+function loadRunRecordUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  cleanupInvalidOrStale: boolean,
 ): LoadRunRecordResult {
   const storage = getStorage();
   const raw = storage.getItem(recordKey(run_id));
   if (!raw) return { status: "missing", record: null };
   const parsed = parseStoredRunRecord(raw, run_id);
   if (!parsed) {
-    evictRunRecord(storage, run_id);
+    if (cleanupInvalidOrStale) evictRunRecordUnlocked(storage, run_id);
     return { status: "invalid", record: null };
   }
   if (!versionsMatch(parsed.versions, currentVersions)) {
-    evictRunRecord(storage, run_id);
+    if (cleanupInvalidOrStale) evictRunRecordUnlocked(storage, run_id);
     return { status: "stale", record: null };
   }
   return { status: "loaded", record: parsed };
 }
 
-/** Persist a record. Best-effort durable; falls back to in-memory on quota / blocked storage. */
-export function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
-  const warnings: string[] = [];
+/**
+ * Persist a newly-created authority. Existing records must use a serialized
+ * mutation boundary; accepting them here would bypass cross-tab ownership.
+ */
+export function saveNewRunRecord(record: RunRecordV1): Promise<SaveRunRecordResult> {
+  return withRunStoreLock(
+    () => {
+      throw new RunStoreCoordinationError(RUN_MUTATION_LOCK_UNAVAILABLE_WARNING);
+    },
+    () => saveNewRunRecordUnlocked(record),
+  );
+}
+
+function saveNewRunRecordUnlocked(record: RunRecordV1): SaveRunRecordResult {
+  const storage = getStorage();
+  if (storage.getItem(recordKey(record.run_id)) !== null) {
+    throw new RunRecordError(`Run ${record.run_id} already exists; use a locked mutation boundary`);
+  }
+  return saveRunRecordUnlocked(record);
+}
+
+/** Internal whole-record write; callers must already own the store-wide mutation lock. */
+function saveRunRecordUnlocked(record: RunRecordV1): SaveRunRecordResult {
+  const warnings = activeStoreMutation?.warnings ?? [];
   let storage = getStorage();
   const key = recordKey(record.run_id);
   const payload = JSON.stringify(record);
   try {
-    storage.setItem(key, payload);
+    applyRunRecordSavePlan(storage, record, key, payload);
   } catch (err) {
-    if (isQuotaError(err)) {
-      // Try evicting oldest records and retry once before going volatile.
-      const idx = loadIndex(storage);
-      if (idx.entries.length > 0) {
-        const oldest = idx.entries[0]!;
-        if (oldest.run_id !== record.run_id) {
-          evictRunRecord(storage, oldest.run_id);
-          try {
-            storage.setItem(key, payload);
-          } catch (retryErr) {
-            if (isQuotaError(retryErr)) {
-              volatileMode = true;
-              storage = memoryBackend;
-              storage.setItem(key, payload);
-              warnings.push("storage quota exhausted: draft saved to this tab only");
-            } else {
-              throw new StorageQuotaError(
-                `Failed to persist run record after eviction retry: ${String(retryErr)}`,
-              );
-            }
-          }
-        } else {
-          volatileMode = true;
-          storage = memoryBackend;
-          storage.setItem(key, payload);
-          warnings.push("storage quota exhausted: draft saved to this tab only");
-        }
-      } else {
-        volatileMode = true;
-        storage = memoryBackend;
-        storage.setItem(key, payload);
-        warnings.push("storage quota exhausted: draft saved to this tab only");
-      }
-    } else {
+    if (!isQuotaError(err)) {
       throw new StorageUnavailableError(`Failed to persist run record: ${String(err)}`);
     }
+    storage = switchActiveMutationToVolatile(record.updated_seq);
+    applyRunRecordSavePlan(storage, record, key, payload);
   }
+  return { persistence: storage.isVolatile ? "volatile" : "durable", warnings: [...warnings] };
+}
+
+function applyRunRecordSavePlan(
+  storage: StorageBackend,
+  record: RunRecordV1,
+  key: string,
+  payload: string,
+): void {
+  setStoreItem(storage, key, payload);
   const idx = loadIndex(storage);
   const nextIdx = updateIndexEntry(idx, record);
   let unpinnedCount = nextIdx.entries.filter((entry) => entry.pinned !== true).length;
@@ -433,50 +811,271 @@ export function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
     );
     if (dropIndex === -1) break;
     const [drop] = nextIdx.entries.splice(dropIndex, 1);
-    if (drop) storage.removeItem(recordKey(drop.run_id));
+    if (drop) removeStoreItem(storage, recordKey(drop.run_id));
     unpinnedCount -= 1;
   }
-  try {
-    saveIndex(storage, nextIdx);
-  } catch (err) {
-    if (isQuotaError(err)) {
-      warnings.push("index update failed under quota");
-    } else {
-      throw err;
-    }
-  }
-  return { persistence: storage.isVolatile ? "volatile" : "durable", warnings };
+  saveIndex(storage, nextIdx);
 }
 
 export interface UpdateRunRecordResult {
-  status: "updated" | "missing" | "stale" | "invalid";
+  status: "updated" | "missing" | "stale" | "invalid" | "conflict";
   record: RunRecordV1 | null;
   persistence: "durable" | "volatile" | "none";
   warnings: string[];
 }
 
+function mutationLockUnavailableResult(): UpdateRunRecordResult {
+  return {
+    status: "conflict",
+    record: null,
+    persistence: "none",
+    warnings: [RUN_MUTATION_LOCK_UNAVAILABLE_WARNING],
+  };
+}
+
 /**
- * Read-modify-write the record. The updater returns the next `DraftState`; we
- * stamp `updated_seq` and persist.
+ * Persist an arrangement only while the run is pre-simulation.
+ *
+ * This read-modify-write boundary protects against both revisiting Review
+ * after completion and another tab completing the run between render and
+ * tap. A completed simulation is immutable evidence for its arrangement;
+ * changing only `a` would pair a stale score with a different XI.
  */
-export function updateRunRecord(
+export function setRunArrangement(
   run_id: string,
   currentVersions: RunRecordVersions,
-  updater: (current: RunRecordV1) => DraftState,
+  arrangement: TeamSheetArrangement,
+): Promise<UpdateRunRecordResult> {
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
+    setRunArrangementUnlocked(run_id, currentVersions, arrangement),
+  );
+}
+
+function setRunArrangementUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  arrangement: TeamSheetArrangement,
 ): UpdateRunRecordResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
   }
+  if (
+    loaded.record.simulation !== undefined ||
+    loaded.record.status === "simulating" ||
+    loaded.record.status === "complete"
+  ) {
+    return {
+      status: "conflict",
+      record: loaded.record,
+      persistence: "none",
+      warnings: ["Team-sheet arrangement is locked during and after simulation."],
+    };
+  }
+  const verified = verifyTeamSheetArrangement(loaded.record.draft, arrangement);
+  const storage = getStorage();
+  const next: RunRecordV1 = {
+    ...loaded.record,
+    updated_seq: nextCounter(storage),
+    arrangement: verified,
+  };
+  const save = saveRunRecordUnlocked(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
+/**
+ * Persist a Review team name against the current authoritative record.
+ *
+ * The caller may be a delayed debounce from a stale React render, so this
+ * boundary deliberately reloads storage and only replaces `draft.team_name`.
+ * Arrangement and every other run fact come from the authoritative record.
+ * Once simulation starts, even a pending debounce is rejected.
+ */
+export function setRunTeamName(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  teamName: string,
+): Promise<UpdateRunRecordResult> {
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
+    setRunTeamNameUnlocked(run_id, currentVersions, teamName),
+  );
+}
+
+function setRunTeamNameUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  teamName: string,
+): UpdateRunRecordResult {
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const status = loaded.status as "missing" | "stale" | "invalid";
+    return { status, record: null, persistence: "none", warnings: [] };
+  }
+  const current = loaded.record;
+  if (
+    current.simulation !== undefined ||
+    current.status === "simulating" ||
+    current.status === "complete"
+  ) {
+    return {
+      status: "conflict",
+      record: current,
+      persistence: "none",
+      warnings: ["Team name is locked during and after simulation."],
+    };
+  }
+  const nextTeamName = teamName.trim().slice(0, 32) || "Your XI";
+  const storage = getStorage();
+  if (nextTeamName === current.draft.team_name) {
+    return {
+      status: "updated",
+      record: current,
+      persistence: storage.isVolatile ? "volatile" : "durable",
+      warnings: [],
+    };
+  }
+  const next: RunRecordV1 = {
+    ...current,
+    updated_seq: nextCounter(storage),
+    draft: { ...current.draft, team_name: nextTeamName },
+  };
+  const save = saveRunRecordUnlocked(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
+export type BeginRunSimulationExpected = Pick<
+  RunRecordV1,
+  "updated_seq" | "status" | "arrangement"
+>;
+
+/**
+ * Under the shared store mutation lock, compare the exact rendered
+ * team-sheet revision and transition it to `simulating`. The returned record
+ * is the only record the caller may simulate: it is the same arrangement that
+ * now owns the lifecycle sequence.
+ */
+export function beginRunSimulation(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  expected: BeginRunSimulationExpected,
+  signal?: AbortSignal,
+): Promise<SetSimulationResult> {
+  return withRunStoreLock(
+    mutationLockUnavailableResult,
+    () => beginRunSimulationUnlocked(run_id, currentVersions, expected),
+    signal,
+  );
+}
+
+function beginRunSimulationUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  expected: BeginRunSimulationExpected,
+): SetSimulationResult {
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const status = loaded.status as "missing" | "stale" | "invalid";
+    return { status, record: null, persistence: "none", warnings: [] };
+  }
+  const current = loaded.record;
+  if (
+    current.simulation !== undefined ||
+    (current.status ?? "ready") !== (expected.status ?? "ready") ||
+    current.updated_seq !== expected.updated_seq ||
+    !sameArrangement(current.arrangement, expected.arrangement)
+  ) {
+    return {
+      status: "conflict",
+      record: current,
+      persistence: "none",
+      warnings: ["The team sheet changed before simulation could lock it."],
+    };
+  }
+  const storage = getStorage();
+  const next: RunRecordV1 = {
+    ...current,
+    updated_seq: nextCounter(storage),
+    status: "simulating",
+  };
+  const save = saveRunRecordUnlocked(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
+function sameArrangement(
+  left: TeamSheetArrangement | undefined,
+  right: TeamSheetArrangement | undefined,
+): boolean {
+  if (left === undefined || right === undefined) return left === right;
+  return left.length === right.length && left.every((cardId, index) => cardId === right[index]);
+}
+
+/**
+ * Apply a draft transition to the exact rendered ready revision while holding
+ * the same store lock as Review and simulation lifecycle mutations.
+ */
+export type UpdateRunDraftExpected = Pick<RunRecordV1, "updated_seq" | "status">;
+
+export function updateRunRecord(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  expected: UpdateRunDraftExpected,
+  updater: (current: RunRecordV1) => DraftState,
+): Promise<UpdateRunRecordResult> {
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
+    updateRunRecordUnlocked(run_id, currentVersions, expected, updater),
+  );
+}
+
+function updateRunRecordUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  expected: UpdateRunDraftExpected,
+  updater: (current: RunRecordV1) => DraftState,
+): UpdateRunRecordResult {
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const status = loaded.status as "missing" | "stale" | "invalid";
+    return { status, record: null, persistence: "none", warnings: [] };
+  }
+  const current = loaded.record;
+  if (
+    current.simulation !== undefined ||
+    current.status === "simulating" ||
+    current.status === "complete" ||
+    current.updated_seq !== expected.updated_seq ||
+    (current.status ?? "ready") !== (expected.status ?? "ready")
+  ) {
+    return {
+      status: "conflict",
+      record: current,
+      persistence: "none",
+      warnings: ["The draft changed before this pick could lock it."],
+    };
+  }
   const storage = getStorage();
   const nextSeq = nextCounter(storage);
   const next: RunRecordV1 = {
-    ...loaded.record,
+    ...current,
     updated_seq: nextSeq,
-    draft: updater(loaded.record),
+    draft: updater(current),
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -500,29 +1099,59 @@ export interface SetSimulationResult {
   warnings: string[];
 }
 
+export interface SimulationOwnership extends RunStatusOwnership {
+  readonly status: "simulating";
+}
+
 export function setRunSimulation(
   run_id: string,
   currentVersions: RunRecordVersions,
   simulation: PersistedSimulation,
-  ownership?: RunStatusOwnership,
+  ownership: SimulationOwnership,
+  signal?: AbortSignal,
+): Promise<SetSimulationResult> {
+  return withRunStoreLock(
+    mutationLockUnavailableResult,
+    () => setRunSimulationUnlocked(run_id, currentVersions, simulation, ownership),
+    signal,
+  );
+}
+
+function setRunSimulationUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  simulation: PersistedSimulation,
+  ownership: SimulationOwnership,
 ): SetSimulationResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const status = loaded.status as "missing" | "stale" | "invalid";
     return { status, record: null, persistence: "none", warnings: [] };
   }
-  if (ownership && !ownsRunStatus(loaded.record, ownership)) {
+  // The explicit nullish check is intentional: JavaScript callers can omit a
+  // TypeScript-required argument. No result may persist without proving it
+  // owns the exact `simulating` lifecycle sequence.
+  if (!ownership || ownership.status !== "simulating" || !ownsRunStatus(loaded.record, ownership)) {
     return { status: "conflict", record: loaded.record, persistence: "none", warnings: [] };
   }
   const storage = getStorage();
   const nextSeq = nextCounter(storage);
+  const managerPresenceBand: ManagerPresenceBand = loaded.record.draft.manager_card_id ? 1 : 0;
+  if (
+    simulation.matches.some(
+      (match) => match.team_facts?.manager_presence_band !== managerPresenceBand,
+    )
+  ) {
+    return { status: "invalid", record: loaded.record, persistence: "none", warnings: [] };
+  }
   const next: RunRecordV1 = {
     ...loaded.record,
     updated_seq: nextSeq,
     status: "complete",
+    manager_presence_band: managerPresenceBand,
     simulation,
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -540,21 +1169,30 @@ export interface RunStatusOwnership {
 export function setRunStatus(
   run_id: string,
   currentVersions: RunRecordVersions,
-  status: RunRecordStatus,
-  ownership?: RunStatusOwnership,
+  status: "ready",
+  ownership: SimulationOwnership,
+): Promise<SetSimulationResult> {
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
+    setRunStatusUnlocked(run_id, currentVersions, status, ownership),
+  );
+}
+
+function setRunStatusUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  status: "ready",
+  ownership: SimulationOwnership,
 ): SetSimulationResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const s = loaded.status as "missing" | "stale" | "invalid";
     return { status: s, record: null, persistence: "none", warnings: [] };
   }
-  if (ownership && !ownsRunStatus(loaded.record, ownership)) {
+  if (!ownership || ownership.status !== "simulating" || !ownsRunStatus(loaded.record, ownership)) {
     return { status: "conflict", record: loaded.record, persistence: "none", warnings: [] };
   }
-  // A simulation payload and any non-complete status form an invalid record.
-  // Refuse that transition even without ownership evidence so cleanup can
-  // never corrupt a completed result.
-  if (status !== "complete" && loaded.record.simulation !== undefined) {
+  // Cleanup can never remove an already-committed simulation payload.
+  if (loaded.record.simulation !== undefined) {
     return { status: "conflict", record: loaded.record, persistence: "none", warnings: [] };
   }
   const storage = getStorage();
@@ -564,7 +1202,7 @@ export function setRunStatus(
     updated_seq: nextSeq,
     status,
   };
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -581,16 +1219,30 @@ export function setRunPinned(
   run_id: string,
   currentVersions: RunRecordVersions,
   pinned: boolean,
+): Promise<SetSimulationResult> {
+  return withRunStoreLock(mutationLockUnavailableResult, () =>
+    setRunPinnedUnlocked(run_id, currentVersions, pinned),
+  );
+}
+
+function setRunPinnedUnlocked(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  pinned: boolean,
 ): SetSimulationResult {
-  const loaded = loadRunRecord(run_id, currentVersions);
+  const loaded = loadRunRecordUnlocked(run_id, currentVersions, true);
   if (loaded.status !== "loaded" || !loaded.record) {
     const s = loaded.status as "missing" | "stale" | "invalid";
     return { status: s, record: null, persistence: "none", warnings: [] };
   }
-  const next: RunRecordV1 = { ...loaded.record };
+  const storage = getStorage();
+  const next: RunRecordV1 = {
+    ...loaded.record,
+    updated_seq: nextCounter(storage),
+  };
   if (pinned) next.pinned = true;
   else delete next.pinned;
-  const save = saveRunRecord(next);
+  const save = saveRunRecordUnlocked(next);
   return {
     status: "updated",
     record: next,
@@ -617,9 +1269,8 @@ export interface ListRunRecordsResult {
 
 /**
  * Return the persisted `RunRecordV1`s for the current `currentVersions`,
- * newest first. Mismatched-version or otherwise-invalid records are evicted
- * in-place (mirrors `loadRunRecord` honest-state behavior); the index is
- * repaired in a single pass so subsequent reads stay clean.
+ * newest first. This render-safe read is pure; startup/history explicitly
+ * await `evictStaleRunRecords` to perform store-wide cleanup under the lock.
  *
  * This is the foundation under `lib/game/history.ts` — the UI never touches
  * `RUN_RECORD_PREFIX`/`RUN_INDEX_KEY` directly.
@@ -632,8 +1283,28 @@ export function listRunRecords(
   const storage = getStorage();
   const idx = loadIndex(storage);
 
-  // Newest first — `saveIndex` sorts ascending by `updated_seq`, so reverse.
-  const sorted = [...idx.entries].sort((a, b) => {
+  const candidates: RunRecordV1[] = [];
+  const warnings: string[] = [];
+  const seen = new Set<string>();
+
+  for (const entry of idx.entries) {
+    if (seen.has(entry.run_id)) continue;
+    seen.add(entry.run_id);
+    const raw = storage.getItem(recordKey(entry.run_id));
+    if (!raw) {
+      warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
+      continue;
+    }
+    const parsed = parseStoredRunRecord(raw, entry.run_id);
+    if (!parsed) {
+      warnings.push(`history: ignored malformed record '${entry.run_id}' pending cleanup`);
+      continue;
+    }
+    if (!versionsMatch(parsed.versions, currentVersions)) continue;
+    candidates.push(parsed);
+  }
+
+  candidates.sort((a, b) => {
     if (b.updated_seq !== a.updated_seq) return b.updated_seq - a.updated_seq;
     if (b.created_seq !== a.created_seq) return b.created_seq - a.created_seq;
     return b.run_id.localeCompare(a.run_id);
@@ -641,51 +1312,12 @@ export function listRunRecords(
 
   const records: RunRecordV1[] = [];
   let unpinnedReturned = 0;
-  const warnings: string[] = [];
-  const survivingIds = new Set<string>();
-  let indexDirty = false;
-
-  for (const entry of sorted) {
-    const raw = storage.getItem(recordKey(entry.run_id));
-    if (!raw) {
-      indexDirty = true;
-      warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
-      continue;
-    }
-    const parsed = parseStoredRunRecord(raw, entry.run_id);
-    if (!parsed) {
-      storage.removeItem(recordKey(entry.run_id));
-      indexDirty = true;
-      warnings.push(`history: evicted malformed record '${entry.run_id}'`);
-      continue;
-    }
-    if (!versionsMatch(parsed.versions, currentVersions)) {
-      storage.removeItem(recordKey(entry.run_id));
-      indexDirty = true;
-      continue;
-    }
+  for (const parsed of candidates) {
     if (parsed.pinned !== true && unpinnedReturned >= limit) {
-      survivingIds.add(entry.run_id);
       continue;
     }
     records.push(parsed);
     if (parsed.pinned !== true) unpinnedReturned += 1;
-    survivingIds.add(entry.run_id);
-  }
-
-  if (indexDirty) {
-    const repaired: RunRecordIndexV1 = {
-      record_version: RUN_RECORD_SCHEMA_VERSION,
-      entries: idx.entries
-        .filter((e) => survivingIds.has(e.run_id))
-        .sort((a, b) => a.updated_seq - b.updated_seq),
-    };
-    try {
-      saveIndex(storage, repaired);
-    } catch {
-      // Best-effort: a failure to write the repaired index just means the
-      // next read repeats the cleanup. Do not surface as a user-facing error.
-    }
   }
 
   return {
@@ -695,25 +1327,54 @@ export function listRunRecords(
   };
 }
 
-/** Drop every record whose version anchors don't match `currentVersions`. */
-export function evictStaleRunRecords(currentVersions: RunRecordVersions): void {
-  const storage = getStorage();
-  const idx = loadIndex(storage);
-  const fresh: RunRecordIndexEntry[] = [];
-  for (const entry of idx.entries) {
-    if (versionsMatch(entry.versions, currentVersions)) {
-      fresh.push(entry);
-    } else {
-      storage.removeItem(recordKey(entry.run_id));
-    }
-  }
-  if (fresh.length !== idx.entries.length) {
-    saveIndex(storage, { record_version: RUN_RECORD_SCHEMA_VERSION, entries: fresh });
-  }
+/** Repair malformed/missing/stale history while holding the store-wide lock. */
+export function evictStaleRunRecords(currentVersions: RunRecordVersions): Promise<string[]> {
+  return withRunStoreLock(
+    () => [RUN_MUTATION_LOCK_UNAVAILABLE_WARNING],
+    () => evictStaleRunRecordsUnlocked(currentVersions),
+  );
 }
 
-function evictRunRecord(storage: StorageBackend, run_id: string): void {
-  storage.removeItem(recordKey(run_id));
+function evictStaleRunRecordsUnlocked(currentVersions: RunRecordVersions): string[] {
+  const storage = getStorage();
+  const idx = loadIndex(storage);
+  const repaired: RunRecordIndexEntry[] = [];
+  const warnings: string[] = [];
+  const seen = new Set<string>();
+  for (const entry of idx.entries) {
+    if (seen.has(entry.run_id)) continue;
+    seen.add(entry.run_id);
+    const raw = storage.getItem(recordKey(entry.run_id));
+    if (!raw) {
+      warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
+      continue;
+    }
+    const record = parseStoredRunRecord(raw, entry.run_id);
+    if (!record) {
+      removeStoreItem(storage, recordKey(entry.run_id));
+      warnings.push(`history: evicted malformed record '${entry.run_id}'`);
+      continue;
+    }
+    if (!versionsMatch(record.versions, currentVersions)) {
+      removeStoreItem(storage, recordKey(entry.run_id));
+      continue;
+    }
+    repaired.push(indexEntryFromRecord(record));
+  }
+  repaired.sort((a, b) => {
+    if (a.updated_seq !== b.updated_seq) return a.updated_seq - b.updated_seq;
+    if (a.created_seq !== b.created_seq) return a.created_seq - b.created_seq;
+    return a.run_id.localeCompare(b.run_id);
+  });
+  const next = { record_version: RUN_RECORD_SCHEMA_VERSION, entries: repaired } as const;
+  if (JSON.stringify(next) !== JSON.stringify(idx)) {
+    saveIndex(storage, next);
+  }
+  return warnings;
+}
+
+function evictRunRecordUnlocked(storage: StorageBackend, run_id: string): void {
+  removeStoreItem(storage, recordKey(run_id));
   const idx = loadIndex(storage);
   const next = idx.entries.filter((e) => e.run_id !== run_id);
   if (next.length !== idx.entries.length) {
@@ -756,6 +1417,21 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     return null;
   }
 
+  let arrangement: TeamSheetArrangement | undefined;
+  if (value.arrangement !== undefined) {
+    if (
+      !Array.isArray(value.arrangement) ||
+      !value.arrangement.every((entry) => typeof entry === "string")
+    ) {
+      return null;
+    }
+    try {
+      arrangement = verifyTeamSheetArrangement(draft.data, value.arrangement);
+    } catch {
+      return null;
+    }
+  }
+
   let simulation: PersistedSimulation | undefined;
   if (value.simulation !== undefined) {
     const parsedSimulation = parsePersistedSimulation(value.simulation);
@@ -764,11 +1440,30 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
   }
   if (status === "complete" && simulation === undefined) return null;
   if (simulation !== undefined && status !== "complete") return null;
+  const managerPresenceBand =
+    value.manager_presence_band === undefined
+      ? undefined
+      : value.manager_presence_band === 0 || value.manager_presence_band === 1
+        ? value.manager_presence_band
+        : "invalid";
+  if (managerPresenceBand === "invalid") return null;
+  if (
+    managerPresenceBand !== undefined &&
+    (managerPresenceBand !== (draft.data.manager_card_id ? 1 : 0) ||
+      simulation?.matches.some(
+        (match) => match.team_facts?.manager_presence_band !== managerPresenceBand,
+      ))
+  ) {
+    return null;
+  }
 
   const challenge = parseRunChallenge(value.challenge, parent_seed);
   if (challenge === "invalid") return null;
   const rankedAttempt = parseRankedAttempt(value.ranked_attempt, parent_seed);
   if (rankedAttempt === "invalid") return null;
+  const friendChallenge = parseFriendChallenge(value.friend_challenge);
+  if (friendChallenge === "invalid") return null;
+  if (rankedAttempt !== undefined && friendChallenge !== undefined) return null;
   const pinned = parseOptionalBoolean(value.pinned);
   if (pinned === "invalid") return null;
 
@@ -780,9 +1475,12 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     updated_seq,
     versions,
     draft: draft.data,
+    ...(arrangement === undefined ? {} : { arrangement }),
+    ...(managerPresenceBand === undefined ? {} : { manager_presence_band: managerPresenceBand }),
     ...(status === undefined ? {} : { status }),
     ...(challenge === undefined ? {} : { challenge }),
     ...(rankedAttempt === undefined ? {} : { ranked_attempt: rankedAttempt }),
+    ...(friendChallenge === undefined ? {} : { friend_challenge: friendChallenge }),
     ...(pinned === undefined ? {} : { pinned }),
     ...(simulation === undefined ? {} : { simulation }),
   };
@@ -840,6 +1538,21 @@ function parseRankedAttempt(
     parent_seed: seed,
     expires_at: expiresAt,
   };
+}
+
+function parseFriendChallenge(value: unknown): FriendChallengeRunMetadata | undefined | "invalid" {
+  if (value === undefined) return undefined;
+  if (!isPlainObject(value)) return "invalid";
+  const token = boundedString(value.token, RUN_TOKEN_MAX_LEN);
+  const proof = boundedString(value.proof, SIGNED_FRIEND_CHALLENGE_MAX_LEN);
+  if (
+    token === null ||
+    !/^t\d{1,4}\./u.test(token) ||
+    proof === null ||
+    !isLikelySignedFriendChallenge(proof)
+  )
+    return "invalid";
+  return { token, proof };
 }
 
 function parseRunRecordVersions(value: unknown): RunRecordVersions | null {

@@ -1,7 +1,7 @@
 {
-  "$schema_doc": "manager-attrition asymmetric realism gate -- the gate sims the default/Career basis after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Rating anchors remain merit-v4.6 because no additional high-confidence owner rows resolved in this season lane. Runtime engine_version is engine-2026.06.30-manager-attrition.",
-  "engine_anchor": "manager-link band wiring plus lower persistent user-path injury attrition plus U5 choose-from-3 soft-floor spread",
-  "engine_version": "engine-2026.06.30-manager-attrition",
+  "$schema_doc": "Season 2 S3 Option A final asymmetric realism relock. The gate sims the default/Career basis after the stable manager-presence tactical tier and calibrated bench-availability mechanics. Lambda, scoring, progression semantics, and the pre-S3 semantic shape-band centers remain unchanged; exact policy populations and telemetry are re-locked to the final engine. Runtime engine_version is engine-2026.07.14-squad-depth.",
+  "engine_anchor": "Season 2 S3 manager-presence tactical tier plus calibrated bench availability and replacement contribution",
+  "engine_version": "engine-2026.07.14-squad-depth",
   "ensemble": {
     "seed_prefix": "wcdraft:realism:e3a:v1",
     "N_runs": 2000,
@@ -10,132 +10,136 @@
   "policies": {
     "strategicAutoDraft": {
       "_doc": "PASS-gate measurement target. Slot-fit best-available: for each spin, scan rolled_card_ids and pick max(positionCompatibility(eligible, slot_position) * rating[channel_for_slot]); tiebreak by overall DESC then card_id ASC. Manager-first flow + first-vacant slot order unchanged from canonical autoDraft.",
-      "qualifying": 1329,
-      "matches": 8846,
+      "qualifying": 1338,
+      "matches": 8883,
       "groupMatches": 6000,
-      "knockoutMatches": 2846,
-      "goalsTotal": 23716,
-      "draws": 1501,
-      "margin4plus": 368,
-      "koEt": 910,
-      "koShootout": 564,
+      "knockoutMatches": 2883,
+      "goalsTotal": 23818,
+      "draws": 1481,
+      "margin4plus": 386,
+      "koEt": 932,
+      "koShootout": 585,
       "observed": {
-        "goals_per_game": 2.6809857562740222,
-        "draw_pct": 0.25016666666666665,
-        "margin4plus_pct": 0.04160072349084332,
-        "ko_et_pct": 0.31974701335207306,
-        "shootout_pct": 0.19817287420941673
+        "goals_per_game": 2.681301362152426,
+        "draw_pct": 0.24683333333333332,
+        "margin4plus_pct": 0.043453788134639196,
+        "ko_et_pct": 0.3232743669788415,
+        "shootout_pct": 0.20291363163371487
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.03481799683472756,
-        "draw_pct": 0.011182823303488125,
-        "margin4plus_pct": 0.004246002138538209,
-        "ko_et_pct": 0.01748441172227628,
-        "shootout_pct": 0.014944280965397004
+        "goals_per_game": 0.03474745322849184,
+        "draw_pct": 0.01113273368311931,
+        "margin4plus_pct": 0.004326303311211633,
+        "ko_et_pct": 0.017422064728810836,
+        "shootout_pct": 0.01498014362616748
       },
       "telemetry": {
         "channelMean": {
-          "attack": 39.217,
-          "midfield": 42.0255,
-          "defense": 38.771,
-          "goalkeeping": 19.969
+          "attack": 39.1715,
+          "midfield": 41.9805,
+          "defense": 38.732,
+          "goalkeeping": 19.9375
         },
         "synergyMultiplierMean": 1.010280999999991,
-        "managerModifierMean": 1.0031287878787853,
+        "managerModifierMean": 1.0018772727272713,
         "coverageMean": 0.9518987227272753
       }
     },
     "autoDraft": {
       "_doc": "Canonical first-card autoDraft — TELEMETRY ONLY. Production engine fixture (byte-stable for goldens); a measurement artifact when used as the realism population (see docs/investigations/engine-v2-asymmetric-realism-2026-06-07.md).",
-      "qualifying": 326,
-      "matches": 6454,
+      "qualifying": 336,
+      "matches": 6473,
       "groupMatches": 6000,
-      "knockoutMatches": 454,
-      "goalsTotal": 17994,
-      "draws": 1150,
-      "margin4plus": 780,
-      "koEt": 117,
-      "koShootout": 65,
+      "knockoutMatches": 473,
+      "goalsTotal": 17997,
+      "draws": 1151,
+      "margin4plus": 768,
+      "koEt": 125,
+      "koShootout": 70,
       "observed": {
-        "goals_per_game": 2.7880384257824606,
-        "draw_pct": 0.19166666666666668,
-        "margin4plus_pct": 0.12085528354508832,
-        "ko_et_pct": 0.2577092511013216,
-        "shootout_pct": 0.14317180616740088
+        "goals_per_game": 2.780318245017766,
+        "draw_pct": 0.19183333333333333,
+        "margin4plus_pct": 0.11864668623513054,
+        "ko_et_pct": 0.2642706131078224,
+        "shootout_pct": 0.14799154334038056
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.04156855162891595,
-        "draw_pct": 0.010163023026493497,
-        "margin4plus_pct": 0.00811481309084975,
-        "ko_et_pct": 0.04105386952074781,
-        "shootout_pct": 0.032875903375962086
+        "goals_per_game": 0.04144999160952064,
+        "draw_pct": 0.010166392528180144,
+        "margin4plus_pct": 0.008038592610684141,
+        "ko_et_pct": 0.04054925813566189,
+        "shootout_pct": 0.03265425859125755
       },
       "telemetry": {
         "channelMean": {
-          "attack": 27.0225,
-          "midfield": 28.701,
-          "defense": 26.4545,
-          "goalkeeping": 14.138
+          "attack": 26.989,
+          "midfield": 28.6625,
+          "defense": 26.427,
+          "goalkeeping": 14.118
         },
         "synergyMultiplierMean": 1.010280999999991,
-        "managerModifierMean": 1.0031287878787853,
+        "managerModifierMean": 1.0018772727272713,
         "coverageMean": 0.9519744590909112
       }
     },
     "greedyOverallAutoDraft": {
       "_doc": "Position-blind max-overall NEGATIVE CONTROL. The gate ASSERTS this policy lands OUTSIDE every shape band, so nobody can 'fix' realism by maxing OVR — competent must mean slot-fit-aware, not max-overall.",
-      "qualifying": 500,
-      "matches": 6780,
+      "qualifying": 508,
+      "matches": 6783,
       "groupMatches": 6000,
-      "knockoutMatches": 780,
-      "goalsTotal": 20518,
-      "draws": 1153,
-      "margin4plus": 724,
-      "koEt": 207,
-      "koShootout": 118,
+      "knockoutMatches": 783,
+      "goalsTotal": 20510,
+      "draws": 1159,
+      "margin4plus": 708,
+      "koEt": 208,
+      "koShootout": 121,
       "observed": {
-        "goals_per_game": 3.0262536873156343,
-        "draw_pct": 0.19216666666666668,
-        "margin4plus_pct": 0.10678466076696165,
-        "ko_et_pct": 0.2653846153846154,
-        "shootout_pct": 0.15128205128205127
+        "goals_per_game": 3.023735810113519,
+        "draw_pct": 0.19316666666666665,
+        "margin4plus_pct": 0.10437859354268023,
+        "ko_et_pct": 0.2656449553001277,
+        "shootout_pct": 0.1545338441890166
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.04225399869238353,
-        "draw_pct": 0.010173122722444958,
-        "margin4plus_pct": 0.007501492358578337,
-        "ko_et_pct": 0.03161917799267053,
-        "shootout_pct": 0.025660084961182574
+        "goals_per_game": 0.04222707589263426,
+        "draw_pct": 0.010193243041530192,
+        "margin4plus_pct": 0.007424838986057699,
+        "ko_et_pct": 0.03156842700822766,
+        "shootout_pct": 0.025835033703939407
       },
       "telemetry": {
         "channelMean": {
-          "attack": 31.9735,
-          "midfield": 30.926,
-          "defense": 25.816,
-          "goalkeeping": 14.1675
+          "attack": 31.938,
+          "midfield": 30.889,
+          "defense": 25.7875,
+          "goalkeeping": 14.151
         },
         "synergyMultiplierMean": 1.010280999999991,
-        "managerModifierMean": 1.0031287878787853,
+        "managerModifierMean": 1.0018772727272713,
         "coverageMean": 0.9523607318181843
       }
     }
   },
   "shape_bands": {
-    "_doc": "manager-attrition relock: shape bands centered on strategicAutoDraft after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).",
+    "_doc": "Season 2 S3 deliberate realism re-lock: the final strategicAutoDraft observation was re-executed at N=2000 after the manager-presence and bench-calibration changes and still passes all pre-S3 semantic shape-band centers and widths. Those acceptance bands are therefore retained exactly rather than weakened or recentered around the new observation. Exact per-policy mechanics counts, telemetry, score population, Wilson evidence, and the goals/game floor are re-locked to the final engine.",
     "draw_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.25016666666666665,
       "half_width": 0.015
     },
     "margin4plus_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.04160072349084332,
       "half_width": 0.015
     },
     "ko_et_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.31974701335207306,
       "half_width": 0.01748441172227628
     },
     "shootout_pct": {
       "center_policy": "strategicAutoDraft",
+      "center": 0.19817287420941673,
       "half_width": 0.015
     }
   },
@@ -147,19 +151,19 @@
     "_doc": "StrategicAutoDraft score distribution measured over the same locked N and seed_prefix as the asymmetric realism gate. Median and p95 use nearest-rank quantiles over sorted run.score values.",
     "policy": "strategicAutoDraft",
     "runs": 2000,
-    "qualifyingRuns": 1329,
-    "mean": 14.4785,
+    "qualifyingRuns": 1338,
+    "mean": 14.8365,
     "median": 9,
     "p95": 62,
-    "min": -24,
+    "min": -26,
     "max": 126
   },
   "wilson_target_for_ko_metrics": {
-    "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. manager-attrition remeasures the strategicAutoDraft observed half-widths after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread.",
+    "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. Season 2 S3 remeasures these widths on the final manager-presence and bench-calibrated engine while retaining the previously locked semantic shape bands.",
     "target_half_width_pp": 4,
     "observed_half_width_pp": {
-      "ko_et_pct": 1.75,
-      "shootout_pct": 1.49
+      "ko_et_pct": 1.74,
+      "shootout_pct": 1.5
     }
   }
 }
