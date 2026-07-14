@@ -1205,6 +1205,39 @@ describe("ranked account gate", () => {
     expect((await allAttempts())[0]!.consumedAt).toBeNull();
   });
 
+  it("cannot turn a disclosed friend seed into ranked through a normal issued attempt", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({
+        email: "friend-seed-ranked@example.com",
+        username: "friend_seed_ranked",
+        emailVerifiedAt: VERIFIED_AT,
+      })
+      .returning();
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = bodyForRecord(
+      "wcdraft:friend:disclosed-seed",
+      {},
+      {
+        mode: "ranked",
+        display_alias: undefined,
+        display_name: undefined,
+      },
+    );
+    await issueRankedAttemptForBody({
+      userId: inserted[0]!.id,
+      sessionId,
+      body,
+      parentSeed: "wcdraft:ranked:v1:server-issued-different-seed",
+    });
+
+    const response = await handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps());
+    expect(response.status).toBe(403);
+    expect((await errorOf(response)).error).toBe("BAD_ATTEMPT");
+    expect(await allRows()).toHaveLength(0);
+    expect((await allAttempts())[0]!.consumedAt).toBeNull();
+  });
+
   it("rejects a superseded live seed before simulation and leaves attempts unconsumed", async () => {
     const inserted = await db
       .insert(users)

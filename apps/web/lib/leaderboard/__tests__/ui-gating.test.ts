@@ -177,6 +177,20 @@ describe("LeaderboardSubmitPanel (container)", () => {
     expect(html).toContain(`${record.simulation!.run.score}`);
   });
 
+  it("keeps seed-disclosed friend challenge runs on the casual lane", () => {
+    const record: RunRecordV1 = {
+      ...simulatedRecord("classic"),
+      friend_challenge: {
+        token: "t3.parent-token",
+        proof: `fc1.${"a".repeat(64)}.${"A".repeat(43)}`,
+      },
+    };
+    const html = renderToStaticMarkup(createElement(LeaderboardSubmitPanel, { gameData, record }));
+    expect(html).toContain("Friend challenge · Casual board only");
+    expect(html).toContain("Post casual run");
+    expect(html).not.toContain(">Ranked<");
+  });
+
   it("is ABSENT (not disabled) when version anchors mismatch the bundle", () => {
     const record = simulatedRecord("classic");
     const skewed: RunRecordV1 = {

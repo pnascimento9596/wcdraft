@@ -640,13 +640,15 @@ describe("trusted run OG signing", () => {
 
     const first = await handleRunOgSignPost(request(), ogSignDeps(allowOnce));
     expect(first.status).toBe(200);
-    const firstBody = (await first.json()) as { signed?: unknown };
+    const firstBody = (await first.json()) as { signed?: unknown; challenge_proof?: unknown };
     expect(typeof firstBody.signed).toBe("string");
+    expect(firstBody.challenge_proof).toMatch(/^fc1\.[0-9a-f]{64}\.[A-Za-z0-9_-]{43}$/u);
 
     const second = await handleRunOgSignPost(request(), ogSignDeps(denyIfCalled));
     expect(second.status).toBe(200);
-    const secondBody = (await second.json()) as { signed?: unknown };
+    const secondBody = (await second.json()) as { signed?: unknown; challenge_proof?: unknown };
     expect(secondBody.signed).toBe(firstBody.signed);
+    expect(secondBody.challenge_proof).toBe(firstBody.challenge_proof);
     expect(quotaCalls).toBe(1);
   });
 

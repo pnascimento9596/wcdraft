@@ -68,6 +68,12 @@ import { encodeRunToken } from "@/lib/game/run-token";
 import { listRunRecords, setRunPinned } from "@/lib/game/run-record";
 import { projectTeamSheetDraft } from "@/lib/game/team-sheet";
 import { mirrorRunPinToServer } from "@/lib/game/save-mirror";
+import {
+  FRIEND_CHALLENGE_VERIFICATION_COPY,
+  verifyFriendChallenge,
+  type VerifiedFriendChallengeSetup,
+} from "@/lib/game/friend-challenge";
+import { ChallengeFriendButton } from "./challenge-friend-button";
 import s from "./game.module.css";
 
 // MemoryReveal renders only for blind-mode runs (see below). Lazy-load it so
@@ -551,6 +557,10 @@ function ResultsBody({
         <LocalProgressBand summary={progressSummary} compact />
       </div>
 
+      {record.friend_challenge ? (
+        <ChallengeHeadToHead parent={record.friend_challenge} recipientScore={sim.run.score} />
+      ) : null}
+
       {!isBlindDraftMode(presentationDraft.mode) ? <MemoryProgressionPanel /> : null}
 
       {/* ── Memory-mode reveal ────────────────────────────────────────────
@@ -668,12 +678,90 @@ function ResultsBody({
           <Link href={shareHref(linkRunValue)} className={`btn btn--primary ${s.sharePrimary}`}>
             Share
           </Link>
+          <ChallengeFriendButton record={record} />
           <Link href={historyHref()} className="btn btn--ghost">
             View History
           </Link>
         </div>
       </section>
     </div>
+  );
+}
+
+function ChallengeHeadToHead({
+  parent,
+  recipientScore,
+}: {
+  parent: NonNullable<RunRecordV1["friend_challenge"]>;
+  recipientScore: number;
+}) {
+  const [state, setState] = useState<
+    | { kind: "loading" }
+    | { kind: "ready"; challenge: VerifiedFriendChallengeSetup }
+    | { kind: "error" }
+  >({ kind: "loading" });
+  useEffect(() => {
+    const controller = new AbortController();
+    setState({ kind: "loading" });
+    void verifyFriendChallenge(parent, controller.signal).then((result) => {
+      if (!controller.signal.aborted)
+        setState(result.ok ? { kind: "ready", challenge: result.challenge } : { kind: "error" });
+    });
+    return () => {
+      controller.abort();
+    };
+  }, [parent.proof, parent.token]);
+  if (state.kind === "loading")
+    return (
+      <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
+        <span className={s.eyebrowAccent}>Head to head</span>
+        <p role="status">Verifying your friend&apos;s run…</p>
+      </section>
+    );
+  if (state.kind === "error")
+    return (
+      <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
+        <span className={s.eyebrowAccent}>Head to head</span>
+        <p role="status">Comparison unavailable — the friend challenge could not be verified.</p>
+      </section>
+    );
+  if (state.challenge.status === "DIFFERENT_BUILD")
+    return (
+      <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
+        <span className={s.eyebrowAccent}>Head to head</span>
+        <h2 className={s.panelTitle}>Different build</h2>
+        <p>
+          Your friend played on a different build. Your score is {recipientScore} pts; their score
+          is not compared.
+        </p>
+      </section>
+    );
+  const challengerScore = state.challenge.challengerScore;
+  const result =
+    recipientScore > challengerScore
+      ? "You won this board"
+      : recipientScore === challengerScore
+        ? "Board tied"
+        : "Your friend leads this board";
+  return (
+    <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
+      <span className={s.eyebrowAccent}>Verified head to head</span>
+      <h2 className={s.panelTitle}>{result}</h2>
+      <div className={s.friendScoreGrid}>
+        <div>
+          <span>You</span>
+          <strong>{recipientScore}</strong>
+          <small>pts</small>
+        </div>
+        <span aria-hidden="true">vs</span>
+        <div>
+          <span>{state.challenge.challengerDisplay}</span>
+          <strong>{challengerScore}</strong>
+          <small>pts</small>
+        </div>
+      </div>
+      <p className={s.friendVerifyNote}>{FRIEND_CHALLENGE_VERIFICATION_COPY}</p>
+    </section>
   );
 }
 
