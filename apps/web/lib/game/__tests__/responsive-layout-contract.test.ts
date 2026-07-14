@@ -194,6 +194,6 @@ describe("responsive layout contract", () => {
       /\.modeCard:not\(\.modeCardFeatured\) \.modeTag \{[^}]*\}/u.exec(sharedGameCss)?.[0] ?? "";
 
     expect(compactTopRule).toContain("padding-right: 0");
-    expect(compactTagRule).toContain("max-width: calc(100% - 40px)");
+    expect(compactTagRule).toContain("max-width: calc(100% - 44px)");
   });
 });

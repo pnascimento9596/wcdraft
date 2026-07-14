@@ -39,7 +39,9 @@ No denylisted file and no player-facing draft, review, results, share, or team-s
 
 The defect came from the compact two-column composition: the `01` and `03` status pills were allowed to occupy the full card width while the numerals were absolutely painted in that same top-right region. At baseline the pill crossed 10px into the numeral's bounding box at 360 and 390px, and 5px at 430px.
 
-The final rule reserves `40px` from the pill's maximum width at the mobile/short-landscape breakpoint. The reservation is scoped to `.modeTag`, not the whole `.modeCardTop`; this preserves the full width for the mode name below. The Daily card retains a separate `50px` header reservation for `00`.
+The original isolated rule reserved `40px` from the pill's maximum width at the mobile/short-landscape breakpoint. After R1 mobile compaction merged, the combined 3px vertical rhythm left only 1.8px of horizontal clearance in Chromium. The final integrated rule reserves `44px`, restoring approximately 5.8px of clearance. The reservation remains scoped to `.modeTag`, not the whole `.modeCardTop`, so the mode name below retains full width. The Daily card keeps its separate `50px` header reservation for `00`.
+
+The R1 rebase conflict was resolved by preserving R1's `gap: 3px` compaction and R2's `padding-right: 0` pill-only layout. A fresh 30-card Chromium matrix at 360/390/430 in both themes then confirmed zero intersections, zero undersized card targets, zero horizontal overflow, and zero console errors with the `44px` reservation.
 
 An initial implementation reserved the entire non-featured header. Browser validation rejected it because the 360px ranked pill became three lines high, card height grew, and the sticky dock overlapped the cards by 6px. That iteration was not retained. The final pill-only reservation restores a two-line ranked pill and clears the strict dock gate.
 

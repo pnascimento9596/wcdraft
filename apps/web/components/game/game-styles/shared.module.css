@@ -815,7 +815,7 @@
 
   .modeCard:not(.modeCardFeatured) .modeTag {
     /* The tag alone shares the numeral row; titles below keep the full card width. */
-    max-width: calc(100% - 40px);
+    max-width: calc(100% - 44px);
     padding: 3px 6px;
     font-size: 8.5px;
     line-height: 1.2;
