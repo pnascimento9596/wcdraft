@@ -7,7 +7,8 @@ runbook="$repo_root/docs/runbooks/neon-restore-vercel-rollback.md"
 workflow="$repo_root/.github/workflows/ci.yml"
 combined_bash="$(mktemp)"
 route_block_file="$(mktemp)"
-trap 'rm -f "$combined_bash" "$route_block_file"' EXIT
+traffic_config_block="$(mktemp)"
+trap 'rm -f "$combined_bash" "$route_block_file" "$traffic_config_block"' EXIT
 
 awk '
   /^```bash$/ { inside = 1; next }
@@ -76,6 +77,8 @@ assert_inverse_route_order() {
 require_literal 'Set COUPLED_ORDER=database-first, application-first, or traffic-stopped.'
 require_literal 'COUPLED_ORDER is only valid with APPLICATION_PAIRING=rollback.'
 require_literal 'TRAFFIC_SUSPENSION_EXPECTED_HTTP must be exactly 503.'
+require_literal 'require_traffic_suspension_configuration() {'
+require_literal 'require_traffic_suspension_configuration'
 require_literal 'x-wcdraft-traffic-suspended'
 require_literal 'https://www.wcdraft.com/api/health'
 require_literal 'https://www.wcdraft.com/api/og/health'
@@ -86,6 +89,34 @@ require_literal 'require_traffic_suspension_receipt traffic-stopped-before-verce
 require_literal 'TRAFFIC_RESUMED_ACK=yes'
 require_literal 'Set INVERSE_COUPLED_ORDER=database-first, application-first, or traffic-stopped.'
 require_literal 'INVERSE_TRAFFIC_RESUMED_ACK=yes'
+
+sed -n \
+  '/^require_traffic_suspension_configuration() {/,/^}/p' \
+  "$runbook" >"$traffic_config_block"
+bash -s -- "$traffic_config_block" <<'BASH'
+set -euo pipefail
+source "$1"
+
+expect_rejected() {
+  if require_traffic_suspension_configuration >/dev/null 2>&1; then
+    echo 'traffic suspension configuration unexpectedly accepted.' >&2
+    exit 1
+  fi
+}
+
+TRAFFIC_SUSPENSION_EXPECTED_HTTP=503
+TRAFFIC_SUSPENSION_MARKER=
+expect_rejected
+TRAFFIC_SUSPENSION_MARKER=too-short
+expect_rejected
+TRAFFIC_SUSPENSION_MARKER='invalid.marker-that-is-long-enough-123456'
+expect_rejected
+TRAFFIC_SUSPENSION_MARKER=valid_marker_0123456789abcdef0123456789
+TRAFFIC_SUSPENSION_EXPECTED_HTTP=404
+expect_rejected
+TRAFFIC_SUSPENSION_EXPECTED_HTTP=503
+require_traffic_suspension_configuration
+BASH
 
 if rg -Fq 'TRAFFIC_SUSPENSION_PROBE_URL' "$runbook"; then
   echo 'traffic suspension must use fixed canonical endpoints, not a caller-supplied URL.' >&2
@@ -98,6 +129,7 @@ rg -Fq 'run: scripts/ci/neon-vercel-recovery-runbook.test.sh' "$workflow" || {
 }
 
 require_count 2 'curl --fail-with-body -sS --request POST \'
+require_count 3 'require_traffic_suspension_configuration'
 require_count 1 'restore_neon_primary() {'
 require_count 1 'restore_neon_primary_from_preserved() {'
 require_count 1 'vercel rollback "$RESTORE_COMPATIBLE_DEPLOYMENT" \'

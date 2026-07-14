@@ -222,9 +222,27 @@ verify_application_pairing() {
   require_application_pairing_receipts "$receipt_name" "$expected_deployment"
 }
 
+require_traffic_suspension_configuration() {
+  test "${TRAFFIC_SUSPENSION_EXPECTED_HTTP:-}" = 503 || {
+    echo 'TRAFFIC_SUSPENSION_EXPECTED_HTTP must be exactly 503.' >&2
+    return 1
+  }
+  case "${TRAFFIC_SUSPENSION_MARKER:-}" in
+    *[!A-Za-z0-9_-]* | '')
+      echo 'TRAFFIC_SUSPENSION_MARKER must use only A-Z, a-z, 0-9, _ or -.' >&2
+      return 1
+      ;;
+  esac
+  [ "${#TRAFFIC_SUSPENSION_MARKER}" -ge 32 ] || {
+    echo 'TRAFFIC_SUSPENSION_MARKER must be an incident-unique value of at least 32 characters.' >&2
+    return 1
+  }
+}
+
 require_traffic_suspension_receipt() {
   local receipt_name="$1"
   local endpoint expected_url receipt
+  require_traffic_suspension_configuration
   for endpoint in health og-health; do
     case "$endpoint" in
       health) expected_url='https://www.wcdraft.com/api/health' ;;
@@ -250,6 +268,7 @@ probe_traffic_suspension_endpoint() {
   local headers="$incident_dir/$receipt_name-traffic-suspension-$endpoint-headers.txt"
   local body="$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt"
   local observed_http header_marker body_contains_marker
+  require_traffic_suspension_configuration
   observed_http="$(curl -sS \
     --proto '=https' --tlsv1.2 --max-time 30 \
     --dump-header "$headers" --output "$body" \
