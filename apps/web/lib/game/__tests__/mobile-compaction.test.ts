@@ -28,6 +28,13 @@ describe("mobile compaction contract", () => {
     expect(playPageCss).not.toContain("100vh");
   });
 
+  it("reserves the physical bottom safe area without changing rectangular-viewport density", () => {
+    expect(homeHeroCss).toContain("--home-safe-area-bottom: env(safe-area-inset-bottom, 0px);");
+    expect(homeHeroCss).toContain("padding-block-end: max(0.5rem, var(--home-safe-area-bottom));");
+    expect(homeHeroCss).toContain("calc(0.5rem - var(--home-safe-area-bottom) / 8)");
+    expect(homeHeroCss).toContain("calc(0.42rem - var(--home-safe-area-bottom) / 16)");
+  });
+
   it("keeps all five modes visible instead of introducing a disclosure control", () => {
     expect(modeCss).toContain("Daily plus the four repeatable modes");
     expect(modeCss).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
@@ -41,7 +48,12 @@ describe("mobile compaction contract", () => {
 
   it("tightens only the animated poster rhythm at the 360px breakpoint", () => {
     const foldRule = heroSpinCss.slice(heroSpinCss.indexOf("@media (max-width: 380px)"));
-    expect(foldRule).toContain(".demo {\n    gap: 0.25rem;\n    padding: 0.35rem;");
+    expect(foldRule).toContain(
+      "gap: max(0.1rem, calc(0.25rem - var(--home-safe-area-bottom, 0px) / 12));",
+    );
+    expect(foldRule).toContain(
+      "padding: max(0.2rem, calc(0.35rem - var(--home-safe-area-bottom, 0px) / 12));",
+    );
     expect(foldRule).toContain(".card .faceFlag");
     expect(foldRule).toContain(".position {\n    font-size: 1.25rem;");
     expect(foldRule).not.toContain(".poster {\n");

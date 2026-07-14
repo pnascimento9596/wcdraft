@@ -20,6 +20,7 @@ const viewports = [
 ] as const;
 const themes: readonly Theme[] = ["light", "dark"];
 const motions: readonly Motion[] = ["full", "reduced"];
+const safeAreaBottoms = [0, 34] as const;
 const axeCdn = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js";
 
 async function main(): Promise<void> {
@@ -40,41 +41,47 @@ async function main(): Promise<void> {
     for (const viewport of viewports) {
       for (const theme of themes) {
         for (const motion of motions) {
-          const context = await browser.newContext({
-            viewport: { width: viewport.width, height: viewport.height },
-            colorScheme: theme,
-            reducedMotion: motion === "reduced" ? "reduce" : "no-preference",
-            isMobile: true,
-            hasTouch: true,
-            deviceScaleFactor: 1,
-          });
-          await context.addInitScript((selectedTheme: Theme) => {
-            window.localStorage.setItem("wcdraft:theme", selectedTheme);
-          }, theme);
-          const page = await context.newPage();
-          const errors: string[] = [];
-          page.on("console", (message) => {
-            if (
-              message.type() === "error" &&
-              !message.text().startsWith("Failed to load resource:")
-            ) {
-              errors.push(message.text());
+          for (const safeAreaBottom of safeAreaBottoms) {
+            const context = await browser.newContext({
+              viewport: { width: viewport.width, height: viewport.height },
+              colorScheme: theme,
+              reducedMotion: motion === "reduced" ? "reduce" : "no-preference",
+              isMobile: true,
+              hasTouch: true,
+              deviceScaleFactor: 1,
+            });
+            await context.addInitScript((selectedTheme: Theme) => {
+              window.localStorage.setItem("wcdraft:theme", selectedTheme);
+            }, theme);
+            const page = await context.newPage();
+            const errors: string[] = [];
+            page.on("console", (message) => {
+              if (
+                message.type() === "error" &&
+                !message.text().startsWith("Failed to load resource:")
+              ) {
+                errors.push(message.text());
+              }
+            });
+            page.on("pageerror", (error) => errors.push(error.message));
+            await page.goto(baseUrl, { waitUntil: "networkidle" });
+            await page.getByRole("heading", { name: /Draft your/u }).waitFor();
+            if (safeAreaBottom > 0) {
+              await page.addStyleTag({
+                content: `.hero { --home-safe-area-bottom: ${safeAreaBottom.toString()}px !important; }`,
+              });
             }
-          });
-          page.on("pageerror", (error) => errors.push(error.message));
-          await page.goto(baseUrl, { waitUntil: "networkidle" });
-          await page.getByRole("heading", { name: /Draft your/u }).waitFor();
-          await page
-            .locator(
-              motion === "reduced"
-                ? '[data-hero-spin-poster][data-reduced-motion="true"]'
-                : "[data-hero-spin-loop]",
-            )
-            .waitFor();
-          await page.evaluate(() => document.fonts.ready);
-          await page.waitForTimeout(100);
-          await page.addScriptTag({ content: axeSource });
-          const axeViolations = (await page.evaluate(`(async () => {
+            await page
+              .locator(
+                motion === "reduced"
+                  ? '[data-hero-spin-poster][data-reduced-motion="true"]'
+                  : "[data-hero-spin-loop]",
+              )
+              .waitFor();
+            await page.evaluate(() => document.fonts.ready);
+            await page.waitForTimeout(100);
+            await page.addScriptTag({ content: axeSource });
+            const axeViolations = (await page.evaluate(`(async () => {
             const result = await window.axe.run(document, {
               runOnly: { type: "tag", values: ["wcag2a", "wcag2aa"] },
             });
@@ -83,13 +90,15 @@ async function main(): Promise<void> {
             );
           })()`)) as string[];
 
-          const measured = (await page.evaluate(`(() => {
+            const measured = (await page.evaluate(`(() => {
             const doc = document.documentElement;
             const body = document.body;
             const hero = document.querySelector(".hero");
             const demo = document.querySelector("[data-hero-spin-demo]");
             const animatedDemo = document.querySelector("[data-hero-spin-loop]");
             const poster = document.querySelector("[data-hero-spin-poster]");
+            const heroInner = document.querySelector(".hero__inner");
+            const heroLive = document.querySelector(".hero__live");
             const animatedRows = animatedDemo
               ? [...animatedDemo.children].map((element) => ({
                   className: element.className,
@@ -130,55 +139,81 @@ async function main(): Promise<void> {
               animatedDemo: rect(animatedDemo),
               animatedRows,
               poster: rect(poster),
+              heroInner: rect(heroInner),
+              heroLive: rect(heroLive),
               requiredCtaBottom: Math.max(...actions.map((element) => element.getBoundingClientRect().bottom)),
               requiredCtasInViewport: actions.every(
                 (element) => element.getBoundingClientRect().bottom <= window.innerHeight,
               ),
               smallTargets,
+              heroPaddingBottom: hero ? getComputedStyle(hero).paddingBottom : null,
+              homeSafeAreaBottom: hero
+                ? getComputedStyle(hero).getPropertyValue("--home-safe-area-bottom").trim()
+                : null,
             };
           })()`)) as {
-            scrollHeight: number;
-            clientHeight: number;
-            verticalOverflow: number;
-            scrollWidth: number;
-            clientWidth: number;
-            maxScrollWidth: number;
-            horizontalOverflow: boolean;
-            hero: { top: number; bottom: number; width: number; height: number } | null;
-            demo: { top: number; bottom: number; width: number; height: number } | null;
-            animatedDemo: { top: number; bottom: number; width: number; height: number } | null;
-            animatedRows: readonly {
-              className: string;
-              top: number;
-              bottom: number;
-              height: number;
-            }[];
-            poster: { top: number; bottom: number; width: number; height: number } | null;
-            requiredCtaBottom: number;
-            requiredCtasInViewport: boolean;
-            smallTargets: readonly { text: string; width: number; height: number }[];
-          };
-          const screenshot = path.join(
-            screenshotsDir,
-            `${phase}-home-${viewport.name}-${theme}-${motion}.png`,
-          );
-          await page.screenshot({ path: screenshot });
-          const row = {
-            viewport: viewport.name,
-            viewportWidth: viewport.width,
-            viewportHeight: viewport.height,
-            theme,
-            motion,
-            screenshot: path.relative(repoRoot, screenshot),
-            axeViolations,
-            consoleErrors: errors,
-            ...measured,
-          };
-          measurements.push(row);
-          console.log(
-            `[home-fold:${phase}] ${viewport.name} ${theme} ${motion} overflow=${measured.verticalOverflow.toString()}px horizontal=${measured.horizontalOverflow ? "fail" : "pass"} targets=${measured.smallTargets.length.toString()}`,
-          );
-          await context.close();
+              scrollHeight: number;
+              clientHeight: number;
+              verticalOverflow: number;
+              scrollWidth: number;
+              clientWidth: number;
+              maxScrollWidth: number;
+              horizontalOverflow: boolean;
+              hero: { top: number; bottom: number; width: number; height: number } | null;
+              demo: { top: number; bottom: number; width: number; height: number } | null;
+              animatedDemo: { top: number; bottom: number; width: number; height: number } | null;
+              animatedRows: readonly {
+                className: string;
+                top: number;
+                bottom: number;
+                height: number;
+              }[];
+              poster: { top: number; bottom: number; width: number; height: number } | null;
+              heroInner: { top: number; bottom: number; width: number; height: number } | null;
+              heroLive: { top: number; bottom: number; width: number; height: number } | null;
+              requiredCtaBottom: number;
+              requiredCtasInViewport: boolean;
+              smallTargets: readonly { text: string; width: number; height: number }[];
+              heroPaddingBottom: string | null;
+              homeSafeAreaBottom: string | null;
+            };
+            const importantContentBottom = Math.max(
+              measured.heroInner?.bottom ?? 0,
+              measured.heroLive?.bottom ?? 0,
+            );
+            const safeAreaBoundary = viewport.height - safeAreaBottom;
+            const safeAreaClearance = safeAreaBoundary - importantContentBottom;
+            const safeAreaPaddingApplied =
+              safeAreaBottom === 0 ||
+              Number.parseFloat(measured.heroPaddingBottom ?? "0") >= safeAreaBottom;
+            const screenshot = path.join(
+              screenshotsDir,
+              `${phase}-home-${viewport.name}-${theme}-${motion}${safeAreaBottom > 0 ? `-safe${safeAreaBottom.toString()}` : ""}.png`,
+            );
+            await page.screenshot({ path: screenshot });
+            const row = {
+              viewport: viewport.name,
+              viewportWidth: viewport.width,
+              viewportHeight: viewport.height,
+              theme,
+              motion,
+              safeAreaBottom,
+              safeAreaBoundary,
+              importantContentBottom,
+              safeAreaClearance,
+              importantContentAboveSafeArea: safeAreaClearance >= 0,
+              safeAreaPaddingApplied,
+              screenshot: path.relative(repoRoot, screenshot),
+              axeViolations,
+              consoleErrors: errors,
+              ...measured,
+            };
+            measurements.push(row);
+            console.log(
+              `[home-fold:${phase}] ${viewport.name} ${theme} ${motion} safe=${safeAreaBottom.toString()}px overflow=${measured.verticalOverflow.toString()}px safeClearance=${safeAreaClearance.toFixed(2)}px safePadding=${safeAreaPaddingApplied ? "pass" : "fail"} horizontal=${measured.horizontalOverflow ? "fail" : "pass"} targets=${measured.smallTargets.length.toString()}`,
+            );
+            await context.close();
+          }
         }
       }
     }
@@ -199,6 +234,8 @@ async function main(): Promise<void> {
         verticalOverflow: number;
         horizontalOverflow: boolean;
         requiredCtasInViewport: boolean;
+        importantContentAboveSafeArea: boolean;
+        safeAreaPaddingApplied: boolean;
         smallTargets: readonly unknown[];
         axeViolations: readonly unknown[];
         consoleErrors: readonly unknown[];
@@ -207,6 +244,8 @@ async function main(): Promise<void> {
         row.verticalOverflow !== 0 ||
         row.horizontalOverflow ||
         !row.requiredCtasInViewport ||
+        !row.importantContentAboveSafeArea ||
+        !row.safeAreaPaddingApplied ||
         row.smallTargets.length > 0 ||
         row.axeViolations.length > 0 ||
         row.consoleErrors.length > 0
