@@ -80,22 +80,24 @@ describe("createNewRunRecord + token round-trip under a non-default era (DC-2)",
     era_preset: "modern",
   });
 
-  it("records the preset on the DraftState and bounds every spin", () => {
-    expect(created.record.draft.era_preset).toBe("modern");
-    for (const spin of created.record.draft.spins) {
+  it("records the preset on the DraftState and bounds every spin", async () => {
+    const resolved = await created;
+    expect(resolved.record.draft.era_preset).toBe("modern");
+    for (const spin of resolved.record.draft.spins) {
       const year = tournamentYear(spin.tournament_id);
       expect(year).toBeGreaterThanOrEqual(2018);
       expect(spin.rare).toBe(false);
     }
   });
 
-  it("a completed modern-era run tokenizes with ef modern and replays byte-identically", () => {
+  it("a completed modern-era run tokenizes with ef modern and replays byte-identically", async () => {
     // Complete the draft deterministically through the engine's default
     // policy against the SAME modern catalog the record was created with.
     const catalog = getCatalogForEra(gameData, "modern");
-    let draft = created.record.draft;
+    const resolved = await created;
+    let draft = resolved.record.draft;
     while (!isDraftComplete(draft)) draft = stepDraft(catalog, draft);
-    const record = { ...created.record, draft };
+    const record = { ...resolved.record, draft };
 
     const token = encodeRunToken(record);
     const decoded = decodeRunToken(token);
@@ -109,8 +111,8 @@ describe("createNewRunRecord + token round-trip under a non-default era (DC-2)",
 });
 
 describe("pick-path catalog coherence (DC-2 regression guard)", () => {
-  it("a modern-era draft picked against the UNFILTERED catalog diverges or throws — the UI must use getCatalogForEra", () => {
-    const created = createNewRunRecord(gameData, {
+  it("a modern-era draft picked against the UNFILTERED catalog diverges or throws — the UI must use getCatalogForEra", async () => {
+    const created = await createNewRunRecord(gameData, {
       formation_id: "4-3-3",
       mode: "classic",
       era_preset: "modern",
@@ -142,12 +144,13 @@ describe("spin-reveal era label (DC-2 honest copy)", () => {
     mode: "classic",
     era_preset: "modern",
   });
-  const spin = created.record.draft.spins[0]!;
 
-  it("non-default preset surfaces its label; default stays null (unchanged rendering)", () => {
+  it("non-default preset surfaces its label; default stays null (unchanged rendering)", async () => {
+    const resolved = await created;
+    const spin = resolved.record.draft.spins[0]!;
     const modernModel = buildSlotRevealModel({
       activeSpin: spin,
-      allSpins: created.record.draft.spins,
+      allSpins: resolved.record.draft.spins,
       indexes: gameData.indexes,
       totalPicks: 17,
       eraPreset: "modern",
@@ -157,7 +160,7 @@ describe("spin-reveal era label (DC-2 honest copy)", () => {
 
     const defaultModel = buildSlotRevealModel({
       activeSpin: spin,
-      allSpins: created.record.draft.spins,
+      allSpins: resolved.record.draft.spins,
       indexes: gameData.indexes,
       totalPicks: 17,
     });

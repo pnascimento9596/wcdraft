@@ -29,7 +29,9 @@ const authContext = vi.hoisted(() => ({
   refresh: vi.fn(async () => undefined),
 }));
 
-type CreateRunResult = ReturnType<(typeof import("@/lib/game/run-record"))["createNewRunRecord"]>;
+type CreateRunResult = Awaited<
+  ReturnType<(typeof import("@/lib/game/run-record"))["createNewRunRecord"]>
+>;
 const runRecordSeam = vi.hoisted(() => ({
   result: null as CreateRunResult | null,
   calls: 0,
@@ -84,7 +86,9 @@ vi.mock("@/lib/game/run-record", async (importOriginal) => {
     ...actual,
     createNewRunRecord: (...args: Parameters<typeof actual.createNewRunRecord>) => {
       runRecordSeam.calls += 1;
-      return runRecordSeam.result ?? actual.createNewRunRecord(...args);
+      return runRecordSeam.result
+        ? Promise.resolve(runRecordSeam.result)
+        : actual.createNewRunRecord(...args);
     },
   };
 });

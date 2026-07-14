@@ -20,6 +20,7 @@ import type { RunRecordVersions } from "../data";
 import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
+import { asDraftedTeamSheet } from "../team-sheet";
 import {
   buildRunTokenBody,
   decodeRunToken,
@@ -226,6 +227,25 @@ describe("run-token — Open Draft t4 replay", () => {
     expect(body.pl).toHaveLength(17);
     expect(body.pl.some((p) => p.k === "m" && "mc" in p)).toBe(true);
     expect(body.pl.filter((p) => p.k === "p").every((p) => "c" in p)).toBe(true);
+  });
+
+  it("re-shares an arranged t4 virtual record without dropping a or mp", () => {
+    const arrangement = [...asDraftedTeamSheet(origin.draft)];
+    [arrangement[0], arrangement[11]] = [arrangement[11]!, arrangement[0]!];
+    const arranged: RunRecordV1 = {
+      ...origin,
+      arrangement,
+      manager_presence_band: 1,
+    };
+    const token = encodeRunToken(arranged);
+    const decoded = decodeRunToken(token);
+    if (decoded === null || decoded.v !== 4) throw new Error("expected arranged t4 token");
+
+    const virtual = virtualRecordFromToken(decoded, gameData);
+    expect(virtual.draft).toEqual(origin.draft);
+    expect(virtual.arrangement).toEqual(arrangement);
+    expect(virtual.manager_presence_band).toBe(1);
+    expect(encodeRunToken(virtual)).toBe(token);
   });
 
   it("round-trips and reconstructs Open Draft and Blind Open byte-for-byte", () => {

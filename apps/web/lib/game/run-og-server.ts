@@ -10,8 +10,7 @@ import {
 import type { ValidationData } from "../leaderboard/validate";
 import {
   decodeRunToken,
-  reconstructDraftFromToken,
-  runTokenManagerPresenceAgrees,
+  reconcileRunToken,
   versionsAgree,
   type RunTokenOgSummary,
   type RunTokenV3Body,
@@ -52,7 +51,7 @@ export function verifyRunTokenForOg(
 
   let draft;
   try {
-    draft = reconstructDraftFromToken(token, data.gameData);
+    draft = reconcileRunToken(token, data.gameData);
   } catch {
     return { status: "rejected", reason: "ILLEGAL_PICK" };
   }
@@ -76,7 +75,9 @@ export function verifyRunTokenForOg(
       ruleset_version: data.gameData.versions.ruleset_version,
     });
     const result = runTournamentFull(draft, scenario, token.ps, world);
-    if (!runTokenManagerPresenceAgrees(token, result.matches)) {
+    try {
+      reconcileRunToken(token, data.gameData, result.matches);
+    } catch {
       return { status: "rejected", reason: "ILLEGAL_PICK" };
     }
     const narrativeLabels = buildNarrativeLabels(data.gameData, data.scenario, draft);
