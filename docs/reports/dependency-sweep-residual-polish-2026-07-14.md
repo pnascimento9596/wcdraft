@@ -3,7 +3,9 @@
 Date: 2026-07-14
 Repository: `pnascimento9596/wcdraft`
 Gate-0 baseline: `81a3b5a22647218597cca92481589d2caf837aa5`
-Production dependency-sweep head before this report: `7d0fe9ce94a2dce6d29062c298f83442c8dd77bd`
+Dependency implementation production head: `7d0fe9ce94a2dce6d29062c298f83442c8dd77bd`
+Closure-report/config production merge: `2a07422019ada83cb76ff49f916e3243d3c483d0`
+Final anti-churn policy: PR #297
 
 ## Outcome
 
@@ -26,10 +28,15 @@ Dependabot regenerated incidental PRs after the new grouping took effect. #287
 (`actions/setup-node` v7) was closed because it is an ESM major; compatible
 v6.5.0 shipped instead. #288 was closed after its nine in-scope updates were
 superseded, with a correction noting three newly surfaced Capacitor patches were
-not merged. #290 then isolated Prettier 3.9.5 plus those three mobile patches.
-Exact-version ignores now prevent those known versions from recreating while
-leaving later versions eligible; #290 is to be closed after this configuration
-lands.
+not merged. #290 then isolated Prettier 3.9.5 plus those three mobile patches
+and auto-closed when PR #291 merged the first exact-version policy. Dependabot
+then fell back to Prettier 3.9.4 in #293 and recreated the already rejected
+setup-node 7 and TypeScript 7 majors as #292 and #294. Root-workspace discovery
+also surfaced the previously rejected Zod 4 and `@types/node` 26 majors as #295
+and #296. The final stabilization therefore defers only the affected Prettier
+3.9, setup-node 7, TypeScript 7, Zod 4, and `@types/node` 26 lines; later lines
+stay eligible. The three Capacitor 8.4.2 ignores remain exact because no
+fallback version exists above the current 8.4.1 pin.
 
 ## Gate 0 — measured baseline
 
@@ -88,9 +95,10 @@ The compatible npm candidate was
    v6.5.0 security/dependency refresh at
    `249970729cb0ef3589644e2896645e5dc5ba9c38` shipped across all nine uses with
    no workflow-semantic change.
-5. Prettier 3.9.5 was not allowed to redefine the format contract in a dependency
-   sweep. Exact 3.8.4 is pinned; Dependabot ignores only 3.9.5, not all future
-   Prettier releases.
+5. Prettier 3.9 was not allowed to redefine the format contract in a dependency
+   sweep. Exact 3.8.4 is pinned; Dependabot ignores only the measured-drifting
+   3.9 line, leaving 3.10 and later eligible for an independently measured
+   decision.
 6. Capacitor 8.4.2 patches first appeared after the original seven-PR baseline.
    They were not self-served because mobile is a separately gated lane. Exact
    8.4.2 ignores prevent repeated PR recreation while later fixes remain
@@ -100,6 +108,11 @@ The compatible npm candidate was
    without reducing production exposure.
 8. `git worktree prune` was skipped because the metadata inspection found no
    prunable or missing worktree record.
+9. Dependabot recreated rejected major lines after the first closure merge.
+   Exact major-line ranges for setup-node 7, TypeScript 7, Zod 4, and
+   `@types/node` 26 prevent fallback/recreation without hiding later major
+   lines. This is the least-behavior-changing policy that makes the empty-ledger
+   state durable.
 
 ## Determinism guard
 
@@ -189,6 +202,17 @@ The independent fresh-context reviewer returned verbatim:
 That reviewer additionally passed DB 161/161 and a PGlite-backed web subset
 135/135 and verified registry integrity for the updated packages.
 
+### Final anti-churn policy
+
+Review fix-forward exposed an ecosystem-specific requirement-parser boundary.
+The first cross-model pass rejected comma-separated ranges for npm because npm
+requires its own standard range syntax. After those entries moved to npm
+`x`-ranges, the fresh independent reviewer proved that GitHub Actions delegates
+to Ruby `Gem::Requirement`, where `7.x` is not a functional major-line range.
+The final candidate therefore uses npm `x`-ranges for npm dependencies and
+`>= 7.0.0, < 8.0.0` for setup-node. Both failed SHAs were invalidated; the final
+exact-head reviewers re-executed after both fixes.
+
 ## D2 — post-sweep supply-chain baseline
 
 ### JavaScript / pnpm
@@ -234,17 +258,17 @@ Gitleaks incremental scan and GitGuardian both passed on #289's exact head.
 | Item                                    | Result                               | Evidence / action                                                                                                                                                                                                                           |
 | --------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Owner worktree metadata                 | Skipped because absent               | `git worktree list --porcelain` showed no `prunable` entry and every listed path existed. `git worktree prune` was therefore not run.                                                                                                       |
-| Prettier pin                            | Done                                 | Root manifest is exact `"prettier": "3.8.4"`; repo-wide format check passed. A read-only 3.9.5 probe found 21 files of drift. Dependabot ignores exact 3.9.5.                                                                               |
+| Prettier pin                            | Done                                 | Root manifest is exact `"prettier": "3.8.4"`; repo-wide format check passed. A read-only 3.9.5 probe found 21 files of drift. Dependabot defers the 3.9 line while leaving 3.10+ eligible.                                                  |
 | `STATE.md` / `SIM_CALIBRATION.md` truth | Already current; no calibration edit | Both identify Season 2 Squad Depth and `engine-2026.07.14-squad-depth`; they record S1 availability, `MANAGER_MODIFIER.BAND = 0.06`, the per-match mean absolute win-probability movement metric, and drafted-manager presence + link tier. |
-| Report/artifact tidiness                | No change needed                     | 794 tracked report artifacts; zero empty regular files, zero broken symlinks, and zero merge-conflict markers in reports/STATE/calibration. No history was deleted or reorganized.                                                          |
+| Report/artifact tidiness                | No change needed                     | 795 tracked report artifacts; zero empty regular files, zero broken symlinks, and zero merge-conflict markers in reports/STATE/calibration. No history was deleted or reorganized.                                                          |
 
 ## Production live verification
 
-After each dependency merge, Vercel reached READY before live checks. The final
-dependency production check returned:
+After each dependency merge, Vercel reached READY before live checks. PR #291's
+closure-report/config merge also reached READY and returned:
 
 - `/api/health`: `ok=true`, exact build SHA
-  `7d0fe9ce94a2dce6d29062c298f83442c8dd77bd`, DB `ready`;
+  `2a07422019ada83cb76ff49f916e3243d3c483d0`, DB `ready`;
 - anchors: schema `runtime-data-2.10.0`, dataset `2026-07-01`, engine
   `engine-2026.07.14-squad-depth`, historical rating `wc-perf-6.6.0`, projected
   rating `proj-career-5.6.0`, ruleset `ruleset-2026.06.04`, current season
@@ -268,20 +292,26 @@ deletion.
 | `ws-meta/deps-actions-batch`        | `92a93925…` | #286 / `bf646847…` | Recovery logged; remote/local branch and worktree removed. |
 | `ws-meta/deps-npm-safe`             | `24f557c2…` | #289 / `7d0fe9ce…` | Recovery logged; remote/local branch and worktree removed. |
 | `ws-meta/dependency-sweep-20260714` | `81a3b5a2…` | Gate-0 only        | Empty-diff recovery logged; local branch/worktree removed. |
+| `ws-meta/depsweep-final`            | `69c5edf5…` | #291 / `2a074220…` | Recovery logged; remote/local branch and worktree removed. |
 
 Original Dependabot heads were captured in PR metadata before or through their
 immutable PR refs: #165 `ea89ea7e…`, #166 `d5eb5bed…`, #211 `ed5a0635…`, #221
 `d7ca3bdb…`, #222 `825948d1…`, #223 `0fa112b7…`, and #224 `5d16c7c2…`.
-Regenerated #287/#288 were closed with reasons and their remote branches were
-deleted automatically. `delete_branch_on_merge=true`. All eight protected tags
-remain: `audit-s1-base`, `audit-s1-wave-a` through `audit-s1-wave-e`,
-`season2-base`, and `season2-ship`.
+Regenerated #287/#288/#290 were closed with reasons and their remote branches
+were deleted automatically. Immediate fallback/recreation PRs #292–#296 are
+closed by the final range stabilization and are not represented as shipped.
+`delete_branch_on_merge=true`. All eight protected tags remain:
+`audit-s1-base`, `audit-s1-wave-a` through `audit-s1-wave-e`, `season2-base`,
+and `season2-ship`.
 
 ## Risks and carryovers
 
 - Two esbuild advisories remain in development-only paths; both are explicit in
   D2 and absent from `pnpm audit --prod`.
-- Prettier 3.9.5 is intentionally ignored until a dedicated format migration.
+- Prettier 3.9 is intentionally deferred until a dedicated format migration.
+- setup-node 7, TypeScript 7, Zod 4, and `@types/node` 26 remain intentionally
+  at their existing major compatibility boundaries; later major lines remain
+  eligible.
 - Capacitor 8.4.2 patches are intentionally deferred to the separately gated
   mobile lane; they are not represented as shipped.
 - Physical Mobile Safari press feel cannot be proven by Chromium/WebKit desktop
