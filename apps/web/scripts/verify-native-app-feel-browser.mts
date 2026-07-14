@@ -5,7 +5,14 @@ import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
-import { chromium, type Browser, type Locator, type Page } from "playwright-core";
+import {
+  chromium,
+  webkit,
+  type Browser,
+  type BrowserType,
+  type Locator,
+  type Page,
+} from "playwright-core";
 
 const require = createRequire(import.meta.url);
 const appRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -15,6 +22,9 @@ const nextBin = require.resolve("next/dist/bin/next");
 const host = "127.0.0.1";
 const phase = process.env.WCDRAFT_NATIVE_APP_FEEL_PHASE ?? "after";
 const strict = process.env.WCDRAFT_NATIVE_APP_FEEL_STRICT === "1";
+const browserEngine = process.env.WCDRAFT_NATIVE_APP_FEEL_ENGINE ?? "chromium";
+const baseUrlOverride = process.env.WCDRAFT_NATIVE_APP_FEEL_BASE_URL;
+const serverMode = process.env.WCDRAFT_NATIVE_APP_FEEL_SERVER ?? "dev";
 const outDir =
   process.env.WCDRAFT_NATIVE_APP_FEEL_OUT_DIR ??
   path.join(repoRoot, "docs/reports/native-app-feel-r3", phase);
@@ -71,6 +81,27 @@ type PressMetric = {
   readonly failures: readonly string[];
 };
 
+type PageContractMetric = {
+  readonly viewport: string;
+  readonly theme: string;
+  readonly failures: readonly string[];
+};
+
+type OverscrollMetric = {
+  readonly viewport: string;
+  readonly theme: string;
+  readonly input: string;
+  readonly scrollX: number;
+  readonly scrollY: number;
+  readonly visualViewportOffsetTop: number;
+  readonly shellTop: number;
+  readonly failure: string | null;
+};
+
+const pressAssertionCount = 8;
+const pageAssertionCount = 7;
+const overscrollAssertionCount = 1;
+
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
@@ -99,15 +130,32 @@ async function stopProcess(proc: ChildProcessWithoutNullStreams): Promise<void> 
 }
 
 async function startServer(): Promise<{ baseUrl: string; stop: () => Promise<void> }> {
+  assert(serverMode === "dev" || serverMode === "production", `unknown server mode: ${serverMode}`);
   const port = await findFreePort();
   const baseUrl = `http://${host}:${port.toString()}`;
   const nextEnv = await readFile(nextEnvPath).catch(() => null);
   const proc = spawn(
     process.execPath,
-    [nextBin, "dev", "--webpack", "--hostname", host, "--port", port.toString()],
+    [
+      nextBin,
+      serverMode === "production" ? "start" : "dev",
+      ...(serverMode === "dev" ? ["--webpack"] : []),
+      "--hostname",
+      host,
+      "--port",
+      port.toString(),
+    ],
     {
       cwd: appRoot,
-      env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },
+      env: {
+        ...process.env,
+        NEXT_TELEMETRY_DISABLED: "1",
+        // Production CSP upgrades HTTP subresources to HTTPS. The deployed
+        // site is HTTPS, but this loopback-only harness is not; report-only
+        // keeps the real policy visible without breaking local hydration in
+        // WebKit by rewriting assets to https://127.0.0.1.
+        ...(serverMode === "production" ? { WCDRAFT_CSP_REPORT_ONLY: "1" } : {}),
+      },
       stdio: ["ignore", "pipe", "pipe"],
     },
   );
@@ -129,7 +177,7 @@ async function startServer(): Promise<{ baseUrl: string; stop: () => Promise<voi
     const deadline = Date.now() + 120_000;
     while (Date.now() < deadline) {
       if (proc.exitCode !== null)
-        throw new Error(`Next dev exited ${proc.exitCode.toString()}\n${logs}`);
+        throw new Error(`Next ${serverMode} exited ${proc.exitCode.toString()}\n${logs}`);
       try {
         const response = await fetch(baseUrl, { signal: AbortSignal.timeout(2_000) });
         if (response.status < 500) break;
@@ -138,7 +186,8 @@ async function startServer(): Promise<{ baseUrl: string; stop: () => Promise<voi
       }
       await delay(500);
     }
-    if (Date.now() >= deadline) throw new Error(`timed out waiting for Next dev\n${logs}`);
+    if (Date.now() >= deadline)
+      throw new Error(`timed out waiting for Next ${serverMode}\n${logs}`);
     return { baseUrl, stop };
   } catch (error) {
     await stop();
@@ -166,7 +215,8 @@ async function readState(target: Locator): Promise<ElementState> {
       css: {
         tapHighlight: style.getPropertyValue("-webkit-tap-highlight-color"),
         touchAction: style.touchAction,
-        userSelect: style.userSelect,
+        userSelect:
+          style.getPropertyValue("user-select") || style.getPropertyValue("-webkit-user-select"),
         transform: style.transform,
         filter: style.filter,
         opacity: style.opacity,
@@ -228,6 +278,8 @@ async function pressWithoutNavigation(
   const before = await readState(target);
   await page.mouse.move(x, y);
   await page.mouse.down();
+  // WebKit applies :active synchronously but can defer the computed paint
+  // value for controls inside momentum-scroll regions until the next frame.
   await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
   const active = await readState(target);
   await page.mouse.up();
@@ -250,8 +302,8 @@ async function pressWithoutNavigation(
   const activeStateChanged = activeChanged(before, active);
   const horizontalOverflow = before.documentWidth > before.viewportWidth;
   const failures = [
-    before.css.tapHighlight !== "rgba(0, 0, 0, 0)"
-      ? `tap highlight=${before.css.tapHighlight}`
+    [before, active, focused, after].some((state) => state.css.tapHighlight !== "rgba(0, 0, 0, 0)")
+      ? `tap highlight=${before.css.tapHighlight}/${active.css.tapHighlight}/${focused.css.tapHighlight}/${after.css.tapHighlight}`
       : null,
     before.css.touchAction !== "manipulation" ? `touch-action=${before.css.touchAction}` : null,
     before.css.userSelect !== "none" ? `user-select=${before.css.userSelect}` : null,
@@ -280,54 +332,146 @@ async function pressWithoutNavigation(
   };
 }
 
-async function assertPageContracts(page: Page, viewportHeight: number): Promise<readonly string[]> {
-  return await page.evaluate((expectedHeight) => {
-    const shell = document.querySelector<HTMLElement>(".shell");
-    const prose = document.querySelector<HTMLElement>(".hero__sub");
-    const viewport = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
-    if (!shell || !prose || !viewport) return ["missing shell, prose, or viewport meta"];
-    const shellStyle = getComputedStyle(shell);
-    const bodyStyle = getComputedStyle(document.body);
-    const htmlStyle = getComputedStyle(document.documentElement);
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(prose);
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-    const selectedCharacters = selection?.toString().trim().length ?? 0;
-    selection?.removeAllRanges();
-    const content = viewport.content.toLowerCase();
-    return [
-      shellStyle.minHeight !== `${expectedHeight.toString()}px`
-        ? `shell min-height=${shellStyle.minHeight}`
-        : null,
-      shellStyle.overscrollBehavior !== "none"
-        ? `shell overscroll=${shellStyle.overscrollBehavior}`
-        : null,
-      bodyStyle.overscrollBehavior !== "none"
-        ? `body overscroll=${bodyStyle.overscrollBehavior}`
-        : null,
-      htmlStyle.overscrollBehavior !== "none"
-        ? `html overscroll=${htmlStyle.overscrollBehavior}`
-        : null,
-      getComputedStyle(prose).userSelect === "none" ? "prose user-select is none" : null,
-      selectedCharacters === 0 ? "prose range could not be selected" : null,
-      content.includes("user-scalable=no") || content.includes("maximum-scale=1")
-        ? `zoom disabled by viewport: ${viewport.content}`
-        : null,
-    ].filter((failure): failure is string => failure !== null);
-  }, viewportHeight);
+async function assertPageContracts(
+  page: Page,
+  viewport: (typeof viewports)[number],
+  theme: (typeof themes)[number],
+): Promise<PageContractMetric> {
+  return await page.evaluate(
+    ({ expectedHeight, viewportName, themeName }) => {
+      const shell = document.querySelector<HTMLElement>(".shell");
+      const prose = document.querySelector<HTMLElement>(".hero__sub");
+      const viewport = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
+      if (!shell || !prose || !viewport) {
+        return {
+          viewport: viewportName,
+          theme: themeName,
+          failures: ["missing shell, prose, or viewport meta"],
+        };
+      }
+      const shellStyle = getComputedStyle(shell);
+      const bodyStyle = getComputedStyle(document.body);
+      const htmlStyle = getComputedStyle(document.documentElement);
+      const selection = window.getSelection();
+      const proseStyle = getComputedStyle(prose);
+      const range = document.createRange();
+      range.selectNodeContents(prose);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+      const selectedCharacters = selection?.toString().trim().length ?? 0;
+      selection?.removeAllRanges();
+      const content = viewport.content.toLowerCase();
+      const failures = [
+        Math.abs(Number.parseFloat(shellStyle.minHeight) - expectedHeight) > 0.01
+          ? `shell min-height=${shellStyle.minHeight}`
+          : null,
+        shellStyle.overscrollBehavior !== "none"
+          ? `shell overscroll=${shellStyle.overscrollBehavior}`
+          : null,
+        bodyStyle.overscrollBehavior !== "none"
+          ? `body overscroll=${bodyStyle.overscrollBehavior}`
+          : null,
+        htmlStyle.overscrollBehavior !== "none"
+          ? `html overscroll=${htmlStyle.overscrollBehavior}`
+          : null,
+        (proseStyle.getPropertyValue("user-select") ||
+          proseStyle.getPropertyValue("-webkit-user-select")) === "none"
+          ? "prose user-select is none"
+          : null,
+        selectedCharacters === 0 ? "prose range could not be selected" : null,
+        content.includes("user-scalable=no") || content.includes("maximum-scale=1")
+          ? `zoom disabled by viewport: ${viewport.content}`
+          : null,
+      ].filter((failure): failure is string => failure !== null);
+      return { viewport: viewportName, theme: themeName, failures };
+    },
+    { expectedHeight: viewport.height, viewportName: viewport.name, themeName: theme },
+  );
 }
 
-const server = await startServer();
+async function measureBoundaryOverscroll(
+  browser: Browser,
+  baseUrl: string,
+  viewport: (typeof viewports)[number],
+  theme: (typeof themes)[number],
+): Promise<OverscrollMetric> {
+  // Playwright rejects mouse.wheel in a mobile WebKit context. Exercise each
+  // engine in a sibling context at the exact same CSS viewport instead; the
+  // physical-iPhone residual remains explicit.
+  const context = await browser.newContext({
+    viewport: { width: viewport.width, height: viewport.height },
+    colorScheme: theme,
+    reducedMotion: "reduce",
+    hasTouch: true,
+    deviceScaleFactor: 1,
+  });
+  try {
+    await context.addInitScript((value) => localStorage.setItem("wcdraft:theme", value), theme);
+    const page = await context.newPage();
+    await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
+    await page.getByRole("heading", { name: /Draft your/u }).waitFor();
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.mouse.move(viewport.width / 2, viewport.height / 2);
+    await page.mouse.wheel(0, -600);
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        ),
+    );
+    return await page.evaluate(
+      ({ viewportName, themeName, browserEngine }) => {
+        const shell = document.querySelector<HTMLElement>(".shell");
+        const metric = {
+          viewport: viewportName,
+          theme: themeName,
+          input: `wheel boundary attempt in an exact-size ${browserEngine} context`,
+          scrollX: window.scrollX,
+          scrollY: window.scrollY,
+          visualViewportOffsetTop: window.visualViewport?.offsetTop ?? 0,
+          shellTop: shell?.getBoundingClientRect().top ?? 0,
+        };
+        const displaced =
+          metric.scrollX !== 0 ||
+          metric.scrollY !== 0 ||
+          Math.abs(metric.visualViewportOffsetTop) > 0.01 ||
+          Math.abs(metric.shellTop) > 0.01;
+        return {
+          ...metric,
+          failure: displaced
+            ? `boundary overscroll displaced viewport: ${JSON.stringify(metric)}`
+            : null,
+        };
+      },
+      { viewportName: viewport.name, themeName: theme, browserEngine },
+    );
+  } finally {
+    await context.close();
+  }
+}
+
+assert(
+  browserEngine === "chromium" || browserEngine === "webkit",
+  `unknown browser engine: ${browserEngine}`,
+);
+assert(serverMode === "dev" || serverMode === "production", `unknown server mode: ${serverMode}`);
+const browserType: BrowserType = browserEngine === "webkit" ? webkit : chromium;
+const server = baseUrlOverride
+  ? { baseUrl: baseUrlOverride.replace(/\/$/u, ""), stop: async () => {} }
+  : await startServer();
 let browser: Browser | null = null;
 const metrics: PressMetric[] = [];
-const pageFailures: string[] = [];
+const pageMetrics: PageContractMetric[] = [];
+const overscrollMetrics: OverscrollMetric[] = [];
+let launchedBrowserVersion: string;
 try {
-  browser = await chromium.launch({
-    channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
+  browser = await browserType.launch({
+    ...(browserEngine === "chromium"
+      ? { channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome" }
+      : {}),
     headless: true,
   });
+  launchedBrowserVersion = browser.version();
   await mkdir(path.join(outDir, "screenshots"), { recursive: true });
   for (const viewport of viewports) {
     for (const theme of themes) {
@@ -344,11 +488,7 @@ try {
 
       await page.goto(`${server.baseUrl}/`, { waitUntil: "networkidle" });
       await page.getByRole("heading", { name: /Draft your/u }).waitFor();
-      pageFailures.push(
-        ...(await assertPageContracts(page, viewport.height)).map(
-          (failure) => `${viewport.name} ${theme}: ${failure}`,
-        ),
-      );
+      pageMetrics.push(await assertPageContracts(page, viewport, theme));
       await page.screenshot({
         path: path.join(outDir, "screenshots", `${phase}-home-${viewport.name}-${theme}.png`),
         fullPage: false,
@@ -387,9 +527,14 @@ try {
       await menuToggle.waitFor();
       await menuToggle.click();
       const openMenu = page.locator("#mobile-menu:not([hidden])");
-      if (!(await openMenu.isVisible())) {
+      const firstPressOpened = await openMenu
+        .waitFor({ state: "visible", timeout: 2_000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!firstPressOpened) {
         // The pathname-closing effect can settle in the same frame as the
-        // first hydration-time press. Re-press only when it demonstrably won.
+        // first hydration-time press. Re-press only after WebKit has had a
+        // bounded paint window and the first press demonstrably did not win.
         await page.getByRole("button", { name: "Open menu" }).click();
       }
       await openMenu.waitFor();
@@ -404,6 +549,9 @@ try {
         }),
       );
       await context.close();
+      overscrollMetrics.push(
+        await measureBoundaryOverscroll(browser, server.baseUrl, viewport, theme),
+      );
     }
   }
 } finally {
@@ -414,16 +562,34 @@ try {
   }
 }
 
-const failures = [...pageFailures, ...metrics.flatMap((metric) => metric.failures)];
+const failures = [
+  ...pageMetrics.flatMap((metric) =>
+    metric.failures.map((failure) => `${metric.viewport} ${metric.theme}: ${failure}`),
+  ),
+  ...overscrollMetrics.flatMap((metric) =>
+    metric.failure === null ? [] : [`${metric.viewport} ${metric.theme}: ${metric.failure}`],
+  ),
+  ...metrics.flatMap((metric) => metric.failures),
+];
+const assertionCount =
+  metrics.length * pressAssertionCount +
+  pageMetrics.length * pageAssertionCount +
+  overscrollMetrics.length * overscrollAssertionCount;
 const payload = {
   phase,
-  browserEngine: "Chromium via Playwright (mobile emulation, not Mobile Safari)",
+  browserEngine:
+    browserEngine === "webkit"
+      ? `WebKit ${launchedBrowserVersion} via Playwright (real WebKit engine; not a physical iPhone or Mobile Safari)`
+      : `Chromium ${launchedBrowserVersion} via Playwright (mobile emulation, not Mobile Safari)`,
+  target: baseUrlOverride ? "deployed URL" : `local Next ${serverMode}`,
   generatedAt: new Date().toISOString(),
   metrics,
-  pageFailures,
+  pageMetrics,
+  overscrollMetrics,
   summary: {
     contexts: viewports.length * themes.length,
     presses: metrics.length,
+    assertions: assertionCount,
     failures: failures.length,
   },
 };
@@ -432,7 +598,7 @@ await writeFile(
   `${JSON.stringify(payload, null, 2)}\n`,
 );
 console.log(
-  `native-app-feel: phase=${phase} contexts=${payload.summary.contexts.toString()} presses=${metrics.length.toString()} failures=${failures.length.toString()} out=${outDir}`,
+  `native-app-feel: engine=${browserEngine} target=${payload.target} phase=${phase} contexts=${payload.summary.contexts.toString()} presses=${metrics.length.toString()} assertions=${assertionCount.toString()} failures=${failures.length.toString()} out=${outDir}`,
 );
 if (strict && failures.length > 0) {
   throw new Error(`native app-feel verification failed:\n${failures.join("\n")}`);
