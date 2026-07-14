@@ -4,6 +4,14 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Dependency sweep D1 — checkout v7: 2026-07-14 · all 18 immutable
+`actions/checkout` pins across the five shipped workflow files now resolve to
+official tag `v7.0.0` commit `9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0`.
+The standalone major-upgrade lane preserved `clean: true`,
+`persist-credentials: false`, fetch-depth settings, and the persistent-runner
+hygiene action; no product, schema, rating, simulation, or runtime-data files
+changed.
+
 Final polish closure through U5 recovery rehearsal: 2026-07-14 · merged U1 OG
 hardening, U2 landing-fold fit, U4 prose cleanup, and U3 WebKit verification are
 present on main through `7bcc53c7ada4204341dd844e9745b707920c2e7c`. The U5
