@@ -41,11 +41,12 @@ import {
 import { fetchBoardPage } from "@/lib/leaderboard/client";
 import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
 import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
+import { requestRunOgSign } from "@/lib/game/run-og-client";
 import {
   loadScoreDistributionOnce,
   referenceStandingForRecord,
 } from "@/lib/game/reference-standing";
-import { boundedRequest, type ReferenceStanding } from "@wcdraft/data/client";
+import type { ReferenceStanding } from "@wcdraft/data/client";
 
 import s from "./game.module.css";
 import { ChallengeFriendButton } from "./challenge-friend-button";
@@ -401,22 +402,13 @@ function ShareBody({
       setOgSign({ kind: "pending" });
       controller = new AbortController();
       try {
-        const response = await boundedRequest(
-          async (signal) =>
-            await fetch("/api/og/sign", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ run: shareLink.token }),
-              signal,
-            }),
-          {
-            operation: "signed share preview",
-            timeoutMs: OG_SIGN_BUDGET_MS,
-            safety: "safe-read",
-            signal: controller.signal,
-          },
-        );
-        if (!response.ok) {
+        const body = await requestRunOgSign(shareLink.token, {
+          operation: "signed share preview",
+          timeoutMs: OG_SIGN_BUDGET_MS,
+          safety: "safe-read",
+          signal: controller.signal,
+        });
+        if (!body?.signed) {
           if (!cancelled && exposeError) {
             setOgSign({
               kind: "error",
@@ -425,16 +417,11 @@ function ShareBody({
           }
           return false;
         }
-        const body = (await response.json()) as {
-          ok?: unknown;
-          signed?: unknown;
-          challenge_proof?: unknown;
-        };
-        if (!cancelled && body.ok === true && typeof body.signed === "string") {
+        if (!cancelled) {
           setOgSign({
             kind: "ready",
             signed: body.signed,
-            challengeProof: typeof body.challenge_proof === "string" ? body.challenge_proof : null,
+            challengeProof: body.challengeProof,
           });
           return true;
         }

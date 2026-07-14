@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { boundedRequest } from "@wcdraft/data/client";
 import {
   buildFriendChallengeShareCopy,
   buildFriendChallengeUrl,
   type FriendChallengeRef,
 } from "@/lib/game/friend-challenge";
+import { requestRunOgSign } from "@/lib/game/run-og-client";
 import type { RunRecordV1 } from "@/lib/game/run-record";
 import { encodeRunToken } from "@/lib/game/run-token";
 
@@ -120,26 +120,12 @@ export function ChallengeFriendButton({
 }
 
 async function requestChallengeProof(token: string, signal: AbortSignal): Promise<string | null> {
-  return boundedRequest(
-    async (signal) => {
-      const response = await fetch("/api/og/sign", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ run: token }),
-        signal,
-      });
-      if (!response.ok) return null;
-      const body: unknown = await response.json();
-      if (body === null || typeof body !== "object" || Array.isArray(body)) return null;
-      const challengeProof = (body as Record<string, unknown>).challenge_proof;
-      return typeof challengeProof === "string" ? challengeProof : null;
-    },
-    {
-      operation: "friend challenge proof",
-      timeoutMs: CHALLENGE_PROOF_BUDGET_MS,
-      // The durable sign limiter may commit before the response reaches the client.
-      safety: "unsafe-mutation",
-      signal,
-    },
-  );
+  const result = await requestRunOgSign(token, {
+    operation: "friend challenge proof",
+    timeoutMs: CHALLENGE_PROOF_BUDGET_MS,
+    // The durable sign limiter may commit before the response reaches the client.
+    safety: "unsafe-mutation",
+    signal,
+  });
+  return result?.challengeProof ?? null;
 }

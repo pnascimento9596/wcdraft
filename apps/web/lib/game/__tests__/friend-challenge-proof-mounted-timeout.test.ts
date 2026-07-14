@@ -45,7 +45,12 @@ describe("mounted friend-challenge proof timeout recovery", () => {
     {
       name: "response whose JSON body never settles",
       firstResponse: async () =>
-        ({ ok: true, json: () => new Promise<unknown>(() => undefined) }) as Response,
+        new Response(
+          new ReadableStream<Uint8Array>({
+            pull: () => new Promise<void>(() => undefined),
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        ),
     },
   ])("leaves pending after a $name and manually retries once", async ({ firstResponse }) => {
     const requestSignals: AbortSignal[] = [];
