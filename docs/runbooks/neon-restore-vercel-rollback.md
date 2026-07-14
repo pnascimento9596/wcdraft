@@ -242,7 +242,7 @@ require_traffic_suspension_configuration() {
 require_traffic_suspension_receipt() {
   local receipt_name="$1"
   local endpoint expected_url receipt
-  require_traffic_suspension_configuration
+  require_traffic_suspension_configuration || return 1
   for endpoint in health og-health; do
     case "$endpoint" in
       health) expected_url='https://www.wcdraft.com/api/health' ;;
@@ -268,7 +268,7 @@ probe_traffic_suspension_endpoint() {
   local headers="$incident_dir/$receipt_name-traffic-suspension-$endpoint-headers.txt"
   local body="$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt"
   local observed_http header_marker body_contains_marker
-  require_traffic_suspension_configuration
+  require_traffic_suspension_configuration || return 1
   observed_http="$(curl -sS \
     --proto '=https' --tlsv1.2 --max-time 30 \
     --dump-header "$headers" --output "$body" \
@@ -296,9 +296,9 @@ probe_traffic_suspension_endpoint() {
 verify_traffic_suspended() {
   local receipt_name="$1"
   probe_traffic_suspension_endpoint \
-    "$receipt_name" health https://www.wcdraft.com/api/health
+    "$receipt_name" health https://www.wcdraft.com/api/health || return 1
   probe_traffic_suspension_endpoint \
-    "$receipt_name" og-health https://www.wcdraft.com/api/og/health
+    "$receipt_name" og-health https://www.wcdraft.com/api/og/health || return 1
   require_traffic_suspension_receipt "$receipt_name"
 }
 
@@ -379,12 +379,12 @@ restore_neon_primary() {
     current: | rollback:database-first) ;;
     rollback:application-first)
       require_production_alias_receipt \
-        "$RESTORE_COMPATIBLE_DEPLOYMENT" application-first-alias
+        "$RESTORE_COMPATIBLE_DEPLOYMENT" application-first-alias || return 1
       require_application_pairing_receipts \
-        application-first-intermediate "$RESTORE_COMPATIBLE_DEPLOYMENT"
+        application-first-intermediate "$RESTORE_COMPATIBLE_DEPLOYMENT" || return 1
       ;;
     rollback:traffic-stopped)
-      require_traffic_suspension_receipt traffic-stopped-before-neon
+      require_traffic_suspension_receipt traffic-stopped-before-neon || return 1
       ;;
     *) echo 'Invalid recovery route; refusing Neon restore.' >&2; return 1 ;;
   esac
@@ -415,14 +415,17 @@ rollback_application() {
   local receipt_prefix="$1"
   case "$COUPLED_ORDER" in
     application-first)
-      require_production_alias_receipt "$PRE_RESTORE_DEPLOYMENT" current-deployment
+      require_production_alias_receipt \
+        "$PRE_RESTORE_DEPLOYMENT" current-deployment || return 1
       ;;
     database-first)
+      require_production_alias_receipt \
+        "$PRE_RESTORE_DEPLOYMENT" database-first-current-alias || return 1
       require_application_pairing_receipts \
-        database-first-intermediate "$PRE_RESTORE_DEPLOYMENT"
+        database-first-intermediate "$PRE_RESTORE_DEPLOYMENT" || return 1
       ;;
     traffic-stopped)
-      require_traffic_suspension_receipt traffic-stopped-before-vercel
+      require_traffic_suspension_receipt traffic-stopped-before-vercel || return 1
       ;;
     *) echo 'Invalid coupled order; refusing Vercel rollback.' >&2; return 1 ;;
   esac
@@ -569,12 +572,13 @@ restore_neon_primary_from_preserved() {
     current: | rollback:database-first) ;;
     rollback:application-first)
       require_production_alias_receipt \
-        "$PRE_RESTORE_DEPLOYMENT" inverse-application-first-alias
+        "$PRE_RESTORE_DEPLOYMENT" inverse-application-first-alias || return 1
       require_application_pairing_receipts \
-        inverse-application-first-intermediate "$PRE_RESTORE_DEPLOYMENT"
+        inverse-application-first-intermediate "$PRE_RESTORE_DEPLOYMENT" || return 1
       ;;
     rollback:traffic-stopped)
-      require_traffic_suspension_receipt inverse-traffic-stopped-before-neon
+      require_traffic_suspension_receipt \
+        inverse-traffic-stopped-before-neon || return 1
       ;;
     *) echo 'Invalid inverse route; refusing Neon restore.' >&2; return 1 ;;
   esac
@@ -605,15 +609,22 @@ promote_pre_restore_application() {
   local receipt_prefix="$1"
   case "$INVERSE_COUPLED_ORDER" in
     application-first)
-      require_production_alias_receipt "$RESTORE_COMPATIBLE_DEPLOYMENT" final-alias
-      require_application_pairing_receipts final "$RESTORE_COMPATIBLE_DEPLOYMENT"
+      require_production_alias_receipt \
+        "$RESTORE_COMPATIBLE_DEPLOYMENT" final-alias || return 1
+      require_application_pairing_receipts \
+        final "$RESTORE_COMPATIBLE_DEPLOYMENT" || return 1
       ;;
     database-first)
+      require_production_alias_receipt \
+        "$RESTORE_COMPATIBLE_DEPLOYMENT" \
+        inverse-database-first-current-alias || return 1
       require_application_pairing_receipts \
-        inverse-database-first-intermediate "$RESTORE_COMPATIBLE_DEPLOYMENT"
+        inverse-database-first-intermediate \
+        "$RESTORE_COMPATIBLE_DEPLOYMENT" || return 1
       ;;
     traffic-stopped)
-      require_traffic_suspension_receipt inverse-traffic-stopped-before-vercel
+      require_traffic_suspension_receipt \
+        inverse-traffic-stopped-before-vercel || return 1
       ;;
     *) echo 'Invalid inverse order; refusing Vercel promotion.' >&2; return 1 ;;
   esac

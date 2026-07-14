@@ -157,7 +157,9 @@ Validated and corrected
    for the first intermediate pairing pass.
 9. Registered the Bash syntax and structural-order contract in the required
    static CI job. It enforces six forward/inverse route orderings, fixed
-   suspension endpoints, single mutation definitions, and CI registration.
+   suspension endpoints, single mutation definitions, CI registration, and
+   four negative cases proving that missing or wrong database-first alias
+   receipts cannot reach either Vercel mutation.
 
 Existing safety controls were retained: mode-0600 receipts, exact preserved
 branch resolution, operation polling, no blind retry after ambiguous restore

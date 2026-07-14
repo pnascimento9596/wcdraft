@@ -8,7 +8,8 @@ workflow="$repo_root/.github/workflows/ci.yml"
 combined_bash="$(mktemp)"
 route_block_file="$(mktemp)"
 traffic_config_block="$(mktemp)"
-trap 'rm -f "$combined_bash" "$route_block_file" "$traffic_config_block"' EXIT
+mutation_guard_block="$(mktemp)"
+trap 'rm -f "$combined_bash" "$route_block_file" "$traffic_config_block" "$mutation_guard_block"' EXIT
 
 awk '
   /^```bash$/ { inside = 1; next }
@@ -74,6 +75,26 @@ assert_inverse_route_order() {
   done
 }
 
+assert_function_order() {
+  function_name="$1"
+  shift
+  sed -n "/^$function_name() {/,/^}/p" "$runbook" >"$route_block_file"
+  [ -s "$route_block_file" ] || {
+    printf 'missing function block: %s\n' "$function_name" >&2
+    exit 1
+  }
+  previous=0
+  for literal in "$@"; do
+    line="$(rg -nF -- "$literal" "$route_block_file" | head -1 | cut -d: -f1)"
+    [ -n "$line" ] && [ "$line" -gt "$previous" ] || {
+      printf 'function %s is missing or misorders: %s\n' \
+        "$function_name" "$literal" >&2
+      exit 1
+    }
+    previous="$line"
+  done
+}
+
 require_literal 'Set COUPLED_ORDER=database-first, application-first, or traffic-stopped.'
 require_literal 'COUPLED_ORDER is only valid with APPLICATION_PAIRING=rollback.'
 require_literal 'TRAFFIC_SUSPENSION_EXPECTED_HTTP must be exactly 503.'
@@ -83,6 +104,8 @@ require_literal 'x-wcdraft-traffic-suspended'
 require_literal 'https://www.wcdraft.com/api/health'
 require_literal 'https://www.wcdraft.com/api/og/health'
 require_literal '"$RESTORE_COMPATIBLE_DEPLOYMENT" application-first-alias'
+require_literal '"$PRE_RESTORE_DEPLOYMENT" database-first-current-alias'
+require_literal 'inverse-database-first-current-alias || return 1'
 require_literal 'require_application_pairing_receipts \'
 require_literal 'require_traffic_suspension_receipt traffic-stopped-before-neon'
 require_literal 'require_traffic_suspension_receipt traffic-stopped-before-vercel'
@@ -116,6 +139,61 @@ TRAFFIC_SUSPENSION_EXPECTED_HTTP=404
 expect_rejected
 TRAFFIC_SUSPENSION_EXPECTED_HTTP=503
 require_traffic_suspension_configuration
+BASH
+
+{
+  sed -n '/^require_production_alias_receipt() {/,/^}/p' "$runbook"
+  sed -n '/^rollback_application() {/,/^}/p' "$runbook"
+  sed -n '/^promote_pre_restore_application() {/,/^}/p' "$runbook"
+} >"$mutation_guard_block"
+bash -s -- "$mutation_guard_block" <<'BASH'
+set -euo pipefail
+source "$1"
+incident_dir="$(mktemp -d)"
+mutation_log="$incident_dir/vendor-mutations.txt"
+trap 'rm -rf "$incident_dir"' EXIT
+
+PRE_RESTORE_DEPLOYMENT=pre-restore-deployment
+RESTORE_COMPATIBLE_DEPLOYMENT=rollback-compatible-deployment
+COUPLED_ORDER=database-first
+INVERSE_COUPLED_ORDER=database-first
+
+require_application_pairing_receipts() { return 0; }
+wait_for_production_alias() { return 0; }
+vercel() {
+  printf '%s\n' "$*" >>"$mutation_log"
+  return 0
+}
+
+assert_alias_failure_blocks_mutation() {
+  function_name="$1"
+  receipt_name="$2"
+  for receipt_state in missing wrong; do
+    rm -f "$incident_dir/$receipt_name.json" "$mutation_log"
+    if [ "$receipt_state" = wrong ]; then
+      jq -nc \
+        '{id:"wrong-deployment",readyState:"READY",target:"production"}' \
+        >"$incident_dir/$receipt_name.json"
+    fi
+    set +e
+    "$function_name" guard-probe >/dev/null 2>&1
+    status="$?"
+    set -e
+    [ "$status" -ne 0 ] || {
+      echo "$function_name accepted a $receipt_state alias receipt." >&2
+      exit 1
+    }
+    [ ! -s "$mutation_log" ] || {
+      echo "$function_name reached a vendor mutation with a $receipt_state alias receipt." >&2
+      exit 1
+    }
+  done
+}
+
+assert_alias_failure_blocks_mutation \
+  rollback_application database-first-current-alias
+assert_alias_failure_blocks_mutation \
+  promote_pre_restore_application inverse-database-first-current-alias
 BASH
 
 if rg -Fq 'TRAFFIC_SUSPENSION_PROBE_URL' "$runbook"; then
@@ -181,5 +259,15 @@ assert_inverse_route_order traffic-stopped \
   'promote_pre_restore_application inverse-traffic-stopped' \
   'verify_traffic_suspended inverse-traffic-stopped-after-vercel'
 
+assert_function_order rollback_application \
+  '"$PRE_RESTORE_DEPLOYMENT" database-first-current-alias || return 1' \
+  'database-first-intermediate "$PRE_RESTORE_DEPLOYMENT"' \
+  'vercel rollback "$RESTORE_COMPATIBLE_DEPLOYMENT" \'
+
+assert_function_order promote_pre_restore_application \
+  'inverse-database-first-current-alias || return 1' \
+  'inverse-database-first-intermediate \' \
+  'vercel promote "$PRE_RESTORE_DEPLOYMENT" \'
+
 printf '%s\n' \
-  'neon-vercel recovery runbook contract: PASS (bash syntax, fixed suspension proof, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'
+  'neon-vercel recovery runbook contract: PASS (bash syntax, fixed suspension proof, 4 alias-negative mutation cases, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'
