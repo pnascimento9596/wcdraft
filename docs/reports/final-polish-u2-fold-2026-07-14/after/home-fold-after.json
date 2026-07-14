@@ -1,0 +1,1118 @@
+{
+  "phase": "after",
+  "baseUrl": "http://127.0.0.1:3032",
+  "measurements": [
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "light",
+      "motion": "full",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 800,
+      "importantContentBottom": 790.828125,
+      "safeAreaClearance": 9.171875,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-light-full.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 322.828125,
+        "width": 328,
+        "height": 260.234375
+      },
+      "animatedDemo": {
+        "top": 62.59375,
+        "bottom": 322.828125,
+        "width": 328,
+        "height": 260.234375
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 69.1875,
+          "bottom": 95.578125,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 99.578125,
+          "bottom": 219.953125,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 223.953125,
+          "bottom": 316.234375,
+          "height": 92.28125
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 790.828125,
+        "width": 360,
+        "height": 728.234375
+      },
+      "heroLive": {
+        "top": 743.953125,
+        "bottom": 790.828125,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 607.375,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "light",
+      "motion": "full",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 766,
+      "importantContentBottom": 761.671875,
+      "safeAreaClearance": 4.328125,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-light-full-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 309.203125,
+        "width": 328,
+        "height": 250.609375
+      },
+      "animatedDemo": {
+        "top": 58.59375,
+        "bottom": 309.203125,
+        "width": 328,
+        "height": 250.609375
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 62.78125,
+          "bottom": 89.171875,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 90.765625,
+          "bottom": 211.140625,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 212.734375,
+          "bottom": 305.015625,
+          "height": 92.28125
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 761.671875,
+        "width": 360,
+        "height": 703.078125
+      },
+      "heroLive": {
+        "top": 714.796875,
+        "bottom": 761.671875,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 583.984375,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    },
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "light",
+      "motion": "reduced",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 800,
+      "importantContentBottom": 694.59375,
+      "safeAreaClearance": 105.40625,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-light-reduced.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 226.59375,
+        "width": 328,
+        "height": 164
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 62.59375,
+        "bottom": 226.59375,
+        "width": 328,
+        "height": 164
+      },
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 694.59375,
+        "width": 360,
+        "height": 632
+      },
+      "heroLive": {
+        "top": 647.71875,
+        "bottom": 694.59375,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 511.140625,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "light",
+      "motion": "reduced",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 766,
+      "importantContentBottom": 675.0625,
+      "safeAreaClearance": 90.9375,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-light-reduced-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 222.59375,
+        "width": 328,
+        "height": 164
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 58.59375,
+        "bottom": 222.59375,
+        "width": 328,
+        "height": 164
+      },
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 675.0625,
+        "width": 360,
+        "height": 616.46875
+      },
+      "heroLive": {
+        "top": 628.1875,
+        "bottom": 675.0625,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 497.375,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    },
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "dark",
+      "motion": "full",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 800,
+      "importantContentBottom": 790.828125,
+      "safeAreaClearance": 9.171875,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-dark-full.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 322.828125,
+        "width": 328,
+        "height": 260.234375
+      },
+      "animatedDemo": {
+        "top": 62.59375,
+        "bottom": 322.828125,
+        "width": 328,
+        "height": 260.234375
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 69.1875,
+          "bottom": 95.578125,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 99.578125,
+          "bottom": 219.953125,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 223.953125,
+          "bottom": 316.234375,
+          "height": 92.28125
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 790.828125,
+        "width": 360,
+        "height": 728.234375
+      },
+      "heroLive": {
+        "top": 743.953125,
+        "bottom": 790.828125,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 607.375,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "dark",
+      "motion": "full",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 766,
+      "importantContentBottom": 761.671875,
+      "safeAreaClearance": 4.328125,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-dark-full-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 309.203125,
+        "width": 328,
+        "height": 250.609375
+      },
+      "animatedDemo": {
+        "top": 58.59375,
+        "bottom": 309.203125,
+        "width": 328,
+        "height": 250.609375
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 62.78125,
+          "bottom": 89.171875,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 90.765625,
+          "bottom": 211.140625,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 212.734375,
+          "bottom": 305.015625,
+          "height": 92.28125
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 761.671875,
+        "width": 360,
+        "height": 703.078125
+      },
+      "heroLive": {
+        "top": 714.796875,
+        "bottom": 761.671875,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 583.984375,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    },
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "dark",
+      "motion": "reduced",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 800,
+      "importantContentBottom": 694.59375,
+      "safeAreaClearance": 105.40625,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-dark-reduced.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 226.59375,
+        "width": 328,
+        "height": 164
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 62.59375,
+        "bottom": 226.59375,
+        "width": 328,
+        "height": 164
+      },
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 694.59375,
+        "width": 360,
+        "height": 632
+      },
+      "heroLive": {
+        "top": 647.71875,
+        "bottom": 694.59375,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 511.140625,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "360x800",
+      "viewportWidth": 360,
+      "viewportHeight": 800,
+      "theme": "dark",
+      "motion": "reduced",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 766,
+      "importantContentBottom": 675.0625,
+      "safeAreaClearance": 90.9375,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-360x800-dark-reduced-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 800,
+      "clientHeight": 800,
+      "verticalOverflow": 0,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "maxScrollWidth": 360,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 799.984375,
+        "width": 360,
+        "height": 745.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 222.59375,
+        "width": 328,
+        "height": 164
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 58.59375,
+        "bottom": 222.59375,
+        "width": 328,
+        "height": 164
+      },
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 675.0625,
+        "width": 360,
+        "height": 616.46875
+      },
+      "heroLive": {
+        "top": 628.1875,
+        "bottom": 675.0625,
+        "width": 344,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 497.375,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "light",
+      "motion": "full",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 844,
+      "importantContentBottom": 813.265625,
+      "safeAreaClearance": 30.734375,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-light-full.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 349.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedDemo": {
+        "top": 62.59375,
+        "bottom": 349.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 71.59375,
+          "bottom": 97.984375,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 104.0625,
+          "bottom": 224.4375,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 230.515625,
+          "bottom": 340.5625,
+          "height": 110.046875
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 813.265625,
+        "width": 390,
+        "height": 750.671875
+      },
+      "heroLive": {
+        "top": 766.390625,
+        "bottom": 813.265625,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 643.421875,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "light",
+      "motion": "full",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 810,
+      "importantContentBottom": 792.796875,
+      "safeAreaClearance": 17.203125,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-light-full-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 345.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedDemo": {
+        "top": 58.59375,
+        "bottom": 345.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 67.59375,
+          "bottom": 93.984375,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 100.0625,
+          "bottom": 220.4375,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 226.515625,
+          "bottom": 336.5625,
+          "height": 110.046875
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 792.796875,
+        "width": 390,
+        "height": 734.203125
+      },
+      "heroLive": {
+        "top": 745.921875,
+        "bottom": 792.796875,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 629.1875,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "light",
+      "motion": "reduced",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 844,
+      "importantContentBottom": 698.296875,
+      "safeAreaClearance": 145.703125,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-light-reduced.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 234.59375,
+        "width": 358,
+        "height": 172
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 62.59375,
+        "bottom": 234.59375,
+        "width": 358,
+        "height": 172
+      },
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 698.296875,
+        "width": 390,
+        "height": 635.703125
+      },
+      "heroLive": {
+        "top": 651.421875,
+        "bottom": 698.296875,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 528.453125,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "light",
+      "motion": "reduced",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 810,
+      "importantContentBottom": 677.828125,
+      "safeAreaClearance": 132.171875,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-light-reduced-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 230.59375,
+        "width": 358,
+        "height": 172
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 58.59375,
+        "bottom": 230.59375,
+        "width": 358,
+        "height": 172
+      },
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 677.828125,
+        "width": 390,
+        "height": 619.234375
+      },
+      "heroLive": {
+        "top": 630.953125,
+        "bottom": 677.828125,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 514.21875,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "dark",
+      "motion": "full",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 844,
+      "importantContentBottom": 813.265625,
+      "safeAreaClearance": 30.734375,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-dark-full.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 349.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedDemo": {
+        "top": 62.59375,
+        "bottom": 349.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 71.59375,
+          "bottom": 97.984375,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 104.0625,
+          "bottom": 224.4375,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 230.515625,
+          "bottom": 340.5625,
+          "height": 110.046875
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 813.265625,
+        "width": 390,
+        "height": 750.671875
+      },
+      "heroLive": {
+        "top": 766.390625,
+        "bottom": 813.265625,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 643.421875,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "dark",
+      "motion": "full",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 810,
+      "importantContentBottom": 792.796875,
+      "safeAreaClearance": 17.203125,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-dark-full-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 345.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedDemo": {
+        "top": 58.59375,
+        "bottom": 345.5625,
+        "width": 358,
+        "height": 286.96875
+      },
+      "animatedRows": [
+        {
+          "className": "hero-spin-demo_statusBar__Wxh2O",
+          "top": 67.59375,
+          "bottom": 93.984375,
+          "height": 26.390625
+        },
+        {
+          "className": "hero-spin-demo_drum__bw_qG",
+          "top": 100.0625,
+          "bottom": 220.4375,
+          "height": 120.375
+        },
+        {
+          "className": "hero-spin-demo_resultRow__EJxjG",
+          "top": 226.515625,
+          "bottom": 336.5625,
+          "height": 110.046875
+        }
+      ],
+      "poster": null,
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 792.796875,
+        "width": 390,
+        "height": 734.203125
+      },
+      "heroLive": {
+        "top": 745.921875,
+        "bottom": 792.796875,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 629.1875,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "dark",
+      "motion": "reduced",
+      "safeAreaBottom": 0,
+      "safeAreaBoundary": 844,
+      "importantContentBottom": 698.296875,
+      "safeAreaClearance": 145.703125,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-dark-reduced.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 62.59375,
+        "bottom": 234.59375,
+        "width": 358,
+        "height": 172
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 62.59375,
+        "bottom": 234.59375,
+        "width": 358,
+        "height": 172
+      },
+      "heroInner": {
+        "top": 62.59375,
+        "bottom": 698.296875,
+        "width": 390,
+        "height": 635.703125
+      },
+      "heroLive": {
+        "top": 651.421875,
+        "bottom": 698.296875,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 528.453125,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "8px",
+      "homeSafeAreaBottom": "0px"
+    },
+    {
+      "viewport": "390x844",
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "theme": "dark",
+      "motion": "reduced",
+      "safeAreaBottom": 34,
+      "safeAreaBoundary": 810,
+      "importantContentBottom": 677.828125,
+      "safeAreaClearance": 132.171875,
+      "importantContentAboveSafeArea": true,
+      "safeAreaPaddingApplied": true,
+      "screenshot": "../../../tmp/wcdraft-final-polish-u2/docs/reports/final-polish-u2-fold-2026-07-14/after/screenshots/after-home-390x844-dark-reduced-safe34.png",
+      "axeViolations": [],
+      "consoleErrors": [],
+      "scrollHeight": 844,
+      "clientHeight": 844,
+      "verticalOverflow": 0,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "maxScrollWidth": 390,
+      "horizontalOverflow": false,
+      "hero": {
+        "top": 54.59375,
+        "bottom": 843.984375,
+        "width": 390,
+        "height": 789.390625
+      },
+      "demo": {
+        "top": 58.59375,
+        "bottom": 230.59375,
+        "width": 358,
+        "height": 172
+      },
+      "animatedDemo": null,
+      "animatedRows": [],
+      "poster": {
+        "top": 58.59375,
+        "bottom": 230.59375,
+        "width": 358,
+        "height": 172
+      },
+      "heroInner": {
+        "top": 58.59375,
+        "bottom": 677.828125,
+        "width": 390,
+        "height": 619.234375
+      },
+      "heroLive": {
+        "top": 630.953125,
+        "bottom": 677.828125,
+        "width": 370.8125,
+        "height": 46.875
+      },
+      "requiredCtaBottom": 514.21875,
+      "requiredCtasInViewport": true,
+      "smallTargets": [],
+      "heroPaddingBottom": "34px",
+      "homeSafeAreaBottom": "34px"
+    }
+  ]
+}

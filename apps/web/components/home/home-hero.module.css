@@ -68,15 +68,18 @@
 
 @media (max-width: 430px) {
   .hero:global(.hero) {
-    padding-block: 0.5rem;
+    --home-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
+    padding-block-start: max(0.25rem, calc(0.5rem - var(--home-safe-area-bottom) / 8));
+    padding-block-end: max(0.5rem, var(--home-safe-area-bottom));
   }
 
   .heroInner {
-    gap: 0.5rem;
+    gap: max(0.25rem, calc(0.5rem - var(--home-safe-area-bottom) / 8));
   }
 
   .copy {
-    gap: 0.48rem;
+    gap: max(0.35rem, calc(0.48rem - var(--home-safe-area-bottom) / 16));
   }
 
   .copy :global(.eyebrow) {
@@ -142,7 +145,7 @@
 
 @media (max-width: 380px) {
   .copy {
-    gap: 0.42rem;
+    gap: max(0.3rem, calc(0.42rem - var(--home-safe-area-bottom) / 16));
   }
 
   .actions {
