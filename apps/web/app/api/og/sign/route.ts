@@ -50,6 +50,17 @@ export async function handleRunOgSignPost(
   request: Request,
   deps: RunOgSignRouteDeps,
 ): Promise<Response> {
+  const mediaType = (request.headers.get("content-type") ?? "")
+    .split(";", 1)[0]!
+    .trim()
+    .toLowerCase();
+  if (mediaType !== "application/json") {
+    return NextResponse.json(
+      { ok: false, error: "UNSUPPORTED_MEDIA_TYPE" },
+      { status: 415, headers: NO_STORE },
+    );
+  }
+
   const secret = readOgSigningSecret();
   if (!secret) {
     return NextResponse.json(

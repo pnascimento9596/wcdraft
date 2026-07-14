@@ -36,13 +36,15 @@ describe("PWA launch hardening source guards", () => {
 
   it("keeps replay sharing available while signed OG preview upgrades independently", () => {
     const shareScreen = source("../../../components/game/share-screen.tsx");
+    const runOgClient = source("../run-og-client.ts");
     expect(shareScreen).toContain("isRecipient: resolved.isReplayedFromToken");
     expect(shareScreen).toContain("draft your own all-time XI");
     expect(shareScreen).toContain("optionalScenarioForLocalRun: true");
     expect(shareScreen).toContain(
       "buildShareView(resolved.gameData, resolved.record, resolved.scenario)",
     );
-    expect(shareScreen).toContain('fetch("/api/og/sign"');
+    expect(shareScreen).toContain("requestRunOgSign(shareLink.token");
+    expect(runOgClient).toContain('fetch("/api/og/sign"');
     expect(shareScreen).not.toContain("initialSignedOg");
     expect(shareScreen).not.toContain("signedRunOgPayloadTokenHash");
     expect(shareScreen).toContain(
@@ -50,7 +52,8 @@ describe("PWA launch hardening source guards", () => {
     );
     expect(shareScreen).toContain("shareHref(shareLink.token)");
     expect(shareScreen).toContain("shareHref(shareLink.token, signedOg)");
-    expect(shareScreen).toContain("boundedRequest(");
+    expect(runOgClient).toContain("boundedRequest(");
+    expect(runOgClient).toContain("RUN_OG_SIGN_RESPONSE_MAX_BYTES");
     expect(shareScreen).toContain("timeoutMs: OG_SIGN_BUDGET_MS");
     expect(shareScreen).not.toContain("disabled={shareLinkPending}");
     expect(shareScreen).toContain('tabIndex={0} aria-label="Share caption"');

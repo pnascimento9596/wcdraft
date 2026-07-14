@@ -566,6 +566,27 @@ describe("trusted run OG signing", () => {
     expect(trusted?.model.team_name).toBe(verified.model.team_name);
   });
 
+  it.each([
+    ["absent", new Headers()],
+    ["wrong", new Headers({ "content-type": "text/plain" })],
+  ])("rejects %s content type before reading the body", async (_label, headers) => {
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    const request = {
+      headers,
+      get body(): never {
+        throw new Error("body must not be read for unsupported media types");
+      },
+    } as unknown as Request;
+
+    const response = await handleRunOgSignPost(request, ogSignDeps());
+
+    expect(response.status).toBe(415);
+    expect(await response.json()).toEqual({
+      ok: false,
+      error: "UNSUPPORTED_MEDIA_TYPE",
+    });
+  });
+
   it("sanitizes attacker-controlled display text before route signing", async () => {
     vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
     const body = decodeV3(encodeRunToken(complete()));

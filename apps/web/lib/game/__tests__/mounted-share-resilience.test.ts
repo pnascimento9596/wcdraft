@@ -254,6 +254,55 @@ describe("mounted share preview resilience", () => {
     }
   });
 
+  it("includes a held-open preview response body in the signing budget", async () => {
+    const fetcher = vi.fn<typeof fetch>(
+      async () =>
+        new Response(
+          new ReadableStream<Uint8Array>({
+            pull: () => new Promise<void>(() => undefined),
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        ),
+    );
+    installShareApis();
+    const view = await mountShare(fetcher);
+    try {
+      await advanceTime(4_000);
+      await advanceTime(650);
+      await advanceTime(4_000);
+      await advanceTime(1_500);
+      await advanceTime(4_000);
+
+      expect(fetcher).toHaveBeenCalledTimes(3);
+      expect(view.container.textContent).toContain("preview unavailable, link works");
+      expect(buttonByText(view.container, "Copy link").disabled).toBe(false);
+    } finally {
+      await view.unmount();
+    }
+  });
+
+  it("rejects an oversized preview response before accepting its signed value", async () => {
+    const fetcher = vi.fn<typeof fetch>(
+      async () =>
+        new Response(JSON.stringify({ ok: true, signed: "x".repeat(20_000) }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+    );
+    installShareApis();
+    const view = await mountShare(fetcher);
+    try {
+      await advanceTime(650);
+      await advanceTime(1_500);
+
+      expect(fetcher).toHaveBeenCalledTimes(3);
+      expect(view.container.textContent).toContain("preview unavailable, link works");
+      expect(view.container.textContent).toContain("static preview card");
+    } finally {
+      await view.unmount();
+    }
+  });
+
   it("aborts on unmount and ignores a late signed-preview success", async () => {
     const deferred: {
       resolve?: (response: Response) => void;
