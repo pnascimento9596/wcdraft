@@ -2,14 +2,9 @@
   "phase": "season2-s6-event-link",
   "baseUrl": "http://127.0.0.1:3027",
   "axeSource": "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js",
-  "surfaces": [
-    "results-factual-recap"
-  ],
-  "viewports": [
-    "390x844",
-    "360x800"
-  ],
-  "generatedAt": "2026-07-14T02:02:39.939Z",
+  "surfaces": ["results-factual-recap"],
+  "viewports": ["390x844", "360x800"],
+  "generatedAt": "2026-07-14T02:33:30.004Z",
   "metrics": [
     {
       "surface": "results-factual-recap",

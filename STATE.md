@@ -5,8 +5,9 @@
 > whatever your change touches.
 
 Season 2 Squad Depth — Unit S6 factual recap: 2026-07-13 · local YELLOW
-implementation on `ws-f4/season2-s6-factual-recap`, initially based on exact
-integration head `cdf16b4f7f795302cc44106c58626383dd56c9e7`. Results now
+implementation on `ws-f4/season2-s6-factual-recap`, initially based on
+`cdf16b4f7f795302cc44106c58626383dd56c9e7` and rebased onto exact integration
+head `3af456d6957d5203f93144bb94e6365ba9d75a6f`. Results now
 includes a mobile-first “Why it went this way” dossier built only from the
 persisted run record, per-match `MatchTeamFacts`, and availability event log.
 It shows final-match line strengths, Synergy multiplier and nation clusters,
@@ -23,19 +24,19 @@ current runtime bundle or expanding the token contract. S6 changes no engine,
 rating, Synergy, manager, token, schema, leaderboard, auth, ETL, or compact-data
 semantics.
 
-Measured local closure before the required moving-integration rebase: focused
-recap 10/10; focused Results/first-load set 26/26; web typecheck, lint, and
-production build pass with 40 routes/pages; generated-data check passes; and
-production Results browser evidence passes 8/8 across layout and event-link
+Measured exact rebased closure: focused Results set 26/26; root typecheck 8/8,
+lint 5/5, test 8/8 (core 423, data 183 + 9 expected skips, DB 161, marketing
+69, web 1,257 + 1 expected skip), game-flow, responsive 218/0, and build 4/4
+with 40 routes/pages. Generated-data and repository formatting checks pass.
+Production Results browser evidence passes 8/8 across layout and event-link
 interaction at 390x844 and 360x800 in light and dark with zero axe, console,
 overflow, small-target, or navigation-wrap failures. The interaction proof
 starts with the linked match collapsed, then proves the exact hash, expanded
 button, revealed target, and in-viewport landing. A visual check caught and
 fixed an intermediate hidden-panel CSS regression before the evidence was
 regenerated. Durable report:
-`docs/reports/season2-s6-factual-recap-2026-07-13.md`. Exact post-rebase root
-gate counts, commit, PR, independent review, and integration merge remain
-required.
+`docs/reports/season2-s6-factual-recap-2026-07-13.md`. Commit, PR, independent
+review, and integration merge remain required.
 
 Season 2 Squad Depth — Unit S5 pre-lock fit teaching:
 2026-07-13 · local YELLOW implementation on

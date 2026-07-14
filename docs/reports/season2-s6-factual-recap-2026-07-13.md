@@ -6,6 +6,8 @@ Branch: `ws-f4/season2-s6-factual-recap`
 
 Initial base: `cdf16b4f7f795302cc44106c58626383dd56c9e7`
 
+Final integration base: `3af456d6957d5203f93144bb94e6365ba9d75a6f`
+
 Risk: YELLOW (bounded Results UI and pure presentation adapter)
 
 ## Outcome
@@ -108,20 +110,36 @@ column with no clipping or compositor corruption.
 
 ## Validation
 
-Measured before the required rebase onto the moving season integration tip:
+Measured after rebasing onto exact integration head
+`3af456d6957d5203f93144bb94e6365ba9d75a6f`:
 
 - focused factual recap: **10/10**;
 - focused Results/first-load regression set: **26/26** across 3 files;
-- web typecheck: PASS;
-- web lint: PASS;
-- web production build: PASS, 40 routes/pages; existing non-fatal Webpack
-  circular-chunk and Edge/static-generation warnings only;
-- scoped production browser layout proof: **4/4**, zero failures;
-- scoped event-log interaction proof: **4/4**, zero failures and all hash,
-  expansion, hidden-state, visibility, and viewport assertions passed.
+- root typecheck: **8/8** Turbo tasks;
+- root lint: **5/5** Turbo tasks;
+- root test: **8/8** Turbo tasks in 8m3.119s:
+  - core: **423/423**;
+  - data: **183 passed, 9 expected skips**;
+  - DB: **161/161**;
+  - marketing: **69/69**;
+  - web: **1,257 passed, 1 expected skip**;
+  - game-flow Playwright: PASS;
+  - responsive shell tail: **218 metrics, 0 failures**;
+- root production build: **4/4** Turbo tasks and **40/40** routes/pages;
+  existing non-fatal Webpack circular-chunk and Edge/static-generation
+  warnings only;
+- generated-data check: PASS; **10,973** rating rows and compact artifacts
+  reproduce without a committed diff;
+- repository Prettier check: PASS;
+- scoped production browser layout proof: **4/4**, zero axe, console,
+  horizontal-overflow, small-target, or navigation-wrap failures;
+- scoped event-log interaction proof: **4/4**, the same zero-failure metrics,
+  and every hash, expansion, hidden-state, visibility, and viewport assertion
+  passed.
 
-The complete post-rebase root and web gate counts will replace this paragraph
-before the implementation is committed and pushed.
+The inherited S5 integration tip also completed GitHub Actions run
+`29300799853` successfully at exact SHA `3af456d6957d5203f93144bb94e6365ba9d75a6f`,
+including realism, ETL, DB, secrets, and required aggregate gates.
 
 Superseded diagnostic: an early full web run completed Vitest (1,242 passed,
 1 expected skip) and game flow, then was invalidated in the mode-setup
