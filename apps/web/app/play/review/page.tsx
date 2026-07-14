@@ -6,7 +6,7 @@ import { GameFallback } from "../../../components/game/game-fallback";
 export const metadata: Metadata = {
   title: "Squad review",
   description:
-    "Arrange your drafted XI and bench, review fit, your manager, rating by line and Synergy — then confirm the team sheet and simulate.",
+    "Arrange your drafted XI and bench, review fit, your manager, rating by line and Synergy, then confirm the team sheet and simulate.",
   // Transient client-state route — renders empty without a live run; noindex.
   robots: { index: false, follow: true },
 };

@@ -82,7 +82,7 @@ export function lockBarIdleCopy({
   lockedTargetLabel: string | null;
   showReviewCta: boolean;
 }): string {
-  if (showReviewCta) return "Draft complete — review your squad and prep for the run.";
+  if (showReviewCta) return "Draft complete. Review your squad and prep for the run.";
   if (lockedTargetLabel)
     return `Locked target: ${lockedTargetLabel}. Select a player for this slot.`;
   return "Select a player and a slot, or pick the manager.";

@@ -132,7 +132,7 @@ export const CandidateCard = memo(function CandidateCard({
               </span>
             ) : null}
             {rarePick ? (
-              <span className={s.candRareTag} title="Rare pick — low roll probability">
+              <span className={s.candRareTag} title="Rare pick: low roll probability">
                 Rare
               </span>
             ) : null}
@@ -348,7 +348,7 @@ export const ManagerCandidate = memo(function ManagerCandidate({
           <span className={s.candRowName}>
             <span className={s.candNameText}>{manager.name}</span>
             {rarePick ? (
-              <span className={s.candRareTag} title="Rare pick — low roll probability">
+              <span className={s.candRareTag} title="Rare pick: low roll probability">
                 Rare
               </span>
             ) : null}
@@ -379,12 +379,12 @@ export const ManagerCandidate = memo(function ManagerCandidate({
             <span className={s.candManagerTag}>Goes to the dedicated manager slot</span>
           </span>
           {manager.traits.length > 0 ? (
-            <span className={s.managerTraits} aria-label="Manager style traits — flavor only">
+            <span className={s.managerTraits} aria-label="Manager style traits, for flavor only">
               {manager.traits.map((t) => (
                 <span
                   key={t.id}
                   className={s.managerTraitChip}
-                  title="Flavor trait only — no gameplay effect."
+                  title="Flavor trait only; no gameplay effect."
                 >
                   {t.label}
                 </span>

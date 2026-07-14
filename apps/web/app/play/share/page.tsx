@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 const STATIC_SHARE_METADATA: Metadata = {
   title: "Share card",
   description:
-    "A deterministic, seed-locked shareable card for your run. Names and national flag codes only — no competition marks.",
+    "A deterministic, seed-locked shareable card for your run. Names and national flag codes only; no competition marks.",
   // Per-run share URLs are an infinite, ephemeral space — keep them out of the
   // search index. `noindex` does NOT block social-card scrapers (they read the
   // og:/twitter: tags below regardless), so unfurls still work; only search

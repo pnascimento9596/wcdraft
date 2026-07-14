@@ -83,7 +83,7 @@ describe("buildShareCaption", () => {
       dailyStanding: { rank: 2, percentile: 50, fieldSize: 12 },
     });
     expect(caption).toContain(
-      "#2 of 12 today · Ties share a rank — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.",
+      "#2 of 12 today · Ties share a rank. Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.",
     );
     expect(caption).not.toContain("Top 50%");
   });

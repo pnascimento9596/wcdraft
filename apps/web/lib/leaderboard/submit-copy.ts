@@ -42,7 +42,7 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
   WRONG_SEASON: {
     title: "Different season",
     message:
-      "This run is from a different build/season — the board only takes runs simulated on the current one. Refresh and draft a new squad to compete.",
+      "This run is from a different build/season. The board only takes runs simulated on the current one. Refresh and draft a new squad to compete.",
   },
   DAILY_UNAVAILABLE: {
     title: "Daily unavailable",
@@ -58,7 +58,7 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
   },
   SIM_FAILURE: {
     title: "Server error",
-    message: "The server failed to re-simulate the run. Nothing was posted — try again later.",
+    message: "The server failed to re-simulate the run. Nothing was posted. Try again later.",
   },
   SCORE_MISMATCH: {
     title: "Run didn't verify",
@@ -95,7 +95,7 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
   },
   INTERNAL_ERROR: {
     title: "Server error",
-    message: "Something went wrong on the server. Nothing was posted — try again later.",
+    message: "Something went wrong on the server. Nothing was posted. Try again later.",
   },
 };
 

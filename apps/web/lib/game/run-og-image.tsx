@@ -356,7 +356,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           textTransform: "uppercase",
         }}
       >
-        wcdraft.com — draft your own XI
+        wcdraft.com: draft your own XI
       </div>
     </div>
   );

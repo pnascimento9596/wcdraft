@@ -110,7 +110,7 @@ describe("buildSlotRevealModel", () => {
     ).toBe("PICK 05 OF 17");
   });
 
-  it("result line uses the exact SPIN RESULT — NATION YEAR format", () => {
+  it("result line uses the exact SPIN RESULT: NATION YEAR format", () => {
     const indexes = makeIndexes();
     const model = buildSlotRevealModel({
       activeSpin: SPINS[0]!,
@@ -118,7 +118,7 @@ describe("buildSlotRevealModel", () => {
       indexes,
       totalPicks: 17,
     });
-    expect(model.resultLine).toBe("SPIN RESULT — Argentina 1986");
+    expect(model.resultLine).toBe("SPIN RESULT: Argentina 1986");
   });
 
   it("flanking reels are decorative, distinct from active, deterministic via the spin ring", () => {
@@ -160,7 +160,7 @@ describe("buildSlotRevealModel", () => {
     expect(model.result.nationCode).toBeNull();
     expect(model.result.flagSrc).toBeNull();
     expect(model.result.yearLabel).toBe("9999");
-    expect(model.resultLine).toBe("SPIN RESULT — T-UNKNOWN 9999");
+    expect(model.resultLine).toBe("SPIN RESULT: T-UNKNOWN 9999");
   });
 
   it("is referentially deterministic — identical inputs produce deep-equal output", () => {

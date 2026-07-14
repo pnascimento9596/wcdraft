@@ -837,7 +837,7 @@ async function verifyManagerOnlyGuardFlow(browser: Browser, baseUrl: string): Pr
   });
   await page.getByRole("button", { name: "Spin" }).click();
   await page.getByRole("button", { name: /Reveal choices/ }).click();
-  await page.getByText("All player slots filled — pick the manager.").waitFor();
+  await page.getByText("All player slots filled. Pick the manager.").waitFor();
   await page.waitForFunction(() => /Manager/u.test(document.activeElement?.textContent ?? ""));
 
   const playerButtons = page

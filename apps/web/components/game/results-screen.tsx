@@ -117,7 +117,7 @@ export function ResultsScreen({
     if (parsed === null) {
       setMode({
         kind: "missing",
-        reason: "Open a draft first — results are only available for a simulated run.",
+        reason: "Open a draft first. Results are only available for a simulated run.",
         runId: null,
       });
       return;
@@ -131,7 +131,7 @@ export function ResultsScreen({
             kind: "missing",
             reason:
               resolved.runId === null
-                ? "Open a draft first — results are only available for a simulated run."
+                ? "Open a draft first. Results are only available for a simulated run."
                 : "We couldn't find that run.",
             runId: resolved.runId,
           });
@@ -164,7 +164,7 @@ export function ResultsScreen({
             kind: "missing",
             reason:
               resolved.reason === "malformed"
-                ? "The shared link is malformed or truncated — ask the sender for a fresh link."
+                ? "The shared link is malformed or truncated. Ask the sender for a fresh link."
                 : resolved.reason,
             runId: null,
           });
@@ -637,7 +637,7 @@ function ResultsBody({
           <button type="button" className={s.seedCopyButton} onClick={copyFullSeed}>
             {seedCopied ? "Seed copied" : "Copy full seed"}
           </button>
-          <span className={s.seedNote}>Replays are seed-locked — identical every time.</span>
+          <span className={s.seedNote}>Replays are seed-locked, identical every time.</span>
         </div>
         <div className={s.pinRow}>
           <button
@@ -722,7 +722,7 @@ function ChallengeHeadToHead({
     return (
       <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
         <span className={s.eyebrowAccent}>Head to head</span>
-        <p role="status">Comparison unavailable — the friend challenge could not be verified.</p>
+        <p role="status">Comparison unavailable. The friend challenge could not be verified.</p>
       </section>
     );
   if (state.challenge.status === "DIFFERENT_BUILD")

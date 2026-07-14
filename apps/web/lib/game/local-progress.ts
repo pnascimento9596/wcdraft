@@ -17,7 +17,7 @@ export const PERFECT_RUN_REFERENCE_SCORE =
   DEFAULT_SCORING_CONFIG.undefeated_bonus;
 
 export const PERFECT_RUN_REFERENCE_LABEL =
-  `Max score: ${PERFECT_RUN_REFERENCE_SCORE} — eight 1-0 wins, no bookings or missed pens` as const;
+  `Max score: ${PERFECT_RUN_REFERENCE_SCORE}: eight 1-0 wins, no bookings or missed pens` as const;
 
 export interface LocalProgressSummary {
   readonly targetDate: string;

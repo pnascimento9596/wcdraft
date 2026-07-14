@@ -86,7 +86,7 @@ describe("UTC countdown helpers", () => {
 
   it("exposes the current perfect-run reference", () => {
     expect(PERFECT_RUN_REFERENCE_LABEL).toBe(
-      "Max score: 108 — eight 1-0 wins, no bookings or missed pens",
+      "Max score: 108: eight 1-0 wins, no bookings or missed pens",
     );
   });
 });

@@ -100,7 +100,7 @@ describe("Pitch markings", () => {
       }),
     );
     expect(reviewHtml).toContain('<button type="button"');
-    expect(reviewHtml).toContain('aria-label="GK — Review keeper; select to swap"');
+    expect(reviewHtml).toContain('aria-label="GK: Review keeper; select to swap"');
     expect(reviewHtml).not.toContain("Review keeper (locked)");
 
     const draftHtml = renderToStaticMarkup(
@@ -111,7 +111,7 @@ describe("Pitch markings", () => {
         onSlotSelect: () => undefined,
       }),
     );
-    expect(draftHtml).toContain('aria-label="GK — Review keeper (locked)"');
+    expect(draftHtml).toContain('aria-label="GK: Review keeper (locked)"');
   });
 
   it("renders the vertical marking layer below synergy and slot nodes", () => {

@@ -648,7 +648,7 @@ function DraftBoard({
         const warning =
           save.persistence === "volatile" || save.warnings.length > 0
             ? save.warnings.join(" · ") ||
-              "Draft is saved in this tab only — browser storage is unavailable."
+              "Draft is saved in this tab only because browser storage is unavailable."
             : null;
         setPhase("spin");
         setAnim("idle");
@@ -800,7 +800,7 @@ function DraftBoard({
       const warning =
         save.persistence === "volatile" || save.warnings.length > 0
           ? save.warnings.join(" · ") ||
-            "Draft is saved in this tab only — browser storage is unavailable."
+            "Draft is saved in this tab only because browser storage is unavailable."
           : null;
       // Re-spin swap: snap back to the idle drum for the next spin in the same
       // commit as the record update, so the lineup for the next spin never
@@ -900,14 +900,14 @@ function DraftBoard({
             </span>
             <h2 className={s.panelTitle}>Choose the slot to fill</h2>
             <p className={s.completeNote}>
-              Position First — commit a target before the squad is revealed. The spin fills only
-              this target; the choice is locked once the squad rolls.
+              Position First: commit a target before the squad is revealed. The spin fills only this
+              target; the choice is locked once the squad rolls.
             </p>
             {targetDeadEnd ? (
               <p className={s.formationError} role="alert">
                 {managerForced
                   ? "The revealed squad has no manager, and this final manager target is unrecoverable. Start a new draft."
-                  : "No candidate for that target in this configured pool — the spin was not used. Pick a different target."}
+                  : "No candidate for that target in this configured pool. The spin was not used. Pick a different target."}
               </p>
             ) : null}
             {transitionError ? (
@@ -917,7 +917,7 @@ function DraftBoard({
             ) : null}
             {managerForced ? (
               <p className={s.memoryModeNote} role="note">
-                Final spin with no manager drafted — the manager is the only legal target.
+                Final spin with no manager drafted; the manager is the only legal target.
               </p>
             ) : null}
             {managerOpen ? (
@@ -1005,7 +1005,7 @@ function DraftBoard({
         ) : null}
         {resumedRun && picked > 0 ? (
           <p className={s.spinResumeNote} role="status">
-            Same draw — spins are seed-locked.
+            Same draw; spins are seed-locked.
           </p>
         ) : null}
         <SpinStage
@@ -1043,7 +1043,7 @@ function DraftBoard({
       <span className={s.eyebrowAccent}>Draft complete</span>
       <h1 className={s.panelTitle}>All 17 spins resolved.</h1>
       <p className={s.completeNote}>
-        Lock-on-pick — nothing else can be rearranged. Step into review for line ratings, Synergy,
+        Lock-on-pick: nothing else can be rearranged. Step into review for line ratings, Synergy,
         and your final XI.
       </p>
     </section>
@@ -1080,7 +1080,7 @@ function DraftBoard({
       />
       {blind ? (
         <p className={s.memoryModeNote} role="note">
-          {blindModeLabel} — hidden values reveal after you simulate.
+          {blindModeLabel}: hidden values reveal after you simulate.
         </p>
       ) : null}
       <div className={s.panelHead}>
@@ -1188,7 +1188,7 @@ function DraftBoard({
           <span className={s.gkWarnGlyph} aria-hidden="true">
             !
           </span>
-          No specialist goalkeeper placed yet — the sim will apply an outfielder-in-goal penalty.
+          No specialist goalkeeper placed yet; the sim will apply an outfielder-in-goal penalty.
         </p>
       </section>
     ) : null;
@@ -1281,7 +1281,7 @@ function DraftBoard({
         )}
         {managerOnlyOpen ? (
           <p className={s.emptyList} role="status">
-            All player slots filled — pick the manager.
+            All player slots filled. Pick the manager.
           </p>
         ) : null}
 

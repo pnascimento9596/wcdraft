@@ -6,4 +6,4 @@ export const TOTAL_SPINS = 17;
  * resume after `router.replace` doesn't lose the warning the user already saw.
  */
 export const VOLATILE_STORAGE_WARNING =
-  "Draft is saved in this tab only — browser storage is unavailable.";
+  "Draft is saved in this tab only because browser storage is unavailable.";

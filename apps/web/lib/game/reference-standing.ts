@@ -26,7 +26,7 @@ import { loadGameData } from "./data";
 
 /** One-line How-to-Play / a11y explainer, kept next to the computation. */
 export const REFERENCE_STANDING_EXPLAINER =
-  "Reference standing compares your score with a reference population of simulated drafts on this engine — not with other players." as const;
+  "Reference standing compares your score with a reference population of simulated drafts on this engine, not with other players." as const;
 
 /**
  * The table applies to a run iff its anchors describe the exact version set

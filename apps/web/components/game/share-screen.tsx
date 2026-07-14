@@ -89,7 +89,7 @@ export function ShareScreen() {
     if (parsed === null) {
       setMode({
         kind: "missing",
-        reason: "Open a draft first — a share card is only available for a simulated run.",
+        reason: "Open a draft first. A share card is only available for a simulated run.",
         runId: null,
       });
       return;
@@ -103,7 +103,7 @@ export function ShareScreen() {
             kind: "missing",
             reason:
               resolved.runId === null
-                ? "Open a draft first — a share card is only available for a simulated run."
+                ? "Open a draft first. A share card is only available for a simulated run."
                 : "We couldn't find that run.",
             runId: resolved.runId,
           });
@@ -135,7 +135,7 @@ export function ShareScreen() {
             kind: "missing",
             reason:
               resolved.reason === "malformed"
-                ? "The shared link is malformed or truncated — ask the sender for a fresh link."
+                ? "The shared link is malformed or truncated. Ask the sender for a fresh link."
                 : resolved.reason,
             runId: null,
           });
@@ -652,7 +652,7 @@ function ShareBody({
   const recipientCta =
     record.challenge?.kind === "daily"
       ? "Draft today's teams →"
-      : `${teamLabel} went ${view.display_record} — draft your own all-time XI →`;
+      : `${teamLabel} went ${view.display_record}; draft your own all-time XI →`;
   const shareReadyNote = ogPreviewPending
     ? "Replay link ready. Preparing the signed preview; sharing works now with the static preview card."
     : ogPreviewError
@@ -680,7 +680,7 @@ function ShareBody({
             ? record.challenge?.kind === "daily"
               ? "A seed-locked daily run from another browser. Draft the same daily teams and chase your own score."
               : "A seed-locked run from another browser. Start fresh to draft your own XI."
-            : "Branded, deterministic, seed-locked. Names and national flag codes only — no competition marks."}
+            : "Branded, deterministic, seed-locked. Names and national flag codes only; no competition marks."}
         </p>
       </header>
 
@@ -865,7 +865,7 @@ function ShareBody({
           {shareLinkError
             ? "The card remains exportable, but this run cannot be shared as a reproducible replay URL."
             : ogPreviewError
-              ? "preview unavailable, link works — the static preview card is active; Retry only refreshes the preview."
+              ? "Preview unavailable, link works. The static preview card is active; Retry only refreshes the preview."
               : `${shareReadyNote} The replay URL reproduces this run byte-for-byte from its seed.`}{" "}
           Nothing here uses any official competition name, emblem, or trophy.
         </p>
@@ -1145,7 +1145,7 @@ function ShareCardSvg({
         fontSize="11"
         letterSpacing="0.28em"
       >
-        wcdraft.com — draft your own XI
+        wcdraft.com: draft your own XI
       </text>
     </svg>
   );
@@ -1372,7 +1372,7 @@ function MemoryRevealShareCardSvg({
         fontFamily="var(--font-family)"
         fontSize="10"
       >
-        wcdraft.com — draft your own XI
+        wcdraft.com: draft your own XI
       </text>
     </svg>
   );

@@ -27,6 +27,6 @@ describe("trust copy", () => {
       new URL("../../../components/game/draft-screen/setup.tsx", import.meta.url),
       "utf8",
     );
-    expect(setup).toContain("Current ratings play as a tougher board — expect lower scores");
+    expect(setup).toContain("Current ratings play as a tougher board; expect lower scores");
   });
 });

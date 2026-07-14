@@ -94,7 +94,7 @@ export function buildFriendChallengeUrl(
 }
 
 export function buildFriendChallengeShareCopy(url: string): string {
-  return `Challenge a friend on my WCDraft board. Same seed, same setup — can you beat my score?\n${url}`;
+  return `Challenge a friend on my WCDraft board. Same seed, same setup. Can you beat my score?\n${url}`;
 }
 
 export const FRIEND_CHALLENGE_VERIFICATION_COPY =

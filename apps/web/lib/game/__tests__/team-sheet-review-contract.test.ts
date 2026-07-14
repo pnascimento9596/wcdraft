@@ -10,7 +10,7 @@ const SOURCE = readFileSync(
 describe("team-sheet review contract", () => {
   it("reveals Memory and Blind Open information before arrangement", () => {
     expect(SOURCE).toContain("hiddenModeRevealed = isBlindDraftMode");
-    expect(SOURCE).toContain("reveal complete — arrange with full card information");
+    expect(SOURCE).toContain("reveal complete. Arrange with full card information");
     expect(SOURCE).not.toContain("blindRatings: blind");
     expect(SOURCE).not.toContain("hidden until you simulate");
   });

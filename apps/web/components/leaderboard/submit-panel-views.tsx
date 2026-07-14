@@ -248,7 +248,7 @@ function SubmitOutcome({
         {phase.rank !== null ? (
           <p className={s.outcomeRank}>{standingText(phase, challengeKind)}</p>
         ) : (
-          <p className={s.outcomeMsg}>Posted — your rank will show on the board.</p>
+          <p className={s.outcomeMsg}>Posted. Your rank will show on the board.</p>
         )}
         <Link href={leaderboardHref} className="btn btn--ghost">
           View leaderboard
@@ -263,9 +263,7 @@ function SubmitOutcome({
         <p className={s.outcomeTitle}>Already on the board</p>
         <p className={s.outcomeMsg}>
           This exact run was posted before
-          {phase.rank !== null
-            ? ` — your best sits at ${standingText(phase, challengeKind)}.`
-            : "."}
+          {phase.rank !== null ? `; your best sits at ${standingText(phase, challengeKind)}.` : "."}
         </p>
         <Link href={leaderboardHref} className="btn btn--ghost">
           View leaderboard

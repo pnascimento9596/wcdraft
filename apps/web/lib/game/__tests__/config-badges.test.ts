@@ -139,7 +139,7 @@ describe("position-first lock-bar copy", () => {
       "Select a player and a slot, or pick the manager.",
     );
     expect(lockBarIdleCopy({ lockedTargetLabel: null, showReviewCta: true })).toBe(
-      "Draft complete — review your squad and prep for the run.",
+      "Draft complete. Review your squad and prep for the run.",
     );
   });
 });
