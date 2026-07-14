@@ -33,6 +33,51 @@ touches. Validation: package typecheck; node:test 3/3; `npx cap sync ios`
 succeeds; iOS Xcode project generated. Simulator runtime download is a free
 host prerequisite (see M1a report).
 
+Season 2 Squad Depth — Unit S5 pre-lock fit teaching:
+2026-07-13 · local YELLOW implementation on
+`ws-f4/season2-s5-fit-teaching`, based on exact integration head
+`cdf16b4f7f795302cc44106c58626383dd56c9e7`. Classic, Open Draft, and Daily
+player choices now show one compact projected line-contribution chip for the
+slot the current lock action would use. The display is a thin mapping of the
+engine-exported `projectSlotContribution`: compatibility-weighted target-line
+rating divided by the fixed XI size, rounded to one decimal only at the UI
+boundary, and explicitly labelled pre-Synergy. Candidate views supply the
+configured Career/Current channels. A selected manual slot overrides a
+position-first locked target, which overrides the existing candidate-specific
+default-slot resolver. Off-natural choices add source-to-target position and
+reduced/severe fit copy using the engine compatibility value and existing
+position shapes. The source position is the exact eligibility that wins the
+engine's max-compatibility fold, with existing eligibility order breaking
+ties. Memory, Blind Open, blinded ratings, and manager choices emit no
+teaching chip. No rating, engine, Synergy, RNG, schema, token, auth, or
+simulation behavior changed.
+
+Fresh exact-head review of `8634e030c540c32cc5c10b2ed6688d82b258a6bf`
+returned FAIL for one honesty defect: multi-position cards used the maximum
+eligible-position compatibility numerically while the arrow named their
+listed position. Layún 2014 at ST therefore displayed `DF → ST · reduced fit`
+even though MF supplied the reduced 0.75 compatibility and DF alone would be
+the severe 0.45 tier. The fix-forward probes each eligibility through the same
+canonical compatibility function, selects the strict maximum in stable
+existing order, and omits only the single-source arrow if that result ever
+diverges from the engine projection. Visible and accessible fit copy share the
+same resolved source. The `8634e03` FAIL remains authoritative; the new head
+requires fresh exact-head review.
+
+Measured fix-forward closure: focused S5 14/14, including 610,950 real runtime
+card/basis/slot label contexts, plus web typecheck and lint. The original head
+also passed root typecheck 8/8, lint 5/5, test 8/8 (core 423, data 183 + 9
+expected skips, DB 161, marketing 69, web 1,244 + 1 expected skip), game-flow,
+responsive 218/0, and build 4/4 with 40 pages/routes; CI and the fresh reviewer
+will re-execute the broad gates on the fix-forward head. Explicit `next start`
+production mobile evidence covers unchanged normal and single-position
+off-natural Classic fixtures at 390x844 and 360x800 in both themes: 8/8 metrics
+have zero horizontal overflow, zero small targets, zero axe violations, zero
+console errors, and the primary action in view. Full gate commands are recorded
+in `docs/reports/season2-s5-fit-teaching-2026-07-13.md`. No merge or
+production ship has occurred; PR CI and integration-branch merge remain
+required.
+
 Season 2 Squad Depth — Unit S4 team-sheet and reconciled token contract:
 2026-07-13 · local RED implementation on `ws-f4/season2-s4-team-sheet`, based
 on exact integration head `98c0e07abd992b624cf44e500ad6b2199c5a25d3`.
