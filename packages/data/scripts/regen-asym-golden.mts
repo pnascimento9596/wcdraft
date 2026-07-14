@@ -1,14 +1,14 @@
-// Season 2 S3 Option A — refresh the asymmetric realism gate golden after the
-// manager-presence tactical tier and calibrated squad-depth mechanics land.
+// manager-attrition — refresh the asymmetric realism gate golden after
+// manager-link band wiring, lower persistent user-path injury attrition, and
+// the U5 choose-from-3 soft-floor spread.
 //
 // What this updates: per-policy run counts + raw event totals + observed rates +
-// per-observed Wilson half-widths + telemetry + score population.
+// per-observed Wilson half-widths + telemetry, then re-centers the shape bands
+// around the strategicAutoDraft landing using the pre-existing recipe:
+// max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor).
 //
-// What this DELIBERATELY preserves byte-for-byte: `ensemble`, each policy's
-// `_doc`, and the semantic shape-band centers/widths. S3 re-evaluated those
-// existing bands against the final engine and retained them because the final
-// strategic population still passes every band. A mechanics relock must not
-// silently recenter acceptance around its own observation.
+// What this DELIBERATELY preserves byte-for-byte: `ensemble` and each policy's
+// `_doc`.
 //
 //   pnpm --filter @wcdraft/data exec tsx scripts/regen-asym-golden.mts
 
@@ -30,6 +30,8 @@ const GOLDEN_PATH = join(HERE, "..", "test", "realism", "asym-realism-golden.jso
 const golden = JSON.parse(readFileSync(GOLDEN_PATH, "utf-8"));
 const N: number = golden.ensemble.N_runs;
 const seedPrefix: string = golden.ensemble.seed_prefix;
+const SHAPE_KEYS = ["draw_pct", "margin4plus_pct", "ko_et_pct", "shootout_pct"] as const;
+const SHAPE_FLOOR = 0.015;
 
 function observedOf(m: RealismMeasurement) {
   return {
@@ -95,14 +97,20 @@ golden.score_population = {
   ...summarizeScorePopulation(strategicMeasurement),
 };
 golden.$schema_doc =
-  "Season 2 S3 Option A final asymmetric realism relock. The gate sims the default/Career basis after the stable manager-presence tactical tier and calibrated bench-availability mechanics. Lambda, scoring, progression semantics, and the pre-S3 semantic shape-band centers remain unchanged; exact policy populations and telemetry are re-locked to the final engine. Runtime engine_version is " +
+  "manager-attrition asymmetric realism gate -- the gate sims the default/Career basis after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Rating anchors remain merit-v4.6 because no additional high-confidence owner rows resolved in this season lane. Runtime engine_version is " +
   RUNTIME_DATA_MANIFEST.engine_version +
   ".";
 golden.engine_anchor =
-  "Season 2 S3 manager-presence tactical tier plus calibrated bench availability and replacement contribution";
+  "manager-link band wiring plus lower persistent user-path injury attrition plus U5 choose-from-3 soft-floor spread";
 golden.engine_version = RUNTIME_DATA_MANIFEST.engine_version;
 golden.shape_bands._doc =
-  "Season 2 S3 deliberate realism re-lock: the final strategicAutoDraft observation was re-executed at N=2000 after the manager-presence and bench-calibration changes and still passes all pre-S3 semantic shape-band centers and widths. Those acceptance bands are therefore retained exactly rather than weakened or recentered around the new observation. Exact per-policy mechanics counts, telemetry, score population, Wilson evidence, and the goals/game floor are re-locked to the final engine.";
+  "manager-attrition relock: shape bands centered on strategicAutoDraft after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
+for (const key of SHAPE_KEYS) {
+  golden.shape_bands[key] = {
+    center_policy: "strategicAutoDraft",
+    half_width: Math.max(strategic.wilson_half_widths_around_observed[key], SHAPE_FLOOR),
+  };
+}
 golden.goals_per_game_lower_floor._doc =
   "One-sided LOWER floor. No upper cap because total goal volume legitimately rises with the strategic-underdog gap and there is no real-world ceiling. Floor = strategicAutoDraft observed minus ~2x Wilson half-width, rounded down to keep honest residual cushion.";
 golden.goals_per_game_lower_floor.lower_bound =
@@ -112,7 +120,7 @@ golden.goals_per_game_lower_floor.lower_bound =
       100,
   ) / 100;
 golden.wilson_target_for_ko_metrics._doc =
-  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. Season 2 S3 remeasures these widths on the final manager-presence and bench-calibrated engine while retaining the previously locked semantic shape bands.";
+  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. manager-attrition remeasures the strategicAutoDraft observed half-widths after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread.";
 golden.wilson_target_for_ko_metrics.observed_half_width_pp = {
   ko_et_pct: Number((100 * strategic.wilson_half_widths_around_observed.ko_et_pct).toFixed(2)),
   shootout_pct: Number(

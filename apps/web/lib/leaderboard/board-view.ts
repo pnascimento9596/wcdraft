@@ -183,7 +183,6 @@ export function boardQueryString(opts: {
   filter: BoardFilter;
   cursor: string | null;
   limit?: number;
-  seasonKey?: string;
 }): string {
   const q = new URLSearchParams();
   q.set("challenge", opts.filter.challenge);
@@ -195,7 +194,6 @@ export function boardQueryString(opts: {
   q.set("draft_order", opts.filter.draftOrder);
   q.set("era", opts.filter.era);
   q.set("rating_basis", opts.filter.ratingBasis);
-  if (opts.seasonKey) q.set("season", opts.seasonKey);
   if (opts.cursor !== null) q.set("cursor", opts.cursor);
   if (typeof opts.limit === "number") q.set("limit", String(opts.limit));
   return `?${q.toString()}`;
@@ -210,7 +208,6 @@ export interface SeasonDisplay {
 }
 
 const SEASON_DISPLAY_NAMES: Readonly<Record<string, string>> = Object.freeze({
-  "season-2026-squad-depth": "Squad Depth 2026",
   "season-2026-manager-attrition": "Summer 2026",
 });
 

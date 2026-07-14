@@ -504,8 +504,6 @@ function eventPlayerIds(e: MatchEvent): string[] {
     case "red":
     case "injury":
       return [e.player_id];
-    case "availability":
-      return [e.player_id, e.replacement_player_id].filter((id): id is string => id !== null);
     case "save":
       return [e.keeper_player_id];
     case "foul":

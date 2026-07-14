@@ -25,11 +25,9 @@ import {
   type MeResponseBody,
   type ReadRouteDeps,
 } from "../board-route";
-import { ARCHIVED_LEADERBOARD_SEASON_IDS } from "../season";
 
 const SECRET = testCookieSecret("f4-u3-board");
 const CURRENT_SEASON = "season-current-test";
-const ARCHIVED_SEASON = ARCHIVED_LEADERBOARD_SEASON_IDS[0];
 const BASE_MS = Date.parse("2026-06-10T12:00:00.000Z");
 
 const { db, pg, reset } = await setupTestDb();
@@ -253,22 +251,15 @@ describe("GET /api/leaderboard — board page", () => {
     expect(body.entries[0]!.rank).toBe(1);
   });
 
-  it("defaults to the current season; explicit ?season= reads the retained archive", async () => {
-    await seed({ score: 90, seasonKey: ARCHIVED_SEASON });
+  it("defaults to the current season; explicit ?season= reads an old board", async () => {
+    await seed({ score: 90, seasonKey: "season-old" });
     await seed({ score: 70 });
     const current = await getBoard();
     expect(current.body.entries.map((e) => e.verified_score)).toEqual([70]);
-    const old = await getBoard({ season: ARCHIVED_SEASON });
+    const old = await getBoard({ season: "season-old" });
     expect(old.body.entries.map((e) => e.verified_score)).toEqual([90]);
-    expect(old.body.season_key).toBe(ARCHIVED_SEASON);
+    expect(old.body.season_key).toBe("season-old");
     expect(old.body.current_season_key).toBe(CURRENT_SEASON);
-  });
-
-  it("rejects an unpublished season even when matching rows exist", async () => {
-    await seed({ score: 99, seasonKey: "season-unpublished" });
-    const res = await getBoard({ season: "season-unpublished" });
-    expect(res.status).toBe(400);
-    expect((res.body as unknown as { error: string }).error).toBe("INVALID_QUERY");
   });
 
   it("explicit ?mode=casual still reads casual entries", async () => {
@@ -326,17 +317,11 @@ describe("GET /api/leaderboard — board page", () => {
     ]);
   });
 
-  it("daily board rejects ranked, malformed dates, and season archive keys", async () => {
+  it("daily board rejects ranked and malformed dates", async () => {
     const ranked = await getBoard({ challenge: "daily", mode: "ranked" });
     expect(ranked.status).toBe(400);
     const badDate = await getBoard({ challenge: "daily", date: "2026-02-30" });
     expect(badDate.status).toBe(400);
-    const seasonalNamespace = await getBoard({
-      challenge: "daily",
-      season: ARCHIVED_SEASON,
-    });
-    expect(seasonalNamespace.status).toBe(400);
-    expect((seasonalNamespace.body as unknown as { error: string }).error).toBe("INVALID_QUERY");
   });
 
   it("full config filter splits the board with canonical config as the default", async () => {
@@ -450,19 +435,6 @@ describe("GET /api/leaderboard/me", () => {
     const res = await handleLeaderboardMeGet(meReq(), deps());
     expect(res.status).toBe(401);
     expect(((await res.json()) as { error: string }).error).toBe("AUTH_REQUIRED");
-  });
-
-  it("rejects an unpublished season for an authenticated caller", async () => {
-    const { cookieValue } = await createSession(
-      { userId: null },
-      { db, now: () => Date.now(), cookieSecret: SECRET },
-    );
-    const res = await handleLeaderboardMeGet(
-      meReq({ season: "season-unpublished" }, cookieValue),
-      deps(),
-    );
-    expect(res.status).toBe(400);
-    expect(((await res.json()) as { error: string }).error).toBe("INVALID_QUERY");
   });
 
   it("anon session: best + same-snapshot rank + newest-first recent, uncached", async () => {

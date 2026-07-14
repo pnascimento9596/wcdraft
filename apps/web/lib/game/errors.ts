@@ -100,13 +100,6 @@ export class StorageUnavailableError extends RunRecordError {
   }
 }
 
-export class RunStoreCoordinationError extends RunRecordError {
-  constructor(message: string) {
-    super(message);
-    this.name = "RunStoreCoordinationError";
-  }
-}
-
 export class StorageQuotaError extends RunRecordError {
   constructor(message: string) {
     super(message);
@@ -165,12 +158,6 @@ export function describeGameError(err: unknown): ErrorDisplay {
       title: "Browser storage full",
       message:
         "Your draft is being held in this tab only. Free up storage or clear older drafts to resume persistence.",
-    };
-  }
-  if (err instanceof RunStoreCoordinationError) {
-    return {
-      title: "Browser update required",
-      message: err.message,
     };
   }
   if (err instanceof StorageUnavailableError) {

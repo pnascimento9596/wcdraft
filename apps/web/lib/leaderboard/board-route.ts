@@ -38,7 +38,6 @@ import {
   type BoardRatingBasis,
 } from "./config";
 import { LeaderboardGateError, requireReadIdentity } from "./identity-gate";
-import { isReadableLeaderboardSeasonId } from "./season";
 import {
   boardPage,
   identityBoardRank,
@@ -117,17 +116,9 @@ function parseSeasonAndMode(
     return queryError("challenge must be 'season' or 'daily'");
   }
   const challengeType = challengeRaw;
-  const requestedSeasonKey = q.get("season");
-  const currentSeasonKey = deps.currentSeasonKey();
-  if (challengeType === DAILY_CHALLENGE_KIND && requestedSeasonKey !== null) {
-    return queryError("season is not valid for daily challenge boards");
-  }
-  const seasonKey = requestedSeasonKey ?? currentSeasonKey;
-  if (
-    challengeType === SEASON_CHALLENGE_KIND &&
-    !isReadableLeaderboardSeasonId(seasonKey, currentSeasonKey)
-  ) {
-    return queryError("season is not an available leaderboard season");
+  const seasonKey = q.get("season") ?? deps.currentSeasonKey();
+  if (seasonKey.length === 0 || seasonKey.length > 256) {
+    return queryError("season is not a valid season key");
   }
   const challengeDate =
     challengeType === DAILY_CHALLENGE_KIND

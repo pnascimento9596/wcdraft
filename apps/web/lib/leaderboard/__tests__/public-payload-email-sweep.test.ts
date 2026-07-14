@@ -41,7 +41,6 @@ import { POST as resendVerificationPost } from "@/app/api/auth/resend-verificati
 import { DELETE as sessionDelete, GET as sessionGet } from "@/app/api/auth/session/route";
 import { POST as signUpPost } from "@/app/api/auth/sign-up/route";
 import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/route";
-import { POST as challengeVerifyPost } from "@/app/api/challenge/verify/route";
 import { POST as cspReportPost } from "@/app/api/csp-report/route";
 import { GET as ogHealthGet } from "@/app/api/og/health/route";
 import { POST as ogSignPost } from "@/app/api/og/sign/route";
@@ -100,7 +99,6 @@ const PUBLIC_API_METHODS = [
   "POST /api/auth/resend-verification",
   "POST /api/auth/sign-up",
   "POST /api/auth/verify",
-  "POST /api/challenge/verify",
   "POST /api/csp-report",
   "POST /api/leaderboard/submit",
   "POST /api/leaderboard/lineup",
@@ -463,20 +461,6 @@ describe("public route payload email sweep", () => {
             body: JSON.stringify({ email: MAGIC_EMAIL }),
           }),
         ),
-      ),
-    );
-    captures.push(
-      routeCapture(
-        "POST /api/challenge/verify",
-        await challengeVerifyPost(
-          req("/api/challenge/verify", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ token: "invalid", proof: "invalid" }),
-          }),
-        ),
-        "POST /api/challenge/verify validation error",
-        500,
       ),
     );
     captures.push(

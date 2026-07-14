@@ -480,7 +480,6 @@
 .channelLabel {
   composes: channelLabel from "./game-styles/draft-base.module.css";
   composes: channelLabel from "./game-styles/review.module.css";
-  composes: channelLabel from "./game-styles/draft-polish.module.css";
 }
 .channelTrack {
   composes: channelTrack from "./game-styles/draft-base.module.css";
@@ -772,45 +771,6 @@
 }
 .narrativeText {
   composes: narrativeText from "./game-styles/results.module.css";
-}
-.factualRecap {
-  composes: factualRecap from "./game-styles/results.module.css";
-}
-.factualRecapKicker {
-  composes: factualRecapKicker from "./game-styles/results.module.css";
-}
-.factualRecapGrid {
-  composes: factualRecapGrid from "./game-styles/results.module.css";
-}
-.factualRecapBlock {
-  composes: factualRecapBlock from "./game-styles/results.module.css";
-}
-.factualRecapDetail {
-  composes: factualRecapDetail from "./game-styles/results.module.css";
-}
-.factualRecapHeading {
-  composes: factualRecapHeading from "./game-styles/results.module.css";
-}
-.factualMetric {
-  composes: factualMetric from "./game-styles/results.module.css";
-}
-.factualEmpty {
-  composes: factualEmpty from "./game-styles/results.module.css";
-}
-.factualStrengthGrid {
-  composes: factualStrengthGrid from "./game-styles/results.module.css";
-}
-.factualDefinitionList {
-  composes: factualDefinitionList from "./game-styles/results.module.css";
-}
-.factualList {
-  composes: factualList from "./game-styles/results.module.css";
-}
-.factualEventList {
-  composes: factualEventList from "./game-styles/results.module.css";
-}
-.factualEventLink {
-  composes: factualEventLink from "./game-styles/results.module.css";
 }
 .matchList {
   composes: matchList from "./game-styles/results.module.css";
@@ -1235,27 +1195,6 @@
 .formationSelect {
   composes: formationSelect from "./game-styles/draft-shell.module.css";
   composes: formationSelect from "./game-styles/draft-polish.module.css";
-}
-.friendChallengeSetup {
-  composes: friendChallengeSetup from "./game-styles/challenge.module.css";
-}
-.friendChallengeKicker {
-  composes: friendChallengeKicker from "./game-styles/challenge.module.css";
-}
-.friendChallengeConfig {
-  composes: friendChallengeConfig from "./game-styles/challenge.module.css";
-}
-.friendChallengeBuildNote {
-  composes: friendChallengeBuildNote from "./game-styles/challenge.module.css";
-}
-.friendHeadToHead {
-  composes: friendHeadToHead from "./game-styles/challenge.module.css";
-}
-.friendScoreGrid {
-  composes: friendScoreGrid from "./game-styles/challenge.module.css";
-}
-.friendVerifyNote {
-  composes: friendVerifyNote from "./game-styles/challenge.module.css";
 }
 .formationHead {
   composes: formationHead from "./game-styles/draft-shell.module.css";
@@ -2026,27 +1965,6 @@
 }
 .candBasisDelta {
   composes: candBasisDelta from "./game-styles/draft-polish.module.css";
-}
-.fitTeachingChip {
-  composes: fitTeachingChip from "./game-styles/draft-polish.module.css";
-}
-.fitTeaching_natural {
-  composes: fitTeaching_natural from "./game-styles/draft-polish.module.css";
-}
-.fitTeaching_reduced {
-  composes: fitTeaching_reduced from "./game-styles/draft-polish.module.css";
-}
-.fitTeaching_severe {
-  composes: fitTeaching_severe from "./game-styles/draft-polish.module.css";
-}
-.fitTeachingShape {
-  composes: fitTeachingShape from "./game-styles/draft-polish.module.css";
-}
-.fitTeachingValue {
-  composes: fitTeachingValue from "./game-styles/draft-polish.module.css";
-}
-.fitTeachingContext {
-  composes: fitTeachingContext from "./game-styles/draft-polish.module.css";
 }
 .candRowProv {
   composes: candRowProv from "./game-styles/draft-polish.module.css";

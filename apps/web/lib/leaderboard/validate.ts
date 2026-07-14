@@ -42,7 +42,7 @@ import {
   RUN_TOKEN_MAX_LEN,
   tokenDraftConfig,
   versionsAgree,
-  reconcileRunToken,
+  reconstructDraftFromToken,
   type RunTokenBody,
 } from "../game/run-token";
 import { buildSimWorldInputs } from "../game/simulate";
@@ -363,7 +363,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
   // token's parent_seed; any choice index outside rolled_card_ids throws.
   let draft: DraftState;
   try {
-    draft = reconcileRunToken(token, data.gameData);
+    draft = reconstructDraftFromToken(token, data.gameData);
   } catch (err) {
     return rejected("ILLEGAL_PICK", err instanceof Error ? err.message : String(err));
   }
@@ -390,11 +390,6 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
       ruleset_version: data.gameData.versions.ruleset_version,
     });
     const result = runTournamentFull(draft, scenario, token.ps, world);
-    try {
-      reconcileRunToken(token, data.gameData, result.matches);
-    } catch (error) {
-      return rejected("ILLEGAL_PICK", error instanceof Error ? error.message : String(error));
-    }
     run = result.run;
   } catch (err) {
     return rejected("SIM_FAILURE", err instanceof Error ? err.message : String(err));

@@ -48,7 +48,6 @@ import {
 import { boundedRequest, type ReferenceStanding } from "@wcdraft/data/client";
 
 import s from "./game.module.css";
-import { ChallengeFriendButton } from "./challenge-friend-button";
 
 type Mode =
   | { kind: "loading" }
@@ -66,7 +65,7 @@ type Mode =
 type OgSignState =
   | { kind: "idle" }
   | { kind: "pending" }
-  | { kind: "ready"; signed: string; challengeProof: string | null }
+  | { kind: "ready"; signed: string }
   | { kind: "error"; message: string };
 
 const OG_SIGN_BUDGET_MS = 4_000;
@@ -425,17 +424,9 @@ function ShareBody({
           }
           return false;
         }
-        const body = (await response.json()) as {
-          ok?: unknown;
-          signed?: unknown;
-          challenge_proof?: unknown;
-        };
+        const body = (await response.json()) as { ok?: unknown; signed?: unknown };
         if (!cancelled && body.ok === true && typeof body.signed === "string") {
-          setOgSign({
-            kind: "ready",
-            signed: body.signed,
-            challengeProof: typeof body.challenge_proof === "string" ? body.challenge_proof : null,
-          });
+          setOgSign({ kind: "ready", signed: body.signed });
           return true;
         }
         if (!cancelled && exposeError) {
@@ -770,10 +761,6 @@ function ShareBody({
                 ? "Share unavailable"
                 : "Native share"}
           </button>
-          <ChallengeFriendButton
-            record={record}
-            proof={ogSign.kind === "ready" ? ogSign.challengeProof : null}
-          />
         </div>
         {/* Social web intents (ws-results/history-share). All affordances
             depend on the tokenized `shareUrl`; when tokenization fails we

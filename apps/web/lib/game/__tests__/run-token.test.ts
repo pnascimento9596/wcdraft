@@ -20,7 +20,6 @@ import type { RunRecordVersions } from "../data";
 import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
-import { asDraftedTeamSheet } from "../team-sheet";
 import {
   buildRunTokenBody,
   decodeRunToken,
@@ -77,10 +76,6 @@ function expectV4Body(record: RunRecordV1): RunTokenV4Body {
 
 function encodeV4Body(body: RunTokenV4Body): string {
   return RUN_TOKEN_V4_PREFIX + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
-}
-
-function encodeRawV3Body(body: unknown): string {
-  return RUN_TOKEN_V3_PREFIX + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }
 
 function cloneV4(body: RunTokenV4Body): RunTokenV4Body {
@@ -143,15 +138,6 @@ describe("run-token — encode / decode round-trip", () => {
     expect(body.ev).toBe(gameData.versions.engine_version);
     expect(body.uv).toBe(gameData.versions.ruleset_version);
     expect(body.hv).toBe(gameData.versions.data_bundle_hash);
-  });
-
-  it("round-trips the stable manager-presence tier and rejects an out-of-domain value", () => {
-    const record = { ...origin, manager_presence_band: 1 as const };
-    const body = buildRunTokenBody(record);
-    expect(body.mp).toBe(1);
-    expect(decodeRunToken(encodeRunToken(record))).toMatchObject({ v: 3, mp: 1 });
-    const forged = { ...body, mp: 2 };
-    expect(decodeRunToken(encodeRawV3Body(forged))).toBeNull();
   });
 });
 
@@ -227,25 +213,6 @@ describe("run-token — Open Draft t4 replay", () => {
     expect(body.pl).toHaveLength(17);
     expect(body.pl.some((p) => p.k === "m" && "mc" in p)).toBe(true);
     expect(body.pl.filter((p) => p.k === "p").every((p) => "c" in p)).toBe(true);
-  });
-
-  it("re-shares an arranged t4 virtual record without dropping a or mp", () => {
-    const arrangement = [...asDraftedTeamSheet(origin.draft)];
-    [arrangement[0], arrangement[11]] = [arrangement[11]!, arrangement[0]!];
-    const arranged: RunRecordV1 = {
-      ...origin,
-      arrangement,
-      manager_presence_band: 1,
-    };
-    const token = encodeRunToken(arranged);
-    const decoded = decodeRunToken(token);
-    if (decoded === null || decoded.v !== 4) throw new Error("expected arranged t4 token");
-
-    const virtual = virtualRecordFromToken(decoded, gameData);
-    expect(virtual.draft).toEqual(origin.draft);
-    expect(virtual.arrangement).toEqual(arrangement);
-    expect(virtual.manager_presence_band).toBe(1);
-    expect(encodeRunToken(virtual)).toBe(token);
   });
 
   it("round-trips and reconstructs Open Draft and Blind Open byte-for-byte", () => {

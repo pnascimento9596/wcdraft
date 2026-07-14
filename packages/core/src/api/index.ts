@@ -27,9 +27,4 @@ export {
 export { positionCompatibility } from "./compatibility.js";
 export { computeSynergy } from "./synergy.js";
 export type { StarterContribution, AggregateUserXiStrengthFn } from "./team-strength.js";
-export {
-  aggregateUserXiStrength,
-  aggregateActiveXiStrength,
-  projectSlotContribution,
-  managerBandModifier,
-} from "../engine/team-strength.js";
+export { aggregateUserXiStrength, managerBandModifier } from "./team-strength.js";

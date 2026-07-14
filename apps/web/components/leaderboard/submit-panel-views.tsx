@@ -29,8 +29,6 @@ export interface SubmitPanelViewProps {
   emailVerified?: boolean;
   challengeKind?: "season" | "daily";
   dailyOpen?: boolean;
-  /** Seed-disclosed friend challenges can only use the casual lane. */
-  casualOnly?: boolean;
   leaderboardHref: string;
   name: string;
   /** Live U2-mirror hint; null when the name is fine or untouched. */
@@ -52,7 +50,6 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
   const { phase } = props;
   const rankedSelected = props.submitMode === "ranked";
   const daily = props.challengeKind === "daily";
-  const casualOnly = props.casualOnly === true;
   const dailyOpen = props.dailyOpen ?? true;
   const rankedAuthBlocked = rankedSelected && (!props.authReady || !props.isSignedIn);
   const rankedVerificationBlocked =
@@ -91,8 +88,6 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
               ? "Daily board · anonymous posting open today"
               : "Daily board · submissions closed for this date"}
           </p>
-        ) : casualOnly ? (
-          <p className={s.submitModeNote}>Friend challenge · Casual board only</p>
         ) : (
           <div className="segmented" role="group" aria-label="Leaderboard lane">
             <button

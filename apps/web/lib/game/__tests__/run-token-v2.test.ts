@@ -380,31 +380,22 @@ describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
     expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
   });
 
-  it("pre-Season-2 shipped t3 token: real production anchors now trip skew", () => {
-    const decoded = decodeRunToken(skewFixtures.shipped_pre_s2_t3.token);
+  it("current-prod t1 token: anchors derive from the shipped manifest and now trip skew", () => {
+    const decoded = decodeRunToken(skewFixtures.current_prod_t1.token);
     expect(decoded).not.toBeNull();
-    expect(decoded!.v).toBe(3);
-    expect(skewFixtures.shipped_pre_s2_source.production_main_commit).toBe(
-      "f04559f46b43944e94a4ccfa904d8cf9c1a65231",
-    );
-    expect(skewFixtures.shipped_pre_s2_source.producer).toBe(
-      "shipped build deterministic test run; not user data",
-    );
-    expect(skewFixtures.shipped_pre_s2_source.body_sha256).toBe(
-      "38aa896cef26b2c33092bea0f1a1a4feb7fce1b86043cb566b4c5d663b35b2e6",
-    );
-    expect(decoded!.sv).toBe("runtime-data-2.10.0");
-    expect(decoded!.ev).toBe("engine-2026.06.30-manager-attrition");
-    expect(decoded!.rv).toBe("wc-perf-6.6.0+proj-career-5.6.0");
+    expect(decoded!.v).toBe(1);
+    expect(decoded!.sv).toBe(skewFixtures.current_prod_source.anchors.sv);
+    expect(decoded!.ev).toBe(skewFixtures.current_prod_source.anchors.ev);
+    expect(decoded!.rv).toBe(skewFixtures.current_prod_source.anchors.rv);
     expect(tokenDraftConfig(decoded!)).toMatchObject({
       draft_flow: "squad_first",
       rating_basis: "career",
       era_preset: "all_time",
     });
     expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
-    expect(decoded!.sv).toBe(gameData.versions.schema_version);
-    expect(decoded!.rv).toBe(gameData.versions.rating_version);
-    expect(decoded!.hv).toBe(gameData.versions.data_bundle_hash);
+    expect(decoded!.sv).not.toBe(gameData.versions.schema_version);
+    expect(decoded!.rv).not.toBe(gameData.versions.rating_version);
+    expect(decoded!.hv).not.toBe(gameData.versions.data_bundle_hash);
     expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
   });
 

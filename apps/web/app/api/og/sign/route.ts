@@ -9,7 +9,6 @@ import {
 import { getValidationData } from "@/lib/leaderboard/server-data";
 import { buildRunOgCacheKey } from "@/lib/game/run-og-metadata";
 import { verifyRunTokenForOg } from "@/lib/game/run-og-server";
-import { signVerifiedFriendChallenge } from "@/lib/game/friend-challenge-server";
 import {
   readOgSigningSecret,
   sha256Hex,
@@ -18,7 +17,6 @@ import {
 } from "@/lib/game/run-og-signing";
 import { RUN_TOKEN_MAX_LEN } from "@/lib/game/run-token";
 import { readClientIp } from "@/lib/http/client-ip";
-import { readBoundedText } from "@/lib/http/read-bounded-text";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,7 +28,6 @@ const SIGN_CACHE_MAX_ENTRIES = 512;
 
 interface SignedOgCacheEntry {
   readonly signed: string;
-  readonly challengeProof: string | null;
   readonly cacheKey: string;
   readonly expiresAt: number;
 }
@@ -107,7 +104,6 @@ export async function handleRunOgSignPost(
       {
         ok: true,
         signed: cached.signed,
-        challenge_proof: cached.challengeProof,
         cache_key: cached.cacheKey,
       },
       { status: 200, headers: NO_STORE },
@@ -141,10 +137,8 @@ export async function handleRunOgSignPost(
     model: verified.model,
   };
   let signed: string;
-  let challengeProof: string | null;
   try {
     signed = await signRunOgPayload(payload, secret);
-    challengeProof = await signVerifiedFriendChallenge(run, verified, data, secret);
   } catch {
     return NextResponse.json(
       { ok: false, error: "CANONICAL_MODEL_INVALID" },
@@ -154,7 +148,6 @@ export async function handleRunOgSignPost(
   const cacheKey = buildRunOgCacheKey(tokenHash, payload.v);
   writeSignedOgCache(`${secretHash}:${tokenHash}`, {
     signed,
-    challengeProof,
     cacheKey,
     expiresAt: now + SIGN_CACHE_TTL_MS,
   });
@@ -162,7 +155,6 @@ export async function handleRunOgSignPost(
     {
       ok: true,
       signed,
-      challenge_proof: challengeProof,
       cache_key: cacheKey,
     },
     { status: 200, headers: NO_STORE },
@@ -216,4 +208,37 @@ function writeSignedOgCache(key: string, entry: SignedOgCacheEntry): void {
     if (!oldest) break;
     signedOgCache.delete(oldest);
   }
+}
+
+async function readBoundedText(
+  request: Request,
+  maxBytes: number,
+): Promise<{ status: "ok"; value: string } | { status: "too_large" } | { status: "invalid" }> {
+  const body = request.body;
+  if (!body) return { status: "ok", value: "" };
+  const reader = body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => undefined);
+        return { status: "too_large" };
+      }
+      chunks.push(value);
+    }
+  } catch {
+    return { status: "invalid" };
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { status: "ok", value: new TextDecoder().decode(bytes) };
 }

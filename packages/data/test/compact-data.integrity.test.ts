@@ -119,10 +119,10 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("keeps frozen rating anchors while the engine carries the squad-depth stamp", () => {
+  it("rating_version anchors are the merit-v4.6 versions; engine_version carries the manager-attrition stamp", () => {
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.6.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.6.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.07.14-squad-depth");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.30-manager-attrition");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {

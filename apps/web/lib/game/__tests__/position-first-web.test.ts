@@ -34,8 +34,8 @@ const catalog = getCatalogForEra(gameData, "all_time");
  * the canonically-first candidate. Dead-ends fall through to the next
  * target — every transition is the same public API the live UI drives.
  */
-async function completePositionFirstRun(mode: "classic" | "hidden") {
-  const created = await createNewRunRecord(gameData, {
+function completePositionFirstRun(mode: "classic" | "hidden") {
+  const created = createNewRunRecord(gameData, {
     formation_id: "4-3-3",
     mode,
     draft_flow: "position_first",
@@ -71,9 +71,8 @@ async function completePositionFirstRun(mode: "classic" | "hidden") {
 describe("DC-3 position-first token round-trip (real data)", () => {
   const record = completePositionFirstRun("classic");
 
-  it("encodes a t3 with df position_first, ts, and choice indices on every player pick", async () => {
-    const resolved = await record;
-    const decoded = decodeRunToken(encodeRunToken(resolved));
+  it("encodes a t3 with df position_first, ts, and choice indices on every player pick", () => {
+    const decoded = decodeRunToken(encodeRunToken(record));
     expect(decoded).not.toBeNull();
     expect(decoded!.v).toBe(3);
     expect(tokenDraftConfig(decoded!).draft_flow).toBe("position_first");
@@ -90,18 +89,17 @@ describe("DC-3 position-first token round-trip (real data)", () => {
     expect(versionsAgree(decoded!, gameData.versions)).toBe(true);
   });
 
-  it("replays through selectDraftTarget to a byte-identical DraftState", async () => {
-    const resolved = await record;
-    const decoded = decodeRunToken(encodeRunToken(resolved))!;
+  it("replays through selectDraftTarget to a byte-identical DraftState", () => {
+    const decoded = decodeRunToken(encodeRunToken(record))!;
     const replayed = reconstructDraftFromToken(decoded, gameData);
-    expect(JSON.stringify(replayed)).toBe(JSON.stringify(resolved.draft));
+    expect(JSON.stringify(replayed)).toBe(JSON.stringify(record.draft));
   });
 });
 
 describe("DC-3 Memory mode × position-first (blind seam intact)", () => {
-  it("same walk in classic vs hidden is byte-identical except the mode field", async () => {
-    const classic = await completePositionFirstRun("classic");
-    const hidden = await completePositionFirstRun("hidden");
+  it("same walk in classic vs hidden is byte-identical except the mode field", () => {
+    const classic = completePositionFirstRun("classic");
+    const hidden = completePositionFirstRun("hidden");
     // run_id/seed differ (separate records) — compare the structural walk:
     // every spin's (T,N)/target/pick depends only on seed + choices, so
     // normalize the seeds by replaying hidden's token as classic instead:
@@ -110,7 +108,7 @@ describe("DC-3 Memory mode × position-first (blind seam intact)", () => {
     expect(classic.draft.mode).toBe("classic");
     expect(hidden.draft.draft_flow).toBe("position_first");
     // The blind seam masks candidate ratings on a rolled position-first spin.
-    const created = await createNewRunRecord(gameData, {
+    const created = createNewRunRecord(gameData, {
       formation_id: "4-3-3",
       mode: "hidden",
       draft_flow: "position_first",

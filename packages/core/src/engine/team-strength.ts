@@ -31,39 +31,10 @@ import type { ManagerRating } from "../types/manager.js";
 import type { TeamStrength } from "../types/rating.js";
 import type { AggregateUserXiStrengthFn, StarterContribution } from "../api/team-strength.js";
 import type { SynergyResult } from "../types/synergy.js";
-import type { Position } from "../types/primitives.js";
-import type { SlotPosition } from "../types/formation.js";
-import { slotPositionLine } from "../types/formation.js";
-import { positionCompatibility } from "./compatibility.js";
 import { MANAGER_MODIFIER, clamp, toChannelInt } from "./calibration.js";
 
 type Channel = "attack" | "midfield" | "defense" | "goalkeeping";
 const CHANNELS: readonly Channel[] = ["attack", "midfield", "defense", "goalkeeping"];
-
-export interface SlotLineProjection {
-  line: Position;
-  compatibility: number;
-  weighted_channel: number;
-}
-
-/** Pure sim-facing line projection shared by replacement ranking and S5 fit teaching. */
-export function projectSlotContribution(input: {
-  rating: Pick<TeamStrength, "attack" | "midfield" | "defense" | "goalkeeping">;
-  eligible_positions: readonly Position[];
-  slot_position: SlotPosition;
-}): SlotLineProjection {
-  const line = slotPositionLine(input.slot_position);
-  const compatibility = positionCompatibility(input.eligible_positions, input.slot_position);
-  const channel =
-    line === "GK"
-      ? input.rating.goalkeeping
-      : line === "DF"
-        ? input.rating.defense
-        : line === "MF"
-          ? input.rating.midfield
-          : input.rating.attack;
-  return { line, compatibility, weighted_channel: channel * compatibility };
-}
 
 /**
  * Manager modifier — bounded by the reserved manager band and driven only by
@@ -116,42 +87,3 @@ export const aggregateUserXiStrength: AggregateUserXiStrengthFn = (starters, syn
     coverage,
   } satisfies TeamStrength;
 };
-
-/**
- * S1 active-XI fold. Missing starters contribute zero to the fixed eleven-slot
- * denominator, then receive the explicit depth-failure penalty. This keeps a
- * short-handed side strictly weaker than inserting even a zero-strength,
- * family-eligible replacement while reusing the canonical XI aggregation.
- */
-export function aggregateActiveXiStrength(
-  starters: readonly StarterContribution[],
-  synergy: SynergyResult,
-  manager: ManagerRating | null,
-  shortHandedMultiplier: number,
-): TeamStrength {
-  if (!Number.isSafeInteger(starters.length) || starters.length > 11) {
-    throw new RangeError(`active XI must contain 0..11 contributions, received ${starters.length}`);
-  }
-  if (!(shortHandedMultiplier > 0 && shortHandedMultiplier <= 1)) {
-    throw new RangeError("shortHandedMultiplier must be in (0, 1]");
-  }
-  const modifier = managerBandModifier(synergy, manager);
-  const amp = synergy.multiplier * modifier;
-  const missing = 11 - starters.length;
-  const depthPenalty = shortHandedMultiplier ** missing;
-  const out = {} as Record<Channel, number>;
-  for (const ch of CHANNELS) {
-    let sum = 0;
-    for (const s of starters) sum += s.rating[ch] * s.position_compatibility;
-    out[ch] = toChannelInt((sum / 11) * amp * depthPenalty);
-  }
-  let coverageSum = 0;
-  for (const s of starters) coverageSum += s.rating.coverage;
-  return {
-    attack: out.attack,
-    midfield: out.midfield,
-    defense: out.defense,
-    goalkeeping: out.goalkeeping,
-    coverage: starters.length > 0 ? clamp(coverageSum / starters.length, 0, 1) : 0,
-  };
-}

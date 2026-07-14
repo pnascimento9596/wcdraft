@@ -19,7 +19,6 @@ import type { GameData } from "@/lib/game/data";
 import { buildMemoryRevealView } from "@/lib/game/memory-reveal-model";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import type { RunRecordV1 } from "@/lib/game/run-record";
-import { projectTeamSheetDraft } from "@/lib/game/team-sheet";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { ManagerSlot } from "./manager-slot";
@@ -41,7 +40,7 @@ function usePrefersReducedMotion(): boolean {
 
 export function MemoryReveal({ gameData, record }: { gameData: GameData; record: RunRecordV1 }) {
   const reducedMotion = usePrefersReducedMotion();
-  const draft = useMemo(() => projectTeamSheetDraft(gameData, record), [gameData, record]);
+  const draft = record.draft;
   const modeCopy = DRAFT_MODE_COPY[draft.mode];
   const formation = FORMATION_TEMPLATES[draft.formation_id]!;
 

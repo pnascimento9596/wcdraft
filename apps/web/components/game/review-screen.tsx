@@ -23,22 +23,15 @@ import { describeGameError } from "@/lib/game/errors";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { draftHref, resultsHref } from "@/lib/game/navigation";
 import {
-  beginRunSimulation,
-  setRunArrangement,
+  saveRunRecord,
   setRunSimulation,
   setRunStatus,
-  setRunTeamName,
   type RunRecordV1,
 } from "@/lib/game/run-record";
 import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { mirrorRunToServer } from "@/lib/game/save-mirror";
 import { runSimulation } from "@/lib/game/simulate";
-import {
-  canonicalTeamSheetSlots,
-  materializeTeamSheetDraft,
-  verifyTeamSheetArrangement,
-} from "@/lib/game/team-sheet";
 import { prewarmSimulationWorker, terminateSimulationWorker } from "@/lib/game/sim-worker-client";
 import { SimulationHandoff } from "@/lib/game/simulation-handoff";
 import { formatNullableNumber, type PitchSlotView } from "@/lib/game/view-models";
@@ -220,97 +213,24 @@ function ReviewBoard({
   onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
   onBack: () => void;
 }) {
-  const sourceDraft = record.draft;
-  const arrangement = useMemo(
-    () => verifyTeamSheetArrangement(sourceDraft, record.arrangement),
-    [sourceDraft, record.arrangement],
-  );
-  // Ephemeral only: projected slots deliberately never replace persisted pick
-  // evidence. The record remains base DraftState + optional arrangement.
-  const draft = useMemo(
-    () => materializeTeamSheetDraft(gameData, sourceDraft, arrangement),
-    [arrangement, gameData, sourceDraft],
-  );
+  const draft = record.draft;
   const formation = FORMATION_TEMPLATES[draft.formation_id]!;
   const validation = useMemo(() => validateSquad(draft), [draft]);
   const [warningsExpanded, setWarningsExpanded] = useState(false);
-  const [selectedSheetSlot, setSelectedSheetSlot] = useState<string | null>(null);
-  const arrangementMutable =
-    record.simulation === undefined &&
-    record.status !== "simulating" &&
-    record.status !== "complete";
 
-  const swapSheetSlot = useCallback(
-    async (slotId: string) => {
-      if (!arrangementMutable) return;
-      if (selectedSheetSlot === null) {
-        setSelectedSheetSlot(slotId);
-        return;
-      }
-      if (selectedSheetSlot === slotId) {
-        setSelectedSheetSlot(null);
-        return;
-      }
-      const slots = canonicalTeamSheetSlots(sourceDraft);
-      const from = slots.findIndex((slot) => slot.slot_id === selectedSheetSlot);
-      const to = slots.findIndex((slot) => slot.slot_id === slotId);
-      if (from < 0 || to < 0) {
-        setSelectedSheetSlot(null);
-        return;
-      }
-      const nextArrangement = [...arrangement];
-      [nextArrangement[from], nextArrangement[to]] = [nextArrangement[to]!, nextArrangement[from]!];
-      const save = await setRunArrangement(record.run_id, gameData.versions, nextArrangement).catch(
-        () => null,
-      );
-      if (!save) {
-        setSelectedSheetSlot(null);
-        onRecordUpdate(record, "Couldn't save the team-sheet arrangement safely.");
-        return;
-      }
-      if (save.status !== "updated" || !save.record) {
-        setSelectedSheetSlot(null);
-        const authoritative = save.record ?? record;
-        onRecordUpdate(
-          authoritative,
-          save.warnings[0] ??
-            (save.status === "conflict"
-              ? "Team-sheet arrangement is locked because this run has already simulated."
-              : "Couldn't save the team-sheet arrangement. Reload Review and try again."),
-        );
-        return;
-      }
-      const warning =
-        save.persistence === "volatile" || save.warnings.length > 0
-          ? save.warnings.join(" · ") ||
-            "Team sheet is saved in this tab only — browser storage is unavailable."
-          : persistenceWarning;
-      setSelectedSheetSlot(null);
-      onRecordUpdate(save.record, warning ?? null);
-    },
-    [
-      arrangement,
-      arrangementMutable,
-      gameData.versions,
-      onRecordUpdate,
-      persistenceWarning,
-      record,
-      selectedSheetSlot,
-      sourceDraft,
-    ],
-  );
-
-  // Memory / Blind Open preserve blind picks, then reveal the complete factual
-  // card information before this arrangement decision.
-  const hiddenModeRevealed = isBlindDraftMode(draft.mode);
+  // Blind modes hide every rating SIGNAL (OVRs, channels, legend
+  // gold, provenance hue, Synergy numerics, line strengths) until the
+  // post-Simulate reveal. DISPLAY-ONLY: the engine still consumes the real
+  // channels; identities, shapes, flags and synergy LINK LINES stay visible.
+  const blind = isBlindDraftMode(draft.mode);
   const blindModeLabel = DRAFT_MODE_COPY[draft.mode].label;
   // Rating basis the squad was drafted on — every card/aggregate view resolves
   // from it (Current reads basis_ratings.current); the CURRENT chip rides it.
   const basis = draft.rating_basis;
 
   const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft, { basis }),
-    [gameData, draft, basis],
+    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind, basis }),
+    [gameData, draft, blind, basis],
   );
 
   const manager = draft.manager_card_id
@@ -325,13 +245,17 @@ function ReviewBoard({
     [draft.squad, formation, managerTournament, gameData.nationByCardId],
   );
 
+  // Blinding rides the adapter opts (same as pitchSlotViews / squadAverageOverall)
+  // so the masked nulls come out of the `blindCardRatingView` seam, never a screen
+  // branch. Under blind, per-line `value` is null but `count` still reports the
+  // filled-starter count so the row labels can render unconditionally.
   const lineRatings = useMemo(
-    () => lineStrengthViews(gameData.indexes, draft, { basis }),
-    [gameData, draft, basis],
+    () => lineStrengthViews(gameData.indexes, draft, { blindRatings: blind, basis }),
+    [gameData, draft, blind, basis],
   );
   const squadAvg = useMemo(
-    () => squadAverageOverall(gameData.indexes, draft, { basis }),
-    [gameData, draft, basis],
+    () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind, basis }),
+    [gameData, draft, blind, basis],
   );
   const squadWarnings = useMemo(
     () => buildPlainSquadWarnings(validation.warnings, [...starters, ...bench]),
@@ -345,49 +269,39 @@ function ReviewBoard({
   useEffect(() => setTeamName(draft.team_name), [draft.team_name]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const clearTeamNameDebounce = useCallback(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = null;
-  }, []);
-
   const persistTeamName = useCallback(
-    async (value: string) => {
-      if (!arrangementMutable) return;
-      const update = await setRunTeamName(record.run_id, gameData.versions, value).catch(
-        () => null,
-      );
-      if (!update) {
-        onRecordUpdate(record, "Couldn't save the team name safely.");
-        return;
-      }
-      if (!update.record) {
-        onRecordUpdate(record, update.warnings[0] ?? "Couldn't save the team name safely.");
-        return;
-      }
+    (value: string) => {
+      const trimmed = value.trim().slice(0, 32);
+      if (trimmed === record.draft.team_name) return;
+      const nextDraft = { ...record.draft, team_name: trimmed || "Your XI" };
+      const next: RunRecordV1 = {
+        ...record,
+        updated_seq: record.updated_seq + 1,
+        draft: nextDraft,
+      };
+      const save = saveRunRecord(next);
       const warning =
-        update.persistence === "volatile" || update.warnings.length > 0
-          ? update.warnings.join(" · ") ||
+        save.persistence === "volatile" || save.warnings.length > 0
+          ? save.warnings.join(" · ") ||
             "Draft is saved in this tab only — browser storage is unavailable."
           : persistenceWarning;
-      onRecordUpdate(update.record, warning ?? null);
+      onRecordUpdate(next, warning ?? null);
     },
-    [arrangementMutable, record, gameData.versions, persistenceWarning, onRecordUpdate],
+    [record, persistenceWarning, onRecordUpdate],
   );
 
   function onTeamNameChange(value: string) {
     setTeamName(value);
-    clearTeamNameDebounce();
-    debounceRef.current = setTimeout(() => {
-      debounceRef.current = null;
-      void persistTeamName(value);
-    }, 300);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => persistTeamName(value), 300);
   }
 
-  useEffect(() => {
-    if (!arrangementMutable) clearTeamNameDebounce();
-  }, [arrangementMutable, clearTeamNameDebounce]);
-
-  useEffect(() => () => clearTeamNameDebounce(), [clearTeamNameDebounce]);
+  useEffect(
+    () => () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    },
+    [],
+  );
 
   // I3.7 fix-pass #2 (PR #18 BLOCKER): the Simulate gate must be DRAFT
   // COMPLETION (all 17 spins → full XI + 5 bench + 1 manager), NOT mere
@@ -405,7 +319,7 @@ function ReviewBoard({
         <span className={s.eyebrowAccent}>Squad review</span>
         <div className={s.teamNameRow}>
           <label className={s.teamNameLabel} htmlFor="team-name">
-            {arrangementMutable ? "Name your team" : "Team name"}
+            Name your team
           </label>
           <input
             id="team-name"
@@ -413,21 +327,17 @@ function ReviewBoard({
             value={teamName}
             maxLength={32}
             onChange={(e) => onTeamNameChange(e.target.value)}
-            onBlur={(e) => {
-              clearTeamNameDebounce();
-              void persistTeamName(e.target.value);
-            }}
+            onBlur={(e) => persistTeamName(e.target.value)}
             placeholder="Your XI"
-            disabled={!arrangementMutable}
           />
         </div>
       </header>
 
       <section className={`${s.panel} ${s.reviewMainPanel}`} aria-label="Final XI">
-        <SynergyBar result={synergy} active={true} blind={false} />
-        {hiddenModeRevealed ? (
+        <SynergyBar result={synergy} active={true} blind={blind} />
+        {blind ? (
           <p className={s.memoryModeNote} role="note">
-            {blindModeLabel} reveal complete — arrange with full card information.
+            {blindModeLabel} — hidden values reveal after you simulate.
           </p>
         ) : null}
         <div className={s.panelHead}>
@@ -440,11 +350,7 @@ function ReviewBoard({
               Current
             </span>
           ) : null}
-          <span className={s.panelMeta}>
-            {arrangementMutable
-              ? "Tap two players to swap · fit never blocks"
-              : "Team sheet locked during and after simulation"}
-          </span>
+          <span className={s.panelMeta}>Locked · no rearranging</span>
         </div>
         <div className={s.squadStage}>
           <Pitch
@@ -452,10 +358,6 @@ function ReviewBoard({
             starters={starters}
             linkedPairs={synergy.linked_pairs}
             showInactiveEdges
-            selectedSlotId={selectedSheetSlot}
-            onSlotSelect={arrangementMutable ? swapSheetSlot : undefined}
-            interactive={arrangementMutable}
-            filledSlotInteraction={arrangementMutable}
           />
           <ManagerSlot manager={manager} />
         </div>
@@ -464,18 +366,11 @@ function ReviewBoard({
           <span className={s.benchLabel}>Bench</span>
           <div className={s.benchSlots}>
             {bench.map((b) => (
-              <button
-                type="button"
+              <div
                 key={b.slot_id}
                 className={`${s.benchSlot} ${b.card ? s.benchFilled : ""} ${
-                  selectedSheetSlot === b.slot_id ? s.slotSelected : ""
+                  b.card ? s.slotLocked : ""
                 }`}
-                aria-pressed={selectedSheetSlot === b.slot_id}
-                aria-label={`${b.slot_position} bench — ${b.card?.name ?? "open"}; ${
-                  arrangementMutable ? "select to swap" : "arrangement locked"
-                }`}
-                onClick={() => swapSheetSlot(b.slot_id)}
-                disabled={!arrangementMutable}
               >
                 <span className={s.benchSlotTop}>
                   <span className={s.slotPos}>{b.slot_position}</span>
@@ -489,7 +384,7 @@ function ReviewBoard({
                   ) : null}
                 </span>
                 <span className={s.slotName}>{b.card ? b.card.name : "Open"}</span>
-              </button>
+              </div>
             ))}
           </div>
         </div>
@@ -497,21 +392,33 @@ function ReviewBoard({
 
       <section className={`${s.panel} ${s.reviewMetricsPanel}`}>
         <div className={s.panelHead}>
-          <h2 className={s.panelTitle}>Rating by line</h2>
-          <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
+          <h2 className={s.panelTitle}>{blind ? "Line strengths hidden" : "Rating by line"}</h2>
+          {blind ? (
+            <span className={s.squadAvg}>Hidden</span>
+          ) : (
+            <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
+          )}
         </div>
-        <p className={s.lineCaption}>line strength · sim scale 0–100</p>
-        <div className={s.lineRatings}>
-          {lineRatings.map((l) => (
-            <div key={l.line} className={s.lineRow}>
-              <span className={s.lineName}>{l.label}</span>
-              <span className={s.lineTrack}>
-                <span className={s.lineFill} style={{ width: `${l.value ?? 0}%` }} />
-              </span>
-              <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
+        {blind ? (
+          <p className={s.memoryModeNote} role="note">
+            {blindModeLabel} keeps line strengths hidden until you simulate.
+          </p>
+        ) : (
+          <>
+            <p className={s.lineCaption}>line strength · sim scale 0–100</p>
+            <div className={s.lineRatings}>
+              {lineRatings.map((l) => (
+                <div key={l.line} className={s.lineRow}>
+                  <span className={s.lineName}>{l.label}</span>
+                  <span className={s.lineTrack}>
+                    <span className={s.lineFill} style={{ width: `${l.value ?? 0}%` }} />
+                  </span>
+                  <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </section>
 
       {squadWarnings.length > 0 ? (
@@ -594,12 +501,14 @@ function SimulatePanel({
   useEffect(
     () => () => {
       handoffRef.current.cancel((ownedStatusSequence) => {
-        void setRunStatus(record.run_id, gameData.versions, "ready", {
-          status: "simulating",
-          updated_seq: ownedStatusSequence,
-        }).catch(() => {
+        try {
+          setRunStatus(record.run_id, gameData.versions, "ready", {
+            status: "simulating",
+            updated_seq: ownedStatusSequence,
+          });
+        } catch {
           // Best-effort durable recovery during navigation/unmount.
-        });
+        }
       });
       simInFlightRef.current = false;
     },
@@ -608,83 +517,50 @@ function SimulatePanel({
 
   const startSim = useCallback(async () => {
     if (!complete || sim.kind === "running" || simInFlightRef.current) return;
-    if (record.simulation !== undefined || record.status === "complete") return;
     const attempt = handoffRef.current.begin();
     if (!attempt) return;
     simInFlightRef.current = true;
     setSim({ kind: "running", note: "Loading 2026 scenario…" });
+    // Reflect lifecycle on the persisted record so refreshes don't claim the
+    // run is "ready" mid-simulation. Best-effort — proceed on failure.
     try {
-      // Compare-and-lock the exact rendered revision. The simulation must use
-      // the returned record—not the stale React prop—so arrangement and score
-      // are owned by the same lifecycle sequence across tabs and in volatile
-      // storage.
-      const lock = await beginRunSimulation(
-        record.run_id,
-        gameData.versions,
-        record,
-        attempt.controller.signal,
-      );
-      if (!handoffRef.current.canCommit(attempt)) {
-        if (lock.status === "updated" && lock.record?.status === "simulating") {
-          await setRunStatus(record.run_id, gameData.versions, "ready", {
-            status: "simulating",
-            updated_seq: lock.record.updated_seq,
-          });
+      const stat = setRunStatus(record.run_id, gameData.versions, "simulating");
+      if (stat.status === "updated" && stat.record) {
+        if (stat.persistence === "durable") {
+          handoffRef.current.markStatusSimulating(attempt, stat.record.updated_seq);
         }
-        return;
+        onRecordUpdate(stat.record, persistenceWarning);
       }
-      if (lock.status !== "updated" || !lock.record) {
-        if (lock.record) onRecordUpdate(lock.record, persistenceWarning);
-        setSim({
-          kind: "error",
-          title: "Team sheet changed",
-          message:
-            lock.warnings[0] ??
-            "This team sheet changed before simulation could start. Review the current lineup and try again.",
-        });
-        return;
-      }
-      const lockedRecord = lock.record;
-      handoffRef.current.markStatusSimulating(attempt, lockedRecord.updated_seq);
-      const lockWarnings = [...lock.warnings];
-      if (lock.persistence === "volatile") {
-        lockWarnings.push(
-          "Simulation is locked in this tab only — browser storage is unavailable.",
-        );
-      }
-      onRecordUpdate(
-        lockedRecord,
-        lockWarnings.length > 0 ? lockWarnings.join(" · ") : persistenceWarning,
-      );
+    } catch {
+      // Non-fatal: a quota error here doesn't block the actual sim.
+    }
+    try {
       const scenarioBundle = await loadScenarioBundle();
       if (!handoffRef.current.canCommit(attempt)) return;
       setSim({ kind: "running", note: "Simulating the run…" });
-      const result = await runSimulation(gameData, scenarioBundle, lockedRecord, {
+      const result = await runSimulation(gameData, scenarioBundle, record, {
         signal: attempt.controller.signal,
       });
       if (!handoffRef.current.canCommit(attempt)) return;
       const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
-      if (ownedStatusSequence === null) {
-        throw new Error("simulation lifecycle ownership was lost before persistence");
-      }
-      const persist = await setRunSimulation(
+      const persist = setRunSimulation(
         record.run_id,
         gameData.versions,
         result.simulation,
-        {
-          status: "simulating",
-          updated_seq: ownedStatusSequence,
-        },
-        attempt.controller.signal,
+        ownedStatusSequence === null
+          ? undefined
+          : { status: "simulating", updated_seq: ownedStatusSequence },
       );
       if (persist.status !== "updated" || !persist.record) {
-        try {
-          await setRunStatus(record.run_id, gameData.versions, "ready", {
-            status: "simulating",
-            updated_seq: ownedStatusSequence,
-          });
-        } catch {
-          // Best-effort; the stale/invalid record may no longer be writable.
+        if (ownedStatusSequence !== null) {
+          try {
+            setRunStatus(record.run_id, gameData.versions, "ready", {
+              status: "simulating",
+              updated_seq: ownedStatusSequence,
+            });
+          } catch {
+            // Best-effort; the stale/invalid record may no longer be writable.
+          }
         }
         handoffRef.current.markStatusRecovered(attempt);
         setSim({
@@ -724,7 +600,7 @@ function SimulatePanel({
       const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
       if (ownedStatusSequence !== null) {
         try {
-          const stat = await setRunStatus(record.run_id, gameData.versions, "ready", {
+          const stat = setRunStatus(record.run_id, gameData.versions, "ready", {
             status: "simulating",
             updated_seq: ownedStatusSequence,
           });
@@ -746,14 +622,11 @@ function SimulatePanel({
     }
   }, [complete, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
 
-  const simulationLocked = record.simulation !== undefined || record.status === "complete";
-  const note = simulationLocked
-    ? "This completed run is read-only. Its team sheet and simulation stay paired."
-    : !complete
-      ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
-      : sim.kind === "running"
-        ? sim.note
-        : "Your team sheet is ready. Confirm it to play the 8-match run.";
+  const note = !complete
+    ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
+    : sim.kind === "running"
+      ? sim.note
+      : "Your draft is complete. Hit simulate to play the 8-match run.";
 
   return (
     <section className={`${s.panel} ${s.simPanel} ${s.reviewSimPanel}`}>
@@ -770,18 +643,12 @@ function SimulatePanel({
       )}
       <button
         type="button"
-        className={`btn btn--primary${
-          !complete || simulationLocked || sim.kind === "running" ? " btn--disabled" : ""
-        }`}
+        className={`btn btn--primary${!complete || sim.kind === "running" ? " btn--disabled" : ""}`}
         onClick={startSim}
-        disabled={!complete || simulationLocked || sim.kind === "running"}
-        aria-disabled={!complete || simulationLocked || sim.kind === "running"}
+        disabled={!complete || sim.kind === "running"}
+        aria-disabled={!complete || sim.kind === "running"}
       >
-        {simulationLocked
-          ? "Simulation complete"
-          : sim.kind === "running"
-            ? "Simulating…"
-            : "Confirm team sheet & simulate"}
+        {sim.kind === "running" ? "Simulating…" : "Simulate the run"}
       </button>
       <button
         type="button"

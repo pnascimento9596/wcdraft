@@ -1,18 +1,18 @@
 {
   "comment": "F-4 U2 golden — regen via `pnpm --filter @wcdraft/web gen:leaderboard-golden` on anchor bumps; never written by tests.",
-  "season_key": "season-2026-squad-depth",
+  "season_key": "season-2026-manager-attrition",
   "versions": {
     "schema_version": "runtime-data-2.10.0",
     "dataset_version": "2026-07-01",
     "rating_version": "wc-perf-6.6.0+proj-career-5.6.0",
-    "engine_version": "engine-2026.07.14-squad-depth",
+    "engine_version": "engine-2026.06.30-manager-attrition",
     "ruleset_version": "ruleset-2026.06.04",
     "data_bundle_hash": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07+50c45d0e9b9b56892e6bd3462988417e072ea1b08aff206fe344c3ebaccd66fd"
   },
   "classic": {
     "parent_seed": "wcdraft:f4-u2-golden:classic:1",
     "display_name": "golden_xi",
-    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1jbGFzc2ljIiwiZmlkIjoiNC0zLTMiLCJwcyI6IndjZHJhZnQ6ZjQtdTItZ29sZGVuOmNsYXNzaWM6MSIsInRuIjoiR29sZGVuIFhJIiwibWQiOiJjbGFzc2ljIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuMTAuMCIsImR2IjoiMjAyNi0wNy0wMSIsInJ2Ijoid2MtcGVyZi02LjYuMCtwcm9qLWNhcmVlci01LjYuMCIsImV2IjoiZW5naW5lLTIwMjYuMDcuMTQtc3F1YWQtZGVwdGgiLCJ1diI6InJ1bGVzZXQtMjAyNi4wNi4wNCIsImh2IjoiYWU1Mzc2YzkxNzM3N2IwMGFjOWRlZTdhMTY2ZGNhY2ViMjhkZDE0MTZmYzlmYmU4YjAwYjExMTZjYThlOGQwNys1MGM0NWQwZTliOWI1Njg5MmU2YmQzNDYyOTg4NDE3ZTA3MmVhMWIwOGFmZjIwNmZlMzQ0YzNlYmFjY2Q2NmZkIn0",
+    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1jbGFzc2ljIiwiZmlkIjoiNC0zLTMiLCJwcyI6IndjZHJhZnQ6ZjQtdTItZ29sZGVuOmNsYXNzaWM6MSIsInRuIjoiR29sZGVuIFhJIiwibWQiOiJjbGFzc2ljIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuMTAuMCIsImR2IjoiMjAyNi0wNy0wMSIsInJ2Ijoid2MtcGVyZi02LjYuMCtwcm9qLWNhcmVlci01LjYuMCIsImV2IjoiZW5naW5lLTIwMjYuMDYuMzAtbWFuYWdlci1hdHRyaXRpb24iLCJ1diI6InJ1bGVzZXQtMjAyNi4wNi4wNCIsImh2IjoiYWU1Mzc2YzkxNzM3N2IwMGFjOWRlZTdhMTY2ZGNhY2ViMjhkZDE0MTZmYzlmYmU4YjAwYjExMTZjYThlOGQwNys1MGM0NWQwZTliOWI1Njg5MmU2YmQzNDYyOTg4NDE3ZTA3MmVhMWIwOGFmZjIwNmZlMzQ0YzNlYmFjY2Q2NmZkIn0",
     "expected": {
       "verified_score": -1,
       "score_breakdown": [
@@ -83,16 +83,16 @@
           "points": 0
         }
       ],
-      "season_key": "season-2026-squad-depth",
+      "season_key": "season-2026-manager-attrition",
       "draft_mode": "classic"
     }
   },
   "hidden": {
     "parent_seed": "wcdraft:f4-u2-golden:hidden:1",
     "display_name": "memory_xi_10",
-    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1oaWRkZW4iLCJmaWQiOiI0LTMtMyIsInBzIjoid2NkcmFmdDpmNC11Mi1nb2xkZW46aGlkZGVuOjEiLCJ0biI6IkdvbGRlbiBYSSIsIm1kIjoiaGlkZGVuIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuMTAuMCIsImR2IjoiMjAyNi0wNy0wMSIsInJ2Ijoid2MtcGVyZi02LjYuMCtwcm9qLWNhcmVlci01LjYuMCIsImV2IjoiZW5naW5lLTIwMjYuMDcuMTQtc3F1YWQtZGVwdGgiLCJ1diI6InJ1bGVzZXQtMjAyNi4wNi4wNCIsImh2IjoiYWU1Mzc2YzkxNzM3N2IwMGFjOWRlZTdhMTY2ZGNhY2ViMjhkZDE0MTZmYzlmYmU4YjAwYjExMTZjYThlOGQwNys1MGM0NWQwZTliOWI1Njg5MmU2YmQzNDYyOTg4NDE3ZTA3MmVhMWIwOGFmZjIwNmZlMzQ0YzNlYmFjY2Q2NmZkIn0",
+    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1oaWRkZW4iLCJmaWQiOiI0LTMtMyIsInBzIjoid2NkcmFmdDpmNC11Mi1nb2xkZW46aGlkZGVuOjEiLCJ0biI6IkdvbGRlbiBYSSIsIm1kIjoiaGlkZGVuIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuMTAuMCIsImR2IjoiMjAyNi0wNy0wMSIsInJ2Ijoid2MtcGVyZi02LjYuMCtwcm9qLWNhcmVlci01LjYuMCIsImV2IjoiZW5naW5lLTIwMjYuMDYuMzAtbWFuYWdlci1hdHRyaXRpb24iLCJ1diI6InJ1bGVzZXQtMjAyNi4wNi4wNCIsImh2IjoiYWU1Mzc2YzkxNzM3N2IwMGFjOWRlZTdhMTY2ZGNhY2ViMjhkZDE0MTZmYzlmYmU4YjAwYjExMTZjYThlOGQwNys1MGM0NWQwZTliOWI1Njg5MmU2YmQzNDYyOTg4NDE3ZTA3MmVhMWIwOGFmZjIwNmZlMzQ0YzNlYmFjY2Q2NmZkIn0",
     "expected": {
-      "verified_score": -25,
+      "verified_score": -26,
       "score_breakdown": [
         {
           "label": "Goals scored",
@@ -132,9 +132,9 @@
         },
         {
           "label": "Yellow cards",
-          "raw": 6,
+          "raw": 7,
           "weight": -1,
-          "points": -6
+          "points": -7
         },
         {
           "label": "Red cards",
@@ -144,7 +144,7 @@
         },
         {
           "label": "Fouls committed",
-          "raw": 29,
+          "raw": 27,
           "weight": 0,
           "points": 0
         },
@@ -161,7 +161,7 @@
           "points": 0
         }
       ],
-      "season_key": "season-2026-squad-depth",
+      "season_key": "season-2026-manager-attrition",
       "draft_mode": "hidden"
     }
   }

@@ -29,7 +29,6 @@ import type { GameData } from "./data";
 import { managerCardView, playerCardView } from "./adapters";
 import { displayNameFromNames } from "./display-names";
 import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
-import type { RunRecordV1 } from "./run-record";
 
 // ─── Round labels ────────────────────────────────────────────────────────────
 
@@ -246,11 +245,6 @@ export interface DerivedBox {
   cards: BoxCardLine[];
   subs: BoxSubLine[];
   injuries: BoxInjuryLine[];
-  availability: Array<{
-    eventId: string;
-    name: string;
-    replacement: string | null;
-  }>;
 }
 
 /**
@@ -265,7 +259,6 @@ export function deriveBox(gameData: GameData, m: MatchResult): DerivedBox {
     cards: [],
     subs: [],
     injuries: [],
-    availability: [],
   };
   for (const e of m.events) {
     const period = e.period as Period;
@@ -314,15 +307,6 @@ export function deriveBox(gameData: GameData, m: MatchResult): DerivedBox {
         period,
         card: e.type,
       });
-    } else if (e.type === "availability") {
-      out.availability.push({
-        eventId: e.event_id,
-        name: resolveScorerName(gameData, e.player_id, e.card_id),
-        replacement:
-          e.replacement_card_id === null
-            ? null
-            : resolveScorerName(gameData, e.replacement_player_id, e.replacement_card_id),
-      });
     } else if (e.type === "sub") {
       out.subs.push({
         side: e.side,
@@ -361,187 +345,6 @@ export function periodTag(period: Period): string {
     case "shootout":
       return " (pens)";
   }
-}
-
-// ─── Persisted factual recap ────────────────────────────────────────────────
-
-export interface FactualRecapActivation {
-  matchId: string;
-  matchLabel: string;
-  eventId: string | null;
-  incomingName: string;
-  outgoingName: string;
-  line: string;
-  contributionDelta: string;
-}
-
-export interface FactualRecapShortHandedMatch {
-  matchId: string;
-  matchLabel: string;
-  entries: Array<{
-    eventId: string | null;
-    playerName: string;
-    line: string;
-  }>;
-}
-
-export interface FactualRecapView {
-  finalMatchLabel: string;
-  lineStrengths: {
-    attack: string;
-    midfield: string;
-    defense: string;
-    goalkeeping: string;
-  } | null;
-  belowNaturalFit: {
-    count: number;
-    starters: Array<{ name: string; slot: string; fit: string }>;
-  } | null;
-  synergy: {
-    multiplier: string;
-    nationLines: Array<{ nation: string; starters: number }>;
-  } | null;
-  manager: {
-    presence: string;
-    link: string;
-    tactical: string;
-  } | null;
-  activations: FactualRecapActivation[];
-  shortHandedMatches: FactualRecapShortHandedMatch[];
-}
-
-const LINE_LABEL: Record<"GK" | "DF" | "MF" | "FW", string> = {
-  GK: "Goalkeeping",
-  DF: "Defense",
-  MF: "Midfield",
-  FW: "Attack",
-};
-
-function displayNumber(value: number, digits = 1): string {
-  return Number.isFinite(value) ? value.toFixed(digits) : "—";
-}
-
-function signedDisplayNumber(value: number): string {
-  if (!Number.isFinite(value)) return "—";
-  const normalized = Math.abs(value) < 0.05 ? 0 : value;
-  return `${normalized >= 0 ? "+" : "−"}${Math.abs(normalized).toFixed(1)}`;
-}
-
-/**
- * Adapt only persisted record and MatchResult facts for the Results recap.
- * This function never calls simulation, projection, Synergy, or fit helpers.
- */
-export function buildFactualRecap(
-  gameData: GameData,
-  record: Pick<RunRecordV1, "draft" | "arrangement">,
-  matches: readonly MatchResult[],
-): FactualRecapView {
-  const finalMatch = matches.at(-1) ?? null;
-  const finalFacts = finalMatch?.team_facts ?? null;
-  const finalStrength = finalFacts
-    ? finalFacts.tactical_applied_to_outcome
-      ? finalFacts.post_tactical_strength
-      : finalFacts.active_strength
-    : null;
-
-  // An unchanged sheet carries exact persisted compatibility on every squad
-  // row. S4's compact arrangement carries card order but not per-destination
-  // fit, so an arranged sheet must remain unknown here: recomputing fit from
-  // runtime data would violate this recap's persisted-facts boundary.
-  const belowNaturalFit =
-    record.arrangement === undefined
-      ? (() => {
-          const starters = record.draft.squad
-            .filter(
-              (slot) => slot.is_starter && slot.card_id !== null && slot.position_compatibility < 1,
-            )
-            .map((slot) => ({
-              name: resolveScorerName(gameData, slot.player_id, slot.card_id),
-              slot: slot.slot_position,
-              fit: `${Math.round(slot.position_compatibility * 100).toString()}%`,
-            }));
-          return { count: starters.length, starters };
-        })()
-      : null;
-
-  const activations: FactualRecapActivation[] = [];
-  const shortHandedMatches: FactualRecapShortHandedMatch[] = [];
-  for (const match of matches) {
-    const facts = match.team_facts;
-    if (!facts) continue;
-    const availabilityEvents = match.events.filter((event) => event.type === "availability");
-    for (const activation of facts.bench_activations) {
-      const event = availabilityEvents.find(
-        (candidate) =>
-          candidate.card_id === activation.out_card_id &&
-          candidate.replacement_card_id === activation.in_card_id &&
-          candidate.slot_id === activation.slot_id,
-      );
-      activations.push({
-        matchId: match.match_id,
-        matchLabel: roundLabel(match.round),
-        eventId: event?.event_id ?? null,
-        incomingName: resolveScorerName(gameData, activation.in_player_id, activation.in_card_id),
-        outgoingName: resolveScorerName(gameData, activation.out_player_id, activation.out_card_id),
-        line: LINE_LABEL[activation.line],
-        contributionDelta: signedDisplayNumber(activation.line_contribution_delta),
-      });
-    }
-    const shortEntries = availabilityEvents
-      .filter((event) => event.short_handed)
-      .map((event) => ({
-        eventId: event.event_id,
-        playerName: resolveScorerName(gameData, event.player_id, event.card_id),
-        line: LINE_LABEL[event.position],
-      }));
-    if (shortEntries.length > 0) {
-      shortHandedMatches.push({
-        matchId: match.match_id,
-        matchLabel: roundLabel(match.round),
-        entries: shortEntries,
-      });
-    }
-  }
-
-  return {
-    finalMatchLabel: finalMatch ? roundLabel(finalMatch.round) : "—",
-    lineStrengths: finalStrength
-      ? {
-          attack: displayNumber(finalStrength.attack),
-          midfield: displayNumber(finalStrength.midfield),
-          defense: displayNumber(finalStrength.defense),
-          goalkeeping: displayNumber(finalStrength.goalkeeping),
-        }
-      : null,
-    belowNaturalFit,
-    synergy: finalFacts
-      ? {
-          multiplier: `×${displayNumber(finalFacts.active_synergy.multiplier, 3)}`,
-          nationLines: finalFacts.active_synergy.nation_clusters.map((cluster) => ({
-            nation: gameData.indexes.nationById.get(cluster.nation_id)?.canonical_name ?? "—",
-            starters: cluster.size,
-          })),
-        }
-      : null,
-    manager: finalFacts
-      ? {
-          presence: finalFacts.manager_present
-            ? `Present · +${finalFacts.manager_presence_band.toString()} tier`
-            : "No manager · +0 tier",
-          link:
-            finalFacts.manager_link_band === 0
-              ? "No link · +0 tier"
-              : finalFacts.manager_link_band === 1
-                ? "Partial link · +1 tier"
-                : "Full link · +2 tier",
-          tactical: finalFacts.tactical_applied_to_outcome
-            ? `+${finalFacts.manager_tactical_band.toString()} applied · ×${displayNumber(finalFacts.manager_tactical_multiplier, 3)}`
-            : "Not applied",
-        }
-      : null,
-    activations,
-    shortHandedMatches,
-  };
 }
 
 // ─── Run summary ─────────────────────────────────────────────────────────────

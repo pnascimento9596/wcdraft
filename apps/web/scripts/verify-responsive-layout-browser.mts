@@ -29,8 +29,6 @@ import {
 } from "../lib/game/run-record";
 import type { BoardPageWire } from "../lib/leaderboard/board-view";
 import type { LeaderboardLineupView } from "../lib/leaderboard/lineup-view";
-import { ADVANCED_BOARD_CONFIG_OPTIONS } from "../lib/leaderboard/config";
-import { DEFAULT_LEADERBOARD_SEASON_ID } from "../lib/leaderboard/season";
 import { configBadgesFromRecordToken } from "../lib/game/config-badges";
 import {
   INLINE_TEXT_LINK_ALLOWLIST,
@@ -48,13 +46,10 @@ type ViewportCase = {
 type SurfaceCase = {
   readonly label: string;
   readonly path: string;
-  /** Feature-specific proof surfaces run only when explicitly filtered in. */
-  readonly optIn?: boolean;
   readonly prepare?: (page: Page) => Promise<void>;
   readonly route?: (page: Page) => Promise<void>;
   readonly waitForNetworkIdle?: boolean;
   readonly shellRule?: boolean;
-  readonly viewportScreenshot?: boolean;
   readonly allowResponseErrorPathnames?: readonly string[];
   readonly primaryAction?: {
     readonly role: "button" | "link" | "radio";
@@ -302,10 +297,6 @@ const activeBlindOpenRecord = draftRecord("open_hidden", {
 });
 const completeA = completedRecord("resp-complete-a", "Broadcast XI");
 const completeB = completedRecord("resp-complete-b", "Wide View XI");
-// This fixed seed has one activation in G2 and two in G3. G3 opens by
-// default, leaving the first recap-linked G2 event collapsed for the S6
-// hash-navigation interaction proof.
-const completeFactualRecap = completedRecord("resp-recap-1", "Factual XI");
 const seededRecords = [
   activeDraftRecord,
   activePositionRecord,
@@ -313,7 +304,6 @@ const seededRecords = [
   activeBlindOpenRecord,
   completeA,
   completeB,
-  ...(SURFACE_FILTER.has("results-factual-recap") ? [completeFactualRecap] : []),
 ] as const;
 
 function localStoragePayload(records: readonly RunRecordV1[]) {
@@ -379,8 +369,8 @@ function lineupFromRecord(record: RunRecordV1): LeaderboardLineupView {
 function boardPage(): BoardPageWire {
   const now = Date.now();
   return {
-    season_key: DEFAULT_LEADERBOARD_SEASON_ID,
-    current_season_key: DEFAULT_LEADERBOARD_SEASON_ID,
+    season_key: "season-2026-manager-attrition",
+    current_season_key: "season-2026-manager-attrition",
     mode: "casual",
     draft_mode: "classic",
     draft_order: "squad_first",
@@ -757,29 +747,6 @@ function surfaceCases(): readonly SurfaceCase[] {
       prepare: revealChoices,
     },
     {
-      label: "classic-pick-off-natural",
-      path: `/play/draft?run=${activeDraftRecord.run_id}`,
-      shellRule: true,
-      viewportScreenshot: true,
-      primaryAction: { role: "button", name: /Lock pick|Choose slot/u },
-      prepare: async (page) => {
-        await revealChoices(page);
-        await page.getByRole("button", { name: /C\. Gamarra/u }).click();
-        await page.getByRole("button", { name: "Choose slot" }).click();
-        const dialog = page.getByRole("dialog", { name: "Assign to slot" });
-        await dialog.getByText("CM", { exact: true }).first().click();
-        const changedChip = page.locator("[data-fit-teaching-chip]", { hasText: "DF → CM" });
-        await changedChip.waitFor();
-        await changedChip.evaluate((element) => element.scrollIntoView({ block: "center" }));
-        await page.evaluate(
-          () =>
-            new Promise<void>((resolve) =>
-              requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-            ),
-        );
-      },
-    },
-    {
       label: "open-roster-pick",
       path: `/play/draft?run=${activeOpenRecord.run_id}`,
       shellRule: true,
@@ -797,10 +764,7 @@ function surfaceCases(): readonly SurfaceCase[] {
       label: "squad-review",
       path: `/play/review?run=${completeA.run_id}`,
       shellRule: true,
-      // The persisted fixture is complete, so Review must expose the
-      // read-only lifecycle state instead of an affordance that can pair a
-      // new arrangement with the old simulation.
-      primaryAction: { role: "button", name: /Simulation complete/u },
+      primaryAction: { role: "button", name: /Simulate the run/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /4-3-3/u }).first().waitFor();
       },
@@ -812,70 +776,6 @@ function surfaceCases(): readonly SurfaceCase[] {
       prepare: async (page) => {
         await page.getByRole("heading", { name: /The run/u }).waitFor();
         await page.getByRole("group", { name: "Leaderboard lane" }).waitFor();
-      },
-    },
-    {
-      label: "results-factual-recap",
-      path: `/play/results?run=${completeFactualRecap.run_id}`,
-      optIn: true,
-      primaryAction: { role: "link", name: "Event log" },
-      prepare: async (page) => {
-        await page.getByRole("heading", { name: "Why it went this way" }).waitFor();
-        const link = page.getByRole("link", { name: "Event log" }).first();
-        const href = await link.getAttribute("href");
-        assert(href?.startsWith("#event-"), "S6 event-log link must carry a real event hash");
-        const target = page.locator(`[id="${href.slice(1)}"]`);
-        await target.waitFor({ state: "attached" });
-        const matchItem = target.locator("xpath=ancestor::li[1]");
-        const toggle = matchItem.getByRole("button").first();
-        assert(
-          (await toggle.getAttribute("aria-expanded")) === "false",
-          "S6 proof requires the linked match to begin collapsed",
-        );
-        assert(
-          await target.evaluate((node) => node.closest("[hidden]") !== null),
-          "S6 proof requires the linked event to begin under a hidden match panel",
-        );
-
-        await link.focus();
-        assert(
-          await link.evaluate((node) => document.activeElement === node),
-          "S6 proof could not focus the event-log link before keyboard activation",
-        );
-        await link.press("Enter");
-        await page.waitForFunction((expectedHash) => window.location.hash === expectedHash, href);
-        await page.waitForFunction(
-          (eventId) =>
-            document
-              .getElementById(eventId)
-              ?.closest("li")
-              ?.querySelector("button")
-              ?.getAttribute("aria-expanded") === "true",
-          href.slice(1),
-        );
-        assert(
-          (await toggle.getAttribute("aria-expanded")) === "true",
-          "event-log link did not expand its owning match",
-        );
-        assert(
-          !(await target.evaluate((node) => node.closest("[hidden]") !== null)),
-          "event-log target remained under a hidden panel after link activation",
-        );
-        assert(await target.isVisible(), "event-log target is not visible after link activation");
-        assert(
-          await target.evaluate((node) => document.activeElement === node),
-          "event-log target did not receive programmatic focus",
-        );
-        const box = await target.boundingBox();
-        const viewport = page.viewportSize();
-        assert(
-          box !== null && viewport !== null,
-          "event-log target has no measurable viewport box",
-        );
-        assert(
-          box.y >= -1 && box.y + box.height <= viewport.height + 1,
-          "event-log target did not land inside the viewport",
-        );
       },
     },
     {
@@ -903,13 +803,6 @@ function surfaceCases(): readonly SurfaceCase[] {
       primaryAction: { role: "button", name: /Broadcast XI/u },
       prepare: async (page) => {
         await page.getByText("Broadcast XI").first().waitFor();
-        await page.getByText("Advanced", { exact: true }).click();
-        await page.waitForFunction((expected) => {
-          const grid = document.querySelector('[aria-label="Advanced season board lanes"]');
-          if (grid === null) return false;
-          const buttons = grid.querySelectorAll("button");
-          return buttons.length === expected && [...buttons].every((button) => !button.disabled);
-        }, ADVANCED_BOARD_CONFIG_OPTIONS.length);
         await page.getByRole("button", { name: /Broadcast XI/u }).click();
         await page.locator('[role="region"][aria-label^="Lineup inspector"]').waitFor();
       },
@@ -1156,7 +1049,7 @@ async function captureSurface(
     const screenshotName = `${PHASE}-${surface.label}-${viewport.name}-${theme}.png`;
     const screenshotPath = path.join(OUT_DIR, "screenshots", screenshotName);
     await mkdir(path.dirname(screenshotPath), { recursive: true });
-    await page.screenshot({ path: screenshotPath, fullPage: surface.viewportScreenshot !== true });
+    await page.screenshot({ path: screenshotPath, fullPage: true });
     const baseMetric = await measure(page);
     const shellRule = shellRuleApplies(surface, viewport);
     const noScrollGate = shellRule
@@ -1198,8 +1091,7 @@ async function main(): Promise<void> {
   });
   const metrics: SurfaceMetric[] = [];
   const selectedSurfaces = surfaceCases().filter(
-    (surface) =>
-      SURFACE_FILTER.has(surface.label) || (SURFACE_FILTER.size === 0 && surface.optIn !== true),
+    (surface) => SURFACE_FILTER.size === 0 || SURFACE_FILTER.has(surface.label),
   );
   const selectedViewports = viewports.filter(
     (viewport) => VIEWPORT_FILTER.size === 0 || VIEWPORT_FILTER.has(viewport.name),

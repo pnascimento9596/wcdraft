@@ -35,7 +35,6 @@ import {
   runTournamentFull,
   type Bracket2026,
   type ManagerTournament,
-  type Position,
   type Rating,
   type RunScenario,
   type SimWorld,
@@ -47,7 +46,6 @@ import { managerTournamentFor } from "./adapters";
 import type { GameData } from "./data";
 import { MissingRecordError } from "./errors";
 import { runWithSimulationWorker, SimulationWorkerBusyError } from "./sim-worker-client";
-import { projectTeamSheetDraft } from "./team-sheet";
 import type {
   PersistedKnockoutLadderMeta,
   PersistedKnockoutLadderRoundMeta,
@@ -104,7 +102,6 @@ export function buildSimWorldInputs(
   // only: the basis decision changes the sim inputs.
   const useCurrent = draft.rating_basis === "current";
   const ratings: Record<string, Rating> = {};
-  const eligiblePositionsByCardId: Record<string, readonly Position[]> = {};
   for (const slot of draft.squad) {
     if (slot.card_id === null) continue;
     const cardId = slot.card_id as string;
@@ -113,15 +110,6 @@ export function buildSimWorldInputs(
       throw new MissingRecordError("rating", cardId, `for drafted squad slot ${slot.slot_id}`);
     }
     ratings[cardId] = useCurrent ? r.basis_ratings.current : r;
-    const card = gameData.indexes.playerByCardId.get(cardId);
-    if (!card || card.eligible_positions.length === 0) {
-      throw new MissingRecordError(
-        "player_card",
-        cardId,
-        `eligibility for drafted squad slot ${slot.slot_id}`,
-      );
-    }
-    eligiblePositionsByCardId[cardId] = card.eligible_positions;
   }
 
   // Opponents = every Team2026 in the scenario bundle (sim only walks the
@@ -161,7 +149,6 @@ export function buildSimWorldInputs(
 
   const world: SimWorld = {
     ratings,
-    eligiblePositionsByCardId,
     opponents,
     managerTournaments,
     nationByCardId: gameData.nationByCardId,
@@ -202,18 +189,14 @@ function narrowWorldForWorker(world: SimWorld, record: RunRecordV1): SimWorld {
   }
 
   const nationByCardId: Record<string, string> = {};
-  const eligiblePositionsByCardId: Record<string, readonly Position[]> = {};
   for (const cardId of neededNationCardIds) {
     const nation = world.nationByCardId?.[cardId];
     if (nation !== undefined) nationByCardId[cardId] = nation;
-    const eligible = world.eligiblePositionsByCardId?.[cardId];
-    if (eligible !== undefined) eligiblePositionsByCardId[cardId] = eligible;
   }
 
   return {
     ...world,
     nationByCardId,
-    eligiblePositionsByCardId,
   };
 }
 
@@ -252,8 +235,7 @@ export function runSimulationSync(
   record: RunRecordV1,
   opts: SimulationOptions = {},
 ): SyncSimulationResult {
-  const prepared = prepareTeamSheetRecord(gameData, record);
-  const { world, teams, bracket } = buildSimWorldInputs(gameData, scenario, prepared);
+  const { world, teams, bracket } = buildSimWorldInputs(gameData, scenario, record);
   const clock = opts.clock ?? defaultClock();
 
   const t0 = clock ? clock() : null;
@@ -266,7 +248,7 @@ export function runSimulationSync(
   });
   void scenarioMeta; // scenario_seed already on `runScenario.scenario_seed`
 
-  const result = runTournamentFull(prepared.draft, runScenario, prepared.parent_seed, world);
+  const result = runTournamentFull(record.draft, runScenario, record.parent_seed, world);
 
   const t1 = clock ? clock() : null;
   const duration_ms = t0 !== null && t1 !== null ? t1 - t0 : null;
@@ -376,12 +358,11 @@ async function runSimulationAsync(
   runWorker: typeof runWithSimulationWorker = runWithSimulationWorker,
 ): Promise<RunSimulationResult> {
   if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
-  const prepared = prepareTeamSheetRecord(gameData, record);
-  const inputs = buildWorkerSimInputs(gameData, scenario, prepared);
+  const inputs = buildWorkerSimInputs(gameData, scenario, record);
   const input: Omit<WorkerInput, "request_id"> = {
     kind: "run",
-    draft: prepared.draft,
-    parent_seed: prepared.parent_seed,
+    draft: record.draft,
+    parent_seed: record.parent_seed,
     world: inputs.world,
     scenario: inputs.scenario,
   };
@@ -403,21 +384,11 @@ async function runSimulationAsync(
     return runMainThread(
       gameData,
       scenario,
-      prepared,
+      record,
       `simulation worker failed (${error instanceof Error ? error.message : String(error)}); ran on main thread`,
       signal,
     );
   }
-}
-
-function prepareTeamSheetRecord(gameData: GameData, record: RunRecordV1): RunRecordV1 {
-  if (record.arrangement === undefined) return record;
-  const projected: RunRecordV1 = {
-    ...record,
-    draft: projectTeamSheetDraft(gameData, record),
-  };
-  delete projected.arrangement;
-  return projected;
 }
 
 async function runMainThread(

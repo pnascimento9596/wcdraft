@@ -713,7 +713,7 @@
     ],
     "dataset_version": "2026-07-01",
     "rating_version": "wc-perf-6.6.0+proj-career-5.6.0",
-    "engine_version": "engine-2026.07.14-squad-depth",
+    "engine_version": "engine-2026.06.30-manager-attrition",
     "draft_flow": "squad_first",
     "rating_basis": "career",
     "era_preset": "all_time"
@@ -761,7 +761,7 @@
     "scenario_id": "scenario:wcdraft:scenario:v1:69a13265b437892417b3d75212ce3490",
     "dataset_version": "2026-07-01",
     "rating_version": "wc-perf-6.6.0+proj-career-5.6.0",
-    "engine_version": "engine-2026.07.14-squad-depth",
+    "engine_version": "engine-2026.06.30-manager-attrition",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:881",
     "reached_round": "R32",
     "eliminated_in_match_id": "e2e-real-run-golden.m3",
@@ -807,7 +807,7 @@
       "goals_for": 7,
       "goals_against": 7,
       "clean_sheets": 0,
-      "top_scorer_player_id": "P-25724"
+      "top_scorer_player_id": "P-84486"
     },
     "score": 11,
     "score_breakdown": [
@@ -879,127 +879,6 @@
       }
     ],
     "player_stats": [
-      {
-        "player_id": "P-21702",
-        "card_id": "P-21702:2014",
-        "tournament_id": 2014,
-        "per_match": [
-          {
-            "player_id": "P-21702",
-            "card_id": "P-21702:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m0",
-            "goals": 0,
-            "assists": 0,
-            "shots": 1,
-            "shots_on_target": 0,
-            "key_passes": 2,
-            "fouls_committed": 1,
-            "fouls_suffered": 1,
-            "offsides": 0,
-            "yellows": 1,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-21702",
-            "card_id": "P-21702:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m1",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 1,
-            "fouls_committed": 2,
-            "fouls_suffered": 2,
-            "offsides": 0,
-            "yellows": 2,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-21702",
-            "card_id": "P-21702:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m2",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 3,
-            "fouls_committed": 2,
-            "fouls_suffered": 1,
-            "offsides": 0,
-            "yellows": 1,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-21702",
-            "card_id": "P-21702:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m3",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 4,
-            "fouls_committed": 2,
-            "fouls_suffered": 1,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          }
-        ],
-        "totals": {
-          "goals": 0,
-          "assists": 0,
-          "shots": 1,
-          "shots_on_target": 0,
-          "key_passes": 10,
-          "fouls_committed": 7,
-          "fouls_suffered": 5,
-          "offsides": 0,
-          "yellows": 4,
-          "reds": 0,
-          "saves": 0,
-          "pens_won": 0,
-          "pens_scored": 0,
-          "pens_missed": 0,
-          "minutes": 360
-        },
-        "rating_at_draft": 83
-      },
       {
         "player_id": "P-85178",
         "card_id": "P-85178:1998",
@@ -1217,9 +1096,9 @@
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
-            "minutes": 90,
+            "minutes": 60,
             "subbed_on": false,
-            "subbed_off": false,
+            "subbed_off": true,
             "injured": false
           }
         ],
@@ -1238,7 +1117,7 @@
           "pens_won": 0,
           "pens_scored": 0,
           "pens_missed": 0,
-          "minutes": 360
+          "minutes": 330
         },
         "rating_at_draft": 74
       },
@@ -1364,369 +1243,6 @@
         "rating_at_draft": 90
       },
       {
-        "player_id": "P-01068",
-        "card_id": "P-01068:2014",
-        "tournament_id": 2014,
-        "per_match": [
-          {
-            "player_id": "P-01068",
-            "card_id": "P-01068:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m0",
-            "goals": 0,
-            "assists": 0,
-            "shots": 1,
-            "shots_on_target": 0,
-            "key_passes": 3,
-            "fouls_committed": 0,
-            "fouls_suffered": 2,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-01068",
-            "card_id": "P-01068:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m1",
-            "goals": 0,
-            "assists": 0,
-            "shots": 2,
-            "shots_on_target": 1,
-            "key_passes": 7,
-            "fouls_committed": 1,
-            "fouls_suffered": 0,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-01068",
-            "card_id": "P-01068:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m2",
-            "goals": 0,
-            "assists": 1,
-            "shots": 2,
-            "shots_on_target": 0,
-            "key_passes": 8,
-            "fouls_committed": 1,
-            "fouls_suffered": 2,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-01068",
-            "card_id": "P-01068:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m3",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 6,
-            "fouls_committed": 1,
-            "fouls_suffered": 2,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          }
-        ],
-        "totals": {
-          "goals": 0,
-          "assists": 1,
-          "shots": 5,
-          "shots_on_target": 1,
-          "key_passes": 24,
-          "fouls_committed": 3,
-          "fouls_suffered": 6,
-          "offsides": 0,
-          "yellows": 0,
-          "reds": 0,
-          "saves": 0,
-          "pens_won": 0,
-          "pens_scored": 0,
-          "pens_missed": 0,
-          "minutes": 360
-        },
-        "rating_at_draft": 83
-      },
-      {
-        "player_id": "P-95198",
-        "card_id": "P-95198:2026",
-        "tournament_id": 2026,
-        "per_match": [
-          {
-            "player_id": "P-95198",
-            "card_id": "P-95198:2026",
-            "tournament_id": 2026,
-            "match_id": "e2e-real-run-golden.m0",
-            "goals": 0,
-            "assists": 0,
-            "shots": 1,
-            "shots_on_target": 1,
-            "key_passes": 3,
-            "fouls_committed": 0,
-            "fouls_suffered": 2,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-95198",
-            "card_id": "P-95198:2026",
-            "tournament_id": 2026,
-            "match_id": "e2e-real-run-golden.m1",
-            "goals": 0,
-            "assists": 0,
-            "shots": 1,
-            "shots_on_target": 0,
-            "key_passes": 2,
-            "fouls_committed": 1,
-            "fouls_suffered": 3,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-95198",
-            "card_id": "P-95198:2026",
-            "tournament_id": 2026,
-            "match_id": "e2e-real-run-golden.m2",
-            "goals": 1,
-            "assists": 0,
-            "shots": 2,
-            "shots_on_target": 1,
-            "key_passes": 1,
-            "fouls_committed": 0,
-            "fouls_suffered": 1,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-95198",
-            "card_id": "P-95198:2026",
-            "tournament_id": 2026,
-            "match_id": "e2e-real-run-golden.m3",
-            "goals": 0,
-            "assists": 0,
-            "shots": 3,
-            "shots_on_target": 1,
-            "key_passes": 1,
-            "fouls_committed": 0,
-            "fouls_suffered": 2,
-            "offsides": 2,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          }
-        ],
-        "totals": {
-          "goals": 1,
-          "assists": 0,
-          "shots": 7,
-          "shots_on_target": 3,
-          "key_passes": 7,
-          "fouls_committed": 1,
-          "fouls_suffered": 8,
-          "offsides": 2,
-          "yellows": 0,
-          "reds": 0,
-          "saves": 0,
-          "pens_won": 0,
-          "pens_scored": 0,
-          "pens_missed": 0,
-          "minutes": 360
-        },
-        "rating_at_draft": 82
-      },
-      {
-        "player_id": "P-79380",
-        "card_id": "P-79380:2002",
-        "tournament_id": 2002,
-        "per_match": [
-          {
-            "player_id": "P-79380",
-            "card_id": "P-79380:2002",
-            "tournament_id": 2002,
-            "match_id": "e2e-real-run-golden.m0",
-            "goals": 1,
-            "assists": 0,
-            "shots": 1,
-            "shots_on_target": 1,
-            "key_passes": 0,
-            "fouls_committed": 2,
-            "fouls_suffered": 1,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-79380",
-            "card_id": "P-79380:2002",
-            "tournament_id": 2002,
-            "match_id": "e2e-real-run-golden.m1",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 0,
-            "fouls_committed": 0,
-            "fouls_suffered": 0,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 0,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-79380",
-            "card_id": "P-79380:2002",
-            "tournament_id": 2002,
-            "match_id": "e2e-real-run-golden.m2",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 0,
-            "fouls_committed": 0,
-            "fouls_suffered": 0,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 0,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-79380",
-            "card_id": "P-79380:2002",
-            "tournament_id": 2002,
-            "match_id": "e2e-real-run-golden.m3",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 0,
-            "fouls_committed": 0,
-            "fouls_suffered": 0,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 0,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          }
-        ],
-        "totals": {
-          "goals": 1,
-          "assists": 0,
-          "shots": 1,
-          "shots_on_target": 1,
-          "key_passes": 0,
-          "fouls_committed": 2,
-          "fouls_suffered": 1,
-          "offsides": 0,
-          "yellows": 0,
-          "reds": 0,
-          "saves": 0,
-          "pens_won": 0,
-          "pens_scored": 0,
-          "pens_missed": 0,
-          "minutes": 90
-        },
-        "rating_at_draft": 86
-      },
-      {
         "player_id": "P-85176",
         "card_id": "P-85176:2006",
         "tournament_id": 2006,
@@ -1774,9 +1290,9 @@
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
-            "minutes": 90,
+            "minutes": 60,
             "subbed_on": false,
-            "subbed_off": false,
+            "subbed_off": true,
             "injured": false
           },
           {
@@ -1843,9 +1359,372 @@
           "pens_won": 0,
           "pens_scored": 0,
           "pens_missed": 0,
-          "minutes": 360
+          "minutes": 330
         },
         "rating_at_draft": 91
+      },
+      {
+        "player_id": "P-84486",
+        "card_id": "P-84486:2014",
+        "tournament_id": 2014,
+        "per_match": [
+          {
+            "player_id": "P-84486",
+            "card_id": "P-84486:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m0",
+            "goals": 1,
+            "assists": 0,
+            "shots": 1,
+            "shots_on_target": 1,
+            "key_passes": 0,
+            "fouls_committed": 2,
+            "fouls_suffered": 1,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-84486",
+            "card_id": "P-84486:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m1",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 1,
+            "fouls_committed": 1,
+            "fouls_suffered": 0,
+            "offsides": 1,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-84486",
+            "card_id": "P-84486:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m2",
+            "goals": 0,
+            "assists": 0,
+            "shots": 2,
+            "shots_on_target": 1,
+            "key_passes": 2,
+            "fouls_committed": 0,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 60,
+            "subbed_on": false,
+            "subbed_off": true,
+            "injured": true
+          },
+          {
+            "player_id": "P-84486",
+            "card_id": "P-84486:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m3",
+            "goals": 1,
+            "assists": 0,
+            "shots": 3,
+            "shots_on_target": 2,
+            "key_passes": 2,
+            "fouls_committed": 1,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 1,
+            "pens_scored": 1,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          }
+        ],
+        "totals": {
+          "goals": 2,
+          "assists": 0,
+          "shots": 6,
+          "shots_on_target": 4,
+          "key_passes": 5,
+          "fouls_committed": 4,
+          "fouls_suffered": 1,
+          "offsides": 1,
+          "yellows": 0,
+          "reds": 0,
+          "saves": 0,
+          "pens_won": 1,
+          "pens_scored": 1,
+          "pens_missed": 0,
+          "minutes": 330
+        },
+        "rating_at_draft": 75
+      },
+      {
+        "player_id": "P-21702",
+        "card_id": "P-21702:2014",
+        "tournament_id": 2014,
+        "per_match": [
+          {
+            "player_id": "P-21702",
+            "card_id": "P-21702:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m0",
+            "goals": 0,
+            "assists": 0,
+            "shots": 1,
+            "shots_on_target": 0,
+            "key_passes": 2,
+            "fouls_committed": 1,
+            "fouls_suffered": 1,
+            "offsides": 0,
+            "yellows": 1,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-21702",
+            "card_id": "P-21702:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m1",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 1,
+            "fouls_committed": 2,
+            "fouls_suffered": 2,
+            "offsides": 0,
+            "yellows": 2,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-21702",
+            "card_id": "P-21702:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m2",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 3,
+            "fouls_committed": 2,
+            "fouls_suffered": 1,
+            "offsides": 0,
+            "yellows": 1,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-21702",
+            "card_id": "P-21702:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m3",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 4,
+            "fouls_committed": 2,
+            "fouls_suffered": 1,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          }
+        ],
+        "totals": {
+          "goals": 0,
+          "assists": 0,
+          "shots": 1,
+          "shots_on_target": 0,
+          "key_passes": 10,
+          "fouls_committed": 7,
+          "fouls_suffered": 5,
+          "offsides": 0,
+          "yellows": 4,
+          "reds": 0,
+          "saves": 0,
+          "pens_won": 0,
+          "pens_scored": 0,
+          "pens_missed": 0,
+          "minutes": 360
+        },
+        "rating_at_draft": 83
+      },
+      {
+        "player_id": "P-01068",
+        "card_id": "P-01068:2014",
+        "tournament_id": 2014,
+        "per_match": [
+          {
+            "player_id": "P-01068",
+            "card_id": "P-01068:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m0",
+            "goals": 0,
+            "assists": 0,
+            "shots": 1,
+            "shots_on_target": 0,
+            "key_passes": 3,
+            "fouls_committed": 0,
+            "fouls_suffered": 2,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 60,
+            "subbed_on": false,
+            "subbed_off": true,
+            "injured": false
+          },
+          {
+            "player_id": "P-01068",
+            "card_id": "P-01068:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m1",
+            "goals": 0,
+            "assists": 0,
+            "shots": 2,
+            "shots_on_target": 1,
+            "key_passes": 7,
+            "fouls_committed": 1,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 60,
+            "subbed_on": false,
+            "subbed_off": true,
+            "injured": true
+          },
+          {
+            "player_id": "P-01068",
+            "card_id": "P-01068:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m2",
+            "goals": 0,
+            "assists": 1,
+            "shots": 2,
+            "shots_on_target": 0,
+            "key_passes": 8,
+            "fouls_committed": 1,
+            "fouls_suffered": 2,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 60,
+            "subbed_on": false,
+            "subbed_off": true,
+            "injured": false
+          },
+          {
+            "player_id": "P-01068",
+            "card_id": "P-01068:2014",
+            "tournament_id": 2014,
+            "match_id": "e2e-real-run-golden.m3",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 6,
+            "fouls_committed": 1,
+            "fouls_suffered": 2,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 60,
+            "subbed_on": false,
+            "subbed_off": true,
+            "injured": true
+          }
+        ],
+        "totals": {
+          "goals": 0,
+          "assists": 1,
+          "shots": 5,
+          "shots_on_target": 1,
+          "key_passes": 24,
+          "fouls_committed": 3,
+          "fouls_suffered": 6,
+          "offsides": 0,
+          "yellows": 0,
+          "reds": 0,
+          "saves": 0,
+          "pens_won": 0,
+          "pens_scored": 0,
+          "pens_missed": 0,
+          "minutes": 240
+        },
+        "rating_at_draft": 83
       },
       {
         "player_id": "P-25724",
@@ -1969,24 +1848,24 @@
         "rating_at_draft": 82
       },
       {
-        "player_id": "P-91268",
-        "card_id": "P-91268:2026",
+        "player_id": "P-95198",
+        "card_id": "P-95198:2026",
         "tournament_id": 2026,
         "per_match": [
           {
-            "player_id": "P-91268",
-            "card_id": "P-91268:2026",
+            "player_id": "P-95198",
+            "card_id": "P-95198:2026",
             "tournament_id": 2026,
             "match_id": "e2e-real-run-golden.m0",
             "goals": 0,
             "assists": 0,
             "shots": 1,
-            "shots_on_target": 0,
-            "key_passes": 1,
-            "fouls_committed": 3,
-            "fouls_suffered": 0,
+            "shots_on_target": 1,
+            "key_passes": 3,
+            "fouls_committed": 0,
+            "fouls_suffered": 2,
             "offsides": 0,
-            "yellows": 1,
+            "yellows": 0,
             "reds": 0,
             "saves": 0,
             "pens_won": 0,
@@ -1998,8 +1877,8 @@
             "injured": false
           },
           {
-            "player_id": "P-91268",
-            "card_id": "P-91268:2026",
+            "player_id": "P-95198",
+            "card_id": "P-95198:2026",
             "tournament_id": 2026,
             "match_id": "e2e-real-run-golden.m1",
             "goals": 0,
@@ -2008,7 +1887,7 @@
             "shots_on_target": 0,
             "key_passes": 2,
             "fouls_committed": 1,
-            "fouls_suffered": 2,
+            "fouls_suffered": 3,
             "offsides": 0,
             "yellows": 0,
             "reds": 0,
@@ -2022,17 +1901,17 @@
             "injured": false
           },
           {
-            "player_id": "P-91268",
-            "card_id": "P-91268:2026",
+            "player_id": "P-95198",
+            "card_id": "P-95198:2026",
             "tournament_id": 2026,
             "match_id": "e2e-real-run-golden.m2",
-            "goals": 0,
+            "goals": 1,
             "assists": 0,
             "shots": 2,
-            "shots_on_target": 0,
-            "key_passes": 0,
+            "shots_on_target": 1,
+            "key_passes": 1,
             "fouls_committed": 0,
-            "fouls_suffered": 2,
+            "fouls_suffered": 1,
             "offsides": 0,
             "yellows": 0,
             "reds": 0,
@@ -2046,18 +1925,18 @@
             "injured": false
           },
           {
-            "player_id": "P-91268",
-            "card_id": "P-91268:2026",
+            "player_id": "P-95198",
+            "card_id": "P-95198:2026",
             "tournament_id": 2026,
             "match_id": "e2e-real-run-golden.m3",
             "goals": 0,
             "assists": 0,
-            "shots": 2,
+            "shots": 3,
             "shots_on_target": 1,
-            "key_passes": 0,
+            "key_passes": 1,
             "fouls_committed": 0,
-            "fouls_suffered": 0,
-            "offsides": 0,
+            "fouls_suffered": 2,
+            "offsides": 2,
             "yellows": 0,
             "reds": 0,
             "saves": 0,
@@ -2071,15 +1950,15 @@
           }
         ],
         "totals": {
-          "goals": 0,
+          "goals": 1,
           "assists": 0,
-          "shots": 6,
-          "shots_on_target": 1,
-          "key_passes": 3,
-          "fouls_committed": 4,
-          "fouls_suffered": 4,
-          "offsides": 0,
-          "yellows": 1,
+          "shots": 7,
+          "shots_on_target": 3,
+          "key_passes": 7,
+          "fouls_committed": 1,
+          "fouls_suffered": 8,
+          "offsides": 2,
+          "yellows": 0,
           "reds": 0,
           "saves": 0,
           "pens_won": 0,
@@ -2087,7 +1966,7 @@
           "pens_missed": 0,
           "minutes": 360
         },
-        "rating_at_draft": 72
+        "rating_at_draft": 82
       },
       {
         "player_id": "P-20091",
@@ -2211,6 +2090,127 @@
         "rating_at_draft": 69
       },
       {
+        "player_id": "P-91268",
+        "card_id": "P-91268:2026",
+        "tournament_id": 2026,
+        "per_match": [
+          {
+            "player_id": "P-91268",
+            "card_id": "P-91268:2026",
+            "tournament_id": 2026,
+            "match_id": "e2e-real-run-golden.m0",
+            "goals": 0,
+            "assists": 0,
+            "shots": 1,
+            "shots_on_target": 0,
+            "key_passes": 1,
+            "fouls_committed": 3,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 1,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-91268",
+            "card_id": "P-91268:2026",
+            "tournament_id": 2026,
+            "match_id": "e2e-real-run-golden.m1",
+            "goals": 0,
+            "assists": 0,
+            "shots": 1,
+            "shots_on_target": 0,
+            "key_passes": 2,
+            "fouls_committed": 1,
+            "fouls_suffered": 2,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-91268",
+            "card_id": "P-91268:2026",
+            "tournament_id": 2026,
+            "match_id": "e2e-real-run-golden.m2",
+            "goals": 0,
+            "assists": 0,
+            "shots": 2,
+            "shots_on_target": 0,
+            "key_passes": 0,
+            "fouls_committed": 0,
+            "fouls_suffered": 2,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-91268",
+            "card_id": "P-91268:2026",
+            "tournament_id": 2026,
+            "match_id": "e2e-real-run-golden.m3",
+            "goals": 0,
+            "assists": 0,
+            "shots": 2,
+            "shots_on_target": 1,
+            "key_passes": 0,
+            "fouls_committed": 0,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 90,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          }
+        ],
+        "totals": {
+          "goals": 0,
+          "assists": 0,
+          "shots": 6,
+          "shots_on_target": 1,
+          "key_passes": 3,
+          "fouls_committed": 4,
+          "fouls_suffered": 4,
+          "offsides": 0,
+          "yellows": 1,
+          "reds": 0,
+          "saves": 0,
+          "pens_won": 0,
+          "pens_scored": 0,
+          "pens_missed": 0,
+          "minutes": 360
+        },
+        "rating_at_draft": 72
+      },
+      {
         "player_id": "P-81049",
         "card_id": "P-81049:2002",
         "tournament_id": 2002,
@@ -2332,6 +2332,127 @@
         "rating_at_draft": 90
       },
       {
+        "player_id": "P-79380",
+        "card_id": "P-79380:2002",
+        "tournament_id": 2002,
+        "per_match": [
+          {
+            "player_id": "P-79380",
+            "card_id": "P-79380:2002",
+            "tournament_id": 2002,
+            "match_id": "e2e-real-run-golden.m0",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 0,
+            "fouls_committed": 0,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 0,
+            "subbed_on": false,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-79380",
+            "card_id": "P-79380:2002",
+            "tournament_id": 2002,
+            "match_id": "e2e-real-run-golden.m1",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 0,
+            "fouls_committed": 0,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 30,
+            "subbed_on": true,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-79380",
+            "card_id": "P-79380:2002",
+            "tournament_id": 2002,
+            "match_id": "e2e-real-run-golden.m2",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 0,
+            "fouls_committed": 0,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 30,
+            "subbed_on": true,
+            "subbed_off": false,
+            "injured": false
+          },
+          {
+            "player_id": "P-79380",
+            "card_id": "P-79380:2002",
+            "tournament_id": 2002,
+            "match_id": "e2e-real-run-golden.m3",
+            "goals": 0,
+            "assists": 0,
+            "shots": 0,
+            "shots_on_target": 0,
+            "key_passes": 0,
+            "fouls_committed": 0,
+            "fouls_suffered": 0,
+            "offsides": 0,
+            "yellows": 0,
+            "reds": 0,
+            "saves": 0,
+            "pens_won": 0,
+            "pens_scored": 0,
+            "pens_missed": 0,
+            "minutes": 30,
+            "subbed_on": true,
+            "subbed_off": false,
+            "injured": false
+          }
+        ],
+        "totals": {
+          "goals": 0,
+          "assists": 0,
+          "shots": 0,
+          "shots_on_target": 0,
+          "key_passes": 0,
+          "fouls_committed": 0,
+          "fouls_suffered": 0,
+          "offsides": 0,
+          "yellows": 0,
+          "reds": 0,
+          "saves": 0,
+          "pens_won": 0,
+          "pens_scored": 0,
+          "pens_missed": 0,
+          "minutes": 90
+        },
+        "rating_at_draft": 86
+      },
+      {
         "player_id": "P-34530",
         "card_id": "P-34530:2010",
         "tournament_id": 2010,
@@ -2355,8 +2476,8 @@
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
-            "minutes": 0,
-            "subbed_on": false,
+            "minutes": 30,
+            "subbed_on": true,
             "subbed_off": false,
             "injured": false
           },
@@ -2379,8 +2500,8 @@
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
-            "minutes": 0,
-            "subbed_on": false,
+            "minutes": 30,
+            "subbed_on": true,
             "subbed_off": false,
             "injured": false
           },
@@ -2403,8 +2524,8 @@
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
-            "minutes": 0,
-            "subbed_on": false,
+            "minutes": 30,
+            "subbed_on": true,
             "subbed_off": false,
             "injured": false
           },
@@ -2448,7 +2569,7 @@
           "pens_won": 0,
           "pens_scored": 0,
           "pens_missed": 0,
-          "minutes": 0
+          "minutes": 90
         },
         "rating_at_draft": 80
       },
@@ -2548,8 +2669,8 @@
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
-            "minutes": 0,
-            "subbed_on": false,
+            "minutes": 30,
+            "subbed_on": true,
             "subbed_off": false,
             "injured": false
           }
@@ -2569,7 +2690,7 @@
           "pens_won": 0,
           "pens_scored": 0,
           "pens_missed": 0,
-          "minutes": 0
+          "minutes": 30
         },
         "rating_at_draft": 82
       },
@@ -2693,103 +2814,6 @@
           "minutes": 0
         },
         "rating_at_draft": 75
-      },
-      {
-        "player_id": "P-84486",
-        "card_id": "P-84486:2014",
-        "tournament_id": 2014,
-        "per_match": [
-          {
-            "player_id": "P-84486",
-            "card_id": "P-84486:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m1",
-            "goals": 0,
-            "assists": 0,
-            "shots": 0,
-            "shots_on_target": 0,
-            "key_passes": 1,
-            "fouls_committed": 1,
-            "fouls_suffered": 0,
-            "offsides": 1,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-84486",
-            "card_id": "P-84486:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m2",
-            "goals": 0,
-            "assists": 0,
-            "shots": 2,
-            "shots_on_target": 1,
-            "key_passes": 2,
-            "fouls_committed": 0,
-            "fouls_suffered": 0,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 0,
-            "pens_scored": 0,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          },
-          {
-            "player_id": "P-84486",
-            "card_id": "P-84486:2014",
-            "tournament_id": 2014,
-            "match_id": "e2e-real-run-golden.m3",
-            "goals": 1,
-            "assists": 0,
-            "shots": 3,
-            "shots_on_target": 2,
-            "key_passes": 2,
-            "fouls_committed": 1,
-            "fouls_suffered": 0,
-            "offsides": 0,
-            "yellows": 0,
-            "reds": 0,
-            "saves": 0,
-            "pens_won": 1,
-            "pens_scored": 1,
-            "pens_missed": 0,
-            "minutes": 90,
-            "subbed_on": false,
-            "subbed_off": false,
-            "injured": false
-          }
-        ],
-        "totals": {
-          "goals": 1,
-          "assists": 0,
-          "shots": 5,
-          "shots_on_target": 3,
-          "key_passes": 5,
-          "fouls_committed": 2,
-          "fouls_suffered": 0,
-          "offsides": 1,
-          "yellows": 0,
-          "reds": 0,
-          "saves": 0,
-          "pens_won": 1,
-          "pens_scored": 1,
-          "pens_missed": 0,
-          "minutes": 270
-        },
-        "rating_at_draft": 75
       }
     ],
     "narrative": {
@@ -2805,475 +2829,7 @@
       "round": "G1",
       "phase": "group",
       "opponent_team_id": "WC2026-C1",
-      "pre_match_win_probability": 0.0831,
-      "team_facts": {
-        "base_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "active_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 32,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "manager_present": true,
-        "manager_presence_band": 1,
-        "manager_link_band": 0,
-        "manager_tactical_band": 1,
-        "manager_tactical_multiplier": 1.0066666666666666,
-        "post_tactical_strength": {
-          "attack": 30.2,
-          "midfield": 35.233333,
-          "defense": 32.213333,
-          "goalkeeping": 15.1,
-          "coverage": 0.8874545454545455
-        },
-        "tactical_applied_to_outcome": true,
-        "base_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "active_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "unavailable": [
-          {
-            "card_id": "P-84486:2014",
-            "player_id": "P-84486",
-            "slot_id": "4-3-3.RB",
-            "position": "DF",
-            "reason": "knock",
-            "duration_matches": 1
-          }
-        ],
-        "bench_activations": [
-          {
-            "out_card_id": "P-84486:2014",
-            "out_player_id": "P-84486",
-            "in_card_id": "P-79380:2002",
-            "in_player_id": "P-79380",
-            "slot_id": "4-3-3.RB",
-            "line": "DF",
-            "fit": 1,
-            "internal_score": 57,
-            "replacement_contribution_multiplier": 0.7,
-            "replacement_score": 39.9,
-            "outgoing_score": 25.5,
-            "line_contribution_delta": 14.399999999999999
-          }
-        ],
-        "short_handed_slot_ids": []
-      },
+      "pre_match_win_probability": 0.0774,
       "user_goals": 2,
       "opp_goals": 1,
       "user_goals_et": null,
@@ -3283,16 +2839,6 @@
       "counts_as_run_win": true,
       "advanced": false,
       "lineup": [
-        {
-          "side": "user",
-          "card_id": "P-21702:2014",
-          "player_id": "P-21702",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.CDM",
-          "position": "MF",
-          "started": true,
-          "minutes": 90
-        },
         {
           "side": "user",
           "card_id": "P-85178:1998",
@@ -3325,10 +2871,50 @@
         },
         {
           "side": "user",
+          "card_id": "P-85176:2006",
+          "player_id": "P-85176",
+          "tournament_id": 2006,
+          "slot_id": "4-3-3.RCB",
+          "position": "DF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.RB",
+          "position": "DF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
+          "card_id": "P-21702:2014",
+          "player_id": "P-21702",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.CDM",
+          "position": "MF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
           "card_id": "P-01068:2014",
           "player_id": "P-01068",
           "tournament_id": 2014,
           "slot_id": "4-3-3.LCM",
+          "position": "MF",
+          "started": true,
+          "minutes": 60
+        },
+        {
+          "side": "user",
+          "card_id": "P-25724:2006",
+          "player_id": "P-25724",
+          "tournament_id": 2006,
+          "slot_id": "4-3-3.RCM",
           "position": "MF",
           "started": true,
           "minutes": 90
@@ -3345,31 +2931,11 @@
         },
         {
           "side": "user",
-          "card_id": "P-79380:2002",
-          "player_id": "P-79380",
-          "tournament_id": 2002,
-          "slot_id": "4-3-3.RB",
-          "position": "DF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-85176:2006",
-          "player_id": "P-85176",
-          "tournament_id": 2006,
-          "slot_id": "4-3-3.RCB",
-          "position": "DF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-25724:2006",
-          "player_id": "P-25724",
-          "tournament_id": 2006,
-          "slot_id": "4-3-3.RCM",
-          "position": "MF",
+          "card_id": "P-20091:1950",
+          "player_id": "P-20091",
+          "tournament_id": 1950,
+          "slot_id": "4-3-3.ST",
+          "position": "FW",
           "started": true,
           "minutes": 90
         },
@@ -3379,16 +2945,6 @@
           "player_id": "P-91268",
           "tournament_id": 2026,
           "slot_id": "4-3-3.RW",
-          "position": "FW",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-20091:1950",
-          "player_id": "P-20091",
-          "tournament_id": 1950,
-          "slot_id": "4-3-3.ST",
           "position": "FW",
           "started": true,
           "minutes": 90
@@ -3405,13 +2961,23 @@
         },
         {
           "side": "user",
+          "card_id": "P-79380:2002",
+          "player_id": "P-79380",
+          "tournament_id": 2002,
+          "slot_id": "bench.1",
+          "position": "DF",
+          "started": false,
+          "minutes": 0
+        },
+        {
+          "side": "user",
           "card_id": "P-34530:2010",
           "player_id": "P-34530",
           "tournament_id": 2010,
           "slot_id": "bench.2",
           "position": "MF",
           "started": false,
-          "minutes": 0
+          "minutes": 30
         },
         {
           "side": "user",
@@ -3696,22 +3262,6 @@
       ],
       "events": [
         {
-          "event_id": "e2e-real-run-golden.m0.availability.0",
-          "minute": 0,
-          "period": "1H",
-          "side": "user",
-          "type": "availability",
-          "card_id": "P-84486:2014",
-          "player_id": "P-84486",
-          "slot_id": "4-3-3.RB",
-          "position": "DF",
-          "reason": "knock",
-          "duration_matches": 1,
-          "replacement_card_id": "P-79380:2002",
-          "replacement_player_id": "P-79380",
-          "short_handed": false
-        },
-        {
           "minute": 1,
           "period": "1H",
           "side": "user",
@@ -3982,8 +3532,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m0.e27",
           "type": "foul",
-          "committed_by_card_id": "P-79380:2002",
-          "committed_by_player_id": "P-79380",
+          "committed_by_card_id": "P-84486:2014",
+          "committed_by_player_id": "P-84486",
           "suffered_by_card_id": "P-14060:2026",
           "suffered_by_player_id": "P-14060"
         },
@@ -4331,8 +3881,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m0.e62",
           "type": "goal",
-          "scorer_card_id": "P-79380:2002",
-          "scorer_player_id": "P-79380",
+          "scorer_card_id": "P-84486:2014",
+          "scorer_player_id": "P-84486",
           "assist_card_id": null,
           "assist_player_id": null,
           "score_after": {
@@ -4378,8 +3928,8 @@
           "type": "foul",
           "committed_by_card_id": "P-02305:2026",
           "committed_by_player_id": "P-02305",
-          "suffered_by_card_id": "P-79380:2002",
-          "suffered_by_player_id": "P-79380"
+          "suffered_by_card_id": "P-84486:2014",
+          "suffered_by_player_id": "P-84486"
         },
         {
           "minute": 54,
@@ -4548,8 +4098,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m0.e83",
           "type": "foul",
-          "committed_by_card_id": "P-79380:2002",
-          "committed_by_player_id": "P-79380",
+          "committed_by_card_id": "P-84486:2014",
+          "committed_by_player_id": "P-84486",
           "suffered_by_card_id": "P-40137:2026",
           "suffered_by_player_id": "P-40137"
         },
@@ -4821,6 +4371,18 @@
           "type": "shot_off",
           "card_id": "P-40137:2026",
           "player_id": "P-40137"
+        },
+        {
+          "minute": 59,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m0.e111",
+          "type": "sub",
+          "in_card_id": "P-34530:2010",
+          "in_player_id": "P-34530",
+          "out_card_id": "P-01068:2014",
+          "out_player_id": "P-01068",
+          "reason": "tactical"
         }
       ]
     },
@@ -4830,451 +4392,7 @@
       "round": "G2",
       "phase": "group",
       "opponent_team_id": "WC2026-C2",
-      "pre_match_win_probability": 0.1429,
-      "team_facts": {
-        "base_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "active_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "manager_present": true,
-        "manager_presence_band": 1,
-        "manager_link_band": 0,
-        "manager_tactical_band": 1,
-        "manager_tactical_multiplier": 1.0066666666666666,
-        "post_tactical_strength": {
-          "attack": 30.2,
-          "midfield": 35.233333,
-          "defense": 30.2,
-          "goalkeeping": 15.1,
-          "coverage": 0.8874545454545455
-        },
-        "tactical_applied_to_outcome": true,
-        "base_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "active_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "unavailable": [],
-        "bench_activations": [],
-        "short_handed_slot_ids": []
-      },
+      "pre_match_win_probability": 0.1399,
       "user_goals": 1,
       "opp_goals": 1,
       "user_goals_et": null,
@@ -5284,16 +4402,6 @@
       "counts_as_run_win": false,
       "advanced": false,
       "lineup": [
-        {
-          "side": "user",
-          "card_id": "P-21702:2014",
-          "player_id": "P-21702",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.CDM",
-          "position": "MF",
-          "started": true,
-          "minutes": 90
-        },
         {
           "side": "user",
           "card_id": "P-85178:1998",
@@ -5326,10 +4434,50 @@
         },
         {
           "side": "user",
+          "card_id": "P-85176:2006",
+          "player_id": "P-85176",
+          "tournament_id": 2006,
+          "slot_id": "4-3-3.RCB",
+          "position": "DF",
+          "started": true,
+          "minutes": 60
+        },
+        {
+          "side": "user",
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.RB",
+          "position": "DF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
+          "card_id": "P-21702:2014",
+          "player_id": "P-21702",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.CDM",
+          "position": "MF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
           "card_id": "P-01068:2014",
           "player_id": "P-01068",
           "tournament_id": 2014,
           "slot_id": "4-3-3.LCM",
+          "position": "MF",
+          "started": true,
+          "minutes": 60
+        },
+        {
+          "side": "user",
+          "card_id": "P-25724:2006",
+          "player_id": "P-25724",
+          "tournament_id": 2006,
+          "slot_id": "4-3-3.RCM",
           "position": "MF",
           "started": true,
           "minutes": 90
@@ -5346,31 +4494,11 @@
         },
         {
           "side": "user",
-          "card_id": "P-84486:2014",
-          "player_id": "P-84486",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.RB",
-          "position": "DF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-85176:2006",
-          "player_id": "P-85176",
-          "tournament_id": 2006,
-          "slot_id": "4-3-3.RCB",
-          "position": "DF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-25724:2006",
-          "player_id": "P-25724",
-          "tournament_id": 2006,
-          "slot_id": "4-3-3.RCM",
-          "position": "MF",
+          "card_id": "P-20091:1950",
+          "player_id": "P-20091",
+          "tournament_id": 1950,
+          "slot_id": "4-3-3.ST",
+          "position": "FW",
           "started": true,
           "minutes": 90
         },
@@ -5380,16 +4508,6 @@
           "player_id": "P-91268",
           "tournament_id": 2026,
           "slot_id": "4-3-3.RW",
-          "position": "FW",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-20091:1950",
-          "player_id": "P-20091",
-          "tournament_id": 1950,
-          "slot_id": "4-3-3.ST",
           "position": "FW",
           "started": true,
           "minutes": 90
@@ -5412,7 +4530,7 @@
           "slot_id": "bench.1",
           "position": "DF",
           "started": false,
-          "minutes": 0
+          "minutes": 30
         },
         {
           "side": "user",
@@ -5422,7 +4540,7 @@
           "slot_id": "bench.2",
           "position": "MF",
           "started": false,
-          "minutes": 0
+          "minutes": 30
         },
         {
           "side": "user",
@@ -6909,6 +6027,40 @@
           "card_id": "P-50688:2026",
           "player_id": "P-50688",
           "for_event_id": null
+        },
+        {
+          "minute": 23,
+          "period": "1H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m1.e120",
+          "type": "injury",
+          "card_id": "P-01068:2014",
+          "player_id": "P-01068",
+          "tournament_ending": false
+        },
+        {
+          "minute": 23,
+          "period": "1H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m1.e121",
+          "type": "sub",
+          "in_card_id": "P-34530:2010",
+          "in_player_id": "P-34530",
+          "out_card_id": "P-01068:2014",
+          "out_player_id": "P-01068",
+          "reason": "injury"
+        },
+        {
+          "minute": 62,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m1.e122",
+          "type": "sub",
+          "in_card_id": "P-79380:2002",
+          "in_player_id": "P-79380",
+          "out_card_id": "P-85176:2006",
+          "out_player_id": "P-85176",
+          "reason": "tactical"
         }
       ]
     },
@@ -6918,451 +6070,7 @@
       "round": "G3",
       "phase": "group",
       "opponent_team_id": "WC2026-C4",
-      "pre_match_win_probability": 0.1417,
-      "team_facts": {
-        "base_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "active_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "manager_present": true,
-        "manager_presence_band": 1,
-        "manager_link_band": 0,
-        "manager_tactical_band": 1,
-        "manager_tactical_multiplier": 1.0066666666666666,
-        "post_tactical_strength": {
-          "attack": 30.2,
-          "midfield": 35.233333,
-          "defense": 30.2,
-          "goalkeeping": 15.1,
-          "coverage": 0.8874545454545455
-        },
-        "tactical_applied_to_outcome": true,
-        "base_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "active_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "unavailable": [],
-        "bench_activations": [],
-        "short_handed_slot_ids": []
-      },
+      "pre_match_win_probability": 0.1388,
       "user_goals": 3,
       "opp_goals": 2,
       "user_goals_et": null,
@@ -7372,16 +6080,6 @@
       "counts_as_run_win": true,
       "advanced": false,
       "lineup": [
-        {
-          "side": "user",
-          "card_id": "P-21702:2014",
-          "player_id": "P-21702",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.CDM",
-          "position": "MF",
-          "started": true,
-          "minutes": 90
-        },
         {
           "side": "user",
           "card_id": "P-85178:1998",
@@ -7414,10 +6112,50 @@
         },
         {
           "side": "user",
+          "card_id": "P-85176:2006",
+          "player_id": "P-85176",
+          "tournament_id": 2006,
+          "slot_id": "4-3-3.RCB",
+          "position": "DF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.RB",
+          "position": "DF",
+          "started": true,
+          "minutes": 60
+        },
+        {
+          "side": "user",
+          "card_id": "P-21702:2014",
+          "player_id": "P-21702",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.CDM",
+          "position": "MF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
           "card_id": "P-01068:2014",
           "player_id": "P-01068",
           "tournament_id": 2014,
           "slot_id": "4-3-3.LCM",
+          "position": "MF",
+          "started": true,
+          "minutes": 60
+        },
+        {
+          "side": "user",
+          "card_id": "P-25724:2006",
+          "player_id": "P-25724",
+          "tournament_id": 2006,
+          "slot_id": "4-3-3.RCM",
           "position": "MF",
           "started": true,
           "minutes": 90
@@ -7434,31 +6172,11 @@
         },
         {
           "side": "user",
-          "card_id": "P-84486:2014",
-          "player_id": "P-84486",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.RB",
-          "position": "DF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-85176:2006",
-          "player_id": "P-85176",
-          "tournament_id": 2006,
-          "slot_id": "4-3-3.RCB",
-          "position": "DF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-25724:2006",
-          "player_id": "P-25724",
-          "tournament_id": 2006,
-          "slot_id": "4-3-3.RCM",
-          "position": "MF",
+          "card_id": "P-20091:1950",
+          "player_id": "P-20091",
+          "tournament_id": 1950,
+          "slot_id": "4-3-3.ST",
+          "position": "FW",
           "started": true,
           "minutes": 90
         },
@@ -7468,16 +6186,6 @@
           "player_id": "P-91268",
           "tournament_id": 2026,
           "slot_id": "4-3-3.RW",
-          "position": "FW",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-20091:1950",
-          "player_id": "P-20091",
-          "tournament_id": 1950,
-          "slot_id": "4-3-3.ST",
           "position": "FW",
           "started": true,
           "minutes": 90
@@ -7500,7 +6208,7 @@
           "slot_id": "bench.1",
           "position": "DF",
           "started": false,
-          "minutes": 0
+          "minutes": 30
         },
         {
           "side": "user",
@@ -7510,7 +6218,7 @@
           "slot_id": "bench.2",
           "position": "MF",
           "started": false,
-          "minutes": 0
+          "minutes": 30
         },
         {
           "side": "user",
@@ -9023,6 +7731,40 @@
           "card_id": "P-01068:2014",
           "player_id": "P-01068",
           "for_event_id": null
+        },
+        {
+          "minute": 49,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e122",
+          "type": "injury",
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486",
+          "tournament_ending": false
+        },
+        {
+          "minute": 49,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e123",
+          "type": "sub",
+          "in_card_id": "P-79380:2002",
+          "in_player_id": "P-79380",
+          "out_card_id": "P-84486:2014",
+          "out_player_id": "P-84486",
+          "reason": "injury"
+        },
+        {
+          "minute": 62,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e124",
+          "type": "sub",
+          "in_card_id": "P-34530:2010",
+          "in_player_id": "P-34530",
+          "out_card_id": "P-01068:2014",
+          "out_player_id": "P-01068",
+          "reason": "tactical"
         }
       ]
     },
@@ -9032,451 +7774,7 @@
       "round": "R32",
       "phase": "knockout",
       "opponent_team_id": "WC2026-F3",
-      "pre_match_win_probability": 0.2662,
-      "team_facts": {
-        "base_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "active_strength": {
-          "attack": 30,
-          "midfield": 35,
-          "defense": 30,
-          "goalkeeping": 15,
-          "coverage": 0.8874545454545455
-        },
-        "manager_present": true,
-        "manager_presence_band": 1,
-        "manager_link_band": 0,
-        "manager_tactical_band": 1,
-        "manager_tactical_multiplier": 1.0066666666666666,
-        "post_tactical_strength": {
-          "attack": 30.2,
-          "midfield": 35.233333,
-          "defense": 30.2,
-          "goalkeeping": 15.1,
-          "coverage": 0.8874545454545455
-        },
-        "tactical_applied_to_outcome": true,
-        "base_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "active_synergy": {
-          "overall": 0,
-          "nation_clusters": [],
-          "linked_pairs": [
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.CDM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.GK",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.LCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.LW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.LW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCB",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCB",
-              "slot_id_b": "4-3-3.RCM",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.RW",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RCM",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            },
-            {
-              "slot_id_a": "4-3-3.RW",
-              "slot_id_b": "4-3-3.ST",
-              "linked": false,
-              "nation_id": null
-            }
-          ],
-          "manager_link": 0,
-          "multiplier": 1
-        },
-        "unavailable": [],
-        "bench_activations": [],
-        "short_handed_slot_ids": []
-      },
+      "pre_match_win_probability": 0.2626,
       "user_goals": 1,
       "opp_goals": 3,
       "user_goals_et": null,
@@ -9486,16 +7784,6 @@
       "counts_as_run_win": false,
       "advanced": false,
       "lineup": [
-        {
-          "side": "user",
-          "card_id": "P-21702:2014",
-          "player_id": "P-21702",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.CDM",
-          "position": "MF",
-          "started": true,
-          "minutes": 90
-        },
         {
           "side": "user",
           "card_id": "P-85178:1998",
@@ -9514,7 +7802,7 @@
           "slot_id": "4-3-3.LB",
           "position": "DF",
           "started": true,
-          "minutes": 90
+          "minutes": 60
         },
         {
           "side": "user",
@@ -9522,36 +7810,6 @@
           "player_id": "P-63927",
           "tournament_id": 2022,
           "slot_id": "4-3-3.LCB",
-          "position": "DF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-01068:2014",
-          "player_id": "P-01068",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.LCM",
-          "position": "MF",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-95198:2026",
-          "player_id": "P-95198",
-          "tournament_id": 2026,
-          "slot_id": "4-3-3.LW",
-          "position": "FW",
-          "started": true,
-          "minutes": 90
-        },
-        {
-          "side": "user",
-          "card_id": "P-84486:2014",
-          "player_id": "P-84486",
-          "tournament_id": 2014,
-          "slot_id": "4-3-3.RB",
           "position": "DF",
           "started": true,
           "minutes": 90
@@ -9568,6 +7826,36 @@
         },
         {
           "side": "user",
+          "card_id": "P-84486:2014",
+          "player_id": "P-84486",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.RB",
+          "position": "DF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
+          "card_id": "P-21702:2014",
+          "player_id": "P-21702",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.CDM",
+          "position": "MF",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
+          "card_id": "P-01068:2014",
+          "player_id": "P-01068",
+          "tournament_id": 2014,
+          "slot_id": "4-3-3.LCM",
+          "position": "MF",
+          "started": true,
+          "minutes": 60
+        },
+        {
+          "side": "user",
           "card_id": "P-25724:2006",
           "player_id": "P-25724",
           "tournament_id": 2006,
@@ -9578,10 +7866,10 @@
         },
         {
           "side": "user",
-          "card_id": "P-91268:2026",
-          "player_id": "P-91268",
+          "card_id": "P-95198:2026",
+          "player_id": "P-95198",
           "tournament_id": 2026,
-          "slot_id": "4-3-3.RW",
+          "slot_id": "4-3-3.LW",
           "position": "FW",
           "started": true,
           "minutes": 90
@@ -9592,6 +7880,16 @@
           "player_id": "P-20091",
           "tournament_id": 1950,
           "slot_id": "4-3-3.ST",
+          "position": "FW",
+          "started": true,
+          "minutes": 90
+        },
+        {
+          "side": "user",
+          "card_id": "P-91268:2026",
+          "player_id": "P-91268",
+          "tournament_id": 2026,
+          "slot_id": "4-3-3.RW",
           "position": "FW",
           "started": true,
           "minutes": 90
@@ -9614,7 +7912,7 @@
           "slot_id": "bench.1",
           "position": "DF",
           "started": false,
-          "minutes": 0
+          "minutes": 30
         },
         {
           "side": "user",
@@ -9634,7 +7932,7 @@
           "slot_id": "bench.3",
           "position": "MF",
           "started": false,
-          "minutes": 0
+          "minutes": 30
         },
         {
           "side": "user",
@@ -11052,6 +9350,40 @@
           "card_id": "P-20091:1950",
           "player_id": "P-20091",
           "for_event_id": null
+        },
+        {
+          "minute": 50,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m3.e114",
+          "type": "injury",
+          "card_id": "P-01068:2014",
+          "player_id": "P-01068",
+          "tournament_ending": false
+        },
+        {
+          "minute": 50,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m3.e115",
+          "type": "sub",
+          "in_card_id": "P-83216:2018",
+          "in_player_id": "P-83216",
+          "out_card_id": "P-01068:2014",
+          "out_player_id": "P-01068",
+          "reason": "injury"
+        },
+        {
+          "minute": 69,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m3.e116",
+          "type": "sub",
+          "in_card_id": "P-79380:2002",
+          "in_player_id": "P-79380",
+          "out_card_id": "P-67758:1934",
+          "out_player_id": "P-67758",
+          "reason": "tactical"
         }
       ]
     }
