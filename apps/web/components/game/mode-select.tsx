@@ -39,7 +39,7 @@ const MODE_COPY: Record<
     index: "00",
     title: "Today's Draft",
     tag: "Daily",
-    desc: "One shared draft for everyone today — a new one drops daily at 00:00 UTC.",
+    desc: "One shared draft for everyone today. A new one drops daily at 00:00 UTC.",
     preview: "DAILY",
     chips: ["Same draft", "Beat today"],
     cta: "Play daily",

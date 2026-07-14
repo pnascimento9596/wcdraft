@@ -5,7 +5,7 @@ import pageStyles from "./play-page.module.css";
 export const metadata: Metadata = {
   title: "Choose a mode",
   description:
-    "Pick a wcdraft game mode — start with Daily or Classic, then try the blind Memory reveal.",
+    "Pick a wcdraft game mode. Start with Daily or Classic, then try the blind Memory reveal.",
 };
 
 export default function ModeSelectPage() {
@@ -15,7 +15,8 @@ export default function ModeSelectPage() {
         <span className="eyebrow">New draft</span>
         <h1 className={`display ${pageStyles.title}`}>Choose your mode</h1>
         <p className={`lede ${pageStyles.lede}`}>
-          Seventeen spins, one all-time XI — live on the real 1930–2026 pool, all in your browser.
+          Seventeen spins, one all-time XI. Play live on the real 1930–2026 pool, all in your
+          browser.
         </p>
       </header>
 

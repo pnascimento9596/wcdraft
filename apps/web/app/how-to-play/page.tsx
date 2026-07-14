@@ -208,8 +208,8 @@ export default function HowToPlayPage() {
 
         <h2>Reference standing</h2>
         <p>
-          Every finished run shows “Beat ~X% of reference drafts” — your score placed on a curve of
-          simulated drafts run on this engine, not a ranking against other players. The Daily
+          Every finished run shows “Beat ~X% of reference drafts.” Your score is placed on a curve
+          of simulated drafts run on this engine, not a ranking against other players. The Daily
           board’s “Top X% of today’s field” is the separate, posted-field standing.
         </p>
 

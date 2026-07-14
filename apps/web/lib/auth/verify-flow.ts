@@ -101,7 +101,7 @@ export function renderVerifyInterstitialHtml(args: RenderInterstitialArgs): stri
       <input type="hidden" name="csrf" value="${csrf}">
       <button type="submit">Sign in</button>
     </form>
-    <p class="meta">If you didn't request this link, close this page — no account is created.</p>
+    <p class="meta">If you didn't request this link, close this page. No account is created.</p>
   </main>
 </body>
 </html>

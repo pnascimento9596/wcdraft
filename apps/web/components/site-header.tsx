@@ -50,7 +50,7 @@ export function SiteHeader({
     <header className="masthead">
       <div className="container masthead__inner">
         {/* Canonical header mark: medallion badge + separate wordmark text. */}
-        <Link href="/" className="wordmark" aria-label="wcdraft — home">
+        <Link href="/" className="wordmark" aria-label="wcdraft home">
           <Image
             src="/brand/medallion-badge.svg"
             alt="WCDraft"

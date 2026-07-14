@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "wcdraft — World Cup draft game",
+    name: "wcdraft: World Cup draft game",
     short_name: "wcdraft",
     description:
       "A football drafting game: spin a team and year, pick your XI, chase the perfect run.",
