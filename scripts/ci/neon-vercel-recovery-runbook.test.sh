@@ -146,7 +146,9 @@ BASH
   sed -n '/^require_application_pairing_receipts() {/,/^}/p' "$runbook"
   sed -n '/^require_traffic_suspension_configuration() {/,/^}/p' "$runbook"
   sed -n '/^require_traffic_suspension_receipt() {/,/^}/p' "$runbook"
+  sed -n '/^restore_neon_primary() {/,/^}/p' "$runbook"
   sed -n '/^rollback_application() {/,/^}/p' "$runbook"
+  sed -n '/^restore_neon_primary_from_preserved() {/,/^}/p' "$runbook"
   sed -n '/^promote_pre_restore_application() {/,/^}/p' "$runbook"
 } >"$mutation_guard_block"
 bash -s -- "$mutation_guard_block" <<'BASH'
@@ -158,11 +160,20 @@ trap 'rm -rf "$incident_dir"' EXIT
 
 PRE_RESTORE_DEPLOYMENT=pre-restore-deployment
 RESTORE_COMPATIBLE_DEPLOYMENT=rollback-compatible-deployment
+APPLICATION_PAIRING=rollback
 COUPLED_ORDER=database-first
 INVERSE_COUPLED_ORDER=database-first
+NEON_PROJECT_ID=test-project
+NEON_PRIMARY_BRANCH_ID=test-primary
+NEON_API_KEY=test-key
+RESTORE_TIMESTAMP=2026-07-14T00:00:00Z
 
 wait_for_production_alias() { return 0; }
 vercel() {
+  printf '%s\n' "$*" >>"$mutation_log"
+  return 0
+}
+curl() {
   printf '%s\n' "$*" >>"$mutation_log"
   return 0
 }
@@ -196,6 +207,14 @@ assert_alias_failure_blocks_mutation \
   rollback_application database-first-current-alias
 assert_alias_failure_blocks_mutation \
   promote_pre_restore_application inverse-database-first-current-alias
+COUPLED_ORDER=application-first
+assert_alias_failure_blocks_mutation \
+  restore_neon_primary application-first-alias
+INVERSE_COUPLED_ORDER=application-first
+assert_alias_failure_blocks_mutation \
+  restore_neon_primary_from_preserved inverse-application-first-alias
+COUPLED_ORDER=database-first
+INVERSE_COUPLED_ORDER=database-first
 
 write_alias_receipt() {
   receipt_name="$1"
@@ -257,6 +276,14 @@ assert_pairing_failure_blocks_mutation \
 assert_pairing_failure_blocks_mutation \
   promote_pre_restore_application inverse-database-first-current-alias \
   inverse-database-first-intermediate "$RESTORE_COMPATIBLE_DEPLOYMENT"
+COUPLED_ORDER=application-first
+assert_pairing_failure_blocks_mutation \
+  restore_neon_primary application-first-alias \
+  application-first-intermediate "$RESTORE_COMPATIBLE_DEPLOYMENT"
+INVERSE_COUPLED_ORDER=application-first
+assert_pairing_failure_blocks_mutation \
+  restore_neon_primary_from_preserved inverse-application-first-alias \
+  inverse-application-first-intermediate "$PRE_RESTORE_DEPLOYMENT"
 
 TRAFFIC_SUSPENSION_EXPECTED_HTTP=503
 TRAFFIC_SUSPENSION_MARKER=valid_marker_0123456789abcdef0123456789
@@ -264,23 +291,40 @@ TRAFFIC_SUSPENSION_MARKER=valid_marker_0123456789abcdef0123456789
 write_suspension_receipts() {
   receipt_name="$1"
   bad_endpoint="$2"
+  failure="$3"
   for endpoint in health og-health; do
     case "$endpoint" in
       health) probe_url='https://www.wcdraft.com/api/health' ;;
       og-health) probe_url='https://www.wcdraft.com/api/og/health' ;;
     esac
+    receipt_url="$probe_url"
+    expected_http=503
     observed_http=503
+    header_marker="$TRAFFIC_SUSPENSION_MARKER"
+    body_contains=true
+    body_marker="$TRAFFIC_SUSPENSION_MARKER"
     if [ "$endpoint" = "$bad_endpoint" ]; then
-      observed_http=404
+      case "$failure" in
+        url) receipt_url=https://wrong.example.invalid/not-canonical ;;
+        expected) expected_http=404 ;;
+        observed) observed_http=404 ;;
+        header) header_marker=wrong-marker ;;
+        body-json) body_contains=false ;;
+        body-file) body_marker=wrong-marker ;;
+      esac
     fi
     jq -nc \
-      --arg url "$probe_url" \
+      --arg url "$receipt_url" \
+      --arg expected "$expected_http" \
       --arg observed "$observed_http" \
       --arg marker "$TRAFFIC_SUSPENSION_MARKER" \
-      '{probe_url:$url,expected_http:"503",observed_http:$observed,
-        expected_marker:$marker,header_marker:$marker,body_contains_marker:true}' \
+      --arg header "$header_marker" \
+      --argjson body_contains "$body_contains" \
+      '{probe_url:$url,expected_http:$expected,observed_http:$observed,
+        expected_marker:$marker,header_marker:$header,
+        body_contains_marker:$body_contains}' \
       >"$incident_dir/$receipt_name-traffic-suspension-$endpoint.json"
-    printf '%s\n' "$TRAFFIC_SUSPENSION_MARKER" \
+    printf '%s\n' "$body_marker" \
       >"$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt"
   done
 }
@@ -289,20 +333,22 @@ assert_suspension_failure_blocks_mutation() {
   function_name="$1"
   receipt_name="$2"
   for bad_endpoint in health og-health; do
-    rm -f "$mutation_log"
-    write_suspension_receipts "$receipt_name" "$bad_endpoint"
-    set +e
-    "$function_name" guard-probe >/dev/null 2>&1
-    status="$?"
-    set -e
-    [ "$status" -ne 0 ] || {
-      echo "$function_name accepted a wrong $bad_endpoint suspension receipt." >&2
-      exit 1
-    }
-    [ ! -s "$mutation_log" ] || {
-      echo "$function_name reached a vendor mutation with a wrong $bad_endpoint suspension receipt." >&2
-      exit 1
-    }
+    for failure in url expected observed header body-json body-file; do
+      rm -f "$mutation_log"
+      write_suspension_receipts "$receipt_name" "$bad_endpoint" "$failure"
+      set +e
+      "$function_name" guard-probe >/dev/null 2>&1
+      status="$?"
+      set -e
+      [ "$status" -ne 0 ] || {
+        echo "$function_name accepted a wrong $bad_endpoint $failure suspension receipt." >&2
+        exit 1
+      }
+      [ ! -s "$mutation_log" ] || {
+        echo "$function_name reached a vendor mutation with a wrong $bad_endpoint $failure suspension receipt." >&2
+        exit 1
+      }
+    done
   done
 }
 
@@ -312,6 +358,12 @@ assert_suspension_failure_blocks_mutation \
 INVERSE_COUPLED_ORDER=traffic-stopped
 assert_suspension_failure_blocks_mutation \
   promote_pre_restore_application inverse-traffic-stopped-before-vercel
+COUPLED_ORDER=traffic-stopped
+assert_suspension_failure_blocks_mutation \
+  restore_neon_primary traffic-stopped-before-neon
+INVERSE_COUPLED_ORDER=traffic-stopped
+assert_suspension_failure_blocks_mutation \
+  restore_neon_primary_from_preserved inverse-traffic-stopped-before-neon
 BASH
 
 if rg -Fq 'TRAFFIC_SUSPENSION_PROBE_URL' "$runbook"; then
@@ -388,4 +440,4 @@ assert_function_order promote_pre_restore_application \
   'vercel promote "$PRE_RESTORE_DEPLOYMENT" \'
 
 printf '%s\n' \
-  'neon-vercel recovery runbook contract: PASS (bash syntax, fixed suspension proof, 14 receipt-negative mutation cases under suppressed errexit, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'
+  'neon-vercel recovery runbook contract: PASS (bash syntax, fixed suspension proof, 68 receipt-negative mutation cases under suppressed errexit across all 4 vendor sinks, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'

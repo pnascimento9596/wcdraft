@@ -158,10 +158,11 @@ Validated and corrected
 9. Registered the Bash syntax and structural-order contract in the required
    static CI job. It enforces six forward/inverse route orderings, fixed
    suspension endpoints, single mutation definitions, CI registration, and
-   fourteen negative cases under deliberately suppressed Bash `errexit`. Those
-   cases prove that missing/wrong aliases, invalid pairing manifests, invalid
-   health/OG bodies, and an invalid first or second canonical suspension
-   receipt cannot reach either Vercel mutation.
+   sixty-eight negative cases under deliberately suppressed Bash `errexit`.
+   Those cases prove that missing/wrong aliases, invalid pairing manifests,
+   invalid health/OG bodies, and every invalid URL/status/header/body field on
+   either canonical suspension receipt cannot reach any of the four forward or
+   inverse Neon/Vercel mutation sinks.
 
 Existing safety controls were retained: mode-0600 receipts, exact preserved
 branch resolution, operation polling, no blind retry after ambiguous restore
