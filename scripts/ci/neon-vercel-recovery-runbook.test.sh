@@ -143,6 +143,9 @@ BASH
 
 {
   sed -n '/^require_production_alias_receipt() {/,/^}/p' "$runbook"
+  sed -n '/^require_application_pairing_receipts() {/,/^}/p' "$runbook"
+  sed -n '/^require_traffic_suspension_configuration() {/,/^}/p' "$runbook"
+  sed -n '/^require_traffic_suspension_receipt() {/,/^}/p' "$runbook"
   sed -n '/^rollback_application() {/,/^}/p' "$runbook"
   sed -n '/^promote_pre_restore_application() {/,/^}/p' "$runbook"
 } >"$mutation_guard_block"
@@ -158,7 +161,6 @@ RESTORE_COMPATIBLE_DEPLOYMENT=rollback-compatible-deployment
 COUPLED_ORDER=database-first
 INVERSE_COUPLED_ORDER=database-first
 
-require_application_pairing_receipts() { return 0; }
 wait_for_production_alias() { return 0; }
 vercel() {
   printf '%s\n' "$*" >>"$mutation_log"
@@ -194,6 +196,122 @@ assert_alias_failure_blocks_mutation \
   rollback_application database-first-current-alias
 assert_alias_failure_blocks_mutation \
   promote_pre_restore_application inverse-database-first-current-alias
+
+write_alias_receipt() {
+  receipt_name="$1"
+  expected_deployment="$2"
+  jq -nc --arg expected "$expected_deployment" \
+    '{id:$expected,readyState:"READY",target:"production"}' \
+    >"$incident_dir/$receipt_name.json"
+}
+
+write_pairing_receipts() {
+  receipt_name="$1"
+  expected_deployment="$2"
+  failure="$3"
+  manifest_deployment="$expected_deployment"
+  health_ok=true
+  og_ok=true
+  case "$failure" in
+    manifest) manifest_deployment=wrong-deployment ;;
+    health) health_ok=false ;;
+    og) og_ok=false ;;
+  esac
+  jq -nc --arg expected "$manifest_deployment" \
+    '{expected_deployment:$expected,health_http:200,database_status:"ready",leaderboard_http:200,og_health_http:200}' \
+    >"$incident_dir/$receipt_name-pairing.json"
+  jq -nc --argjson ok "$health_ok" \
+    '{ok:$ok,db:{status:"ready"}}' \
+    >"$incident_dir/$receipt_name-health.json"
+  jq -nc --argjson ok "$og_ok" '{ok:$ok}' \
+    >"$incident_dir/$receipt_name-og-health.json"
+}
+
+assert_pairing_failure_blocks_mutation() {
+  function_name="$1"
+  alias_receipt="$2"
+  pairing_receipt="$3"
+  expected_deployment="$4"
+  for failure in manifest health og; do
+    rm -f "$mutation_log"
+    write_alias_receipt "$alias_receipt" "$expected_deployment"
+    write_pairing_receipts "$pairing_receipt" "$expected_deployment" "$failure"
+    set +e
+    "$function_name" guard-probe >/dev/null 2>&1
+    status="$?"
+    set -e
+    [ "$status" -ne 0 ] || {
+      echo "$function_name accepted a wrong $failure pairing receipt." >&2
+      exit 1
+    }
+    [ ! -s "$mutation_log" ] || {
+      echo "$function_name reached a vendor mutation with a wrong $failure pairing receipt." >&2
+      exit 1
+    }
+  done
+}
+
+assert_pairing_failure_blocks_mutation \
+  rollback_application database-first-current-alias \
+  database-first-intermediate "$PRE_RESTORE_DEPLOYMENT"
+assert_pairing_failure_blocks_mutation \
+  promote_pre_restore_application inverse-database-first-current-alias \
+  inverse-database-first-intermediate "$RESTORE_COMPATIBLE_DEPLOYMENT"
+
+TRAFFIC_SUSPENSION_EXPECTED_HTTP=503
+TRAFFIC_SUSPENSION_MARKER=valid_marker_0123456789abcdef0123456789
+
+write_suspension_receipts() {
+  receipt_name="$1"
+  bad_endpoint="$2"
+  for endpoint in health og-health; do
+    case "$endpoint" in
+      health) probe_url='https://www.wcdraft.com/api/health' ;;
+      og-health) probe_url='https://www.wcdraft.com/api/og/health' ;;
+    esac
+    observed_http=503
+    if [ "$endpoint" = "$bad_endpoint" ]; then
+      observed_http=404
+    fi
+    jq -nc \
+      --arg url "$probe_url" \
+      --arg observed "$observed_http" \
+      --arg marker "$TRAFFIC_SUSPENSION_MARKER" \
+      '{probe_url:$url,expected_http:"503",observed_http:$observed,
+        expected_marker:$marker,header_marker:$marker,body_contains_marker:true}' \
+      >"$incident_dir/$receipt_name-traffic-suspension-$endpoint.json"
+    printf '%s\n' "$TRAFFIC_SUSPENSION_MARKER" \
+      >"$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt"
+  done
+}
+
+assert_suspension_failure_blocks_mutation() {
+  function_name="$1"
+  receipt_name="$2"
+  for bad_endpoint in health og-health; do
+    rm -f "$mutation_log"
+    write_suspension_receipts "$receipt_name" "$bad_endpoint"
+    set +e
+    "$function_name" guard-probe >/dev/null 2>&1
+    status="$?"
+    set -e
+    [ "$status" -ne 0 ] || {
+      echo "$function_name accepted a wrong $bad_endpoint suspension receipt." >&2
+      exit 1
+    }
+    [ ! -s "$mutation_log" ] || {
+      echo "$function_name reached a vendor mutation with a wrong $bad_endpoint suspension receipt." >&2
+      exit 1
+    }
+  done
+}
+
+COUPLED_ORDER=traffic-stopped
+assert_suspension_failure_blocks_mutation \
+  rollback_application traffic-stopped-before-vercel
+INVERSE_COUPLED_ORDER=traffic-stopped
+assert_suspension_failure_blocks_mutation \
+  promote_pre_restore_application inverse-traffic-stopped-before-vercel
 BASH
 
 if rg -Fq 'TRAFFIC_SUSPENSION_PROBE_URL' "$runbook"; then
@@ -270,4 +388,4 @@ assert_function_order promote_pre_restore_application \
   'vercel promote "$PRE_RESTORE_DEPLOYMENT" \'
 
 printf '%s\n' \
-  'neon-vercel recovery runbook contract: PASS (bash syntax, fixed suspension proof, 4 alias-negative mutation cases, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'
+  'neon-vercel recovery runbook contract: PASS (bash syntax, fixed suspension proof, 14 receipt-negative mutation cases under suppressed errexit, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'

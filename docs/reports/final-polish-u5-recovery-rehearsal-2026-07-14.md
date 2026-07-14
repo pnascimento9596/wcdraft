@@ -158,8 +158,10 @@ Validated and corrected
 9. Registered the Bash syntax and structural-order contract in the required
    static CI job. It enforces six forward/inverse route orderings, fixed
    suspension endpoints, single mutation definitions, CI registration, and
-   four negative cases proving that missing or wrong database-first alias
-   receipts cannot reach either Vercel mutation.
+   fourteen negative cases under deliberately suppressed Bash `errexit`. Those
+   cases prove that missing/wrong aliases, invalid pairing manifests, invalid
+   health/OG bodies, and an invalid first or second canonical suspension
+   receipt cannot reach either Vercel mutation.
 
 Existing safety controls were retained: mode-0600 receipts, exact preserved
 branch resolution, operation polling, no blind retry after ambiguous restore

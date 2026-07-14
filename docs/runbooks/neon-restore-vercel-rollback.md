@@ -180,10 +180,11 @@ require_application_pairing_receipts() {
     .health_http == 200 and .database_status == "ready" and
     (.leaderboard_http == 200 or .leaderboard_http == 404) and
     .og_health_http == 200
-  ' "$manifest" >/dev/null
+  ' "$manifest" >/dev/null || return 1
   jq -e '.ok == true and .db.status == "ready"' \
-    "$incident_dir/$receipt_name-health.json" >/dev/null
-  jq -e '.ok == true' "$incident_dir/$receipt_name-og-health.json" >/dev/null
+    "$incident_dir/$receipt_name-health.json" >/dev/null || return 1
+  jq -e '.ok == true' \
+    "$incident_dir/$receipt_name-og-health.json" >/dev/null || return 1
 }
 
 verify_application_pairing() {
@@ -191,26 +192,28 @@ verify_application_pairing() {
   local expected_deployment="$2"
   local alias_receipt_name="$3"
   local health_http leaderboard_http og_health_http
-  require_production_alias_receipt "$expected_deployment" "$alias_receipt_name"
+  require_production_alias_receipt \
+    "$expected_deployment" "$alias_receipt_name" || return 1
 
   health_http="$(curl -sS -o "$incident_dir/$receipt_name-health.json" -w '%{http_code}' \
     https://www.wcdraft.com/api/health)"
-  test "$health_http" = 200
+  test "$health_http" = 200 || return 1
   jq -e '.ok == true and .db.status == "ready"' \
-    "$incident_dir/$receipt_name-health.json" >/dev/null
+    "$incident_dir/$receipt_name-health.json" >/dev/null || return 1
 
   leaderboard_http="$(curl -sS -o "$incident_dir/$receipt_name-leaderboard.json" \
     -w '%{http_code}' 'https://www.wcdraft.com/api/leaderboard?limit=1')"
   case "$leaderboard_http" in
-    200) jq . "$incident_dir/$receipt_name-leaderboard.json" >/dev/null ;;
+    200) jq . "$incident_dir/$receipt_name-leaderboard.json" >/dev/null || return 1 ;;
     404) ;;
     *) echo "Unexpected leaderboard HTTP $leaderboard_http" >&2; return 1 ;;
   esac
 
   og_health_http="$(curl -sS -o "$incident_dir/$receipt_name-og-health.json" \
     -w '%{http_code}' https://www.wcdraft.com/api/og/health)"
-  test "$og_health_http" = 200
-  jq -e '.ok == true' "$incident_dir/$receipt_name-og-health.json" >/dev/null
+  test "$og_health_http" = 200 || return 1
+  jq -e '.ok == true' \
+    "$incident_dir/$receipt_name-og-health.json" >/dev/null || return 1
 
   jq -nc \
     --arg expected "$expected_deployment" \
@@ -255,9 +258,9 @@ require_traffic_suspension_receipt() {
         .probe_url == $url and .expected_http == "503" and
         .observed_http == "503" and .expected_marker == $marker and
         .header_marker == $marker and .body_contains_marker == true
-      ' "$receipt" >/dev/null
+      ' "$receipt" >/dev/null || return 1
     grep -Fq -- "$TRAFFIC_SUSPENSION_MARKER" \
-      "$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt"
+      "$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt" || return 1
   done
 }
 
