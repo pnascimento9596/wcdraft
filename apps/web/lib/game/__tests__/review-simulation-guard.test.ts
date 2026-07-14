@@ -27,7 +27,7 @@ describe("review simulation single-winner contract", () => {
       "if (!handoffRef.current.canCommit(attempt)) return;",
       resultAwait,
     );
-    const persist = SOURCE.indexOf("const persist = setRunSimulation", resultAwait);
+    const persist = SOURCE.indexOf("const persist = await setRunSimulation", resultAwait);
     const navigationGuard = SOURCE.indexOf(
       "if (!handoffRef.current.canCommit(attempt)) return;",
       persist,
@@ -37,6 +37,20 @@ describe("review simulation single-winner contract", () => {
     expect(commitGuard).toBeLessThan(persist);
     expect(navigationGuard).toBeGreaterThan(persist);
     expect(navigationGuard).toBeLessThan(navigate);
+  });
+
+  it("recovers a granted lock when cancellation wins the await continuation", () => {
+    const lockAwait = SOURCE.indexOf("const lock = await beginRunSimulation(");
+    const cancellationGuard = SOURCE.indexOf(
+      "if (!handoffRef.current.canCommit(attempt))",
+      lockAwait,
+    );
+    const recovery = SOURCE.indexOf("await setRunStatus", cancellationGuard);
+    const ordinaryConflict = SOURCE.indexOf('if (lock.status !== "updated"', cancellationGuard);
+    expect(lockAwait).toBeGreaterThan(-1);
+    expect(cancellationGuard).toBeGreaterThan(lockAwait);
+    expect(recovery).toBeGreaterThan(cancellationGuard);
+    expect(recovery).toBeLessThan(ordinaryConflict);
   });
 
   it("cancel restores a genuinely in-flight status and blocks result handoff", () => {

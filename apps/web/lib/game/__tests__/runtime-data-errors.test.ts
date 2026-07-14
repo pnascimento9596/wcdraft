@@ -4,9 +4,25 @@ import { RuntimeDataIntegrityError } from "@wcdraft/data/client";
 import type { RuntimeDataManifest } from "@wcdraft/data";
 
 import { loadGameDataUncached, type GameData } from "../data";
-import { describeGameError, RuntimeDataLoadError, toRuntimeDataLoadError } from "../errors";
+import {
+  describeGameError,
+  RunStoreCoordinationError,
+  RuntimeDataLoadError,
+  toRuntimeDataLoadError,
+} from "../errors";
+import { RUN_MUTATION_LOCK_UNAVAILABLE_WARNING } from "../run-record";
 
 describe("runtime-data failure typing and player-facing recovery", () => {
+  it("surfaces the durable coordination requirement instead of generic storage copy", () => {
+    expect(
+      describeGameError(new RunStoreCoordinationError(RUN_MUTATION_LOCK_UNAVAILABLE_WARNING)),
+    ).toEqual({
+      title: "Browser update required",
+      message:
+        "This browser cannot safely coordinate saved-run changes. Update your browser to continue; existing runs remain readable.",
+    });
+  });
+
   it("keeps corruption distinct from timeout/unavailable failures", () => {
     const corruptCause = new RuntimeDataIntegrityError(
       "digest_mismatch",

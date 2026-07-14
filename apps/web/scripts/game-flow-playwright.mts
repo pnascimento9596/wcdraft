@@ -811,8 +811,8 @@ async function verifyReviewResultsShareFlow(browser: Browser, baseUrl: string): 
   await page.goto(`${baseUrl}/play/review?run=${seeded.run_id}`, {
     waitUntil: "domcontentloaded",
   });
-  await page.getByRole("button", { name: "Simulate the run" }).waitFor();
-  await page.getByRole("button", { name: "Simulate the run" }).click();
+  await page.getByRole("button", { name: "Confirm team sheet & simulate" }).waitFor();
+  await page.getByRole("button", { name: "Confirm team sheet & simulate" }).click();
   await page.waitForURL(/\/play\/results\?run=pw-complete-classic$/, { timeout: 90_000 });
   await page.getByText("Results").first().waitFor();
   await page.getByRole("link", { name: "Share" }).click();

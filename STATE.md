@@ -33,6 +33,153 @@ touches. Validation: package typecheck; node:test 3/3; `npx cap sync ios`
 succeeds; iOS Xcode project generated. Simulator runtime download is a free
 host prerequisite (see M1a report).
 
+Season 2 Squad Depth — Unit S4 team-sheet and reconciled token contract:
+2026-07-13 · local RED implementation on `ws-f4/season2-s4-team-sheet`, based
+on exact integration head `98c0e07abd992b624cf44e500ad6b2199c5a25d3`.
+Post-pick Review is now an interactive 11-starter + 5-bench team sheet with an
+as-drafted default, tap-to-swap, full-info post-pick reveal for Memory/Blind
+Open, graduated fit warnings, and structural-only legality. The persisted
+authority is base legal-pick `DraftState` plus optional canonical arrangement;
+the arranged draft is ephemeral and feeds S1 availability/bench selection,
+Synergy, manager tactics, local/worker simulation, OG, ranked validation, and
+the lineup inspector.
+
+First exact-head review exposed three replay-integrity gaps, now fixed forward:
+one `projectTeamSheetDraft` seam supplies arranged facts to local Results,
+Share, Memory reveal, history, saved-run summaries, and simulation; Review
+atomically refuses arrangement changes while simulation is active or complete;
+and token-loaded virtual records retain the authoritative base draft plus
+decoded `a`/`mp`, so a re-share preserves canonical token bytes. The first
+review FAIL remains recorded in the durable report; a fresh review is required
+on the fix-forward head.
+
+The subsequent `c781891` head was invalidated before review: static CI found
+three Prettier failures, and an aborted fallback review identified a cross-tab
+TOCTOU at simulation start. Review now uses `beginRunSimulation` to compare and
+lock the exact rendered status, revision, and arrangement, then simulates only
+the returned locked record with mandatory ownership in durable and volatile
+storage. A conflict attaches no simulation. Completed Review is fully
+read-only, including team name; the same field and arrangement controls remain
+locked while simulation is active. The durable report preserves this failure
+history; exact-head review must target the next fix-forward commit.
+
+Fresh exact-head review of `03c107d` found two remaining persistence blockers.
+`setRunSimulation` still accepted omitted ownership at its runtime boundary,
+and Review's delayed team-name save still spread a stale React record directly
+over authoritative storage. Result persistence now requires literal
+`simulating` ownership at both the type and runtime boundaries, including
+volatile storage. Team-name writes now reload the authoritative record, merge
+only the normalized name plus sequence while ready, and reject any active or
+completed simulation; Review clears pending debounce work on blur, lock, and
+unmount, and refreshes from the authoritative record on conflict. Focused
+regressions cover missing/undefined/wrong-status ownership, stale-arrangement
+merge safety, delayed cross-tab writes, and durable/volatile locks. The
+`03c107d` FAIL and its two-finding inventory remain recorded in the durable
+report; review must run again on the next exact head.
+
+Fresh exact-head review of `0453ed5` invalidated the third fix-forward with one
+architectural blocker: every durable mutation still performed an unlocked
+localStorage read/counter/write sequence, so browser agent clusters could
+interleave stale whole-record commits. The reviewer reproduced six losses:
+team name or arrangement erasing a simulation lock, a lock erasing a newer
+arrangement, a result committing after cleanup, cleanup erasing a result, and
+pinning erasing a result while regressing its sequence. All existing-record
+writes now share one asynchronous per-run exclusive mutation seam. Durable
+storage holds a Web Lock across load, ownership/revision checks, counter, and
+record/index persistence; browsers without Web Locks fail closed with an
+explicit warning and no mutation. Volatile storage uses a module-local per-run
+Promise queue, including abort-before-mutation checks. Draft, Review, Results,
+simulation result/cleanup, team-name, arrangement, and pin callers await this
+seam; the raw whole-record writer is private and the exported creation writer
+refuses an existing authority. Deterministic regressions replay all six
+reviewer interleavings plus the stale Draft writer and unsupported/aborted
+paths. The `0453ed5` FAIL remains recorded in the durable report; the next
+commit still requires a fresh exact-head independent review.
+
+Fresh exact-head review of `2aaccd3` found two store-wide blockers. Per-run
+lock names allowed different run IDs to race on the shared index, which could
+erase a successful pin and later evict that pinned record at the cap. New-run
+creation and the exported creation writer also remained outside the lock, so
+simultaneous tabs could collide on one ID, double-succeed an existence/write
+race, or mutate durable storage when Web Locks were unavailable. The fifth
+fix-forward uses one exclusive `wcdraft:run-store:v1` Web Lock for every
+durable counter, record, cap, and index mutation and one global Promise queue
+for volatile storage. Full creation, raw creation checks, existing-record
+transitions, and malformed/stale cleanup delegate to private unlocked helpers
+only after acquiring that seam. Render-time load/list reads are pure; awaited
+startup, resume, and history cleanup owns repair without blocking valid pure
+reads on unsupported browsers. Durable creation without Web Locks fails before
+any key changes and maps to the explicit browser-compatibility message. Quota
+fallback carries the monotonic counter into volatile storage and queued
+requests join the volatile store queue. The `2aaccd3` FAIL is preserved in the
+durable report; the next exact head still requires independent review.
+
+Fresh exact-head review of `2320e56` found that the fifth fix still split
+same-page admission across two queues at the durable-to-volatile quota
+boundary. An earlier request already waiting for the Web Lock could be
+overtaken by a later request that observed volatile mode and entered the
+Promise queue directly, reversing raw-creation single-winner authority. The
+sixth fix-forward makes one module-global FIFO Promise queue the outer
+boundary for every mutation. Each queue turn then inspects storage: volatile
+mutations execute directly, while durable mutations require the one
+store-wide Web Lock. A quota switch while waiting or granted stays inside the
+already-held page turn without nested acquisition. The reviewer-v2 regression
+now proves the earlier request wins and the later duplicate rejects; existing
+abort and callback-failure recovery coverage remains green. The `2320e56`
+FAIL is preserved in the durable report and the next exact head requires a new
+independent review.
+
+Fresh exact-head review of `53f0b2f` found a separate coherent-store blocker:
+record payload and counter writes could succeed, cap eviction could delete old
+payloads, and a quota failure on the final shared-index write was swallowed as
+durable success. The seventh fix-forward makes the already-serialized queue
+turn and store-wide Web Lock own one snapshot-backed logical transaction. It
+captures prior counter, raw index, indexed payloads, and the explicit target;
+all record, counter, cap, pin, cleanup, and index writes are tracked. A quota
+failure in a record save restores the durable bytes before hydrating the
+complete indexed authority into the tab-local store and replaying the save
+there. Cleanup and non-quota failures restore and throw rather than leaving a
+partial commit. Existing durable history is therefore not silently discarded.
+Rollback failure reports no success, blocks later mutation,
+serves pure reads from the last coherent snapshot, and retries exact durable
+recovery under the next locked turn. A quota
+failure on the storage capability probe remains on the readable durable path
+so the transaction can snapshot before failover. Focused regressions cover
+actual and raw creation, counter and record writes, existing pin/index writes,
+cap deletion followed by index failure, byte-identical durable rollback, and
+rollback-failure recovery while retaining the sixth-fix FIFO and one-level Web
+Lock contracts. The locked turn also reuses its admitted storage backend so a
+nested capability probe cannot bypass the snapshot. Draft creation re-resolves
+that active backend on each retry, preventing a post-quota retry from writing
+through a stale durable adapter. The `53f0b2f` FAIL is
+preserved in the durable report; the seventh-fix candidate still requires fresh
+exact-head independent review.
+
+Current `t3`/`t4` bodies optionally carry compact `a` beside S3's optional
+`mp`. One shared reconciliation path covers all four presence combinations,
+ordinary Results/Share replay, OG, leaderboard, and inspector. Absent `a`
+remains exact as drafted; absent `mp` derives from deterministic matches.
+Canonical token encoding is insertion-order independent with stable `mp`, `a`,
+then challenge ordering. Semantic arrangement defects map to typed
+`ILLEGAL_PICK` HTTP 422 after shallow decode. The paused marketing composer
+fails closed on arranged tokens instead of silently scoring the wrong XI.
+
+Measured closure: focused core token 4/4, focused S4 web 177/177, fourth
+fix-forward mutation coverage 56/56, and fifth fix-forward store coverage
+147/147; sixth fix-forward store coverage 148/148; seventh-fix narrow store
+coverage 57/57 and changed-S4 web coverage 192/192 across 14 files; seventh-fix
+web typecheck passes. Seventh-fix root typecheck 8/8, lint 5/5, test 8/8
+(core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,233 + 1
+expected benchmark skip), game-flow, responsive 218/0, and build 4/4 with 40
+pages/routes. Forced goldens pass core 69+42, data 59, integration 22, and
+leaderboard 6; canary 1/1 proves zero pick flips; heavy realism passes 10/10 at
+N=2000 x three policies. Generated check and the
+pinned 2026-07-10 / 45-day / population-128 / max-attempts-8 five-step Daily
+closure pass with score-distribution, Daily-map, and manifest bytes unchanged.
+Durable report: `docs/reports/season2-s4-team-sheet-token-2026-07-13.md`.
+No merge or ship has occurred; exact-head independent/cross-model review, PR
+CI, and integration merge remain required.
+
 Season 2 Squad Depth — Unit S3 Option A final calibration:
 2026-07-13 · local RED implementation on
 `ws-core/season2-s3-calibration`, based on exact integration head

@@ -1,9 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { encodeRunTokenBody } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import type { GameData } from "../data";
 import type { RunRecordV1 } from "../run-record";
-import { encodeRunToken } from "../run-token";
+import { buildRunTokenBody, encodeRunToken } from "../run-token";
 import { resolveDisplayRun, type ResolveDisplayRunDeps } from "../run-screen-loader";
 import { runSimulation, runSimulationSync } from "../simulate";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
@@ -15,6 +16,7 @@ function deps(overrides: Partial<ResolveDisplayRunDeps> = {}): ResolveDisplayRun
     loadGameData: async () => gameData,
     loadScenarioBundle: async () => SCENARIO_2026_BUNDLE,
     loadRunRecord: () => ({ status: "missing", record: null }),
+    evictStaleRunRecords: async () => [],
     runSimulation,
     ...overrides,
   };
@@ -63,6 +65,22 @@ describe("resolveDisplayRun", () => {
     );
     expect(editable.kind).toBe("ready");
     expect(editable.kind === "ready" ? editable.record : null).toBe(record);
+  });
+
+  it("resumes a valid pure-read record when unsupported cleanup defers without mutation", async () => {
+    const record = buildOriginRecord(gameData, "wcdraft:run-screen:no-lock-resume");
+    const cleanup = vi.fn(async () => ["browser coordination unavailable"]);
+
+    const state = await resolveDisplayRun(
+      { kind: "id", run_id: record.run_id },
+      { allowUnsimulatedLocalRun: true },
+      deps({
+        loadRunRecord: () => ({ status: "loaded", record }),
+        evictStaleRunRecords: cleanup,
+      }),
+    );
+    expect(state).toMatchObject({ kind: "ready", record });
+    expect(cleanup).toHaveBeenCalledOnce();
   });
 
   it("returns ready for a local completed run and loads scenario only when requested", async () => {
@@ -139,6 +157,31 @@ describe("resolveDisplayRun", () => {
     expect(state.isReplayedFromToken).toBe(true);
     expect(state.linkRunValue).toBe(token);
     expect(JSON.stringify(state.record.simulation)).toBe(JSON.stringify(direct));
+  });
+
+  it("rejects forged manager presence on ordinary Results/Share replay", async () => {
+    const origin = buildOriginRecord(gameData, "wcdraft:screen-loader:forged-mp");
+    const token = encodeRunToken({ ...origin, manager_presence_band: 0 });
+
+    const state = await resolveDisplayRun({ kind: "token", token }, {}, deps());
+    expect(state).toMatchObject({ kind: "invalidToken" });
+    expect(state.kind === "invalidToken" ? state.reason : "").toMatch(/manager tactical tier/u);
+  });
+
+  it("rejects an invalid arrangement as an ordinary replay token", async () => {
+    const origin = buildOriginRecord(gameData, "wcdraft:screen-loader:invalid-arrangement");
+    const body = buildRunTokenBody(origin);
+    body.a = Array.from({ length: 15 }, (_, index) => index);
+
+    const state = await resolveDisplayRun(
+      { kind: "token", token: encodeRunTokenBody(body) },
+      {},
+      deps(),
+    );
+    expect(state).toMatchObject({ kind: "invalidToken" });
+    expect(state.kind === "invalidToken" ? state.reason : "").toMatch(
+      /team sheet reconciliation failed/u,
+    );
   });
 });
 
