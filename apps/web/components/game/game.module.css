@@ -480,6 +480,7 @@
 .channelLabel {
   composes: channelLabel from "./game-styles/draft-base.module.css";
   composes: channelLabel from "./game-styles/review.module.css";
+  composes: channelLabel from "./game-styles/draft-polish.module.css";
 }
 .channelTrack {
   composes: channelTrack from "./game-styles/draft-base.module.css";
@@ -1965,6 +1966,27 @@
 }
 .candBasisDelta {
   composes: candBasisDelta from "./game-styles/draft-polish.module.css";
+}
+.fitTeachingChip {
+  composes: fitTeachingChip from "./game-styles/draft-polish.module.css";
+}
+.fitTeaching_natural {
+  composes: fitTeaching_natural from "./game-styles/draft-polish.module.css";
+}
+.fitTeaching_reduced {
+  composes: fitTeaching_reduced from "./game-styles/draft-polish.module.css";
+}
+.fitTeaching_severe {
+  composes: fitTeaching_severe from "./game-styles/draft-polish.module.css";
+}
+.fitTeachingShape {
+  composes: fitTeachingShape from "./game-styles/draft-polish.module.css";
+}
+.fitTeachingValue {
+  composes: fitTeachingValue from "./game-styles/draft-polish.module.css";
+}
+.fitTeachingContext {
+  composes: fitTeachingContext from "./game-styles/draft-polish.module.css";
 }
 .candRowProv {
   composes: candRowProv from "./game-styles/draft-polish.module.css";

@@ -1897,6 +1897,14 @@
   border-top-right-radius: 13px;
 }
 
+/* Expanded selected rows sit on the slightly lighter --bg-750 surface. Keep
+   their small secondary labels at the AA-safe mid-ink token in dark mode. */
+.candRowSelected .candRowSub,
+.candRowSelected .candRowOvr i,
+.candRowSelected .channelLabel {
+  color: var(--ink-300);
+}
+
 .candRow.prov_historical,
 .candRow.prov_projected,
 .candRow.prov_estimate,
@@ -2057,6 +2065,71 @@
   font-size: 10px;
   line-height: 1;
   white-space: nowrap;
+}
+
+/* Season 2 S5 — one compact, basis-honest teaching chip per visible player.
+   The numeric is the fixed-XI line contribution before Synergy/manager
+   amplification; position continues to be encoded by the established shapes. */
+.fitTeachingChip {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px 5px;
+  max-width: 100%;
+  min-height: 18px;
+  margin-top: 3px;
+  padding: 2px 6px;
+  border: 1px solid var(--accent-line);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-750));
+  color: var(--ink-200);
+  font-family: var(--font-family);
+  font-size: 10px;
+  font-feature-settings: "tnum" 1;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-align: left;
+}
+
+.fitTeaching_natural {
+  border-color: var(--accent-line);
+}
+
+.fitTeaching_reduced,
+.fitTeaching_severe {
+  border-color: color-mix(in srgb, var(--warn) 44%, var(--line));
+  background: color-mix(in srgb, var(--warn) 7%, var(--bg-750));
+}
+
+.fitTeaching_severe {
+  border-color: color-mix(in srgb, var(--warn) 70%, var(--line));
+}
+
+.fitTeachingShape {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  background: var(--ink-300);
+}
+
+.fitTeachingShape.shapeDot_triangle {
+  width: 0;
+  height: 0;
+  border-left-width: 4px;
+  border-right-width: 4px;
+  border-bottom-width: 8px;
+}
+
+.fitTeachingValue,
+.fitTeachingContext {
+  white-space: nowrap;
+}
+
+.fitTeachingContext {
+  color: var(--warn);
+  font-weight: 500;
 }
 
 .candRowProv {
@@ -2280,6 +2353,13 @@
   }
 
   .candRowSub {
+    font-size: 10px;
+  }
+
+  .fitTeachingChip {
+    gap: 2px 4px;
+    margin-top: 2px;
+    padding: 2px 5px;
     font-size: 10px;
   }
 }

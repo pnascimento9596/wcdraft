@@ -4,6 +4,34 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Season 2 Squad Depth — Unit S5 pre-lock fit teaching:
+2026-07-13 · local YELLOW implementation on
+`ws-f4/season2-s5-fit-teaching`, based on exact integration head
+`cdf16b4f7f795302cc44106c58626383dd56c9e7`. Classic, Open Draft, and Daily
+player choices now show one compact projected line-contribution chip for the
+slot the current lock action would use. The display is a thin mapping of the
+engine-exported `projectSlotContribution`: compatibility-weighted target-line
+rating divided by the fixed XI size, rounded to one decimal only at the UI
+boundary, and explicitly labelled pre-Synergy. Candidate views supply the
+configured Career/Current channels. A selected manual slot overrides a
+position-first locked target, which overrides the existing candidate-specific
+default-slot resolver. Off-natural choices add source-to-target position and
+reduced/severe fit copy using the engine compatibility value and existing
+position shapes. Memory, Blind Open, blinded ratings, and manager choices emit
+no teaching chip. No rating, engine, Synergy, RNG, schema, token, auth, or
+simulation behavior changed.
+
+Measured local closure: focused S5 11/11; root typecheck 8/8, lint 5/5, test
+8/8 (core 423, data 183 + 9 expected skips, DB 161, marketing 69, web 1,244 +
+1 expected skip), game-flow, responsive 218/0, and build 4/4 with 40
+pages/routes. Explicit `next start` production mobile evidence covers normal
+and off-natural Classic picks at 390x844 and 360x800 in both themes: 8/8
+metrics have zero horizontal overflow, zero small targets, zero axe
+violations, zero console errors, and the primary action in view. Full gate
+commands are recorded in
+`docs/reports/season2-s5-fit-teaching-2026-07-13.md`. No merge or production
+ship has occurred; PR CI and integration-branch merge remain required.
+
 Season 2 Squad Depth — Unit S4 team-sheet and reconciled token contract:
 2026-07-13 · local RED implementation on `ws-f4/season2-s4-team-sheet`, based
 on exact integration head `98c0e07abd992b624cf44e500ad6b2199c5a25d3`.
