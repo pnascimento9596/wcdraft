@@ -33,8 +33,50 @@ touches. Validation: package typecheck; node:test 3/3; `npx cap sync ios`
 succeeds; iOS Xcode project generated. Simulator runtime download is a free
 host prerequisite (see M1a report).
 
-Season 2 Squad Depth — Unit S6 factual recap: 2026-07-13 · local YELLOW
-implementation on `ws-f4/season2-s6-factual-recap`, initially based on
+Season 2 Squad Depth — Unit S7 same-seed friend challenge: 2026-07-13 · local
+YELLOW implementation on `ws-f4/season2-s7-friend-challenge`, based on exact
+integration head `71a4408482b2cb7f619dac9ad4f83a1716935c6c`. Results and Share
+now offer a compact “Challenge a friend” action. The link reuses the canonical
+`t3`/`t4` run token for seed, configuration, picks, and score authority and adds
+an exact 112-character `fc1` HMAC proof bound to the raw token hash. Recipient
+verification is server-only, rate-limited, bounded, content-type checked, and
+delegates challenger-score derivation to the unchanged OG verifier. No
+database, schema, token-codec, engine, rating, Synergy, manager, ETL,
+compact-data, or auth contract changed.
+
+Challenges are deliberately casual-only. The recipient gets the exact
+formation, mode, order, basis, era, and seed, but no ranked attempt; persisted
+friend metadata is `{ token, proof }` and cannot coexist with ranked metadata.
+Current-build links show a server-rederived challenger score after completion.
+Version-skew links authenticate the configuration but withhold the challenger
+score as `DIFFERENT_BUILD`; Daily links fail closed outside current published
+coverage. Because the signed run token contains no verified challenger
+identity, the UI says only `a friend`.
+
+Focused closure is 194/194 across 7 files. Root typecheck is 8/8, lint 5/5,
+test 8/8 (core 423, data 183 + 9 expected skips, DB 161, marketing 69, web
+1,273 + 1 expected skip), responsive 218/0, and build 4/4 with 40 routes/pages.
+Core goldens are 69/69 plus draft 42/42; data goldens are 59/59 plus
+integration 22/22; leaderboard golden is 6/6. Generated-data, formatting, and
+diff checks pass. Production browser proof passes 16/16 surfaces
+across CTA, setup, active draft, and head-to-head at 390x844 and 360x800 in
+light and dark: exact token/proof and persisted-config assertions pass,
+same-seed draws are true in all 4 cases, and there are zero axe A/AA,
+horizontal-overflow, or small-target failures. The proof link is 1,524
+characters, below the separate 8,192-character escaped-URL cap. An initial
+browser pass exposed `Ranked-capable` in the standalone active-draft shell; it
+was invalidated and replaced by a shared run-aware cue resolver. Final setup
+and active captures both show `Classic · Casual`; the setup chip's accessible
+name is also exactly `Draft mode: Classic · Casual`. This includes the
+fix-forward from exact head `e9c5fd60dad24e7141cc85dda153c61bef4a68d7`,
+which failed review because the main app bar lacked the visible separator and
+omitted Casual from its accessible name. Durable report and all 16 captures:
+`docs/reports/season2-s7-friend-challenge-2026-07-13/`.
+
+Season 2 Squad Depth — Unit S6 factual recap: 2026-07-13 · integrated YELLOW
+on `season/squad-depth` as `71a4408482b2cb7f619dac9ad4f83a1716935c6c`
+via PR #273, after implementation on `ws-f4/season2-s6-factual-recap`
+initially based on
 `cdf16b4f7f795302cc44106c58626383dd56c9e7` and rebased onto exact integration
 head `3af456d6957d5203f93144bb94e6365ba9d75a6f`. Results now
 includes a mobile-first “Why it went this way” dossier built only from the
@@ -73,8 +115,11 @@ ring. Focused closure is 28/28 across 4 files; web typecheck, lint, and
 production build with 40 routes/pages pass; and the regenerated interaction
 proof is 4/4 after focusing each link and activating it with Enter, including
 an exact `document.activeElement` assertion. The `04758ad` FAIL remains
-authoritative; PR #273 requires fresh CI and exact-head review on the
-fix-forward commit. Durable report:
+authoritative historical evidence; the fix-forward subsequently passed the
+required review and GitHub Actions run `29302919688` completed successfully at
+exact integration SHA `71a4408482b2cb7f619dac9ad4f83a1716935c6c`. This is
+integration-branch truth only; S6 has not shipped to `main` or production.
+Durable report:
 `docs/reports/season2-s6-factual-recap-2026-07-13.md`.
 
 Season 2 Squad Depth — Unit S5 pre-lock fit teaching:

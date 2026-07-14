@@ -11,6 +11,7 @@ export function DraftAppBar({
   mode,
   daily,
   ranked,
+  casualOnly,
   pickSpace,
   warning,
 }: {
@@ -19,6 +20,7 @@ export function DraftAppBar({
   mode?: DraftMode;
   daily?: boolean;
   ranked?: boolean;
+  casualOnly?: boolean;
   pickSpace?: string;
   warning?: string | null;
 }) {
@@ -29,15 +31,7 @@ export function DraftAppBar({
       : mode === "open_hidden"
         ? "BLIND OPEN"
         : draftModeShortLabel(mode);
-  const modeCue = daily
-    ? "today's shared draft"
-    : mode === undefined
-      ? null
-      : ranked && isRankedDraftMode(mode)
-        ? "Ranked"
-        : mode === "open_hidden"
-          ? "CASUAL"
-          : draftModeCue(mode);
+  const modeCue = draftModeCueForRun({ mode, daily, ranked, casualOnly });
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
@@ -45,8 +39,11 @@ export function DraftAppBar({
         <span className={s.appBarTitle}>Draft</span>
       </div>
       {modeLabel ? (
-        <div className={s.appBarModeChip} aria-label={`Draft mode: ${modeLabel}`}>
-          <span>{modeLabel}</span>
+        <div
+          className={s.appBarModeChip}
+          aria-label={`Draft mode: ${modeLabel} · ${modeCue}${pickSpace ? ` · ${pickSpace}` : ""}`}
+        >
+          <span>{modeLabel} ·</span>
           <b>{modeCue}</b>
           {pickSpace ? <i>{pickSpace}</i> : null}
         </div>
@@ -75,4 +72,22 @@ export function DraftAppBar({
       ) : null}
     </header>
   );
+}
+
+export function draftModeCueForRun({
+  mode,
+  daily = false,
+  ranked = false,
+  casualOnly = false,
+}: {
+  mode?: DraftMode;
+  daily?: boolean;
+  ranked?: boolean;
+  casualOnly?: boolean;
+}): string | null {
+  if (daily) return "today's shared draft";
+  if (mode === undefined) return null;
+  if (casualOnly) return "Casual";
+  if (ranked && isRankedDraftMode(mode)) return "Ranked";
+  return mode === "open_hidden" ? "CASUAL" : draftModeCue(mode);
 }
