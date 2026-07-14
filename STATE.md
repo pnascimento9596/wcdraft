@@ -32,11 +32,21 @@ Production Results browser evidence passes 8/8 across layout and event-link
 interaction at 390x844 and 360x800 in light and dark with zero axe, console,
 overflow, small-target, or navigation-wrap failures. The interaction proof
 starts with the linked match collapsed, then proves the exact hash, expanded
-button, revealed target, and in-viewport landing. A visual check caught and
-fixed an intermediate hidden-panel CSS regression before the evidence was
-regenerated. Durable report:
-`docs/reports/season2-s6-factual-recap-2026-07-13.md`. Commit, PR, independent
-review, and integration merge remain required.
+button, revealed target, and in-viewport landing.
+
+Fresh exact-head review of `04758ad366ff807477d1ae9628336bf5abf7626a`
+returned FAIL because the revealed event was a non-focusable span and focus
+remained on `BODY`. The fix-forward makes the exact event target
+programmatically focusable, opens its owning match, then focuses it on the
+next animation frame without replacing native hash navigation or scrolling.
+A focus-visible ring follows keyboard modality without adding a mouse-click
+ring. Focused closure is 28/28 across 4 files; web typecheck, lint, and
+production build with 40 routes/pages pass; and the regenerated interaction
+proof is 4/4 after focusing each link and activating it with Enter, including
+an exact `document.activeElement` assertion. The `04758ad` FAIL remains
+authoritative; PR #273 requires fresh CI and exact-head review on the
+fix-forward commit. Durable report:
+`docs/reports/season2-s6-factual-recap-2026-07-13.md`.
 
 Season 2 Squad Depth — Unit S5 pre-lock fit teaching:
 2026-07-13 · local YELLOW implementation on

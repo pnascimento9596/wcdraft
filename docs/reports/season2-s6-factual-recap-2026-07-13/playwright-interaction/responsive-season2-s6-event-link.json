@@ -4,7 +4,7 @@
   "axeSource": "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js",
   "surfaces": ["results-factual-recap"],
   "viewports": ["390x844", "360x800"],
-  "generatedAt": "2026-07-14T02:33:30.004Z",
+  "generatedAt": "2026-07-14T02:50:26.786Z",
   "metrics": [
     {
       "surface": "results-factual-recap",

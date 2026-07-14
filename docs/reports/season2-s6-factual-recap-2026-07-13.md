@@ -75,11 +75,35 @@ reserved for existing pick/win semantics. All values use the existing Space
 Grotesk token, tabular numerals, CSS custom-property colors, and existing panel
 radii. Event-log links have a 44 px minimum target.
 
-The React best-practices checklist found no new mirrored state, effects,
-waterfalls, conditional hooks, unstable reorderable keys, or untyped handlers.
-The presentation adapter is pure and memoized once at the Results boundary;
-the recap component is a named semantic component with native sections,
-headings, lists, definitions, and anchors.
+The React best-practices checklist found no mirrored state, waterfalls,
+conditional hooks, unstable reorderable keys, or untyped handlers. The only
+new interaction effect is a bounded open-then-focus handoff: after the owning
+match commits open, a cancellable `requestAnimationFrame` focuses the exact
+`tabIndex={-1}` target with `preventScroll`, preserving native anchor hash and
+scroll behavior. Keyboard modality receives a `:focus-visible` ring without a
+noisy pointer-focus ring. The presentation adapter remains pure and memoized
+once at the Results boundary; the recap and event-target components are named
+and semantic.
+
+## Exact-head review and fix-forward
+
+Fresh review of exact PR head
+`04758ad366ff807477d1ae9628336bf5abf7626a` returned **FAIL**: the link expanded
+the match, set the exact hash, revealed and scrolled to the event, but the
+target was a non-focusable span and `document.activeElement` remained `BODY`
+in the 390x844 production probe.
+
+The fix-forward preserves that verdict and closes only its focus defect:
+
+- one shared helper owns the encoded event target id and href;
+- the event target is programmatically focusable with `tabIndex={-1}`;
+- Results records the requested match+target, opens the owning match, and
+  focuses the now-visible target in a cancellable animation frame;
+- focus uses `preventScroll`, so native exact-hash scrolling remains the
+  authority;
+- hidden targets fail closed rather than receiving focus;
+- the production harness focuses the source link and activates it with Enter,
+  then requires the exact target to equal `document.activeElement`.
 
 ## Browser evidence
 
@@ -93,12 +117,14 @@ Production-build captures are committed under
 
 The opt-in interaction proof under `playwright-interaction/` uses fixed seed
 `resp-recap-1` (one G2 activation, two G3 activations). For each mobile
-viewport and theme it begins with G2 collapsed, clicks the first recap
-`Event log` anchor, and asserts all of the following before capture:
+viewport and theme it begins with G2 collapsed, focuses the first recap
+`Event log` anchor, activates it with Enter, and asserts all of the following
+before capture:
 
 - the URL hash exactly equals the match+event target;
 - the owning match changes from `aria-expanded=false` to `true`;
 - the target is no longer below a `[hidden]` ancestor;
+- `document.activeElement` is the exact target;
 - the target is visible and its box is inside the viewport.
 
 That proof passes **4/4** with the same zero-failure responsive and axe metrics.
@@ -136,6 +162,18 @@ Measured after rebasing onto exact integration head
 - scoped event-log interaction proof: **4/4**, the same zero-failure metrics,
   and every hash, expansion, hidden-state, visibility, and viewport assertion
   passed.
+
+Fix-forward evidence after the `04758ad` FAIL:
+
+- focused factual/Results/focus set: **28/28** across 4 files;
+- web typecheck: PASS;
+- web lint: PASS;
+- web production build: PASS, **40/40** routes/pages;
+- keyboard event-log interaction proof: **4/4**, zero responsive or axe
+  failures, with exact hash, expansion, reveal, `activeElement`, visibility,
+  and viewport assertions passing in both themes at both mobile sizes;
+- 390x844 light and 360x800 dark focus-forward captures visually inspected;
+  the keyboard focus ring is legible and unclipped.
 
 The inherited S5 integration tip also completed GitHub Actions run
 `29300799853` successfully at exact SHA `3af456d6957d5203f93144bb94e6365ba9d75a6f`,

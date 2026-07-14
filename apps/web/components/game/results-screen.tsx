@@ -53,6 +53,11 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 import { isBlindDraftMode, type MatchResult } from "@wcdraft/core";
 import { GoalIcon, InjuryIcon, SubstitutionIcon } from "@/components/icons";
 import { FactualRecap } from "./factual-recap";
+import {
+  FactualEventTarget,
+  factualEventTargetId,
+  focusFactualEventTarget,
+} from "./factual-event-target";
 
 import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
 import { LocalProgressBand } from "./local-progress-band";
@@ -354,6 +359,20 @@ function ResultsBody({
   // Open the LAST match by default (the climax of the run).
   const lastMatchId = sim.matches[sim.matches.length - 1]?.match_id ?? null;
   const [open, setOpen] = useState<string | null>(lastMatchId);
+  const [pendingEventFocus, setPendingEventFocus] = useState<{
+    matchId: string;
+    targetId: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (pendingEventFocus === null || open !== pendingEventFocus.matchId) return;
+    const request = pendingEventFocus;
+    const frame = window.requestAnimationFrame(() => {
+      focusFactualEventTarget(request.targetId);
+      setPendingEventFocus((current) => (current?.targetId === request.targetId ? null : current));
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, pendingEventFocus]);
 
   const eyebrow = summary.is_champion
     ? "Champions"
@@ -470,6 +489,11 @@ function ResultsBody({
     }
   }
 
+  function openFactualEvent(matchId: string, eventId: string) {
+    setOpen(matchId);
+    setPendingEventFocus({ matchId, targetId: factualEventTargetId(matchId, eventId) });
+  }
+
   return (
     <div className={s.results}>
       <ResultsAppBar />
@@ -549,7 +573,7 @@ function ResultsBody({
         </section>
       ) : null}
 
-      <FactualRecap view={factualRecap} onOpenMatch={setOpen} />
+      <FactualRecap view={factualRecap} onOpenEvent={openFactualEvent} />
 
       {/* ── Match-by-match ────────────────────────────────────────────── */}
       <section className={`${s.panel} ${s.resultsMatchPanel}`} aria-label="Match results">
@@ -806,15 +830,15 @@ function MatchListItem({
               <span className={s.bookingsLegend}>Availability</span>
             ) : null}
             {box.availability.map((entry) => (
-              <span
+              <FactualEventTarget
                 key={entry.eventId}
-                id={`event-${encodeURIComponent(match.match_id)}-${encodeURIComponent(entry.eventId)}`}
-                className={s.boxEvent}
+                matchId={match.match_id}
+                eventId={entry.eventId}
               >
                 <InjuryIcon className={s.boxIcon} width={16} height={16} />
                 {entry.name} unavailable
                 {entry.replacement === null ? " · short-handed" : ` · ${entry.replacement} started`}
-              </span>
+              </FactualEventTarget>
             ))}
             {box.cards.length > 0 ? <span className={s.bookingsLegend}>Bookings</span> : null}
             {box.cards.map((c, i) => (

@@ -835,7 +835,12 @@ function surfaceCases(): readonly SurfaceCase[] {
           "S6 proof requires the linked event to begin under a hidden match panel",
         );
 
-        await link.click();
+        await link.focus();
+        assert(
+          await link.evaluate((node) => document.activeElement === node),
+          "S6 proof could not focus the event-log link before keyboard activation",
+        );
+        await link.press("Enter");
         await page.waitForFunction((expectedHash) => window.location.hash === expectedHash, href);
         await page.waitForFunction(
           (eventId) =>
@@ -855,6 +860,10 @@ function surfaceCases(): readonly SurfaceCase[] {
           "event-log target remained under a hidden panel after link activation",
         );
         assert(await target.isVisible(), "event-log target is not visible after link activation");
+        assert(
+          await target.evaluate((node) => document.activeElement === node),
+          "event-log target did not receive programmatic focus",
+        );
         const box = await target.boundingBox();
         const viewport = page.viewportSize();
         assert(

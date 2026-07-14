@@ -644,6 +644,11 @@
   font-size: 0.82rem;
   color: var(--ink-soft);
 }
+.boxEvent:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 3px;
+}
 .boxIcon {
   flex: none;
   color: var(--accent-solid);

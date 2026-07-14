@@ -1,18 +1,15 @@
 import type { FactualRecapView } from "@/lib/game/results-adapters";
 
+import { factualEventHref } from "./factual-event-target";
 import s from "./game.module.css";
 
 export interface FactualRecapProps {
   view: FactualRecapView;
-  onOpenMatch?: (matchId: string) => void;
-}
-
-function eventHref(matchId: string, eventId: string): string {
-  return `#event-${encodeURIComponent(matchId)}-${encodeURIComponent(eventId)}`;
+  onOpenEvent?: (matchId: string, eventId: string) => void;
 }
 
 /** Persisted match facts only; all display adaptation happens before render. */
-export function FactualRecap({ view, onOpenMatch }: FactualRecapProps) {
+export function FactualRecap({ view, onOpenEvent }: FactualRecapProps) {
   return (
     <section className={`${s.panel} ${s.factualRecap}`} aria-labelledby="factual-recap-title">
       <div className={s.panelHead}>
@@ -151,8 +148,8 @@ export function FactualRecap({ view, onOpenMatch }: FactualRecapProps) {
                 {activation.eventId ? (
                   <a
                     className={s.factualEventLink}
-                    href={eventHref(activation.matchId, activation.eventId)}
-                    onClick={() => onOpenMatch?.(activation.matchId)}
+                    href={factualEventHref(activation.matchId, activation.eventId)}
+                    onClick={() => onOpenEvent?.(activation.matchId, activation.eventId!)}
                   >
                     Event log
                   </a>
@@ -183,8 +180,8 @@ export function FactualRecap({ view, onOpenMatch }: FactualRecapProps) {
                   {entry.eventId ? (
                     <a
                       className={s.factualEventLink}
-                      href={eventHref(match.matchId, entry.eventId)}
-                      onClick={() => onOpenMatch?.(match.matchId)}
+                      href={factualEventHref(match.matchId, entry.eventId)}
+                      onClick={() => onOpenEvent?.(match.matchId, entry.eventId!)}
                     >
                       Event log
                     </a>
