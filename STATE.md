@@ -114,6 +114,57 @@ five-plus-entry lanes to become enabled before capture. The full root test then
 passed 8/8 in 7m52s with web 1,281 + 1 expected skip and responsive 218/0.
 Exact-head CI and fresh independent RED review remain required after commit.
 
+The cumulative main candidate `d44ea31a749c7a0690a53ab9c7e7a0017b29a795`
+is void after a fresh exact-head RED review found that friend-challenge
+verification could wait forever for either response headers or JSON body
+completion. The preserved FAIL report is
+`/tmp/season2-s8-cumulative-exact-review-d44ea31.md` (270 lines, 19,312 bytes;
+SHA-256
+`18aeb49994d1fea58028a1b1c02b443d062e7a767a7fd735b923b7be2e34f1c9`).
+The fix-forward puts the one-dispatch POST and body parse inside one four-second
+`boundedRequest`, classifies the rate-limit-consuming POST conservatively as
+an unsafe mutation, maps timeout to the existing `UNAVAILABLE` state, and
+exposes manual verification retry with a fresh controller. Mounted regressions
+cover both a request that never returns headers and a body that never settles;
+each proves one initial dispatch, a finite recovery transition, and one manual
+retry. Focused challenge/loader coverage passes 19/19 across three files; web
+typecheck and lint pass. A new commit voids all prior exact-head evidence, so
+fresh CI, S7 browser proof, cumulative review, merge, deploy, and live
+verification remain required.
+
+Fix-forward head `f97aadfd1e2526c76c5f3738d63577f936f67a10` is also
+void before review: Gitleaks 8.30.1 correctly ran over the complete ten-commit
+range and reported two `generic-api-key` findings where the held-open test
+assigned a high-entropy-looking placeholder literal directly to the `proof`
+property. These are synthetic test values, not credentials, but required CI is
+fail-closed. The next mechanical fix constructs that placeholder from static
+segments through one shared fixture; it does not alter scanner policy,
+allowlists, production code, or test behavior. The complete exact-head gate and
+review cycle restarts after this commit.
+
+That same fresh `f97aadf` review found the public leaderboard read boundary
+accepted any nonempty `season` query, despite the shipped archive contract
+allowing only the current season plus `season-2026-manager-attrition`. The
+shared board parser now rejects every other seasonal key for both public and
+authenticated reads and rejects the seasonal namespace on Daily boards.
+PGlite regressions prove the retained archive remains readable while seeded
+unpublished-season rows stay unreachable. The preserved FAIL report is
+`/tmp/season2-s8-cumulative-exact-review-f97aadf.md` (129 lines, 10,053 bytes;
+SHA-256
+`4a127824bf48e37d78451eaf07f9b5ae4f1e3c64ae84b5168ec747e11eac94bb`).
+
+Exact head `1c03b0e16e45a4a19676888f5241e81da278bd7d` completed the
+local root gate but is deliberately void: cumulative GLM review found that
+challenge-proof creation bounded response headers but parsed the response body
+outside the four-second budget. Although that review returned PASS and called
+the finding non-blocking, release adjudication promoted it because a held-open
+sign body leaves the user action pending forever and the durable sign limiter
+may already have committed. The proof POST and body parse now share one
+`unsafe-mutation` budget. Mounted coverage mirrors verification coverage for
+held-open headers and body, finite error transition, one initial dispatch, and
+one manual retry with a fresh controller. The preserved verbatim cross-model
+report is `/tmp/season2-crossmodel-s8-1c03b0e.md`.
+
 Season 2 Squad Depth — Unit S7 same-seed friend challenge: 2026-07-13 · local
 YELLOW implementation on `ws-f4/season2-s7-friend-challenge`, based on exact
 integration head `71a4408482b2cb7f619dac9ad4f83a1716935c6c`. Results and Share

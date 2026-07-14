@@ -6,8 +6,10 @@ import {
   buildFriendChallengeShareCopy,
   buildFriendChallengeUrl,
   FRIEND_CHALLENGE_URL_MAX_LEN,
+  FRIEND_CHALLENGE_VERIFICATION_BUDGET_MS,
   parseFriendChallengeSearchParams,
   FRIEND_CHALLENGE_VERIFICATION_COPY,
+  verifyFriendChallenge,
 } from "../friend-challenge";
 import {
   signVerifiedFriendChallenge,
@@ -33,7 +35,17 @@ const gameData = buildGameDataFromBundles();
 const validation = { gameData, scenario: SCENARIO_2026_BUNDLE };
 const SECRET = "friend-challenge-test-secret-32-bytes";
 
-afterEach(() => vi.unstubAllEnvs());
+function heldOpenVerificationRef() {
+  const token = ["t3", "placeholder"].join(".");
+  const proof = ["fc1", "placeholder"].join(".");
+  return { token, proof };
+}
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
+});
 
 function complete(record: RunRecordV1): RunRecordV1 {
   const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, record);
@@ -113,6 +125,47 @@ describe("same-seed friend challenge contract", () => {
         null,
       ),
     ).toThrow(/maximum is 8192/u);
+  });
+
+  it("bounds verification when the request never returns headers", async () => {
+    vi.useFakeTimers();
+    let requestSignal: AbortSignal | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>(
+        (_input, init) =>
+          new Promise<Response>(() => {
+            requestSignal = init?.signal instanceof AbortSignal ? init.signal : undefined;
+          }),
+      ),
+    );
+
+    const pending = verifyFriendChallenge(heldOpenVerificationRef());
+    await vi.advanceTimersByTimeAsync(FRIEND_CHALLENGE_VERIFICATION_BUDGET_MS);
+
+    await expect(pending).resolves.toEqual({ ok: false, error: "UNAVAILABLE" });
+    expect(requestSignal?.aborted).toBe(true);
+  });
+
+  it("includes a held-open response body in the verification budget", async () => {
+    vi.useFakeTimers();
+    let requestSignal: AbortSignal | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn<typeof fetch>(async (_input, init) => {
+        requestSignal = init?.signal instanceof AbortSignal ? init.signal : undefined;
+        return {
+          ok: true,
+          json: () => new Promise<unknown>(() => undefined),
+        } as Response;
+      }),
+    );
+
+    const pending = verifyFriendChallenge(heldOpenVerificationRef());
+    await vi.advanceTimersByTimeAsync(FRIEND_CHALLENGE_VERIFICATION_BUDGET_MS);
+
+    await expect(pending).resolves.toEqual({ ok: false, error: "UNAVAILABLE" });
+    expect(requestSignal?.aborted).toBe(true);
   });
 
   it("stops a headerless oversized verify body while streaming", async () => {
