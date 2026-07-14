@@ -4,6 +4,16 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Dependency sweep D1 — Actions batch: 2026-07-14 · immutable pins now resolve
+to `dorny/paths-filter` v4.0.2 (`7b450fff…`, 2 uses),
+`astral-sh/setup-uv` v8.3.2 (`11f9893b…`, 5 uses), and
+`pnpm/action-setup` v6.0.9 (`0ebf4713…`, 9 uses). Workflow triggers,
+permissions, action inputs, path filters, concurrency, and persistent-runner
+hygiene placement are unchanged. Dependabot remains weekly, now groups Actions
+updates and limits every npm group to patch/minor updates so majors remain
+individually reviewable. No product, schema, rating, simulation, or runtime-data
+files changed.
+
 Dependency sweep D1 — checkout v7: 2026-07-14 · all 18 immutable
 `actions/checkout` pins across the five shipped workflow files now resolve to
 official tag `v7.0.0` commit `9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0`.
