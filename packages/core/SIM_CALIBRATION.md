@@ -1,5 +1,29 @@
 # WS-B Sim + Scoring — Calibration
 
+> **Season 2 Squad Depth (`engine-2026.07.14-squad-depth`) — current
+> calibration.** S1 replaces the old post-hoc injury flavour with one seeded
+> pre-match availability event (probability `0.125`) and deterministic
+> hard-position-family bench assignment across simultaneous absences. Events
+> can be tournament-ending (`0.12`) or one-/two-match knocks and suspensions;
+> minor events are capped at two per run. Incoming replacements contribute at
+> `0.70` of their canonical fitted line value, unfilled slots apply the `0.72`
+> short-handed multiplier, and fewer than seven available players forfeits.
+>
+> S2/S3 retain the aggregate manager-link seam but calibrate
+> `MANAGER_MODIFIER.BAND = 0.06`. Every drafted manager also contributes an
+> honest presence tier `+1`, composed with the preserved manager-link tier
+> `+0/+1/+2` into a per-match `0..3` band. Its maximum continuous uplift is
+> `MANAGER_TACTICAL.WIDTH = 0.02`, applied once to all four post-availability
+> channels before λ; managerless is neutral. The binding magnitude metric is
+> mean absolute movement in `pre_match_win_probability` over exact paired
+> fixtures, not tournament final-score delta: the strategic N=2000 manager
+> landing is `0.0101751` (ceiling `0.0150`) at `28.30%` changed-run reach.
+> Bench movement is `0.0394470` (ceiling `0.0500`) at `38.15%` reach and
+> `41.95%` activation. The λ tuple, scoring, progression, rating channels,
+> Synergy formula, and RNG consumption remain unchanged from the accepted
+> merit-v4.6 basis. Full evidence:
+> `docs/reports/season2-s3-calibration-lock-2026-07-13.md`.
+
 > **merit-v4.6 (`engine-2026.06.28-merit-v4.6`) — λ refit after manual
 > override curve inversion.** merit-v4.5 pinned owner override internals to the
 > display scale, which made override-heavy XIs simulate far above their visible
@@ -403,17 +427,25 @@ Shootout: best-of-five + sudden death, conversion `BASE_CONVERT_PROB = 0.75`
 confined to a **variance floor band** `±CONVERT_BAND (0.10)` regardless of
 how lopsided the teams are — the "favourites can still lose" guarantee.
 
-## Injuries / substitutions / forfeit
+## Availability / substitutions / forfeit
 
-0–2 injury events per match (`PRIMARY_INJURY_PROB 0.5`, `SECOND_INJURY_PROB
-0.2`); each is tournament-ending with `TOURNAMENT_ENDING_PROB 0.12` and then
-persists out of every later match lineup for the user's run path. The lowered
-persistent probability is intentional for the manager-attrition engine season:
-opponents are regenerated per fixture, so a symmetric opponent tournament
-attrition model would require a larger tournament-roster state change.
-Position-aware bench
-subs from the 5-bench (reset each match). Below `FIELDABLE_FLOOR = 7`
-available players → forfeit (0–3 walkover) — a safety valve.
+Each fixture has at most one seeded pre-match availability event
+(`AVAILABILITY_EVENT_PROB = 0.125`). A tournament-ending event persists across
+later fixtures with conditional probability `0.12`; otherwise the event is a
+one- or two-match knock/suspension, with two-match conditional probability
+`0.05` and a hard cap of two minor events per run. Events, active absences,
+replacement identities, strength consequences, and short-handed slots are
+persisted facts.
+
+The engine assigns the five-player bench across all simultaneous absences in
+one deterministic optimization: maximize filled slots first, then total
+canonical line contribution × positional fit, with stable slot/card
+tie-breaks. Hard position-family eligibility exists only at this replacement
+seam. A replacement contributes at multiplier `0.70`; an unfilled slot applies
+the `0.72` all-channel short-handed multiplier. Fewer than
+`FIELDABLE_FLOOR = 7` available players forfeits the remaining fixture as a
+0–3 walkover. Opponents are still generated per fixture rather than tracked as
+a persistent tournament roster.
 
 ## Synergy + team-strength fold
 
@@ -423,14 +455,18 @@ synergy.multiplier × manager_modifier )`
 - **position compatibility** — MAX-of-eligibles fold over
   `POSITION_COMPATIBILITY_FACTORS` (same line 1.0, one-off ≈0.75, two-off
   ≈0.45, GK↔outfield ≈0.15).
-- **manager modifier** — positive reserved band `1 + 0.10 * manager_link`,
+- **manager modifier** — positive reserved band `1 + 0.06 * manager_link`,
   where `manager_link` is computed from the drafted manager nation and the
-  starter nation mix. `ManagerRating.overall` remains display-only.
+  active starter nation mix. Separately, drafted-manager presence `+1`
+  composes with the match-dynamic manager-link `+0/+1/+2` tier; the resulting
+  `0..3` band applies up to a 2% continuous uplift to all four channels before
+  λ. `ManagerRating.overall` remains display-only.
 - **Synergy** components: nation clusters (starters only), linked pairs (per
   formation adjacency edge), manager link. Weights `0.45 / 0.40 / 0.15`.
-- **Bounded multipliers**: `synergy.multiplier ∈ [1, 1 + 0.12]`; manager
-  modifier `∈ [1 − 0.10, 1 + 0.10]` (null manager → exactly 1.0). The bound
-  is the "Synergy amplifies, never replaces talent" guarantee.
+- **Bounded multipliers**: `synergy.multiplier ∈ [1, 1 + 0.12]`; aggregate
+  manager-link modifier `∈ [1, 1 + 0.06]`; per-match manager tactical
+  multiplier `∈ [1, 1.02]` (null manager → exactly 1.0). These bounds are the
+  "Synergy amplifies, never replaces talent" guarantee.
 
 The aggregator is unchanged; only the channel inputs are now on the
 compressed display band. The four-channel λ form makes the Synergy

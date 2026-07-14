@@ -8,6 +8,7 @@ import { BoardScreen } from "@/components/leaderboard/board-screen";
 import { LeaderboardClosed } from "@/components/leaderboard/board-views";
 import { isLeaderboardEnabled } from "@/lib/leaderboard/enabled";
 import { currentSeasonKey } from "@/lib/leaderboard/server-data";
+import { ARCHIVED_LEADERBOARD_SEASON_IDS } from "@/lib/leaderboard/season";
 
 export const metadata: Metadata = {
   title: "Leaderboard",
@@ -19,7 +20,14 @@ export default function LeaderboardPage() {
   const enabled = isLeaderboardEnabled();
   return (
     <div className="container container--narrow page leaderboard-page">
-      {enabled ? <BoardScreen currentSeasonKey={currentSeasonKey()} /> : <LeaderboardClosed />}
+      {enabled ? (
+        <BoardScreen
+          currentSeasonKey={currentSeasonKey()}
+          archivedSeasonKeys={ARCHIVED_LEADERBOARD_SEASON_IDS}
+        />
+      ) : (
+        <LeaderboardClosed />
+      )}
     </div>
   );
 }

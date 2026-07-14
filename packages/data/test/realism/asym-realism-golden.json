@@ -1,7 +1,7 @@
 {
-  "$schema_doc": "Season 2 S3 Option A final asymmetric realism relock. The gate sims the default/Career basis after the stable manager-presence tactical tier and calibrated bench-availability mechanics. Lambda, scoring, progression semantics, and the pre-S3 semantic shape-band centers remain unchanged; exact policy populations and telemetry are re-locked to the final engine. Runtime engine_version is engine-2026.06.30-manager-attrition.",
+  "$schema_doc": "Season 2 S3 Option A final asymmetric realism relock. The gate sims the default/Career basis after the stable manager-presence tactical tier and calibrated bench-availability mechanics. Lambda, scoring, progression semantics, and the pre-S3 semantic shape-band centers remain unchanged; exact policy populations and telemetry are re-locked to the final engine. Runtime engine_version is engine-2026.07.14-squad-depth.",
   "engine_anchor": "Season 2 S3 manager-presence tactical tier plus calibrated bench availability and replacement contribution",
-  "engine_version": "engine-2026.06.30-manager-attrition",
+  "engine_version": "engine-2026.07.14-squad-depth",
   "ensemble": {
     "seed_prefix": "wcdraft:realism:e3a:v1",
     "N_runs": 2000,
