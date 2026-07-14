@@ -7,7 +7,8 @@
 Final polish closure through U5 recovery rehearsal: 2026-07-14 · merged U1 OG
 hardening, U2 landing-fold fit, U4 prose cleanup, and U3 WebKit verification are
 present on main through `7bcc53c7ada4204341dd844e9745b707920c2e7c`. The U5
-documentation-only rehearsal passed on production-derived Neon child branches:
+non-runtime documentation and CI-contract rehearsal passed on
+production-derived Neon child branches:
 create 1.207s; reset-from-parent restore 1.174s after the CLI OAuth path failed
 before mutation; preserved-branch cleanup 1.035s; target cleanup 0.988s; final
 temporary-branch inventory zero. Post-restore coherence was `saved_runs=254`,
