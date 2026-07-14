@@ -451,11 +451,26 @@
   }
 
   .demo {
-    gap: 0.46rem;
+    gap: 0.25rem;
+    padding: 0.35rem;
   }
 
   .drum {
     min-block-size: 5.25rem;
+  }
+
+  .card {
+    gap: 0.08rem;
+    padding: 0.3rem;
+  }
+
+  .card .faceFlag {
+    inline-size: 1.75rem;
+    block-size: 1.18rem;
+  }
+
+  .position {
+    font-size: 1.25rem;
   }
 
   .resultName,

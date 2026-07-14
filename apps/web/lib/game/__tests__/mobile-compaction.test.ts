@@ -6,6 +6,10 @@ const homeHeroCss = readFileSync(
   fileURLToPath(new URL("../../../components/home/home-hero.module.css", import.meta.url)),
   "utf8",
 );
+const heroSpinCss = readFileSync(
+  fileURLToPath(new URL("../../../components/home/hero-spin-demo.module.css", import.meta.url)),
+  "utf8",
+);
 const playPageCss = readFileSync(
   fileURLToPath(new URL("../../../app/play/play-page.module.css", import.meta.url)),
   "utf8",
@@ -33,5 +37,13 @@ describe("mobile compaction contract", () => {
   it("retains the 44px floor through full-card and dock-button targets", () => {
     expect(modeCss).toContain("min-height: 118px");
     expect(modeCss).toContain(".modeDock :global(.btn)");
+  });
+
+  it("tightens only the animated poster rhythm at the 360px breakpoint", () => {
+    const foldRule = heroSpinCss.slice(heroSpinCss.indexOf("@media (max-width: 380px)"));
+    expect(foldRule).toContain(".demo {\n    gap: 0.25rem;\n    padding: 0.35rem;");
+    expect(foldRule).toContain(".card .faceFlag");
+    expect(foldRule).toContain(".position {\n    font-size: 1.25rem;");
+    expect(foldRule).not.toContain(".poster {\n");
   });
 });
