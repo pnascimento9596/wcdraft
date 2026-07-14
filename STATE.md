@@ -4,6 +4,19 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Dependency sweep and residual-polish closure: 2026-07-14 · the seven original
+Dependabot PRs are resolved through production merges `e23aeb78`, `bf646847`,
+and `7d0fe9ce`; no original dependency PR remains open. Production and Python
+runtime audits are clean. The full JavaScript development graph retains one
+moderate and one low esbuild advisory on pre-existing dev-only paths, recorded
+with exact IDs and paths in
+`docs/reports/dependency-sweep-residual-polish-2026-07-14.md`. The residual
+hygiene audit found no stale worktree metadata and no broken report artifact;
+the current Season 2 calibration docs were already correct. Dependabot now
+exact-ignores Prettier 3.9.5 (measured 21-file drift) and the newly surfaced
+Capacitor 8.4.2 patches (separately gated mobile lane), while later versions
+remain eligible.
+
 Dependency sweep D1/D3 — compatible dependency batch: 2026-07-14 · accepted
 eight patch/minor npm updates (`eslint` 10.7.0, `globals` 17.7.0, `tsx`
 4.23.1, `turbo` 2.10.5, `typescript-eslint` 8.64.0, `vitest` 4.1.10,

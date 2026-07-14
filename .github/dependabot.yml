@@ -4,6 +4,19 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # 3.9.5 changes 21 tracked files under the repository's current format contract.
+      # Keep the verified exact 3.8.4 pin until a dedicated formatting migration.
+      - dependency-name: "prettier"
+        versions: ["3.9.5"]
+      # These patches surfaced after the dependency-sweep baseline and belong to
+      # the separately gated mobile lane. Exact-version ignores allow later fixes.
+      - dependency-name: "@capacitor/core"
+        versions: ["8.4.2"]
+      - dependency-name: "@capacitor/ios"
+        versions: ["8.4.2"]
+      - dependency-name: "@capacitor/cli"
+        versions: ["8.4.2"]
     groups:
       npm-workspace:
         patterns:
