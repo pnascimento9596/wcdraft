@@ -8,7 +8,7 @@
     "predev": "pnpm run runtime:materialize && node scripts/generate-icons.mjs && node scripts/generate-marketing-assets.mjs && node scripts/generate-sw-version.mjs",
     "dev": "next dev",
     "prebuild": "pnpm run runtime:materialize && node scripts/generate-icons.mjs && node scripts/generate-marketing-assets.mjs && node scripts/generate-sw-version.mjs",
-    "build": "next build --webpack",
+    "build": "next build --webpack && node scripts/verify-runtime-data-traces.mjs",
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "pretypecheck": "pnpm run runtime:materialize",
