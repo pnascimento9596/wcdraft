@@ -200,6 +200,9 @@ jobs:
       - name: Future Daily regeneration path contract
         run: bash scripts/ci/validate-daily-refresh-regeneration.test.sh
 
+      - name: Neon/Vercel recovery runbook contract
+        run: scripts/ci/neon-vercel-recovery-runbook.test.sh
+
       - name: Agent contract drift check
         run: pnpm run check:agent-contracts
 

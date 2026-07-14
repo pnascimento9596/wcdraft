@@ -147,12 +147,17 @@ Validated and corrected
 7. Added executable receipt gates for every route: application-first proves the
    production alias and intermediate endpoints before Neon restore;
    database-first proves the current-code/restored-database endpoints before
-   Vercel rollback; traffic-stopped positively records the expected public
-   non-serving status before and between mutations without claiming to control
-   traffic.
-8. Added a durable Bash syntax and structural-order contract for all three
-   coupled routes so the second mutation cannot drift ahead of its required
-   intermediate verification.
+   Vercel rollback; traffic-stopped is bound to the canonical health and OG
+   health endpoints and requires an incident-unique marker in both a fixed
+   response header and body with exact HTTP 503 before and between mutations.
+   A normal unrelated-path 404 cannot satisfy this proof.
+8. Added compatibility-selected and receipt-gated application-first,
+   database-first, and traffic-stopped routes for the inverse recovery. The
+   second inverse mutation cannot run until the exact alias and health receipts
+   for the first intermediate pairing pass.
+9. Registered the Bash syntax and structural-order contract in the required
+   static CI job. It enforces six forward/inverse route orderings, fixed
+   suspension endpoints, single mutation definitions, and CI registration.
 
 Existing safety controls were retained: mode-0600 receipts, exact preserved
 branch resolution, operation polling, no blind retry after ambiguous restore
@@ -177,10 +182,10 @@ connector surface, and do not switch tools mid-operation without reading live
 branch/operation state first.
 
 This report, runbook, and static runbook contract are operations evidence only.
-They do not change schema, migrations, application runtime,
-draft/simulation/rating, tokens, auth, or deployment configuration. Rollback is
-a normal documentation/test revert; it does not undo or repeat the
-already-completed rehearsal.
+The contract is registered in CI, but it does not change schema, migrations,
+application runtime, draft/simulation/rating, tokens, auth, or production
+deployment configuration. Rollback is a normal documentation/test/workflow
+revert; it does not undo or repeat the already-completed rehearsal.
 
 ## Out of scope
 

@@ -11,7 +11,14 @@ incident_dir="$(mktemp -d /tmp/wcdraft-restore-incident.XXXXXX)"
 health_status="$(curl -sS -o "$incident_dir/health-before.json" -w '%{http_code}' \
   https://www.wcdraft.com/api/health)"
 printf 'health HTTP %s\n' "$health_status"
-jq . "$incident_dir/health-before.json"
+test "$health_status" = 200
+jq -e '.ok == true and .db.status == "ready"' \
+  "$incident_dir/health-before.json" >/dev/null
+og_health_status="$(curl -sS -o "$incident_dir/og-health-before.json" -w '%{http_code}' \
+  https://www.wcdraft.com/api/og/health)"
+printf 'OG health HTTP %s\n' "$og_health_status"
+test "$og_health_status" = 200
+jq -e '.ok == true' "$incident_dir/og-health-before.json" >/dev/null
 vercel list wcdraft-web --environment production --status READY \
   --scope pnascimento9596s-projects | tee "$incident_dir/deployments.txt"
 test -n "${NEON_API_KEY:-}"
@@ -31,14 +38,20 @@ case "${APPLICATION_PAIRING:-}" in
     case "${COUPLED_ORDER:-}" in
       database-first | application-first) ;;
       traffic-stopped)
-        test -n "${TRAFFIC_SUSPENSION_PROBE_URL:-}"
-        case "${TRAFFIC_SUSPENSION_EXPECTED_HTTP:-}" in
-          [45][0-9][0-9]) ;;
-          *)
-            echo 'TRAFFIC_SUSPENSION_EXPECTED_HTTP must be an expected 4xx/5xx status.' >&2
+        test "${TRAFFIC_SUSPENSION_EXPECTED_HTTP:-}" = 503 || {
+          echo 'TRAFFIC_SUSPENSION_EXPECTED_HTTP must be exactly 503.' >&2
+          exit 1
+        }
+        case "${TRAFFIC_SUSPENSION_MARKER:-}" in
+          *[!A-Za-z0-9_-]* | '')
+            echo 'TRAFFIC_SUSPENSION_MARKER must use only A-Z, a-z, 0-9, _ or -.' >&2
             exit 1
             ;;
         esac
+        [ "${#TRAFFIC_SUSPENSION_MARKER}" -ge 32 ] || {
+          echo 'TRAFFIC_SUSPENSION_MARKER must be an incident-unique value of at least 32 characters.' >&2
+          exit 1
+        }
         ;;
       *)
         echo 'Set COUPLED_ORDER=database-first, application-first, or traffic-stopped.' >&2
@@ -104,9 +117,13 @@ order. Preselect and verify both artifacts, then choose the order whose first
 state remains compatible with the still-current half. Minimize and measure the
 mismatch window. If neither intermediate pairing is safe, select
 `traffic-stopped`, execute an approved traffic-suspension procedure outside
-this runbook, and supply its public probe URL and expected non-serving 4xx/5xx
-status. This runbook does not know how to stop or resume traffic; it only
-refuses to mutate until public suspension is positively observed and recorded.
+this runbook, and configure that control to return HTTP 503 from both canonical
+`/api/health` and `/api/og/health` endpoints with the same incident-unique
+marker in the `x-wcdraft-traffic-suspended` response header and body. Set that
+value as `TRAFFIC_SUSPENSION_MARKER`; it must be at least 32 URL-safe
+characters. This runbook does not know how to stop or resume traffic. It first
+records that both canonical endpoints served healthy HTTP 200 responses, then
+refuses to mutate until both return the control-specific 503 marker.
 
 ## Define guarded recovery operations
 
@@ -126,19 +143,19 @@ set -euo pipefail
 umask 077
 
 require_production_alias_receipt() {
-  expected_deployment="$1"
-  receipt_name="$2"
-  receipt="$incident_dir/$receipt_name.json"
+  local expected_deployment="$1"
+  local receipt_name="$2"
+  local receipt="$incident_dir/$receipt_name.json"
   jq -e --arg expected "$expected_deployment" '
     .id == $expected and .readyState == "READY" and .target == "production"
   ' "$receipt" >/dev/null
 }
 
 wait_for_production_alias() {
-  expected_deployment="$1"
-  receipt_name="$2"
-  receipt="$incident_dir/$receipt_name.json"
-  attempt=1
+  local expected_deployment="$1"
+  local receipt_name="$2"
+  local receipt="$incident_dir/$receipt_name.json"
+  local attempt=1
   while [ "$attempt" -le 60 ]; do
     if vercel inspect https://www.wcdraft.com --format=json \
       --scope pnascimento9596s-projects --wait --timeout 30s >"$receipt"; then
@@ -155,9 +172,9 @@ wait_for_production_alias() {
 }
 
 require_application_pairing_receipts() {
-  receipt_name="$1"
-  expected_deployment="$2"
-  manifest="$incident_dir/$receipt_name-pairing.json"
+  local receipt_name="$1"
+  local expected_deployment="$2"
+  local manifest="$incident_dir/$receipt_name-pairing.json"
   jq -e --arg expected "$expected_deployment" '
     .expected_deployment == $expected and
     .health_http == 200 and .database_status == "ready" and
@@ -170,9 +187,10 @@ require_application_pairing_receipts() {
 }
 
 verify_application_pairing() {
-  receipt_name="$1"
-  expected_deployment="$2"
-  alias_receipt_name="$3"
+  local receipt_name="$1"
+  local expected_deployment="$2"
+  local alias_receipt_name="$3"
+  local health_http leaderboard_http og_health_http
   require_production_alias_receipt "$expected_deployment" "$alias_receipt_name"
 
   health_http="$(curl -sS -o "$incident_dir/$receipt_name-health.json" -w '%{http_code}' \
@@ -205,34 +223,71 @@ verify_application_pairing() {
 }
 
 require_traffic_suspension_receipt() {
-  receipt_name="$1"
-  jq -e \
-    --arg url "$TRAFFIC_SUSPENSION_PROBE_URL" \
-    --arg expected "$TRAFFIC_SUSPENSION_EXPECTED_HTTP" '
-      .probe_url == $url and .expected_http == $expected and
-      .observed_http == $expected and
-      (.observed_http | test("^[45][0-9][0-9]$"))
-    ' "$incident_dir/$receipt_name-traffic-suspension.json" >/dev/null
+  local receipt_name="$1"
+  local endpoint expected_url receipt
+  for endpoint in health og-health; do
+    case "$endpoint" in
+      health) expected_url='https://www.wcdraft.com/api/health' ;;
+      og-health) expected_url='https://www.wcdraft.com/api/og/health' ;;
+    esac
+    receipt="$incident_dir/$receipt_name-traffic-suspension-$endpoint.json"
+    jq -e \
+      --arg url "$expected_url" \
+      --arg marker "$TRAFFIC_SUSPENSION_MARKER" '
+        .probe_url == $url and .expected_http == "503" and
+        .observed_http == "503" and .expected_marker == $marker and
+        .header_marker == $marker and .body_contains_marker == true
+      ' "$receipt" >/dev/null
+    grep -Fq -- "$TRAFFIC_SUSPENSION_MARKER" \
+      "$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt"
+  done
+}
+
+probe_traffic_suspension_endpoint() {
+  local receipt_name="$1"
+  local endpoint="$2"
+  local probe_url="$3"
+  local headers="$incident_dir/$receipt_name-traffic-suspension-$endpoint-headers.txt"
+  local body="$incident_dir/$receipt_name-traffic-suspension-$endpoint-body.txt"
+  local observed_http header_marker body_contains_marker
+  observed_http="$(curl -sS \
+    --proto '=https' --tlsv1.2 --max-time 30 \
+    --dump-header "$headers" --output "$body" \
+    --write-out '%{http_code}' "$probe_url")"
+  header_marker="$(tr -d '\r' <"$headers" | awk -F ': *' '
+    tolower($1) == "x-wcdraft-traffic-suspended" { print $2 }
+  ' | tail -1)"
+  body_contains_marker=false
+  if grep -Fq -- "$TRAFFIC_SUSPENSION_MARKER" "$body"; then
+    body_contains_marker=true
+  fi
+  jq -nc \
+    --arg url "$probe_url" \
+    --arg expected '503' \
+    --arg observed "$observed_http" \
+    --arg marker "$TRAFFIC_SUSPENSION_MARKER" \
+    --arg header "$header_marker" \
+    --argjson body_contains "$body_contains_marker" \
+    '{probe_url:$url,expected_http:$expected,observed_http:$observed,
+      expected_marker:$marker,header_marker:$header,
+      body_contains_marker:$body_contains}' \
+    >"$incident_dir/$receipt_name-traffic-suspension-$endpoint.json"
 }
 
 verify_traffic_suspended() {
-  receipt_name="$1"
-  observed_http="$(curl -sS \
-    -o "$incident_dir/$receipt_name-traffic-suspension-body.txt" \
-    -w '%{http_code}' "$TRAFFIC_SUSPENSION_PROBE_URL")"
-  jq -nc \
-    --arg url "$TRAFFIC_SUSPENSION_PROBE_URL" \
-    --arg expected "$TRAFFIC_SUSPENSION_EXPECTED_HTTP" \
-    --arg observed "$observed_http" \
-    '{probe_url:$url,expected_http:$expected,observed_http:$observed}' \
-    >"$incident_dir/$receipt_name-traffic-suspension.json"
+  local receipt_name="$1"
+  probe_traffic_suspension_endpoint \
+    "$receipt_name" health https://www.wcdraft.com/api/health
+  probe_traffic_suspension_endpoint \
+    "$receipt_name" og-health https://www.wcdraft.com/api/og/health
   require_traffic_suspension_receipt "$receipt_name"
 }
 
 wait_for_neon_operations() {
-  response_path="$1"
-  receipt_prefix="$2"
-  operation_ids="$incident_dir/$receipt_prefix-operation-ids.txt"
+  local response_path="$1"
+  local receipt_prefix="$2"
+  local operation_ids="$incident_dir/$receipt_prefix-operation-ids.txt"
+  local operation_id attempt operation_receipt operation_status
 
   jq -er '.operations | select(length > 0) | .[].id' \
     "$response_path" >"$operation_ids"
@@ -269,11 +324,12 @@ wait_for_neon_operations() {
 }
 
 capture_preserved_branch_id() {
-  expected_name="$1"
-  id_file="$2"
-  receipt_prefix="$3"
-  branches_receipt="$incident_dir/$receipt_prefix-branches.json"
-  branch_receipt="$incident_dir/$receipt_prefix-branch.json"
+  local expected_name="$1"
+  local id_file="$2"
+  local receipt_prefix="$3"
+  local branches_receipt="$incident_dir/$receipt_prefix-branches.json"
+  local branch_receipt="$incident_dir/$receipt_prefix-branch.json"
+  local preserved_id
 
   curl --fail-with-body -sS --get \
     "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
@@ -299,6 +355,7 @@ capture_preserved_branch_id() {
 }
 
 restore_neon_primary() {
+  local preserve_name response_file payload
   case "$APPLICATION_PAIRING:${COUPLED_ORDER:-}" in
     current: | rollback:database-first) ;;
     rollback:application-first)
@@ -336,7 +393,7 @@ restore_neon_primary() {
 }
 
 rollback_application() {
-  receipt_prefix="$1"
+  local receipt_prefix="$1"
   case "$COUPLED_ORDER" in
     application-first)
       require_production_alias_receipt "$PRE_RESTORE_DEPLOYMENT" current-deployment
@@ -422,8 +479,9 @@ esac
 
 The `traffic-stopped` route deliberately contains no suspension or resumption
 command. An operator must suspend traffic through an approved external control
-before running it. The route records and revalidates the expected public 4xx/5xx
-before Neon restore, before Vercel rollback, and after Vercel rollback. Resume
+before running it. The route records and revalidates the incident-marked 503
+from both canonical health endpoints before Neon restore, before Vercel
+rollback, and after Vercel rollback. Resume
 traffic externally only after both mutations and incident-specific database
 readback are complete. Save that readback under the incident directory, then
 resume through the approved external control, set `TRAFFIC_RESUMED_ACK=yes`,
@@ -466,46 +524,140 @@ reviewed.
 ## Rollback the rollback
 
 Do not delete the preserved branch during the incident. If the restore point
-was wrong, restore the primary branch from the captured preserved branch's
-head. Preserve the failed restore under a second unique name, wait for API
-operations, capture that second branch from API truth, and promote the exact
-deployment that was serving before the restore:
+was wrong, first select `INVERSE_COUPLED_ORDER=database-first`,
+`application-first`, or `traffic-stopped` using the same compatibility test as
+the forward recovery. When the forward recovery did not change the application
+(`APPLICATION_PAIRING=current`), leave `INVERSE_COUPLED_ORDER` unset and only
+the database is restored. Preserve the failed restore under a second unique
+name, wait for API operations, and capture that second branch from API truth.
+The guarded dispatcher below requires an exact alias plus application-health
+receipt after the first inverse mutation before it permits the second one.
 
 ```bash
 set -euo pipefail
-preserved_branch_id="$(tr -d '\r\n' <"$incident_dir/preserved-branch-id.txt")"
-test -n "$preserved_branch_id"
-failed_restore_name="failed-restore-$(date -u +%Y%m%dT%H%M%SZ)"
-inverse_response="$incident_dir/neon-inverse-restore-response.json"
-inverse_payload="$(jq -nc \
-  --arg source "$preserved_branch_id" \
-  --arg preserve "$failed_restore_name" \
-  '{source_branch_id:$source,preserve_under_name:$preserve}')"
+case "$APPLICATION_PAIRING:${INVERSE_COUPLED_ORDER:-}" in
+  current:) ;;
+  rollback:database-first | rollback:application-first | rollback:traffic-stopped) ;;
+  *)
+    echo 'Set INVERSE_COUPLED_ORDER=database-first, application-first, or traffic-stopped.' >&2
+    exit 1
+    ;;
+esac
 
-curl --fail-with-body -sS --request POST \
-  "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$NEON_PRIMARY_BRANCH_ID/restore" \
-  --header "Authorization: Bearer $NEON_API_KEY" \
-  --header 'Content-Type: application/json' \
-  --data "$inverse_payload" >"$inverse_response"
-jq -e --arg primary "$NEON_PRIMARY_BRANCH_ID" \
-  '.branch.id == $primary and (.operations | length > 0)' \
-  "$inverse_response" >/dev/null
-wait_for_neon_operations "$inverse_response" inverse-restore
-capture_preserved_branch_id \
-  "$failed_restore_name" "$incident_dir/failed-restore-branch-id.txt" failed-restore
+restore_neon_primary_from_preserved() {
+  local preserved_branch_id failed_restore_name inverse_response inverse_payload
+  case "$APPLICATION_PAIRING:${INVERSE_COUPLED_ORDER:-}" in
+    current: | rollback:database-first) ;;
+    rollback:application-first)
+      require_production_alias_receipt \
+        "$PRE_RESTORE_DEPLOYMENT" inverse-application-first-alias
+      require_application_pairing_receipts \
+        inverse-application-first-intermediate "$PRE_RESTORE_DEPLOYMENT"
+      ;;
+    rollback:traffic-stopped)
+      require_traffic_suspension_receipt inverse-traffic-stopped-before-neon
+      ;;
+    *) echo 'Invalid inverse route; refusing Neon restore.' >&2; return 1 ;;
+  esac
 
-vercel promote "$PRE_RESTORE_DEPLOYMENT" \
-  --scope pnascimento9596s-projects --yes
-vercel promote status wcdraft-web --scope pnascimento9596s-projects
+  preserved_branch_id="$(tr -d '\r\n' <"$incident_dir/preserved-branch-id.txt")"
+  test -n "$preserved_branch_id"
+  failed_restore_name="failed-restore-$(date -u +%Y%m%dT%H%M%SZ)"
+  inverse_response="$incident_dir/neon-inverse-restore-response.json"
+  inverse_payload="$(jq -nc \
+    --arg source "$preserved_branch_id" \
+    --arg preserve "$failed_restore_name" \
+    '{source_branch_id:$source,preserve_under_name:$preserve}')"
 
-curl --fail-with-body -sS https://www.wcdraft.com/api/health \
-  | tee "$incident_dir/health-after-inverse.json" \
-  | jq -e '.ok == true and .db.status == "ready"'
-curl --fail-with-body -sS https://www.wcdraft.com/api/og/health \
-  | jq -e '.ok == true'
+  curl --fail-with-body -sS --request POST \
+    "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$NEON_PRIMARY_BRANCH_ID/restore" \
+    --header "Authorization: Bearer $NEON_API_KEY" \
+    --header 'Content-Type: application/json' \
+    --data "$inverse_payload" >"$inverse_response"
+  jq -e --arg primary "$NEON_PRIMARY_BRANCH_ID" \
+    '.branch.id == $primary and (.operations | length > 0)' \
+    "$inverse_response" >/dev/null
+  wait_for_neon_operations "$inverse_response" inverse-restore
+  capture_preserved_branch_id \
+    "$failed_restore_name" "$incident_dir/failed-restore-branch-id.txt" failed-restore
+}
+
+promote_pre_restore_application() {
+  local receipt_prefix="$1"
+  case "$INVERSE_COUPLED_ORDER" in
+    application-first)
+      require_production_alias_receipt "$RESTORE_COMPATIBLE_DEPLOYMENT" final-alias
+      require_application_pairing_receipts final "$RESTORE_COMPATIBLE_DEPLOYMENT"
+      ;;
+    database-first)
+      require_application_pairing_receipts \
+        inverse-database-first-intermediate "$RESTORE_COMPATIBLE_DEPLOYMENT"
+      ;;
+    traffic-stopped)
+      require_traffic_suspension_receipt inverse-traffic-stopped-before-vercel
+      ;;
+    *) echo 'Invalid inverse order; refusing Vercel promotion.' >&2; return 1 ;;
+  esac
+
+  vercel promote "$PRE_RESTORE_DEPLOYMENT" \
+    --scope pnascimento9596s-projects --yes \
+    | tee "$incident_dir/$receipt_prefix-vercel-promote.txt"
+  vercel promote status wcdraft-web --scope pnascimento9596s-projects \
+    | tee "$incident_dir/$receipt_prefix-vercel-promote-status.txt"
+  wait_for_production_alias \
+    "$PRE_RESTORE_DEPLOYMENT" "$receipt_prefix-alias"
+}
+
+case "$APPLICATION_PAIRING:${INVERSE_COUPLED_ORDER:-}" in
+  # INVERSE ROUTE current-application
+  current:)
+    restore_neon_primary_from_preserved
+    ;;
+
+  # INVERSE ROUTE application-first
+  rollback:application-first)
+    promote_pre_restore_application inverse-application-first
+    verify_application_pairing \
+      inverse-application-first-intermediate \
+      "$PRE_RESTORE_DEPLOYMENT" inverse-application-first-alias
+    restore_neon_primary_from_preserved
+    ;;
+
+  # INVERSE ROUTE database-first
+  rollback:database-first)
+    restore_neon_primary_from_preserved
+    wait_for_production_alias \
+      "$RESTORE_COMPATIBLE_DEPLOYMENT" inverse-database-first-current-alias
+    verify_application_pairing \
+      inverse-database-first-intermediate \
+      "$RESTORE_COMPATIBLE_DEPLOYMENT" inverse-database-first-current-alias
+    promote_pre_restore_application inverse-database-first
+    ;;
+
+  # INVERSE ROUTE traffic-stopped
+  rollback:traffic-stopped)
+    verify_traffic_suspended inverse-traffic-stopped-before-neon
+    restore_neon_primary_from_preserved
+    verify_traffic_suspended inverse-traffic-stopped-before-vercel
+    promote_pre_restore_application inverse-traffic-stopped
+    verify_traffic_suspended inverse-traffic-stopped-after-vercel
+    ;;
+esac
+
+if [ "${INVERSE_COUPLED_ORDER:-}" = traffic-stopped ]; then
+  test "${INVERSE_TRAFFIC_RESUMED_ACK:-}" = yes || {
+    echo 'Resume traffic externally and set INVERSE_TRAFFIC_RESUMED_ACK=yes.' >&2
+    exit 1
+  }
+fi
+wait_for_production_alias "$PRE_RESTORE_DEPLOYMENT" inverse-final-alias
+verify_application_pairing inverse-final "$PRE_RESTORE_DEPLOYMENT" inverse-final-alias
 ```
 
 Omitting a timestamp in the inverse request intentionally restores the target
 from the preserved source branch's head. Delete neither preservation branch
 until incident-specific data readback, health, and deployment receipts are
-approved.
+approved. For an inverse `traffic-stopped` route, keep the same marker-bearing
+control active through both mutations, perform the data readback, then resume
+externally before setting `INVERSE_TRAFFIC_RESUMED_ACK=yes`; the final positive
+serving checks remain authoritative.
