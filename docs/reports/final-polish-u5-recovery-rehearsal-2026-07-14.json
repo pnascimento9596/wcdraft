@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "rehearsal_date": "2026-07-14",
+  "production_mutated": false,
+  "neon": {
+    "project_id": "rapid-wind-87431051",
+    "production_branch_id": "br-blue-heart-aqcejtyf",
+    "rehearsal_branch_id": "br-damp-bird-aqtx44wm",
+    "preserved_branch_id": "br-sweet-lake-aqvqw2n4",
+    "create_seconds": 1.207,
+    "restore_reset_seconds": 1.174,
+    "restored_parent_lsn": "0/58F6D00",
+    "restored_parent_timestamp": "2026-07-14T10:32:49Z",
+    "probe_timestamp": "2026-07-14T14:05:56.870Z",
+    "probe_rows_before": 2,
+    "probe_absent_after": true,
+    "coherence_after": {
+      "saved_runs": 254,
+      "sessions": 149,
+      "users": 7,
+      "drizzle_migrations": 14
+    },
+    "preserved_delete_seconds": 1.035,
+    "target_delete_seconds": 0.988,
+    "temporary_branches_remaining": 0
+  },
+  "vercel": {
+    "project_id": "prj_MXJxM5wTyp4rqnHPqA1Z9Ncvc17K",
+    "current_deployment_id": "dpl_DthG9fnes3KT9o6xPmjPuw5cS32c",
+    "current_commit": "c102142deffcfbe72bef7b1456d5e091e5869462",
+    "prior_deployment_id": "dpl_CDN5wHxGYxfogiVehbAh7QwU5w3n",
+    "prior_commit": "777096ec6bcf7d189c62dc90fcc0d89b19e9af11",
+    "prior_ready": true,
+    "prior_is_rollback_candidate": true,
+    "rollback_invoked": false,
+    "promote_invoked": false
+  },
+  "live_baseline": {
+    "health_http": 200,
+    "database_status": "ready",
+    "og_health_http": 200,
+    "leaderboard_http": 200
+  }
+}

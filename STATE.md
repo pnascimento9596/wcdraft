@@ -4,6 +4,20 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Final polish closure through U5 recovery rehearsal: 2026-07-14 · merged U1 OG
+hardening, U2 landing-fold fit, U4 prose cleanup, and U3 WebKit verification are
+present on main through `7bcc53c7ada4204341dd844e9745b707920c2e7c`. The U5
+documentation-only rehearsal passed on production-derived Neon child branches:
+create 1.207s; reset-from-parent restore 1.174s after the CLI OAuth path failed
+before mutation; preserved-branch cleanup 1.035s; target cleanup 0.988s; final
+temporary-branch inventory zero. Post-restore coherence was `saved_runs=254`,
+`sessions=149`, `users=7`, and `drizzle_migrations=14`; the production primary
+was never mutated. Vercel current and prior READY production deployments were
+inspected, rollback eligibility plus rollback/promote/status commands were
+validated, and neither rollback nor promote was invoked. Durable evidence:
+`docs/reports/final-polish-u5-recovery-rehearsal-2026-07-14.{md,json}` and
+`docs/runbooks/neon-restore-vercel-rollback.md`.
+
 Final polish U3 WebKit native app-feel verification: 2026-07-14 · local YELLOW
 implementation on `ws-ux/final-polish-u3-webkit`, based on shipped Season 2 main
 `e751639c2c5a4fc20d8c1ecee24708ff967e0235` after the U1/U2/U4 integration
