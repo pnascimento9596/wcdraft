@@ -32,7 +32,7 @@ const VERSIONS: RunRecordVersions = {
   schema_version: "runtime-data-2.9.0",
   dataset_version: "2026-07-01",
   rating_version: "wc-perf-6.6.0+proj-career-5.6.0",
-  engine_version: "engine-2026.06.30-manager-attrition",
+  engine_version: "engine-2026.07.14-squad-depth",
   ruleset_version: "ruleset-2026.06.04",
   data_bundle_hash: "poolsha+scenariosha",
 };
@@ -45,7 +45,7 @@ function makeDist(overrides: Partial<ScoreDistribution["anchors"]> = {}): ScoreD
     _doc: "test fixture",
     anchors: {
       dataset_version: "2026-07-01",
-      engine_version: "engine-2026.06.30-manager-attrition",
+      engine_version: "engine-2026.07.14-squad-depth",
       rating_version_historical: "wc-perf-6.6.0",
       rating_version_projected: "proj-career-5.6.0",
       ruleset_version: "ruleset-2026.06.04",

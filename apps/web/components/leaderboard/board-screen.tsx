@@ -53,13 +53,22 @@ type AdvancedLaneSummary =
   | { readonly kind: "error" };
 
 const ADVANCED_SUMMARY_LIMIT = 1;
+const NO_ARCHIVED_SEASONS: readonly string[] = Object.freeze([]);
+const NO_ADVANCED_SUMMARIES: Readonly<Record<string, AdvancedLaneSummary>> = Object.freeze({});
 
-export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) {
+export function BoardScreen({
+  currentSeasonKey,
+  archivedSeasonKeys = NO_ARCHIVED_SEASONS,
+}: {
+  currentSeasonKey: string;
+  archivedSeasonKeys?: readonly string[];
+}) {
   const auth = useAuth();
   const [filter, setFilter] = useState<BoardFilter>({
     ...DEFAULT_DAILY_BOARD_FILTER,
     challengeDate: utcDateString(),
   });
+  const [boardSeasonKey, setBoardSeasonKey] = useState(currentSeasonKey);
   const [acc, setAcc] = useState<BoardAccumulator>(EMPTY_BOARD);
   const [phase, setPhase] = useState<LoadPhase>("loading");
   const [loadingMore, setLoadingMore] = useState(false);
@@ -71,11 +80,11 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   const [advancedPhase, setAdvancedPhase] = useState<"idle" | "loading" | "ready" | "error">(
     "idle",
   );
-  const [advancedSummaries, setAdvancedSummaries] = useState<
-    Readonly<Record<string, AdvancedLaneSummary>>
-  >({});
+  const [advancedSummaries, setAdvancedSummaries] =
+    useState<Readonly<Record<string, AdvancedLaneSummary>>>(NO_ADVANCED_SUMMARIES);
   const reqSeq = useRef(0);
   const lineupSeq = useRef(0);
+  const advancedReqSeq = useRef(0);
   const lineupsRef = useRef(lineups);
 
   useEffect(() => {
@@ -84,49 +93,70 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    setFilter(filterFromSearch(new URLSearchParams(window.location.search)));
-  }, []);
+    const params = new URLSearchParams(window.location.search);
+    setFilter(filterFromSearch(params));
+    const requestedSeason = params.get("season");
+    setBoardSeasonKey(
+      requestedSeason !== null && archivedSeasonKeys.includes(requestedSeason)
+        ? requestedSeason
+        : currentSeasonKey,
+    );
+  }, [archivedSeasonKeys, currentSeasonKey]);
 
-  const loadFirstPage = useCallback((nextFilter: BoardFilter) => {
-    const seq = ++reqSeq.current;
-    lineupSeq.current += 1;
-    setPhase("loading");
-    setAcc(EMPTY_BOARD);
-    setOpenKey(null);
-    setLineups({});
-    void fetchBoardPage({ filter: nextFilter, cursor: null }).then((r) => {
-      if (seq !== reqSeq.current) return;
-      if (!r.ok) {
-        setPhase(r.reason === "timeout" ? "timeout" : "error");
-        return;
-      }
-      setNowMs(Date.now());
-      setAcc(appendBoardPage(EMPTY_BOARD, r.page));
-      setPhase("ready");
-    });
-  }, []);
+  const seasonClosed = boardSeasonKey !== currentSeasonKey;
+
+  const loadFirstPage = useCallback(
+    (nextFilter: BoardFilter) => {
+      const seq = ++reqSeq.current;
+      lineupSeq.current += 1;
+      setPhase("loading");
+      setAcc(EMPTY_BOARD);
+      setOpenKey(null);
+      setLineups({});
+      void fetchBoardPage({ filter: nextFilter, cursor: null, seasonKey: boardSeasonKey }).then(
+        (r) => {
+          if (seq !== reqSeq.current) return;
+          if (!r.ok) {
+            setPhase(r.reason === "timeout" ? "timeout" : "error");
+            return;
+          }
+          setNowMs(Date.now());
+          setAcc(appendBoardPage(EMPTY_BOARD, r.page));
+          setPhase("ready");
+        },
+      );
+    },
+    [boardSeasonKey],
+  );
 
   useEffect(() => {
     loadFirstPage(filter);
   }, [filter, loadFirstPage]);
 
   useEffect(() => {
+    const seq = ++advancedReqSeq.current;
     let cancelled = false;
-    if (!advancedOpen || advancedPhase !== "idle") return;
+    if (!advancedOpen) {
+      setAdvancedPhase("idle");
+      setAdvancedSummaries(NO_ADVANCED_SUMMARIES);
+      return;
+    }
     setAdvancedPhase("loading");
+    setAdvancedSummaries(NO_ADVANCED_SUMMARIES);
     void Promise.all(
       ADVANCED_BOARD_CONFIG_OPTIONS.map(async (option) => {
         const result = await fetchBoardPage({
           filter: option.filter,
           cursor: null,
           limit: ADVANCED_SUMMARY_LIMIT,
+          seasonKey: boardSeasonKey,
         });
         if (!result.ok) return [option.key, { kind: "error" } as const] as const;
         const count = result.page.entries[0]?.field_size ?? 0;
         return [option.key, { kind: "ready", count } as const] as const;
       }),
     ).then((items) => {
-      if (cancelled) return;
+      if (cancelled || seq !== advancedReqSeq.current) return;
       const next = Object.fromEntries(items);
       setAdvancedSummaries(next);
       setAdvancedPhase(items.some(([, summary]) => summary.kind === "error") ? "error" : "ready");
@@ -134,38 +164,38 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
     return () => {
       cancelled = true;
     };
-  }, [advancedOpen, advancedPhase]);
+  }, [advancedOpen, boardSeasonKey]);
 
   // Your-entry highlight — anonymous session or account; absent when
   // unresolvable (no session / dark / transport failure).
   useEffect(() => {
     let cancelled = false;
     setMe(null);
-    if (!auth.ready || auth.session === null) {
+    if (seasonClosed || !auth.ready || auth.session === null) {
       return () => {
         cancelled = true;
       };
     }
-    void fetchMyPresence({ filter }).then((presence) => {
+    void fetchMyPresence({ filter, seasonKey: boardSeasonKey }).then((presence) => {
       if (!cancelled) setMe(presence);
     });
     return () => {
       cancelled = true;
     };
-  }, [auth.ready, auth.session, filter]);
+  }, [auth.ready, auth.session, boardSeasonKey, filter, seasonClosed]);
 
   const loadMore = useCallback(() => {
     if (acc.nextCursor === null || loadingMore) return;
     const seq = reqSeq.current;
     setLoadingMore(true);
-    void fetchBoardPage({ filter, cursor: acc.nextCursor }).then((r) => {
+    void fetchBoardPage({ filter, cursor: acc.nextCursor, seasonKey: boardSeasonKey }).then((r) => {
       setLoadingMore(false);
       if (seq !== reqSeq.current) return;
       // A failed load-more keeps the loaded rows and the button; honest no-op.
       if (!r.ok) return;
       setAcc((prev) => appendBoardPage(prev, r.page));
     });
-  }, [acc.nextCursor, filter, loadingMore]);
+  }, [acc.nextCursor, boardSeasonKey, filter, loadingMore]);
 
   useEffect(() => {
     if (openKey === null) return;
@@ -194,9 +224,16 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
 
   return (
     <div className={s.boardShell}>
-      <BoardHead currentSeasonKey={currentSeasonKey} filter={filter} />
+      <BoardHead
+        currentSeasonKey={currentSeasonKey}
+        boardSeasonKey={boardSeasonKey}
+        archivedSeasonKeys={archivedSeasonKeys}
+        filter={filter}
+        onSeasonChange={setBoardSeasonKey}
+      />
       <BoardToolbar
         filter={filter}
+        seasonClosed={seasonClosed}
         onFilter={setFilter}
         advancedOpen={advancedOpen}
         advancedPhase={advancedPhase}
@@ -214,7 +251,9 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
         {(phase === "error" || phase === "timeout") && (
           <BoardError timedOut={phase === "timeout"} onRetry={() => loadFirstPage(filter)} />
         )}
-        {phase === "ready" && rows.length === 0 && <EmptyBoard filter={filter} />}
+        {phase === "ready" && rows.length === 0 && (
+          <EmptyBoard filter={filter} seasonClosed={seasonClosed} />
+        )}
         {phase === "ready" && rows.length > 0 && (
           <BoardRows
             rows={rows}

@@ -39,6 +39,7 @@ import { handleRunOgSignPost, POST as runOgSignRoutePost } from "../../../app/ap
 import { setupTestDb } from "../../auth/__tests__/_test-db";
 
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
+import skewFixtures from "./fixtures/run-token-skew.json" with { type: "json" };
 
 const gameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
@@ -366,6 +367,15 @@ describe("dynamic run OG metadata decision", () => {
 });
 
 describe("dynamic run OG model and image", () => {
+  it("reports the real pre-Season-2 production token as wrong-season skew", () => {
+    expect(
+      verifyRunTokenForOg(skewFixtures.shipped_pre_s2_t3.token, {
+        gameData,
+        scenario: SCENARIO_2026_BUNDLE,
+      }),
+    ).toEqual({ status: "rejected", reason: "WRONG_SEASON" });
+  });
+
   it("builds the image model only from a trusted server-derived summary", () => {
     const token = encodeRunToken(complete());
     const decoded = decodeV3(token);

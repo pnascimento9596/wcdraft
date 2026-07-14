@@ -29,6 +29,8 @@ import {
 } from "../lib/game/run-record";
 import type { BoardPageWire } from "../lib/leaderboard/board-view";
 import type { LeaderboardLineupView } from "../lib/leaderboard/lineup-view";
+import { ADVANCED_BOARD_CONFIG_OPTIONS } from "../lib/leaderboard/config";
+import { DEFAULT_LEADERBOARD_SEASON_ID } from "../lib/leaderboard/season";
 import { configBadgesFromRecordToken } from "../lib/game/config-badges";
 import {
   INLINE_TEXT_LINK_ALLOWLIST,
@@ -377,8 +379,8 @@ function lineupFromRecord(record: RunRecordV1): LeaderboardLineupView {
 function boardPage(): BoardPageWire {
   const now = Date.now();
   return {
-    season_key: "season-2026-manager-attrition",
-    current_season_key: "season-2026-manager-attrition",
+    season_key: DEFAULT_LEADERBOARD_SEASON_ID,
+    current_season_key: DEFAULT_LEADERBOARD_SEASON_ID,
     mode: "casual",
     draft_mode: "classic",
     draft_order: "squad_first",
@@ -901,6 +903,13 @@ function surfaceCases(): readonly SurfaceCase[] {
       primaryAction: { role: "button", name: /Broadcast XI/u },
       prepare: async (page) => {
         await page.getByText("Broadcast XI").first().waitFor();
+        await page.getByText("Advanced", { exact: true }).click();
+        await page.waitForFunction((expected) => {
+          const grid = document.querySelector('[aria-label="Advanced season board lanes"]');
+          if (grid === null) return false;
+          const buttons = grid.querySelectorAll("button");
+          return buttons.length === expected && [...buttons].every((button) => !button.disabled);
+        }, ADVANCED_BOARD_CONFIG_OPTIONS.length);
         await page.getByRole("button", { name: /Broadcast XI/u }).click();
         await page.locator('[role="region"][aria-label^="Lineup inspector"]').waitFor();
       },

@@ -33,6 +33,87 @@ touches. Validation: package typecheck; node:test 3/3; `npx cap sync ios`
 succeeds; iOS Xcode project generated. Simulator runtime download is a free
 host prerequisite (see M1a report).
 
+Season 2 Squad Depth — Unit S8 rollover candidate: 2026-07-14 · RED
+implementation on `ws-meta/season2-rollover`, based on exact integration head
+`227b944decc2c8e8dceb38d431b81adf9f8cc1bd`. The coordinated release anchors
+are `engine-2026.07.14-squad-depth` and `season-2026-squad-depth`; runtime schema
+stays `runtime-data-2.10.0` because draft-pool/scenario structure and parsed
+semantics are unchanged. Ratings, offer logic, λ, scoring, progression,
+Synergy, auth, and DB schema remain frozen. Current `t3`/`t4` encoding remains
+the reconciled S4 codec: optional manager presence `mp` and arrangement `a`
+share one canonical validation/replay path.
+
+The new current season exposes empty featured Classic and Memory ranked boards
+without waiting for the advanced-lane threshold. Other exact-config boards
+retain the measured tiny-field policy (`opens at 5 runs`). The prior
+`season-2026-manager-attrition` standings stay publicly readable as an archive
+with literal `Season closed` and read-only copy. Writes are still validated
+against the current six-anchor tuple and current season, so the real pre-S2
+production token returns typed `WRONG_SEASON` HTTP 409 and cannot persist.
+`/api/health` now reports the active leaderboard season from the same explicit
+season policy as the leaderboard routes.
+
+PREV provenance is pinned to production main
+`f04559f46b43944e94a4ccfa904d8cf9c1a65231`: a disposable exact checkout built
+and executed its own shipped `encodeRunToken` implementation to emit a
+deterministic synthetic test run, not user data. The pinned decoded-body
+SHA-256 is
+`38aa896cef26b2c33092bea0f1a1a4feb7fce1b86043cb566b4c5d663b35b2e6`;
+S8 verifies that literal and does not use its current body builder to author
+the fixture. The fixture decodes but surfaces honest engine-version skew in
+replay, OG, friend challenge (`DIFFERENT_BUILD`, no score), and leaderboard
+submit. The schema/rating/data hashes remain equal by design; only the
+coordinated engine anchor diverges.
+
+Generated closure followed compact -> score distribution -> compact -> pinned
+45-day Daily map (2026-07-10 through 2026-08-23, N=128, max attempts 8) ->
+compact. Player/scenario bundles were reused byte-for-byte. Strategic-pick
+canary regeneration changes only its engine stamp: normalized fixture compare
+is byte-identical, proving **zero pick flips**. Focused S8 coverage passes
+215/215 across eight files, and the final non-circular PREV subset passes
+133/133 across four files. Root typecheck is 8/8, lint 5/5, test 8/8 (core 423,
+data 183 + 9 expected skips, DB 161, marketing 69, web 1,281 + 1 expected
+skip), responsive 218/0, and build 4/4 with 40 routes/pages. Core goldens are
+69/69 plus draft 42/42; data goldens are 59/59 plus integration 22/22;
+leaderboard golden is 6/6; heavy realism is 10/10 at N=2,000 x 3. Generated
+artifact, formatting, and diff checks pass. Fresh exact-head review, CI,
+integration merge, environment adjudication, deploy, and production live
+verification remain required and are not claimed here.
+
+Protected CI run `29308780140` on exact head
+`a96ddf1f989485e361aa8e997b3abe5bcdcd8fc1` passed static contracts, goldens,
+root typecheck/lint/test/build, and heavy realism N=2,000 x 3, but the required
+aggregate failed because Gitleaks 8.24.3 classified six duplicate public
+season-id literals as `generic-api-key`. That head is void for merge. The
+minimal fix-forward imports the canonical `DEFAULT_LEADERBOARD_SEASON_ID` in
+the affected health test, leaderboard view test, and responsive fixture; it
+does not weaken `.gitleaks.toml` or add an allowlist. Replacement exact-head CI
+and fresh independent RED review remain mandatory.
+
+Fresh exact review of `a96ddf1f989485e361aa8e997b3abe5bcdcd8fc1`
+independently failed and is preserved at
+`/tmp/season2-s8-exact-review-a96ddf1.md` (526 lines, 20,598 bytes; SHA-256
+`4fedf6c87b111cdf2fca717ac4d67ecb929944bae166ee0f2b23d73f75c22ac3`).
+In addition to the remote head advancing and voiding that review boundary, it
+found the Advanced-board effect depended on and changed its own phase. The
+idle -> loading render ran cleanup immediately, cancelled the successful
+62-read batch, and left every non-featured board permanently checking/disabled.
+The Gitleaks-only head `df0cd0d806474989acaa61d0c302dfc6babf247a`
+inherited that runtime defect and is superseded. The next fix-forward keys the
+batch only to disclosure-open and board-season state, resets each generation,
+rejects stale completions, refetches current/archive and close/reopen
+transitions, and pins the behavior with mounted async and production-browser
+coverage. A new exact-head review and CI run are required.
+
+The Advanced-board fix-forward passes its focused mounted regression suite
+45/45, including all 62 summary reads, close/reopen refetch, current/archive
+refetch, and stale-response rejection. The production build generated all 40
+routes/pages. Its strict production-browser leaderboard probe passed 4/4 at
+390x844 and 360x800 in light and dark mode; each probe waited for all 62 mocked
+five-plus-entry lanes to become enabled before capture. The full root test then
+passed 8/8 in 7m52s with web 1,281 + 1 expected skip and responsive 218/0.
+Exact-head CI and fresh independent RED review remain required after commit.
+
 Season 2 Squad Depth — Unit S7 same-seed friend challenge: 2026-07-13 · local
 YELLOW implementation on `ws-f4/season2-s7-friend-challenge`, based on exact
 integration head `71a4408482b2cb7f619dac9ad4f83a1716935c6c`. Results and Share
