@@ -4,6 +4,17 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Dependency sweep D1/D3 — compatible dependency batch: 2026-07-14 · accepted
+eight patch/minor npm updates (`eslint` 10.7.0, `globals` 17.7.0, `tsx`
+4.23.1, `turbo` 2.10.5, `typescript-eslint` 8.64.0, `vitest` 4.1.10,
+`next` 16.2.10, and `@electric-sql/pglite` 0.5.4) while retaining
+`@types/node` 25, TypeScript 6, and Zod 3 across their major boundaries.
+Prettier is exact-pinned at 3.8.4 to prevent known 3.9.5 formatting drift.
+All nine immutable `actions/setup-node` pins use compatible v6.5.0 commit
+`249970729cb0ef3589644e2896645e5dc5ba9c38`, incorporating the v6 security
+override refresh without taking the newly surfaced v7 ESM major. No schema,
+rating, simulation, compact-runtime version, or product-source file changed.
+
 Dependency sweep D1 — Actions batch: 2026-07-14 · immutable pins now resolve
 to `dorny/paths-filter` v4.0.2 (`7b450fff…`, 2 uses),
 `astral-sh/setup-uv` v8.3.2 (`11f9893b…`, 5 uses), and
