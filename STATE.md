@@ -4,6 +4,50 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Season 2 Squad Depth — Unit S6 factual recap: 2026-07-13 · local YELLOW
+implementation on `ws-f4/season2-s6-factual-recap`, initially based on
+`cdf16b4f7f795302cc44106c58626383dd56c9e7` and rebased onto exact integration
+head `3af456d6957d5203f93144bb94e6365ba9d75a6f`. Results now
+includes a mobile-first “Why it went this way” dossier built only from the
+persisted run record, per-match `MatchTeamFacts`, and availability event log.
+It shows final-match line strengths, Synergy multiplier and nation clusters,
+manager presence/link/applied tactical tiers, actual bench activations with
+slot-contribution deltas, and short-handed matches. Activation/short-handed
+rows target their exact match+event entry; unresolved display identities stay
+`—`, and empty channels render `No activations` or `—`.
+
+Architect-delegated honest-state decision: the S4 compact arrangement persists
+card order but not per-destination starter fit. Unchanged sheets use their exact
+persisted `draft.squad.position_compatibility`; arranged sheets say
+`— · not recorded for this arranged XI` rather than recomputing from the
+current runtime bundle or expanding the token contract. S6 changes no engine,
+rating, Synergy, manager, token, schema, leaderboard, auth, ETL, or compact-data
+semantics.
+
+Measured exact rebased closure: focused Results set 26/26; root typecheck 8/8,
+lint 5/5, test 8/8 (core 423, data 183 + 9 expected skips, DB 161, marketing
+69, web 1,257 + 1 expected skip), game-flow, responsive 218/0, and build 4/4
+with 40 routes/pages. Generated-data and repository formatting checks pass.
+Production Results browser evidence passes 8/8 across layout and event-link
+interaction at 390x844 and 360x800 in light and dark with zero axe, console,
+overflow, small-target, or navigation-wrap failures. The interaction proof
+starts with the linked match collapsed, then proves the exact hash, expanded
+button, revealed target, and in-viewport landing.
+
+Fresh exact-head review of `04758ad366ff807477d1ae9628336bf5abf7626a`
+returned FAIL because the revealed event was a non-focusable span and focus
+remained on `BODY`. The fix-forward makes the exact event target
+programmatically focusable, opens its owning match, then focuses it on the
+next animation frame without replacing native hash navigation or scrolling.
+A focus-visible ring follows keyboard modality without adding a mouse-click
+ring. Focused closure is 28/28 across 4 files; web typecheck, lint, and
+production build with 40 routes/pages pass; and the regenerated interaction
+proof is 4/4 after focusing each link and activating it with Enter, including
+an exact `document.activeElement` assertion. The `04758ad` FAIL remains
+authoritative; PR #273 requires fresh CI and exact-head review on the
+fix-forward commit. Durable report:
+`docs/reports/season2-s6-factual-recap-2026-07-13.md`.
+
 Season 2 Squad Depth — Unit S5 pre-lock fit teaching:
 2026-07-13 · local YELLOW implementation on
 `ws-f4/season2-s5-fit-teaching`, based on exact integration head

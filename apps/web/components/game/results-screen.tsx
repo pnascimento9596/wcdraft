@@ -25,6 +25,7 @@ import type { RunRecordV1 } from "@/lib/game/run-record";
 import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import {
   buildNarrativeLabels,
+  buildFactualRecap,
   buildRunSummary,
   deriveBox,
   matchCardViews,
@@ -51,6 +52,12 @@ import { MiniNationFlag } from "./mini-nation-flag";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import { isBlindDraftMode, type MatchResult } from "@wcdraft/core";
 import { GoalIcon, InjuryIcon, SubstitutionIcon } from "@/components/icons";
+import { FactualRecap } from "./factual-recap";
+import {
+  FactualEventTarget,
+  factualEventTargetId,
+  focusFactualEventTarget,
+} from "./factual-event-target";
 
 import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
 import { LocalProgressBand } from "./local-progress-band";
@@ -344,10 +351,28 @@ function ResultsBody({
     () => matchCardViews(scenario, gameData, sim.matches),
     [scenario, gameData, sim.matches],
   );
+  const factualRecap = useMemo(
+    () => buildFactualRecap(gameData, record, sim.matches),
+    [gameData, record, sim.matches],
+  );
 
   // Open the LAST match by default (the climax of the run).
   const lastMatchId = sim.matches[sim.matches.length - 1]?.match_id ?? null;
   const [open, setOpen] = useState<string | null>(lastMatchId);
+  const [pendingEventFocus, setPendingEventFocus] = useState<{
+    matchId: string;
+    targetId: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (pendingEventFocus === null || open !== pendingEventFocus.matchId) return;
+    const request = pendingEventFocus;
+    const frame = window.requestAnimationFrame(() => {
+      focusFactualEventTarget(request.targetId);
+      setPendingEventFocus((current) => (current?.targetId === request.targetId ? null : current));
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, pendingEventFocus]);
 
   const eyebrow = summary.is_champion
     ? "Champions"
@@ -464,6 +489,11 @@ function ResultsBody({
     }
   }
 
+  function openFactualEvent(matchId: string, eventId: string) {
+    setOpen(matchId);
+    setPendingEventFocus({ matchId, targetId: factualEventTargetId(matchId, eventId) });
+  }
+
   return (
     <div className={s.results}>
       <ResultsAppBar />
@@ -542,6 +572,8 @@ function ResultsBody({
           <p className={s.narrativeText}>{summary.narrative}</p>
         </section>
       ) : null}
+
+      <FactualRecap view={factualRecap} onOpenEvent={openFactualEvent} />
 
       {/* ── Match-by-match ────────────────────────────────────────────── */}
       <section className={`${s.panel} ${s.resultsMatchPanel}`} aria-label="Match results">
@@ -765,62 +797,77 @@ function MatchListItem({
         </span>
       </button>
 
-      {isOpen && (
-        <div className={s.boxScore}>
-          <div className={s.boxCol}>
-            <span className={s.boxColHead}>Your XI</span>
-            {box.userGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
-            {box.userGoals.map((g, i) => (
-              <span key={`u${i}`} className={s.boxGoal}>
-                <GoalIcon className={s.boxIcon} width={16} height={16} />
-                {g.name} {g.minute}&rsquo;{periodTag(g.period)}
-                {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
-              </span>
-            ))}
-          </div>
-          <div className={s.boxCol}>
-            <span className={s.boxColHead}>{view.opponent.name}</span>
-            {box.oppGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
-            {box.oppGoals.map((g, i) => (
-              <span key={`o${i}`} className={s.boxGoal}>
-                <GoalIcon className={s.boxIcon} width={16} height={16} />
-                {g.name} {g.minute}&rsquo;{periodTag(g.period)}
-                {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
-              </span>
-            ))}
-          </div>
-
-          {(box.cards.length > 0 || box.subs.length > 0 || box.injuries.length > 0) && (
-            <div className={s.boxEvents}>
-              {box.cards.length > 0 ? <span className={s.bookingsLegend}>Bookings</span> : null}
-              {box.cards.map((c, i) => (
-                <span key={`c${i}`} className={s.boxEvent}>
-                  <span
-                    className={c.card === "red" ? s.cardRed : s.cardYellow}
-                    aria-label={c.card === "red" ? "Red card" : "Yellow card"}
-                  >
-                    {c.card === "red" ? "R" : "Y"}
-                  </span>
-                  {c.name} {c.minute}&rsquo; ({c.side === "user" ? "us" : view.opponent.name})
-                </span>
-              ))}
-              {box.subs.length > 0 ? <span className={s.bookingsLegend}>SUBS</span> : null}
-              {box.subs.map((sub, i) => (
-                <span key={`s${i}`} className={s.boxEvent}>
-                  <SubstitutionIcon className={s.boxIcon} width={16} height={16} />
-                  {sub.name} for {sub.off} {sub.minute}&rsquo;
-                </span>
-              ))}
-              {box.injuries.map((inj, i) => (
-                <span key={`i${i}`} className={s.boxEvent}>
-                  <InjuryIcon className={s.boxIcon} width={16} height={16} />
-                  {inj.name} {inj.minute}&rsquo;{inj.ending ? " (out of tournament)" : ""}
-                </span>
-              ))}
-            </div>
-          )}
+      <div className={s.boxScore} hidden={!isOpen}>
+        <div className={s.boxCol}>
+          <span className={s.boxColHead}>Your XI</span>
+          {box.userGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
+          {box.userGoals.map((g, i) => (
+            <span key={`u${i}`} className={s.boxGoal}>
+              <GoalIcon className={s.boxIcon} width={16} height={16} />
+              {g.name} {g.minute}&rsquo;{periodTag(g.period)}
+              {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
+            </span>
+          ))}
         </div>
-      )}
+        <div className={s.boxCol}>
+          <span className={s.boxColHead}>{view.opponent.name}</span>
+          {box.oppGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
+          {box.oppGoals.map((g, i) => (
+            <span key={`o${i}`} className={s.boxGoal}>
+              <GoalIcon className={s.boxIcon} width={16} height={16} />
+              {g.name} {g.minute}&rsquo;{periodTag(g.period)}
+              {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
+            </span>
+          ))}
+        </div>
+
+        {(box.cards.length > 0 ||
+          box.subs.length > 0 ||
+          box.injuries.length > 0 ||
+          box.availability.length > 0) && (
+          <div className={s.boxEvents}>
+            {box.availability.length > 0 ? (
+              <span className={s.bookingsLegend}>Availability</span>
+            ) : null}
+            {box.availability.map((entry) => (
+              <FactualEventTarget
+                key={entry.eventId}
+                matchId={match.match_id}
+                eventId={entry.eventId}
+              >
+                <InjuryIcon className={s.boxIcon} width={16} height={16} />
+                {entry.name} unavailable
+                {entry.replacement === null ? " · short-handed" : ` · ${entry.replacement} started`}
+              </FactualEventTarget>
+            ))}
+            {box.cards.length > 0 ? <span className={s.bookingsLegend}>Bookings</span> : null}
+            {box.cards.map((c, i) => (
+              <span key={`c${i}`} className={s.boxEvent}>
+                <span
+                  className={c.card === "red" ? s.cardRed : s.cardYellow}
+                  aria-label={c.card === "red" ? "Red card" : "Yellow card"}
+                >
+                  {c.card === "red" ? "R" : "Y"}
+                </span>
+                {c.name} {c.minute}&rsquo; ({c.side === "user" ? "us" : view.opponent.name})
+              </span>
+            ))}
+            {box.subs.length > 0 ? <span className={s.bookingsLegend}>SUBS</span> : null}
+            {box.subs.map((sub, i) => (
+              <span key={`s${i}`} className={s.boxEvent}>
+                <SubstitutionIcon className={s.boxIcon} width={16} height={16} />
+                {sub.name} for {sub.off} {sub.minute}&rsquo;
+              </span>
+            ))}
+            {box.injuries.map((inj, i) => (
+              <span key={`i${i}`} className={s.boxEvent}>
+                <InjuryIcon className={s.boxIcon} width={16} height={16} />
+                {inj.name} {inj.minute}&rsquo;{inj.ending ? " (out of tournament)" : ""}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </li>
   );
 }
