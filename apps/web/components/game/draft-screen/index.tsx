@@ -49,6 +49,11 @@ import {
   type PlayerCardView,
 } from "@/lib/game/view-models";
 import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
+import {
+  bestOpenSlotForCandidate,
+  fitTeachingImpactForMode,
+  resolveFitTeachingSlot,
+} from "@/lib/game/fit-teaching";
 import { focusFirstWithin, trapTabWithin } from "@/lib/a11y/focus";
 import { LockIcon } from "@/components/icons";
 import { Pitch } from "../pitch";
@@ -539,16 +544,7 @@ function DraftBoard({
   );
 
   const bestSlotFor = useCallback(
-    (card: PlayerCardView): string | null => {
-      const starterOpens = openSlots.filter((sl) => sl.is_starter);
-      const pool = starterOpens.length > 0 ? starterOpens : openSlots;
-      let best: { id: string; c: number } | null = null;
-      for (const slot of pool) {
-        const c = positionCompatibility(card.eligible_positions, slot.slot_position);
-        if (!best || c > best.c) best = { id: slot.slot_id, c };
-      }
-      return best?.id ?? null;
-    },
+    (card: PlayerCardView): string | null => bestOpenSlotForCandidate(card, openSlots),
     [openSlots],
   );
 
@@ -720,6 +716,26 @@ function DraftBoard({
       ? candidates.players
       : candidates.players.filter((card) => card.eligible_positions.includes(openRosterFilter));
   }, [candidates.players, openPickSpace, openRosterFilter]);
+  const fitTeachingImpacts = useMemo(() => {
+    const impacts = new Map<string, ReturnType<typeof fitTeachingImpactForMode>>();
+    const selectedCardId = sel?.kind === "player" ? sel.card.card_id : null;
+    for (const card of visiblePlayers) {
+      const slot = resolveFitTeachingSlot(card, draft.squad, openSlots, {
+        selected_card_id: selectedCardId,
+        selected_slot_id: selectedCardId === card.card_id ? selSlot : null,
+        locked_target_id: lockedTarget === "manager" ? null : lockedTarget,
+      });
+      if (!slot) continue;
+      const impact = fitTeachingImpactForMode({
+        mode: draft.mode,
+        daily: dailyRun,
+        card,
+        slot_position: slot.slot_position,
+      });
+      if (impact) impacts.set(card.card_id, impact);
+    }
+    return impacts;
+  }, [dailyRun, draft.mode, draft.squad, lockedTarget, openSlots, sel, selSlot, visiblePlayers]);
   const openRosterManagerGroup = openPickSpace && candidates.managers.length > 0;
   const showManagerCandidates = !openRosterManagerGroup || openRosterManagersOpen;
 
@@ -1149,6 +1165,7 @@ function DraftBoard({
             <CandidateCard
               key={card.card_id}
               card={card}
+              fitTeachingImpact={fitTeachingImpacts.get(card.card_id) ?? null}
               selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
               disabled={managerOnlyOpen}
               blindRatings={blind}
