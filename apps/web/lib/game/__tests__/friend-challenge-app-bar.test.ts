@@ -15,7 +15,8 @@ describe("friend challenge draft app bar", () => {
       }),
     );
 
-    expect(html).toContain("Casual");
+    expect(html).toContain('aria-label="Draft mode: Classic · Casual"');
+    expect(html).toContain("Classic ·</span><b>Casual</b>");
     expect(html).not.toContain("Ranked-capable");
     expect(draftModeCueForRun({ mode: "classic", casualOnly: true })).toBe("Casual");
   });
@@ -29,6 +30,8 @@ describe("friend challenge draft app bar", () => {
       }),
     );
 
+    expect(html).toContain('aria-label="Draft mode: Classic · Ranked-capable"');
+    expect(html).toContain("Classic ·</span><b>Ranked-capable</b>");
     expect(html).toContain("Ranked-capable");
   });
 });

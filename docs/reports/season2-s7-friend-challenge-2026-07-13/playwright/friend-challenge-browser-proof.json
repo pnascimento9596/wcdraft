@@ -1,8 +1,14 @@
 {
   "baseUrl": "http://localhost:3028",
   "exactIntegrationBase": "71a4408482b2cb7f619dac9ad4f83a1716935c6c",
-  "viewports": ["390x844", "360x800"],
-  "themes": ["light", "dark"],
+  "viewports": [
+    "390x844",
+    "360x800"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
   "axeSource": "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js",
   "originTokenPrefix": "t3.",
   "proofLength": 112,

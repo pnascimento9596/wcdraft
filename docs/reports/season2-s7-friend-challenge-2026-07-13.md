@@ -106,8 +106,14 @@ of `Ranked-capable` on both setup and active-draft surfaces. The fixture link is
 
 Both mobile sizes were visually inspected in light and dark. The parent
 architect independently inspected regenerated setup and active-draft captures;
-both display `Classic · Casual` without clipping. The machine-readable proof
-and 16 PNG captures are in
+both display `Classic · Casual` without clipping. The setup app bar also exposes
+the complete accessible name `Draft mode: Classic · Casual`; this closes an
+exact-head review failure at `e9c5fd60dad24e7141cc85dda153c61bef4a68d7`
+where the app bar had styled adjacent words without the visible separator and
+omitted the Casual cue from its accessible name. That failed review is preserved
+at `/tmp/season2-s7-exact-review-e9c5fd6.md` with SHA-256
+`01b590f0fd51f993f0c1a749f01d816ed94cd040cba5cb2793a889bed9eef354`.
+The machine-readable proof and 16 PNG captures are in
 `docs/reports/season2-s7-friend-challenge-2026-07-13/playwright/`.
 
 ## Validation

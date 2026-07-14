@@ -313,6 +313,7 @@ async function exerciseRoundTrip(
   await recipient.page.goto(deepLink, { waitUntil: "domcontentloaded" });
   await recipient.page.getByRole("heading", { name: "You're playing a friend's board" }).waitFor();
   await recipient.page.getByText("Casual only").waitFor();
+  await recipient.page.getByLabel("Draft mode: Classic · Casual", { exact: true }).waitFor();
   const setupText = await recipient.page.locator("body").innerText();
   assert(/casual/iu.test(setupText), "challenge setup is missing its casual label");
   assert(
@@ -323,6 +324,7 @@ async function exerciseRoundTrip(
   await recipient.page.getByRole("button", { name: "Play this board" }).click();
   await recipient.page.waitForURL(/\/play\/draft\?run=run-/u);
   await recipient.page.getByRole("button", { name: "Spin" }).waitFor();
+  await recipient.page.getByText("Classic · Casual", { exact: true }).waitFor();
   const activeDraftText = await recipient.page.locator("body").innerText();
   const recipientRecord = await recipient.page.evaluate((recordPrefix) => {
     const runId = new URL(window.location.href).searchParams.get("run");

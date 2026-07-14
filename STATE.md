@@ -37,8 +37,11 @@ horizontal-overflow, or small-target failures. The proof link is 1,524
 characters, below the separate 8,192-character escaped-URL cap. An initial
 browser pass exposed `Ranked-capable` in the standalone active-draft shell; it
 was invalidated and replaced by a shared run-aware cue resolver. Final setup
-and active captures both show `Classic · Casual`. Durable report and all 16
-captures:
+and active captures both show `Classic · Casual`; the setup chip's accessible
+name is also exactly `Draft mode: Classic · Casual`. This includes the
+fix-forward from exact head `e9c5fd60dad24e7141cc85dda153c61bef4a68d7`,
+which failed review because the main app bar lacked the visible separator and
+omitted Casual from its accessible name. Durable report and all 16 captures:
 `docs/reports/season2-s7-friend-challenge-2026-07-13/`.
 
 Season 2 Squad Depth — Unit S6 factual recap: 2026-07-13 · integrated YELLOW

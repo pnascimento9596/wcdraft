@@ -39,8 +39,11 @@ export function DraftAppBar({
         <span className={s.appBarTitle}>Draft</span>
       </div>
       {modeLabel ? (
-        <div className={s.appBarModeChip} aria-label={`Draft mode: ${modeLabel}`}>
-          <span>{modeLabel}</span>
+        <div
+          className={s.appBarModeChip}
+          aria-label={`Draft mode: ${modeLabel} · ${modeCue}${pickSpace ? ` · ${pickSpace}` : ""}`}
+        >
+          <span>{modeLabel} ·</span>
           <b>{modeCue}</b>
           {pickSpace ? <i>{pickSpace}</i> : null}
         </div>
