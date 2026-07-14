@@ -7,6 +7,7 @@ import {
   type EraPresetId,
   type RatingBasis,
 } from "@wcdraft/core";
+import { boundedRequest } from "@wcdraft/data/client";
 
 import { RUN_TOKEN_MAX_LEN } from "./run-token";
 import { isLikelySignedFriendChallenge, SIGNED_FRIEND_CHALLENGE_MAX_LEN } from "./run-og-signing";
@@ -14,6 +15,7 @@ import { isLikelySignedFriendChallenge, SIGNED_FRIEND_CHALLENGE_MAX_LEN } from "
 export const FRIEND_CHALLENGE_PARAM = "challenge" as const;
 export const FRIEND_CHALLENGE_PROOF_PARAM = "proof" as const;
 export const FRIEND_CHALLENGE_URL_MAX_LEN = 8192 as const;
+export const FRIEND_CHALLENGE_VERIFICATION_BUDGET_MS = 4_000 as const;
 
 export interface FriendChallengeRef {
   readonly token: string;
@@ -102,25 +104,34 @@ export async function verifyFriendChallenge(
   ref: FriendChallengeRef,
   signal?: AbortSignal,
 ): Promise<FriendChallengeVerifyResult> {
-  let response: Response;
+  let result: { readonly response: Response; readonly body: unknown };
   try {
-    response = await fetch("/api/challenge/verify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(ref),
-      signal,
-    });
+    result = await boundedRequest(
+      async (requestSignal) => {
+        const response = await fetch("/api/challenge/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(ref),
+          signal: requestSignal,
+        });
+        const body: unknown = await response.json();
+        return { response, body };
+      },
+      {
+        operation: "friend challenge verification",
+        timeoutMs: FRIEND_CHALLENGE_VERIFICATION_BUDGET_MS,
+        // Verification is read-only, but the server-side rate-limit counter
+        // may have committed before a timeout. Never classify an ambiguous
+        // POST as automatically replayable.
+        safety: "unsafe-mutation",
+        signal,
+      },
+    );
   } catch {
     return { ok: false, error: "UNAVAILABLE" };
   }
-  let body: unknown;
-  try {
-    body = await response.json();
-  } catch {
-    return { ok: false, error: "UNAVAILABLE" };
-  }
-  if (!response.ok) return { ok: false, error: readChallengeError(body) };
-  const challenge = parseVerifiedSetup(body);
+  if (!result.response.ok) return { ok: false, error: readChallengeError(result.body) };
+  const challenge = parseVerifiedSetup(result.body);
   return challenge ? { ok: true, challenge } : { ok: false, error: "UNAVAILABLE" };
 }
 

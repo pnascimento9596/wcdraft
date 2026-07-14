@@ -41,7 +41,14 @@ export type DraftScreenMode =
       record: RunRecordV1;
       persistenceWarning: string | null;
     }
-  | { kind: "recovery"; gameData: GameData; reason: string; runId: string | null }
+  | {
+      kind: "recovery";
+      gameData: GameData;
+      title: string;
+      reason: string;
+      runId: string | null;
+      retryable: boolean;
+    }
   | { kind: "error"; title: string; message: string };
 
 export type InitialDraftDataResult =
@@ -115,8 +122,10 @@ export function useDraftScreenLoader(
           setMode({
             kind: "recovery",
             gameData: gd,
+            title: "Couldn’t verify that challenge",
             reason: "This friend challenge link is malformed or incomplete.",
             runId: null,
+            retryable: false,
           });
           return;
         }
@@ -127,6 +136,7 @@ export function useDraftScreenLoader(
             setMode({
               kind: "recovery",
               gameData: gd,
+              title: "Couldn’t verify that challenge",
               reason:
                 verified.error === "DAILY_UNAVAILABLE"
                   ? "This Daily challenge is outside the currently published coverage window."
@@ -136,6 +146,7 @@ export function useDraftScreenLoader(
                       ? "This friend challenge could not be verified. Ask for a fresh link."
                       : "Friend challenge verification is unavailable right now.",
               runId: null,
+              retryable: verified.error === "RATE_LIMITED" || verified.error === "UNAVAILABLE",
             });
             return;
           }
@@ -143,8 +154,10 @@ export function useDraftScreenLoader(
             setMode({
               kind: "recovery",
               gameData: gd,
+              title: "Couldn’t verify that challenge",
               reason: "This friend challenge was opened on the wrong play route.",
               runId: null,
+              retryable: false,
             });
             return;
           }
@@ -179,6 +192,7 @@ export function useDraftScreenLoader(
             setMode({
               kind: "recovery",
               gameData: gd,
+              title: "Couldn’t resume that draft",
               reason:
                 resolved.kind === "missing" && resolved.localStatus === "missing"
                   ? "We couldn't find a draft for that link."
@@ -186,6 +200,7 @@ export function useDraftScreenLoader(
                     ? "This draft was created on an older data bundle and has been evicted."
                     : "This draft record is invalid and has been removed.",
               runId: requestRunId,
+              retryable: false,
             });
           }
         } else if (dailyDate) {

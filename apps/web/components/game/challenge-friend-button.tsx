@@ -15,7 +15,7 @@ type State =
   | { kind: "pending" }
   | { kind: "copied" }
   | { kind: "error"; message: string };
-const CHALLENGE_PROOF_BUDGET_MS = 4_000;
+export const CHALLENGE_PROOF_BUDGET_MS = 4_000;
 
 export function ChallengeFriendButton({
   record,
@@ -120,22 +120,26 @@ export function ChallengeFriendButton({
 }
 
 async function requestChallengeProof(token: string, signal: AbortSignal): Promise<string | null> {
-  const response = await boundedRequest(
-    async (signal) =>
-      fetch("/api/og/sign", {
+  return boundedRequest(
+    async (signal) => {
+      const response = await fetch("/api/og/sign", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ run: token }),
         signal,
-      }),
+      });
+      if (!response.ok) return null;
+      const body: unknown = await response.json();
+      if (body === null || typeof body !== "object" || Array.isArray(body)) return null;
+      const challengeProof = (body as Record<string, unknown>).challenge_proof;
+      return typeof challengeProof === "string" ? challengeProof : null;
+    },
     {
       operation: "friend challenge proof",
       timeoutMs: CHALLENGE_PROOF_BUDGET_MS,
-      safety: "safe-read",
+      // The durable sign limiter may commit before the response reaches the client.
+      safety: "unsafe-mutation",
       signal,
     },
   );
-  if (!response.ok) return null;
-  const body = (await response.json()) as { challenge_proof?: unknown };
-  return typeof body.challenge_proof === "string" ? body.challenge_proof : null;
 }

@@ -148,6 +148,53 @@ byte-identical to the integration-base fixture: zero pick flips.
   and 360x800 in light and dark mode, waiting for all 62 mocked eligible lanes
   to become enabled before capture. The full root test passed 8/8 in 7m52s,
   including web 1,281 + 1 intentional skip and responsive 218/0.
+- Cumulative exact-head review of the rebased nine-commit main candidate
+  `d44ea31a749c7a0690a53ab9c7e7a0017b29a795` returned FAIL. Artifact:
+  `/tmp/season2-s8-cumulative-exact-review-d44ea31.md`, 270 lines / 19,312
+  bytes, SHA-256
+  `18aeb49994d1fea58028a1b1c02b443d062e7a767a7fd735b923b7be2e34f1c9`.
+  The verifier awaited both `/api/challenge/verify` response headers and JSON
+  body completion without an elapsed-time bound, so the recipient draft setup
+  and Results comparison could remain pending forever on stalled I/O.
+- The cumulative fix-forward keeps the POST single-dispatch, moves both fetch
+  and response parsing inside one four-second `boundedRequest`, uses
+  mutation-conservative timeout classification because the server rate-limit
+  counter may already have committed, and maps failure to the existing
+  `UNAVAILABLE` result. Retryability is explicit: unavailable and rate-limited
+  verification may be retried manually with a fresh controller; malformed,
+  wrong-route, and missing-run states remain non-retryable. Mounted coverage
+  proves finite recovery and one manual retry for both held-open headers and a
+  held-open JSON body. Focused challenge/loader coverage passes 19/19 across
+  three files; web typecheck and lint pass. The resulting exact head still
+  requires fresh CI, S7 browser proof, and a new cumulative RED review.
+- Fix-forward head `f97aadfd1e2526c76c5f3738d63577f936f67a10` is void
+  before review because Gitleaks 8.30.1 reported two `generic-api-key`
+  findings on direct `proof: "fc1.placeholder"` test assignments. No secret is
+  present, but required CI remains fail-closed. The replacement sources the
+  same synthetic placeholder from static segments through one shared fixture;
+  scanner configuration and allowlists remain unchanged, and production
+  behavior is identical. All exact-head gates and reviews restart afterward.
+- The same fresh `f97aadf` review found that both public and authenticated
+  leaderboard reads accepted arbitrary nonempty `season` query keys. The
+  shipped archive contract permits only the current season and
+  `season-2026-manager-attrition`; the shared parser now enforces that
+  allowlist and rejects seasonal keys on Daily boards. PGlite regressions keep
+  the retained archive readable while proving seeded unpublished-season rows
+  remain unreachable. The preserved FAIL report is
+  `/tmp/season2-s8-cumulative-exact-review-f97aadf.md` (129 lines, 10,053
+  bytes; SHA-256
+  `4a127824bf48e37d78451eaf07f9b5ae4f1e3c64ae84b5168ec747e11eac94bb`).
+- Exact head `1c03b0e16e45a4a19676888f5241e81da278bd7d` completed the
+  local root gate but is deliberately void. Cumulative
+  `ollama-cloud/glm-5.2` max review returned PASS while documenting that
+  challenge-proof creation parsed `response.json()` outside its bounded
+  request. Release adjudication promoted that observation: a held-open sign
+  body leaves the user action pending forever, and its durable limiter may
+  already have committed. The proof POST and body parse now share one
+  `unsafe-mutation` four-second budget. Mounted coverage proves finite recovery
+  and one manual retry with a fresh controller for both held-open headers and a
+  held-open body. The verbatim report is
+  `/tmp/season2-crossmodel-s8-1c03b0e.md`.
 - Deploy and live verification remain pending until their lifecycle stages.
 
 ## Risk, rollback, and reviewer focus

@@ -212,11 +212,16 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
         <h1 className="visually-hidden">Draft recovery</h1>
         <DraftAppBar spinNumber={null} progressPct={0} />
         <div className={s.errorPanel} role="alert">
-          <h2 className={s.errorTitle}>Couldn&rsquo;t resume that draft</h2>
+          <h2 className={s.errorTitle}>{mode.title}</h2>
           <p className={s.errorMessage}>{mode.reason}</p>
+          {mode.retryable ? (
+            <button type="button" className="btn btn--primary" onClick={retryFromError}>
+              Retry verification
+            </button>
+          ) : null}
           <button
             type="button"
-            className="btn btn--primary"
+            className={mode.retryable ? "btn btn--ghost" : "btn btn--primary"}
             onClick={() =>
               router.replace(
                 dailyDate
