@@ -5,10 +5,20 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-      # 3.9.5 changes 21 tracked files under the repository's current format contract.
-      # Keep the verified exact 3.8.4 pin until a dedicated formatting migration.
+      # The 3.9 line changes 21 tracked files under the repository's current format
+      # contract. Keep exact 3.8.4 until a dedicated formatting migration; 3.10+
+      # remains eligible for an independently measured decision.
       - dependency-name: "prettier"
-        versions: ["3.9.5"]
+        versions: ["3.9.x"]
+      # These majors were split out of the mixed root update and deliberately
+      # retained at their existing compatibility boundaries. Future majors remain
+      # eligible rather than being hidden by a blanket semver-major ignore.
+      - dependency-name: "@types/node"
+        versions: ["26.x"]
+      - dependency-name: "typescript"
+        versions: ["7.x"]
+      - dependency-name: "zod"
+        versions: ["4.x"]
       # These patches surfaced after the dependency-sweep baseline and belong to
       # the separately gated mobile lane. Exact-version ignores allow later fixes.
       - dependency-name: "@capacitor/core"
@@ -95,6 +105,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # v7 is an ESM major and was rejected after v6.5.0 shipped cleanly. Keep
+      # later major lines eligible for a fresh compatibility decision.
+      - dependency-name: "actions/setup-node"
+        versions: [">= 7.0.0, < 8.0.0"]
     groups:
       github-actions:
         patterns:

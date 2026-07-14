@@ -13,9 +13,12 @@ with exact IDs and paths in
 `docs/reports/dependency-sweep-residual-polish-2026-07-14.md`. The residual
 hygiene audit found no stale worktree metadata and no broken report artifact;
 the current Season 2 calibration docs were already correct. Dependabot now
-exact-ignores Prettier 3.9.5 (measured 21-file drift) and the newly surfaced
-Capacitor 8.4.2 patches (separately gated mobile lane), while later versions
-remain eligible.
+defers the measured-drifting Prettier 3.9 line, the rejected setup-node 7,
+TypeScript 7, `@types/node` 26, and Zod 4 major lines, plus the newly surfaced
+exact Capacitor 8.4.2 patches (separately gated mobile lane). Later major/minor
+lines remain eligible. This range stabilization closes the immediate
+post-closure fallback PRs #292–#296 without claiming that any rejected version
+shipped.
 
 Dependency sweep D1/D3 — compatible dependency batch: 2026-07-14 · accepted
 eight patch/minor npm updates (`eslint` 10.7.0, `globals` 17.7.0, `tsx`
