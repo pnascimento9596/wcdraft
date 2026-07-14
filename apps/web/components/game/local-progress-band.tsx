@@ -97,7 +97,7 @@ export function LocalProgressBand({
       </div>
       {friendRun ? (
         <p className={s.localProgressFriend}>
-          Friend&apos;s run: {friendRun.record ?? "—"} · {friendRun.score} pts — beat it
+          Friend&apos;s run: {friendRun.record ?? "—"} · {friendRun.score} pts to beat
         </p>
       ) : null}
       <div className={s.localProgressBest}>
@@ -115,7 +115,7 @@ export function LocalProgressBand({
       ) : null}
       {showSignInNudge ? (
         <p className={s.localProgressNudge} role="status">
-          <span>Keep your streak on every device — </span>
+          <span>Keep your streak on every device. </span>
           <a href="/sign-in">sign in.</a>
           <button type="button" onClick={dismissSignInNudge} aria-label="Dismiss sign-in nudge">
             Dismiss

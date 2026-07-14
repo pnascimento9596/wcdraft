@@ -44,10 +44,10 @@ export function ManagerSlot({
       className={`${s.managerSlot} ${stateClass}`}
       aria-label={
         isCommitted
-          ? "Manager slot — locked"
+          ? "Manager slot: locked"
           : isPreview
-            ? "Manager slot — preview"
-            : "Manager slot — open"
+            ? "Manager slot: preview"
+            : "Manager slot: open"
       }
     >
       <span className={s.managerSlotEyebrow}>Manager</span>
@@ -69,12 +69,12 @@ export function ManagerSlot({
           </div>
           {isPreview ? <span className={s.managerSlotBadge}>Preview</span> : null}
           {display.traits.length > 0 ? (
-            <span className={s.managerTraits} aria-label="Manager style traits — flavor only">
+            <span className={s.managerTraits} aria-label="Manager style traits, for flavor only">
               {display.traits.map((t) => (
                 <span
                   key={t.id}
                   className={s.managerTraitChip}
-                  title="Flavor trait only — no gameplay effect."
+                  title="Flavor trait only; no gameplay effect."
                 >
                   {t.label}
                 </span>
@@ -83,7 +83,7 @@ export function ManagerSlot({
           ) : null}
         </>
       ) : (
-        <p className={s.managerSlotEmpty}>Open — pick a manager on any spin to fill this slot.</p>
+        <p className={s.managerSlotEmpty}>Open. Pick a manager on any spin to fill this slot.</p>
       )}
     </div>
   );

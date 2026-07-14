@@ -133,7 +133,7 @@ function DraftSetupDisclosure({
               <p className={s.setupAxisNote}>
                 {lane === "ranked"
                   ? "Ranked requests an account-bound server seed when you lock a formation. Sign in and verify your email first."
-                  : "Casual by default — start immediately, then post to the Casual board after the run."}
+                  : "Casual by default: start immediately, then post to the Casual board after the run."}
               </p>
             </div>
           ) : null}
@@ -192,7 +192,7 @@ function DraftSetupDisclosure({
             </div>
             <p className={s.setupAxisNote}>
               {ratingBasis === "current"
-                ? "Current ratings play as a tougher board — expect lower scores"
+                ? "Current ratings play as a tougher board; expect lower scores"
                 : "Career ratings use each card's whole-career peak."}
             </p>
           </div>
@@ -337,7 +337,7 @@ export function FormationSelect({
         const warning =
           created.persistence === "volatile" || created.warnings.length > 0
             ? created.warnings.join(" · ") ||
-              "This draft is saved in this tab only — browser storage is unavailable."
+              "This draft is saved in this tab only because browser storage is unavailable."
             : null;
         if (!isCurrentRequest()) return;
         onLocked(created.record, warning);
@@ -370,12 +370,12 @@ export function FormationSelect({
         <div className={s.formationHead}>
           <h1 className={s.formationTitle}>Lock a formation</h1>
           <p className={s.formationSub}>
-            Your shape is committed the moment you lock. 17 spins, one pick per spin — a player, or
+            Your shape is committed the moment you lock. 17 spins, one pick per spin: a player, or
             your manager. No rearranging afterwards.
           </p>
           {draftMode !== "classic" ? (
             <p className={s.memoryModeNote} role="note">
-              {DRAFT_MODE_COPY[draftMode].label} — {DRAFT_MODE_COPY[draftMode].description}
+              {DRAFT_MODE_COPY[draftMode].label}: {DRAFT_MODE_COPY[draftMode].description}
             </p>
           ) : null}
         </div>

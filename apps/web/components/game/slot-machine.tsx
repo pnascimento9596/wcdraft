@@ -124,7 +124,7 @@ export function SpinStage({
   const eraValue = spinEraRangeLabel(result.yearLabel);
 
   const tagline = settled
-    ? `${result.nationName} ${result.yearLabel} is on the board — ${pickSpace.toLowerCase()} available.`
+    ? `${result.nationName} ${result.yearLabel} is on the board; ${pickSpace.toLowerCase()} available.`
     : spinning
       ? "Rolling the drum…"
       : "Press spin to lock in a nation and World Cup year.";

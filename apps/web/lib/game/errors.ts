@@ -184,7 +184,7 @@ export function describeGameError(err: unknown): ErrorDisplay {
     logUnexpectedGameError(err);
     return {
       title: "Something went wrong",
-      message: "Something went wrong — try again, or start a fresh run",
+      message: "Something went wrong. Try again, or start a fresh run",
       action: "start_new",
     };
   }
@@ -192,14 +192,14 @@ export function describeGameError(err: unknown): ErrorDisplay {
     logUnexpectedGameError(err);
     return {
       title: "Something went wrong",
-      message: "Something went wrong — try again, or start a fresh run",
+      message: "Something went wrong. Try again, or start a fresh run",
       action: "start_new",
     };
   }
   logUnexpectedGameError(err);
   return {
     title: "Something went wrong",
-    message: "Something went wrong — try again, or start a fresh run",
+    message: "Something went wrong. Try again, or start a fresh run",
     action: "start_new",
   };
 }

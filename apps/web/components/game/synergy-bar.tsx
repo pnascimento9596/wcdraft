@@ -109,7 +109,7 @@ export function SynergyBar({
       className={s.synergyBar}
       role="group"
       aria-label={
-        blind ? "Squad synergy summary — hidden until you simulate" : "Squad synergy summary"
+        blind ? "Squad synergy summary, hidden until you simulate" : "Squad synergy summary"
       }
     >
       <button type="button" className={s.synergyBarToggle} onClick={toggle} aria-expanded={open}>

@@ -226,7 +226,7 @@ function SlotChip({
   if (previewTier) classes.push(s.slotPreview, s[`tierPreview_${previewTier}`]!);
 
   const label = filled
-    ? `${slot.slot_position} — ${slot.card!.name}${filledSlotInteraction ? "; select to swap" : " (locked)"}`
+    ? `${slot.slot_position}: ${slot.card!.name}${filledSlotInteraction ? "; select to swap" : " (locked)"}`
     : `${slot.slot_position} — empty slot`;
 
   const shapeMarker = (

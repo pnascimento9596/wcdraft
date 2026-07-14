@@ -9,14 +9,56 @@ const EM_DASH_ENTITY = /&(?:mdash|#8212|#x2014);/iu;
 const CLEANED_PROSE_SURFACES = [
   "../../../app/page.tsx",
   "../../../app/play/page.tsx",
+  "../../../app/play/review/page.tsx",
+  "../../../app/play/share/page.tsx",
   "../../../app/contact/page.tsx",
   "../../../app/how-to-play/page.tsx",
   "../../../app/manifest.ts",
+  "../../../components/game/candidate-card.tsx",
+  "../../../components/game/draft-screen/constants.ts",
+  "../../../components/game/draft-screen/index.tsx",
+  "../../../components/game/draft-screen/setup.tsx",
+  "../../../components/game/local-progress-band.tsx",
+  "../../../components/game/manager-slot.tsx",
+  "../../../components/game/memory-reveal.tsx",
   "../../../components/game/mode-select.tsx",
+  "../../../components/game/pitch.tsx",
+  "../../../components/game/results-screen.tsx",
+  "../../../components/game/review-screen.tsx",
+  "../../../components/game/share-screen.tsx",
+  "../../../components/game/slot-machine.tsx",
+  "../../../components/game/synergy-bar.tsx",
   "../../../components/site-header.tsx",
+  "../../../components/leaderboard/submit-panel-views.tsx",
   "../../auth/verify-flow.ts",
+  "../config-badges.ts",
+  "../errors.ts",
+  "../friend-challenge.ts",
+  "../local-progress.ts",
+  "../reference-standing.ts",
+  "../results-adapters.ts",
+  "../run-og-image.tsx",
+  "../share-adapters.ts",
+  "../slot-reveal.ts",
+  "../../leaderboard/submit-copy.ts",
   "../../site-metadata.ts",
 ] as const;
+
+const PROTECTED_EM_DASH_VALUES: Readonly<Record<string, readonly string[]>> = {
+  "../../../components/game/candidate-card.tsx": ["—", "—", "—", "—", "—", "—"],
+  "../../../components/game/draft-screen/index.tsx": ["—"],
+  "../../../components/game/local-progress-band.tsx": ["—", "—"],
+  "../../../components/game/pitch.tsx": ["— empty slot"],
+  "../../../components/game/results-screen.tsx": ["Daily field: —", "—"],
+  "../../../components/game/share-screen.tsx": ["—", "—", "—", "—", "—", "—", "—"],
+  "../../../components/game/slot-machine.tsx": ["—", "—", "—", "—"],
+  "../../../components/game/synergy-bar.tsx": ["—", "—", "—", "—"],
+  "../errors.ts": ["—"],
+  "../local-progress.ts": ["—"],
+  "../results-adapters.ts": ["—", "—", "—", "—", "—"],
+  "../run-og-image.tsx": ["—", "—", "—"],
+  "../slot-reveal.ts": ["—"],
+};
 
 interface Violation {
   readonly file: string;
@@ -64,9 +106,14 @@ function userFacingEmDashes(file: string): Violation[] {
 }
 
 describe("cleaned user-facing prose", () => {
-  it("does not reintroduce em dashes", () => {
-    const violations = CLEANED_PROSE_SURFACES.flatMap(userFacingEmDashes);
-    expect(violations).toEqual([]);
+  it("contains only explicitly classified placeholders or diagnostics", () => {
+    for (const file of CLEANED_PROSE_SURFACES) {
+      const actual = userFacingEmDashes(file)
+        .map(({ value }) => value)
+        .sort();
+      const expected = [...(PROTECTED_EM_DASH_VALUES[file] ?? [])].sort();
+      expect(actual, file).toEqual(expected);
+    }
   });
 
   it.each([

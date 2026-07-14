@@ -71,7 +71,7 @@ describe("same-seed friend challenge contract", () => {
       ref: { token, proof },
     });
     expect(buildFriendChallengeShareCopy(url)).toMatchInlineSnapshot(`
-      "Challenge a friend on my WCDraft board. Same seed, same setup — can you beat my score?
+      "Challenge a friend on my WCDraft board. Same seed, same setup. Can you beat my score?
       ${url}"
     `);
     expect(FRIEND_CHALLENGE_VERIFICATION_COPY).toMatchInlineSnapshot(

@@ -304,7 +304,7 @@ function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding |
       const scoreLine = `${view.team_name} ${action}, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on ${view.challenge_date}'s draft`;
       return dailyStanding === null
         ? `${scoreLine}. Beat it →`
-        : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+        : `${dailyStandingText(dailyStanding)}. ${scoreLine}. Beat it →`;
     }
     return `${view.team_name} ${action}, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on wcdraft.`;
   }
@@ -314,7 +314,7 @@ function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding |
       const scoreLine = `${view.team_name} played ${label}, ended with ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
       return dailyStanding === null
         ? `${scoreLine}. Beat it →`
-        : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+        : `${dailyStandingText(dailyStanding)}. ${scoreLine}. Beat it →`;
     }
     return `${view.team_name} played ${label}, ended with ${view.display_record} (${view.score} pts) on wcdraft.`;
   }
@@ -322,7 +322,7 @@ function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding |
     const scoreLine = `${view.team_name} went ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
     return dailyStanding === null
       ? `${scoreLine}. Beat it →`
-      : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+      : `${dailyStandingText(dailyStanding)}. ${scoreLine}. Beat it →`;
   }
   return `${view.team_name} went ${view.display_record} on wcdraft.`;
 }

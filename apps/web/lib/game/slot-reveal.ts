@@ -89,7 +89,7 @@ export function buildSlotRevealModel(params: BuildSlotRevealModelParams): SlotRe
 
   const resultFace = faceFromSpin(activeSpin, indexes, "C");
   const pickLabel = `PICK ${String(activeSpin.index + 1).padStart(2, "0")} OF ${totalPicks}`;
-  const resultLine = `SPIN RESULT — ${resultFace.nationName} ${resultFace.yearLabel}`;
+  const resultLine = `SPIN RESULT: ${resultFace.nationName} ${resultFace.yearLabel}`;
 
   // Build deterministic neighbor faces by walking the ordered spin ring.
   const sortedSpins = [...allSpins].sort((a, b) => a.index - b.index);

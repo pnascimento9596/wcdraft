@@ -38,7 +38,7 @@ describe("LocalProgressBand", () => {
       }),
     );
 
-    expect(html).toContain("Friend&#x27;s run: 8-0 · 84 pts — beat it");
+    expect(html).toContain("Friend&#x27;s run: 8-0 · 84 pts to beat");
   });
 
   it("keeps the sign-in nudge inline and persists dismissal against the trigger key", () => {

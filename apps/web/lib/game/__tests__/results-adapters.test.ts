@@ -108,12 +108,12 @@ describe("win-probability payoff labels", () => {
           shootout: { user: 4, opp: 5, sequence: [] },
         }),
       ),
-    ).toBe("78% — lost on penalties");
+    ).toBe("78%, lost on penalties");
   });
 
   it("frames a favorite win as held", () => {
     expect(matchPayoffLabel(match({ pre_match_win_probability: 0.824, outcome: "W" }))).toBe(
-      "82% — held",
+      "82%, held",
     );
   });
 

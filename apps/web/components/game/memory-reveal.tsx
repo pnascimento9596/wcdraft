@@ -68,7 +68,7 @@ export function MemoryReveal({ gameData, record }: { gameData: GameData; record:
       <div className={s.panelHead}>
         <h2 className={s.panelTitle}>The reveal</h2>
         <span className={s.panelMeta}>
-          {modeCopy.label} — ratings &amp; Synergy, now on the table
+          {modeCopy.label}: ratings &amp; Synergy, now on the table
         </span>
       </div>
 

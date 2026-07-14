@@ -74,7 +74,7 @@ export function ReviewScreen() {
     if (!runId) {
       setMode({
         kind: "missing",
-        reason: "Open a draft first — review is only available for a saved run.",
+        reason: "Open a draft first. Review is only available for a saved run.",
       });
       return;
     }
@@ -95,7 +95,7 @@ export function ReviewScreen() {
             kind: "missing",
             reason:
               resolved.kind === "missing" && resolved.runId === null
-                ? "Open a draft first — review is only available for a saved run."
+                ? "Open a draft first. Review is only available for a saved run."
                 : resolved.kind === "stale"
                   ? "This draft was created on an older data bundle."
                   : "We couldn't find this draft.",
@@ -283,7 +283,7 @@ function ReviewBoard({
       const warning =
         save.persistence === "volatile" || save.warnings.length > 0
           ? save.warnings.join(" · ") ||
-            "Team sheet is saved in this tab only — browser storage is unavailable."
+            "Team sheet is saved in this tab only because browser storage is unavailable."
           : persistenceWarning;
       setSelectedSheetSlot(null);
       onRecordUpdate(save.record, warning ?? null);
@@ -367,7 +367,7 @@ function ReviewBoard({
       const warning =
         update.persistence === "volatile" || update.warnings.length > 0
           ? update.warnings.join(" · ") ||
-            "Draft is saved in this tab only — browser storage is unavailable."
+            "Draft is saved in this tab only because browser storage is unavailable."
           : persistenceWarning;
       onRecordUpdate(update.record, warning ?? null);
     },
@@ -427,7 +427,7 @@ function ReviewBoard({
         <SynergyBar result={synergy} active={true} blind={false} />
         {hiddenModeRevealed ? (
           <p className={s.memoryModeNote} role="note">
-            {blindModeLabel} reveal complete — arrange with full card information.
+            {blindModeLabel} reveal complete. Arrange with full card information.
           </p>
         ) : null}
         <div className={s.panelHead}>
@@ -471,7 +471,7 @@ function ReviewBoard({
                   selectedSheetSlot === b.slot_id ? s.slotSelected : ""
                 }`}
                 aria-pressed={selectedSheetSlot === b.slot_id}
-                aria-label={`${b.slot_position} bench — ${b.card?.name ?? "open"}; ${
+                aria-label={`${b.slot_position} bench, ${b.card?.name ?? "open"}; ${
                   arrangementMutable ? "select to swap" : "arrangement locked"
                 }`}
                 onClick={() => swapSheetSlot(b.slot_id)}
@@ -649,7 +649,7 @@ function SimulatePanel({
       const lockWarnings = [...lock.warnings];
       if (lock.persistence === "volatile") {
         lockWarnings.push(
-          "Simulation is locked in this tab only — browser storage is unavailable.",
+          "Simulation is locked in this tab only because browser storage is unavailable.",
         );
       }
       onRecordUpdate(
@@ -699,7 +699,9 @@ function SimulatePanel({
       const warningParts: string[] = [];
       if (result.warning) warningParts.push(result.warning);
       if (persist.persistence === "volatile") {
-        warningParts.push("Simulation saved to this tab only — browser storage is unavailable.");
+        warningParts.push(
+          "Simulation saved to this tab only because browser storage is unavailable.",
+        );
       }
       warningParts.push(...persist.warnings);
       const warn = warningParts.length > 0 ? warningParts.join(" · ") : persistenceWarning;
@@ -750,7 +752,7 @@ function SimulatePanel({
   const note = simulationLocked
     ? "This completed run is read-only. Its team sheet and simulation stay paired."
     : !complete
-      ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
+      ? "Your draft isn't finished. Head back and consume all 17 spins before simulating."
       : sim.kind === "running"
         ? sim.note
         : "Your team sheet is ready. Confirm it to play the 8-match run.";

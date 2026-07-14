@@ -680,18 +680,18 @@ export function formatWinProbability(value: number): string {
 export function matchPayoffLabel(m: MatchResult): string {
   const pct = formatWinProbability(m.pre_match_win_probability);
   if (m.outcome === "W") {
-    if (m.shootout) return `${pct} — won on penalties`;
-    if (m.user_goals_et !== null || m.opp_goals_et !== null) return `${pct} — held after ET`;
-    return `${pct} — ${m.pre_match_win_probability >= 0.5 ? "held" : "upset win"}`;
+    if (m.shootout) return `${pct}, won on penalties`;
+    if (m.user_goals_et !== null || m.opp_goals_et !== null) return `${pct}, held after ET`;
+    return `${pct}, ${m.pre_match_win_probability >= 0.5 ? "held" : "upset win"}`;
   }
   if (m.outcome === "L") {
-    if (m.shootout) return `${pct} — lost on penalties`;
-    if (m.user_goals_et !== null || m.opp_goals_et !== null) return `${pct} — lost after ET`;
-    if (m.pre_match_win_probability >= 0.6) return `${pct} — unlucky loss`;
-    if (m.pre_match_win_probability >= 0.45) return `${pct} — edged out`;
-    return `${pct} — beaten`;
+    if (m.shootout) return `${pct}, lost on penalties`;
+    if (m.user_goals_et !== null || m.opp_goals_et !== null) return `${pct}, lost after ET`;
+    if (m.pre_match_win_probability >= 0.6) return `${pct}, unlucky loss`;
+    if (m.pre_match_win_probability >= 0.45) return `${pct}, edged out`;
+    return `${pct}, beaten`;
   }
-  return `${pct} — shared points`;
+  return `${pct}, shared points`;
 }
 
 /**
