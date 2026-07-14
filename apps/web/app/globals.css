@@ -792,6 +792,11 @@ main {
   min-height: 44px;
   gap: 0.75rem;
 }
+.mobile-menu__link:active {
+  /* WebKit otherwise defers the reduced-motion opacity response by two
+     paint frames inside this momentum-scroll region. */
+  transition-duration: 0s !important;
+}
 .mobile-menu__link:last-child {
   border-bottom: none;
 }

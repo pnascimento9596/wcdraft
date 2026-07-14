@@ -29,7 +29,9 @@
     "verify:responsive-layout": "tsx scripts/verify-responsive-layout-browser.mts",
     "verify:home-fold": "tsx scripts/verify-home-fold-browser.mts",
     "preverify:native-app-feel": "pnpm exec turbo run build --filter=@wcdraft/web^...",
-    "verify:native-app-feel": "tsx scripts/verify-native-app-feel-browser.mts"
+    "verify:native-app-feel": "tsx scripts/verify-native-app-feel-browser.mts",
+    "preverify:native-app-feel:webkit": "pnpm exec turbo run build --filter=@wcdraft/web",
+    "verify:native-app-feel:webkit": "WCDRAFT_NATIVE_APP_FEEL_SERVER=production tsx scripts/verify-native-app-feel-webkit.mts"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",

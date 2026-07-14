@@ -4,6 +4,25 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Final polish U3 WebKit native app-feel verification: 2026-07-14 · local YELLOW
+implementation on `ws-ux/final-polish-u3-webkit`, based on shipped Season 2 main
+`e751639c2c5a4fc20d8c1ecee24708ff967e0235` after the U1/U2/U4 integration
+merges. The repository-native interaction
+probe now runs on Playwright WebKit 26.5 at 390×844 and 360×800 in both themes.
+The strict production-build pass completed 4 contexts, 16 presses, 4 automated
+boundary-scroll attempts, and 160 assertions with 0 failures. WebKit surfaced
+one real app delta: mobile-nav opacity feedback inside the momentum-scroll menu
+painted two frames late under the reduced-motion transition contract; the link's
+active transition duration is now zero without changing layout, selection, or
+zoom. CI installs/caches repository-pinned Chromium + WebKit and runs the strict
+WebKit pass after build. Root validation passed typecheck 9/9, lint 6/6, build
+5/5 with 40/40 pages, and test 9/9 with 2,160 package/unit tests passed, 10
+expected skips, passing game flow, and responsive-shell 218/218. Playwright
+WebKit is not a physical iPhone or Mobile Safari; production live verification
+and a short owner physical-iPhone Safari smoke remain required after merge and
+are not claimed here. Durable report:
+`docs/reports/final-polish-u3-webkit-2026-07-14.md`.
+
 iOS M1a Unit P4 (simulator smoke + capability matrix):
 2026-07-12 · evidence on `ws-mobile/m1a-p3-icons` / report path
 `docs/reports/m1a-ios-native-scaffold/`. Debug sim build SUCCEEDED;

@@ -243,17 +243,17 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Restore Playwright Chromium cache
+      - name: Restore Playwright browser cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          key: playwright-chromium-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: playwright-chromium-webkit-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: ${{ runner.tool_cache }}/wcdraft-cache/ms-playwright
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Ensure Playwright Chromium is installed
-        run: pnpm --filter @wcdraft/web exec playwright install chromium
+      - name: Ensure Playwright browsers are installed
+        run: node apps/web/node_modules/playwright-core/cli.js install chromium webkit
 
       - name: Generated data determinism
         run: pnpm run check:generated
@@ -275,6 +275,13 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: WebKit native app-feel interaction contract
+        env:
+          WCDRAFT_NATIVE_APP_FEEL_OUT_DIR: ${{ runner.temp }}/native-app-feel-webkit
+          WCDRAFT_NATIVE_APP_FEEL_PHASE: ci
+          WCDRAFT_NATIVE_APP_FEEL_STRICT: "1"
+        run: pnpm --filter @wcdraft/web verify:native-app-feel:webkit
 
   golden:
     name: golden RNG determinism
