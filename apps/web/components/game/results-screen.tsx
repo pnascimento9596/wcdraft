@@ -25,7 +25,6 @@ import type { RunRecordV1 } from "@/lib/game/run-record";
 import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import {
   buildNarrativeLabels,
-  buildFactualRecap,
   buildRunSummary,
   deriveBox,
   matchCardViews,
@@ -52,12 +51,6 @@ import { MiniNationFlag } from "./mini-nation-flag";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import { isBlindDraftMode, type MatchResult } from "@wcdraft/core";
 import { GoalIcon, InjuryIcon, SubstitutionIcon } from "@/components/icons";
-import { FactualRecap } from "./factual-recap";
-import {
-  FactualEventTarget,
-  factualEventTargetId,
-  focusFactualEventTarget,
-} from "./factual-event-target";
 
 import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
 import { LocalProgressBand } from "./local-progress-band";
@@ -66,14 +59,7 @@ import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
 import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
 import { encodeRunToken } from "@/lib/game/run-token";
 import { listRunRecords, setRunPinned } from "@/lib/game/run-record";
-import { projectTeamSheetDraft } from "@/lib/game/team-sheet";
 import { mirrorRunPinToServer } from "@/lib/game/save-mirror";
-import {
-  FRIEND_CHALLENGE_VERIFICATION_COPY,
-  verifyFriendChallenge,
-  type VerifiedFriendChallengeSetup,
-} from "@/lib/game/friend-challenge";
-import { ChallengeFriendButton } from "./challenge-friend-button";
 import s from "./game.module.css";
 
 // MemoryReveal renders only for blind-mode runs (see below). Lazy-load it so
@@ -313,10 +299,6 @@ function ResultsBody({
   const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
   const [referenceStanding, setReferenceStanding] = useState<ReferenceStanding | null>(null);
   const [seedCopied, setSeedCopied] = useState(false);
-  const presentationDraft = useMemo(
-    () => projectTeamSheetDraft(gameData, record),
-    [gameData, record],
-  );
 
   // Reference standing: computed locally from the shipped quantile table.
   // Null (chip omitted) when the table is unavailable or its anchors do not
@@ -336,49 +318,31 @@ function ResultsBody({
   }, [record]);
 
   const narrativeLabels = useMemo(
-    () => buildNarrativeLabels(gameData, scenario, presentationDraft),
-    [gameData, scenario, presentationDraft],
+    () => buildNarrativeLabels(gameData, scenario, record.draft),
+    [gameData, scenario, record.draft],
   );
 
   const summary: RunSummaryView = useMemo(
     () =>
       buildRunSummary(
         gameData,
-        presentationDraft.team_name,
+        record.draft.team_name,
         sim.run,
         sim.matches,
         eliminatedInGroup,
         narrativeLabels,
       ),
-    [gameData, presentationDraft, sim.run, sim.matches, eliminatedInGroup, narrativeLabels],
+    [gameData, record.draft, sim.run, sim.matches, eliminatedInGroup, narrativeLabels],
   );
 
   const matchCards: MatchCardView[] = useMemo(
     () => matchCardViews(scenario, gameData, sim.matches),
     [scenario, gameData, sim.matches],
   );
-  const factualRecap = useMemo(
-    () => buildFactualRecap(gameData, record, sim.matches),
-    [gameData, record, sim.matches],
-  );
 
   // Open the LAST match by default (the climax of the run).
   const lastMatchId = sim.matches[sim.matches.length - 1]?.match_id ?? null;
   const [open, setOpen] = useState<string | null>(lastMatchId);
-  const [pendingEventFocus, setPendingEventFocus] = useState<{
-    matchId: string;
-    targetId: string;
-  } | null>(null);
-
-  useEffect(() => {
-    if (pendingEventFocus === null || open !== pendingEventFocus.matchId) return;
-    const request = pendingEventFocus;
-    const frame = window.requestAnimationFrame(() => {
-      focusFactualEventTarget(request.targetId);
-      setPendingEventFocus((current) => (current?.targetId === request.targetId ? null : current));
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [open, pendingEventFocus]);
 
   const eyebrow = summary.is_champion
     ? "Champions"
@@ -465,16 +429,10 @@ function ResultsBody({
     };
   }, [dailyDate, isReplayedFromToken, record, sim.run.score, standingRefresh]);
 
-  async function togglePinned() {
+  function togglePinned() {
     if (isReplayedFromToken) return;
     const nextPinned = !pinned;
-    const result = await setRunPinned(record.run_id, gameData.versions, nextPinned).catch(
-      () => null,
-    );
-    if (!result) {
-      setPinWarning("Could not update the local pin for this run.");
-      return;
-    }
+    const result = setRunPinned(record.run_id, gameData.versions, nextPinned);
     if (result.status === "updated" && result.record) {
       setPinned(result.record.pinned === true);
       setPinWarning(result.warnings[0] ?? null);
@@ -482,7 +440,7 @@ function ResultsBody({
       void mirrorRunPinToServer(record.run_id, result.record.pinned === true);
       return;
     }
-    setPinWarning(result.warnings[0] ?? "Could not update the local pin for this run.");
+    setPinWarning("Could not update the local pin for this run.");
   }
 
   async function copyFullSeed() {
@@ -493,11 +451,6 @@ function ResultsBody({
     } catch {
       setSeedCopied(false);
     }
-  }
-
-  function openFactualEvent(matchId: string, eventId: string) {
-    setOpen(matchId);
-    setPendingEventFocus({ matchId, targetId: factualEventTargetId(matchId, eventId) });
   }
 
   return (
@@ -557,11 +510,7 @@ function ResultsBody({
         <LocalProgressBand summary={progressSummary} compact />
       </div>
 
-      {record.friend_challenge ? (
-        <ChallengeHeadToHead parent={record.friend_challenge} recipientScore={sim.run.score} />
-      ) : null}
-
-      {!isBlindDraftMode(presentationDraft.mode) ? <MemoryProgressionPanel /> : null}
+      {!isBlindDraftMode(record.draft.mode) ? <MemoryProgressionPanel /> : null}
 
       {/* ── Memory-mode reveal ────────────────────────────────────────────
           Blind-mode runs blind every rating signal through draft + review;
@@ -569,7 +518,7 @@ function ResultsBody({
           covers SHARED blind runs — a token replay reconstructs the
           draft (mode rides the token's `md`) and reveals the same way.
           Sighted runs render nothing extra. */}
-      {isBlindDraftMode(presentationDraft.mode) ? (
+      {isBlindDraftMode(record.draft.mode) ? (
         <MemoryReveal gameData={gameData} record={record} />
       ) : null}
 
@@ -582,8 +531,6 @@ function ResultsBody({
           <p className={s.narrativeText}>{summary.narrative}</p>
         </section>
       ) : null}
-
-      <FactualRecap view={factualRecap} onOpenEvent={openFactualEvent} />
 
       {/* ── Match-by-match ────────────────────────────────────────────── */}
       <section className={`${s.panel} ${s.resultsMatchPanel}`} aria-label="Match results">
@@ -678,90 +625,12 @@ function ResultsBody({
           <Link href={shareHref(linkRunValue)} className={`btn btn--primary ${s.sharePrimary}`}>
             Share
           </Link>
-          <ChallengeFriendButton record={record} />
           <Link href={historyHref()} className="btn btn--ghost">
             View History
           </Link>
         </div>
       </section>
     </div>
-  );
-}
-
-function ChallengeHeadToHead({
-  parent,
-  recipientScore,
-}: {
-  parent: NonNullable<RunRecordV1["friend_challenge"]>;
-  recipientScore: number;
-}) {
-  const [state, setState] = useState<
-    | { kind: "loading" }
-    | { kind: "ready"; challenge: VerifiedFriendChallengeSetup }
-    | { kind: "error" }
-  >({ kind: "loading" });
-  useEffect(() => {
-    const controller = new AbortController();
-    setState({ kind: "loading" });
-    void verifyFriendChallenge(parent, controller.signal).then((result) => {
-      if (!controller.signal.aborted)
-        setState(result.ok ? { kind: "ready", challenge: result.challenge } : { kind: "error" });
-    });
-    return () => {
-      controller.abort();
-    };
-  }, [parent.proof, parent.token]);
-  if (state.kind === "loading")
-    return (
-      <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
-        <span className={s.eyebrowAccent}>Head to head</span>
-        <p role="status">Verifying your friend&apos;s run…</p>
-      </section>
-    );
-  if (state.kind === "error")
-    return (
-      <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
-        <span className={s.eyebrowAccent}>Head to head</span>
-        <p role="status">Comparison unavailable — the friend challenge could not be verified.</p>
-      </section>
-    );
-  if (state.challenge.status === "DIFFERENT_BUILD")
-    return (
-      <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
-        <span className={s.eyebrowAccent}>Head to head</span>
-        <h2 className={s.panelTitle}>Different build</h2>
-        <p>
-          Your friend played on a different build. Your score is {recipientScore} pts; their score
-          is not compared.
-        </p>
-      </section>
-    );
-  const challengerScore = state.challenge.challengerScore;
-  const result =
-    recipientScore > challengerScore
-      ? "You won this board"
-      : recipientScore === challengerScore
-        ? "Board tied"
-        : "Your friend leads this board";
-  return (
-    <section className={`${s.panel} ${s.friendHeadToHead}`} aria-label="Head to head">
-      <span className={s.eyebrowAccent}>Verified head to head</span>
-      <h2 className={s.panelTitle}>{result}</h2>
-      <div className={s.friendScoreGrid}>
-        <div>
-          <span>You</span>
-          <strong>{recipientScore}</strong>
-          <small>pts</small>
-        </div>
-        <span aria-hidden="true">vs</span>
-        <div>
-          <span>{state.challenge.challengerDisplay}</span>
-          <strong>{challengerScore}</strong>
-          <small>pts</small>
-        </div>
-      </div>
-      <p className={s.friendVerifyNote}>{FRIEND_CHALLENGE_VERIFICATION_COPY}</p>
-    </section>
   );
 }
 
@@ -885,77 +754,62 @@ function MatchListItem({
         </span>
       </button>
 
-      <div className={s.boxScore} hidden={!isOpen}>
-        <div className={s.boxCol}>
-          <span className={s.boxColHead}>Your XI</span>
-          {box.userGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
-          {box.userGoals.map((g, i) => (
-            <span key={`u${i}`} className={s.boxGoal}>
-              <GoalIcon className={s.boxIcon} width={16} height={16} />
-              {g.name} {g.minute}&rsquo;{periodTag(g.period)}
-              {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
-            </span>
-          ))}
-        </div>
-        <div className={s.boxCol}>
-          <span className={s.boxColHead}>{view.opponent.name}</span>
-          {box.oppGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
-          {box.oppGoals.map((g, i) => (
-            <span key={`o${i}`} className={s.boxGoal}>
-              <GoalIcon className={s.boxIcon} width={16} height={16} />
-              {g.name} {g.minute}&rsquo;{periodTag(g.period)}
-              {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
-            </span>
-          ))}
-        </div>
-
-        {(box.cards.length > 0 ||
-          box.subs.length > 0 ||
-          box.injuries.length > 0 ||
-          box.availability.length > 0) && (
-          <div className={s.boxEvents}>
-            {box.availability.length > 0 ? (
-              <span className={s.bookingsLegend}>Availability</span>
-            ) : null}
-            {box.availability.map((entry) => (
-              <FactualEventTarget
-                key={entry.eventId}
-                matchId={match.match_id}
-                eventId={entry.eventId}
-              >
-                <InjuryIcon className={s.boxIcon} width={16} height={16} />
-                {entry.name} unavailable
-                {entry.replacement === null ? " · short-handed" : ` · ${entry.replacement} started`}
-              </FactualEventTarget>
-            ))}
-            {box.cards.length > 0 ? <span className={s.bookingsLegend}>Bookings</span> : null}
-            {box.cards.map((c, i) => (
-              <span key={`c${i}`} className={s.boxEvent}>
-                <span
-                  className={c.card === "red" ? s.cardRed : s.cardYellow}
-                  aria-label={c.card === "red" ? "Red card" : "Yellow card"}
-                >
-                  {c.card === "red" ? "R" : "Y"}
-                </span>
-                {c.name} {c.minute}&rsquo; ({c.side === "user" ? "us" : view.opponent.name})
-              </span>
-            ))}
-            {box.subs.length > 0 ? <span className={s.bookingsLegend}>SUBS</span> : null}
-            {box.subs.map((sub, i) => (
-              <span key={`s${i}`} className={s.boxEvent}>
-                <SubstitutionIcon className={s.boxIcon} width={16} height={16} />
-                {sub.name} for {sub.off} {sub.minute}&rsquo;
-              </span>
-            ))}
-            {box.injuries.map((inj, i) => (
-              <span key={`i${i}`} className={s.boxEvent}>
-                <InjuryIcon className={s.boxIcon} width={16} height={16} />
-                {inj.name} {inj.minute}&rsquo;{inj.ending ? " (out of tournament)" : ""}
+      {isOpen && (
+        <div className={s.boxScore}>
+          <div className={s.boxCol}>
+            <span className={s.boxColHead}>Your XI</span>
+            {box.userGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
+            {box.userGoals.map((g, i) => (
+              <span key={`u${i}`} className={s.boxGoal}>
+                <GoalIcon className={s.boxIcon} width={16} height={16} />
+                {g.name} {g.minute}&rsquo;{periodTag(g.period)}
+                {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
               </span>
             ))}
           </div>
-        )}
-      </div>
+          <div className={s.boxCol}>
+            <span className={s.boxColHead}>{view.opponent.name}</span>
+            {box.oppGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
+            {box.oppGoals.map((g, i) => (
+              <span key={`o${i}`} className={s.boxGoal}>
+                <GoalIcon className={s.boxIcon} width={16} height={16} />
+                {g.name} {g.minute}&rsquo;{periodTag(g.period)}
+                {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
+              </span>
+            ))}
+          </div>
+
+          {(box.cards.length > 0 || box.subs.length > 0 || box.injuries.length > 0) && (
+            <div className={s.boxEvents}>
+              {box.cards.length > 0 ? <span className={s.bookingsLegend}>Bookings</span> : null}
+              {box.cards.map((c, i) => (
+                <span key={`c${i}`} className={s.boxEvent}>
+                  <span
+                    className={c.card === "red" ? s.cardRed : s.cardYellow}
+                    aria-label={c.card === "red" ? "Red card" : "Yellow card"}
+                  >
+                    {c.card === "red" ? "R" : "Y"}
+                  </span>
+                  {c.name} {c.minute}&rsquo; ({c.side === "user" ? "us" : view.opponent.name})
+                </span>
+              ))}
+              {box.subs.length > 0 ? <span className={s.bookingsLegend}>SUBS</span> : null}
+              {box.subs.map((sub, i) => (
+                <span key={`s${i}`} className={s.boxEvent}>
+                  <SubstitutionIcon className={s.boxIcon} width={16} height={16} />
+                  {sub.name} for {sub.off} {sub.minute}&rsquo;
+                </span>
+              ))}
+              {box.injuries.map((inj, i) => (
+                <span key={`i${i}`} className={s.boxEvent}>
+                  <InjuryIcon className={s.boxIcon} width={16} height={16} />
+                  {inj.name} {inj.minute}&rsquo;{inj.ending ? " (out of tournament)" : ""}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </li>
   );
 }

@@ -32,12 +32,6 @@ export const DEFAULT_BOARD_FILTER: BoardConfigFilter = Object.freeze({
 
 export const CANONICAL_SEASON_BOARD_FILTER: BoardConfigFilter = DEFAULT_BOARD_FILTER;
 
-/** The Memory counterpart to the canonical Classic board stays visible at zero entries. */
-export const FEATURED_MEMORY_BOARD_FILTER: BoardConfigFilter = Object.freeze({
-  ...DEFAULT_BOARD_FILTER,
-  draftMode: "hidden",
-});
-
 export const DEFAULT_DAILY_BOARD_FILTER: BoardConfigFilter = Object.freeze({
   challenge: "daily",
   challengeDate: null,
@@ -152,11 +146,7 @@ export const ADVANCED_BOARD_CONFIG_OPTIONS: readonly AdvancedBoardConfigOption[]
         ),
       ),
     ),
-  ).filter(
-    (option) =>
-      !isCanonicalSeasonBoardFilter(option.filter) &&
-      !isFeaturedMemorySeasonBoardFilter(option.filter),
-  ),
+  ).filter((option) => !isCanonicalSeasonBoardFilter(option.filter)),
 );
 
 export function isCanonicalSeasonBoardFilter(filter: BoardConfigFilter): boolean {
@@ -167,17 +157,6 @@ export function isCanonicalSeasonBoardFilter(filter: BoardConfigFilter): boolean
     filter.draftOrder === CANONICAL_SEASON_BOARD_FILTER.draftOrder &&
     filter.era === CANONICAL_SEASON_BOARD_FILTER.era &&
     filter.ratingBasis === CANONICAL_SEASON_BOARD_FILTER.ratingBasis
-  );
-}
-
-export function isFeaturedMemorySeasonBoardFilter(filter: BoardConfigFilter): boolean {
-  return (
-    filter.challenge === "season" &&
-    filter.lane === FEATURED_MEMORY_BOARD_FILTER.lane &&
-    filter.draftMode === FEATURED_MEMORY_BOARD_FILTER.draftMode &&
-    filter.draftOrder === FEATURED_MEMORY_BOARD_FILTER.draftOrder &&
-    filter.era === FEATURED_MEMORY_BOARD_FILTER.era &&
-    filter.ratingBasis === FEATURED_MEMORY_BOARD_FILTER.ratingBasis
   );
 }
 

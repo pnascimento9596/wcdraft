@@ -5,7 +5,7 @@
   "formation_id": "4-3-3",
   "n_seeds": 5,
   "rating_version": "wc-perf-6.6.0+proj-career-5.6.0",
-  "engine_version": "engine-2026.07.14-squad-depth",
+  "engine_version": "engine-2026.06.30-manager-attrition",
   "dataset_version": "2026-07-01",
   "records": [
     {

@@ -25,18 +25,7 @@ export const SEASON_HASH_ANCHOR_ORDER = [
 /** Hex length of the collision-proof suffix. */
 export const SEASON_KEY_HASH_LEN = 8;
 
-export const DEFAULT_LEADERBOARD_SEASON_ID = "season-2026-squad-depth" as const;
-
-/** Completed seasons remain readable, but current-anchor writes can never land in them. */
-export const ARCHIVED_LEADERBOARD_SEASON_IDS = ["season-2026-manager-attrition"] as const;
-
-/** Public read boundary: only the live season and explicitly retained archives are addressable. */
-export function isReadableLeaderboardSeasonId(value: string, currentSeasonId: string): boolean {
-  return (
-    value === currentSeasonId ||
-    (ARCHIVED_LEADERBOARD_SEASON_IDS as readonly string[]).includes(value)
-  );
-}
+export const DEFAULT_LEADERBOARD_SEASON_ID = "season-2026-manager-attrition" as const;
 
 const MAX_EXPLICIT_SEASON_ID_CHARS = 160;
 const EXPLICIT_SEASON_ID_RE = /^[A-Za-z0-9._:+-]+$/u;

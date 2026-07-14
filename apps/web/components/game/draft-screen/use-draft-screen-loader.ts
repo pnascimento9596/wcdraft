@@ -18,37 +18,18 @@ import {
 } from "@/lib/game/run-record";
 import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { VOLATILE_STORAGE_WARNING } from "./constants";
-import {
-  verifyFriendChallenge,
-  type FriendChallengeRef,
-  type FriendChallengeSearchState,
-  type VerifiedFriendChallengeSetup,
-} from "@/lib/game/friend-challenge";
 
 export type DraftScreenMode =
   | { kind: "loading" }
   | { kind: "daily_unavailable" }
   | { kind: "formation_select"; gameData: GameData }
   | {
-      kind: "friend_setup";
-      gameData: GameData;
-      ref: FriendChallengeRef;
-      challenge: VerifiedFriendChallengeSetup;
-    }
-  | {
       kind: "ready";
       gameData: GameData;
       record: RunRecordV1;
       persistenceWarning: string | null;
     }
-  | {
-      kind: "recovery";
-      gameData: GameData;
-      title: string;
-      reason: string;
-      runId: string | null;
-      retryable: boolean;
-    }
+  | { kind: "recovery"; gameData: GameData; reason: string; runId: string | null }
   | { kind: "error"; title: string; message: string };
 
 export type InitialDraftDataResult =
@@ -94,7 +75,7 @@ export async function loadInitialDraftData(
 
 export function useDraftScreenLoader(
   requestRunId: string | null,
-  opts: { dailyDate?: string | null; friendChallenge?: FriendChallengeSearchState } = {},
+  opts: { dailyDate?: string | null } = {},
 ): {
   mode: DraftScreenMode;
   setMode: Dispatch<SetStateAction<DraftScreenMode>>;
@@ -106,9 +87,7 @@ export function useDraftScreenLoader(
 
   useEffect(() => {
     const myToken = ++reqToken.current;
-    const controller = new AbortController();
     const dailyDate = opts.dailyDate ?? null;
-    const friendChallenge = opts.friendChallenge ?? { kind: "none" as const };
     setMode({ kind: "loading" });
     loadInitialDraftData(requestRunId, dailyDate)
       .then(async (initial) => {
@@ -118,58 +97,7 @@ export function useDraftScreenLoader(
           return;
         }
         const gd = initial.gameData;
-        if (friendChallenge.kind === "invalid") {
-          setMode({
-            kind: "recovery",
-            gameData: gd,
-            title: "Couldn’t verify that challenge",
-            reason: "This friend challenge link is malformed or incomplete.",
-            runId: null,
-            retryable: false,
-          });
-          return;
-        }
-        if (friendChallenge.kind === "ready") {
-          const verified = await verifyFriendChallenge(friendChallenge.ref, controller.signal);
-          if (myToken !== reqToken.current) return;
-          if (!verified.ok) {
-            setMode({
-              kind: "recovery",
-              gameData: gd,
-              title: "Couldn’t verify that challenge",
-              reason:
-                verified.error === "DAILY_UNAVAILABLE"
-                  ? "This Daily challenge is outside the currently published coverage window."
-                  : verified.error === "RATE_LIMITED"
-                    ? "Friend challenge verification is busy. Try again shortly."
-                    : verified.error === "INVALID_CHALLENGE"
-                      ? "This friend challenge could not be verified. Ask for a fresh link."
-                      : "Friend challenge verification is unavailable right now.",
-              runId: null,
-              retryable: verified.error === "RATE_LIMITED" || verified.error === "UNAVAILABLE",
-            });
-            return;
-          }
-          if (verified.challenge.dailyDate !== dailyDate) {
-            setMode({
-              kind: "recovery",
-              gameData: gd,
-              title: "Couldn’t verify that challenge",
-              reason: "This friend challenge was opened on the wrong play route.",
-              runId: null,
-              retryable: false,
-            });
-            return;
-          }
-          setMode({
-            kind: "friend_setup",
-            gameData: gd,
-            ref: friendChallenge.ref,
-            challenge: verified.challenge,
-          });
-          return;
-        }
-        if (!requestRunId) await evictStaleRunRecords(gd.versions);
+        evictStaleRunRecords(gd.versions);
         if (requestRunId) {
           const resolved = await resolveDisplayRun(
             { kind: "id", run_id: requestRunId },
@@ -192,7 +120,6 @@ export function useDraftScreenLoader(
             setMode({
               kind: "recovery",
               gameData: gd,
-              title: "Couldn’t resume that draft",
               reason:
                 resolved.kind === "missing" && resolved.localStatus === "missing"
                   ? "We couldn't find a draft for that link."
@@ -200,7 +127,6 @@ export function useDraftScreenLoader(
                     ? "This draft was created on an older data bundle and has been evicted."
                     : "This draft record is invalid and has been removed.",
               runId: requestRunId,
-              retryable: false,
             });
           }
         } else if (dailyDate) {
@@ -209,7 +135,7 @@ export function useDraftScreenLoader(
             return;
           }
           const challenge = dailyChallengeForDate(dailyDate, gd.dailySeedSaltMap);
-          const created = await createNewRunRecord(gd, {
+          const created = createNewRunRecord(gd, {
             formation_id: DAILY_DRAFT_CONFIG.formationId,
             mode: DAILY_DRAFT_CONFIG.mode,
             team_name: DAILY_DRAFT_CONFIG.teamName,
@@ -239,39 +165,13 @@ export function useDraftScreenLoader(
         setMode({ kind: "error", title: d.title, message: d.message });
       });
     return () => {
-      controller.abort();
       reqToken.current += 1;
     };
-  }, [requestRunId, opts.dailyDate, opts.friendChallenge, retryNonce]);
+  }, [requestRunId, opts.dailyDate, retryNonce]);
 
   const retryFromError = useCallback(() => {
     setRetryNonce((value) => value + 1);
   }, []);
 
   return { mode, setMode, retryFromError };
-}
-
-export async function createFriendChallengeRun(
-  gameData: GameData,
-  ref: FriendChallengeRef,
-  challenge: VerifiedFriendChallengeSetup,
-): Promise<Awaited<ReturnType<typeof createNewRunRecord>>> {
-  return createNewRunRecord(gameData, {
-    formation_id: challenge.formationId,
-    mode: challenge.mode,
-    parent_seed: challenge.parentSeed,
-    era_preset: challenge.eraPreset,
-    draft_flow: challenge.draftFlow,
-    rating_basis: challenge.ratingBasis,
-    ...(challenge.dailyDate === null
-      ? {}
-      : {
-          challenge: {
-            kind: "daily" as const,
-            date: challenge.dailyDate,
-            seed: challenge.parentSeed,
-          },
-        }),
-    friend_challenge: ref,
-  });
 }

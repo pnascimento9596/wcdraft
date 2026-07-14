@@ -41,8 +41,6 @@ export interface PitchProps {
   onSlotSelect?: (slotId: string) => void;
   /** Static display (review screen) hides interaction affordances. */
   interactive?: boolean;
-  /** Review-only: filled slots remain swappable; draft filled slots stay locked. */
-  filledSlotInteraction?: boolean;
 }
 
 const FALLBACK_LINE: Record<string, FormationVisualSlot["visual_line"]> = {
@@ -108,7 +106,6 @@ export function Pitch({
   previewCompat = null,
   onSlotSelect,
   interactive = false,
-  filledSlotInteraction = false,
 }: PitchProps) {
   const canonicalSlots: FormationVisualSlot[] = isSupportedFormationId(formationId)
     ? getFormationVisualSlots(formationId)
@@ -180,7 +177,6 @@ export function Pitch({
             selected={slot.slot_id === selectedSlotId}
             previewCompat={previewCompat?.[slot.slot_id]}
             interactive={interactive}
-            filledSlotInteraction={filledSlotInteraction}
             onSelect={onSlotSelect}
           />
         );
@@ -196,7 +192,6 @@ function SlotChip({
   selected,
   previewCompat,
   interactive,
-  filledSlotInteraction,
   onSelect,
 }: {
   slot: PitchSlotView;
@@ -205,7 +200,6 @@ function SlotChip({
   selected: boolean;
   previewCompat: number | undefined;
   interactive: boolean;
-  filledSlotInteraction: boolean;
   onSelect?: (slotId: string) => void;
 }) {
   const filled = !!slot.card;
@@ -216,8 +210,7 @@ function SlotChip({
 
   const classes = [s.slot, s[`slotShape_${shape}`]!];
   if (filled) {
-    classes.push(s.slotFilled, s[`slotProv_${card!.rating.badge_kind}`]!);
-    if (!filledSlotInteraction) classes.push(s.slotLocked);
+    classes.push(s.slotFilled, s.slotLocked, s[`slotProv_${card!.rating.badge_kind}`]!);
   } else {
     classes.push(s.slotEmpty);
   }
@@ -226,7 +219,7 @@ function SlotChip({
   if (previewTier) classes.push(s.slotPreview, s[`tierPreview_${previewTier}`]!);
 
   const label = filled
-    ? `${slot.slot_position} — ${slot.card!.name}${filledSlotInteraction ? "; select to swap" : " (locked)"}`
+    ? `${slot.slot_position} — ${slot.card!.name} (locked)`
     : `${slot.slot_position} — empty slot`;
 
   const shapeMarker = (
@@ -264,7 +257,7 @@ function SlotChip({
 
   const style = { left: `${x}%`, top: `${y}%` } as const;
 
-  if (!interactive || (filled && !filledSlotInteraction)) {
+  if (!interactive || filled) {
     return (
       <div className={classes.join(" ")} aria-label={label} style={style}>
         {content}

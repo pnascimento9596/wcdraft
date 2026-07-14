@@ -5,11 +5,6 @@ export const RUN_OG_SIGNING_SECRET_ENV = "WCDRAFT_OG_SIGNING_SECRET" as const;
 export const RUN_OG_SIGNING_SECRET_MIN_CHARS = 32 as const;
 export const SIGNED_RUN_OG_PREFIX = "ogs1." as const;
 export const SIGNED_RUN_OG_MAX_LEN = 12000 as const;
-export const SIGNED_FRIEND_CHALLENGE_PREFIX = "fc1." as const;
-// `fc1.` + 64 lowercase hex chars + `.` + a canonical unpadded 32-byte
-// base64url HMAC. Keeping this exact prevents alternate wire encodings from
-// becoming separate accepted challenge identifiers.
-export const SIGNED_FRIEND_CHALLENGE_MAX_LEN = 112 as const;
 
 export interface SignedRunOgPayload {
   v: 1;
@@ -18,19 +13,7 @@ export interface SignedRunOgPayload {
   model: RunOgModel;
 }
 
-/**
- * Stateless proof that a canonical run token passed server replay when the
- * challenge was created. The run token itself remains the seed/config/pick
- * authority; this compact payload only binds its hash. S7 has no dedicated
- * verified display claim in a run token, so recipients render "a friend".
- */
-export interface SignedFriendChallengePayload {
-  v: 1;
-  token_hash: string;
-}
-
 const HEX_64 = /^[0-9a-f]{64}$/u;
-const SIGNED_FRIEND_CHALLENGE = /^fc1\.[0-9a-f]{64}\.[A-Za-z0-9_-]{43}$/u;
 const TEXT_MAX = 160;
 const LABEL_MAX = 64;
 
@@ -106,55 +89,6 @@ export async function verifySignedRunOgPayload(
   return normalizeSignedRunOgPayload(parsed);
 }
 
-export async function signFriendChallengePayload(
-  payload: SignedFriendChallengePayload,
-  secret: string,
-): Promise<string> {
-  const normalized = assertSignedFriendChallengePayload(payload);
-  const sig = await hmac(friendChallengeSigningMessage(normalized.token_hash), secret);
-  return `${SIGNED_FRIEND_CHALLENGE_PREFIX}${normalized.token_hash}.${base64UrlEncode(sig)}`;
-}
-
-export async function verifySignedFriendChallengePayload(
-  value: string,
-  secret: string,
-): Promise<SignedFriendChallengePayload | null> {
-  if (!isLikelySignedFriendChallenge(value)) return null;
-  const rest = value.slice(SIGNED_FRIEND_CHALLENGE_PREFIX.length);
-  const dot = rest.indexOf(".");
-  if (dot !== 64 || dot === rest.length - 1 || rest.indexOf(".", dot + 1) !== -1) return null;
-  const tokenHash = rest.slice(0, dot);
-  if (!HEX_64.test(tokenHash)) return null;
-  const signature = rest.slice(dot + 1);
-  let supplied: Uint8Array;
-  try {
-    supplied = base64UrlDecode(signature);
-  } catch {
-    return null;
-  }
-  if (supplied.length !== 32 || base64UrlEncode(supplied) !== signature) return null;
-  const expected = await hmac(friendChallengeSigningMessage(tokenHash), secret);
-  if (!constantTimeEqual(supplied, expected)) return null;
-  return { v: 1, token_hash: tokenHash };
-}
-
-export function isLikelySignedFriendChallenge(value: unknown): value is string {
-  if (
-    typeof value !== "string" ||
-    value.length !== SIGNED_FRIEND_CHALLENGE_MAX_LEN ||
-    !SIGNED_FRIEND_CHALLENGE.test(value)
-  ) {
-    return false;
-  }
-  try {
-    const signature = value.slice(-43);
-    const decoded = base64UrlDecode(signature);
-    return decoded.length === 32 && base64UrlEncode(decoded) === signature;
-  } catch {
-    return false;
-  }
-}
-
 export function isLikelySignedRunOg(value: unknown): value is string {
   return (
     typeof value === "string" &&
@@ -186,21 +120,6 @@ function assertSignedRunOgPayload(value: SignedRunOgPayload): SignedRunOgPayload
     throw new TypeError("signed run OG payload failed validation");
   }
   return normalized;
-}
-
-function assertSignedFriendChallengePayload(
-  value: SignedFriendChallengePayload,
-): SignedFriendChallengePayload {
-  if (value.v !== 1 || !HEX_64.test(value.token_hash)) {
-    throw new TypeError("signed friend challenge payload failed validation");
-  }
-  return { v: 1, token_hash: value.token_hash };
-}
-
-function friendChallengeSigningMessage(tokenHash: string): string {
-  // Domain-separated from the OG envelope HMAC. A valid `ogs1` signature can
-  // never be substituted for an `fc1` proof, even under the same secret.
-  return `wcdraft:friend-challenge:v1:${tokenHash}`;
 }
 
 function isVersions(value: unknown): value is RunRecordVersions {

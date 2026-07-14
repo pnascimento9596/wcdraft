@@ -8,7 +8,6 @@ import {
   type ManagerCardView,
   type PlayerCardView,
 } from "@/lib/game/view-models";
-import type { FitTeachingImpact } from "@/lib/game/fit-teaching";
 import { ClubCrestMark } from "./club-crest";
 import s from "./game.module.css";
 
@@ -81,7 +80,6 @@ function PositionGlyph({ position }: { position: PlayerCardView["eligible_positi
  */
 export const CandidateCard = memo(function CandidateCard({
   card,
-  fitTeachingImpact = null,
   selected,
   disabled,
   blindRatings = false,
@@ -89,8 +87,6 @@ export const CandidateCard = memo(function CandidateCard({
   onSelect,
 }: {
   card: PlayerCardView;
-  /** S5 projected line contribution for this candidate's honest lock context. */
-  fitTeachingImpact?: FitTeachingImpact | null;
   selected: boolean;
   disabled?: boolean;
   blindRatings?: boolean;
@@ -154,29 +150,6 @@ export const CandidateCard = memo(function CandidateCard({
               </span>
             ) : null}
           </span>
-          {fitTeachingImpact ? (
-            <span
-              className={`${s.fitTeachingChip} ${s[`fitTeaching_${fitTeachingImpact.fit_tier}`]!}`}
-              data-fit-teaching-chip
-              data-fit-basis={fitTeachingImpact.basis}
-              aria-label={fitTeachingImpact.accessible_label}
-              title={fitTeachingImpact.accessible_label}
-            >
-              <span
-                className={`${s.fitTeachingShape} ${s[`shapeDot_${positionShape(fitTeachingImpact.line)}`]!}`}
-                aria-hidden="true"
-              />
-              <span className={s.fitTeachingValue}>
-                {fitTeachingImpact.line_label} {fitTeachingImpact.display_delta_label} pre-Synergy
-              </span>
-              {fitTeachingImpact.fit_copy ? (
-                <span className={s.fitTeachingContext}>
-                  {fitTeachingImpact.position_copy ? `${fitTeachingImpact.position_copy} · ` : null}
-                  {fitTeachingImpact.fit_copy}
-                </span>
-              ) : null}
-            </span>
-          ) : null}
         </span>
 
         <span

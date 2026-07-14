@@ -42,7 +42,6 @@ import {
 import type { SubmissionBody, ValidationData } from "../validate";
 import { buildOriginRecord, buildSubmissionBody, encodeBody, expectedRunFor } from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
-import skewFixtures from "../../game/__tests__/fixtures/run-token-skew.json" with { type: "json" };
 
 const GOLDEN = fixtureJson as unknown as {
   season_key: string;
@@ -461,18 +460,6 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     const body = await errorOf(res);
     expect(body.error).toBe("WRONG_SEASON");
     expect(body.mismatched_anchors).toEqual(["engine_version"]);
-  });
-
-  it("the real pre-Season-2 production token cannot submit into the new season", async () => {
-    const res = await handleLeaderboardSubmit(
-      makeReq({ body: validBody({ token: skewFixtures.shipped_pre_s2_t3.token }) }),
-      makeDeps(),
-    );
-    expect(res.status).toBe(409);
-    const body = await errorOf(res);
-    expect(body.error).toBe("WRONG_SEASON");
-    expect(body.mismatched_anchors).toEqual(["engine_version"]);
-    expect(await allRows()).toHaveLength(0);
   });
 
   it("pre-V6 leaderboard token anchors → 409 WRONG_SEASON, never persisted", async () => {
@@ -1214,39 +1201,6 @@ describe("ranked account gate", () => {
     const res = await handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps());
     expect(res.status).toBe(403);
     expect((await errorOf(res)).error).toBe("BAD_ATTEMPT");
-    expect(await allRows()).toHaveLength(0);
-    expect((await allAttempts())[0]!.consumedAt).toBeNull();
-  });
-
-  it("cannot turn a disclosed friend seed into ranked through a normal issued attempt", async () => {
-    const inserted = await db
-      .insert(users)
-      .values({
-        email: "friend-seed-ranked@example.com",
-        username: "friend_seed_ranked",
-        emailVerifiedAt: VERIFIED_AT,
-      })
-      .returning();
-    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
-    const body = bodyForRecord(
-      "wcdraft:friend:disclosed-seed",
-      {},
-      {
-        mode: "ranked",
-        display_alias: undefined,
-        display_name: undefined,
-      },
-    );
-    await issueRankedAttemptForBody({
-      userId: inserted[0]!.id,
-      sessionId,
-      body,
-      parentSeed: "wcdraft:ranked:v1:server-issued-different-seed",
-    });
-
-    const response = await handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps());
-    expect(response.status).toBe(403);
-    expect((await errorOf(response)).error).toBe("BAD_ATTEMPT");
     expect(await allRows()).toHaveLength(0);
     expect((await allAttempts())[0]!.consumedAt).toBeNull();
   });

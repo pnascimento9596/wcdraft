@@ -15,7 +15,6 @@ import { z } from "zod";
 import type {
   FoulEvent,
   GoalEvent,
-  AvailabilityEvent,
   InjuryEvent,
   KeyPassEvent,
   MatchEvent,
@@ -36,11 +35,6 @@ import type {
   YellowEvent,
 } from "../types/sim.js";
 import { CardIdSchema, refineCardIdConsistency } from "./identity.js";
-import { TeamStrengthSchema } from "./rating.js";
-import { applyManagerTacticalAdjustment } from "../engine/manager-tactics.js";
-import { INJURY } from "../engine/calibration.js";
-import { FORMATION_TEMPLATES, slotPositionLine } from "../types/formation.js";
-import { SynergyResultSchema } from "./synergy.js";
 import {
   IntegerRangeSchema,
   MatchPeriodSchema,
@@ -65,14 +59,6 @@ const ProbabilitySchema = z
   .min(0)
   .max(1)
   .refine(Number.isFinite, { message: "probability must be finite" });
-
-const ContinuousTacticalStrengthSchema = z.object({
-  attack: z.number().finite().min(0).max(100),
-  midfield: z.number().finite().min(0).max(100),
-  defense: z.number().finite().min(0).max(100),
-  goalkeeping: z.number().finite().min(0).max(100),
-  coverage: ProbabilitySchema,
-});
 
 const EventBase = {
   event_id: NonEmptyIdSchema,
@@ -195,22 +181,6 @@ const InjuryEventSchema = z.object({
   tournament_ending: z.boolean(),
 }) satisfies z.ZodType<InjuryEvent>;
 
-const AvailabilityEventSchema = z.object({
-  ...EventBase,
-  type: z.literal("availability"),
-  minute: z.literal(0),
-  period: z.literal("1H"),
-  card_id: CardIdSchema,
-  player_id: NonEmptyIdSchema,
-  slot_id: NonEmptyIdSchema,
-  position: PositionSchema,
-  reason: z.enum(["knock", "suspension", "tournament_injury"]),
-  duration_matches: z.union([z.literal(1), z.literal(2)]).nullable(),
-  replacement_card_id: CardIdSchema.nullable(),
-  replacement_player_id: NonEmptyIdSchema.nullable(),
-  short_handed: z.boolean(),
-}) satisfies z.ZodType<AvailabilityEvent>;
-
 const SubEventSchema = z.object({
   ...EventBase,
   type: z.literal("sub"),
@@ -247,7 +217,6 @@ export const MatchEventSchema = z.discriminatedUnion("type", [
   YellowEventSchema,
   RedEventSchema,
   InjuryEventSchema,
-  AvailabilityEventSchema,
   SubEventSchema,
   ShootoutKickEventSchema,
 ]) as unknown as z.ZodType<MatchEvent>;
@@ -278,36 +247,6 @@ export const MatchLineupEntrySchema = z
 
 const KNOCKOUT_ROUNDS = new Set(["R32", "R16", "QF", "SF", "F"] as const);
 const GROUP_ROUNDS = new Set(["G1", "G2", "G3"] as const);
-const CANONICAL_XI_SIZE = 11;
-
-function accountsForExactKnownFormation(
-  startedUserEntries: readonly Pick<MatchLineupEntry, "slot_id" | "position">[],
-  shortHandedSlotIds: readonly string[],
-  unavailable: readonly { slot_id: string; position: MatchLineupEntry["position"] }[],
-): boolean {
-  const shortHandedEntries = shortHandedSlotIds.map((slotId) => {
-    const facts = unavailable.filter((entry) => entry.slot_id === slotId);
-    return facts.length === 1 ? { slot_id: slotId, position: facts[0]!.position } : null;
-  });
-  if (shortHandedEntries.some((entry) => entry === null)) return false;
-  const accounted = [...startedUserEntries, ...shortHandedEntries];
-  const accountedSlotIds = accounted.map((entry) => entry!.slot_id);
-  const accountedSet = new Set(accountedSlotIds);
-  if (accounted.length !== CANONICAL_XI_SIZE || accountedSet.size !== accounted.length)
-    return false;
-  return Object.values(FORMATION_TEMPLATES).some((template) => {
-    const expectedPositions = new Map(
-      template.slots.map((slot) => [slot.slot_id, slotPositionLine(slot.slot_position)]),
-    );
-    return (
-      expectedPositions.size === accountedSet.size &&
-      [...expectedPositions].every(([slotId]) => accountedSet.has(slotId)) &&
-      accounted.every(
-        (entry) => entry !== null && expectedPositions.get(entry.slot_id) === entry.position,
-      )
-    );
-  });
-}
 
 function isKnockoutRound(round: string): boolean {
   return (KNOCKOUT_ROUNDS as ReadonlySet<string>).has(round);
@@ -324,85 +263,6 @@ export const MatchResultSchema = z
     phase: MatchPhaseSchema,
     opponent_team_id: NonEmptyIdSchema,
     pre_match_win_probability: ProbabilitySchema,
-    team_facts: z
-      .object({
-        base_strength: TeamStrengthSchema,
-        active_strength: TeamStrengthSchema,
-        manager_present: z.boolean(),
-        manager_presence_band: z.union([z.literal(0), z.literal(1)]),
-        manager_link_band: z.union([z.literal(0), z.literal(1), z.literal(2)]),
-        manager_tactical_band: z.number().int().min(0).max(3),
-        manager_tactical_multiplier: z.number().finite().min(1),
-        post_tactical_strength: ContinuousTacticalStrengthSchema,
-        tactical_applied_to_outcome: z.boolean(),
-        base_synergy: SynergyResultSchema,
-        active_synergy: SynergyResultSchema,
-        unavailable: z.array(
-          z.object({
-            card_id: CardIdSchema,
-            player_id: NonEmptyIdSchema,
-            slot_id: NonEmptyIdSchema,
-            position: PositionSchema,
-            reason: z.enum(["knock", "suspension", "tournament_injury"]),
-            duration_matches: z.union([z.literal(1), z.literal(2)]).nullable(),
-          }),
-        ),
-        bench_activations: z.array(
-          z
-            .object({
-              out_card_id: CardIdSchema,
-              out_player_id: NonEmptyIdSchema,
-              in_card_id: CardIdSchema,
-              in_player_id: NonEmptyIdSchema,
-              slot_id: NonEmptyIdSchema,
-              line: PositionSchema,
-              fit: ProbabilitySchema,
-              internal_score: z.number().finite().min(0).max(100),
-              replacement_contribution_multiplier: z.number().finite().gt(0).max(1),
-              replacement_score: z.number().finite().min(0).max(100),
-              outgoing_score: z.number().finite().min(0).max(100),
-              line_contribution_delta: z.number().finite().min(-100).max(100),
-            })
-            .superRefine((activation, ctx) => {
-              if (
-                activation.replacement_contribution_multiplier !==
-                INJURY.BENCH_REPLACEMENT_CONTRIBUTION_MULTIPLIER
-              ) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message:
-                    "replacement contribution multiplier must match the calibrated engine constant",
-                  path: ["replacement_contribution_multiplier"],
-                });
-              }
-              if (
-                activation.replacement_score !==
-                activation.internal_score *
-                  activation.fit *
-                  activation.replacement_contribution_multiplier
-              ) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message:
-                    "replacement_score must equal internal_score * fit * contribution multiplier",
-                  path: ["replacement_score"],
-                });
-              }
-              if (
-                activation.line_contribution_delta !==
-                activation.replacement_score - activation.outgoing_score
-              ) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: "line_contribution_delta must equal replacement_score - outgoing_score",
-                  path: ["line_contribution_delta"],
-                });
-              }
-            }),
-        ),
-        short_handed_slot_ids: z.array(NonEmptyIdSchema),
-      })
-      .optional(),
     user_goals: NonNegativeIntegerSchema,
     opp_goals: NonNegativeIntegerSchema,
     user_goals_et: NonNegativeIntegerSchema.nullable(),
@@ -421,247 +281,6 @@ export const MatchResultSchema = z
     events: z.array(MatchEventSchema),
   })
   .superRefine((m, ctx) => {
-    if (m.team_facts) {
-      const userStartedCount = m.lineup.filter(
-        (entry) => entry.side === "user" && entry.started,
-      ).length;
-      if (userStartedCount + m.team_facts.short_handed_slot_ids.length !== CANONICAL_XI_SIZE) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message:
-            "started user lineup entries plus short_handed_slot_ids must account for the canonical XI",
-          path: ["team_facts", "short_handed_slot_ids"],
-        });
-      }
-      if (m.team_facts.short_handed_slot_ids.length > 0) {
-        const startedUserEntries = m.lineup.filter(
-          (entry) => entry.side === "user" && entry.started,
-        );
-        if (
-          !accountsForExactKnownFormation(
-            startedUserEntries,
-            m.team_facts.short_handed_slot_ids,
-            m.team_facts.unavailable,
-          )
-        ) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message:
-              "started user and short-handed slots must match the identities and coarse positions of one known formation",
-            path: ["team_facts", "short_handed_slot_ids"],
-          });
-        }
-      }
-      const expectedTactical = applyManagerTacticalAdjustment(
-        m.team_facts.active_strength,
-        m.team_facts.manager_present,
-        m.team_facts.active_synergy.manager_link,
-        m.team_facts.tactical_applied_to_outcome,
-      );
-      if (
-        m.team_facts.manager_presence_band !== expectedTactical.manager_presence_band ||
-        m.team_facts.manager_link_band !== expectedTactical.manager_link_band
-      ) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "manager presence/link bands must reconcile with persisted manager facts",
-          path: ["team_facts", "manager_presence_band"],
-        });
-      }
-      if (m.team_facts.manager_tactical_band !== expectedTactical.manager_tactical_band) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "manager_tactical_band must reconcile with active manager link and application",
-          path: ["team_facts", "manager_tactical_band"],
-        });
-      }
-      if (
-        m.team_facts.manager_tactical_multiplier !== expectedTactical.manager_tactical_multiplier
-      ) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "manager_tactical_multiplier must reconcile with the applied tactical band",
-          path: ["team_facts", "manager_tactical_multiplier"],
-        });
-      }
-      for (const channel of ["attack", "midfield", "defense", "goalkeeping", "coverage"] as const) {
-        if (
-          m.team_facts.post_tactical_strength[channel] !==
-          expectedTactical.post_tactical_strength[channel]
-        ) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `post_tactical_strength.${channel} must reconcile with active strength and multiplier`,
-            path: ["team_facts", "post_tactical_strength", channel],
-          });
-        }
-      }
-      const honestBypassedOutcome =
-        m.pre_match_win_probability === 0 &&
-        m.user_goals === 0 &&
-        m.opp_goals === INJURY.FORFEIT_OPP_GOALS &&
-        m.user_goals_et === null &&
-        m.opp_goals_et === null &&
-        m.shootout === null &&
-        m.outcome === "L" &&
-        !m.counts_as_run_win &&
-        !m.advanced &&
-        m.lineup.every((entry) => entry.side === "user") &&
-        m.lineup.filter((entry) => entry.side === "user" && entry.started).length <
-          INJURY.FIELDABLE_FLOOR &&
-        m.lineup.every((entry) => entry.minutes === 0) &&
-        m.events.every((event) => event.type === "availability" && event.side === "user");
-      if (
-        (m.team_facts.tactical_applied_to_outcome && m.pre_match_win_probability <= 0) ||
-        (!m.team_facts.tactical_applied_to_outcome && !honestBypassedOutcome)
-      ) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message:
-            "tactical_applied_to_outcome must be true for simulated matches and false only for canonical forfeits",
-          path: ["team_facts", "tactical_applied_to_outcome"],
-        });
-      }
-      const allAvailabilityEvents = m.events.filter(
-        (event): event is AvailabilityEvent => event.type === "availability",
-      );
-      if (allAvailabilityEvents.some((event) => event.side !== "user")) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "availability events in user team facts must be user-side",
-          path: ["events"],
-        });
-      }
-      const availabilityEvents = allAvailabilityEvents.filter(
-        (event): event is AvailabilityEvent => event.side === "user",
-      );
-      for (let index = 0; index < m.team_facts.unavailable.length; index++) {
-        const unavailable = m.team_facts.unavailable[index]!;
-        const corresponding = availabilityEvents.filter(
-          (event) => event.player_id === unavailable.player_id,
-        );
-        if (corresponding.length !== 1) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "unavailable fact must have exactly one corresponding availability event",
-            path: ["team_facts", "unavailable", index],
-          });
-          continue;
-        }
-        const event = corresponding[0]!;
-        if (
-          (event.card_id as string) !== (unavailable.card_id as string) ||
-          event.slot_id !== unavailable.slot_id ||
-          event.position !== unavailable.position ||
-          event.reason !== unavailable.reason ||
-          event.duration_matches !== unavailable.duration_matches
-        ) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "unavailable fact contradicts its availability event",
-            path: ["team_facts", "unavailable", index],
-          });
-        }
-      }
-      for (const event of availabilityEvents) {
-        const corresponding = m.team_facts.unavailable.filter(
-          (unavailable) => unavailable.player_id === event.player_id,
-        );
-        if (corresponding.length !== 1) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "availability event must have exactly one corresponding unavailable fact",
-            path: ["events", m.events.indexOf(event)],
-          });
-        }
-      }
-
-      const actualShortHanded = m.team_facts.short_handed_slot_ids.slice().sort();
-      const eventShortHanded = availabilityEvents
-        .filter((event) => event.short_handed)
-        .map((event) => event.slot_id)
-        .sort();
-      if (
-        new Set(actualShortHanded).size !== actualShortHanded.length ||
-        actualShortHanded.length !== eventShortHanded.length ||
-        actualShortHanded.some((slotId, index) => slotId !== eventShortHanded[index])
-      ) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "short_handed_slot_ids must equal the short-handed availability event slots",
-          path: ["team_facts", "short_handed_slot_ids"],
-        });
-      }
-
-      for (let index = 0; index < m.team_facts.bench_activations.length; index++) {
-        const activation = m.team_facts.bench_activations[index]!;
-        const corresponding = availabilityEvents.filter(
-          (event) => event.player_id === activation.out_player_id,
-        );
-        if (corresponding.length !== 1) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "bench activation must have exactly one corresponding availability event",
-            path: ["team_facts", "bench_activations", index],
-          });
-          continue;
-        }
-        const event = corresponding[0]!;
-        if (
-          (event.card_id as string) !== (activation.out_card_id as string) ||
-          event.slot_id !== activation.slot_id ||
-          event.position !== activation.line ||
-          (event.replacement_card_id as string | null) !== (activation.in_card_id as string) ||
-          event.replacement_player_id !== activation.in_player_id ||
-          event.short_handed
-        ) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "bench activation contradicts its availability event",
-            path: ["team_facts", "bench_activations", index],
-          });
-        }
-        const activeReplacement = m.lineup.filter(
-          (entry) => entry.side === "user" && entry.started && entry.slot_id === activation.slot_id,
-        );
-        if (
-          activeReplacement.length !== 1 ||
-          (activeReplacement[0]!.card_id as string) !== (activation.in_card_id as string) ||
-          activeReplacement[0]!.player_id !== activation.in_player_id ||
-          activeReplacement[0]!.position !== activation.line
-        ) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "bench activation must match the active replacement in the lineup",
-            path: ["team_facts", "bench_activations", index],
-          });
-        }
-      }
-      for (let index = 0; index < availabilityEvents.length; index++) {
-        const event = availabilityEvents[index]!;
-        const corresponding = m.team_facts.bench_activations.filter(
-          (activation) => activation.out_player_id === event.player_id,
-        );
-        const validShortHanded =
-          event.short_handed &&
-          corresponding.length === 0 &&
-          event.replacement_card_id === null &&
-          event.replacement_player_id === null;
-        const validReplacement =
-          !event.short_handed &&
-          corresponding.length === 1 &&
-          event.replacement_card_id !== null &&
-          event.replacement_player_id !== null;
-        if (!validShortHanded && !validReplacement) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "availability event replacement state contradicts bench activations",
-            path: ["events", m.events.indexOf(event)],
-          });
-        }
-      }
-    }
-
     // Phase / round consistency.
     if (isGroupRound(m.round) && m.phase !== "group") {
       ctx.addIssue({

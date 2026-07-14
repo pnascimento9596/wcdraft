@@ -163,8 +163,7 @@ export type SubstreamName =
   | "opponent_selection"
   | "narrative"
   | "scenario"
-  | "group_table"
-  | "availability";
+  | "group_table";
 
 const SUBSTREAM_NAMES: readonly SubstreamName[] = [
   "draft",
@@ -174,7 +173,6 @@ const SUBSTREAM_NAMES: readonly SubstreamName[] = [
   "narrative",
   "scenario",
   "group_table",
-  "availability",
 ] as const;
 
 const SUBSEED_VERSION = "v1";

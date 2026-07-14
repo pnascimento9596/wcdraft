@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  autoDraft,
-  encodeRunTokenBody,
-  ERA_PRESETS,
-  type RunTokenV3Body,
-  type RunTokenV4Body,
-} from "@wcdraft/core";
+import { autoDraft, encodeRunTokenBody, ERA_PRESETS, type RunTokenV4Body } from "@wcdraft/core";
 
 import { loadMarketingGameData, simulateDraft } from "../engine/game-data.ts";
 import { buildTokenBodyFromDraft, encodeRunTokenV2, type RunTokenV2Body } from "../engine/token.ts";
@@ -123,35 +117,6 @@ describe("runFromToken — real record from a share token", () => {
     if (res.ok) return;
     expect(res.reason).toBe("replay_failed");
     expect(res.message).toContain("Open Draft");
-  });
-
-  it("honest-state: an arranged token fails closed while marketing replay stays paused", () => {
-    const gd = loadMarketingGameData();
-    const preset = ERA_PRESETS.all_time;
-    const body: RunTokenV3Body = {
-      v: 3,
-      rid: "mkt-arranged-unsupported",
-      fid: "4-3-3",
-      ps: "wcdraft:mkt:arranged:unsupported",
-      tn: "Arranged XI",
-      md: "classic",
-      df: "squad_first",
-      rb: "career",
-      ef: { id: preset.id, min: preset.min_year, max: preset.max_year },
-      pl: Array.from({ length: 17 }, () => ({ k: "m" as const })),
-      sv: gd.versions.schema_version,
-      dv: gd.versions.dataset_version,
-      rv: gd.versions.rating_version,
-      ev: gd.versions.engine_version,
-      uv: gd.versions.ruleset_version,
-      hv: gd.versions.data_bundle_hash,
-      a: Array.from({ length: 16 }, (_, index) => index),
-    };
-    const res = runFromToken(encodeRunTokenBody(body), gd);
-    expect(res.ok).toBe(false);
-    if (res.ok) return;
-    expect(res.reason).toBe("replay_failed");
-    expect(res.message).toContain("arranged team-sheet tokens");
   });
 
   it("honest-state: foreign / non-token garbage → malformed", () => {

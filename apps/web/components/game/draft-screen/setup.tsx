@@ -317,7 +317,7 @@ export function FormationSelect({
           rankedAttemptIssued = true;
           rankedIssuance.markCommitted();
         }
-        const created = await createNewRunRecord(gameData, {
+        const created = createNewRunRecord(gameData, {
           formation_id,
           mode: draftMode,
           parent_seed: rankedAttempt?.attempt.parent_seed,

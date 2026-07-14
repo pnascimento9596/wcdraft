@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 
 import { DATA_MANIFEST_ANCHOR, handleHealthGet, type LatestMigrationRow } from "../readiness";
 import { MIGRATION_JOURNAL_ENTRIES, SUPPORTED_MIGRATION_RANGE } from "../migration-contract";
-import { DEFAULT_LEADERBOARD_SEASON_ID } from "../../leaderboard/season";
 
 const latest = MIGRATION_JOURNAL_ENTRIES[MIGRATION_JOURNAL_ENTRIES.length - 1]!;
 const previous = MIGRATION_JOURNAL_ENTRIES[MIGRATION_JOURNAL_ENTRIES.length - 2]!;
@@ -26,7 +25,6 @@ describe("GET /api/health readiness contract", () => {
       ok: true,
       build: { sha: null },
       data: DATA_MANIFEST_ANCHOR,
-      leaderboard: { season_key: DEFAULT_LEADERBOARD_SEASON_ID },
       db: { status: "unconfigured" },
       schema: { expected: SUPPORTED_MIGRATION_RANGE, actual: null },
     });
@@ -45,7 +43,6 @@ describe("GET /api/health readiness contract", () => {
     expect(await response.json()).toMatchObject({
       ok: true,
       build: { sha: "abcdef0123456789" },
-      leaderboard: { season_key: DEFAULT_LEADERBOARD_SEASON_ID },
       db: { status: "ready" },
       schema: {
         expected: SUPPORTED_MIGRATION_RANGE,
@@ -95,7 +92,7 @@ describe("GET /api/health readiness contract", () => {
     expect(DATA_MANIFEST_ANCHOR).toEqual({
       schema_version: "runtime-data-2.10.0",
       dataset_version: "2026-07-01",
-      engine_version: "engine-2026.07.14-squad-depth",
+      engine_version: "engine-2026.06.30-manager-attrition",
       rating_version_historical: "wc-perf-6.6.0",
       rating_version_projected: "proj-career-5.6.0",
       ruleset_version: "ruleset-2026.06.04",

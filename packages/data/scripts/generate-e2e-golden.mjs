@@ -76,9 +76,6 @@ const world = {
   opponents,
   managerTournaments,
   nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
-  eligiblePositionsByCardId: Object.fromEntries(
-    DRAFT_POOL_BUNDLE.player_cards.map((card) => [card.card_id, card.eligible_positions]),
-  ),
   bracket: {
     groups: SCENARIO_2026_BUNDLE.groups,
     knockout_slots: SCENARIO_2026_BUNDLE.knockout_slots,

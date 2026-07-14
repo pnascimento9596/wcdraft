@@ -81,39 +81,6 @@ function renderedSlotCoords(html: string): Array<[number, number]> {
 }
 
 describe("Pitch markings", () => {
-  it("makes filled review slots accessible swap buttons without unlocking draft slots", () => {
-    const starters = filledStarterViews({
-      "4-3-3.GK": {
-        name: "Review keeper",
-        nation_id: "N-1",
-        nation_name: "Nation",
-        nation_code: "NAT",
-      },
-    });
-    const reviewHtml = renderToStaticMarkup(
-      createElement(Pitch, {
-        formationId: "4-3-3",
-        starters,
-        interactive: true,
-        filledSlotInteraction: true,
-        onSlotSelect: () => undefined,
-      }),
-    );
-    expect(reviewHtml).toContain('<button type="button"');
-    expect(reviewHtml).toContain('aria-label="GK — Review keeper; select to swap"');
-    expect(reviewHtml).not.toContain("Review keeper (locked)");
-
-    const draftHtml = renderToStaticMarkup(
-      createElement(Pitch, {
-        formationId: "4-3-3",
-        starters,
-        interactive: true,
-        onSlotSelect: () => undefined,
-      }),
-    );
-    expect(draftHtml).toContain('aria-label="GK — Review keeper (locked)"');
-  });
-
   it("renders the vertical marking layer below synergy and slot nodes", () => {
     const inactivePair: LinkedPair = {
       slot_id_a: "4-3-3.LW",

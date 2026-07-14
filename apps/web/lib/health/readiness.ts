@@ -4,7 +4,6 @@ import type { Db } from "@wcdraft/db";
 
 import manifest from "../../../../packages/data/src/generated/manifest.json";
 import { journalEntryForCreatedAt, SUPPORTED_MIGRATION_RANGE } from "./migration-contract";
-import { explicitSeasonKey } from "../leaderboard/season";
 
 const NO_STORE = { "Cache-Control": "no-store" } as const;
 
@@ -74,7 +73,6 @@ function basePayload(buildSha: string | undefined) {
   return {
     build: { sha: buildSha?.trim() || null },
     data: DATA_MANIFEST_ANCHOR,
-    leaderboard: { season_key: explicitSeasonKey() },
     schema: { expected: SUPPORTED_MIGRATION_RANGE },
   };
 }

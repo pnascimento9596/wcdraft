@@ -1,7 +1,7 @@
 name: CI
 
 # Triggered on `main` AND every long-lived integration branch (engine-*,
-# merit-*, leaderboard-profiles, and both season-* and season/** families). Before the merit-v2 season
+# merit-*, leaderboard-profiles and the placeholder season-* family). Before the merit-v2 season
 # merge the workflow only ran for `main`-targeted PRs, so the entire
 # `engine-v2`/`merit-v2` series shipped CI-dark — a structural risk the
 # post-season gate review flagged. Listing the integration prefixes here
@@ -9,9 +9,9 @@ name: CI
 # PR into main; new integration branches MUST follow the same naming.
 on:
   pull_request:
-    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*", "season/**"]
+    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*"]
   push:
-    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*", "season/**"]
+    branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*"]
   workflow_dispatch:
     inputs:
       force_all:
@@ -120,7 +120,6 @@ jobs:
               - 'packages/data/scripts/build-daily-seed-salt-map.mts'
               - 'packages/data/scripts/build-score-distribution.mts'
               - 'packages/data/scripts/fit-calibration.mjs'
-              - 'packages/data/scripts/measure-squad-depth-calibration.mts'
               - 'packages/data/scripts/regen-asym-golden.mts'
               - 'packages/data/test/daily-seed-salt-map.golden.test.ts'
               - 'packages/data/test/realism/**'
@@ -391,11 +390,7 @@ jobs:
             fi
             sed "s/^/[${policy}] /" "$RUNNER_TEMP/realism-$policy.log"
           done
-          if (( failed != 0 )); then
-            exit "$failed"
-          fi
-
-          pnpm --filter @wcdraft/data test:calibration:squad-depth
+          exit "$failed"
 
   etl:
     name: ingest · identity-QA · determinism
