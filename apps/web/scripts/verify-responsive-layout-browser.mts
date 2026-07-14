@@ -50,6 +50,7 @@ type SurfaceCase = {
   readonly route?: (page: Page) => Promise<void>;
   readonly waitForNetworkIdle?: boolean;
   readonly shellRule?: boolean;
+  readonly viewportScreenshot?: boolean;
   readonly allowResponseErrorPathnames?: readonly string[];
   readonly primaryAction?: {
     readonly role: "button" | "link" | "radio";
@@ -747,6 +748,29 @@ function surfaceCases(): readonly SurfaceCase[] {
       prepare: revealChoices,
     },
     {
+      label: "classic-pick-off-natural",
+      path: `/play/draft?run=${activeDraftRecord.run_id}`,
+      shellRule: true,
+      viewportScreenshot: true,
+      primaryAction: { role: "button", name: /Lock pick|Choose slot/u },
+      prepare: async (page) => {
+        await revealChoices(page);
+        await page.getByRole("button", { name: /C\. Gamarra/u }).click();
+        await page.getByRole("button", { name: "Choose slot" }).click();
+        const dialog = page.getByRole("dialog", { name: "Assign to slot" });
+        await dialog.getByText("CM", { exact: true }).first().click();
+        const changedChip = page.locator("[data-fit-teaching-chip]", { hasText: "DF → CM" });
+        await changedChip.waitFor();
+        await changedChip.evaluate((element) => element.scrollIntoView({ block: "center" }));
+        await page.evaluate(
+          () =>
+            new Promise<void>((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+            ),
+        );
+      },
+    },
+    {
       label: "open-roster-pick",
       path: `/play/draft?run=${activeOpenRecord.run_id}`,
       shellRule: true,
@@ -1052,7 +1076,7 @@ async function captureSurface(
     const screenshotName = `${PHASE}-${surface.label}-${viewport.name}-${theme}.png`;
     const screenshotPath = path.join(OUT_DIR, "screenshots", screenshotName);
     await mkdir(path.dirname(screenshotPath), { recursive: true });
-    await page.screenshot({ path: screenshotPath, fullPage: true });
+    await page.screenshot({ path: screenshotPath, fullPage: surface.viewportScreenshot !== true });
     const baseMetric = await measure(page);
     const shellRule = shellRuleApplies(surface, viewport);
     const noScrollGate = shellRule
