@@ -2,7 +2,13 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { projectSlotContribution, type SlotPosition } from "@wcdraft/core";
+import {
+  positionCompatibility,
+  projectSlotContribution,
+  SLOT_POSITIONS,
+  type Position,
+  type SlotPosition,
+} from "@wcdraft/core";
 import { DRAFT_POOL_BUNDLE } from "@wcdraft/data";
 import { CandidateCard, ManagerCandidate } from "@/components/game/candidate-card";
 
@@ -21,6 +27,22 @@ import type { PlayerCardView } from "../view-models";
 const indexes = buildGameDataIndexes(DRAFT_POOL_BUNDLE);
 const firstPlayerId = DRAFT_POOL_BUNDLE.player_cards[0]!.card_id;
 const firstManagerId = DRAFT_POOL_BUNDLE.manager_cards[0]!.manager_card_id;
+
+function bestEligibilityForSlot(
+  eligiblePositions: readonly Position[],
+  slotPosition: SlotPosition,
+): Position {
+  let best = eligiblePositions[0]!;
+  let bestCompatibility = positionCompatibility([best], slotPosition);
+  for (const position of eligiblePositions.slice(1)) {
+    const compatibility = positionCompatibility([position], slotPosition);
+    if (compatibility > bestCompatibility) {
+      best = position;
+      bestCompatibility = compatibility;
+    }
+  }
+  return best;
+}
 
 function renderCandidate(card: PlayerCardView, impact: FitTeachingImpact | null): string {
   return renderToStaticMarkup(
@@ -116,6 +138,71 @@ describe("Season 2 S5 fit teaching — engine parity and display basis", () => {
     expect(html).toContain("DF → CM · reduced fit");
     expect(html).toContain("shapeDot_diamond");
     expect(html).toContain("before Synergy");
+  });
+
+  it("names the max-compatibility eligibility for a real multi-position card", () => {
+    const card = playerCardView(indexes, "P-10063:2014");
+    expect(card.position_listed).toBe("DF");
+    expect(card.eligible_positions).toEqual(["DF", "MF"]);
+    expect(positionCompatibility(["DF"], "ST")).toBe(0.45);
+    expect(positionCompatibility(["MF"], "ST")).toBe(0.75);
+
+    const impact = projectFitTeachingImpact(card, "ST");
+    expect(impact).toMatchObject({
+      fit_tier: "reduced",
+      fit_copy: "reduced fit",
+      position_copy: "MF → ST",
+    });
+    expect(impact?.accessible_label).toContain("MF → ST, reduced fit");
+    expect(impact?.accessible_label).not.toContain("DF → ST");
+
+    const html = renderCandidate(card, impact);
+    expect(html).toContain("MF → ST · reduced fit");
+    expect(html).not.toContain("DF → ST");
+  });
+
+  it("uses existing eligibility order as the deterministic tie-break", () => {
+    const base = playerCardView(indexes, firstPlayerId);
+    const fwFirst = projectFitTeachingImpact(
+      { ...base, position_listed: "DF", primary_position: "DF", eligible_positions: ["FW", "DF"] },
+      "CM",
+    );
+    const dfFirst = projectFitTeachingImpact(
+      { ...base, position_listed: "FW", primary_position: "FW", eligible_positions: ["DF", "FW"] },
+      "CM",
+    );
+
+    expect(positionCompatibility(["FW"], "CM")).toBe(0.75);
+    expect(positionCompatibility(["DF"], "CM")).toBe(0.75);
+    expect(fwFirst?.position_copy).toBe("FW → CM");
+    expect(dfFirst?.position_copy).toBe("DF → CM");
+    expect(fwFirst?.accessible_label).toContain("FW → CM, reduced fit");
+    expect(dfFirst?.accessible_label).toContain("DF → CM, reduced fit");
+  });
+
+  it("keeps every runtime arrow aligned with the engine's winning eligibility", () => {
+    let contexts = 0;
+    for (const basis of ["career", "current"] as const) {
+      for (const runtimeCard of DRAFT_POOL_BUNDLE.player_cards) {
+        const card = playerCardView(indexes, runtimeCard.card_id, { basis });
+        for (const slotPosition of SLOT_POSITIONS) {
+          const impact = projectFitTeachingImpact(card, slotPosition)!;
+          const compatibility = positionCompatibility(card.eligible_positions, slotPosition);
+          const expectedSource = bestEligibilityForSlot(card.eligible_positions, slotPosition);
+          expect(positionCompatibility([expectedSource], slotPosition)).toBe(compatibility);
+          if (compatibility === 1) {
+            expect(impact.position_copy).toBeNull();
+            expect(impact.fit_copy).toBeNull();
+          } else {
+            const expectedCopy = `${expectedSource} → ${slotPosition}`;
+            expect(impact.position_copy).toBe(expectedCopy);
+            expect(impact.accessible_label).toContain(expectedCopy);
+          }
+          contexts += 1;
+        }
+      }
+    }
+    expect(contexts).toBe(DRAFT_POOL_BUNDLE.player_cards.length * SLOT_POSITIONS.length * 2);
   });
 });
 

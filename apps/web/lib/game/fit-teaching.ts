@@ -108,8 +108,27 @@ function basisResolvedRating(card: PlayerCardView) {
   return { attack, midfield, defense, goalkeeping };
 }
 
-function sourcePosition(card: PlayerCardView): Position {
-  return card.position_listed ?? card.primary_position ?? card.eligible_positions[0]!;
+/**
+ * Name the exact eligibility that wins the engine's max-compatibility fold.
+ * Strict `>` preserves existing eligibility order as the deterministic tie
+ * break. If the engine projection ever stops agreeing with this canonical
+ * singleton probe, fail closed by omitting the single-source arrow.
+ */
+function projectionSourcePosition(
+  eligiblePositions: readonly Position[],
+  slotPosition: SlotPosition,
+  projectedCompatibility: number,
+): Position | null {
+  let source: Position | null = null;
+  let bestCompatibility = -1;
+  for (const position of eligiblePositions) {
+    const compatibility = positionCompatibility([position], slotPosition);
+    if (compatibility > bestCompatibility) {
+      source = position;
+      bestCompatibility = compatibility;
+    }
+  }
+  return bestCompatibility === projectedCompatibility ? source : null;
 }
 
 /**
@@ -143,9 +162,17 @@ export function projectFitTeachingImpact(
       : "severe";
   const fitCopy =
     fitTier === "natural" ? null : fitTier === "reduced" ? "reduced fit" : "severe fit penalty";
-  const positionCopy = offNatural ? `${sourcePosition(card)} → ${slotPosition}` : null;
+  const sourcePosition = offNatural
+    ? projectionSourcePosition(card.eligible_positions, slotPosition, projection.compatibility)
+    : null;
+  const positionCopy = sourcePosition ? `${sourcePosition} → ${slotPosition}` : null;
   const basisLabel = card.rating.basis === "current" ? "Current" : "Career";
-  const fitSentence = positionCopy && fitCopy ? ` ${positionCopy}, ${fitCopy}.` : " Natural fit.";
+  const fitSentence =
+    fitCopy === null
+      ? " Natural fit."
+      : positionCopy
+        ? ` ${positionCopy}, ${fitCopy}.`
+        : ` ${fitCopy}.`;
 
   return {
     display_delta_tenths: displayDeltaTenths,

@@ -169,9 +169,10 @@ export const CandidateCard = memo(function CandidateCard({
               <span className={s.fitTeachingValue}>
                 {fitTeachingImpact.line_label} {fitTeachingImpact.display_delta_label} pre-Synergy
               </span>
-              {fitTeachingImpact.position_copy && fitTeachingImpact.fit_copy ? (
+              {fitTeachingImpact.fit_copy ? (
                 <span className={s.fitTeachingContext}>
-                  {fitTeachingImpact.position_copy} · {fitTeachingImpact.fit_copy}
+                  {fitTeachingImpact.position_copy ? `${fitTeachingImpact.position_copy} · ` : null}
+                  {fitTeachingImpact.fit_copy}
                 </span>
               ) : null}
             </span>

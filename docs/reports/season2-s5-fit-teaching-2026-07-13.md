@@ -44,6 +44,9 @@ views project Current channels.
 4. **Fit language.** Compatibility `1` is natural, `0.75.. <1` is reduced,
    and `<0.75` is severe. These labels expose the graduated engine fit already
    governing the projection; they do not introduce legality or a new score.
+   For a multi-position card, the named source is the exact eligibility that
+   wins that maximum-compatibility fold. Existing eligibility order breaks a
+   tie deterministically.
 5. **Manager boundary.** Manager choice remains deliberately unscored. The
    engine has no equivalent player slot-contribution contract for a manager,
    so inventing a parallel number would violate the honesty requirement.
@@ -68,12 +71,15 @@ views project Current channels.
 
 ## Executable evidence
 
-Focused S5 tests pass 11/11 in one file. They project every runtime player into
-the same CM context under both Career and Current bases, compare every chip
-value to the engine function's exact display mapping, and prove that display
-ordering never inverts engine ordering. Separate tests pin adapter basis,
-default/locked/manual slot precedence, visible Classic/Open/Daily markup,
-absent Memory/Blind Open markup, off-natural copy/shape, and manager absence.
+Focused S5 fix-forward tests pass 14/14 in one file. They project every runtime
+player into the same CM context under both Career and Current bases, compare
+every chip value to the engine function's exact display mapping, and prove
+that display ordering never inverts engine ordering. An exhaustive label pass
+covers all 610,950 runtime card/basis/slot contexts. Separate regressions pin
+the real Layún 2014 `[DF, MF]` card at ST, stable existing-order tie-breaking,
+adapter basis, default/locked/manual slot precedence, visible
+Classic/Open/Daily markup, absent Memory/Blind Open markup, off-natural
+copy/shape, and manager absence.
 
 The final visual run used the successful root `next build --webpack` output
 and an explicitly started `next start --hostname 127.0.0.1 --port 3027`
@@ -98,12 +104,46 @@ were not represented as product evidence. All superseded files were removed;
 the eight retained PNGs above were regenerated against the explicit
 production server and visually inspected.
 
+The source-position fix does not alter those retained pixels: the supplemental
+off-natural fixture is the single-position C. Gamarra card, whose `DF → CM`
+source remains the engine authority. A synthetic Layún browser state was not
+manufactured; the real-card regression and exhaustive runtime test execute the
+changed multi-position path directly.
+
+## Exact-review fix-forward
+
+Fresh exact-head review of `8634e030c540c32cc5c10b2ed6688d82b258a6bf`
+returned FAIL with one release blocker. The numeric projection correctly used
+the maximum across all eligibilities, but the arrow independently preferred
+`position_listed`. For Layún 2014, listed DF and eligible `[DF, MF]`, an ST
+projection therefore displayed `DF → ST · reduced fit`: MF supplied the 0.75
+engine compatibility while DF alone was 0.45 and severe. The independent
+runtime scan found 2,185 source/tier contradictions.
+
+The fix-forward resolves the source by applying canonical
+`positionCompatibility` to each eligibility and retaining the strict maximum;
+strict `>` makes the existing eligibility order the deterministic tie-break.
+It verifies the winner against the engine projection and fails closed by
+omitting only the single-source arrow if those seams ever disagree. The fit
+tier itself remains visible, and visible/accessibility copy consumes the same
+resolved source. No numeric, rating, engine, legality, or mode behavior
+changes. The first verdict remains a FAIL; the fix-forward head requires a
+fresh independent review.
+
 ## Validation
 
-- `pnpm --filter @wcdraft/web exec vitest run lib/game/__tests__/fit-teaching.test.ts`
-  — 1/1 file, 11/11 tests.
-- `pnpm --filter @wcdraft/web typecheck` — pass after verifying/materializing
-  19 manifest-derived runtime files.
+- Fix-forward `pnpm --filter @wcdraft/web exec vitest run lib/game/__tests__/fit-teaching.test.ts`
+  — 1/1 file, 14/14 tests in 8.42s, including 610,950 runtime
+  card/basis/slot contexts.
+- Fix-forward fit-teaching plus Memory hidden-mode run — 2/2 files, 35/35
+  tests in 8.00s.
+- Fix-forward `pnpm --filter @wcdraft/web typecheck` — pass after
+  verifying/materializing 19 manifest-derived runtime files.
+- Fix-forward `pnpm --filter @wcdraft/web lint` — pass.
+
+The following broad gates were measured at the original `8634e03` head. CI
+and the fresh exact-head reviewer will re-execute them for the fix-forward:
+
 - `pnpm typecheck` — Turbo 8/8 tasks.
 - `pnpm lint` — Turbo 5/5 tasks.
 - `pnpm test` — Turbo 8/8 tasks in 7m52.918s: core 423/423; data 183 passed +
