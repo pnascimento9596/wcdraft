@@ -304,6 +304,178 @@
   hyphens: auto;
 }
 
+/* ── S6 persisted factual recap ────────────────────────────────────────── */
+
+.factualRecap {
+  display: grid;
+  gap: 1rem;
+  border-top: 3px solid var(--accent-solid);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent-solid) 7%, transparent),
+      transparent 42%
+    ),
+    var(--bg-800);
+}
+.factualRecapKicker {
+  display: block;
+  margin-bottom: 0.18rem;
+  color: var(--accent);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.factualRecapGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.factualRecapBlock,
+.factualRecapDetail {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg-sunken) 82%, transparent);
+}
+.factualRecapBlock {
+  padding: 0.72rem;
+}
+.factualRecapDetail {
+  padding: 0.8rem;
+}
+.factualRecapHeading {
+  margin: 0 0 0.6rem;
+  color: var(--ink-300);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.factualMetric {
+  margin: 0 0 0.45rem;
+  color: var(--ink-100);
+  font-size: 1.42rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.factualEmpty {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 0.86rem;
+}
+.factualStrengthGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+}
+.factualStrengthGrid div,
+.factualDefinitionList div {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.factualStrengthGrid dt,
+.factualDefinitionList dt {
+  color: var(--ink-faint);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.factualStrengthGrid dd,
+.factualDefinitionList dd {
+  margin: 0;
+  color: var(--ink-100);
+  font-variant-numeric: tabular-nums;
+}
+.factualStrengthGrid dd {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+.factualDefinitionList {
+  display: grid;
+  gap: 0.48rem;
+  margin: 0;
+}
+.factualDefinitionList dd {
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+}
+.factualList,
+.factualEventList {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.factualList li {
+  display: grid;
+  gap: 0.1rem;
+  color: var(--ink-100);
+  font-size: 0.78rem;
+}
+.factualList li span:last-child {
+  color: var(--ink-faint);
+  font-size: 0.7rem;
+}
+.factualEventList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 0.38rem 0;
+  border-top: 1px solid var(--line-1);
+}
+.factualEventList li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.factualEventList li > span {
+  display: grid;
+  gap: 0.16rem;
+  min-width: 0;
+  color: var(--ink-100);
+  font-size: 0.84rem;
+}
+.factualEventList small {
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+.factualEventLink {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--accent-solid) 58%, var(--line));
+  border-radius: 7px;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.factualEventLink:hover,
+.factualEventLink:focus-visible {
+  background: color-mix(in srgb, var(--accent-solid) 10%, transparent);
+}
+
+@media (min-width: 44rem) {
+  .factualRecapGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .matchList {
   list-style: none;
   display: grid;
@@ -418,6 +590,9 @@
   padding: 0.85rem 0.9rem;
   background: var(--bg-sunken);
   border-top: 1px solid var(--line);
+}
+.boxScore[hidden] {
+  display: none;
 }
 @media (min-width: 34rem) {
   .boxScore {
@@ -821,6 +996,7 @@
   }
 
   .resultsMatchPanel,
+  .factualRecap,
   .resultsSubmitWrap,
   .seedPanel {
     grid-column: 1 / -1;

@@ -46,6 +46,8 @@ type ViewportCase = {
 type SurfaceCase = {
   readonly label: string;
   readonly path: string;
+  /** Feature-specific proof surfaces run only when explicitly filtered in. */
+  readonly optIn?: boolean;
   readonly prepare?: (page: Page) => Promise<void>;
   readonly route?: (page: Page) => Promise<void>;
   readonly waitForNetworkIdle?: boolean;
@@ -298,6 +300,10 @@ const activeBlindOpenRecord = draftRecord("open_hidden", {
 });
 const completeA = completedRecord("resp-complete-a", "Broadcast XI");
 const completeB = completedRecord("resp-complete-b", "Wide View XI");
+// This fixed seed has one activation in G2 and two in G3. G3 opens by
+// default, leaving the first recap-linked G2 event collapsed for the S6
+// hash-navigation interaction proof.
+const completeFactualRecap = completedRecord("resp-recap-1", "Factual XI");
 const seededRecords = [
   activeDraftRecord,
   activePositionRecord,
@@ -305,6 +311,7 @@ const seededRecords = [
   activeBlindOpenRecord,
   completeA,
   completeB,
+  ...(SURFACE_FILTER.has("results-factual-recap") ? [completeFactualRecap] : []),
 ] as const;
 
 function localStoragePayload(records: readonly RunRecordV1[]) {
@@ -806,6 +813,61 @@ function surfaceCases(): readonly SurfaceCase[] {
       },
     },
     {
+      label: "results-factual-recap",
+      path: `/play/results?run=${completeFactualRecap.run_id}`,
+      optIn: true,
+      primaryAction: { role: "link", name: "Event log" },
+      prepare: async (page) => {
+        await page.getByRole("heading", { name: "Why it went this way" }).waitFor();
+        const link = page.getByRole("link", { name: "Event log" }).first();
+        const href = await link.getAttribute("href");
+        assert(href?.startsWith("#event-"), "S6 event-log link must carry a real event hash");
+        const target = page.locator(`[id="${href.slice(1)}"]`);
+        await target.waitFor({ state: "attached" });
+        const matchItem = target.locator("xpath=ancestor::li[1]");
+        const toggle = matchItem.getByRole("button").first();
+        assert(
+          (await toggle.getAttribute("aria-expanded")) === "false",
+          "S6 proof requires the linked match to begin collapsed",
+        );
+        assert(
+          await target.evaluate((node) => node.closest("[hidden]") !== null),
+          "S6 proof requires the linked event to begin under a hidden match panel",
+        );
+
+        await link.click();
+        await page.waitForFunction((expectedHash) => window.location.hash === expectedHash, href);
+        await page.waitForFunction(
+          (eventId) =>
+            document
+              .getElementById(eventId)
+              ?.closest("li")
+              ?.querySelector("button")
+              ?.getAttribute("aria-expanded") === "true",
+          href.slice(1),
+        );
+        assert(
+          (await toggle.getAttribute("aria-expanded")) === "true",
+          "event-log link did not expand its owning match",
+        );
+        assert(
+          !(await target.evaluate((node) => node.closest("[hidden]") !== null)),
+          "event-log target remained under a hidden panel after link activation",
+        );
+        assert(await target.isVisible(), "event-log target is not visible after link activation");
+        const box = await target.boundingBox();
+        const viewport = page.viewportSize();
+        assert(
+          box !== null && viewport !== null,
+          "event-log target has no measurable viewport box",
+        );
+        assert(
+          box.y >= -1 && box.y + box.height <= viewport.height + 1,
+          "event-log target did not land inside the viewport",
+        );
+      },
+    },
+    {
       label: "share-author",
       path: `/play/share?run=${completeA.run_id}`,
       route: mockOgSignFailure,
@@ -1118,7 +1180,8 @@ async function main(): Promise<void> {
   });
   const metrics: SurfaceMetric[] = [];
   const selectedSurfaces = surfaceCases().filter(
-    (surface) => SURFACE_FILTER.size === 0 || SURFACE_FILTER.has(surface.label),
+    (surface) =>
+      SURFACE_FILTER.has(surface.label) || (SURFACE_FILTER.size === 0 && surface.optIn !== true),
   );
   const selectedViewports = viewports.filter(
     (viewport) => VIEWPORT_FILTER.size === 0 || VIEWPORT_FILTER.has(viewport.name),

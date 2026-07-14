@@ -773,6 +773,45 @@
 .narrativeText {
   composes: narrativeText from "./game-styles/results.module.css";
 }
+.factualRecap {
+  composes: factualRecap from "./game-styles/results.module.css";
+}
+.factualRecapKicker {
+  composes: factualRecapKicker from "./game-styles/results.module.css";
+}
+.factualRecapGrid {
+  composes: factualRecapGrid from "./game-styles/results.module.css";
+}
+.factualRecapBlock {
+  composes: factualRecapBlock from "./game-styles/results.module.css";
+}
+.factualRecapDetail {
+  composes: factualRecapDetail from "./game-styles/results.module.css";
+}
+.factualRecapHeading {
+  composes: factualRecapHeading from "./game-styles/results.module.css";
+}
+.factualMetric {
+  composes: factualMetric from "./game-styles/results.module.css";
+}
+.factualEmpty {
+  composes: factualEmpty from "./game-styles/results.module.css";
+}
+.factualStrengthGrid {
+  composes: factualStrengthGrid from "./game-styles/results.module.css";
+}
+.factualDefinitionList {
+  composes: factualDefinitionList from "./game-styles/results.module.css";
+}
+.factualList {
+  composes: factualList from "./game-styles/results.module.css";
+}
+.factualEventList {
+  composes: factualEventList from "./game-styles/results.module.css";
+}
+.factualEventLink {
+  composes: factualEventLink from "./game-styles/results.module.css";
+}
 .matchList {
   composes: matchList from "./game-styles/results.module.css";
 }
