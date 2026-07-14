@@ -66,10 +66,15 @@ import { SynergyBar } from "../synergy-bar";
 import { GameFallback } from "../game-fallback";
 import { DailyUnavailableNotice } from "../daily-unavailable-notice";
 import { LocalProgressBandWithVersions, type FriendRunContext } from "../local-progress-band";
-import { DraftAppBar } from "./app-bar";
-import { TOTAL_SPINS } from "./constants";
+import { DraftAppBar, draftModeCueForRun } from "./app-bar";
+import { TOTAL_SPINS, VOLATILE_STORAGE_WARNING } from "./constants";
 import { FormationSelect } from "./setup";
-import { useDraftScreenLoader } from "./use-draft-screen-loader";
+import { createFriendChallengeRun, useDraftScreenLoader } from "./use-draft-screen-loader";
+import {
+  parseFriendChallengeSearchParams,
+  type VerifiedFriendChallengeSetup,
+} from "@/lib/game/friend-challenge";
+import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 import s from "../game.module.css";
 
 export { SETUP_RATING_BASES } from "./setup";
@@ -128,6 +133,10 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const requestRunId = searchParams?.get("run") ?? null;
+  const friendChallenge = useMemo(
+    () => parseFriendChallengeSearchParams(searchParams),
+    [searchParams],
+  );
   const dailyDate = useMemo(
     () => (daily ? dailyDateFromSearchParams(searchParams) : null),
     [daily, searchParams],
@@ -156,7 +165,10 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
     !daily &&
     (searchParams?.get("lane") === "ranked" || searchParams?.get("ranked") === "1");
 
-  const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId, { dailyDate });
+  const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId, {
+    dailyDate,
+    friendChallenge,
+  });
 
   useEffect(() => {
     if (!dailyDate || requestRunId !== null || mode.kind !== "ready") return;
@@ -244,6 +256,32 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
     );
   }
 
+  if (mode.kind === "friend_setup") {
+    return (
+      <FriendChallengeSetup
+        challenge={mode.challenge}
+        onStart={async () => {
+          const created = await createFriendChallengeRun(mode.gameData, mode.ref, mode.challenge);
+          const warning =
+            created.persistence === "volatile" || created.warnings.length > 0
+              ? created.warnings.join(" · ") || VOLATILE_STORAGE_WARNING
+              : null;
+          router.replace(
+            mode.challenge.dailyDate === null
+              ? draftHref(created.record.run_id)
+              : dailyDraftHref(created.record.run_id, mode.challenge.dailyDate),
+          );
+          setMode({
+            kind: "ready",
+            gameData: mode.gameData,
+            record: created.record,
+            persistenceWarning: warning,
+          });
+        }}
+      />
+    );
+  }
+
   // mode.kind === "ready"
   return (
     <DraftBoard
@@ -263,6 +301,86 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
       }
       onReview={() => router.push(reviewHref(mode.record.run_id))}
     />
+  );
+}
+
+function FriendChallengeSetup({
+  challenge,
+  onStart,
+}: {
+  challenge: VerifiedFriendChallengeSetup;
+  onStart: () => Promise<void>;
+}) {
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const modeLabel = DRAFT_MODE_COPY[challenge.mode].label;
+  const flowLabel = challenge.draftFlow === "position_first" ? "Position First" : "Squad First";
+  const ratingLabel = challenge.ratingBasis === "current" ? "Current" : "Career";
+  async function start() {
+    if (pending) return;
+    setPending(true);
+    setError(null);
+    try {
+      await onStart();
+    } catch {
+      setError("The friend challenge could not start in this browser. Try again.");
+      setPending(false);
+    }
+  }
+  return (
+    <div className={s.draftShell}>
+      <DraftAppBar spinNumber={null} progressPct={0} mode={challenge.mode} casualOnly />
+      <section className={`${s.formationSelect} ${s.friendChallengeSetup}`}>
+        <div className={s.friendChallengeKicker}>Same seed · Casual</div>
+        <h1 className={s.formationTitle}>You&apos;re playing a friend&apos;s board</h1>
+        <p className={s.formationSub}>
+          The seed and setup are locked to the shared run. Your picks stay yours.
+        </p>
+        <dl className={s.friendChallengeConfig} aria-label="Friend challenge setup">
+          <div>
+            <dt>Formation</dt>
+            <dd>{challenge.formationId}</dd>
+          </div>
+          <div>
+            <dt>Mode</dt>
+            <dd>{modeLabel}</dd>
+          </div>
+          <div>
+            <dt>Draft order</dt>
+            <dd>{flowLabel}</dd>
+          </div>
+          <div>
+            <dt>Ratings</dt>
+            <dd>{ratingLabel}</dd>
+          </div>
+          <div>
+            <dt>Era</dt>
+            <dd>{ERA_PRESET_LABELS[challenge.eraPreset]}</dd>
+          </div>
+          <div>
+            <dt>Leaderboard</dt>
+            <dd>Casual only</dd>
+          </div>
+        </dl>
+        {challenge.status === "DIFFERENT_BUILD" ? (
+          <p className={s.friendChallengeBuildNote} role="note">
+            Your friend played on a different build. The challenge still uses their seed and setup,
+            but scores won&apos;t be compared.
+          </p>
+        ) : null}
+        {error ? (
+          <p className={s.formationError} role="alert">
+            {error}
+          </p>
+        ) : null}
+        <button type="button" className="btn btn--primary" disabled={pending} onClick={start}>
+          {pending ? "Starting…" : "Play this board"}
+        </button>
+        <Link href="/play" className="btn btn--ghost">
+          Choose another mode
+        </Link>
+      </section>
+    </div>
   );
 }
 
@@ -766,6 +884,7 @@ function DraftBoard({
           mode={draft.mode}
           daily={dailyRun}
           ranked={record.ranked_attempt !== undefined}
+          casualOnly={record.friend_challenge !== undefined}
           pickSpace={dailyPickSpace}
           warning={persistenceWarning}
         />
@@ -891,11 +1010,12 @@ function DraftBoard({
           formationId={draft.formation_id}
           modeLabel={dailyRun ? "Daily" : DRAFT_MODE_COPY[draft.mode].shortLabel}
           modeCue={
-            dailyRun
-              ? "today's shared draft"
-              : record.ranked_attempt
-                ? "Ranked"
-                : DRAFT_MODE_COPY[draft.mode].cue
+            draftModeCueForRun({
+              mode: draft.mode,
+              daily: dailyRun,
+              ranked: record.ranked_attempt !== undefined,
+              casualOnly: record.friend_challenge !== undefined,
+            }) ?? ""
           }
           pickSpace={dailyPickSpace}
           synergyOverall={revealSynergyOverall}
@@ -1196,6 +1316,7 @@ function DraftBoard({
         mode={draft.mode}
         daily={dailyRun}
         ranked={record.ranked_attempt !== undefined}
+        casualOnly={record.friend_challenge !== undefined}
         pickSpace={dailyPickSpace}
         warning={persistenceWarning}
       />

@@ -107,6 +107,11 @@ afterEach(() => {
 });
 
 describe("run-record persisted boundary", () => {
+  const friendChallenge = {
+    token: "t3.parent-token",
+    proof: `fc1.${"a".repeat(64)}.${"A".repeat(43)}`,
+  } as const;
+
   it("mixes a per-run creation nonce into first-run seeds and rolled draws", async () => {
     stubRandomUuids("35502f44-95e8-418e-bfea-80dcfe96c74a", "ffbad4c1-1875-4d4f-ae3c-427c6851d616");
 
@@ -158,6 +163,58 @@ describe("run-record persisted boundary", () => {
     expect(right.parent_seed).toBe(left.parent_seed);
     expect(drawPairs(left.draft)).toEqual(drawPairs(right.draft));
     expect(left.challenge).toEqual(challenge);
+  });
+
+  it("persists friend challenges as casual-only metadata and rejects ranked coexistence", async () => {
+    const seed = "wcdraft:friend:recipient";
+    const origin = (
+      await createNewRunRecord(gameData, {
+        formation_id: "4-3-3",
+        parent_seed: seed,
+      })
+    ).record;
+    localStorage.clear();
+    const created = (
+      await createNewRunRecord(gameData, {
+        formation_id: "4-3-3",
+        parent_seed: seed,
+        friend_challenge: friendChallenge,
+      })
+    ).record;
+    expect(drawPairs(created.draft)).toEqual(drawPairs(origin.draft));
+    expect(created.friend_challenge).toEqual(friendChallenge);
+    expect(created.ranked_attempt).toBeUndefined();
+    expect(loadRunRecord(created.run_id, gameData.versions).record?.friend_challenge).toEqual(
+      friendChallenge,
+    );
+
+    const key = recordKey(created.run_id);
+    const persisted = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
+    persisted.ranked_attempt = {
+      attempt_id: "attempt-injected",
+      season_key: "season-injected",
+      parent_seed: created.parent_seed,
+      expires_at: "2026-07-14T00:00:00.000Z",
+    };
+    localStorage.setItem(key, JSON.stringify(persisted));
+    expect(loadRunRecord(created.run_id, gameData.versions)).toEqual({
+      record: null,
+      status: "invalid",
+    });
+
+    await expect(
+      createNewRunRecord(gameData, {
+        formation_id: "4-3-3",
+        parent_seed: "wcdraft:friend:ranked-forbidden",
+        friend_challenge: friendChallenge,
+        ranked_attempt: {
+          attempt_id: "attempt-forbidden",
+          season_key: "season-forbidden",
+          parent_seed: "wcdraft:friend:ranked-forbidden",
+          expires_at: "2026-07-14T00:00:00.000Z",
+        },
+      }),
+    ).rejects.toThrow("friend challenge runs cannot carry a ranked attempt");
   });
 
   it("rejects persisted daily challenge metadata when seed/date derivation disagrees", async () => {
