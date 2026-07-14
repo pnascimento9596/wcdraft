@@ -33,6 +33,31 @@
   word-break: break-all;
 }
 
+.seasonClosed {
+  width: fit-content;
+  margin: 0.25rem 0 0;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.seasonNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  margin-top: 0.45rem;
+  font-size: 0.78rem;
+}
+
+.seasonNav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
 .toolbar {
   display: grid;
   gap: 0.55rem;
@@ -40,7 +65,7 @@
 
 .laneTabs {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
   gap: 0.4rem;
 }

@@ -14,7 +14,8 @@
 import type { CardId } from "./identity.js";
 import type { ManagerRating, ManagerTournament } from "./manager.js";
 import type { MatchPeriod, MatchPhase, MatchRound, Position } from "./primitives.js";
-import type { Rating } from "./rating.js";
+import type { Rating, TeamStrength } from "./rating.js";
+import type { SynergyResult } from "./synergy.js";
 import type { ScoringConfig } from "./scoring.js";
 import type { Bracket2026, Team2026 } from "./tournament.js";
 
@@ -160,6 +161,23 @@ export interface InjuryEvent extends MatchEventCommon {
   tournament_ending: boolean;
 }
 
+/** A seeded pre-match absence. This event always reflects the XI used mechanically. */
+export interface AvailabilityEvent extends MatchEventCommon {
+  type: "availability";
+  minute: 0;
+  period: "1H";
+  card_id: CardId;
+  player_id: string;
+  slot_id: string;
+  position: Position;
+  reason: "knock" | "suspension" | "tournament_injury";
+  /** One or two for minor events; null means the player is out for the tournament. */
+  duration_matches: 1 | 2 | null;
+  replacement_card_id: CardId | null;
+  replacement_player_id: string | null;
+  short_handed: boolean;
+}
+
 export interface SubEvent extends MatchEventCommon {
   type: "sub";
   in_card_id: CardId;
@@ -207,6 +225,7 @@ export type MatchEvent =
   | YellowEvent
   | RedEvent
   | InjuryEvent
+  | AvailabilityEvent
   | SubEvent
   | ShootoutKickEvent;
 
@@ -287,6 +306,9 @@ export interface MatchResult {
    */
   pre_match_win_probability: number;
 
+  /** Persisted engine facts consumed by the factual recap; UI must not re-derive these. */
+  team_facts?: MatchTeamFacts;
+
   /** Regulation (90') goals. */
   user_goals: number;
   /** Regulation (90') goals against. */
@@ -327,6 +349,60 @@ export interface MatchResult {
   events: MatchEvent[];
 }
 
+export interface AvailabilityFact {
+  card_id: CardId;
+  player_id: string;
+  slot_id: string;
+  position: Position;
+  reason: "knock" | "suspension" | "tournament_injury";
+  duration_matches: 1 | 2 | null;
+}
+
+export interface BenchActivationFact {
+  out_card_id: CardId;
+  out_player_id: string;
+  in_card_id: CardId;
+  in_player_id: string;
+  slot_id: string;
+  line: Position;
+  fit: number;
+  internal_score: number;
+  /** S3 calibration factor applied only after canonical replacement selection. */
+  replacement_contribution_multiplier: number;
+  /** Effective incoming slot contribution after the calibration factor. */
+  replacement_score: number;
+  outgoing_score: number;
+  line_contribution_delta: number;
+}
+
+export type ManagerTacticalBand = 0 | 1 | 2 | 3;
+export type ManagerPresenceBand = 0 | 1;
+export type ManagerLinkBand = 0 | 1 | 2;
+
+export interface MatchTeamFacts {
+  base_strength: TeamStrength;
+  active_strength: TeamStrength;
+  /** Drafted-manager presence, persisted rather than inferred by recap consumers. */
+  manager_present: boolean;
+  /** Internal competent-manager presence contribution. Production currently resolves all managers to +1. */
+  manager_presence_band: ManagerPresenceBand;
+  /** Preserved S2 +0/+1/+2 contribution: round(clamp(manager_link) * 2). */
+  manager_link_band: ManagerLinkBand;
+  /** Bounded sum of manager_presence_band + the preserved S2 +0/+1/+2 link tier. */
+  manager_tactical_band: ManagerTacticalBand;
+  /** Bounded multiplier corresponding exactly to manager_tactical_band. */
+  manager_tactical_multiplier: number;
+  /** Continuous factual projection of active strength under the tactical multiplier. */
+  post_tactical_strength: TeamStrength;
+  /** Whether post_tactical_strength mechanically fed the match outcome. */
+  tactical_applied_to_outcome: boolean;
+  base_synergy: SynergyResult;
+  active_synergy: SynergyResult;
+  unavailable: AvailabilityFact[];
+  bench_activations: BenchActivationFact[];
+  short_handed_slot_ids: string[];
+}
+
 // ─── SimWorld ─────────────────────────────────────────────────────────────────
 //
 // Resolved sim inputs the public `(draft, scenario, seed)` signature does NOT
@@ -340,6 +416,8 @@ export interface MatchResult {
 export interface SimWorld {
   /** card_id → Rating for every card in the user squad (all 16). */
   ratings: Readonly<Record<string, Rating>>;
+  /** Authoritative per-card eligibility. Missing rows fail closed for bench replacement. */
+  eligiblePositionsByCardId?: Readonly<Record<string, readonly Position[]>>;
   /** team_id → Team2026 for every opponent reachable in the scenario. */
   opponents: Readonly<Record<string, Team2026>>;
   /** manager_card_id → ManagerRating, when a manager was drafted. */

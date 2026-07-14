@@ -104,10 +104,10 @@ interface AsymRealismGolden {
     }
   >;
   shape_bands: {
-    draw_pct: { center_policy: DraftPolicyName; half_width: number };
-    margin4plus_pct: { center_policy: DraftPolicyName; half_width: number };
-    ko_et_pct: { center_policy: DraftPolicyName; half_width: number };
-    shootout_pct: { center_policy: DraftPolicyName; half_width: number };
+    draw_pct: { center_policy: DraftPolicyName; center: number; half_width: number };
+    margin4plus_pct: { center_policy: DraftPolicyName; center: number; half_width: number };
+    ko_et_pct: { center_policy: DraftPolicyName; center: number; half_width: number };
+    shootout_pct: { center_policy: DraftPolicyName; center: number; half_width: number };
   };
   goals_per_game_lower_floor: { lower_bound: number };
   score_population: ScorePopulationSummary & { _doc: string; policy: DraftPolicyName };
@@ -206,14 +206,23 @@ const SHAPE_DISPLAY: Record<ShapeKey, string> = {
 
 function bandFor(key: ShapeKey): { center: number; half: number } {
   const cfg = GOLDEN.shape_bands[key];
-  const center = GOLDEN.policies[cfg.center_policy].observed[key];
-  return { center, half: cfg.half_width };
+  return { center: cfg.center, half: cfg.half_width };
 }
 
 function inShapeBand(key: ShapeKey, observed: number): boolean {
   const { center, half } = bandFor(key);
   return Math.abs(observed - center) <= half;
 }
+
+describe("Season 2 S3 final realism lock keeps semantic shape centers fixed", () => {
+  it("does not derive acceptance centers from the newly observed mechanics telemetry", () => {
+    for (const key of SHAPE_KEYS) {
+      const cfg = GOLDEN.shape_bands[key];
+      expect(bandFor(key).center).toBe(cfg.center);
+      expect(cfg.center).not.toBe(GOLDEN.policies[cfg.center_policy].observed[key]);
+    }
+  });
+});
 
 gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RUNS}`, () => {
   const results = new Map<DraftPolicyName, PolicyResult>();

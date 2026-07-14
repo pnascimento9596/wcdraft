@@ -40,6 +40,7 @@ import {
   DEFAULT_DAILY_BOARD_FILTER,
   boardConfigKey,
 } from "../config";
+import { DEFAULT_LEADERBOARD_SEASON_ID } from "../season";
 import { submitStatusCopy } from "../submit-copy";
 import type { SubmitPhase } from "../submit-state";
 import { runSimulationSync } from "../../game/simulate";
@@ -175,6 +176,20 @@ describe("LeaderboardSubmitPanel (container)", () => {
     const record = simulatedRecord("classic");
     const html = renderToStaticMarkup(createElement(LeaderboardSubmitPanel, { gameData, record }));
     expect(html).toContain(`${record.simulation!.run.score}`);
+  });
+
+  it("keeps seed-disclosed friend challenge runs on the casual lane", () => {
+    const record: RunRecordV1 = {
+      ...simulatedRecord("classic"),
+      friend_challenge: {
+        token: "t3.parent-token",
+        proof: `fc1.${"a".repeat(64)}.${"A".repeat(43)}`,
+      },
+    };
+    const html = renderToStaticMarkup(createElement(LeaderboardSubmitPanel, { gameData, record }));
+    expect(html).toContain("Friend challenge · Casual board only");
+    expect(html).toContain("Post casual run");
+    expect(html).not.toContain(">Ranked<");
   });
 
   it("is ABSENT (not disabled) when version anchors mismatch the bundle", () => {
@@ -616,12 +631,15 @@ describe("board views", () => {
     expect(html).toContain("#1 of 2 today · Ties share a rank");
   });
 
-  it("toolbar keeps Daily/Season headline lanes and gates Advanced combos by count", () => {
+  it("toolbar exposes empty Classic and Memory headline lanes and gates other combos by count", () => {
     const openOption = ADVANCED_BOARD_CONFIG_OPTIONS.find(
       (option) => option.filter.lane === "casual" && option.filter.draftMode === "hidden",
     )!;
     const closedOption = ADVANCED_BOARD_CONFIG_OPTIONS.find(
-      (option) => option.filter.lane === "ranked" && option.filter.draftMode === "hidden",
+      (option) =>
+        option.filter.lane === "ranked" &&
+        option.filter.draftMode === "classic" &&
+        option.filter.draftOrder === "position_first",
     )!;
     const html = renderToStaticMarkup(
       createElement(BoardToolbar, {
@@ -636,12 +654,45 @@ describe("board views", () => {
       }),
     );
     expect(html).toContain("Daily");
-    expect(html).toContain("Season");
+    expect(html).toContain("Classic");
+    expect(html).toContain("Memory");
     expect(html).toContain("Advanced");
     expect(html).toContain(`${BOARD_LANE_OPEN_ENTRY_THRESHOLD.toString()} runs`);
     expect(html).toContain(`opens at ${BOARD_LANE_OPEN_ENTRY_THRESHOLD.toString()} runs`);
     expect(html).toContain("disabled");
     expect(html).not.toContain(boardConfigKey(DEFAULT_BOARD_FILTER));
+  });
+
+  it("archive surfaces are read-only and carry the literal closed-season state", () => {
+    const head = renderToStaticMarkup(
+      createElement(BoardHead, {
+        currentSeasonKey: DEFAULT_LEADERBOARD_SEASON_ID,
+        boardSeasonKey: "season-2026-manager-attrition",
+        archivedSeasonKeys: ["season-2026-manager-attrition"],
+        filter: DEFAULT_BOARD_FILTER,
+      }),
+    );
+    const toolbar = renderToStaticMarkup(
+      createElement(BoardToolbar, {
+        filter: DEFAULT_BOARD_FILTER,
+        seasonClosed: true,
+        onFilter: () => undefined,
+      }),
+    );
+    const empty = renderToStaticMarkup(
+      createElement(EmptyBoard, {
+        filter: DEFAULT_BOARD_FILTER,
+        seasonClosed: true,
+      }),
+    );
+    expect(head).toContain("Season closed");
+    expect(head).toContain("Summer 2026 archive");
+    expect(head).toContain("View current season");
+    expect(toolbar).toContain("Classic");
+    expect(toolbar).toContain("Memory");
+    expect(toolbar).not.toContain("Daily");
+    expect(empty).toContain("archived board is read-only");
+    expect(empty).not.toContain("Play today");
   });
 
   it("error state is an alert with retry — never an empty board", () => {
@@ -673,11 +724,11 @@ describe("board views", () => {
   it("board head carries a human season label + raw-key tooltip evidence", () => {
     const html = renderToStaticMarkup(
       createElement(BoardHead, {
-        currentSeasonKey: "season-2026-manager-attrition",
+        currentSeasonKey: DEFAULT_LEADERBOARD_SEASON_ID,
       }),
     );
-    expect(html).toContain("Season · Summer 2026");
-    expect(html).toContain('title="season-2026-manager-attrition"');
+    expect(html).toContain("Season · Squad Depth 2026");
+    expect(html).toContain(`title="${DEFAULT_LEADERBOARD_SEASON_ID}"`);
     expect(html).toContain("Season key verified");
   });
 });

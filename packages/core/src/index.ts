@@ -101,11 +101,18 @@ export type {
   YellowEvent,
   RedEvent,
   InjuryEvent,
+  AvailabilityEvent,
   SubEvent,
   ShootoutKickEvent,
   ShootoutKick,
   MatchLineupEntry,
   MatchResult,
+  AvailabilityFact,
+  BenchActivationFact,
+  MatchTeamFacts,
+  ManagerTacticalBand,
+  ManagerPresenceBand,
+  ManagerLinkBand,
   SimWorld,
   // scoring
   ScoringConfig,
@@ -189,6 +196,8 @@ export {
   positionCompatibility,
   computeSynergy,
   aggregateUserXiStrength,
+  aggregateActiveXiStrength,
+  projectSlotContribution,
   managerBandModifier,
 } from "./api/index.js";
 
@@ -213,6 +222,11 @@ export {
 // against modern-era WC norms. `simulateMatch` (UserXiSimView path) is the
 // drafted-user surface; these are the Team2026-vs-Team2026 primitives.
 export { simulateMatchCore, membersFromTeam2026 } from "./engine/match.js";
+export {
+  applyManagerTacticalAdjustment,
+  managerTacticalBand,
+  type ManagerTacticalAdjustment,
+} from "./engine/manager-tactics.js";
 export type { CoreMatchInput, InternalMatchResult, SimMember } from "./engine/match.js";
 
 // ─── I3.2 scenario builder — RunScenario from real Team2026[] + Bracket2026 ─

@@ -194,9 +194,25 @@ describe("boardQueryString", () => {
       "?challenge=season&mode=ranked&draft_mode=classic&draft_order=squad_first&era=all_time&rating_basis=career&limit=1",
     );
   });
+
+  it("threads an explicit archive season only when requested", () => {
+    expect(
+      boardQueryString({
+        filter: DEFAULT_BOARD_FILTER,
+        cursor: null,
+        seasonKey: "season-2026-manager-attrition",
+      }),
+    ).toBe(
+      "?challenge=season&mode=ranked&draft_mode=classic&draft_order=squad_first&era=all_time&rating_basis=career&season=season-2026-manager-attrition",
+    );
+  });
 });
 
 describe("seasonLabel", () => {
+  it("names both current and archived explicit seasons", () => {
+    expect(seasonLabel("season-2026-squad-depth")).toBe("Squad Depth 2026");
+    expect(seasonLabel("season-2026-manager-attrition")).toBe("Summer 2026");
+  });
   it("leads with dataset · engine from a legacy derived key", () => {
     expect(
       seasonLabel(

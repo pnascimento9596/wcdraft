@@ -104,6 +104,9 @@ function buildSimWorld(): SimWorld {
     opponents,
     managerTournaments,
     nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
+    eligiblePositionsByCardId: Object.fromEntries(
+      DRAFT_POOL_BUNDLE.player_cards.map((card) => [card.card_id, card.eligible_positions]),
+    ),
     bracket,
     // managerRatings omitted — runtime data does not publish a manager rating.
     // scoringConfig omitted — defaults to DEFAULT_SCORING_CONFIG.

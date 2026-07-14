@@ -36,13 +36,15 @@ import {
 const MAX_SEARCH = 40000;
 
 function tournamentEndingInjuryCount(matches: MatchResult[]): number {
-  let n = 0;
+  const players = new Set<string>();
   for (const m of matches) {
     for (const e of m.events) {
-      if (e.type === "injury" && e.tournament_ending) n++;
+      if (e.type === "availability" && e.reason === "tournament_injury") {
+        players.add(e.player_id);
+      }
     }
   }
-  return n;
+  return players.size;
 }
 
 function exhibits(name: ScenarioName, run: RunResult, matches: MatchResult[]): boolean {

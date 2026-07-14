@@ -24,6 +24,7 @@ import type { ReferenceStanding } from "@wcdraft/data/client";
 import type { GameData } from "./data";
 import { buildMemoryRevealView, type MemoryRevealView } from "./memory-reveal-model";
 import type { RunRecordV1 } from "./run-record";
+import { projectTeamSheetDraft } from "./team-sheet";
 import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
 import { buildNarrativeLabels, topScorerView, type TopScorerView } from "./results-adapters";
 import { formatNullableNumber } from "./view-models";
@@ -164,7 +165,7 @@ export function buildShareView(
   if (!record.simulation) return null;
   const run = record.simulation.run;
   const matches = record.simulation.matches;
-  const draft = record.draft;
+  const draft = projectTeamSheetDraft(gameData, record);
   const headline = headlineFor(run, matches.length);
   return {
     team_name: draft.team_name,
@@ -181,7 +182,7 @@ export function buildShareView(
     manager: managerLine(gameData, draft),
     stars: topStars(gameData, draft, 3),
     top_scorer: topScorerCaption(gameData, run, matches),
-    narrative: shareNarrative(gameData, record, scenario),
+    narrative: shareNarrative(gameData, record, draft, scenario),
     seed: run.seed,
     reached_round: run.reached_round,
     matches_played: matches.length,
@@ -195,13 +196,14 @@ export function buildShareView(
 function shareNarrative(
   gameData: GameData,
   record: RunRecordV1,
+  draft: DraftState,
   scenario?: Scenario2026Bundle | null,
 ): string {
   const simulation = record.simulation;
   if (!simulation) return "";
   const run = simulation.run;
   if (!scenario) return "";
-  const labels = buildNarrativeLabels(gameData, scenario, record.draft);
+  const labels = buildNarrativeLabels(gameData, scenario, draft);
   return cleanNarrative(buildNarrative(run, [...simulation.matches], labels).filled_text);
 }
 

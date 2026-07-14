@@ -2,19 +2,19 @@
   "bundles": {
     "daily_seed_salt_map": {
       "brotli_impl_version": "1.1.0",
-      "bytes": 19016,
-      "bytes_brotli": 1688,
-      "bytes_gzip": 2113,
-      "compressed_bytes": 1688,
-      "compressed_sha256": "e5e1f7d4bbc8635ff6339f79f7761563d4e73cebcb3754c9b111f7702c8ae9ee",
+      "bytes": 18976,
+      "bytes_brotli": 1694,
+      "bytes_gzip": 2128,
+      "compressed_bytes": 1694,
+      "compressed_sha256": "5382d83b0d0be028be8cf72920e35f30b7682c2439b571a3485e046bcd173477",
       "options": {
         "mode": "text",
         "quality": 11,
-        "size_hint": 19016
+        "size_hint": 18976
       },
       "path": "daily-seed-salt-map.compact.json",
-      "raw_sha256": "0fa4eca1f6005738ec0fdc156d0357bef9e5445ceb84ce08f8f057e36bca7695",
-      "sha256": "0fa4eca1f6005738ec0fdc156d0357bef9e5445ceb84ce08f8f057e36bca7695"
+      "raw_sha256": "aed021c8a726f938ddb97b156b35a8cda7bb2c21722e61fee1acea829dd9916d",
+      "sha256": "aed021c8a726f938ddb97b156b35a8cda7bb2c21722e61fee1acea829dd9916d"
     },
     "draft_pool": {
       "brotli_impl_version": "1.1.0",
@@ -34,19 +34,19 @@
     },
     "manifest": {
       "brotli_impl_version": "1.1.0",
-      "bytes": 7147,
-      "bytes_brotli": 2154,
+      "bytes": 7141,
+      "bytes_brotli": 2149,
       "bytes_gzip": 2623,
-      "compressed_bytes": 2154,
-      "compressed_sha256": "f9b245c2deee938f2eb841c2c77d41b03bd389d9355193b73b09ede2437ccd6e",
+      "compressed_bytes": 2149,
+      "compressed_sha256": "522f92f8099a713458a5f683b92835195925b727e426a8d335edf1575b4f0ee6",
       "options": {
         "mode": "text",
         "quality": 11,
-        "size_hint": 7147
+        "size_hint": 7141
       },
       "path": "manifest.json",
-      "raw_sha256": "d823b6f9a321fb6231cfb3cbdfa24a8e98e26773128f6513fad220810976edcc",
-      "sha256": "d823b6f9a321fb6231cfb3cbdfa24a8e98e26773128f6513fad220810976edcc"
+      "raw_sha256": "214df946a291016f34ae689a1c2e52a857ae5590e1aa66870ec12b172211eb82",
+      "sha256": "214df946a291016f34ae689a1c2e52a857ae5590e1aa66870ec12b172211eb82"
     },
     "scenario_2026": {
       "brotli_impl_version": "1.1.0",
@@ -66,24 +66,24 @@
     },
     "score_distribution": {
       "brotli_impl_version": "1.1.0",
-      "bytes": 1224,
-      "bytes_brotli": 593,
-      "bytes_gzip": 729,
-      "compressed_bytes": 593,
-      "compressed_sha256": "65e4cf05a0450f2f632168949295b3c83ebf7c999241568a7e1ac4d7bd0face9",
+      "bytes": 1218,
+      "bytes_brotli": 582,
+      "bytes_gzip": 725,
+      "compressed_bytes": 582,
+      "compressed_sha256": "5624b2f734b291bfb85606bb437f8bab2b9e93221b0b506641ffdc7834731e73",
       "options": {
         "mode": "text",
         "quality": 11,
-        "size_hint": 1224
+        "size_hint": 1218
       },
       "path": "score-distribution.compact.json",
-      "raw_sha256": "52752f4a19a839cf978107d3178c9c85d73803b7f2e846da1895501ac1cfb134",
-      "sha256": "52752f4a19a839cf978107d3178c9c85d73803b7f2e846da1895501ac1cfb134"
+      "raw_sha256": "785e1363127567bbc4ed6186088c5796e77d8ba9cd6fdc33b3ccefe813cdc36b",
+      "sha256": "785e1363127567bbc4ed6186088c5796e77d8ba9cd6fdc33b3ccefe813cdc36b"
     }
   },
   "dataset_version": "2026-07-01",
   "schema_version": "runtime-data-2.10.0",
-  "total_brotli_bytes": 1318010,
+  "total_brotli_bytes": 1318005,
   "total_gzip_bytes": 2798540,
-  "total_raw_bytes": 68462885
+  "total_raw_bytes": 68462879
 }

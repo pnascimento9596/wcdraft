@@ -17,7 +17,6 @@ import {
   validateSquad,
   type CardId,
   type DraftMode,
-  type DraftState,
   type ManagerCardId,
   type Position,
   type SquadSlot,
@@ -42,7 +41,7 @@ import {
   reviewHref,
   type DailyDraftContext,
 } from "@/lib/game/navigation";
-import { saveRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
+import { updateRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import {
   compatLabel,
   compatTier,
@@ -50,6 +49,11 @@ import {
   type PlayerCardView,
 } from "@/lib/game/view-models";
 import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
+import {
+  bestOpenSlotForCandidate,
+  fitTeachingImpactForMode,
+  resolveFitTeachingSlot,
+} from "@/lib/game/fit-teaching";
 import { focusFirstWithin, trapTabWithin } from "@/lib/a11y/focus";
 import { LockIcon } from "@/components/icons";
 import { Pitch } from "../pitch";
@@ -62,10 +66,15 @@ import { SynergyBar } from "../synergy-bar";
 import { GameFallback } from "../game-fallback";
 import { DailyUnavailableNotice } from "../daily-unavailable-notice";
 import { LocalProgressBandWithVersions, type FriendRunContext } from "../local-progress-band";
-import { DraftAppBar } from "./app-bar";
-import { TOTAL_SPINS } from "./constants";
+import { DraftAppBar, draftModeCueForRun } from "./app-bar";
+import { TOTAL_SPINS, VOLATILE_STORAGE_WARNING } from "./constants";
 import { FormationSelect } from "./setup";
-import { useDraftScreenLoader } from "./use-draft-screen-loader";
+import { createFriendChallengeRun, useDraftScreenLoader } from "./use-draft-screen-loader";
+import {
+  parseFriendChallengeSearchParams,
+  type VerifiedFriendChallengeSetup,
+} from "@/lib/game/friend-challenge";
+import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 import s from "../game.module.css";
 
 export { SETUP_RATING_BASES } from "./setup";
@@ -124,6 +133,10 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const requestRunId = searchParams?.get("run") ?? null;
+  const friendChallenge = useMemo(
+    () => parseFriendChallengeSearchParams(searchParams),
+    [searchParams],
+  );
   const dailyDate = useMemo(
     () => (daily ? dailyDateFromSearchParams(searchParams) : null),
     [daily, searchParams],
@@ -152,7 +165,10 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
     !daily &&
     (searchParams?.get("lane") === "ranked" || searchParams?.get("ranked") === "1");
 
-  const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId, { dailyDate });
+  const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId, {
+    dailyDate,
+    friendChallenge,
+  });
 
   useEffect(() => {
     if (!dailyDate || requestRunId !== null || mode.kind !== "ready") return;
@@ -196,11 +212,16 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
         <h1 className="visually-hidden">Draft recovery</h1>
         <DraftAppBar spinNumber={null} progressPct={0} />
         <div className={s.errorPanel} role="alert">
-          <h2 className={s.errorTitle}>Couldn&rsquo;t resume that draft</h2>
+          <h2 className={s.errorTitle}>{mode.title}</h2>
           <p className={s.errorMessage}>{mode.reason}</p>
+          {mode.retryable ? (
+            <button type="button" className="btn btn--primary" onClick={retryFromError}>
+              Retry verification
+            </button>
+          ) : null}
           <button
             type="button"
-            className="btn btn--primary"
+            className={mode.retryable ? "btn btn--ghost" : "btn btn--primary"}
             onClick={() =>
               router.replace(
                 dailyDate
@@ -240,6 +261,32 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
     );
   }
 
+  if (mode.kind === "friend_setup") {
+    return (
+      <FriendChallengeSetup
+        challenge={mode.challenge}
+        onStart={async () => {
+          const created = await createFriendChallengeRun(mode.gameData, mode.ref, mode.challenge);
+          const warning =
+            created.persistence === "volatile" || created.warnings.length > 0
+              ? created.warnings.join(" · ") || VOLATILE_STORAGE_WARNING
+              : null;
+          router.replace(
+            mode.challenge.dailyDate === null
+              ? draftHref(created.record.run_id)
+              : dailyDraftHref(created.record.run_id, mode.challenge.dailyDate),
+          );
+          setMode({
+            kind: "ready",
+            gameData: mode.gameData,
+            record: created.record,
+            persistenceWarning: warning,
+          });
+        }}
+      />
+    );
+  }
+
   // mode.kind === "ready"
   return (
     <DraftBoard
@@ -259,6 +306,86 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
       }
       onReview={() => router.push(reviewHref(mode.record.run_id))}
     />
+  );
+}
+
+function FriendChallengeSetup({
+  challenge,
+  onStart,
+}: {
+  challenge: VerifiedFriendChallengeSetup;
+  onStart: () => Promise<void>;
+}) {
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const modeLabel = DRAFT_MODE_COPY[challenge.mode].label;
+  const flowLabel = challenge.draftFlow === "position_first" ? "Position First" : "Squad First";
+  const ratingLabel = challenge.ratingBasis === "current" ? "Current" : "Career";
+  async function start() {
+    if (pending) return;
+    setPending(true);
+    setError(null);
+    try {
+      await onStart();
+    } catch {
+      setError("The friend challenge could not start in this browser. Try again.");
+      setPending(false);
+    }
+  }
+  return (
+    <div className={s.draftShell}>
+      <DraftAppBar spinNumber={null} progressPct={0} mode={challenge.mode} casualOnly />
+      <section className={`${s.formationSelect} ${s.friendChallengeSetup}`}>
+        <div className={s.friendChallengeKicker}>Same seed · Casual</div>
+        <h1 className={s.formationTitle}>You&apos;re playing a friend&apos;s board</h1>
+        <p className={s.formationSub}>
+          The seed and setup are locked to the shared run. Your picks stay yours.
+        </p>
+        <dl className={s.friendChallengeConfig} aria-label="Friend challenge setup">
+          <div>
+            <dt>Formation</dt>
+            <dd>{challenge.formationId}</dd>
+          </div>
+          <div>
+            <dt>Mode</dt>
+            <dd>{modeLabel}</dd>
+          </div>
+          <div>
+            <dt>Draft order</dt>
+            <dd>{flowLabel}</dd>
+          </div>
+          <div>
+            <dt>Ratings</dt>
+            <dd>{ratingLabel}</dd>
+          </div>
+          <div>
+            <dt>Era</dt>
+            <dd>{ERA_PRESET_LABELS[challenge.eraPreset]}</dd>
+          </div>
+          <div>
+            <dt>Leaderboard</dt>
+            <dd>Casual only</dd>
+          </div>
+        </dl>
+        {challenge.status === "DIFFERENT_BUILD" ? (
+          <p className={s.friendChallengeBuildNote} role="note">
+            Your friend played on a different build. The challenge still uses their seed and setup,
+            but scores won&apos;t be compared.
+          </p>
+        ) : null}
+        {error ? (
+          <p className={s.formationError} role="alert">
+            {error}
+          </p>
+        ) : null}
+        <button type="button" className="btn btn--primary" disabled={pending} onClick={start}>
+          {pending ? "Starting…" : "Play this board"}
+        </button>
+        <Link href="/play" className="btn btn--ghost">
+          Choose another mode
+        </Link>
+      </section>
+    </div>
   );
 }
 
@@ -501,20 +628,23 @@ function DraftBoard({
   // blocking honest notice and the user picks a different target.
   const [targetDeadEnd, setTargetDeadEnd] = useState<string | null>(null);
   const handleSelectTarget = useCallback(
-    (target: string) => {
+    async (target: string) => {
       if (committing) return;
       setCommitting(true);
       setTargetDeadEnd(null);
       setTransitionError(null);
       try {
-        const catalog = getCatalogForEra(gameData, draft.era_preset ?? "all_time");
-        const nextDraft = selectDraftTarget(catalog, draft, target);
-        const updated: RunRecordV1 = {
-          ...record,
-          updated_seq: record.updated_seq + 1,
-          draft: nextDraft,
-        };
-        const save = saveRunRecord(updated);
+        const save = await updateRunRecord(record.run_id, gameData.versions, record, (current) => {
+          const catalog = getCatalogForEra(gameData, current.draft.era_preset ?? "all_time");
+          return selectDraftTarget(catalog, current.draft, target);
+        });
+        if (save.status !== "updated" || !save.record) {
+          if (save.record) onRecordUpdate(save.record, save.warnings[0] ?? null);
+          setTransitionError(
+            save.warnings[0] ?? "This draft changed in another tab. Review it before continuing.",
+          );
+          return;
+        }
         const warning =
           save.persistence === "volatile" || save.warnings.length > 0
             ? save.warnings.join(" · ") ||
@@ -522,7 +652,7 @@ function DraftBoard({
             : null;
         setPhase("spin");
         setAnim("idle");
-        onRecordUpdate(updated, warning ?? persistenceWarning);
+        onRecordUpdate(save.record, warning ?? persistenceWarning);
       } catch (err) {
         if (err instanceof DraftTargetDeadEndError) {
           setTargetDeadEnd(err.message);
@@ -537,16 +667,7 @@ function DraftBoard({
   );
 
   const bestSlotFor = useCallback(
-    (card: PlayerCardView): string | null => {
-      const starterOpens = openSlots.filter((sl) => sl.is_starter);
-      const pool = starterOpens.length > 0 ? starterOpens : openSlots;
-      let best: { id: string; c: number } | null = null;
-      for (const slot of pool) {
-        const c = positionCompatibility(card.eligible_positions, slot.slot_position);
-        if (!best || c > best.c) best = { id: slot.slot_id, c };
-      }
-      return best?.id ?? null;
-    },
+    (card: PlayerCardView): string | null => bestOpenSlotForCandidate(card, openSlots),
     [openSlots],
   );
 
@@ -651,31 +772,31 @@ function DraftBoard({
     slotReveal !== null ? `${slotReveal.result.nationName} ${slotReveal.result.yearLabel}` : null;
 
   // Lock pick → call core engine → save record.
-  const handleLock = useCallback(() => {
+  const handleLock = useCallback(async () => {
     if (!sel || committing) return;
     setCommitting(true);
     setTransitionError(null);
     try {
-      let nextDraft: DraftState;
-      // DC-2: picks must run against the SAME era-bounded catalog the draft
-      // was created from — pending-spin rebuilds redraw from this pool.
-      const catalog = getCatalogForEra(gameData, draft.era_preset ?? "all_time");
-      if (sel.kind === "player") {
-        if (!selSlot) {
-          setCommitting(false);
-          setTransitionError("Pick a slot for this player.");
-          return;
-        }
-        nextDraft = pickPlayer(catalog, draft, sel.card.card_id as CardId, selSlot);
-      } else {
-        nextDraft = pickManager(catalog, draft, sel.card.manager_card_id as ManagerCardId);
+      if (sel.kind === "player" && !selSlot) {
+        setCommitting(false);
+        setTransitionError("Pick a slot for this player.");
+        return;
       }
-      const updated: RunRecordV1 = {
-        ...record,
-        updated_seq: record.updated_seq + 1,
-        draft: nextDraft,
-      };
-      const save = saveRunRecord(updated);
+      const save = await updateRunRecord(record.run_id, gameData.versions, record, (current) => {
+        // DC-2: picks must run against the SAME era-bounded catalog the draft
+        // was created from — pending-spin rebuilds redraw from this pool.
+        const catalog = getCatalogForEra(gameData, current.draft.era_preset ?? "all_time");
+        return sel.kind === "player"
+          ? pickPlayer(catalog, current.draft, sel.card.card_id as CardId, selSlot!)
+          : pickManager(catalog, current.draft, sel.card.manager_card_id as ManagerCardId);
+      });
+      if (save.status !== "updated" || !save.record) {
+        if (save.record) onRecordUpdate(save.record, save.warnings[0] ?? null);
+        setTransitionError(
+          save.warnings[0] ?? "This draft changed in another tab. Review it before continuing.",
+        );
+        return;
+      }
       const warning =
         save.persistence === "volatile" || save.warnings.length > 0
           ? save.warnings.join(" · ") ||
@@ -689,7 +810,7 @@ function DraftBoard({
       justLockedRef.current = true;
       setPhase("spin");
       setAnim("idle");
-      onRecordUpdate(updated, warning ?? persistenceWarning);
+      onRecordUpdate(save.record, warning ?? persistenceWarning);
     } catch (err) {
       const wrapped =
         err instanceof DraftTransitionError
@@ -718,6 +839,26 @@ function DraftBoard({
       ? candidates.players
       : candidates.players.filter((card) => card.eligible_positions.includes(openRosterFilter));
   }, [candidates.players, openPickSpace, openRosterFilter]);
+  const fitTeachingImpacts = useMemo(() => {
+    const impacts = new Map<string, ReturnType<typeof fitTeachingImpactForMode>>();
+    const selectedCardId = sel?.kind === "player" ? sel.card.card_id : null;
+    for (const card of visiblePlayers) {
+      const slot = resolveFitTeachingSlot(card, draft.squad, openSlots, {
+        selected_card_id: selectedCardId,
+        selected_slot_id: selectedCardId === card.card_id ? selSlot : null,
+        locked_target_id: lockedTarget === "manager" ? null : lockedTarget,
+      });
+      if (!slot) continue;
+      const impact = fitTeachingImpactForMode({
+        mode: draft.mode,
+        daily: dailyRun,
+        card,
+        slot_position: slot.slot_position,
+      });
+      if (impact) impacts.set(card.card_id, impact);
+    }
+    return impacts;
+  }, [dailyRun, draft.mode, draft.squad, lockedTarget, openSlots, sel, selSlot, visiblePlayers]);
   const openRosterManagerGroup = openPickSpace && candidates.managers.length > 0;
   const showManagerCandidates = !openRosterManagerGroup || openRosterManagersOpen;
 
@@ -748,6 +889,7 @@ function DraftBoard({
           mode={draft.mode}
           daily={dailyRun}
           ranked={record.ranked_attempt !== undefined}
+          casualOnly={record.friend_challenge !== undefined}
           pickSpace={dailyPickSpace}
           warning={persistenceWarning}
         />
@@ -873,11 +1015,12 @@ function DraftBoard({
           formationId={draft.formation_id}
           modeLabel={dailyRun ? "Daily" : DRAFT_MODE_COPY[draft.mode].shortLabel}
           modeCue={
-            dailyRun
-              ? "today's shared draft"
-              : record.ranked_attempt
-                ? "Ranked"
-                : DRAFT_MODE_COPY[draft.mode].cue
+            draftModeCueForRun({
+              mode: draft.mode,
+              daily: dailyRun,
+              ranked: record.ranked_attempt !== undefined,
+              casualOnly: record.friend_challenge !== undefined,
+            }) ?? ""
           }
           pickSpace={dailyPickSpace}
           synergyOverall={revealSynergyOverall}
@@ -1147,6 +1290,7 @@ function DraftBoard({
             <CandidateCard
               key={card.card_id}
               card={card}
+              fitTeachingImpact={fitTeachingImpacts.get(card.card_id) ?? null}
               selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
               disabled={managerOnlyOpen}
               blindRatings={blind}
@@ -1177,6 +1321,7 @@ function DraftBoard({
         mode={draft.mode}
         daily={dailyRun}
         ranked={record.ranked_attempt !== undefined}
+        casualOnly={record.friend_challenge !== undefined}
         pickSpace={dailyPickSpace}
         warning={persistenceWarning}
       />
