@@ -4,6 +4,25 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Terrace dark identity: 2026-07-15 · Archivo is now the single active shipped web and OG
+family, with mechanical `tnum` evidence and deterministic OG-only tabular derivatives.
+Dark-mode surfaces use the Terrace bone/bottle-green/vintage-gold system; all 87 declared
+text/background pairings pass, light CSS retains the same 132-value hash, provenance remains
+hue-distinguishable, and the protected medallion remains byte-identical. `/` and `/play` now
+fit the full document across Chromium and WebKit at descriptor-derived 320×568, 360×732,
+390×664, 430×740, 667×375, 768×1024, 1024×768, 1280×720, and disclosed
+1366×720 width-override viewports, both themes and motion modes: 144/144 contexts, zero
+failures, strict 44px targets, zoom preserved, and semantic screenshot-paint evidence.
+Signed OG/card caching moved coherently from `ogs1`/v1 to `ogs2`/v2; dynamic and default
+render bytes changed to Archivo while the secret, boot assertion, friend signing, and error
+contracts remain pinned. No data artifact was regenerated: base/head core, data, and ETL tree
+objects are identical. Forced lane-boundary validation passed typecheck 9/9, lint 6/6, test
+9/9 with 2,193 passed and 10 expected skips, responsive 218/218, one-screen 144/144, build
+5/5 with 40/40 pages and both protected traces 8/8, core/draft goldens 69/42,
+data/integration goldens 59/22, and leaderboard golden 6/6. All U0–U5 fresh-context reviews
+and the independent GLM-5.2 cross-model review passed at their pinned heads. Durable evidence:
+`docs/reports/terrace-dark-identity-2026-07-15.md`.
+
 Dependency sweep and residual-polish closure: 2026-07-14 · the seven original
 Dependabot PRs are resolved through production merges `e23aeb78`, `bf646847`,
 and `7d0fe9ce`; no original dependency PR remains open. Production and Python
