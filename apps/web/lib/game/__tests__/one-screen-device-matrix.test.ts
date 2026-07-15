@@ -148,5 +148,8 @@ describe("one-screen descriptor matrix", () => {
     expect(gameFlowSource).toContain(
       'getByRole("heading", { name: "Choose the slot to fill" }).waitFor()',
     );
+    expect(gameFlowSource.match(/waitUntil: "commit"/gu)).toHaveLength(4);
+    expect(gameFlowSource).toContain('getByText("Results").first().waitFor()');
+    expect(gameFlowSource).toContain('getByRole("heading", { name: "The card" }).waitFor()');
   });
 });

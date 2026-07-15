@@ -520,6 +520,7 @@ async function verifyModeSelectCtaDoesNotTapThrough(
   await page.touchscreen.tap(hit.center.x, hit.center.y);
   await page.waitForURL((url) => url.pathname === "/play/draft" && !url.searchParams.has("mode"), {
     timeout: 30_000,
+    waitUntil: "commit",
   });
 
   await assertNoBrowserErrors(testCase, "mode-select CTA tap target");
@@ -840,10 +841,16 @@ async function verifyReviewResultsShareFlow(browser: Browser, baseUrl: string): 
   });
   await page.getByRole("button", { name: "Confirm team sheet & simulate" }).waitFor();
   await page.getByRole("button", { name: "Confirm team sheet & simulate" }).click();
-  await page.waitForURL(/\/play\/results\?run=pw-complete-classic$/, { timeout: 90_000 });
+  await page.waitForURL(/\/play\/results\?run=pw-complete-classic$/, {
+    timeout: 90_000,
+    waitUntil: "commit",
+  });
   await page.getByText("Results").first().waitFor();
   await page.getByRole("link", { name: "Share" }).click();
-  await page.waitForURL(/\/play\/share\?run=pw-complete-classic$/, { timeout: 30_000 });
+  await page.waitForURL(/\/play\/share\?run=pw-complete-classic$/, {
+    timeout: 30_000,
+    waitUntil: "commit",
+  });
   await page.getByRole("heading", { name: "The card" }).waitFor();
   await page.getByRole("button", { name: "Copy caption" }).waitFor();
 
