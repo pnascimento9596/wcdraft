@@ -104,11 +104,17 @@
 .modeTagSoon {
   composes: modeTagSoon from "./game-styles/shared.module.css";
 }
+.modeIndex {
+  composes: modeIndex from "./game-styles/shared.module.css";
+}
 .modeName {
   composes: modeName from "./game-styles/shared.module.css";
 }
 .modeDesc {
   composes: modeDesc from "./game-styles/shared.module.css";
+}
+.modePreview {
+  composes: modePreview from "./game-styles/shared.module.css";
 }
 .modeFeatures {
   composes: modeFeatures from "./game-styles/shared.module.css";
@@ -155,8 +161,14 @@
 .localProgressBandCompact {
   composes: localProgressBandCompact from "./game-styles/shared.module.css";
 }
-.localProgressRow {
-  composes: localProgressRow from "./game-styles/shared.module.css";
+.localProgressPrimary {
+  composes: localProgressPrimary from "./game-styles/shared.module.css";
+}
+.localProgressBest {
+  composes: localProgressBest from "./game-styles/shared.module.css";
+}
+.localProgressStreak {
+  composes: localProgressStreak from "./game-styles/shared.module.css";
 }
 .localProgressCountdown {
   composes: localProgressCountdown from "./game-styles/shared.module.css";
@@ -1105,8 +1117,7 @@
   color: var(--ink-200);
   font-family: var(--font-family);
   font-size: 11px;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 700;
 }
 
 .openRosterBtnActive {
@@ -1156,8 +1167,8 @@
   min-width: 0;
   font-family: var(--font-family);
   font-size: 15px;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  font-weight: 800;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -1166,8 +1177,7 @@
   color: var(--ink-300);
   font-family: var(--font-family);
   font-size: 10px;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 

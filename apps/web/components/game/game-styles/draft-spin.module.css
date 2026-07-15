@@ -64,8 +64,7 @@
 .spinPickKicker {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -78,8 +77,7 @@
 .spinPickOf {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -87,8 +85,7 @@
   text-align: center;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--ink-300);
 }
@@ -111,8 +108,7 @@
 .spinStatusChipLabel {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -132,8 +128,7 @@
   text-align: center;
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -144,7 +139,7 @@
 
 .spinSkipHint {
   letter-spacing: 0.08em;
-  color: var(--accent-text);
+  color: var(--accent);
 }
 .spinDrum {
   position: relative;
@@ -344,8 +339,7 @@
 .spinResultEyebrow {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -353,12 +347,11 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: clamp(28px, 8vw, 40px);
-  font-weight: var(--font-weight-heading);
   line-height: 1;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0.01em;
 }
 .spinResultNation {
-  color: var(--ember-bright);
+  color: var(--ember);
 }
 .spinResultYear {
   color: var(--ink-200);
@@ -393,8 +386,7 @@
 .spinTileLabel {
   font-family: var(--font-family);
   font-size: 9px;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-400);
 }

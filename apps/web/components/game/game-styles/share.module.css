@@ -45,12 +45,11 @@
 .shareBrand {
   font-family: var(--font-family);
   font-size: 1.3rem;
-  letter-spacing: var(--tracking-display);
-  font-weight: var(--font-weight-display);
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 .shareBrand b {
-  color: var(--accent-text);
+  color: var(--accent);
 }
 .shareSeed {
   font-family: var(--font-family);
@@ -74,10 +73,9 @@
 .shareHeadline {
   font-family: var(--font-family);
   font-size: clamp(2.6rem, 10vw, 4.5rem);
-  font-weight: var(--font-weight-heading);
   line-height: 0.85;
   color: var(--gold);
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0.01em;
 }
 .shareRecord {
   display: flex;
@@ -112,9 +110,8 @@
 }
 .shareStat span {
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.08em;
   opacity: 0.78;
 }
 .shareStars {
@@ -132,9 +129,8 @@
 }
 .shareCaptionLabel {
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.14em;
   color: var(--ink-faint);
 }
 .shareCaption {
@@ -165,7 +161,7 @@
   height: auto;
   border-radius: 22px;
   display: block;
-  box-shadow: var(--e3);
+  box-shadow: 0 24px 70px rgba(8, 14, 12, 0.35);
 }
 .shareHint {
   font-size: 0.82rem;
@@ -187,8 +183,7 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 0.72rem;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -204,8 +199,8 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 0.78rem;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -253,16 +248,7 @@
 .shareRecordNum,
 .shareStat b {
   font-family: var(--font-family);
-}
-
-.shareBrand {
-  font-weight: var(--font-weight-display);
-  letter-spacing: var(--tracking-display);
-}
-
-.shareHeadline {
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  font-weight: 700;
 }
 
 .shareSeed,

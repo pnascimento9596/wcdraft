@@ -19,9 +19,9 @@ describe("LocalProgressBand", () => {
       }),
     );
 
-    expect(html).toContain("Streak —");
-    expect(html).toContain("Today —");
-    expect(html).toContain("All-time 84");
+    expect(html).toContain("—-DAY STREAK");
+    expect(html).toContain("Today&#x27;s best: —");
+    expect(html).toContain("All-time best: 84");
   });
 
   it("pins session-scoped friend-run context into the daily band", () => {

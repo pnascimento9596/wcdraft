@@ -8,7 +8,7 @@ export const RUN_OG_PALETTE = {
   textStrong: T.inkStrong,
   muted: T.inkSoft,
   mutedTeal: T.inkFaint,
-  aqua: T.accentText,
+  aqua: T.accent,
   aquaLine: rgba(T.accent, 0.38),
   aquaSoftLine: rgba(T.accent, 0.28),
   aquaWash: rgba(T.accent, 0.07),

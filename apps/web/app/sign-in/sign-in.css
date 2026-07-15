@@ -50,9 +50,8 @@
   gap: var(--s-2);
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.14em;
   color: var(--ink-300);
 }
 
@@ -67,7 +66,7 @@
 .signin-screen__title {
   font-size: var(--t-d1);
   line-height: 0.9;
-  letter-spacing: var(--tracking-display);
+  letter-spacing: 0;
   color: var(--ink-100);
   margin: 0;
   max-width: 100%;
@@ -139,9 +138,8 @@
 .signin-form__label {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.14em;
   color: var(--ink-300);
 }
 
@@ -159,8 +157,6 @@
   color: var(--ink-100);
   padding: 0;
   font: inherit;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
   font-size: var(--t-sm);
   text-decoration: underline solid var(--line-strong);
   text-underline-offset: 3px;
@@ -213,9 +209,8 @@
 .signin-form__submit {
   font-family: var(--font-family);
   font-size: var(--t-h);
-  font-weight: var(--font-weight-button);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-button);
+  letter-spacing: 0.03em;
   color: var(--bg-900);
   background: var(--ember);
   border: none;
@@ -241,7 +236,6 @@
   transform: translateY(-1px);
 }
 .signin-form__submit:active {
-  translate: none;
   transform: translateY(0);
 }
 .signin-form__submit:focus-visible {
@@ -293,9 +287,8 @@
   color: var(--ink-400);
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.14em;
 }
 
 .signin-form__divider::before,
@@ -371,9 +364,8 @@
 .signin-sent__h {
   margin: 0;
   font-size: var(--t-d3);
-  font-weight: var(--font-weight-display);
   color: var(--ink-100);
-  letter-spacing: var(--tracking-display);
+  letter-spacing: 0;
 }
 
 .signin-sent__msg {
@@ -408,8 +400,6 @@
   text-underline-offset: 3px;
   cursor: pointer;
   font: inherit;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
 }
 
 /* ── Disabled (ship-dark) notice ──────────────────────────────────── */
@@ -426,8 +416,7 @@
 .signin-screen__disabled-tag {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
   padding: 2px 6px;
@@ -466,8 +455,8 @@
 .signin-screen__crumb-num {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  color: var(--ember-bright);
-  letter-spacing: 0.1em;
+  color: var(--ember);
+  letter-spacing: 0.16em;
 }
 
 @media (min-width: 720px) {

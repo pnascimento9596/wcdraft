@@ -269,26 +269,22 @@ const CARD_WIDTH = 600;
 const CARD_HEIGHT = 800;
 const SVG_FONT_STYLE_MARKER = "data-wcdraft-font-contract";
 const SVG_FONT_FILES = [
-  { weight: 400, url: "/fonts/archivo/archivo-latin-400-normal.woff2" },
-  { weight: 400, url: "/fonts/archivo/archivo-latin-ext-400-normal.woff2" },
-  { weight: 500, url: "/fonts/archivo/archivo-latin-500-normal.woff2" },
-  { weight: 500, url: "/fonts/archivo/archivo-latin-ext-500-normal.woff2" },
-  { weight: 600, url: "/fonts/archivo/archivo-latin-600-normal.woff2" },
-  { weight: 600, url: "/fonts/archivo/archivo-latin-ext-600-normal.woff2" },
-  { weight: 700, url: "/fonts/archivo/archivo-latin-700-normal.woff2" },
-  { weight: 700, url: "/fonts/archivo/archivo-latin-ext-700-normal.woff2" },
-  { weight: 800, url: "/fonts/archivo/archivo-latin-800-normal.woff2" },
-  { weight: 800, url: "/fonts/archivo/archivo-latin-ext-800-normal.woff2" },
-  { weight: 900, url: "/fonts/archivo/archivo-latin-900-normal.woff2" },
-  { weight: 900, url: "/fonts/archivo/archivo-latin-ext-900-normal.woff2" },
+  { weight: 400, url: "/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2" },
+  { weight: 400, url: "/fonts/space-grotesk/space-grotesk-latin-ext-400-normal.woff2" },
+  { weight: 500, url: "/fonts/space-grotesk/space-grotesk-latin-500-normal.woff2" },
+  { weight: 500, url: "/fonts/space-grotesk/space-grotesk-latin-ext-500-normal.woff2" },
+  { weight: 600, url: "/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2" },
+  { weight: 600, url: "/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff2" },
+  { weight: 700, url: "/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2" },
+  { weight: 700, url: "/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff2" },
 ] as const;
 
 const SHARE_SVG_FONT_CONTRACT = `${SVG_FONT_FILES.map(
   ({ weight, url }) =>
-    `@font-face{font-family:"Archivo";font-style:normal;font-weight:${weight};src:url("${url}") format("woff2")}`,
+    `@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:${weight};src:url("${url}") format("woff2")}`,
 ).join("\n")}
-:root{--font-family:"Archivo",sans-serif}
-svg,text,tspan{font-family:var(--font-family);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}`;
+:root{--font-family:"Space Grotesk",sans-serif}
+svg,text,tspan{font-family:var(--font-family)}`;
 
 let embeddedShareSvgFontContractPromise: Promise<string> | null = null;
 
@@ -309,13 +305,13 @@ async function loadEmbeddedShareSvgFontContract(): Promise<string> {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`share SVG font fetch failed: ${url}`);
         const data = arrayBufferToBase64(await response.arrayBuffer());
-        return `@font-face{font-family:"Archivo";font-style:normal;font-weight:${weight};src:url("data:font/woff2;base64,${data}") format("woff2")}`;
+        return `@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:${weight};src:url("data:font/woff2;base64,${data}") format("woff2")}`;
       }),
     ).then(
       (faces) =>
         `${faces.join("\n")}
-:root{--font-family:"Archivo",sans-serif}
-svg,text,tspan{font-family:var(--font-family);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}`,
+:root{--font-family:"Space Grotesk",sans-serif}
+svg,text,tspan{font-family:var(--font-family)}`,
     );
   }
   return embeddedShareSvgFontContractPromise;
@@ -331,7 +327,6 @@ function upsertShareSvgFontContract(svg: SVGSVGElement, css: string) {
   }
   style.textContent = css;
   svg.setAttribute("font-family", "var(--font-family)");
-  svg.setAttribute("font-variant-numeric", "tabular-nums");
 }
 
 async function embedShareSvgFontContract(svg: SVGSVGElement) {
@@ -991,8 +986,8 @@ function ShareCardSvg({
           fill={colors.text}
           fontFamily="var(--font-family)"
           fontSize="28"
-          fontWeight="900"
-          letterSpacing="-0.035em"
+          fontWeight="700"
+          letterSpacing="0.04em"
         >
           wc
           <tspan fontWeight="900" fill="url(#wcEmerald)">
@@ -1009,8 +1004,8 @@ function ShareCardSvg({
         fill={colors.text}
         fontFamily="var(--font-family)"
         fontSize="32"
-        fontWeight="800"
-        letterSpacing="-0.02em"
+        fontWeight="600"
+        letterSpacing="0.02em"
       >
         {truncate(view.team_name, 24)}
       </text>
@@ -1023,8 +1018,8 @@ function ShareCardSvg({
         fill={headlineColor}
         fontFamily="var(--font-family)"
         fontSize="18"
-        fontWeight="800"
-        letterSpacing="-0.02em"
+        fontWeight="600"
+        letterSpacing="0.32em"
       >
         {headline}
       </text>
@@ -1038,7 +1033,7 @@ function ShareCardSvg({
         fontFamily="var(--font-family)"
         fontSize="180"
         fontWeight="900"
-        letterSpacing="-0.035em"
+        letterSpacing="-0.04em"
       >
         {view.display_record}
       </text>
@@ -1051,8 +1046,7 @@ function ShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="16"
-        fontWeight="400"
-        letterSpacing="0"
+        letterSpacing="0.06em"
       >
         {truncate(formationLabel, 48)}
       </text>
@@ -1067,7 +1061,7 @@ function ShareCardSvg({
           fill={i === 0 && view.challenge_date !== null ? colors.text : colors.muted}
           fontFamily="var(--font-family)"
           fontSize="16"
-          fontWeight="500"
+          fontWeight="650"
         >
           {line}
         </text>
@@ -1122,8 +1116,7 @@ function ShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
-          fontWeight="500"
-          letterSpacing="0.1em"
+          letterSpacing="0.32em"
         >
           KEY PICKS
         </text>
@@ -1150,8 +1143,7 @@ function ShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="11"
-        fontWeight="500"
-        letterSpacing="0.1em"
+        letterSpacing="0.28em"
       >
         wcdraft.com: draft your own XI
       </text>
@@ -1217,8 +1209,7 @@ function MemoryRevealShareCardSvg({
           fill={colors.text}
           fontFamily="var(--font-family)"
           fontSize="28"
-          fontWeight="900"
-          letterSpacing="-0.035em"
+          fontWeight="700"
         >
           wc
           <tspan fontWeight="900" fill="url(#wcEmerald)">
@@ -1234,8 +1225,7 @@ function MemoryRevealShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="13"
-        fontWeight="500"
-        letterSpacing="0.1em"
+        fontWeight="700"
       >
         {revealCopy.kicker}
       </text>
@@ -1246,8 +1236,7 @@ function MemoryRevealShareCardSvg({
         fill={colors.text}
         fontFamily="var(--font-family)"
         fontSize="30"
-        fontWeight="800"
-        letterSpacing="-0.02em"
+        fontWeight="650"
       >
         {truncate(view.team_name, 25)}
       </text>
@@ -1258,8 +1247,7 @@ function MemoryRevealShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="15"
-        fontWeight="400"
-        letterSpacing="0"
+        fontWeight="600"
       >
         {revealCopy.action}, ended {view.display_record} · {view.score} pts · {avgAfter} OVR
       </text>
@@ -1278,7 +1266,7 @@ function MemoryRevealShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="28"
-          fontWeight="800"
+          fontWeight="700"
         >
           -&gt;
         </text>
@@ -1292,8 +1280,7 @@ function MemoryRevealShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
-          fontWeight="500"
-          letterSpacing="0.1em"
+          fontWeight="700"
         >
           LINE REVEAL
         </text>
@@ -1309,8 +1296,7 @@ function MemoryRevealShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
-          fontWeight="500"
-          letterSpacing="0.1em"
+          fontWeight="700"
         >
           RESULTING XI
         </text>
@@ -1341,8 +1327,7 @@ function MemoryRevealShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
-          fontWeight="500"
-          letterSpacing="0.1em"
+          fontWeight="700"
         >
           TOP REVEALS
         </text>
@@ -1352,7 +1337,7 @@ function MemoryRevealShareCardSvg({
           fill={colors.text}
           fontFamily="var(--font-family)"
           fontSize="17"
-          fontWeight="500"
+          fontWeight="600"
         >
           {reveal.topReveals.length > 0
             ? reveal.topReveals
@@ -1374,7 +1359,7 @@ function MemoryRevealShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="13"
-        fontWeight="500"
+        fontWeight="600"
       >
         {truncate(standingLine, 68)}
       </text>
@@ -1412,8 +1397,7 @@ function RevealMetricBox({
         width="204"
         height="88"
         rx="14"
-        fill={colors.bgEnd}
-        fillOpacity="0.72"
+        fill="rgba(0,0,0,0.16)"
         stroke={colors.muted}
         strokeOpacity="0.36"
       />
@@ -1424,8 +1408,7 @@ function RevealMetricBox({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="12"
-        fontWeight="500"
-        letterSpacing="0.1em"
+        fontWeight="700"
       >
         {title}
       </text>
@@ -1436,7 +1419,7 @@ function RevealMetricBox({
         fill={colors.text}
         fontFamily="var(--font-family)"
         fontSize="34"
-        fontWeight="800"
+        fontWeight="850"
       >
         {value}
       </text>
@@ -1461,7 +1444,7 @@ function RevealLineRow({
         fill={colors.text}
         fontFamily="var(--font-family)"
         fontSize="16"
-        fontWeight="500"
+        fontWeight="600"
       >
         {line.label}
       </text>
@@ -1472,7 +1455,7 @@ function RevealLineRow({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="15"
-        fontWeight="800"
+        fontWeight="700"
       >
         {formatShareNumber(line.before_value)}
       </text>
@@ -1483,7 +1466,7 @@ function RevealLineRow({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="15"
-        fontWeight="800"
+        fontWeight="700"
       >
         -&gt;
       </text>
@@ -1498,7 +1481,7 @@ function RevealLineRow({
       >
         {formatShareNumber(line.after_value)}
       </text>
-      <rect x="420" y="-12" width="110" height="8" rx="4" fill={colors.bgEnd} fillOpacity="0.82" />
+      <rect x="420" y="-12" width="110" height="8" rx="4" fill="rgba(0,0,0,0.22)" />
       <rect
         x="420"
         y="-12"
@@ -1530,8 +1513,7 @@ function RevealXiRow({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="12"
-        fontWeight="500"
-        letterSpacing="0.1em"
+        fontWeight="700"
       >
         {truncate(starter.slot_label, 4)}
       </text>
@@ -1541,7 +1523,7 @@ function RevealXiRow({
         fill={colors.text}
         fontFamily="var(--font-family)"
         fontSize="15"
-        fontWeight="500"
+        fontWeight="600"
       >
         {starter.nation_code} {truncate(starter.name, 13)}
       </text>
@@ -1591,8 +1573,7 @@ function ShareStat({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="11"
-        fontWeight="500"
-        letterSpacing="0.1em"
+        letterSpacing="0.28em"
       >
         {label.toUpperCase()}
       </text>

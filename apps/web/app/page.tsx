@@ -73,7 +73,8 @@ export default async function HomePage() {
             all-time <span className="accent">XI.</span>
           </h1>
           <p className="lede hero__sub">
-            Spin a random national team and a tournament year. Pick one footballer per spin.
+            Spin a random national team and a tournament year. Pick one footballer per spin. Lock
+            your formation, build a squad across eight matches, and chase the perfect run.
           </p>
 
           <div className={`btn-row ${heroStyles.actions}`}>
@@ -87,6 +88,7 @@ export default async function HomePage() {
               How to play
             </Link>
           </div>
+          <p className="hero__daily">One shared draft for everyone today. A new one drops daily.</p>
 
           <div className="hero__meta">
             <div className="stat">
@@ -106,6 +108,11 @@ export default async function HomePage() {
               <span className="stat__label">a perfect run</span>
             </div>
           </div>
+
+          <p className="hero__live">
+            Live now on real football data from 1930–2026. The deterministic draft engine, the match
+            simulator, and real scoring all run in your browser.
+          </p>
         </div>
 
         <div className={heroStyles.visual}>

@@ -67,13 +67,13 @@
   font-family: var(--font-family);
   font-size: clamp(2.4rem, 9vw, 3.2rem);
   line-height: 0.9;
-  color: var(--accent-text);
+  color: var(--accent);
 }
 
 .historyRecordGold {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--gold) 72%, var(--ink)) 0%,
+    color-mix(in srgb, var(--gold) 72%, white) 0%,
     var(--gold) 55%,
     var(--gold-strong) 100%
   );
@@ -96,8 +96,7 @@
 
 .historyFormation {
   font-size: 0.78rem;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -127,7 +126,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--accent-text);
+  color: var(--accent);
 }
 
 .historyPickName {
@@ -144,10 +143,10 @@
 }
 
 .historyRecency {
-  font-weight: var(--font-weight-medium);
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
-  color: var(--accent-text);
+  letter-spacing: 0.1em;
+  color: var(--accent);
 }
 
 .historySequence {
@@ -175,7 +174,7 @@
   display: inline-flex;
   align-items: center;
   min-block-size: 44px;
-  color: var(--accent-text);
+  color: var(--accent);
   font-weight: 600;
   letter-spacing: 0.04em;
 }
@@ -196,8 +195,8 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 0.68rem;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -218,9 +217,8 @@
 
 .shareIntentLabel {
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.14em;
   color: var(--ink-faint);
   margin: 0;
 }
@@ -237,7 +235,7 @@
 }
 
 .copyLinkOk {
-  color: var(--accent-text);
+  color: var(--accent);
   font-size: 0.78rem;
   margin: 0;
 }
@@ -275,7 +273,7 @@
 }
 
 .historyRecord {
-  color: var(--accent-text);
+  color: var(--accent);
 }
 
 .historyRecordGold {
@@ -292,8 +290,7 @@
 .historyFormation,
 .historyRecency,
 .historyOpenHint {
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.04em;
 }
 
 @media (min-width: 64rem) {

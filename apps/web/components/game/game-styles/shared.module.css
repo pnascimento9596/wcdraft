@@ -28,8 +28,7 @@
 .panelTitle {
   font-family: var(--font-family);
   font-size: 1.5rem;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0.02em;
 }
 .panelMeta {
   font-size: 0.78rem;
@@ -40,16 +39,15 @@
 .eyebrowAccent {
   font-family: var(--font-family);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.26em;
   font-size: 0.7rem;
-  font-weight: var(--font-weight-medium);
+  font-weight: 600;
   color: var(--accent-text);
 }
 .demoBadge {
   font-size: 0.66rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.16em;
   color: var(--ink-faint);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -115,8 +113,8 @@
 .modeTag {
   font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.16em;
+  font-weight: 700;
   color: var(--accent-ink);
   background: var(--accent);
   border-radius: 999px;
@@ -125,18 +123,22 @@
 .modeTagSoon {
   font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.16em;
+  font-weight: 600;
   color: var(--ink-faint);
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   padding: 0.24rem 0.64rem;
 }
+.modeIndex {
+  font-family: var(--font-family);
+  font-size: 1.6rem;
+  color: color-mix(in srgb, var(--ink) 52%, var(--bg-panel));
+}
 .modeName {
   font-family: var(--font-family);
   font-size: 2.1rem;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0.01em;
 }
 .modeDesc {
   color: var(--ink-soft);
@@ -165,10 +167,9 @@
   margin-top: auto;
   font-family: var(--font-family);
   font-size: 0.82rem;
-  font-weight: var(--font-weight-button);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-button);
-  color: var(--accent-text);
+  letter-spacing: 0.08em;
+  color: var(--accent);
   padding-top: 0.5rem;
 }
 .modeCtaSoon {
@@ -198,6 +199,9 @@
   .modeTag {
     font-size: 0.58rem;
     padding: 0.18rem 0.5rem;
+  }
+  .modeIndex {
+    font-size: 1.1rem;
   }
   .modeName {
     font-size: 1.4rem;
@@ -229,9 +233,11 @@
   margin-top: 14px;
 }
 .modeGridDaily {
+  --mode-dock-reserve: calc(84px + env(safe-area-inset-bottom, 0px));
+
   grid-auto-rows: auto;
-  padding-block-end: 0;
-  scroll-padding-block-end: 0;
+  padding-block-end: var(--mode-dock-reserve);
+  scroll-padding-block-end: var(--mode-dock-reserve);
 }
 
 /* Recovery states can be taller than the one-line action dock. Keep those
@@ -240,9 +246,9 @@
   padding-block-end: 0;
   scroll-padding-block-end: 0;
 }
-@media (min-width: 46rem) {
+@media (min-width: 52rem) {
   .modeGridDaily {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -271,38 +277,12 @@
 }
 
 .modeCardFeatured {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  min-height: 52px;
+  min-height: 176px;
   border-color: color-mix(in srgb, var(--gold) 58%, var(--line));
   background: color-mix(in srgb, var(--gold) 8%, var(--s1));
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--gold) 18%, transparent),
     var(--e1);
-}
-
-.modeCardFeatured .modeDesc,
-.modeCardFeatured .modeFeatures {
-  display: none;
-}
-
-.modeCardFeatured .modeCardTop {
-  min-width: 0;
-  gap: 6px;
-}
-
-.modeCardFeatured .modeTag,
-.modeCardFeatured .modeName,
-.modeCardFeatured .modeCta {
-  white-space: nowrap;
-}
-
-.modeCardFeatured .modeCardBottom {
-  margin: 0;
-  padding: 0 0 0 6px;
-  border-top: 0;
 }
 
 .modeCardFeatured .modeTag {
@@ -344,6 +324,12 @@
   margin-top: 0;
 }
 
+@media (min-width: 52rem) {
+  .modeCardSecondary {
+    grid-column: 1 / -1;
+  }
+}
+
 .modeCardLive::before {
   content: none;
 }
@@ -375,17 +361,25 @@
   border-top-right-radius: 13px;
 }
 
+.modeIndex {
+  position: absolute;
+  top: 2px;
+  right: 13px;
+  z-index: 0;
+  font-family: var(--font-family);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  color: color-mix(in srgb, var(--tx) 52%, var(--bg-panel));
+  pointer-events: none;
+}
+
 .modeCardTop {
   position: relative;
   z-index: 1;
+  padding-right: 48px;
   justify-content: flex-start;
   gap: 10px;
-}
-
-.modeCard:not(.modeCardFeatured) .modeCardTop {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
 }
 
 .modeTag {
@@ -398,11 +392,11 @@
   border: 1px solid var(--accent-line);
   border-radius: 6px;
   background: var(--accent-wash);
-  color: var(--accent-text);
+  color: var(--accent);
   font-family: var(--font-family);
   font-size: 10px;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   /* Prefer wrap over mid-word clip; shortened copy keeps one line at 390px. */
   overflow-wrap: anywhere;
 }
@@ -419,9 +413,9 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: 22px;
-  font-weight: var(--font-weight-heading);
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--tx);
 }
@@ -435,6 +429,27 @@
   color: var(--tx2);
   font-size: 14.5px;
   line-height: 1.58;
+}
+
+.modePreview {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid var(--line-1);
+  border-radius: 7px;
+  background: var(--s2);
+  color: var(--tx);
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .modeFeatures,
@@ -488,11 +503,11 @@
 .modeCta {
   margin: 0;
   padding: 6px 0;
-  color: var(--accent-text);
+  color: var(--accent);
   font-family: var(--font-family);
   font-size: 13px;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -500,10 +515,10 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--accent-text);
+  color: var(--accent);
   font-size: 10.5px;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -577,6 +592,10 @@
     scroll-padding-block-end: 0;
   }
 
+  .modeCardSecondary {
+    grid-column: auto;
+  }
+
   .modeDock {
     position: static;
     margin: 14px 0 0;
@@ -610,21 +629,29 @@
   margin-top: 10px;
 }
 
-.localProgressRow {
+.localProgressPrimary,
+.localProgressBest {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 8px 12px;
+}
+
+.localProgressPrimary {
   justify-content: space-between;
-  gap: 6px;
-  white-space: nowrap;
+}
+
+.localProgressStreak,
+.localProgressCountdown {
   font-family: var(--font-family);
   font-size: 0.75rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .localProgressCountdown {
-  color: var(--accent-text);
+  color: var(--accent);
 }
 
 .localProgressFriend {
@@ -633,6 +660,11 @@
   font-family: var(--font-family);
   font-size: 0.76rem;
   font-weight: 700;
+}
+
+.localProgressBest {
+  color: var(--ink-300);
+  font-size: 0.78rem;
 }
 
 .localProgressNudge {
@@ -654,7 +686,7 @@
 }
 
 .localProgressNudge a {
-  color: var(--accent-text);
+  color: var(--accent);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -693,11 +725,39 @@
     gap: 5px;
     padding: 8px;
     border-radius: 12px;
+    min-height: 176px;
+  }
+
+  .modeCardFeatured {
+    min-height: 96px;
+  }
+
+  .modeCardSecondary {
+    min-height: 118px;
+  }
+
+  .modeCardFeatured .modeDesc {
+    min-height: 0;
+  }
+
+  .modeCardFeatured .modeFeatures {
+    display: none;
   }
 
   .modeCard:hover,
   .modeCard:focus-visible {
     transform: none;
+  }
+
+  .modeIndex {
+    right: 9px;
+    font-size: 30px;
+    opacity: 0.6;
+  }
+
+  .modeCardTop {
+    /* Reserve the ghost numeral's full painted width plus a quiet gutter. */
+    padding-right: 50px;
   }
 
   .modeName {
@@ -722,7 +782,7 @@
 }
 
 /* Five-mode mobile/short-landscape composition: Daily keeps the broadcast
-   lead, while the four repeatable modes form a compact board below it. */
+   lead, while the four repeatable modes form a compact two-column board. */
 @media (max-width: 430px), (max-height: 500px) and (max-width: 51.99rem) {
   .modeGridDaily {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -730,19 +790,20 @@
 
   .modeCard {
     min-width: 0;
-    min-height: 0;
-  }
-
-  .modeCardSecondary {
-    min-height: 0;
+    min-height: 118px;
   }
 
   .modeCardFeatured {
-    min-height: 52px;
+    grid-column: 1 / -1;
+    min-height: 92px;
   }
 
-  .modeCardFeatured .modeCardBottom {
+  .modeCardFeatured .modeDesc {
     display: none;
+  }
+
+  .modeCardSecondary {
+    min-height: 118px;
   }
 
   .modeCard:not(.modeCardFeatured) .modeCardTop {
@@ -753,7 +814,8 @@
   }
 
   .modeCard:not(.modeCardFeatured) .modeTag {
-    max-width: 100%;
+    /* The tag alone shares the numeral row; titles below keep the full card width. */
+    max-width: calc(100% - 44px);
     padding: 3px 6px;
     font-size: 8.5px;
     line-height: 1.2;
@@ -765,6 +827,15 @@
     display: none;
   }
 
+  .modeCard:not(.modeCardFeatured) .modePreview {
+    width: 100%;
+    min-height: 26px;
+    padding: 4px 7px;
+    font-size: 9px;
+    line-height: 1.2;
+    white-space: normal;
+  }
+
   .modeCard:not(.modeCardFeatured) .modeCta {
     font-size: 11px;
     line-height: 1.25;
@@ -773,7 +844,7 @@
 }
 
 /* A sticky action would consume too much of a 375px-tall landscape viewport.
-   Keep it in flow there; the four-column board remains compact and no card can
+   Keep it in flow there; the two-column board remains compact and no card can
    paint underneath the action. */
 @media (max-height: 500px) and (max-width: 63.99rem) {
   .modeGridDaily {
@@ -784,56 +855,5 @@
   .modeDock {
     position: static;
     margin-top: 8px;
-  }
-}
-
-@media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
-  .localProgressBand {
-    padding-block: 6px;
-  }
-
-  .localProgressBandCompact {
-    margin-top: 4px;
-  }
-
-  .modeGrid,
-  .modeGridDaily {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
-    margin-top: 5px;
-  }
-
-  .modeCard,
-  .modeCardFeatured,
-  .modeCardSecondary {
-    min-height: 44px;
-    padding: 6px;
-    gap: 3px;
-  }
-
-  .modeCardFeatured {
-    grid-column: 1 / -1;
-  }
-
-  .modeCardBottom {
-    display: none;
-  }
-
-  .modeCard:not(.modeCardFeatured) .modeCardTop {
-    gap: 2px;
-  }
-
-  .modeTag {
-    padding: 2px 5px;
-    font-size: 8px;
-  }
-
-  .modeName {
-    font-size: 15px;
-  }
-
-  .modeDock {
-    margin-top: 5px;
-    padding-block: 5px calc(5px + env(safe-area-inset-bottom, 0px));
   }
 }

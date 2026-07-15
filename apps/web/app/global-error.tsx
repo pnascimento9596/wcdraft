@@ -20,67 +20,67 @@ const btn: React.CSSProperties = {
   padding: "0 1.25rem",
   borderRadius: "0.5rem",
   fontSize: "1rem",
-  fontWeight: 800,
-  letterSpacing: "0.02em",
+  fontWeight: 600,
   textDecoration: "none",
   cursor: "pointer",
 };
 
 const themeCss = `
 @font-face {
-  font-family: "Archivo";
+  font-family: "Space Grotesk";
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url("/fonts/archivo/archivo-latin-400-normal.woff2") format("woff2");
+  src: url("/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Archivo";
+  font-family: "Space Grotesk";
   font-style: normal;
   font-display: swap;
-  font-weight: 500;
-  src: url("/fonts/archivo/archivo-latin-500-normal.woff2") format("woff2");
+  font-weight: 600;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Archivo";
+  font-family: "Space Grotesk";
   font-style: normal;
   font-display: swap;
-  font-weight: 800;
-  src: url("/fonts/archivo/archivo-latin-800-normal.woff2") format("woff2");
+  font-weight: 700;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2") format("woff2");
 }
 .global-error-body {
-  --font-family: "Archivo", system-ui, sans-serif;
-  --error-bg: #0f100e;
-  --error-ink: #ebe6da;
-  --error-accent: #3fa268;
-  --error-accent-solid: #3f9268;
-  --error-accent-ink: #05130c;
-  --error-line: #42493f;
+  --font-family: "Space Grotesk", system-ui, sans-serif;
   font-family: var(--font-family);
-  background: var(--error-bg);
-  color: var(--error-ink);
+  background: #080809;
+  color: #edecf2;
 }
 .global-error-eyebrow {
-  color: var(--error-accent);
+  color: #2ecf92;
 }
 .global-error-primary {
-  background: var(--error-accent-solid);
-  color: var(--error-accent-ink);
+  background: #2ecf92;
+  color: #06130d;
   border: none;
 }
 .global-error-secondary {
   background: transparent;
-  color: var(--error-ink);
-  border: 1px solid var(--error-line);
+  color: #edecf2;
+  border: 1px solid rgba(220, 220, 235, 0.2);
 }
 @media (prefers-color-scheme: light) {
   .global-error-body {
-    --error-bg: #e7e1d2;
-    --error-ink: #16211a;
-    --error-accent: #067044;
-    --error-accent-solid: #2ecf92;
-    --error-accent-ink: #06130d;
-    --error-line: rgba(24, 36, 28, 0.28);
+    background: #e7e1d2;
+    color: #16211a;
+  }
+  .global-error-eyebrow {
+    color: #067044;
+  }
+  .global-error-primary {
+    background: #2ecf92;
+    color: #06130d;
+  }
+  .global-error-secondary {
+    color: #16211a;
+    border-color: rgba(24, 36, 28, 0.28);
   }
 }
 `;
@@ -101,23 +101,14 @@ export default function GlobalError({
             className="global-error-eyebrow"
             style={{
               textTransform: "uppercase",
-              letterSpacing: "0.1em",
+              letterSpacing: "0.08em",
               fontSize: "0.78rem",
-              fontWeight: 500,
               margin: "0 0 0.5rem",
             }}
           >
             Something went wrong
           </p>
-          <h1
-            style={{
-              fontSize: "1.75rem",
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.15,
-              margin: "0 0 0.75rem",
-            }}
-          >
+          <h1 style={{ fontSize: "1.75rem", lineHeight: 1.15, margin: "0 0 0.75rem" }}>
             The match was abandoned
           </h1>
           <p style={{ opacity: 0.82, margin: "0 0 1.5rem", lineHeight: 1.55 }}>
