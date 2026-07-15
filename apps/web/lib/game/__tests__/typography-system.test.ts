@@ -44,6 +44,19 @@ describe("Terrace typography source contract", () => {
         `/fonts/archivo/archivo-latin-ext-${weight.toString()}-normal.woff2`,
       );
     }
+
+    const latinExtFaces = [
+      ...globals.matchAll(
+        /@font-face\s*\{[^}]*archivo-latin-ext-(400|500|600|700|800|900)-normal\.woff2[^}]*unicode-range:\s*([^;]+);[^}]*\}/gsu,
+      ),
+    ];
+    expect(latinExtFaces).toHaveLength(6);
+    for (const [, weight, range] of latinExtFaces) {
+      expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+0100-02BA");
+      expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+02C7-02CC");
+      expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+02DD-02FF");
+      expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+1D00-1DBF");
+    }
   });
 
   it("pins the approved display, heading, body, micro, and button roles", () => {
@@ -78,6 +91,9 @@ describe("Terrace typography source contract", () => {
     expect(globals).toMatch(
       /\.btn\s*\{[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
     );
+    expect(globals).toMatch(
+      /button\s*\{[^}]*font-weight:\s*var\(--font-weight-button\)\s*!important;[^}]*letter-spacing:\s*var\(--tracking-button\)\s*!important;/su,
+    );
 
     const shared = readFileSync(
       path.join(WEB_ROOT, "components/game/game-styles/shared.module.css"),
@@ -97,6 +113,10 @@ describe("Terrace typography source contract", () => {
     );
     const signIn = readFileSync(path.join(WEB_ROOT, "app/sign-in/sign-in.css"), "utf8");
     const account = readFileSync(path.join(WEB_ROOT, "app/account/account.css"), "utf8");
+    const accountClient = readFileSync(
+      path.join(WEB_ROOT, "app/account/account-client.tsx"),
+      "utf8",
+    );
     const leaderboard = readFileSync(
       path.join(WEB_ROOT, "components/leaderboard/leaderboard.module.css"),
       "utf8",
@@ -136,6 +156,12 @@ describe("Terrace typography source contract", () => {
     expect(signIn).toMatch(
       /\.signin-sent__h\s*\{[^}]*font-weight:\s*var\(--font-weight-display\);[^}]*letter-spacing:\s*var\(--tracking-display\);/su,
     );
+    expect(signIn).toMatch(
+      /\.signin-form__inline\s*\{[^}]*font:[^;]+;[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
+    );
+    expect(signIn).toMatch(
+      /\.signin-sent__again\s*\{[^}]*font:[^;]+;[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
+    );
     expect(globals).toMatch(/\.prose h3\s*\{[^}]*letter-spacing:\s*var\(--tracking-heading\);/su);
     expect(account).toMatch(
       /\.account-head h1\s*\{[^}]*font-weight:\s*var\(--font-weight-display\);[^}]*letter-spacing:\s*var\(--tracking-display\);/su,
@@ -146,8 +172,25 @@ describe("Terrace typography source contract", () => {
     expect(account).toMatch(
       /\.account-run h3\s*\{[^}]*font-weight:\s*var\(--font-weight-heading\);[^}]*letter-spacing:\s*var\(--tracking-heading\);/su,
     );
+    expect(account).toMatch(
+      /\.account-link-button\s*\{[^}]*font:[^;]+;[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
+    );
+    for (const accountButtonClass of [
+      "account-link-button",
+      "account-action",
+      "account-danger",
+      "account-load-more",
+    ] as const) {
+      expect(accountClient).toContain(accountButtonClass);
+    }
     expect(leaderboard).toMatch(
       /\.submitTitle\s*\{[^}]*font-weight:\s*var\(--font-weight-heading\);[^}]*letter-spacing:\s*var\(--tracking-heading\);/su,
+    );
+    expect(leaderboard).toMatch(
+      /\.laneTab\s*\{[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
+    );
+    expect(draftShell).toMatch(
+      /\.setupSegBtn\s*\{[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
     );
     expect(results).toMatch(
       /\.seedCopyButton\s*\{[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
@@ -252,6 +295,14 @@ describe("Terrace typography source contract", () => {
       ),
     );
     expect(violations).toEqual([]);
+
+    const nonEmSvgMutation = trackingDeclarations(
+      "public/flags/fixture.svg",
+      '<path font-size="100" letter-spacing="60" />',
+    ).filter(({ value }) => value > MAX_POSITIVE_TRACKING_EM + Number.EPSILON);
+    expect(nonEmSvgMutation).toEqual([
+      { file: "public/flags/fixture.svg", line: 1, value: Number.POSITIVE_INFINITY },
+    ]);
   });
 
   it("assigns every authored uppercase CSS seam to a locked Terrace role", () => {
@@ -320,12 +371,14 @@ function collectSources(root: string): readonly { file: string; source: string }
 function trackingDeclarations(file: string, source: string): readonly TrackingDeclaration[] {
   const declarations: TrackingDeclaration[] = [];
   const pattern =
-    /\b(?:letter-spacing|letterSpacing)\s*(?::|=)\s*(?:"|')?(-?(?:\d+\.?\d*|\.\d+))em/gu;
+    /\b(?:letter-spacing|letterSpacing)\s*(?::|=)\s*(?:"|')?(-?(?:\d+\.?\d*|\.\d+))(em|[a-z%]+)?/giu;
   for (const match of source.matchAll(pattern)) {
+    const numeric = Number(match[1]);
+    const unit = match[2]?.toLowerCase() ?? "";
     declarations.push({
       file,
       line: source.slice(0, match.index).split("\n").length,
-      value: Number(match[1]),
+      value: unit === "em" || numeric <= 0 ? numeric : Number.POSITIVE_INFINITY,
     });
   }
   return declarations;

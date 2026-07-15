@@ -169,7 +169,14 @@ async function startNextDev(): Promise<{ baseUrl: string; stop: () => Promise<vo
     [nextBin, "dev", "--webpack", "--hostname", host, "--port", String(port)],
     {
       cwd: appRoot,
-      env: { ...process.env, LEADERBOARD_ENABLED: "1", NEXT_TELEMETRY_DISABLED: "1" },
+      env: {
+        ...process.env,
+        AUTH_BASE_URL: baseUrl,
+        AUTH_EMAIL_FROM: "font-audit@example.invalid",
+        LEADERBOARD_ENABLED: "1",
+        NEXT_TELEMETRY_DISABLED: "1",
+        RESEND_API_KEY: "font-audit-non-secret-placeholder",
+      },
       stdio: ["ignore", "pipe", "pipe"],
     },
   );
@@ -410,20 +417,50 @@ async function measureSurface(
     });
     const semanticHeadingRoleViolations = visible.flatMap((el) => {
       if (!(el instanceof HTMLElement) || !/^H[1-3]$/u.test(el.tagName)) return [];
+      const display = el.classList.contains("display");
+      const expectedWeight = display ? 900 : 800;
+      const expectedTracking = display ? -0.035 : -0.02;
       const style = window.getComputedStyle(el);
       const fontSize = Number.parseFloat(style.fontSize);
       const trackingPx =
         style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing);
       const trackingEm = Number.isFinite(fontSize) && fontSize > 0 ? trackingPx / fontSize : NaN;
       const weight = Number.parseInt(style.fontWeight, 10);
-      const display = el.classList.contains("display");
-      const expectedWeight = display ? 900 : 800;
-      const expectedTracking = display ? -0.035 : -0.02;
-      if (weight === expectedWeight && Math.abs(trackingEm - expectedTracking) <= 0.002) {
-        return [];
-      }
+      if (weight === expectedWeight && Math.abs(trackingEm - expectedTracking) <= 0.002) return [];
       return [
         `${display ? "display" : "heading"} ${el.tagName.toLowerCase()}.${Array.from(el.classList).join(".")} ${weight.toString()}/${trackingEm.toFixed(4)}em`,
+      ];
+    });
+    const semanticButtonRoleViolations = visible.flatMap((el) => {
+      if (!(el instanceof HTMLButtonElement) || !/[A-Za-z]/u.test(el.textContent ?? "")) return [];
+      const style = window.getComputedStyle(el);
+      const fontSize = Number.parseFloat(style.fontSize);
+      const trackingPx =
+        style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing);
+      const trackingEm = Number.isFinite(fontSize) && fontSize > 0 ? trackingPx / fontSize : NaN;
+      const weight = Number.parseInt(style.fontWeight, 10);
+      if (weight === 800 && Math.abs(trackingEm - 0.02) <= 0.002) return [];
+      return [
+        `button ${el.tagName.toLowerCase()}.${Array.from(el.classList).join(".")} ${weight.toString()}/${trackingEm.toFixed(4)}em`,
+      ];
+    });
+    const semanticBodyRoleViolations = visible.flatMap((el) => {
+      if (
+        !(el instanceof HTMLElement) ||
+        (el.tagName !== "P" && !(el.tagName === "LI" && el.closest(".prose")))
+      ) {
+        return [];
+      }
+      const style = window.getComputedStyle(el);
+      if (style.textTransform === "uppercase" || !/[A-Za-z]/u.test(el.textContent ?? "")) return [];
+      const fontSize = Number.parseFloat(style.fontSize);
+      const trackingPx =
+        style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing);
+      const trackingEm = Number.isFinite(fontSize) && fontSize > 0 ? trackingPx / fontSize : NaN;
+      const weight = Number.parseInt(style.fontWeight, 10);
+      if (weight === 400 && Math.abs(trackingEm) <= 0.002) return [];
+      return [
+        `body ${el.tagName.toLowerCase()}.${Array.from(el.classList).join(".")} ${weight.toString()}/${trackingEm.toFixed(4)}em`,
       ];
     });
     const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight);
@@ -446,6 +483,8 @@ async function measureSurface(
               `${node}${className ? `.${className.trim().replace(/\s+/gu, ".")}` : ""} ${weight.toString()}/${trackingEm.toFixed(4)}em ${JSON.stringify(text)}`,
           ),
         ...semanticHeadingRoleViolations,
+        ...semanticButtonRoleViolations,
+        ...semanticBodyRoleViolations,
       ],
     };
   });
@@ -661,14 +700,60 @@ async function auditAuthoredRoleFixture(
           <div class="account-head"><h1 class="display">Account fixture</h1></div>
           <div class="account-section-head"><h2>Saved runs</h2></div>
           <article class="account-run"><h3>Fixture team</h3></article>
+          <p>Authenticated account body copy.</p>
+          <button class="account-link-button" type="button">Sign out</button>
+          <button class="account-action" type="button">Save username</button>
+          <button class="account-danger" type="button">Delete account</button>
+          <button class="account-load-more" type="button">Load more</button>
+          <button class="signin-form__inline" type="button">Forgot password?</button>
           <h2 class="signin-sent__h display">Check your email</h2>
+          <p class="signin-sent__hint">Try <button class="signin-sent__again" type="button">a different email</button>.</p>
         </main>
       </body>
     </html>`);
   await page.evaluate(async () => await document.fonts.ready);
   const surfaces = [
-    await measureSurface(page, "authored role fixture", "/__font-role-fixture", viewport, theme),
+    await measureSurface(
+      page,
+      "authenticated account role fixture",
+      "/__font-role-fixture",
+      viewport,
+      theme,
+    ),
   ];
+  await context.close();
+  return { surfaces, targets: [], errors };
+}
+
+async function auditSignInSentState(
+  browser: Browser,
+  baseUrl: string,
+  viewport: ViewportCase,
+  theme: Theme,
+): Promise<{ surfaces: SurfaceMetric[]; targets: TargetMetric[]; errors: string[] }> {
+  const { context, page, errors } = await newAuditedPage(browser, viewport, theme);
+  await page.route("**/api/auth/csrf", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      headers: { "set-cookie": "wcdraft_csrf=font-audit-csrf; Path=/; SameSite=Lax" },
+      body: JSON.stringify({ csrfToken: "font-audit-csrf" }),
+    });
+  });
+  await page.route("**/api/auth/magic-link", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true }),
+    });
+  });
+  await page.goto(`${baseUrl}/sign-in`, { waitUntil: "domcontentloaded" });
+  await settle(page);
+  await page.locator('input[type="email"]').fill("font-audit@example.invalid");
+  await page.getByRole("button", { name: /^Send link$/i }).click();
+  await page.getByRole("heading", { name: /check your email/i }).waitFor();
+  await settle(page);
+  const surfaces = [await measureSurface(page, "sign-in sent", "/sign-in", viewport, theme)];
   await context.close();
   return { surfaces, targets: [], errors };
 }
@@ -781,6 +866,7 @@ async function auditAll(baseUrl: string): Promise<Report> {
           await auditStaticSurface(browser, baseUrl, viewport, theme, "/", "home"),
           await auditStaticSurface(browser, baseUrl, viewport, theme, "/play", "mode select"),
           await auditStaticSurface(browser, baseUrl, viewport, theme, "/sign-in", "sign-in"),
+          await auditSignInSentState(browser, baseUrl, viewport, theme),
           await auditStaticSurface(browser, baseUrl, viewport, theme, "/play/draft", "setup"),
           await auditClassicDraftFlow(browser, baseUrl, viewport, theme),
           await auditOpenDraftFlow(browser, baseUrl, viewport, theme, "open"),
@@ -820,7 +906,6 @@ async function auditAll(baseUrl: string): Promise<Report> {
             "/leaderboard",
             "leaderboard",
           ),
-          await auditStaticSurface(browser, baseUrl, viewport, theme, "/account", "account"),
           await auditStaticSurface(
             browser,
             baseUrl,

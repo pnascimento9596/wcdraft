@@ -76,7 +76,8 @@
   border-radius: 8px;
   background: var(--bg-sunken);
   font-family: var(--font-family);
-  font-weight: 700;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   font-size: 0.85rem;
   color: var(--ink-soft);
   cursor: pointer;

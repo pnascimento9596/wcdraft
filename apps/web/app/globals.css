@@ -23,8 +23,9 @@
   font-weight: 400;
   src: url("/fonts/archivo/archivo-latin-ext-400-normal.woff2") format("woff2");
   unicode-range:
-    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
 }
 
 @font-face {
@@ -91,8 +92,9 @@
   font-weight: 500;
   src: url("/fonts/archivo/archivo-latin-ext-500-normal.woff2") format("woff2");
   unicode-range:
-    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
 }
 
 @font-face {
@@ -113,8 +115,9 @@
   font-weight: 600;
   src: url("/fonts/archivo/archivo-latin-ext-600-normal.woff2") format("woff2");
   unicode-range:
-    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
 }
 
 @font-face {
@@ -135,8 +138,9 @@
   font-weight: 700;
   src: url("/fonts/archivo/archivo-latin-ext-700-normal.woff2") format("woff2");
   unicode-range:
-    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
 }
 
 /* ----------------------------------------------------------------------------
@@ -374,6 +378,10 @@ a {
 
 button {
   font: inherit;
+  /* Locked Terrace control role. Component skins may change size and color,
+     but native text buttons must not drift back to ad-hoc UI typography. */
+  font-weight: var(--font-weight-button) !important;
+  letter-spacing: var(--tracking-button) !important;
   color: inherit;
   cursor: pointer;
 }
@@ -1146,7 +1154,7 @@ main {
   font-family: var(--font-family);
   font-size: 0.86rem;
   line-height: 1.5;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-body);
   color: var(--ink-soft);
   max-width: 38rem;
 }
@@ -1524,9 +1532,9 @@ main {
   background: transparent;
   color: var(--ink-soft);
   font-family: var(--font-family);
-  font-weight: 600;
+  font-weight: var(--font-weight-button);
   font-size: 0.85rem;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--tracking-button);
   padding: 0.45rem 1rem;
   border-radius: 999px;
   transition:

@@ -91,6 +91,8 @@
   background: transparent;
   padding: 0;
   font: inherit;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   cursor: pointer;
 }
 

@@ -159,6 +159,8 @@
   color: var(--ink-100);
   padding: 0;
   font: inherit;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   font-size: var(--t-sm);
   text-decoration: underline solid var(--line-strong);
   text-underline-offset: 3px;
@@ -405,6 +407,8 @@
   text-underline-offset: 3px;
   cursor: pointer;
   font: inherit;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
 }
 
 /* ── Disabled (ship-dark) notice ──────────────────────────────────── */

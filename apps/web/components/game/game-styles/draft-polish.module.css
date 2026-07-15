@@ -587,7 +587,8 @@
   flex: 0 0 auto;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   color: var(--ink-200);
   background: var(--bg-700);
   border: 1px solid var(--line-2);
@@ -1808,7 +1809,7 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-body);
   color: var(--ink-400);
 }
 
