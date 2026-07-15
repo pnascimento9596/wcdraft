@@ -76,7 +76,8 @@
   border-radius: 8px;
   background: var(--bg-sunken);
   font-family: var(--font-family);
-  font-weight: 700;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   font-size: 0.85rem;
   color: var(--ink-soft);
   cursor: pointer;
@@ -132,7 +133,8 @@
 .selectFilter span {
   font-size: 0.62rem;
   line-height: 1;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -261,7 +263,7 @@
 .meChipRank {
   font-family: var(--font-family);
   font-size: 1rem;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* ── Rows ───────────────────────────────────────────────────────────────── */
@@ -337,7 +339,8 @@
 
 .badge {
   font-size: 0.62rem;
-  letter-spacing: 0.07em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
@@ -365,7 +368,8 @@
   display: block;
   font-family: var(--font-family);
   font-size: 0.62rem;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -443,7 +447,8 @@
 .inspectorEyebrow {
   font-family: var(--font-family);
   font-size: 0.62rem;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--accent-text);
 }
@@ -766,7 +771,8 @@
 .submitTitle {
   font-family: var(--font-family);
   font-size: 1.3rem;
-  letter-spacing: 0.02em;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
 }
 
 .submitScore {
@@ -795,7 +801,7 @@
 }
 
 .submitModeNote a {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 700;
   text-decoration: none;
 }
@@ -854,7 +860,7 @@
   font-size: 1.1rem;
 }
 .outcomeTitleGood {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .outcomeTitleGold {
   color: var(--gold);

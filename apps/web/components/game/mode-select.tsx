@@ -23,11 +23,9 @@ export const DAILY_DATE_CHECK_INTERVAL_MS = 60_000;
 const MODE_COPY: Record<
   PlayMode,
   {
-    index: string;
     title: string;
     tag: string;
     desc: string;
-    preview: string;
     chips: readonly string[];
     cta: string;
     href: string;
@@ -36,54 +34,44 @@ const MODE_COPY: Record<
   }
 > = {
   daily: {
-    index: "00",
     title: "Today's Draft",
     tag: "Daily",
     desc: "One shared draft for everyone today. A new one drops daily at 00:00 UTC.",
-    preview: "DAILY",
     chips: ["Same draft", "Beat today"],
     cta: "Play daily",
     href: "/play/daily",
     featured: true,
   },
   classic: {
-    index: "01",
     title: DRAFT_MODE_COPY.classic.label,
     // Short tags/chips so 360–390px cards do not clip mid-phrase (Q5 craft).
     tag: "Ranked · casual default",
     desc: DRAFT_MODE_COPY.classic.description,
-    preview: "CLASSIC · RANKED · CASUAL DEFAULT",
     chips: ["3 choices", "Ranked-capable", "Synergy"],
     cta: "Start drafting",
     href: "/play/draft",
   },
   open: {
-    index: "02",
     title: DRAFT_MODE_COPY.open.label,
     tag: "Casual",
     desc: DRAFT_MODE_COPY.open.description,
-    preview: "OPEN · CASUAL",
     chips: ["Full roster", "Casual", "Shareable"],
     cta: "Open draft",
     href: "/play/draft?mode=open",
   },
   hidden: {
-    index: "03",
     title: DRAFT_MODE_COPY.hidden.label,
     tag: "Ranked · casual default",
     desc: DRAFT_MODE_COPY.hidden.description,
-    preview: "MEMORY · RANKED · CASUAL DEFAULT",
     chips: ["Ratings hidden", "3 choices", "Ranked-capable"],
     cta: "Draft from memory",
     href: "/play/draft?mode=hidden",
     secondary: true,
   },
   open_hidden: {
-    index: "04",
     title: DRAFT_MODE_COPY.open_hidden.label,
     tag: "Casual",
     desc: DRAFT_MODE_COPY.open_hidden.description,
-    preview: "BLIND OPEN · CASUAL",
     chips: ["Full roster", "Ratings hidden", "Shareable"],
     cta: "Blind Open",
     href: "/play/draft?mode=open_hidden",
@@ -189,9 +177,6 @@ export function ModeSelect() {
               aria-checked={on}
               onClick={() => setMode(key)}
             >
-              <span className={s.modeIndex} aria-hidden="true">
-                {item.index}
-              </span>
               <span className={s.modeCardTop}>
                 <span className={s.modeTag}>
                   <span className={s.modeTagDot} aria-hidden="true" />
@@ -207,15 +192,6 @@ export function ModeSelect() {
                     : checking
                       ? "Checking today's Daily…"
                       : item.desc}
-              </span>
-              <span className={s.modePreview}>
-                {timedOut
-                  ? "DAILY · CHECK TIMED OUT"
-                  : unavailable
-                    ? "DAILY · PAUSED"
-                    : checking
-                      ? "DAILY · CHECKING"
-                      : item.preview}
               </span>
               <span className={s.modeFeatures}>
                 {(unavailable || checking || timedOut ? ["Other modes ready"] : item.chips).map(

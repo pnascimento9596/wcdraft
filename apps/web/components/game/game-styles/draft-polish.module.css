@@ -63,7 +63,8 @@
   padding: 3px 8px;
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-100);
   background: color-mix(in srgb, var(--bg-900) 65%, transparent);
@@ -200,7 +201,7 @@
 
 .managerSlotCommitted {
   border-color: color-mix(in srgb, var(--prov-manager) 55%, var(--line));
-  box-shadow: inset 0 0 0 1px rgba(var(--prov-manager-rgb, 255, 255, 255), 0.15);
+  box-shadow: inset 0 0 0 1px rgba(var(--prov-manager-rgb), 0.15);
 }
 
 .managerSlotPreview {
@@ -217,7 +218,8 @@
 .managerSlotEyebrow {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.16em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-300);
 }
@@ -275,7 +277,8 @@
   align-self: flex-start;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--prov-manager);
   padding: 2px 8px;
@@ -487,9 +490,10 @@
 .candRowOvr i {
   font-family: var(--font-family);
   font-size: 7px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-400);
   font-style: normal;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
 }
 .candRowCov {
@@ -565,7 +569,8 @@
 .nowDraftingPick {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.14em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ember-bright);
 }
@@ -582,7 +587,8 @@
   flex: 0 0 auto;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   color: var(--ink-200);
   background: var(--bg-700);
   border: 1px solid var(--line-2);
@@ -733,7 +739,8 @@
 .synergyBarLabel {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.16em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -749,7 +756,7 @@
   font-size: 22px;
   line-height: 1;
   letter-spacing: 0.01em;
-  color: var(--ember);
+  color: var(--ember-bright);
   font-feature-settings: "tnum" 1;
 }
 
@@ -793,7 +800,8 @@
 .synergyBarFigure dt {
   font-family: var(--font-family);
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
   margin: 0;
@@ -928,7 +936,7 @@
   }
   .appBarTitle {
     font-size: 14px;
-    letter-spacing: 0.03em;
+    letter-spacing: var(--tracking-heading);
   }
   .appBarMeter {
     min-width: 108px;
@@ -1021,7 +1029,7 @@
   }
   .spinStatusTitle {
     font-size: 10px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.1em;
   }
   .spinStatusChip {
     min-width: 88px;
@@ -1110,7 +1118,7 @@
   }
   .formationCardCta {
     font-size: 9px;
-    letter-spacing: 0.08em;
+    letter-spacing: var(--tracking-button);
   }
   .miniPitch {
     width: 78px;
@@ -1154,7 +1162,8 @@
   }
   .benchLabel {
     font-size: 9px;
-    letter-spacing: 0.1em;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-micro);
   }
   .benchSlots {
     gap: 4px;
@@ -1206,7 +1215,7 @@
   .reviewHead > .eyebrowAccent {
     align-self: center;
     font-size: 9px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.1em;
   }
   .reviewHead .teamNameRow {
     gap: 2px;
@@ -1262,7 +1271,7 @@
   }
   .reviewShell .managerSlotEyebrow {
     font-size: 8px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
   }
   .reviewShell .managerSlotIdentity {
     gap: 6px;
@@ -1301,7 +1310,8 @@
   .reviewShell .benchLabel {
     margin: 0;
     font-size: 8px;
-    letter-spacing: 0.08em;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-micro);
   }
   .reviewShell .benchSlots {
     gap: 3px;
@@ -1702,8 +1712,8 @@
 
 .rareMomentTitle {
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   color: var(--gold);
   text-transform: uppercase;
 }
@@ -1747,8 +1757,8 @@
   border-radius: var(--r-pill);
   font-family: var(--font-family);
   font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
   color: var(--gold);
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
@@ -1768,11 +1778,11 @@
   border-radius: var(--r-pill);
   font-family: var(--font-family);
   font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--ember);
+  color: var(--ember-bright);
   border: 1px solid color-mix(in srgb, var(--ember) 55%, transparent);
   background: color-mix(in srgb, var(--ember) 12%, transparent);
 }
@@ -1799,7 +1809,7 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-body);
   color: var(--ink-400);
 }
 
@@ -1844,8 +1854,8 @@
 .panelTitle {
   color: var(--ink-100);
   font-family: var(--font-family);
-  font-weight: 700;
-  letter-spacing: 0;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
 }
 
@@ -2297,7 +2307,8 @@
 .synergyBarFigure dt {
   color: var(--ink-400);
   font-family: var(--font-family);
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
 }
 
 .synergyBarNum,

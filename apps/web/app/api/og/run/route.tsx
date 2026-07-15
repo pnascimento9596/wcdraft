@@ -51,28 +51,44 @@ function loadAssets(request: Request): Promise<RunOgImageAssets> {
     const base = new URL(request.url);
     const [
       mark,
-      spaceGroteskSemiBold,
-      spaceGroteskSemiBoldExt,
-      spaceGroteskBold,
-      spaceGroteskBoldExt,
+      archivoRegular,
+      archivoRegularExt,
+      archivoMedium,
+      archivoMediumExt,
+      archivoExtraBold,
+      archivoExtraBoldExt,
+      archivoBlack,
+      archivoBlackExt,
     ] = await Promise.all([
       fetchTextAsset(new URL("/brand/logo-mark.svg", base)),
-      fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", base)),
       fetchBinaryAsset(
-        new URL("/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff", base),
+        new URL("/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff", base),
       ),
-      fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-400-normal.woff", base)),
       fetchBinaryAsset(
-        new URL("/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff", base),
+        new URL("/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff", base),
       ),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-500-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff", base),
+      ),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-800-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff", base),
+      ),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-900-normal.woff", base)),
     ]);
     return {
       markSvgDataUri: `data:image/svg+xml;utf8,${encodeURIComponent(mark)}`,
       fonts: {
-        spaceGroteskSemiBold,
-        spaceGroteskSemiBoldExt,
-        spaceGroteskBold,
-        spaceGroteskBoldExt,
+        archivoRegular,
+        archivoRegularExt,
+        archivoMedium,
+        archivoMediumExt,
+        archivoExtraBold,
+        archivoExtraBoldExt,
+        archivoBlack,
+        archivoBlackExt,
       },
     };
   })();

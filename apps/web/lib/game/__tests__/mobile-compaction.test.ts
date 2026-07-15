@@ -32,7 +32,7 @@ describe("mobile compaction contract", () => {
     expect(homeHeroCss).toContain("--home-safe-area-bottom: env(safe-area-inset-bottom, 0px);");
     expect(homeHeroCss).toContain("padding-block-end: max(0.5rem, var(--home-safe-area-bottom));");
     expect(homeHeroCss).toContain("calc(0.5rem - var(--home-safe-area-bottom) / 8)");
-    expect(homeHeroCss).toContain("calc(0.42rem - var(--home-safe-area-bottom) / 16)");
+    expect(homeHeroCss).toContain("calc(0.25rem - var(--home-safe-area-bottom) / 16)");
   });
 
   it("keeps all five modes visible instead of introducing a disclosure control", () => {
@@ -42,7 +42,8 @@ describe("mobile compaction contract", () => {
   });
 
   it("retains the 44px floor through full-card and dock-button targets", () => {
-    expect(modeCss).toContain("min-height: 118px");
+    expect(modeCss).toContain("min-height: 52px");
+    expect(modeCss).toContain("min-height: 44px");
     expect(modeCss).toContain(".modeDock :global(.btn)");
   });
 

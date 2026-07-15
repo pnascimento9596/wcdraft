@@ -166,7 +166,7 @@ async function newSession(
       contentType: "application/json",
       body: JSON.stringify({
         ok: true,
-        signed: "ogs1.browser-proof",
+        signed: "ogs2.browser-proof",
         challenge_proof: originProof,
         cache_key: "browser-proof",
       }),
