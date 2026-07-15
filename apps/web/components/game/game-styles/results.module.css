@@ -324,7 +324,7 @@
   color: var(--accent);
   font-size: 0.66rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 .factualRecapGrid {
@@ -610,7 +610,7 @@
 .boxColHead {
   font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
   border-bottom: 1px solid var(--line);
   padding-bottom: 0.25rem;
@@ -701,7 +701,7 @@
 .seedLabel {
   font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
 }
 .seedCode {

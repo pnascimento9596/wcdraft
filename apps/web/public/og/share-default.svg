@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="wcdraft — draft your all-time XI">
   <style>
-    @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500;src:url("/fonts/space-grotesk/space-grotesk-latin-500-normal.woff2") format("woff2")}
-    @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:600;src:url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2")}
-    @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:700;src:url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2") format("woff2")}
-    :root{--font-family:"Space Grotesk",sans-serif}
+    @font-face{font-family:"Archivo";font-style:normal;font-weight:500;src:url("/fonts/archivo/archivo-latin-500-normal.woff2") format("woff2")}
+    @font-face{font-family:"Archivo";font-style:normal;font-weight:800;src:url("/fonts/archivo/archivo-latin-800-normal.woff2") format("woff2")}
+    @font-face{font-family:"Archivo";font-style:normal;font-weight:900;src:url("/fonts/archivo/archivo-latin-900-normal.woff2") format("woff2")}
+    :root{--font-family:"Archivo",sans-serif}
   </style>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -109,12 +109,12 @@
   </g>
 
   <!-- Wordmark -->
-  <text x="320" y="220" fill="#e9f9f2" font-family="var(--font-family)" font-size="120" font-weight="900" letter-spacing="-0.02em">
+  <text x="320" y="220" fill="#e9f9f2" font-family="var(--font-family)" font-size="120" font-weight="900" letter-spacing="-0.035em">
     wc<tspan fill="url(#emerald)">draft</tspan>
   </text>
 
   <!-- Headline -->
-  <text x="320" y="310" fill="#9bb6ad" font-family="var(--font-family)" font-size="36" font-weight="600" letter-spacing="0.28em">
+  <text x="320" y="310" fill="#9bb6ad" font-family="var(--font-family)" font-size="36" font-weight="800" letter-spacing="0.1em">
     DRAFT YOUR ALL-TIME XI
   </text>
 
@@ -124,7 +124,7 @@
   </text>
 
   <!-- Footer line: domain + non-affiliation hint -->
-  <text x="600" y="560" text-anchor="middle" fill="#5e7068" font-family="var(--font-family)" font-size="22" letter-spacing="0.28em">
+  <text x="600" y="560" text-anchor="middle" fill="#5e7068" font-family="var(--font-family)" font-size="22" letter-spacing="0.1em">
     WCDRAFT.APP · NAMES &amp; FLAG CODES ONLY
   </text>
 </svg>

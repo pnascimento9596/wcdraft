@@ -49,30 +49,21 @@ function staticFallback(request: Request): Response {
 function loadAssets(request: Request): Promise<RunOgImageAssets> {
   assetsPromise ??= (async () => {
     const base = new URL(request.url);
-    const [
-      mark,
-      spaceGroteskSemiBold,
-      spaceGroteskSemiBoldExt,
-      spaceGroteskBold,
-      spaceGroteskBoldExt,
-    ] = await Promise.all([
-      fetchTextAsset(new URL("/brand/logo-mark.svg", base)),
-      fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", base)),
-      fetchBinaryAsset(
-        new URL("/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff", base),
-      ),
-      fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff", base)),
-      fetchBinaryAsset(
-        new URL("/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff", base),
-      ),
-    ]);
+    const [mark, archivoExtraBold, archivoExtraBoldExt, archivoBlack, archivoBlackExt] =
+      await Promise.all([
+        fetchTextAsset(new URL("/brand/logo-mark.svg", base)),
+        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-800-normal.woff", base)),
+        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-800-normal.woff", base)),
+        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-900-normal.woff", base)),
+        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-900-normal.woff", base)),
+      ]);
     return {
       markSvgDataUri: `data:image/svg+xml;utf8,${encodeURIComponent(mark)}`,
       fonts: {
-        spaceGroteskSemiBold,
-        spaceGroteskSemiBoldExt,
-        spaceGroteskBold,
-        spaceGroteskBoldExt,
+        archivoExtraBold,
+        archivoExtraBoldExt,
+        archivoBlack,
+        archivoBlackExt,
       },
     };
   })();

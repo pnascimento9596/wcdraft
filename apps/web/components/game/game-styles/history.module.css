@@ -218,7 +218,7 @@
 .shareIntentLabel {
   font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
   margin: 0;
 }

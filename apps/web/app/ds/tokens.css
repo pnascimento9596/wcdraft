@@ -97,11 +97,19 @@
   --pitch-accent-mute: rgba(220, 220, 235, 0.2);
 
   /* ---- Type ---- */
-  --font-family: "Space Grotesk", system-ui, sans-serif;
+  --font-family: "Archivo", system-ui, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  --font-weight-bold: 800;
+  --font-weight-display: 900;
+  --font-weight-heading: 800;
+  --font-weight-button: 800;
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.02em;
+  --tracking-body: 0;
+  --tracking-micro: 0.1em;
+  --tracking-button: 0.02em;
 
   /* type scale (px) */
   --t-hero: clamp(56px, 9vw, 132px);

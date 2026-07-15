@@ -46,7 +46,7 @@ type SurfaceMetric = {
   clientWidth: number;
   horizontalOverflow: boolean;
   uniqueFontFamilies: string[];
-  nonGroteskFamilies: string[];
+  nonArchivoFamilies: string[];
   numericSampleCount: number;
   numericTabularSampleCount: number;
   axeViolations: string[];
@@ -328,9 +328,9 @@ async function runAxe(page: Page): Promise<string[]> {
   });
 }
 
-function isGroteskFamily(family: string): boolean {
+function isArchivoFamily(family: string): boolean {
   const normalized = family.toLowerCase();
-  return normalized.includes("space grotesk") && !normalized.includes("space mono");
+  return normalized.includes("archivo");
 }
 
 async function measureSurface(
@@ -384,7 +384,7 @@ async function measureSurface(
     ...metric,
     scrollRatio: Number((metric.scrollHeight / metric.clientHeight).toFixed(3)),
     horizontalOverflow: metric.scrollWidth > metric.clientWidth + 1,
-    nonGroteskFamilies: metric.uniqueFontFamilies.filter((family) => !isGroteskFamily(family)),
+    nonArchivoFamilies: metric.uniqueFontFamilies.filter((family) => !isArchivoFamily(family)),
     axeViolations,
   };
 }
@@ -468,10 +468,10 @@ async function validateShareSvgExport(page: Page): Promise<string | null> {
 
     if (capturedBlob === null) return "share export: no SVG blob captured";
     const xml = await capturedBlob.text();
-    if (!xml.includes("Space Grotesk")) return "share export: missing Space Grotesk contract";
+    if (!xml.includes("Archivo")) return "share export: missing Archivo contract";
     if (!xml.includes("--font-family")) return "share export: missing font-family token";
     if (!xml.includes("data:font/woff2;base64,")) {
-      return "share export: missing embedded Space Grotesk font data";
+      return "share export: missing embedded Archivo font data";
     }
     const monoFamilyLeak = new RegExp(
       [
@@ -739,9 +739,9 @@ async function auditAll(baseUrl: string): Promise<Report> {
         `${surface.label} ${surface.viewport} ${surface.theme}: axe ${surface.axeViolations.join(",")}`,
       );
     }
-    if (strict && surface.nonGroteskFamilies.length > 0) {
+    if (strict && surface.nonArchivoFamilies.length > 0) {
       report.failures.push(
-        `${surface.label} ${surface.viewport} ${surface.theme}: non-Grotesk families ${surface.nonGroteskFamilies.join(" | ")}`,
+        `${surface.label} ${surface.viewport} ${surface.theme}: non-Archivo families ${surface.nonArchivoFamilies.join(" | ")}`,
       );
     }
     if (strict && surface.numericSampleCount > 0 && surface.numericTabularSampleCount === 0) {

@@ -63,7 +63,7 @@
   padding: 3px 8px;
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-100);
   background: color-mix(in srgb, var(--bg-900) 65%, transparent);
@@ -217,7 +217,7 @@
 .managerSlotEyebrow {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-300);
 }
@@ -565,7 +565,7 @@
 .nowDraftingPick {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ember-bright);
 }
@@ -733,7 +733,7 @@
 .synergyBarLabel {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -1021,7 +1021,7 @@
   }
   .spinStatusTitle {
     font-size: 10px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.1em;
   }
   .spinStatusChip {
     min-width: 88px;
@@ -1206,7 +1206,7 @@
   .reviewHead > .eyebrowAccent {
     align-self: center;
     font-size: 9px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.1em;
   }
   .reviewHead .teamNameRow {
     gap: 2px;
@@ -1262,7 +1262,7 @@
   }
   .reviewShell .managerSlotEyebrow {
     font-size: 8px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
   }
   .reviewShell .managerSlotIdentity {
     gap: 6px;
@@ -1703,7 +1703,7 @@
 .rareMomentTitle {
   font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   color: var(--gold);
   text-transform: uppercase;
 }
@@ -1748,7 +1748,7 @@
   font-family: var(--font-family);
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gold);
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
@@ -1769,7 +1769,7 @@
   font-family: var(--font-family);
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--ember);

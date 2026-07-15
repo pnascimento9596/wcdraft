@@ -170,29 +170,17 @@ function localAssets(): RunOgImageAssets {
       readFileSync(new URL("../../../public/brand/logo-mark.svg", import.meta.url), "utf8"),
     )}`,
     fonts: {
-      spaceGroteskSemiBold: readArrayBuffer(
-        new URL(
-          "../../../public/fonts/space-grotesk/space-grotesk-latin-600-normal.woff",
-          import.meta.url,
-        ),
+      archivoExtraBold: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-800-normal.woff", import.meta.url),
       ),
-      spaceGroteskSemiBoldExt: readArrayBuffer(
-        new URL(
-          "../../../public/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff",
-          import.meta.url,
-        ),
+      archivoExtraBoldExt: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-ext-800-normal.woff", import.meta.url),
       ),
-      spaceGroteskBold: readArrayBuffer(
-        new URL(
-          "../../../public/fonts/space-grotesk/space-grotesk-latin-700-normal.woff",
-          import.meta.url,
-        ),
+      archivoBlack: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-900-normal.woff", import.meta.url),
       ),
-      spaceGroteskBoldExt: readArrayBuffer(
-        new URL(
-          "../../../public/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff",
-          import.meta.url,
-        ),
+      archivoBlackExt: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-ext-900-normal.woff", import.meta.url),
       ),
     },
   };
@@ -213,16 +201,10 @@ function stubOgRouteFetch() {
     "utf8",
   );
   const fonts = new Map<string, ArrayBuffer>([
-    ["/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", assets.fonts.spaceGroteskSemiBold],
-    [
-      "/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff",
-      assets.fonts.spaceGroteskSemiBoldExt,
-    ],
-    ["/fonts/space-grotesk/space-grotesk-latin-700-normal.woff", assets.fonts.spaceGroteskBold],
-    [
-      "/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff",
-      assets.fonts.spaceGroteskBoldExt,
-    ],
+    ["/fonts/archivo/archivo-latin-800-normal.woff", assets.fonts.archivoExtraBold],
+    ["/fonts/archivo/archivo-latin-ext-800-normal.woff", assets.fonts.archivoExtraBoldExt],
+    ["/fonts/archivo/archivo-latin-900-normal.woff", assets.fonts.archivoBlack],
+    ["/fonts/archivo/archivo-latin-ext-900-normal.woff", assets.fonts.archivoBlackExt],
   ]);
 
   vi.stubGlobal(

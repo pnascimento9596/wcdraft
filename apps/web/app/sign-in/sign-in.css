@@ -51,7 +51,7 @@
   font-family: var(--font-family);
   font-size: var(--t-xs);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--ink-300);
 }
 
@@ -139,7 +139,7 @@
   font-family: var(--font-family);
   font-size: var(--t-xs);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--ink-300);
 }
 
@@ -288,7 +288,7 @@
   font-family: var(--font-family);
   font-size: var(--t-xs);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
 }
 
 .signin-form__divider::before,
@@ -416,7 +416,7 @@
 .signin-screen__disabled-tag {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gold);
   padding: 2px 6px;
@@ -456,7 +456,7 @@
   font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--ember);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
 }
 
 @media (min-width: 720px) {

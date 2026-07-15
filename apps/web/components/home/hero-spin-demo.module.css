@@ -245,7 +245,7 @@
   font-family: var(--font-family);
   font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -292,7 +292,7 @@
   font-family: var(--font-family);
   font-size: 0.66rem;
   font-weight: 800;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 

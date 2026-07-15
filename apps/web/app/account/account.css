@@ -42,7 +42,7 @@
 .account-panel__label {
   font-family: var(--font-family);
   font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent-text);
 }

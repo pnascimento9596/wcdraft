@@ -216,7 +216,7 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   display: block;
   font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
   margin-bottom: 0.45rem;
 }
@@ -521,7 +521,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .candOverallLabel {
   font-size: 0.6rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
 }
 .candPositions {
@@ -543,7 +543,7 @@ button.benchSlot:not(:disabled):hover {
   margin-left: auto;
   font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
 }
 .channels {
@@ -710,7 +710,7 @@ button.benchSlot:not(:disabled):hover {
 .clustersLabel {
   font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
 }
 .clusterTags {

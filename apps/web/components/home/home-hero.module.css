@@ -85,7 +85,7 @@
   .copy :global(.eyebrow) {
     font-size: 0.64rem;
     line-height: 1.25;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.1em;
   }
 
   .copy :global(.display) {

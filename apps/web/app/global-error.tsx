@@ -20,35 +20,36 @@ const btn: React.CSSProperties = {
   padding: "0 1.25rem",
   borderRadius: "0.5rem",
   fontSize: "1rem",
-  fontWeight: 600,
+  fontWeight: 800,
+  letterSpacing: "0.02em",
   textDecoration: "none",
   cursor: "pointer",
 };
 
 const themeCss = `
 @font-face {
-  font-family: "Space Grotesk";
+  font-family: "Archivo";
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url("/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2") format("woff2");
+  src: url("/fonts/archivo/archivo-latin-400-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Space Grotesk";
+  font-family: "Archivo";
   font-style: normal;
   font-display: swap;
-  font-weight: 600;
-  src: url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2");
+  font-weight: 500;
+  src: url("/fonts/archivo/archivo-latin-500-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Space Grotesk";
+  font-family: "Archivo";
   font-style: normal;
   font-display: swap;
-  font-weight: 700;
-  src: url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2") format("woff2");
+  font-weight: 800;
+  src: url("/fonts/archivo/archivo-latin-800-normal.woff2") format("woff2");
 }
 .global-error-body {
-  --font-family: "Space Grotesk", system-ui, sans-serif;
+  --font-family: "Archivo", system-ui, sans-serif;
   font-family: var(--font-family);
   background: #080809;
   color: #edecf2;
@@ -103,12 +104,21 @@ export default function GlobalError({
               textTransform: "uppercase",
               letterSpacing: "0.08em",
               fontSize: "0.78rem",
+              fontWeight: 500,
               margin: "0 0 0.5rem",
             }}
           >
             Something went wrong
           </p>
-          <h1 style={{ fontSize: "1.75rem", lineHeight: 1.15, margin: "0 0 0.75rem" }}>
+          <h1
+            style={{
+              fontSize: "1.75rem",
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.15,
+              margin: "0 0 0.75rem",
+            }}
+          >
             The match was abandoned
           </h1>
           <p style={{ opacity: 0.82, margin: "0 0 1.5rem", lineHeight: 1.55 }}>

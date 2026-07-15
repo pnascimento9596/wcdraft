@@ -64,7 +64,7 @@
 .spinPickKicker {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -85,7 +85,7 @@
   text-align: center;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.26em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-300);
 }
@@ -108,7 +108,7 @@
 .spinStatusChipLabel {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -128,7 +128,7 @@
   text-align: center;
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -339,7 +339,7 @@
 .spinResultEyebrow {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -386,7 +386,7 @@
 .spinTileLabel {
   font-family: var(--font-family);
   font-size: 9px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
