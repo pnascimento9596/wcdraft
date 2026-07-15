@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import net from "node:net";
 import { setTimeout as delay } from "node:timers/promises";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { chromium, webkit, type BrowserType, type Page } from "playwright-core";
 
@@ -19,6 +19,43 @@ type Theme = "light" | "dark";
 type Motion = "no-preference" | "reduce";
 type RoutePath = "/" | "/play";
 
+type PaintRegion = {
+  readonly label: string;
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+};
+
+type SharpMetadata = {
+  readonly format?: string;
+  readonly width?: number;
+  readonly height?: number;
+};
+
+type SharpStats = {
+  readonly entropy: number;
+  readonly channels: readonly {
+    readonly min: number;
+    readonly max: number;
+    readonly stdev: number;
+  }[];
+};
+
+type SharpPipeline = {
+  png: (options: { compressionLevel: number; adaptiveFiltering: boolean }) => SharpPipeline;
+  toBuffer: () => Promise<Buffer>;
+  metadata: () => Promise<SharpMetadata>;
+  extract: (region: { left: number; top: number; width: number; height: number }) => SharpPipeline;
+  raw: () => SharpPipeline;
+  stats: () => Promise<SharpStats>;
+};
+
+type SharpFactory = (
+  input: Buffer,
+  options?: { readonly failOn?: "none" | "warning" | "error" | "truncated" },
+) => SharpPipeline;
+
 type FitMetric = {
   readonly engine: OneScreenEngine;
   readonly browserVersion: string;
@@ -31,6 +68,9 @@ type FitMetric = {
   readonly screenshot: string | null;
   readonly screenshotPaintStable: boolean | null;
   readonly screenshotCaptureCount: number | null;
+  readonly screenshotChangedSampleRatio: number | null;
+  readonly screenshotPngNormalized: boolean | null;
+  readonly screenshotPaintFailures: readonly string[];
   readonly scrollHeight: number;
   readonly bodyScrollHeight: number;
   readonly innerHeight: number;
@@ -40,6 +80,8 @@ type FitMetric = {
   readonly renderedTheme: string | null;
   readonly renderedReducedMotion: boolean;
   readonly unpaintedRequiredContent: readonly string[];
+  readonly devicePixelRatio: number;
+  readonly requiredPaintRegions: readonly PaintRegion[];
   readonly ledeLines: number | null;
   readonly requiredTargetCount: number;
   readonly requiredTargetsInViewport: boolean;
@@ -69,6 +111,9 @@ type MeasuredFitMetric = Omit<
   | "screenshot"
   | "screenshotPaintStable"
   | "screenshotCaptureCount"
+  | "screenshotChangedSampleRatio"
+  | "screenshotPngNormalized"
+  | "screenshotPaintFailures"
 >;
 
 type ManagedServer = {
@@ -100,6 +145,30 @@ const devOverlayCss = `
     display: none !important;
   }
 `;
+
+async function loadSharp(): Promise<SharpFactory> {
+  const moduleName = "sharp";
+  try {
+    return ((await import(moduleName)) as unknown as { default: SharpFactory }).default;
+  } catch {
+    const { globSync } = require("node:fs") as typeof import("node:fs");
+    const root = path.join(appRoot, "..", "..", "node_modules", ".pnpm");
+    const matches = globSync("sharp@*/node_modules/sharp/lib/index.js", { cwd: root });
+    const match = matches[0];
+    if (!match) {
+      throw new Error(
+        "sharp not found; install dev dependencies before running one-screen verification",
+      );
+    }
+    return (
+      (await import(pathToFileURL(path.join(root, match)).href)) as unknown as {
+        default: SharpFactory;
+      }
+    ).default;
+  }
+}
+
+const sharpPromise = loadSharp();
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -265,7 +334,18 @@ function metricFailures(metric: FitMetric): readonly string[] {
   if (metric.screenshot !== null && metric.motion === "reduce" && !metric.screenshotPaintStable) {
     failures.push(
       `${prefix}: reduced-motion screenshot did not reach a stable painted frame after ` +
-        `${String(metric.screenshotCaptureCount)} captures`,
+        `${String(metric.screenshotCaptureCount)} captures ` +
+        `(changed sample ratio ${String(metric.screenshotChangedSampleRatio)})`,
+    );
+  }
+  if (metric.screenshot !== null && !metric.screenshotPngNormalized) {
+    failures.push(`${prefix}: screenshot was not normalized into portable PNG evidence`);
+  }
+  if (metric.screenshotPaintFailures.length > 0) {
+    failures.push(
+      `${prefix}: screenshot required regions are not painted ${metric.screenshotPaintFailures.join(
+        " | ",
+      )}`,
     );
   }
 
@@ -376,6 +456,42 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
             ["mode grid", document.querySelector('[aria-label="Draft mode"]')],
           ];
+    const mastheadPaintTargets = [
+      ["wordmark", document.querySelector(".wordmark")],
+      ["theme control", document.querySelector('[aria-label^="Switch to "]')],
+      ["menu control", document.querySelector(".menu-toggle")],
+    ];
+    const routePaintTargets =
+      pathValue === "/"
+        ? [
+            ["hero title", document.querySelector(".hero .display")],
+            ["hero lede", document.querySelector(".hero__sub")],
+            ["spin demo", document.querySelector("[data-hero-spin-demo]")],
+            ["hero actions", document.querySelector(".hero .btn-row")],
+            ["stat strip", document.querySelector(".hero__meta")],
+          ]
+        : [
+            ["mode title", document.querySelector(".game-page--mode .display")],
+            ["mode lede", document.querySelector(".game-page--mode .lede")],
+            ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
+            ...[...document.querySelectorAll('[role="radio"]')].map((element, index) => [
+              "mode card " + (index + 1).toString(),
+              element,
+            ]),
+            ["dock action", document.querySelector("main button.btn")],
+          ];
+    const requiredPaintRegions = [...mastheadPaintTargets, ...routePaintTargets]
+      .filter(([, element]) => visible(element))
+      .map(([label, element]) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          label,
+          x: rect.x,
+          y: rect.y,
+          width: rect.width,
+          height: rect.height,
+        };
+      });
     const unpaintedRequiredContent = requiredContent
       .filter(([, element]) => !visible(element))
       .map(([label]) => label);
@@ -422,6 +538,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       renderedTheme: doc.dataset.theme ?? null,
       renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
       unpaintedRequiredContent,
+      devicePixelRatio,
+      requiredPaintRegions,
       ledeLines: lineCount(document.querySelector(".hero__sub")),
       requiredTargetCount: requiredTargets.length,
       requiredTargetsInViewport,
@@ -443,41 +561,195 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
   })()`)) as MeasuredFitMetric;
 }
 
+function assertCompletePng(buffer: Buffer): void {
+  const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  assert(buffer.subarray(0, pngSignature.length).equals(pngSignature), "invalid PNG signature");
+  let offset = pngSignature.length;
+  let sawIend = false;
+  while (offset < buffer.length) {
+    assert(offset + 12 <= buffer.length, "truncated normalized PNG chunk header");
+    const length = buffer.readUInt32BE(offset);
+    const chunkEnd = offset + 12 + length;
+    assert(chunkEnd <= buffer.length, "truncated normalized PNG chunk payload");
+    const type = buffer.toString("ascii", offset + 4, offset + 8);
+    offset = chunkEnd;
+    if (type === "IEND") {
+      sawIend = true;
+      break;
+    }
+  }
+  assert(sawIend, "normalized PNG is missing IEND");
+  assert(offset === buffer.length, "normalized PNG contains data after IEND");
+}
+
+async function captureNormalizedPng(
+  page: Page,
+  animations: "allow" | "disabled",
+  expectedWidth: number,
+  expectedHeight: number,
+): Promise<Buffer> {
+  const raw = await page.screenshot({ animations });
+  const sharp = await sharpPromise;
+  const normalized = await sharp(raw, { failOn: "warning" })
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .toBuffer();
+  assertCompletePng(normalized);
+  const metadata = await sharp(normalized, { failOn: "warning" }).metadata();
+  assert(metadata.format === "png", `normalized screenshot format is ${String(metadata.format)}`);
+  assert(
+    metadata.width === expectedWidth && metadata.height === expectedHeight,
+    `normalized screenshot dimensions ${String(metadata.width)}x${String(metadata.height)} ` +
+      `did not match ${expectedWidth.toString()}x${expectedHeight.toString()}`,
+  );
+  return normalized;
+}
+
+async function screenshotPaintFailures(
+  screenshot: Buffer,
+  regions: readonly PaintRegion[],
+  deviceScaleFactor: number,
+): Promise<readonly string[]> {
+  const sharp = await sharpPromise;
+  const metadata = await sharp(screenshot, { failOn: "warning" }).metadata();
+  const screenshotWidth = metadata.width ?? 0;
+  const screenshotHeight = metadata.height ?? 0;
+  const failures: string[] = [];
+
+  for (const region of regions) {
+    const left = Math.max(0, Math.floor(region.x * deviceScaleFactor));
+    const top = Math.max(0, Math.floor(region.y * deviceScaleFactor));
+    const right = Math.min(
+      screenshotWidth,
+      Math.ceil((region.x + region.width) * deviceScaleFactor),
+    );
+    const bottom = Math.min(
+      screenshotHeight,
+      Math.ceil((region.y + region.height) * deviceScaleFactor),
+    );
+    if (right <= left || bottom <= top) {
+      failures.push(`${region.label}: empty crop`);
+      continue;
+    }
+    const stats = await sharp(screenshot, { failOn: "warning" })
+      .extract({ left, top, width: right - left, height: bottom - top })
+      .stats();
+    const colorChannels = stats.channels.slice(0, 3);
+    const maxRange = Math.max(...colorChannels.map((channel) => channel.max - channel.min));
+    const maxStdev = Math.max(...colorChannels.map((channel) => channel.stdev));
+    if (stats.entropy < 0.5 || maxRange < 24 || maxStdev < 2.5) {
+      failures.push(
+        `${region.label}: flat pixels entropy=${stats.entropy.toFixed(2)} ` +
+          `range=${maxRange.toFixed(1)} stdev=${maxStdev.toFixed(1)}`,
+      );
+    }
+  }
+
+  return failures;
+}
+
+async function normalizedChangedSampleRatio(left: Buffer, right: Buffer): Promise<number> {
+  if (left.equals(right)) return 0;
+  const sharp = await sharpPromise;
+  const [leftPixels, rightPixels] = await Promise.all([
+    sharp(left, { failOn: "warning" }).raw().toBuffer(),
+    sharp(right, { failOn: "warning" }).raw().toBuffer(),
+  ]);
+  assert(leftPixels.length === rightPixels.length, "normalized screenshot pixel sizes differ");
+  let changedSamples = 0;
+  for (let index = 0; index < leftPixels.length; index += 1) {
+    if (Math.abs((leftPixels[index] ?? 0) - (rightPixels[index] ?? 0)) > 2) {
+      changedSamples += 1;
+    }
+  }
+  return changedSamples / leftPixels.length;
+}
+
 async function captureEvidence(
   page: Page,
   screenshotPath: string | null,
   motion: Motion,
-): Promise<{ readonly stable: boolean | null; readonly captureCount: number | null }> {
-  if (screenshotPath === null) return { stable: null, captureCount: null };
+  requiredPaintRegions: readonly PaintRegion[],
+  devicePixelRatio: number,
+): Promise<{
+  readonly stable: boolean | null;
+  readonly captureCount: number | null;
+  readonly changedSampleRatio: number | null;
+  readonly normalized: boolean | null;
+  readonly paintFailures: readonly string[];
+}> {
+  if (screenshotPath === null) {
+    return {
+      stable: null,
+      captureCount: null,
+      changedSampleRatio: null,
+      normalized: null,
+      paintFailures: [],
+    };
+  }
+  const viewport = page.viewportSize();
+  assert(viewport, "one-screen screenshot page has no viewport");
+  const expectedWidth = Math.round(viewport.width * devicePixelRatio);
+  const expectedHeight = Math.round(viewport.height * devicePixelRatio);
 
   if (motion === "no-preference") {
     // Review evidence is about the finished one-screen composition, not a
     // nondeterministic frame within the finite entrance animation.
-    await page.screenshot({ path: screenshotPath, animations: "disabled" });
-    return { stable: null, captureCount: 1 };
+    const screenshot = await captureNormalizedPng(page, "disabled", expectedWidth, expectedHeight);
+    await writeFile(screenshotPath, screenshot);
+    return {
+      stable: null,
+      captureCount: 1,
+      changedSampleRatio: null,
+      normalized: true,
+      paintFailures: await screenshotPaintFailures(
+        screenshot,
+        requiredPaintRegions,
+        devicePixelRatio,
+      ),
+    };
   }
 
-  // A geometry-only gate previously passed while reduced-motion screenshots
-  // were paint-incomplete, and two early captures could even match while both
-  // were incomplete. A direct Chromium/WebKit probe reached complete paint by
-  // 1.2s, so establish a conservative floor before comparing frames. This UI
-  // is then static except for the once-per-second countdown: demand two byte-
-  // identical captures separated by 500ms, retrying across a clock tick.
+  // Playwright can emit a structurally valid PNG that some decoders render
+  // incompletely even though its pixel stream is intact. Normalize every frame
+  // through an independent decoder before comparing or writing review evidence.
+  // The UI is static except for the once-per-second countdown: demand two
+  // visually stable normalized captures separated by 500ms. The Daily card has
+  // a live countdown, so exact byte equality is accepted immediately and a
+  // tightly bounded normalized-pixel delta handles only that small text tick.
   const compositorSettleMs = 1_500;
   const maxCaptures = 7;
+  const maxChangedSampleRatio = 0.005;
   await page.waitForTimeout(compositorSettleMs);
-  let previous = await page.screenshot({ animations: "allow" });
+  let previous = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
+  let changedSampleRatio = 1;
   for (let captureCount = 2; captureCount <= maxCaptures; captureCount += 1) {
     await page.waitForTimeout(500);
-    const current = await page.screenshot({ animations: "allow" });
-    if (current.equals(previous)) {
+    const current = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
+    changedSampleRatio = await normalizedChangedSampleRatio(previous, current);
+    if (changedSampleRatio <= maxChangedSampleRatio) {
       await writeFile(screenshotPath, current);
-      return { stable: true, captureCount };
+      return {
+        stable: true,
+        captureCount,
+        changedSampleRatio,
+        normalized: true,
+        paintFailures: await screenshotPaintFailures(
+          current,
+          requiredPaintRegions,
+          devicePixelRatio,
+        ),
+      };
     }
     previous = current;
   }
   await writeFile(screenshotPath, previous);
-  return { stable: false, captureCount: maxCaptures };
+  return {
+    stable: false,
+    captureCount: maxCaptures,
+    changedSampleRatio,
+    normalized: true,
+    paintFailures: await screenshotPaintFailures(previous, requiredPaintRegions, devicePixelRatio),
+  };
 }
 
 async function main(): Promise<void> {
@@ -546,7 +818,13 @@ async function main(): Promise<void> {
                           ].join("-") + ".png",
                         )
                       : null;
-                  const screenshotCapture = await captureEvidence(page, screenshot, motion);
+                  const screenshotCapture = await captureEvidence(
+                    page,
+                    screenshot,
+                    motion,
+                    measured.requiredPaintRegions,
+                    measured.devicePixelRatio,
+                  );
                   const metric: FitMetric = {
                     engine: engineName,
                     browserVersion,
@@ -559,6 +837,9 @@ async function main(): Promise<void> {
                     screenshot,
                     screenshotPaintStable: screenshotCapture.stable,
                     screenshotCaptureCount: screenshotCapture.captureCount,
+                    screenshotChangedSampleRatio: screenshotCapture.changedSampleRatio,
+                    screenshotPngNormalized: screenshotCapture.normalized,
+                    screenshotPaintFailures: screenshotCapture.paintFailures,
                     ...measured,
                     pageErrors,
                   };

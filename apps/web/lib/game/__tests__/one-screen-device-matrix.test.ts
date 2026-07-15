@@ -87,15 +87,28 @@ describe("one-screen descriptor matrix", () => {
   });
 
   it("rejects unstable reduced-motion screenshot paint", () => {
-    expect(verifierSource).toContain("current.equals(previous)");
     expect(verifierSource).toContain("const compositorSettleMs = 1_500");
     expect(verifierSource).toContain("page.waitForTimeout(compositorSettleMs)");
     expect(verifierSource).toContain("page.waitForTimeout(500)");
     expect(verifierSource).toContain("screenshotPaintStable");
+    expect(verifierSource).toContain("normalizedChangedSampleRatio(previous, current)");
+    expect(verifierSource).toContain("const maxChangedSampleRatio = 0.005");
     expect(verifierSource).toContain(
       "reduced-motion screenshot did not reach a stable painted frame",
     );
     expect(verifierSource).toContain("Keep routes in separate browser contexts");
+  });
+
+  it("normalizes portable PNG evidence and rejects flat required regions", () => {
+    expect(verifierSource).toContain("async function captureNormalizedPng");
+    expect(verifierSource).toContain("assertCompletePng(normalized)");
+    expect(verifierSource).toContain("normalized PNG contains data after IEND");
+    expect(verifierSource).toContain("metadata.width === expectedWidth");
+    expect(verifierSource).toContain("if (left.equals(right)) return 0");
+    expect(verifierSource).toContain("requiredPaintRegions");
+    expect(verifierSource).toContain("screenshotPaintFailures");
+    expect(verifierSource).toContain("stats.entropy < 0.5");
+    expect(verifierSource).toContain("screenshot required regions are not painted");
   });
 
   it("runs the descriptor gate in the normal web test envelope", () => {
