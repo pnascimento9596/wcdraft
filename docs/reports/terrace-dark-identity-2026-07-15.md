@@ -93,9 +93,13 @@ failures.
 Provenance remains hue-based and position remains shape-based. Page/card ratios are historical
 8.9384/7.9752, projected 7.8484/7.0027, estimate 8.0189/7.1549, manager
 7.3219/6.5329, and unknown 5.0498/4.5057. All 10 pairwise CIE76 comparisons clear 15;
-the minimum is manager versus unknown at 17.4938. The light-theme inventory contains the same
-132 values as the base and retains SHA-256
-`f9c7800e2132efcfc67dea22a6d6aaaf9d1648ba60d92fda2b296386b0649aad`.
+the minimum is manager versus unknown at 17.4938. The base light-theme inventory contains
+124 values at SHA-256 `c4f8621e8c68e7b6e0594f15a4605f3e6f8da118781bd14e42400c39c6b0b7e7`;
+head contains 132 at `f9c7800e2132efcfc67dea22a6d6aaaf9d1648ba60d92fda2b296386b0649aad`.
+The exact shared typography consequence is two changed values plus eight added role values.
+Removing those 10 leaves all 122 non-typography values byte-identical between base and head at
+`ce8624f9c559a92f30ea2ecc20b098170e412a8bd48238e31971960a392c59ef`; the guard locks both
+the preserved inventory and the exact typography exception.
 The protected static-share medallion block is byte-equal at SHA-256
 `7f4de85f6ace928938bd53bbf0bcdeb496b1c20dfebe1ca14951d0d0472600b6`.
 
@@ -183,9 +187,16 @@ lede is at most two lines at the narrowest viewport.
    `hero__live` are removed at all widths under “redundancy first” and “cut, do not rewrite.”
    Their facts remain on `/play` and/or How to Play; restoring them would break the zero-slack
    320×568 contract or create responsive-only copy variants.
-6. **Shared PWA theme color.** CSS light tokens are byte-frozen, but the manifest exposes one
-   unqualified install `theme_color`. Mapping that shared structural field to Terrace green is
-   the minimal install-surface consequence; it does not mutate the 132 light CSS values.
+6. **Shared light-theme typography roles.** The single global light/default block owns the type
+   variables used by both themes, so the required all-surface Archivo system cannot leave its
+   complete custom-property inventory byte-identical. The minimal light consequence changes
+   only `--font-family` and `--font-weight-bold`, adds the eight locked weight/tracking role
+   variables required by Terrace, and preserves the other 122 base values byte-for-byte. This
+   is the dispatch's allowed shared-architecture exception; redesigning or duplicating the
+   light theme would change more behavior.
+7. **Shared PWA theme color.** The manifest exposes one unqualified install `theme_color`.
+   Mapping that shared structural field to Terrace green is the minimal install-surface
+   consequence; it does not mutate any light color or palette token.
 
 ## Validation run
 
@@ -278,6 +289,15 @@ Base: dddf3ce50b589e409ce38197fc22bb4d2af2a42d
 - Unit commits are conventional, scoped to web presentation/tests, and listed in Git history.
 - The documentation closeout commit necessarily advances the branch after the code-head
   reviews; a fresh exact-head RED review is required before merge.
+- The first final exact-head review correctly returned **FAIL** at
+  `dbebf3df8c34f70476080354ab90c2edd39d9518`: its immutable report
+  `/tmp/terrace-final-review-dbebf3d.md` has SHA-256
+  `32018d81dd883707e6c7ae82dd519e672903be965ea4b531278489834bfae323`. Runtime and all
+  re-executed gates were green, but the report/test falsely described the new 132-entry light
+  inventory as identical to the 124-entry base and omitted the shared-typography delegated
+  decision. This fix-forward locks the 122 unchanged values plus the exact 10 intended
+  typography consequences and corrects every claim. Its new commit voids the failed head and
+  requires a new exact-head independent review.
 
 ## Git status
 

@@ -203,7 +203,7 @@ describe("Terrace dark palette", () => {
 });
 
 describe("Terrace light-mode immutability", () => {
-  it("locks every existing light custom-property value", () => {
+  it("locks the base light values and the exact shared typography consequence", () => {
     const inventory = [
       ...customPropertyInventory(tokensCss, /\[data-theme="light"\]\s*\{/u, "tokens"),
       ...customPropertyInventory(
@@ -212,11 +212,37 @@ describe("Terrace light-mode immutability", () => {
         "globals",
       ),
     ];
+    const sharedTypographyNames = new Set([
+      "--font-family",
+      "--font-weight-bold",
+      "--font-weight-display",
+      "--font-weight-heading",
+      "--font-weight-button",
+      "--tracking-display",
+      "--tracking-heading",
+      "--tracking-body",
+      "--tracking-micro",
+      "--tracking-button",
+    ]);
+    const sharedTypography = inventory.filter(([, name]) => sharedTypographyNames.has(name));
+    const preservedBaseValues = inventory.filter(([, name]) => !sharedTypographyNames.has(name));
 
-    expect(inventory).toHaveLength(132);
-    expect(createHash("sha256").update(JSON.stringify(inventory)).digest("hex")).toBe(
-      "f9c7800e2132efcfc67dea22a6d6aaaf9d1648ba60d92fda2b296386b0649aad",
+    expect(preservedBaseValues).toHaveLength(122);
+    expect(createHash("sha256").update(JSON.stringify(preservedBaseValues)).digest("hex")).toBe(
+      "ce8624f9c559a92f30ea2ecc20b098170e412a8bd48238e31971960a392c59ef",
     );
+    expect(sharedTypography).toEqual([
+      ["globals", "--font-family", '"Archivo", system-ui, sans-serif'],
+      ["globals", "--font-weight-bold", "800"],
+      ["globals", "--font-weight-display", "900"],
+      ["globals", "--font-weight-heading", "800"],
+      ["globals", "--font-weight-button", "800"],
+      ["globals", "--tracking-display", "-0.035em"],
+      ["globals", "--tracking-heading", "-0.02em"],
+      ["globals", "--tracking-body", "0"],
+      ["globals", "--tracking-micro", "0.1em"],
+      ["globals", "--tracking-button", "0.02em"],
+    ]);
   });
 
   it("keeps low ink and text-facing accents AA on light paper", () => {
