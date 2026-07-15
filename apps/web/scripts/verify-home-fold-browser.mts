@@ -359,8 +359,7 @@ async function waitForRouteReady(page: Page, pathname: RoutePath): Promise<void>
 }
 
 async function waitForInitialRouteMotion(page: Page, pathname: RoutePath): Promise<void> {
-  const animatedSurfaceSelectors =
-    pathname === "/" ? ["main > *", ".reveal > *"] : ["main > *"];
+  const animatedSurfaceSelectors = pathname === "/" ? ["main > *", ".reveal > *"] : ["main > *"];
   await page.evaluate(
     () =>
       new Promise<void>((resolve) => {
@@ -374,8 +373,7 @@ async function waitForInitialRouteMotion(page: Page, pathname: RoutePath): Promi
           element
             .getAnimations()
             .every(
-              (animation) =>
-                animation.playState !== "running" && animation.playState !== "pending",
+              (animation) => animation.playState !== "running" && animation.playState !== "pending",
             ),
         ),
       ),
@@ -1040,7 +1038,10 @@ async function main(): Promise<void> {
                   page.on("pageerror", (error) => pageErrors.push(error.message));
                   const response = await page.goto(pathname, { waitUntil: "domcontentloaded" });
                   assert(response !== null, `${pathname} did not return a main-document response`);
-                  assert(response.ok(), `${pathname} returned HTTP ${response.status().toString()}`);
+                  assert(
+                    response.ok(),
+                    `${pathname} returned HTTP ${response.status().toString()}`,
+                  );
                   await waitForRouteReady(page, pathname);
                   await page.evaluate(() => document.fonts.ready);
                   await waitForInitialRouteMotion(page, pathname);

@@ -82,14 +82,12 @@ describe("one-screen descriptor matrix", () => {
   });
 
   it("uses semantic route readiness instead of a brittle global network-idle gate", () => {
-    expect(verifierSource).toContain(
-      'page.goto(pathname, { waitUntil: "domcontentloaded" })',
-    );
+    expect(verifierSource).toContain('page.goto(pathname, { waitUntil: "domcontentloaded" })');
     expect(verifierSource).not.toContain('waitUntil: "networkidle"');
-    expect(verifierSource).toContain("assert(response.ok()");
+    expect(verifierSource).toMatch(/assert\(\s*response\.ok\(\)/u);
     expect(verifierSource).toContain("await waitForRouteReady(page, pathname)");
     expect(verifierSource).toContain("await waitForInitialRouteMotion(page, pathname)");
-    expect(verifierSource).toContain('window.location.pathname !== expectedPath');
+    expect(verifierSource).toContain("window.location.pathname !== expectedPath");
     expect(verifierSource).toContain("routeReadySelectors[pathname]");
     expect(verifierSource).toContain('pathname === "/" ? ["main > *", ".reveal > *"]');
     expect(verifierSource).toContain('animation.playState !== "running"');
@@ -162,16 +160,10 @@ describe("one-screen descriptor matrix", () => {
 
   it("pairs committed client routes with semantic readiness checks", () => {
     const modeCtaCase = gameFlowSource.slice(
-      gameFlowSource.indexOf(
-        'await page.waitForURL((url) => url.pathname === "/play/draft"',
-      ),
-      gameFlowSource.indexOf(
-        'await assertNoBrowserErrors(testCase, "mode-select CTA tap target")',
-      ),
+      gameFlowSource.indexOf('await page.waitForURL((url) => url.pathname === "/play/draft"'),
+      gameFlowSource.indexOf('await assertNoBrowserErrors(testCase, "mode-select CTA tap target")'),
     );
-    expect(modeCtaCase).toContain(
-      'getByRole("heading", { name: "Lock a formation" }).waitFor()',
-    );
+    expect(modeCtaCase).toContain('getByRole("heading", { name: "Lock a formation" }).waitFor()');
     expect(gameFlowSource).toMatch(
       /waitForURL\(\/\\\/play\\\/draft\\\?run=\[\^&\]\+\$\/,[\s\S]*?waitUntil: "commit"/u,
     );
