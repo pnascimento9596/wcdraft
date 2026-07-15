@@ -141,6 +141,7 @@ const nextBin = require.resolve("next/dist/bin/next");
 const host = "127.0.0.1";
 const strict =
   process.env.WCDRAFT_ONE_SCREEN_STRICT !== "0" && process.env.WCDRAFT_HOME_FOLD_STRICT !== "0";
+const screenshotTimeoutMs = 30_000;
 const themes: readonly Theme[] = ["light", "dark"];
 const motions: readonly Motion[] = ["no-preference", "reduce"];
 const routes: readonly RoutePath[] = ["/", "/play"];
@@ -310,6 +311,77 @@ async function hideDevOverlay(page: Page): Promise<void> {
     style.textContent = css;
     document.head.append(style);
   }, devOverlayCss);
+}
+
+const routeReadySelectors: Readonly<Record<RoutePath, readonly string[]>> = {
+  "/": [
+    ".masthead",
+    ".hero .display",
+    ".hero .hero__sub",
+    "[data-hero-spin-demo]",
+    ".hero .hero__meta",
+  ],
+  "/play": [
+    ".masthead",
+    ".game-page--mode .page-head",
+    '[aria-label="Daily progress"]',
+    '[aria-label="Draft mode"]',
+    '[role="radio"]:nth-of-type(5)',
+    "main button.btn",
+  ],
+};
+
+async function waitForRouteReady(page: Page, pathname: RoutePath): Promise<void> {
+  await page.waitForFunction(
+    ({ expectedPath, selectors }) => {
+      if (window.location.pathname !== expectedPath) return false;
+      return selectors.every((selector) => {
+        const element = document.querySelector(selector);
+        if (!(element instanceof HTMLElement)) return false;
+        const rect = element.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return false;
+        for (let current: HTMLElement | null = element; current; current = current.parentElement) {
+          const style = window.getComputedStyle(current);
+          if (
+            style.display === "none" ||
+            style.visibility === "hidden" ||
+            style.visibility === "collapse" ||
+            Number.parseFloat(style.opacity) <= 0.01
+          ) {
+            return false;
+          }
+        }
+        return true;
+      });
+    },
+    { expectedPath: pathname, selectors: routeReadySelectors[pathname] },
+  );
+}
+
+async function waitForInitialRouteMotion(page: Page, pathname: RoutePath): Promise<void> {
+  const animatedSurfaceSelectors =
+    pathname === "/" ? ["main > *", ".reveal > *"] : ["main > *"];
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }),
+  );
+  await page.waitForFunction(
+    (selectors) =>
+      selectors.every((selector) =>
+        [...document.querySelectorAll(selector)].every((element) =>
+          element
+            .getAnimations()
+            .every(
+              (animation) =>
+                animation.playState !== "running" && animation.playState !== "pending",
+            ),
+        ),
+      ),
+    animatedSurfaceSelectors,
+    { timeout: 5_000 },
+  );
 }
 
 function metricFailures(metric: FitMetric): readonly string[] {
@@ -634,7 +706,7 @@ async function captureNormalizedPng(
   expectedWidth: number,
   expectedHeight: number,
 ): Promise<Buffer> {
-  const raw = await page.screenshot({ animations });
+  const raw = await page.screenshot({ animations, timeout: screenshotTimeoutMs });
   const sharp = await sharpPromise;
   const normalized = await sharp(raw, { failOn: "warning" })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
@@ -925,22 +997,27 @@ async function main(): Promise<void> {
 
   try {
     for (const [engineName, browserType] of engineEntries) {
-      const browser = await browserType.launch({ headless: true });
-      const browserVersion = browser.version();
-      try {
-        const deviceCases = oneScreenDeviceCases(engineName);
-        resolvedDescriptors.push(
-          ...deviceCases.map((entry) => ({
-            engine: engineName,
-            name: entry.name,
-            source: entry.source,
-            viewport: entry.descriptor.viewport,
-            screen: entry.descriptor.screen,
-            defaultBrowserType: entry.descriptor.defaultBrowserType,
-            delegatedDecision: entry.delegatedDecision ?? null,
-          })),
-        );
-        for (const deviceCase of deviceCases) {
+      const deviceCases = oneScreenDeviceCases(engineName);
+      resolvedDescriptors.push(
+        ...deviceCases.map((entry) => ({
+          engine: engineName,
+          name: entry.name,
+          source: entry.source,
+          viewport: entry.descriptor.viewport,
+          screen: entry.descriptor.screen,
+          defaultBrowserType: entry.descriptor.defaultBrowserType,
+          delegatedDecision: entry.delegatedDecision ?? null,
+        })),
+      );
+      for (const deviceCase of deviceCases) {
+        // WebKit reproducibly degraded on the 64th sequential context when all
+        // 72 engine cases shared one browser: navigation first timed out, then
+        // semantic navigation exposed the same lifecycle stall at screenshot.
+        // Recycle at the device boundary so each launch owns exactly the eight
+        // theme/motion/route contexts for one descriptor.
+        const browser = await browserType.launch({ headless: true });
+        const browserVersion = browser.version();
+        try {
           for (const theme of themes) {
             for (const motion of motions) {
               for (const pathname of routes) {
@@ -961,9 +1038,13 @@ async function main(): Promise<void> {
                   const page = await context.newPage();
                   const pageErrors: string[] = [];
                   page.on("pageerror", (error) => pageErrors.push(error.message));
-                  await page.goto(pathname, { waitUntil: "networkidle" });
-                  await hideDevOverlay(page);
+                  const response = await page.goto(pathname, { waitUntil: "domcontentloaded" });
+                  assert(response !== null, `${pathname} did not return a main-document response`);
+                  assert(response.ok(), `${pathname} returned HTTP ${response.status().toString()}`);
+                  await waitForRouteReady(page, pathname);
                   await page.evaluate(() => document.fonts.ready);
+                  await waitForInitialRouteMotion(page, pathname);
+                  await hideDevOverlay(page);
                   await page.waitForTimeout(100);
                   const measured = await measurePage(page, pathname);
                   const screenshot =
@@ -1018,9 +1099,9 @@ async function main(): Promise<void> {
               }
             }
           }
+        } finally {
+          await browser.close();
         }
-      } finally {
-        await browser.close();
       }
     }
   } finally {

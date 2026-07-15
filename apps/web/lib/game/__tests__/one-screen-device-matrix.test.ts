@@ -81,6 +81,25 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).not.toContain('name: "390x844"');
   });
 
+  it("uses semantic route readiness instead of a brittle global network-idle gate", () => {
+    expect(verifierSource).toContain(
+      'page.goto(pathname, { waitUntil: "domcontentloaded" })',
+    );
+    expect(verifierSource).not.toContain('waitUntil: "networkidle"');
+    expect(verifierSource).toContain("assert(response.ok()");
+    expect(verifierSource).toContain("await waitForRouteReady(page, pathname)");
+    expect(verifierSource).toContain("await waitForInitialRouteMotion(page, pathname)");
+    expect(verifierSource).toContain('window.location.pathname !== expectedPath');
+    expect(verifierSource).toContain("routeReadySelectors[pathname]");
+    expect(verifierSource).toContain('pathname === "/" ? ["main > *", ".reveal > *"]');
+    expect(verifierSource).toContain('animation.playState !== "running"');
+    expect(verifierSource).toContain("Number.parseFloat(style.opacity) <= 0.01");
+    expect(verifierSource).toContain("Recycle at the device boundary");
+    expect(verifierSource).toContain("const browser = await browserType.launch");
+    expect(verifierSource).toContain("animations, timeout: screenshotTimeoutMs");
+    expect(verifierSource).toContain("const screenshotTimeoutMs = 30_000");
+  });
+
   it("rejects opacity-zero required content through any ancestor", () => {
     expect(verifierSource).toContain(
       "for (let current = element; current; current = current.parentElement)",
