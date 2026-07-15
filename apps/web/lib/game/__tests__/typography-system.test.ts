@@ -16,6 +16,7 @@ const LOCKED_UPPERCASE_ROLE_INVENTORY_SHA256 =
 type TrackingDeclaration = {
   readonly file: string;
   readonly line: number;
+  readonly raw: string;
   readonly value: number;
 };
 
@@ -296,12 +297,34 @@ describe("Terrace typography source contract", () => {
     );
     expect(violations).toEqual([]);
 
-    const nonEmSvgMutation = trackingDeclarations(
-      "public/flags/fixture.svg",
+    const adversarialSyntaxes = [
       '<path font-size="100" letter-spacing="60" />',
+      ".plus { letter-spacing: +0.11em; }",
+      ".calc { letter-spacing: calc(0.10em + 0.01em); }",
+    ].join("\n");
+    const adversarialViolations = trackingDeclarations(
+      "public/flags/fixture.svg",
+      adversarialSyntaxes,
     ).filter(({ value }) => value > MAX_POSITIVE_TRACKING_EM + Number.EPSILON);
-    expect(nonEmSvgMutation).toEqual([
-      { file: "public/flags/fixture.svg", line: 1, value: Number.POSITIVE_INFINITY },
+    expect(adversarialViolations).toEqual([
+      {
+        file: "public/flags/fixture.svg",
+        line: 1,
+        raw: "60",
+        value: Number.POSITIVE_INFINITY,
+      },
+      {
+        file: "public/flags/fixture.svg",
+        line: 2,
+        raw: "+0.11em",
+        value: 0.11,
+      },
+      {
+        file: "public/flags/fixture.svg",
+        line: 3,
+        raw: "calc(0.10em + 0.01em)",
+        value: Number.POSITIVE_INFINITY,
+      },
     ]);
   });
 
@@ -370,15 +393,31 @@ function collectSources(root: string): readonly { file: string; source: string }
 
 function trackingDeclarations(file: string, source: string): readonly TrackingDeclaration[] {
   const declarations: TrackingDeclaration[] = [];
-  const pattern =
-    /\b(?:letter-spacing|letterSpacing)\s*(?::|=)\s*(?:"|')?(-?(?:\d+\.?\d*|\.\d+))(em|[a-z%]+)?/giu;
+  const pattern = /\b(?:letter-spacing|letterSpacing)\s*(?::|=)\s*(?:(["'])(.*?)\1|([^;,\n}]+))/giu;
+  const allowedTokens = new Set([
+    "var(--tracking-body)",
+    "var(--tracking-button)",
+    "var(--tracking-display)",
+    "var(--tracking-heading)",
+    "var(--tracking-micro)",
+  ]);
   for (const match of source.matchAll(pattern)) {
-    const numeric = Number(match[1]);
-    const unit = match[2]?.toLowerCase() ?? "";
+    const raw = (match[2] ?? match[3] ?? "").trim();
+    const canonical = raw.replace(/\s*!important\s*$/iu, "").trim();
+    const direct = /^([+-]?(?:\d+(?:\.\d*)?|\.\d+))(em)?$/iu.exec(canonical);
+    const numeric = direct ? Number(direct[1]) : Number.NaN;
+    const value = allowedTokens.has(canonical)
+      ? 0
+      : direct?.[2]?.toLowerCase() === "em"
+        ? numeric
+        : direct && numeric === 0
+          ? 0
+          : Number.POSITIVE_INFINITY;
     declarations.push({
       file,
       line: source.slice(0, match.index).split("\n").length,
-      value: unit === "em" || numeric <= 0 ? numeric : Number.POSITIVE_INFINITY,
+      raw,
+      value,
     });
   }
   return declarations;
