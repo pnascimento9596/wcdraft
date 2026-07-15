@@ -18,7 +18,11 @@ hue-distinguishable, and the protected medallion remains byte-identical. `/` and
 fit the full document across Chromium and WebKit at descriptor-derived 320×568, 360×732,
 390×664, 430×740, 667×375, 768×1024, 1024×768, 1280×720, and disclosed
 1366×720 width-override viewports, both themes and motion modes: 144/144 contexts, zero
-failures, strict 44px targets, zoom preserved, and semantic screenshot-paint evidence.
+failures, strict 44px targets, zoom preserved, and semantic screenshot-paint evidence. The
+one-screen harness now uses HTTP + visible-route readiness, waits for only the initial finite
+surface motion, bounds screenshots at 30 seconds, and recycles each browser at the device
+boundary; this closes the independently reproduced WebKit 64th-context stall without weakening
+any fit, content, target, collision, or paint assertion.
 Signed OG/card caching moved coherently from `ogs1`/v1 to `ogs2`/v2; dynamic and default
 render bytes changed to Archivo while the secret, boot assertion, friend signing, and error
 contracts remain pinned. No data artifact was regenerated: base/head core, data, and ETL tree

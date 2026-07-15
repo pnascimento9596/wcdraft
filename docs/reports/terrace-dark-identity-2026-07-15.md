@@ -211,7 +211,7 @@ lede is at most two lines at the narrowest viewport.
 ## Validation run
 
 All lane-boundary commands below ran at reviewed code head `987f1b8` with no Turbo cache unless
-noted:
+noted; later exact-head fix-forward evidence is labeled with its own head:
 
 - `TURBO_FORCE=1 pnpm typecheck` — **9/9 tasks**, 0 cached.
 - `TURBO_FORCE=1 pnpm lint` — **6/6 tasks**, 0 cached, zero warnings.
@@ -222,6 +222,14 @@ noted:
   - responsive shell **218/218**: desktop 84, mobile 56, interactions 40, mode setup 30,
     mobile nav 8;
   - one-screen **144/144**, failures 0.
+- Final harness fix-forward `c6994f910ae7a4e12bb1aba5b90c5d64b9c17ffa` re-ran the strict
+  one-screen matrix from a fresh process: **144/144**, Chromium 72/72 + WebKit 72/72,
+  failures 0. The exact formerly blocked WebKit/Desktop Safari 1280×720 dark/reduced-motion
+  `/play` sample is 720/720 document/body height, has 11/11 semantic paint regions with
+  non-zero contribution, stable normalized PNG evidence in 2 captures, zero page errors, and
+  zero target/collision failures. The retained JSON proof is
+  `/tmp/terrace-one-screen-device-recycle/one-screen-fit.json`, SHA-256
+  `5931632371c599b7d51bca25eb907e2438c23f9fe6f2a02e3e56da9a0ffbf105`.
 - The 33-test increase over the measured 2,160-pass baseline is attributable to this lane's
   typography, contrast, device-matrix, semantic-paint, compaction, and OG regression guards.
 - `TURBO_FORCE=1 pnpm build` — **5/5 tasks**, 0 cached, **40/40 pages**; protected traces
@@ -329,12 +337,26 @@ Base: dddf3ce50b589e409ce38197fc22bb4d2af2a42d
   whole-element opacity composite and combined primary+gold cascade failures above. This third
   fix-forward replaces the unsafe global signal, preserves the combined CTA's gold cascade,
   upgrades the real-browser proof, and requires another exact-head review.
+- The following exact-head rereview correctly returned **FAIL** at
+  `2fabfb05450ac0d3b308eabdb97fb83862aafe4e`: immutable report
+  `/tmp/terrace-final-rereview-2fabfb0.md`, SHA-256
+  `1586607370de137af6d4731e6b6f765b88971e5a0f381eebe82dfa3e565328c9`. Two complete,
+  uncached root-test attempts each passed 2,193 package tests plus responsive 218/218 and
+  Chromium one-screen 72/72, then stopped at the same WebKit 64th sequential context
+  (`desktop dark reduce /play`) while waiting for global `networkidle`, leaving 135/144
+  contexts adjudicated. The fix-forward at `c6994f9` replaces that heuristic with HTTP +
+  semantic visible-route readiness, explicitly settles only initial finite route motion,
+  bounds screenshot capture, and recycles the browser per device (eight contexts per launch).
+  A diagnostic run proved the old single-browser lifecycle could move the same 64th-context
+  stall from navigation to screenshot capture; that interrupted run is not counted. The clean
+  replacement run above completed 144/144. The new commit still requires a fresh exact-head
+  independent review before merge.
 
 ## Git status
 
-The implementation worktree was clean at `987f1b8` before adding this report and `STATE.md`.
-Only those explicit documentation paths are intended for the closeout commit. The owner
-checkout was not modified.
+The implementation worktree was clean after committing the harness fix at `c6994f9`; only this
+report and `STATE.md` are intended for the follow-up evidence commit. The owner checkout was
+not modified.
 
 ## HUMAN ACTIONS
 
