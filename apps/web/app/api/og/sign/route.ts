@@ -13,6 +13,7 @@ import { signVerifiedFriendChallenge } from "@/lib/game/friend-challenge-server"
 import {
   readOgSigningSecret,
   sha256Hex,
+  SIGNED_RUN_OG_VERSION,
   signRunOgPayload,
   type SignedRunOgPayload,
 } from "@/lib/game/run-og-signing";
@@ -112,7 +113,8 @@ export async function handleRunOgSignPost(
   const now = deps.now();
   const tokenHash = await sha256Hex(run);
   const secretHash = await sha256Hex(secret);
-  const cached = readSignedOgCache(`${secretHash}:${tokenHash}`, now);
+  const signatureCacheKey = `${SIGNED_RUN_OG_VERSION.toString()}:${secretHash}:${tokenHash}`;
+  const cached = readSignedOgCache(signatureCacheKey, now);
   if (cached) {
     return NextResponse.json(
       {
@@ -146,7 +148,7 @@ export async function handleRunOgSignPost(
   }
 
   const payload: SignedRunOgPayload = {
-    v: 1,
+    v: SIGNED_RUN_OG_VERSION,
     token_hash: tokenHash,
     versions: data.gameData.versions,
     model: verified.model,
@@ -163,7 +165,7 @@ export async function handleRunOgSignPost(
     );
   }
   const cacheKey = buildRunOgCacheKey(tokenHash, payload.v);
-  writeSignedOgCache(`${secretHash}:${tokenHash}`, {
+  writeSignedOgCache(signatureCacheKey, {
     signed,
     challengeProof,
     cacheKey,

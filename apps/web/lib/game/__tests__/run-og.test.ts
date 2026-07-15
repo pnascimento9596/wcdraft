@@ -30,6 +30,7 @@ import {
 } from "../run-og-sign-rate-limiter-db";
 import {
   SIGNED_RUN_OG_PREFIX,
+  SIGNED_RUN_OG_VERSION,
   assertOgSigningSecretPresent,
   sha256Hex,
   signRunOgPayload,
@@ -81,7 +82,7 @@ async function signedOgForToken(token: string): Promise<string> {
   const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
   if (verified.status !== "accepted") throw new Error(`token did not verify: ${verified.reason}`);
   const payload: SignedRunOgPayload = {
-    v: 1,
+    v: SIGNED_RUN_OG_VERSION,
     token_hash: await sha256Hex(token),
     versions: gameData.versions,
     model: verified.model,
@@ -89,7 +90,10 @@ async function signedOgForToken(token: string): Promise<string> {
   return signRunOgPayload(payload, SECRET);
 }
 
-async function signedRawOgPayload(payload: unknown): Promise<string> {
+async function signedRawOgPayload(
+  payload: unknown,
+  prefix: string = SIGNED_RUN_OG_PREFIX,
+): Promise<string> {
   const payloadB64 = Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
   const key = await crypto.subtle.importKey(
     "raw",
@@ -99,7 +103,7 @@ async function signedRawOgPayload(payload: unknown): Promise<string> {
     ["sign"],
   );
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payloadB64));
-  return `${SIGNED_RUN_OG_PREFIX}${payloadB64}.${Buffer.from(sig).toString("base64url")}`;
+  return `${prefix}${payloadB64}.${Buffer.from(sig).toString("base64url")}`;
 }
 
 function tamperSignedOgPayload(signed: string, mutate: (payload: Record<string, unknown>) => void) {
@@ -228,25 +232,13 @@ function stubOgRouteFetch() {
     "utf8",
   );
   const fonts = new Map<string, ArrayBuffer>([
-    [
-      "/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff",
-      assets.fonts.archivoRegular,
-    ],
+    ["/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff", assets.fonts.archivoRegular],
     ["/fonts/archivo/archivo-latin-ext-400-normal.woff", assets.fonts.archivoRegularExt],
-    [
-      "/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff",
-      assets.fonts.archivoMedium,
-    ],
+    ["/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff", assets.fonts.archivoMedium],
     ["/fonts/archivo/archivo-latin-ext-500-normal.woff", assets.fonts.archivoMediumExt],
-    [
-      "/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff",
-      assets.fonts.archivoExtraBold,
-    ],
+    ["/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff", assets.fonts.archivoExtraBold],
     ["/fonts/archivo/archivo-latin-ext-800-normal.woff", assets.fonts.archivoExtraBoldExt],
-    [
-      "/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff",
-      assets.fonts.archivoBlack,
-    ],
+    ["/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff", assets.fonts.archivoBlack],
     ["/fonts/archivo/archivo-latin-ext-900-normal.woff", assets.fonts.archivoBlackExt],
   ]);
 
@@ -482,8 +474,9 @@ describe("dynamic run OG metadata decision", () => {
     expect(image.dynamic).toBe(true);
     expect(image.url).toContain("/api/og/run?");
     expect(image.url).toContain("run=t3.");
-    expect(image.url).toContain("og=ogs1.");
-    expect(image.url).toContain(`v=ogs1.${tokenHash.slice(0, 32)}`);
+    expect(image.url).toContain("og=ogs2.");
+    expect(image.url).toContain(`v=ogs2.${tokenHash.slice(0, 32)}`);
+    expect(image.url).not.toContain("ogs1.");
   });
 
   it("keeps signed historical snapshots dynamic after version anchors move", async () => {
@@ -497,7 +490,7 @@ describe("dynamic run OG metadata decision", () => {
     if (verified.status !== "accepted") return;
     const signed = await signRunOgPayload(
       {
-        v: 1,
+        v: SIGNED_RUN_OG_VERSION,
         token_hash: await sha256Hex(historicalToken),
         versions: {
           schema_version: "runtime-data-previous",
@@ -711,7 +704,7 @@ describe("trusted run OG signing", () => {
     expect(verified.model.result_label).toBe(formatRunOgResult(trueSummary));
 
     const payload: SignedRunOgPayload = {
-      v: 1,
+      v: SIGNED_RUN_OG_VERSION,
       token_hash: await sha256Hex(token),
       versions: gameData.versions,
       model: verified.model,
@@ -723,7 +716,7 @@ describe("trusted run OG signing", () => {
     expect(trusted?.model.summary).toEqual(trueSummary);
   });
 
-  it("verifies legacy signed payloads that predate the narrative field", async () => {
+  it("normalizes historical model payloads inside the v2 envelope", async () => {
     const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:legacy")));
     const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
     expect(verified.status).toBe("accepted");
@@ -731,7 +724,7 @@ describe("trusted run OG signing", () => {
     const legacyModel = { ...verified.model } as Record<string, unknown>;
     delete legacyModel.narrative;
     const legacySigned = await signedRawOgPayload({
-      v: 1,
+      v: SIGNED_RUN_OG_VERSION,
       token_hash: await sha256Hex(token),
       versions: gameData.versions,
       model: legacyModel,
@@ -740,6 +733,41 @@ describe("trusted run OG signing", () => {
     const trusted = await verifySignedRunOgPayload(legacySigned, SECRET);
     expect(trusted?.model.narrative).toBe(verified.model.result_label);
     expect(trusted?.model.team_name).toBe(verified.model.team_name);
+  });
+
+  it("rejects both old ogs1 envelopes and v1 payloads after the cache cutover", async () => {
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:v1-cutover")));
+    const verified = verifyRunTokenForOg(token, {
+      gameData,
+      scenario: SCENARIO_2026_BUNDLE,
+    });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+    const oldPayload = {
+      v: 1,
+      token_hash: await sha256Hex(token),
+      versions: gameData.versions,
+      model: verified.model,
+    };
+    const oldEnvelope = await signedRawOgPayload(oldPayload, "ogs1.");
+    const oldPayloadUnderCurrentPrefix = await signedRawOgPayload(oldPayload);
+
+    for (const signed of [oldEnvelope, oldPayloadUnderCurrentPrefix]) {
+      expect(await verifySignedRunOgPayload(signed, SECRET)).toBeNull();
+      expect(shareOgImageForRunValue(token, signed, gameData.versions)).toEqual(
+        defaultRunOgImage(),
+      );
+      const response = await runOgRouteGet(
+        new Request(
+          `http://localhost/api/og/run?run=${encodeURIComponent(token)}&og=${encodeURIComponent(signed)}`,
+        ),
+      );
+      expect(response.status).toBe(307);
+      expect(response.headers.get("location")).toBe(
+        "http://localhost/brand/marketing/og-default.png",
+      );
+    }
   });
 
   it.each([
@@ -847,8 +875,13 @@ describe("trusted run OG signing", () => {
 
     const first = await handleRunOgSignPost(request(), ogSignDeps(allowOnce));
     expect(first.status).toBe(200);
-    const firstBody = (await first.json()) as { signed?: unknown; challenge_proof?: unknown };
-    expect(typeof firstBody.signed).toBe("string");
+    const firstBody = (await first.json()) as {
+      signed?: unknown;
+      challenge_proof?: unknown;
+      cache_key?: unknown;
+    };
+    expect(firstBody.signed).toMatch(/^ogs2\./u);
+    expect(firstBody.cache_key).toMatch(/^ogs2\.[0-9a-f]{32}$/u);
     expect(firstBody.challenge_proof).toMatch(/^fc1\.[0-9a-f]{64}\.[A-Za-z0-9_-]{43}$/u);
 
     const second = await handleRunOgSignPost(request(), ogSignDeps(denyIfCalled));
@@ -964,7 +997,7 @@ describe("dynamic run OG route scope", () => {
     if (verified.status !== "accepted") return;
     const signed = await signRunOgPayload(
       {
-        v: 1,
+        v: SIGNED_RUN_OG_VERSION,
         token_hash: await sha256Hex(historicalToken),
         versions: {
           schema_version: "runtime-data-previous",
@@ -980,7 +1013,7 @@ describe("dynamic run OG route scope", () => {
     );
     const url = `http://localhost/api/og/run?run=${encodeURIComponent(
       historicalToken,
-    )}&og=${encodeURIComponent(signed)}&v=ogs1.test`;
+    )}&og=${encodeURIComponent(signed)}&v=ogs2.test`;
 
     const response = await runOgRouteGet(new Request(url));
     const bytes = Buffer.from(await response.arrayBuffer());

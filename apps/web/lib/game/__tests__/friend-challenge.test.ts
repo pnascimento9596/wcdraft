@@ -19,6 +19,7 @@ import {
   isLikelySignedFriendChallenge,
   sha256Hex,
   SIGNED_FRIEND_CHALLENGE_MAX_LEN,
+  SIGNED_RUN_OG_VERSION,
   signFriendChallengePayload,
   signRunOgPayload,
   verifySignedFriendChallengePayload,
@@ -256,7 +257,7 @@ describe("same-seed friend challenge contract", () => {
     if (verified.status !== "accepted") throw new Error("fixture did not verify");
     const ogSignature = await signRunOgPayload(
       {
-        v: 1,
+        v: SIGNED_RUN_OG_VERSION,
         token_hash: await sha256Hex(tokenA),
         versions: gameData.versions,
         model: verified.model,
