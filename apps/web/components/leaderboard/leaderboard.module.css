@@ -263,7 +263,7 @@
 .meChipRank {
   font-family: var(--font-family);
   font-size: 1rem;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* ── Rows ───────────────────────────────────────────────────────────────── */
@@ -801,7 +801,7 @@
 }
 
 .submitModeNote a {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 700;
   text-decoration: none;
 }
@@ -860,7 +860,7 @@
   font-size: 1.1rem;
 }
 .outcomeTitleGood {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .outcomeTitleGold {
   color: var(--gold);

@@ -78,8 +78,8 @@
   border-radius: 12px;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--field) 92%, black 0%),
-    color-mix(in srgb, var(--field) 78%, black 8%)
+    color-mix(in srgb, var(--field) 92%, var(--well) 0%),
+    color-mix(in srgb, var(--field) 78%, var(--well) 8%)
   );
   overflow: hidden;
 }
@@ -292,7 +292,7 @@ button.benchSlot:not(:disabled):hover {
 .mgrRating {
   margin-left: auto;
   font-family: var(--font-family);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* ── Spin reveal ───────────────────────────────────────────────────────── */
@@ -309,7 +309,7 @@ button.benchSlot:not(:disabled):hover {
   color: var(--bg);
 }
 .revealPanel .eyebrowAccent {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .revealTeam {
   display: flex;
@@ -325,7 +325,7 @@ button.benchSlot:not(:disabled):hover {
 .revealYear {
   font-family: var(--font-family);
   font-size: clamp(1.6rem, 5vw, 2.4rem);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .revealHint {
   font-size: 0.92rem;
@@ -605,7 +605,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .candManagerTag {
   margin-left: auto;
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 600;
 }
 .candAwards {
@@ -656,12 +656,12 @@ button.benchSlot:not(:disabled):hover {
 .synergyNum {
   font-family: var(--font-family);
   font-size: 2.1rem;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .deltaUp {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--teal-deep);
+  color: var(--teal-bright);
 }
 .deltaDown {
   font-size: 0.85rem;

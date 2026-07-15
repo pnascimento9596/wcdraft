@@ -144,7 +144,7 @@
 
 .spinSkipHint {
   letter-spacing: 0.08em;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .spinDrum {
   position: relative;
@@ -358,7 +358,7 @@
   letter-spacing: var(--tracking-heading);
 }
 .spinResultNation {
-  color: var(--ember);
+  color: var(--ember-bright);
 }
 .spinResultYear {
   color: var(--ink-200);

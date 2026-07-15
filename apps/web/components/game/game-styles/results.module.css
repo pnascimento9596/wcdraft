@@ -89,7 +89,7 @@
 .outcomeBigGold {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--gold) 72%, white) 0%,
+    color-mix(in srgb, var(--gold) 72%, var(--ink)) 0%,
     var(--gold) 55%,
     var(--gold-strong) 100%
   );
@@ -99,7 +99,7 @@
   /* B2 — the plate is cream in dark theme; gold text alone would fall under AA
      there. A 1px ink edge (drawn under the clipped gradient) grounds the digits
      on either plate while preserving the precious-gold fill. */
-  -webkit-text-stroke: 0.6px color-mix(in srgb, var(--gold-strong) 70%, #000);
+  -webkit-text-stroke: 0.6px color-mix(in srgb, var(--gold-strong) 70%, var(--well));
   text-shadow: 0 1px 0 color-mix(in srgb, currentColor 30%, transparent);
 }
 .outcomeWL {
@@ -324,7 +324,7 @@
 .factualRecapKicker {
   display: block;
   margin-bottom: 0.18rem;
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 0.66rem;
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--tracking-micro);
@@ -461,7 +461,7 @@
   padding: 0.35rem 0.65rem;
   border: 1px solid color-mix(in srgb, var(--accent-solid) 58%, var(--line));
   border-radius: 7px;
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 0.7rem;
   font-weight: var(--font-weight-button);
   letter-spacing: var(--tracking-button);
@@ -657,7 +657,7 @@
 }
 .boxIcon {
   flex: none;
-  color: var(--accent-solid);
+  color: var(--accent-text);
 }
 .bookingsLegend {
   display: inline-flex;
@@ -775,7 +775,7 @@
   min-width: 0;
 }
 .memoryProgressionKicker {
-  color: var(--accent);
+  color: var(--accent-text);
   font-family: var(--font-family);
   font-size: 0.68rem;
   font-weight: var(--font-weight-medium);

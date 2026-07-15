@@ -1412,7 +1412,8 @@ function RevealMetricBox({
         width="204"
         height="88"
         rx="14"
-        fill="rgba(0,0,0,0.16)"
+        fill={colors.bgEnd}
+        fillOpacity="0.72"
         stroke={colors.muted}
         strokeOpacity="0.36"
       />
@@ -1497,7 +1498,7 @@ function RevealLineRow({
       >
         {formatShareNumber(line.after_value)}
       </text>
-      <rect x="420" y="-12" width="110" height="8" rx="4" fill="rgba(0,0,0,0.22)" />
+      <rect x="420" y="-12" width="110" height="8" rx="4" fill={colors.bgEnd} fillOpacity="0.82" />
       <rect
         x="420"
         y="-12"

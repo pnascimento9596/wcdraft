@@ -10,7 +10,7 @@
   border: 1px solid color-mix(in srgb, var(--accent) 48%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 12%, var(--s1));
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 0.75rem;
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--tracking-micro);

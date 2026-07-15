@@ -465,7 +465,7 @@
 .signin-screen__crumb-num {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  color: var(--ember);
+  color: var(--ember-bright);
   letter-spacing: 0.1em;
 }
 

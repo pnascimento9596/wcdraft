@@ -69,8 +69,8 @@ export function renderVerifyInterstitialHtml(args: RenderInterstitialArgs): stri
   const token = escapeHtmlAttr(args.token);
   const next = escapeHtmlAttr(args.next);
   const csrf = escapeHtmlAttr(args.csrfToken);
-  // Minimal inline CSS keeps the page presentable without coupling to the
-  // design system; F-3 can replace this with an in-app component if needed.
+  // Minimal inline CSS keeps this standalone page aligned with the dark design
+  // tokens without coupling the prefetch-safe auth seam to the app layout.
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,13 +81,13 @@ export function renderVerifyInterstitialHtml(args: RenderInterstitialArgs): stri
   <style>
     @font-face { font-family: "Archivo"; font-style: normal; font-display: swap; font-weight: 400; src: url("/fonts/archivo/archivo-latin-400-normal.woff2") format("woff2"); }
     @font-face { font-family: "Archivo"; font-style: normal; font-display: swap; font-weight: 800; src: url("/fonts/archivo/archivo-latin-800-normal.woff2") format("woff2"); }
-    :root { color-scheme: light dark; --font-family: "Archivo", system-ui, sans-serif; }
-    body { font: 16px/1.5 var(--font-family); font-variant-numeric: tabular-nums; font-feature-settings: "kern", "liga", "tnum"; margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0d1117; color: #f0f6fc; }
+    :root { color-scheme: light dark; --font-family: "Archivo", system-ui, sans-serif; --page: #0f100e; --ink: #ebe6da; --accent: #3f9268; --accent-press: #37805b; --accent-ink: #05130c; }
+    body { font: 16px/1.5 var(--font-family); font-variant-numeric: tabular-nums; font-feature-settings: "kern", "liga", "tnum"; margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--page); color: var(--ink); }
     main { max-width: 32rem; padding: 2rem; text-align: center; }
     h1 { margin: 0 0 1rem; font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
     p { margin: 0 0 1.5rem; opacity: 0.85; }
-    button { font: inherit; font-weight: 800; letter-spacing: 0.02em; padding: 0.75rem 1.5rem; border: 0; border-radius: 0.5rem; background: #2ea043; color: white; cursor: pointer; }
-    button:hover { background: #2c974b; }
+    button { font: inherit; font-weight: 800; letter-spacing: 0.02em; padding: 0.75rem 1.5rem; border: 0; border-radius: 0.5rem; background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+    button:hover { background: var(--accent-press); }
     .meta { margin-top: 1.5rem; font-size: 0.875rem; opacity: 0.65; }
   </style>
 </head>

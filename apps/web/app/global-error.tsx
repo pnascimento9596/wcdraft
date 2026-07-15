@@ -50,38 +50,37 @@ const themeCss = `
 }
 .global-error-body {
   --font-family: "Archivo", system-ui, sans-serif;
+  --error-bg: #0f100e;
+  --error-ink: #ebe6da;
+  --error-accent: #3f9b68;
+  --error-accent-solid: #3f9268;
+  --error-accent-ink: #05130c;
+  --error-line: #42493f;
   font-family: var(--font-family);
-  background: #080809;
-  color: #edecf2;
+  background: var(--error-bg);
+  color: var(--error-ink);
 }
 .global-error-eyebrow {
-  color: #2ecf92;
+  color: var(--error-accent);
 }
 .global-error-primary {
-  background: #2ecf92;
-  color: #06130d;
+  background: var(--error-accent-solid);
+  color: var(--error-accent-ink);
   border: none;
 }
 .global-error-secondary {
   background: transparent;
-  color: #edecf2;
-  border: 1px solid rgba(220, 220, 235, 0.2);
+  color: var(--error-ink);
+  border: 1px solid var(--error-line);
 }
 @media (prefers-color-scheme: light) {
   .global-error-body {
-    background: #e7e1d2;
-    color: #16211a;
-  }
-  .global-error-eyebrow {
-    color: #067044;
-  }
-  .global-error-primary {
-    background: #2ecf92;
-    color: #06130d;
-  }
-  .global-error-secondary {
-    color: #16211a;
-    border-color: rgba(24, 36, 28, 0.28);
+    --error-bg: #e7e1d2;
+    --error-ink: #16211a;
+    --error-accent: #067044;
+    --error-accent-solid: #2ecf92;
+    --error-accent-ink: #06130d;
+    --error-line: rgba(24, 36, 28, 0.28);
   }
 }
 `;

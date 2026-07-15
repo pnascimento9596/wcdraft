@@ -50,7 +50,7 @@
   text-transform: uppercase;
 }
 .shareBrand b {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .shareSeed {
   font-family: var(--font-family);
@@ -165,7 +165,7 @@
   height: auto;
   border-radius: 22px;
   display: block;
-  box-shadow: 0 24px 70px rgba(8, 14, 12, 0.35);
+  box-shadow: var(--e3);
 }
 .shareHint {
   font-size: 0.82rem;
