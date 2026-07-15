@@ -368,6 +368,55 @@ describe("Terrace typography source contract", () => {
     expect(globals).toContain('font-feature-settings: "kern", "liga", "tnum";');
     expect(tokens).toContain("font-variant-numeric: tabular-nums;");
   });
+
+  it("pins renderer-compatible Archivo tabular derivatives for edge OG numerals", () => {
+    const route = readFileSync(path.join(WEB_ROOT, "app/api/og/run/route.tsx"), "utf8");
+    const runOg = readFileSync(path.join(WEB_ROOT, "lib/game/run-og-image.tsx"), "utf8");
+    const shareScreen = readFileSync(
+      path.join(WEB_ROOT, "components/game/share-screen.tsx"),
+      "utf8",
+    );
+    const staticShare = readFileSync(path.join(WEB_ROOT, "public/og/share-default.svg"), "utf8");
+    const expected = [
+      {
+        weight: 400,
+        source: "9c0a51442fdc30e015f734d04fd957ae00e3f39cc07817050735da301c0d7eda",
+        derived: "da77a6ed32a65aade9d833855981c3c6dad4fde8c37f948391275feef4f1fb6b",
+      },
+      {
+        weight: 500,
+        source: "29719fa13f06afbcc46f373e9e94f4ade13aca0fc997e7b4d35fea203cad776c",
+        derived: "17e321fbc9b4a0f31cd61ad297184dd623e47ac0a0e5fa8177df6a312ceac61e",
+      },
+      {
+        weight: 800,
+        source: "585c9cce853f7140238c31f858aa01f8e913cd1ac88f7675f3f8ed26227f93c5",
+        derived: "8b64ef4afd88ae8362d108eafd9fc649fef9cfdab2b2e69f1817561dad44ea36",
+      },
+      {
+        weight: 900,
+        source: "ee2d90e2a8b1155feb250563fc718e19de211756576108019bbb8d7d3b86c62c",
+        derived: "4992706e9cabce7c65cf32d37aa4bc71b0f3f1113d4f13fa98ffd0d7008450bd",
+      },
+    ] as const;
+
+    for (const { weight, source, derived } of expected) {
+      const sourceFont = readFileSync(
+        path.join(WEB_ROOT, `public/fonts/archivo/archivo-latin-${weight}-normal.woff`),
+      );
+      const derivedPath = `public/fonts/archivo-og-tabular/archivo-latin-${weight}-og-tabular.woff`;
+      const derivedFont = readFileSync(path.join(WEB_ROOT, derivedPath));
+      expect(createHash("sha256").update(sourceFont).digest("hex")).toBe(source);
+      expect(createHash("sha256").update(derivedFont).digest("hex")).toBe(derived);
+      expect(route).toContain(`/${derivedPath.replace(/^public\//u, "")}`);
+    }
+
+    expect(runOg).toContain('fontVariantNumeric: "tabular-nums"');
+    expect(shareScreen).toContain('font-variant-numeric:tabular-nums');
+    expect(shareScreen).toContain('font-feature-settings:"tnum" 1');
+    expect(staticShare).toContain('font-variant-numeric:tabular-nums');
+    expect(staticShare).toContain('font-feature-settings:"tnum" 1');
+  });
 });
 
 function authoredSources(roots: readonly string[]): readonly { file: string; source: string }[] {

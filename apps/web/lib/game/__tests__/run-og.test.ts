@@ -1,8 +1,11 @@
 import { readFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
+import { inflateSync } from "node:zlib";
 
 import { buildNarrative } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
+import { ImageResponse } from "next/og";
+import { createElement } from "react";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -171,25 +174,37 @@ function localAssets(): RunOgImageAssets {
     )}`,
     fonts: {
       archivoRegular: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-400-normal.woff", import.meta.url),
+        new URL(
+          "../../../public/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff",
+          import.meta.url,
+        ),
       ),
       archivoRegularExt: readArrayBuffer(
         new URL("../../../public/fonts/archivo/archivo-latin-ext-400-normal.woff", import.meta.url),
       ),
       archivoMedium: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-500-normal.woff", import.meta.url),
+        new URL(
+          "../../../public/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff",
+          import.meta.url,
+        ),
       ),
       archivoMediumExt: readArrayBuffer(
         new URL("../../../public/fonts/archivo/archivo-latin-ext-500-normal.woff", import.meta.url),
       ),
       archivoExtraBold: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-800-normal.woff", import.meta.url),
+        new URL(
+          "../../../public/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff",
+          import.meta.url,
+        ),
       ),
       archivoExtraBoldExt: readArrayBuffer(
         new URL("../../../public/fonts/archivo/archivo-latin-ext-800-normal.woff", import.meta.url),
       ),
       archivoBlack: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-900-normal.woff", import.meta.url),
+        new URL(
+          "../../../public/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff",
+          import.meta.url,
+        ),
       ),
       archivoBlackExt: readArrayBuffer(
         new URL("../../../public/fonts/archivo/archivo-latin-ext-900-normal.woff", import.meta.url),
@@ -213,13 +228,25 @@ function stubOgRouteFetch() {
     "utf8",
   );
   const fonts = new Map<string, ArrayBuffer>([
-    ["/fonts/archivo/archivo-latin-400-normal.woff", assets.fonts.archivoRegular],
+    [
+      "/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff",
+      assets.fonts.archivoRegular,
+    ],
     ["/fonts/archivo/archivo-latin-ext-400-normal.woff", assets.fonts.archivoRegularExt],
-    ["/fonts/archivo/archivo-latin-500-normal.woff", assets.fonts.archivoMedium],
+    [
+      "/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff",
+      assets.fonts.archivoMedium,
+    ],
     ["/fonts/archivo/archivo-latin-ext-500-normal.woff", assets.fonts.archivoMediumExt],
-    ["/fonts/archivo/archivo-latin-800-normal.woff", assets.fonts.archivoExtraBold],
+    [
+      "/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff",
+      assets.fonts.archivoExtraBold,
+    ],
     ["/fonts/archivo/archivo-latin-ext-800-normal.woff", assets.fonts.archivoExtraBoldExt],
-    ["/fonts/archivo/archivo-latin-900-normal.woff", assets.fonts.archivoBlack],
+    [
+      "/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff",
+      assets.fonts.archivoBlack,
+    ],
     ["/fonts/archivo/archivo-latin-ext-900-normal.woff", assets.fonts.archivoBlackExt],
   ]);
 
@@ -240,6 +267,133 @@ function stubOgRouteFetch() {
       return new Response("not found", { status: 404 });
     }),
   );
+}
+
+async function renderNumericBandWidth(font: ArrayBuffer, digits: string): Promise<number> {
+  const image = new ImageResponse(
+    createElement(
+      "div",
+      {
+        style: {
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#000000",
+        },
+      },
+      createElement(
+        "div",
+        {
+          style: {
+            display: "flex",
+            background: "#ff0000",
+            color: "#ffffff",
+            fontFamily: "Archivo",
+            fontSize: 60,
+            fontWeight: 500,
+            lineHeight: 1,
+          },
+        },
+        digits,
+      ),
+    ),
+    {
+      width: 500,
+      height: 160,
+      fonts: [{ name: "Archivo", data: font, weight: 500, style: "normal" }],
+    },
+  );
+  return exactRedBandWidth(Buffer.from(await image.arrayBuffer()));
+}
+
+function exactRedBandWidth(png: Buffer): number {
+  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  if (!png.subarray(0, signature.length).equals(signature)) {
+    throw new Error("numeric-band receipt is not a PNG");
+  }
+
+  let width = 0;
+  let height = 0;
+  let bitDepth = 0;
+  let colorType = 0;
+  const compressed: Buffer[] = [];
+  for (let offset = signature.length; offset + 12 <= png.length; ) {
+    const length = png.readUInt32BE(offset);
+    const type = png.toString("ascii", offset + 4, offset + 8);
+    const data = png.subarray(offset + 8, offset + 8 + length);
+    if (type === "IHDR") {
+      width = data.readUInt32BE(0);
+      height = data.readUInt32BE(4);
+      bitDepth = data[8]!;
+      colorType = data[9]!;
+    } else if (type === "IDAT") {
+      compressed.push(data);
+    }
+    offset += length + 12;
+    if (type === "IEND") break;
+  }
+
+  if (width <= 0 || height <= 0 || bitDepth !== 8 || ![2, 6].includes(colorType)) {
+    throw new Error(
+      `unsupported numeric-band PNG: ${width}x${height}, depth ${bitDepth}, type ${colorType}`,
+    );
+  }
+  const bytesPerPixel = colorType === 6 ? 4 : 3;
+  const stride = width * bytesPerPixel;
+  const filtered = inflateSync(Buffer.concat(compressed));
+  let previous = new Uint8Array(stride);
+  let sourceOffset = 0;
+  let minX = width;
+  let maxX = -1;
+
+  for (let y = 0; y < height; y += 1) {
+    const filter = filtered[sourceOffset++]!;
+    const row = new Uint8Array(stride);
+    for (let i = 0; i < stride; i += 1) {
+      const raw = filtered[sourceOffset++]!;
+      const left = i >= bytesPerPixel ? row[i - bytesPerPixel]! : 0;
+      const up = previous[i]!;
+      const upLeft = i >= bytesPerPixel ? previous[i - bytesPerPixel]! : 0;
+      const predictor =
+        filter === 0
+          ? 0
+          : filter === 1
+            ? left
+            : filter === 2
+              ? up
+              : filter === 3
+                ? Math.floor((left + up) / 2)
+                : filter === 4
+                  ? paeth(left, up, upLeft)
+                  : Number.NaN;
+      if (!Number.isFinite(predictor)) throw new Error(`unsupported PNG filter ${filter}`);
+      row[i] = (raw + predictor) & 0xff;
+    }
+    for (let x = 0; x < width; x += 1) {
+      const pixel = x * bytesPerPixel;
+      const opaque = colorType === 2 || row[pixel + 3]! > 0;
+      if (opaque && row[pixel] === 255 && row[pixel + 1] === 0 && row[pixel + 2] === 0) {
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+      }
+    }
+    previous = row;
+  }
+
+  if (maxX < minX) throw new Error("numeric-band PNG contains no exact red pixels");
+  return maxX - minX + 1;
+}
+
+function paeth(left: number, up: number, upLeft: number): number {
+  const estimate = left + up - upLeft;
+  const leftDistance = Math.abs(estimate - left);
+  const upDistance = Math.abs(estimate - up);
+  const upLeftDistance = Math.abs(estimate - upLeft);
+  if (leftDistance <= upDistance && leftDistance <= upLeftDistance) return left;
+  if (upDistance <= upLeftDistance) return up;
+  return upLeft;
 }
 
 describe("dynamic run OG tokens", () => {
@@ -365,6 +519,24 @@ describe("dynamic run OG metadata decision", () => {
 });
 
 describe("dynamic run OG model and image", () => {
+  it("uses renderer-compatible default tabular glyphs for OG data numerals", async () => {
+    const upstreamMedium = readArrayBuffer(
+      new URL("../../../public/fonts/archivo/archivo-latin-500-normal.woff", import.meta.url),
+    );
+    const tabularMedium = localAssets().fonts.archivoMedium;
+
+    const [upstreamOnes, upstreamEights, tabularOnes, tabularEights] = await Promise.all([
+      renderNumericBandWidth(upstreamMedium, "111111"),
+      renderNumericBandWidth(upstreamMedium, "888888"),
+      renderNumericBandWidth(tabularMedium, "111111"),
+      renderNumericBandWidth(tabularMedium, "888888"),
+    ]);
+
+    expect(upstreamOnes).not.toBe(upstreamEights);
+    expect(tabularOnes).toBeGreaterThan(0);
+    expect(tabularOnes).toBe(tabularEights);
+  });
+
   it("reports the real pre-Season-2 production token as wrong-season skew", () => {
     expect(
       verifyRunTokenForOg(skewFixtures.shipped_pre_s2_t3.token, {
@@ -497,7 +669,7 @@ describe("dynamic run OG model and image", () => {
     const b = Buffer.from(await renderRunOgImage(model, assets).arrayBuffer());
 
     expect(Buffer.compare(a, b)).toBe(0);
-    expect(fontBytes).toBe(147_268);
+    expect(fontBytes).toBe(150_032);
     expect(fontBytes).toBeLessThan(500_000);
     expect(a.length).toBeLessThan(500_000);
   });

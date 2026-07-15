@@ -91,6 +91,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
         background: P.pageBg,
         color: P.text,
         fontFamily: "Archivo",
+        fontVariantNumeric: "tabular-nums",
         overflow: "hidden",
       }}
     >

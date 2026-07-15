@@ -288,7 +288,7 @@ const SHARE_SVG_FONT_CONTRACT = `${SVG_FONT_FILES.map(
     `@font-face{font-family:"Archivo";font-style:normal;font-weight:${weight};src:url("${url}") format("woff2")}`,
 ).join("\n")}
 :root{--font-family:"Archivo",sans-serif}
-svg,text,tspan{font-family:var(--font-family)}`;
+svg,text,tspan{font-family:var(--font-family);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}`;
 
 let embeddedShareSvgFontContractPromise: Promise<string> | null = null;
 
@@ -315,7 +315,7 @@ async function loadEmbeddedShareSvgFontContract(): Promise<string> {
       (faces) =>
         `${faces.join("\n")}
 :root{--font-family:"Archivo",sans-serif}
-svg,text,tspan{font-family:var(--font-family)}`,
+svg,text,tspan{font-family:var(--font-family);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}`,
     );
   }
   return embeddedShareSvgFontContractPromise;
@@ -331,6 +331,7 @@ function upsertShareSvgFontContract(svg: SVGSVGElement, css: string) {
   }
   style.textContent = css;
   svg.setAttribute("font-family", "var(--font-family)");
+  svg.setAttribute("font-variant-numeric", "tabular-nums");
 }
 
 async function embedShareSvgFontContract(svg: SVGSVGElement) {

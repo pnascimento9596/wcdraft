@@ -61,13 +61,21 @@ function loadAssets(request: Request): Promise<RunOgImageAssets> {
       archivoBlackExt,
     ] = await Promise.all([
       fetchTextAsset(new URL("/brand/logo-mark.svg", base)),
-      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-400-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff", base),
+      ),
       fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-400-normal.woff", base)),
-      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-500-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff", base),
+      ),
       fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-500-normal.woff", base)),
-      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-800-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff", base),
+      ),
       fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-800-normal.woff", base)),
-      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-900-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff", base),
+      ),
       fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-900-normal.woff", base)),
     ]);
     return {
