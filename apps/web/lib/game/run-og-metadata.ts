@@ -1,5 +1,5 @@
 import { decodeRunToken, type RunTokenOgSummary } from "./run-token";
-import { isLikelySignedRunOg, SIGNED_RUN_OG_PREFIX } from "./run-og-signing";
+import { isLikelySignedRunOg, SIGNED_RUN_OG_PREFIX, SIGNED_RUN_OG_VERSION } from "./run-og-signing";
 import { RUN_OG_HEIGHT, RUN_OG_IMAGE_ROUTE, RUN_OG_WIDTH } from "./run-og-constants";
 import type { RunRecordVersions } from "./versions";
 import { OG_DEFAULT_IMAGE, OG_DEFAULT_IMAGE_ALT } from "../site-metadata";
@@ -82,7 +82,7 @@ function readSignedRunOgCacheHint(value: string): { tokenHash: string; version: 
   }
   if (!parsed || typeof parsed !== "object") return null;
   const payload = parsed as Record<string, unknown>;
-  if (payload.v !== 1) return null;
+  if (payload.v !== SIGNED_RUN_OG_VERSION) return null;
   const tokenHash = payload.token_hash;
   if (typeof tokenHash !== "string" || !/^[0-9a-f]{64}$/u.test(tokenHash)) return null;
   return { tokenHash, version: payload.v };

@@ -16,8 +16,9 @@
 .teamNameLabel {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-400);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
 }
 
@@ -120,7 +121,8 @@
 }
 
 .channelLabel {
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
 }
 
@@ -176,10 +178,16 @@
 /* ── Broadcast tactics review overrides ────────────────────────────────── */
 
 .teamNameLabel,
-.panelSubTitle,
 .channelLabel {
   font-family: var(--font-family);
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
+}
+
+.panelSubTitle {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
 }
 
 .teamNameInput {

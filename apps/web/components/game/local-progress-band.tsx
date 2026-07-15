@@ -89,10 +89,20 @@ export function LocalProgressBand({
 
   return (
     <section className={className} aria-label="Daily progress">
-      <div className={s.localProgressPrimary}>
-        <span className={s.localProgressStreak}>{streakLabel}-DAY STREAK</span>
-        <span className={s.localProgressCountdown} suppressHydrationWarning>
-          NEXT DRAFT IN {countdown}
+      <div className={s.localProgressRow}>
+        <span aria-label={`${streakLabel} day streak`}>Streak {streakLabel}</span>
+        <span aria-label={`Today's best ${formatBestScore(summary.todayBest)}`}>
+          Today {formatBestScore(summary.todayBest)}
+        </span>
+        <span aria-label={`All-time best ${formatBestScore(summary.allTimeBest)}`}>
+          All-time {formatBestScore(summary.allTimeBest)}
+        </span>
+        <span
+          className={s.localProgressCountdown}
+          aria-label={`Next draft in ${countdown}`}
+          suppressHydrationWarning
+        >
+          {countdown}
         </span>
       </div>
       {friendRun ? (
@@ -100,10 +110,6 @@ export function LocalProgressBand({
           Friend&apos;s run: {friendRun.record ?? "—"} · {friendRun.score} pts to beat
         </p>
       ) : null}
-      <div className={s.localProgressBest}>
-        <span>Today&apos;s best: {formatBestScore(summary.todayBest)}</span>
-        <span>All-time best: {formatBestScore(summary.allTimeBest)}</span>
-      </div>
       {timedOut && onRetry ? (
         <p className={s.localProgressNudge} role="alert">
           <span>Progress took too long to load. </span>

@@ -1,56 +1,57 @@
 /* ========================================================================
-   wcdraft — design tokens  (dark-first "premium arcade")
+   wcdraft — design tokens  (dark-first "Terrace")
    ===================================================================== */
 
 :root {
-  /* ---- Canvas ramp (warm-neutral, dark) ---- */
-  --bg-void: #080809;
-  --bg-900: #0e0e10;
-  --bg-850: #0e0e10; /* app canvas */
-  --bg-800: #161618; /* card */
-  --bg-750: #1e1e21; /* raised / selected */
-  --bg-700: #25252a; /* popover / active */
-  --bg-650: #25252a; /* hover / chips */
+  /* ---- Canvas ramp (warm Terrace dark) ---- */
+  --bg-void: #0f100e;
+  --bg-900: #151512;
+  --bg-850: #151512; /* app canvas */
+  --bg-800: #1a1d19; /* card */
+  --bg-750: #212520; /* raised / selected */
+  --bg-700: #292c28; /* popover / active */
+  --bg-650: #292c28; /* hover / chips */
 
-  --line: rgba(220, 220, 235, 0.11);
-  --line-1: rgba(220, 220, 235, 0.06);
-  --line-2: rgba(220, 220, 235, 0.2);
+  --line: #2b2f29;
+  --line-1: #1f211d;
+  --line-2: #42493f;
   --line-strong: var(--line-2);
 
-  /* ---- Ink (cool white) ---- */
-  --ink-100: #edecf2; /* hi */
-  --ink-200: #c5c3d4;
-  --ink-300: #9695a8; /* mid */
+  /* ---- Ink (warm bone) ---- */
+  --ink-100: #ebe6da; /* hi */
+  --ink-200: #c3c1b5;
+  --ink-300: #96968a; /* mid */
   /* low body ink — AA ≥4.5 on canvas (--bg-850), cards (--bg-800), and raised (--bg-750) */
-  --ink-400: #8a899c;
-  --ink-500: #424153; /* faint / disabled */
+  --ink-400: #8a8b7f;
+  --ink-500: #474c40; /* faint / disabled */
 
-  /* ---- Duotone v2 — CYAN (primary brand + action + structure) + GOLD (precious: the draft
-     moment, legend, champion, award ONLY). Cyan does the everyday work; gold is rare and earned. */
+  /* ---- Terrace color roles — provenance keeps cyan; bottle green owns action + structure;
+     vintage gold remains precious: draft moment, legend, champion, award ONLY. ---- */
   --cyan: #35c2d6;
   --cyan-bright: #35c2d6;
   --cyan-deep: #10809e;
 
-  --gold: #f5b62a;
-  --gold-bright: #f5b62a;
-  --gold-deep: #caa022;
-  --brand-gold-start: #c8861a;
-  --brand-gold-mid: #f5b62a;
-  --brand-gold-end: #ffd86a;
-  --brand-mark-gold-start: var(--brand-gold-start);
-  --brand-mark-gold-mid: var(--brand-gold-mid);
-  --brand-mark-gold-end: var(--brand-gold-end);
+  --gold: #d4a94e;
+  --gold-bright: #d4a94e;
+  --gold-deep: #b69143;
+  --brand-gold-start: #ac7e34;
+  --brand-gold-mid: #d4a94e;
+  --brand-gold-end: #f1c15c;
+  /* The medallion is explicitly out of scope and retains its approved gold. */
+  --brand-mark-gold-start: #c8861a;
+  --brand-mark-gold-mid: #f5b62a;
+  --brand-mark-gold-end: #ffd86a;
 
-  --teal: #2ecf92;
-  --teal-bright: #2ecf92;
-  --teal-deep: #1c9c70;
+  --teal: #3f9268;
+  --teal-bright: #3fa268;
+  --teal-deep: #2f6d4d;
 
-  /* legacy aliases — ember now == CYAN (the primary), so existing components adopt the new brand */
-  --ember: #2ecf92;
-  --ember-bright: #2ecf92;
-  --ember-deep: #1c9c70;
-  --amber: #f5b62a;
-  --amber-bright: #ffd45e;
+  /* Legacy aliases remain wired so existing components inherit Terrace without a new namespace. */
+  --ember: #3f9268;
+  --ember-bright: #3fa268;
+  --ember-deep: #2f6d4d;
+  --amber: #d4a94e;
+  --amber-bright: #efbe58;
 
   /* ---- Lock / committed — its OWN treatment, off the accent palette (cool steel) ---- */
   --lock: #c5cbd6;
@@ -58,7 +59,7 @@
   --lock-rgb: 197, 203, 214;
 
   /* ---- Functional / result states ---- */
-  --win: #f5b62a; /* gold = the win (precious) */
+  --win: #d4a94e; /* gold = the win (precious) */
   --loss: #ff4d63;
   --draw: #8b93a0;
   --warn: #ffce5a;
@@ -71,37 +72,45 @@
   --prov-projected: #94a1f2; /* modelled */
   --prov-estimate: #f0913f; /* inferred */
   --prov-manager: #93a2b3; /* staff card */
-  --prov-legend: #f5b62a; /* elite */
-  --prov-unknown: #717c75; /* the "—" */
+  --prov-legend: #d4a94e; /* elite */
+  --prov-unknown: #7b867f; /* the "—"; minimally lifted to AA on cards */
 
   /* provenance rgb triples (kept in sync for fills in JS + CSS) */
   --prov-historical-rgb: 53, 194, 214;
   --prov-projected-rgb: 148, 161, 242;
   --prov-estimate-rgb: 240, 145, 63;
   --prov-manager-rgb: 147, 162, 179;
-  --prov-legend-rgb: 245, 182, 42;
+  --prov-legend-rgb: 212, 169, 78;
 
   /* ---- Position — encoded by SHAPE, not hue (orthogonal to provenance).
      Glyphs render in neutral ink; these tints are used only for tiny legend dots, never on cards. ---- */
-  --pos-gk: #9695a8;
-  --pos-def: #9695a8;
-  --pos-mid: #9695a8;
-  --pos-fwd: #f5b62a;
+  --pos-gk: #96968a;
+  --pos-def: #96968a;
+  --pos-mid: #96968a;
+  --pos-fwd: #d4a94e;
 
   /* ---- Pitch surface (theme-aware chalk + chip lines) ----
      The pitch backdrop is bg-800 + a teal wash in BOTH themes, so chalk
      lines / recessed empty-slot borders can't be white literals — they must
      darken when the pitch goes pale in light mode. */
-  --pitch-line: rgba(46, 207, 146, 0.42);
-  --pitch-slot-line: rgba(220, 220, 235, 0.2);
-  --pitch-accent-mute: rgba(220, 220, 235, 0.2);
+  --pitch-line: rgba(63, 146, 104, 0.42);
+  --pitch-slot-line: var(--line-2);
+  --pitch-accent-mute: var(--line-2);
 
   /* ---- Type ---- */
-  --font-family: "Space Grotesk", system-ui, sans-serif;
+  --font-family: "Archivo", system-ui, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  --font-weight-bold: 800;
+  --font-weight-display: 900;
+  --font-weight-heading: 800;
+  --font-weight-button: 800;
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.02em;
+  --tracking-body: 0;
+  --tracking-micro: 0.1em;
+  --tracking-button: 0.02em;
 
   /* type scale (px) */
   --t-hero: clamp(56px, 9vw, 132px);
@@ -273,9 +282,9 @@ body {
 }
 .display {
   font-family: var(--font-family);
-  font-weight: 700;
+  font-weight: var(--font-weight-display);
   line-height: 0.92;
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-display);
 }
 
 @media (prefers-reduced-motion: reduce) {

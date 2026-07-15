@@ -1,3 +1,22 @@
+.page:global(.game-page) {
+  padding-block: clamp(0.75rem, 2vh, 1.25rem);
+}
+
+.pageHead:global(.page-head) {
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.5rem;
+}
+
+.title:global(.display) {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.lede:global(.lede) {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
 @media (max-width: 430px) {
   .page:global(.game-page) {
     min-block-size: calc(100svh - 3.35rem - 1px - env(safe-area-inset-top, 0px));
@@ -23,6 +42,36 @@
   .lede:global(.lede) {
     font-size: 0.8rem;
     line-height: 1.3;
+  }
+}
+
+@media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
+  .page:global(.game-page) {
+    padding-block: 0.25rem 0;
+  }
+
+  .pageHead:global(.page-head) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.1rem 0.6rem;
+    margin-bottom: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .pageHead :global(.eyebrow) {
+    font-size: 0.55rem;
+  }
+
+  .title:global(.display) {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  .lede:global(.lede) {
+    flex-basis: 100%;
+    font-size: 0.7rem;
+    line-height: 1.2;
   }
 }
 
