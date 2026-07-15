@@ -81,7 +81,7 @@ export function renderVerifyInterstitialHtml(args: RenderInterstitialArgs): stri
   <style>
     @font-face { font-family: "Archivo"; font-style: normal; font-display: swap; font-weight: 400; src: url("/fonts/archivo/archivo-latin-400-normal.woff2") format("woff2"); }
     @font-face { font-family: "Archivo"; font-style: normal; font-display: swap; font-weight: 800; src: url("/fonts/archivo/archivo-latin-800-normal.woff2") format("woff2"); }
-    :root { color-scheme: light dark; --font-family: "Archivo", system-ui, sans-serif; --page: #0f100e; --ink: #ebe6da; --accent: #3f9268; --accent-press: #37805b; --accent-ink: #05130c; }
+    :root { color-scheme: light dark; --font-family: "Archivo", system-ui, sans-serif; --page: #0f100e; --ink: #ebe6da; --accent: #3f9268; --accent-press: #408964; --accent-ink: #05130c; }
     body { font: 16px/1.5 var(--font-family); font-variant-numeric: tabular-nums; font-feature-settings: "kern", "liga", "tnum"; margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--page); color: var(--ink); }
     main { max-width: 32rem; padding: 2rem; text-align: center; }
     h1 { margin: 0 0 1rem; font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }

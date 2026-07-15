@@ -79,6 +79,7 @@ from the shipped stop so minimal adjustments remain visible.
 | Secondary low ink      | `#8a8a7e`           | `#8a8b7f` | Minimal lift; 5.5236 / 4.9284 / **4.5033** on page/card/raised                 |
 | Green structure/action | `#3f9268`           | `#3f9268` | 5.0172 page, 4.4766 card; remains structural where below AA                    |
 | Green text             | derived from target | `#3fa268` | Minimal text-safe lift; 5.9771 / 5.3330 / 4.8731; 4.5092 on actual tinted card |
+| Pressed green action   | `#37805b`           | `#408964` | Uniform sRGB +9; `#3f8863` (+8) is 4.4467, shipped is 4.5074 on `#05130c`      |
 | Vintage gold           | `#d4a94e`           | `#d4a94e` | 8.7072 / 7.7690 / 7.0989 on page/card/raised                                   |
 | On-green ink           | `#05130c`           | `#05130c` | 4.9984 on structural green                                                     |
 | On-gold ink            | `#1a1305`           | `#1a1305` | 8.4130 on gold                                                                 |
@@ -87,8 +88,11 @@ The rejected predecessor `#3fa168` measured 4.4611 on the actual 14% green-tinte
 proving that the one-channel lift to `#3fa268` is necessary and minimal. Derived intermediate
 AA text stops also clear their actual surfaces: bone ink 200 has a worst ratio of 8.6032,
 bone ink 300 has 5.2041, deep gold has 5.2737, and bright gold has 9.0186 on the raised
-surface. The executable inventory checked 87/87 declared text/background pairings with zero
-failures.
+surface. The first final rereview exposed that the original pressed fill `#37805b` produced
+only 3.9833 against action ink on `.btn--primary:active` and standalone auth hover. The
+smallest uniform channel lift that clears AA is +9: `#408964` produces 4.5074, while +8
+remains 4.4467. The executable inventory now covers the token plus both actual text-bearing
+state surfaces with zero known failures.
 
 Provenance remains hue-based and position remains shape-based. Page/card ratios are historical
 8.9384/7.9752, projected 7.8484/7.0027, estimate 8.0189/7.1549, manager
@@ -298,6 +302,13 @@ Base: dddf3ce50b589e409ce38197fc22bb4d2af2a42d
   decision. This fix-forward locks the 122 unchanged values plus the exact 10 intended
   typography consequences and corrects every claim. Its new commit voids the failed head and
   requires a new exact-head independent review.
+- The replacement exact-head rereview correctly returned **FAIL** at
+  `5dd7edc4446b60ce2bb60a9d9e102d3dcf053bb6`: immutable report
+  `/tmp/terrace-final-rereview-5dd7edc.md`, SHA-256
+  `ea3c71c646e64035b9af2a7363ea6f9771192b9bf0c7f111bdb53f65a8a36e10`. It independently
+  confirmed the light proof was repaired, then found the pressed/hover action pairing omitted
+  by the 87-pair guard. This second fix-forward minimally lifts the pressed fill, covers both
+  real usages, and again requires a new exact-head review.
 
 ## Git status
 

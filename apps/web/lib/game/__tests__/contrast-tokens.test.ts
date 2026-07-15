@@ -3,6 +3,8 @@ import { readFileSync, readdirSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import { RUN_SURFACE_PALETTE } from "../run-palette";
+
 const AA_BODY = 4.5;
 const AA_LARGE = 3.0;
 const RAMP_POSITION_TOLERANCE = 0.006;
@@ -17,6 +19,10 @@ const manifestSource = readFileSync(new URL("../../../app/manifest.ts", import.m
 const layoutSource = readFileSync(new URL("../../../app/layout.tsx", import.meta.url), "utf8");
 const shareDefaultSvg = readFileSync(
   new URL("../../../public/og/share-default.svg", import.meta.url),
+  "utf8",
+);
+const verifyFlowSource = readFileSync(
+  new URL("../../auth/verify-flow.ts", import.meta.url),
   "utf8",
 );
 
@@ -36,6 +42,7 @@ const TERRACE = {
   border: "#2b2f29",
   ink: "#ebe6da",
   accent: "#3f9268",
+  accentPress: "#408964",
   accentText: "#3fa268",
   gold: "#d4a94e",
   onAccent: "#05130c",
@@ -62,6 +69,7 @@ describe("Terrace dark palette", () => {
     expect(requireVar(darkGlobals, "--line")).toBe(TERRACE.border);
     expect(requireVar(darkGlobals, "--tx")).toBe(TERRACE.ink);
     expect(requireVar(darkGlobals, "--accent-solid")).toBe(TERRACE.accent);
+    expect(requireVar(darkGlobals, "--accent-press")).toBe(TERRACE.accentPress);
     expect(requireVar(darkGlobals, "--accent-text")).toBe(TERRACE.accentText);
     expect(requireVar(darkGlobals, "--gold-solid")).toBe(TERRACE.gold);
     expect(requireVar(darkGlobals, "--accent-on-solid")).toBe(TERRACE.onAccent);
@@ -151,9 +159,23 @@ describe("Terrace dark palette", () => {
     expect(contrastRatio(text, tintedCard)).toBeGreaterThanOrEqual(AA_BODY);
   });
 
-  it("keeps CTA ink AA against the approved structural fills", () => {
+  it("keeps CTA ink AA across the solid, pressed, and standalone auth fills", () => {
+    const darkGlobals = varsFromBlock(globalsCss, /:root\[data-theme="dark"\]\s*\{/u);
+    const pressed = requireVar(darkGlobals, "--accent-press");
+
     expect(contrastRatio(TERRACE.onAccent, TERRACE.accent)).toBeGreaterThanOrEqual(AA_BODY);
+    expect(pressed).toBe(TERRACE.accentPress);
+    expect(contrastRatio(TERRACE.onAccent, "#37805b")).toBeCloseTo(3.9833, 3);
+    expect(contrastRatio(TERRACE.onAccent, "#3f8863")).toBeLessThan(AA_BODY);
+    expect(contrastRatio(TERRACE.onAccent, pressed)).toBeCloseTo(4.5074, 3);
+    expect(contrastRatio(TERRACE.onAccent, pressed)).toBeGreaterThanOrEqual(AA_BODY);
     expect(contrastRatio(TERRACE.onGold, TERRACE.gold)).toBeGreaterThanOrEqual(AA_BODY);
+    expect(globalsCss).toMatch(
+      /\.btn--primary:active\s*\{[^}]*background:\s*var\(--accent-press\);/u,
+    );
+    expect(verifyFlowSource).toContain("--accent-press: #408964");
+    expect(verifyFlowSource).toContain("button:hover { background: var(--accent-press); }");
+    expect(RUN_SURFACE_PALETTE.dark.accentStrong).toBe(TERRACE.accentPress);
   });
 
   it("keeps all five provenance hues AA and mutually distinguishable on page and card", () => {

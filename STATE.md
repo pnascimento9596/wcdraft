@@ -6,8 +6,9 @@
 
 Terrace dark identity: 2026-07-15 · Archivo is now the single active shipped web and OG
 family, with mechanical `tnum` evidence and deterministic OG-only tabular derivatives.
-Dark-mode surfaces use the Terrace bone/bottle-green/vintage-gold system; all 87 declared
-text/background pairings pass, all 122 non-typography light values retain their base hash,
+Dark-mode surfaces use the Terrace bone/bottle-green/vintage-gold system; every asserted
+text/background role passes, including pressed and standalone-auth action ink at 4.5074:1.
+All 122 non-typography light values retain their base hash,
 and the shared type system's exact two changed plus eight added light typography roles are
 separately locked under a recorded Architect-delegated decision. Provenance remains
 hue-distinguishable, and the protected medallion remains byte-identical. `/` and `/play` now

@@ -26,7 +26,7 @@ export const RUN_SURFACE_PALETTE = {
     inkFaint: "#8a8b7f",
     accent: "#3f9268",
     accentText: "#3fa268",
-    accentStrong: "#37805b",
+    accentStrong: "#408964",
     accentInk: "#05130c",
     gold: "#d4a94e",
     goldStrong: "#b69143",

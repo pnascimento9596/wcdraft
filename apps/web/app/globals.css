@@ -254,7 +254,7 @@
   --accent: #3f9268;
   --accent-solid: #3f9268;
   --accent-ink: #05130c;
-  --accent-press: #37805b;
+  --accent-press: #408964;
   --accent-deep: #2f6d4d;
   --accent-wash: color-mix(in srgb, var(--accent-solid) 12%, transparent);
   --accent-line: color-mix(in srgb, var(--accent-solid) 42%, transparent);
