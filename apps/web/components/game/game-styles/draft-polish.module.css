@@ -63,7 +63,8 @@
   padding: 3px 8px;
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-100);
   background: color-mix(in srgb, var(--bg-900) 65%, transparent);
@@ -217,7 +218,8 @@
 .managerSlotEyebrow {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-300);
 }
@@ -275,7 +277,8 @@
   align-self: flex-start;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--prov-manager);
   padding: 2px 8px;
@@ -487,9 +490,10 @@
 .candRowOvr i {
   font-family: var(--font-family);
   font-size: 7px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-400);
   font-style: normal;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
 }
 .candRowCov {
@@ -565,7 +569,8 @@
 .nowDraftingPick {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ember-bright);
 }
@@ -733,7 +738,8 @@
 .synergyBarLabel {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -793,7 +799,8 @@
 .synergyBarFigure dt {
   font-family: var(--font-family);
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
   margin: 0;
@@ -928,7 +935,7 @@
   }
   .appBarTitle {
     font-size: 14px;
-    letter-spacing: 0.03em;
+    letter-spacing: var(--tracking-heading);
   }
   .appBarMeter {
     min-width: 108px;
@@ -1154,7 +1161,8 @@
   }
   .benchLabel {
     font-size: 9px;
-    letter-spacing: 0.1em;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-micro);
   }
   .benchSlots {
     gap: 4px;
@@ -1301,7 +1309,8 @@
   .reviewShell .benchLabel {
     margin: 0;
     font-size: 8px;
-    letter-spacing: 0.08em;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-micro);
   }
   .reviewShell .benchSlots {
     gap: 3px;
@@ -1747,8 +1756,8 @@
   border-radius: var(--r-pill);
   font-family: var(--font-family);
   font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
   color: var(--gold);
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
@@ -1768,8 +1777,8 @@
   border-radius: var(--r-pill);
   font-family: var(--font-family);
   font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--ember);
@@ -2297,7 +2306,8 @@
 .synergyBarFigure dt {
   color: var(--ink-400);
   font-family: var(--font-family);
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
 }
 
 .synergyBarNum,

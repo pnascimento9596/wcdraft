@@ -724,7 +724,8 @@ main {
 .wordmark__text {
   font-family: var(--font-family);
   font-size: 1.6rem;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-display);
+  font-weight: var(--font-weight-display);
   text-transform: uppercase;
   line-height: 1;
 }
@@ -1010,8 +1011,9 @@ main {
 .site-footer__brand {
   font-family: var(--font-family);
   font-size: 1.4rem;
+  font-weight: var(--font-weight-display);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--tracking-display);
 }
 .site-footer__links {
   display: flex;
@@ -1130,8 +1132,9 @@ main {
 }
 .stat__label {
   font-size: 0.78rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 
@@ -1295,8 +1298,9 @@ main {
   display: inline-block;
   margin-top: 0.8rem;
   font-size: 0.72rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -1339,8 +1343,8 @@ main {
   padding: 0.2rem 0.55rem;
   color: var(--ink-faint);
   font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .shape-key,
@@ -1432,8 +1436,9 @@ main {
 }
 .def-row dt {
   font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--tracking-micro);
   font-size: 1.05rem;
   color: var(--ink);
 }
@@ -1461,9 +1466,9 @@ main {
 .setting__label b {
   font-family: var(--font-family);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--tracking-micro);
   font-size: 1.1rem;
-  font-weight: 400;
+  font-weight: var(--font-weight-medium);
 }
 .setting__label span {
   font-size: 0.88rem;
@@ -1726,7 +1731,8 @@ main {
 .account-pop__eyebrow {
   font-family: var(--font-family);
   font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-soft);
 }

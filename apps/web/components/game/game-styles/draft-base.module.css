@@ -215,8 +215,9 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
 .benchLabel {
   display: block;
   font-size: 0.68rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
   margin-bottom: 0.45rem;
 }
@@ -388,8 +389,9 @@ button.benchSlot:not(:disabled):hover {
   gap: 0.45rem;
   font-size: 0.8rem;
   color: var(--ink-faint);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
 }
 .sortSelect {
   font: inherit;
@@ -542,8 +544,9 @@ button.benchSlot:not(:disabled):hover {
 .candDrafted {
   margin-left: auto;
   font-size: 0.66rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .channels {
@@ -698,8 +701,9 @@ button.benchSlot:not(:disabled):hover {
 }
 .synergyStatLabel {
   font-size: 0.64rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .clusters {
@@ -709,8 +713,9 @@ button.benchSlot:not(:disabled):hover {
 }
 .clustersLabel {
   font-size: 0.66rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .clusterTags {

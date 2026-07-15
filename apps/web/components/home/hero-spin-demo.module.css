@@ -64,9 +64,9 @@
   color: var(--ink);
   font-family: var(--font-family);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-micro);
   white-space: nowrap;
 }
 
@@ -244,8 +244,8 @@
   color: var(--ink-faint);
   font-family: var(--font-family);
   font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 
@@ -291,8 +291,8 @@
   color: var(--ink-soft);
   font-family: var(--font-family);
   font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 

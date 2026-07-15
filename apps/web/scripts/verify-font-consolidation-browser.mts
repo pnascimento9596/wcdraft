@@ -49,6 +49,9 @@ type SurfaceMetric = {
   nonArchivoFamilies: string[];
   numericSampleCount: number;
   numericTabularSampleCount: number;
+  uppercaseSampleCount: number;
+  uppercaseRoleSampleCount: number;
+  uppercaseRoleViolations: string[];
   axeViolations: string[];
 };
 type TargetMetric = {
@@ -364,6 +367,60 @@ async function measureSurface(
         style.fontFeatureSettings.toLowerCase().includes("tnum")
       );
     });
+    const uppercase = visible.flatMap((el) => {
+      const ownText = Array.from(el.childNodes)
+        .filter((node) => node.nodeType === Node.TEXT_NODE)
+        .map((node) => node.textContent ?? "")
+        .join(" ")
+        .replace(/\s+/gu, " ")
+        .trim();
+      const style = window.getComputedStyle(el);
+      if (!/[A-Za-z]/u.test(ownText) || style.textTransform !== "uppercase") return [];
+      const fontSize = Number.parseFloat(style.fontSize);
+      const trackingPx =
+        style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing);
+      const trackingEm = Number.isFinite(fontSize) && fontSize > 0 ? trackingPx / fontSize : NaN;
+      const weight = Number.parseInt(style.fontWeight, 10);
+      const rolePairs = [
+        [900, -0.035],
+        [800, -0.02],
+        [500, 0.1],
+        [800, 0.02],
+      ] as const;
+      const roleMatch = rolePairs.some(
+        ([roleWeight, roleTracking]) =>
+          weight === roleWeight && Math.abs(trackingEm - roleTracking) <= 0.002,
+      );
+      const className =
+        typeof el.className === "string"
+          ? el.className
+          : el.className instanceof SVGAnimatedString
+            ? el.className.baseVal
+            : "";
+      return [
+        {
+          node: el.tagName.toLowerCase(),
+          className,
+          text: ownText.slice(0, 80),
+          weight,
+          trackingEm: Number(trackingEm.toFixed(4)),
+          roleMatch,
+        },
+      ];
+    });
+    const displayRoleViolations = visible.flatMap((el) => {
+      if (!(el instanceof HTMLElement) || !el.classList.contains("display")) return [];
+      const style = window.getComputedStyle(el);
+      const fontSize = Number.parseFloat(style.fontSize);
+      const trackingPx =
+        style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing);
+      const trackingEm = Number.isFinite(fontSize) && fontSize > 0 ? trackingPx / fontSize : NaN;
+      const weight = Number.parseInt(style.fontWeight, 10);
+      if (weight === 900 && Math.abs(trackingEm + 0.035) <= 0.002) return [];
+      return [
+        `display ${el.tagName.toLowerCase()}.${Array.from(el.classList).join(".")} ${weight.toString()}/${trackingEm.toFixed(4)}em`,
+      ];
+    });
     const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight);
     const scrollWidth = Math.max(doc.scrollWidth, body.scrollWidth);
     return {
@@ -374,6 +431,17 @@ async function measureSurface(
       uniqueFontFamilies: families,
       numericSampleCount: numeric.length,
       numericTabularSampleCount: numericTabular.length,
+      uppercaseSampleCount: uppercase.length,
+      uppercaseRoleSampleCount: uppercase.filter(({ roleMatch }) => roleMatch).length,
+      uppercaseRoleViolations: [
+        ...uppercase
+          .filter(({ roleMatch }) => !roleMatch)
+          .map(
+            ({ node, className, text, weight, trackingEm }) =>
+              `${node}${className ? `.${className.trim().replace(/\s+/gu, ".")}` : ""} ${weight.toString()}/${trackingEm.toFixed(4)}em ${JSON.stringify(text)}`,
+          ),
+        ...displayRoleViolations,
+      ],
     };
   });
   return {
@@ -664,7 +732,9 @@ async function auditAll(baseUrl: string): Promise<Report> {
     for (const viewport of viewports) {
       for (const theme of themes) {
         const runs = [
+          await auditStaticSurface(browser, baseUrl, viewport, theme, "/", "home"),
           await auditStaticSurface(browser, baseUrl, viewport, theme, "/play", "mode select"),
+          await auditStaticSurface(browser, baseUrl, viewport, theme, "/sign-in", "sign-in"),
           await auditStaticSurface(browser, baseUrl, viewport, theme, "/play/draft", "setup"),
           await auditClassicDraftFlow(browser, baseUrl, viewport, theme),
           await auditOpenDraftFlow(browser, baseUrl, viewport, theme, "open"),
@@ -747,6 +817,11 @@ async function auditAll(baseUrl: string): Promise<Report> {
     if (strict && surface.numericSampleCount > 0 && surface.numericTabularSampleCount === 0) {
       report.failures.push(
         `${surface.label} ${surface.viewport} ${surface.theme}: no tabular numeric sample`,
+      );
+    }
+    if (strict && surface.uppercaseRoleViolations.length > 0) {
+      report.failures.push(
+        `${surface.label} ${surface.viewport} ${surface.theme}: Terrace roles ${surface.uppercaseRoleViolations.join(" | ")}`,
       );
     }
     const coreNoScroll = ["spin", "classic pick"].includes(surface.label);

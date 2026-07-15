@@ -16,6 +16,14 @@ type TrackingDeclaration = {
   readonly value: number;
 };
 
+type RoleViolation = {
+  readonly file: string;
+  readonly line: number;
+  readonly selector: string;
+  readonly weight: string | null;
+  readonly tracking: string | null;
+};
+
 describe("Terrace typography source contract", () => {
   it("uses Archivo at every active authored font seam", () => {
     const sources = authoredSources(FONT_SOURCE_ROOTS);
@@ -76,6 +84,14 @@ describe("Terrace typography source contract", () => {
       path.join(WEB_ROOT, "components/game/game-styles/draft-shell.module.css"),
       "utf8",
     );
+    const draftBase = readFileSync(
+      path.join(WEB_ROOT, "components/game/game-styles/draft-base.module.css"),
+      "utf8",
+    );
+    const draftSpin = readFileSync(
+      path.join(WEB_ROOT, "components/game/game-styles/draft-spin.module.css"),
+      "utf8",
+    );
     const signIn = readFileSync(path.join(WEB_ROOT, "app/sign-in/sign-in.css"), "utf8");
     const results = readFileSync(
       path.join(WEB_ROOT, "components/game/game-styles/results.module.css"),
@@ -91,6 +107,7 @@ describe("Terrace typography source contract", () => {
       "utf8",
     );
     const runOg = readFileSync(path.join(WEB_ROOT, "lib/game/run-og-image.tsx"), "utf8");
+    const globalError = readFileSync(path.join(WEB_ROOT, "app/global-error.tsx"), "utf8");
     for (const source of [shared, draftShell]) {
       expect(source).toMatch(
         /\.(?:modeName|formationTitle|formationCardName)\s*\{[^}]*font-weight:\s*var\(--font-weight-heading\);[^}]*letter-spacing:\s*var\(--tracking-heading\);/su,
@@ -104,6 +121,9 @@ describe("Terrace typography source contract", () => {
     );
     expect(signIn).toMatch(
       /\.signin-form__submit\s*\{[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
+    );
+    expect(signIn).toMatch(
+      /\.signin-screen__title\s*\{[^}]*letter-spacing:\s*var\(--tracking-display\);/su,
     );
     expect(results).toMatch(
       /\.seedCopyButton\s*\{[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
@@ -131,7 +151,7 @@ describe("Terrace typography source contract", () => {
     }
     expect(runOg).toContain('fontWeight: 900,\n                letterSpacing: "-0.035em"');
     expect(runOg).toContain('fontWeight: 800,\n              letterSpacing: "-0.02em"');
-    expectUppercaseRoleAssignments(runOg);
+    expectUppercaseRoleAssignments(`${runOg}\n${globalError}`);
 
     expectRoleDeclarations(
       shared,
@@ -163,6 +183,42 @@ describe("Terrace typography source contract", () => {
       "var(--font-weight-button)",
       "var(--tracking-button)",
     );
+    expectRoleDeclarations(
+      `${draftShell}\n${draftPolish}`,
+      "appBarTitle",
+      "var(--font-weight-heading)",
+      "var(--tracking-heading)",
+    );
+    expectRoleDeclarations(
+      `${draftBase}\n${draftPolish}`,
+      "benchLabel",
+      "var(--font-weight-medium)",
+      "var(--tracking-micro)",
+    );
+    expectRoleDeclarations(
+      `${draftSpin}\n${draftPolish}`,
+      "spinResultName",
+      "var(--font-weight-heading)",
+      "var(--tracking-heading)",
+    );
+    expectRoleDeclarations(
+      results,
+      "outcomeHeadline",
+      "var(--font-weight-heading)",
+      "var(--tracking-heading)",
+    );
+    expectRoleDeclarations(
+      results,
+      "memoryProgressionTitle",
+      "var(--font-weight-heading)",
+      "var(--tracking-heading)",
+    );
+    expectRoleDeclarations(
+      results,
+      "pinButton",
+      "var(--font-weight-button)",
+      "var(--tracking-button)",
+    );
   });
 
   it("rejects positive tracking above 0.10em on every active authored surface", () => {
@@ -171,6 +227,16 @@ describe("Terrace typography source contract", () => {
         ({ value }) => value > MAX_POSITIVE_TRACKING_EM + Number.EPSILON,
       ),
     );
+    expect(violations).toEqual([]);
+  });
+
+  it("assigns every authored uppercase CSS seam to a locked Terrace role", () => {
+    const violations = authoredSources(["app", "components"])
+      .filter(({ file }) => file.endsWith(".css"))
+      .flatMap(({ file, source }) => [
+        ...uppercaseRoleViolations(file, source),
+        ...uppercaseOverrideViolations(file, source),
+      ]);
     expect(violations).toEqual([]);
   });
 
@@ -221,6 +287,102 @@ function trackingDeclarations(file: string, source: string): readonly TrackingDe
   return declarations;
 }
 
+function uppercaseRoleViolations(file: string, source: string): readonly RoleViolation[] {
+  const allowed = new Set([
+    "var(--font-weight-display)/var(--tracking-display)",
+    "var(--font-weight-heading)/var(--tracking-heading)",
+    "var(--font-weight-medium)/var(--tracking-micro)",
+    "var(--font-weight-button)/var(--tracking-button)",
+    "900/-0.035em",
+    "800/-0.02em",
+    "500/0.1em",
+    "800/0.02em",
+  ]);
+  const violations: RoleViolation[] = [];
+  for (const match of source.matchAll(/([^{}]+)\{([^{}]*text-transform:\s*uppercase[^{}]*)\}/gsu)) {
+    const selector = match[1]!.trim().replace(/\s+/gu, " ");
+    const body = match[2]!;
+    const weights = [...body.matchAll(/font-weight:\s*([^;]+);/gu)];
+    const trackingValues = [...body.matchAll(/letter-spacing:\s*([^;]+);/gu)];
+    const weight = weights.at(-1)?.[1]?.trim() ?? null;
+    const tracking = trackingValues.at(-1)?.[1]?.trim() ?? null;
+    if (weight !== null && tracking !== null && allowed.has(`${weight}/${tracking}`)) continue;
+    violations.push({
+      file,
+      line: source.slice(0, match.index).split("\n").length,
+      selector,
+      weight,
+      tracking,
+    });
+  }
+  return violations;
+}
+
+function uppercaseOverrideViolations(file: string, source: string): readonly RoleViolation[] {
+  const uppercaseClasses = new Set<string>();
+  for (const match of source.matchAll(/([^{}]+)\{[^{}]*text-transform:\s*uppercase[^{}]*\}/gsu)) {
+    for (const selector of match[1]!.split(",")) {
+      const target =
+        selector
+          .trim()
+          .split(/[\s>+~]+/u)
+          .at(-1) ?? "";
+      for (const classMatch of target.matchAll(/\.([A-Za-z0-9_-]+)/gu)) {
+        uppercaseClasses.add(classMatch[1]!);
+      }
+    }
+  }
+  const allowedWeights = new Set([
+    "var(--font-weight-display)",
+    "var(--font-weight-heading)",
+    "var(--font-weight-medium)",
+    "var(--font-weight-button)",
+    "900",
+    "800",
+    "500",
+  ]);
+  const allowedTracking = new Set([
+    "var(--tracking-display)",
+    "var(--tracking-heading)",
+    "var(--tracking-micro)",
+    "var(--tracking-button)",
+    "-0.035em",
+    "-0.02em",
+    "0.1em",
+    "0.02em",
+  ]);
+  const violations: RoleViolation[] = [];
+  for (const match of source.matchAll(/([^{}]+)\{([^{}]*)\}/gsu)) {
+    const selector = match[1]!.trim().replace(/\s+/gu, " ");
+    const selectorClasses = selector.split(",").flatMap((part) => {
+      const target =
+        part
+          .trim()
+          .split(/[\s>+~]+/u)
+          .at(-1) ?? "";
+      return [...target.matchAll(/\.([A-Za-z0-9_-]+)/gu)].map((classMatch) => classMatch[1]!);
+    });
+    if (!selectorClasses.some((className) => uppercaseClasses.has(className))) continue;
+    const body = match[2]!;
+    const weight = [...body.matchAll(/font-weight:\s*([^;]+);/gu)].at(-1)?.[1]?.trim() ?? null;
+    const tracking = [...body.matchAll(/letter-spacing:\s*([^;]+);/gu)].at(-1)?.[1]?.trim() ?? null;
+    if (
+      (weight === null || allowedWeights.has(weight)) &&
+      (tracking === null || allowedTracking.has(tracking))
+    ) {
+      continue;
+    }
+    violations.push({
+      file,
+      line: source.slice(0, match.index).split("\n").length,
+      selector,
+      weight,
+      tracking,
+    });
+  }
+  return violations;
+}
+
 function expectRoleDeclarations(
   source: string,
   className: string,
@@ -256,13 +418,15 @@ function expectUppercaseRoleAssignments(source: string): void {
     const index = occurrence.index;
     const blockStart = source.lastIndexOf("style={{", index);
     expect(blockStart, "uppercase seam is not inside an inline style").toBeGreaterThanOrEqual(0);
-    const body = source.slice(blockStart, index);
+    const blockEnd = source.indexOf("}}", index);
+    expect(blockEnd, "uppercase inline style is not closed").toBeGreaterThan(index);
+    const body = source.slice(blockStart, blockEnd);
     const weight = /fontWeight:\s*(400|500|800|900),/u.exec(body)?.[1];
     const tracking = /letterSpacing:\s*"(-?\d+(?:\.\d+)?em)",/u.exec(body)?.[1];
     expect(weight, "uppercase seam is missing an explicit registered weight").toBeDefined();
     expect(tracking, "uppercase seam is missing explicit role tracking").toBeDefined();
     expect(
-      new Set(["500/0.1em", "800/-0.02em", "900/-0.035em"]),
+      new Set(["500/0.1em", "800/-0.02em", "900/-0.035em", "800/0.02em"]),
       `uppercase role ${weight}/${tracking}`,
     ).toContain(`${weight}/${tracking}`);
   }

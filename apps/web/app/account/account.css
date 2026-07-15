@@ -42,7 +42,8 @@
 .account-panel__label {
   font-family: var(--font-family);
   font-size: 0.78rem;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--accent-text);
 }
@@ -118,7 +119,8 @@
   background: var(--accent-solid);
   color: var(--accent-ink);
   font-family: var(--font-family);
-  font-weight: 700;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -257,7 +259,8 @@
   color: var(--accent-text);
   padding: 0.25rem 0.55rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 

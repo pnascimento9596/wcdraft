@@ -12,8 +12,8 @@
   background: color-mix(in srgb, var(--accent) 12%, var(--s1));
   color: var(--accent);
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 
@@ -37,8 +37,8 @@
 .friendChallengeConfig dt {
   color: var(--tx2);
   font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 
@@ -98,8 +98,9 @@
   overflow: hidden;
   color: var(--tx2);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-medium);
   text-overflow: ellipsis;
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
   white-space: nowrap;
 }

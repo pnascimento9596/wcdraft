@@ -11,15 +11,15 @@
 }
 .teamNameLabel {
   font-size: 0.68rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .teamNameInput {
   font-family: var(--font-family);
   font-size: clamp(2.2rem, 7vw, 3.6rem);
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
+  letter-spacing: var(--tracking-body);
   color: var(--ink);
   background: transparent;
   border: none;

@@ -162,9 +162,9 @@
 
 .appBarTitle {
   font-family: var(--font-family);
-  font-weight: 700;
+  font-weight: var(--font-weight-heading);
   font-size: 18px;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
   color: var(--ink-100);
 }
@@ -509,7 +509,8 @@
 }
 
 .setupRowLabel {
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -557,7 +558,8 @@
 .setupAxisLabel {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -610,7 +612,8 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -1128,8 +1131,9 @@
 
 .candOverallLabel {
   font-size: var(--t-micro);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-400);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
 }
 
@@ -1228,7 +1232,8 @@
 .provBadge {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   padding: 2px 8px;
   border-radius: var(--r-pill);
@@ -1622,7 +1627,7 @@
 
 .appBarTitle {
   font-size: 19px;
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-heading);
 }
 
 .appBarMeter {
@@ -1649,8 +1654,8 @@
   color: var(--accent);
   font-family: var(--font-family);
   font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 
@@ -1688,8 +1693,8 @@
   color: var(--ink-400);
   font-family: var(--font-family);
   font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
 }
 
 .setupRowValue {

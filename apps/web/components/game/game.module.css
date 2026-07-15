@@ -1167,8 +1167,8 @@
   min-width: 0;
   font-family: var(--font-family);
   font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
 }
 
@@ -1177,7 +1177,8 @@
   color: var(--ink-300);
   font-family: var(--font-family);
   font-size: 10px;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
 }
 

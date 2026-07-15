@@ -115,9 +115,9 @@
   color: currentColor;
   font-family: var(--font-family);
   font-size: clamp(2.35rem, 11vw, 4.5rem);
-  font-weight: 800;
+  font-weight: var(--font-weight-heading);
   line-height: 0.95;
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-heading);
 }
 .outcomeHeadlineGold {
   color: var(--gold);
@@ -130,7 +130,8 @@
   opacity: 0.84;
   font-family: var(--font-family);
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .payoffMeta span {
@@ -175,8 +176,9 @@
 .outcomeRecordSmall span {
   color: currentColor;
   font-size: 0.68rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-medium);
   opacity: 0.88;
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .outcomeRecordSmall {
@@ -207,8 +209,9 @@
 }
 .oStatLabel {
   font-size: 0.72rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   opacity: 0.8;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -217,8 +220,8 @@
 .oStatCaption {
   font-family: var(--font-family);
   font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
   opacity: 0.7;
 }
@@ -248,8 +251,8 @@
 .flagMuted {
   font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   border-radius: 999px;
   padding: 0.3rem 0.7rem;
 }
@@ -323,8 +326,8 @@
   margin-bottom: 0.18rem;
   color: var(--accent);
   font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .factualRecapGrid {
@@ -349,8 +352,8 @@
   margin: 0 0 0.6rem;
   color: var(--ink-300);
   font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   line-height: 1.3;
   text-transform: uppercase;
 }
@@ -383,8 +386,8 @@
 .factualDefinitionList dt {
   color: var(--ink-faint);
   font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .factualStrengthGrid dd,
@@ -460,8 +463,8 @@
   border-radius: 7px;
   color: var(--accent);
   font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -530,8 +533,9 @@
   min-width: 0;
   max-width: 7.5rem;
   font-size: 0.74rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-300);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -572,8 +576,9 @@
 .matchTag {
   font-family: var(--font-family);
   font-size: 0.66rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -609,8 +614,9 @@
 }
 .boxColHead {
   font-size: 0.68rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
   border-bottom: 1px solid var(--line);
   padding-bottom: 0.25rem;
@@ -663,6 +669,8 @@
   color: var(--ink-300);
   font-family: var(--font-family);
   font-size: 0.68rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .cardYellow,
@@ -700,8 +708,9 @@
 }
 .seedLabel {
   font-size: 0.68rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .seedCode {
@@ -739,7 +748,8 @@
 .pinButton {
   min-width: 6.8rem;
   font-family: var(--font-family);
-  letter-spacing: 0.08em;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
 }
 .pinNote,
 .pinWarning {
@@ -768,8 +778,8 @@
   color: var(--accent);
   font-family: var(--font-family);
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .memoryProgressionTitle {
@@ -777,8 +787,9 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 1.2rem;
+  font-weight: var(--font-weight-heading);
   line-height: 1.05;
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-heading);
 }
 .memoryProgression p {
   margin: 0;
@@ -824,6 +835,8 @@
   color: var(--gold);
   font-family: var(--font-family);
   font-size: 0.68rem;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
 }
 .sharePreviewTeam {
@@ -899,7 +912,6 @@
   border-style: solid;
 }
 
-.outcomeHeadline,
 .outcomeBig,
 .oStatNum,
 .matchScore,

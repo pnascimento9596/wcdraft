@@ -64,7 +64,8 @@
 .spinPickKicker {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -77,7 +78,8 @@
 .spinPickOf {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -85,7 +87,8 @@
   text-align: center;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-300);
 }
@@ -108,7 +111,8 @@
 .spinStatusChipLabel {
   font-family: var(--font-family);
   font-size: 8px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -128,7 +132,8 @@
   text-align: center;
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -339,7 +344,8 @@
 .spinResultEyebrow {
   font-family: var(--font-family);
   font-size: var(--t-micro);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }
@@ -347,8 +353,9 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: clamp(28px, 8vw, 40px);
+  font-weight: var(--font-weight-heading);
   line-height: 1;
-  letter-spacing: 0.01em;
+  letter-spacing: var(--tracking-heading);
 }
 .spinResultNation {
   color: var(--ember);
@@ -386,7 +393,8 @@
 .spinTileLabel {
   font-family: var(--font-family);
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-400);
 }

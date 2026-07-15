@@ -132,7 +132,8 @@
 .selectFilter span {
   font-size: 0.62rem;
   line-height: 1;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -337,7 +338,8 @@
 
 .badge {
   font-size: 0.62rem;
-  letter-spacing: 0.07em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
@@ -365,7 +367,8 @@
   display: block;
   font-family: var(--font-family);
   font-size: 0.62rem;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -443,7 +446,8 @@
 .inspectorEyebrow {
   font-family: var(--font-family);
   font-size: 0.62rem;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--accent-text);
 }

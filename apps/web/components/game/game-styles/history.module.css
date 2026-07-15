@@ -96,7 +96,8 @@
 
 .historyFormation {
   font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -143,9 +144,9 @@
 }
 
 .historyRecency {
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--accent);
 }
 
@@ -195,8 +196,8 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   text-transform: uppercase;
 }
 
@@ -217,8 +218,9 @@
 
 .shareIntentLabel {
   font-size: 0.68rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
   margin: 0;
 }
@@ -290,7 +292,8 @@
 .historyFormation,
 .historyRecency,
 .historyOpenHint {
-  letter-spacing: 0.04em;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-micro);
 }
 
 @media (min-width: 64rem) {

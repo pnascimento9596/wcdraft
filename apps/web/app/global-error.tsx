@@ -102,7 +102,7 @@ export default function GlobalError({
             className="global-error-eyebrow"
             style={{
               textTransform: "uppercase",
-              letterSpacing: "0.08em",
+              letterSpacing: "0.1em",
               fontSize: "0.78rem",
               fontWeight: 500,
               margin: "0 0 0.5rem",
