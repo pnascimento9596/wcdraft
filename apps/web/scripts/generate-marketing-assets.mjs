@@ -6,7 +6,7 @@
  * Inputs:
  *   - public/brand/marketing/banner.png
  *   - public/brand/logo-mark.svg
- *   - public/fonts/archivo/archivo-latin-800-normal.woff2
+ *   - public/fonts/archivo/archivo-latin-800-normal.woff
  *
  * Output:
  *   - public/brand/marketing/og-default.png (1200x630, <=300KB)
@@ -18,6 +18,8 @@ import { createRequire } from "node:module";
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { ImageResponse } from "next/og.js";
+import { createElement } from "react";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const webRoot = join(here, "..");
@@ -61,8 +63,8 @@ async function loadSharp() {
 
 const sharp = await loadSharp();
 const archivoFont = readFileSync(
-  join(publicDir, "fonts", "archivo", "archivo-latin-800-normal.woff2"),
-).toString("base64");
+  join(publicDir, "fonts", "archivo", "archivo-latin-800-normal.woff"),
+);
 const markSvg = readFileSync(join(brandDir, "logo-mark.svg"));
 
 const lockupPlate = Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
@@ -77,26 +79,50 @@ const lockupPlate = Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
   <rect x="35" y="37" width="440" height="114" rx="17" fill="none" stroke="#d4a94e" stroke-opacity=".38" stroke-width="1.5"/>
 </svg>`);
 
-const wordmarkSvg = Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="306" height="90" viewBox="0 0 306 90">
-  <style>
-    @font-face{font-family:"Archivo";font-style:normal;font-weight:800;src:url("data:font/woff2;base64,${archivoFont}") format("woff2")}
-  </style>
-  <text x="0" y="63" font-family="Archivo" font-weight="800" font-size="55" letter-spacing="-1.1">
-    <tspan fill="#ebe6da">WC</tspan><tspan fill="#3fa268">DRAFT</tspan>
-  </text>
-</svg>`);
-
 const [markOverlay, wordmarkOverlay] = await Promise.all([
   sharp(markSvg, { density: 384 })
     .resize({ width: 82, height: 82, fit: "contain" })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .toBuffer(),
-  sharp(wordmarkSvg, { density: 192 })
-    .resize({ width: 306, height: 90, fit: "fill" })
-    .png({ compressionLevel: 9, adaptiveFiltering: true })
-    .toBuffer(),
+  renderArchivoWordmark(),
 ]);
+
+async function renderArchivoWordmark() {
+  const response = new ImageResponse(
+    createElement(
+      "div",
+      {
+        style: {
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          background: "transparent",
+          fontFamily: "Archivo",
+          fontSize: 55,
+          fontWeight: 800,
+          letterSpacing: -1.1,
+          lineHeight: 1,
+        },
+      },
+      createElement("span", { style: { color: "#ebe6da" } }, "WC"),
+      createElement("span", { style: { color: "#3fa268" } }, "DRAFT"),
+    ),
+    {
+      width: 306,
+      height: 90,
+      fonts: [
+        {
+          name: "Archivo",
+          data: toArrayBuffer(archivoFont),
+          weight: 800,
+          style: "normal",
+        },
+      ],
+    },
+  );
+  return Buffer.from(await response.arrayBuffer());
+}
 
 function defaultOgPipeline() {
   return sharp(bannerPath)
@@ -148,4 +174,8 @@ function verifyHash(path, expected) {
 
 function hash(value) {
   return createHash("sha256").update(value).digest("hex");
+}
+
+function toArrayBuffer(value) {
+  return value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength);
 }

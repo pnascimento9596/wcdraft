@@ -427,15 +427,17 @@ describe("Terrace typography source contract", () => {
     const banner = readFileSync(path.join(WEB_ROOT, "public/brand/marketing/banner.png"));
     const square = readFileSync(path.join(WEB_ROOT, "public/brand/marketing/og-square.png"));
 
-    expect(generator).toContain("archivo-latin-800-normal.woff2");
-    expect(generator).toContain('font-family="Archivo"');
+    expect(generator).toContain("archivo-latin-800-normal.woff");
+    expect(generator).toContain("new ImageResponse(");
+    expect(generator).toContain('fontFamily: "Archivo"');
+    expect(generator).toContain("data: toArrayBuffer(archivoFont)");
     expect(generator).not.toContain("space-" + "grotesk");
     expect(generator).toContain("writeFileSync(defaultOgPath, best.buffer)");
     expect(defaultOg.readUInt32BE(16)).toBe(1200);
     expect(defaultOg.readUInt32BE(20)).toBe(630);
     expect(defaultOg.byteLength).toBeLessThanOrEqual(300 * 1024);
     expect(createHash("sha256").update(defaultOg).digest("hex")).toBe(
-      "caf0227bb3d114064eb39956c2d98e569562cf4897aaff5b6f21342eb98d8c25",
+      "5f1af97f956ba67d52de6a9cb25231a234e4399cccaa4830db6165a3080cdb01",
     );
     expect(createHash("sha256").update(banner).digest("hex")).toBe(
       "809a8dfe09b8396fc65083fee5981a128e6407cfd66513988d1f0df678936331",

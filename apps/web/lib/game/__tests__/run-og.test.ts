@@ -300,6 +300,36 @@ async function renderNumericBandWidth(font: ArrayBuffer, digits: string): Promis
   return exactRedBandWidth(Buffer.from(await image.arrayBuffer()));
 }
 
+async function renderMarketingWordmark(font: ArrayBuffer): Promise<Buffer> {
+  const image = new ImageResponse(
+    createElement(
+      "div",
+      {
+        style: {
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          background: "transparent",
+          fontFamily: "Archivo",
+          fontSize: 55,
+          fontWeight: 800,
+          letterSpacing: -1.1,
+          lineHeight: 1,
+        },
+      },
+      createElement("span", { style: { color: "#ebe6da" } }, "WC"),
+      createElement("span", { style: { color: "#3fa268" } }, "DRAFT"),
+    ),
+    {
+      width: 306,
+      height: 90,
+      fonts: [{ name: "Archivo", data: font, weight: 800, style: "normal" }],
+    },
+  );
+  return Buffer.from(await image.arrayBuffer());
+}
+
 function exactRedBandWidth(png: Buffer): number {
   const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
   if (!png.subarray(0, signature.length).equals(signature)) {
@@ -512,6 +542,24 @@ describe("dynamic run OG metadata decision", () => {
 });
 
 describe("dynamic run OG model and image", () => {
+  it("makes the fallback wordmark depend on explicit Archivo bytes", async () => {
+    const archivoExtraBold = readArrayBuffer(
+      new URL("../../../public/fonts/archivo/archivo-latin-800-normal.woff", import.meta.url),
+    );
+    const archivoRegular = readArrayBuffer(
+      new URL("../../../public/fonts/archivo/archivo-latin-400-normal.woff", import.meta.url),
+    );
+    const [first, second, fontMutation] = await Promise.all([
+      renderMarketingWordmark(archivoExtraBold),
+      renderMarketingWordmark(archivoExtraBold),
+      renderMarketingWordmark(archivoRegular),
+    ]);
+
+    expect(Buffer.compare(first, second)).toBe(0);
+    expect(Buffer.compare(first, fontMutation)).not.toBe(0);
+    await expect(renderMarketingWordmark(new Uint8Array([0, 1, 2, 3]).buffer)).rejects.toThrow();
+  });
+
   it("uses renderer-compatible default tabular glyphs for OG data numerals", async () => {
     const upstreamMedium = readArrayBuffer(
       new URL("../../../public/fonts/archivo/archivo-latin-500-normal.woff", import.meta.url),
