@@ -209,8 +209,9 @@
 .signin-form__submit {
   font-family: var(--font-family);
   font-size: var(--t-h);
+  font-weight: var(--font-weight-button);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: var(--tracking-button);
   color: var(--bg-900);
   background: var(--ember);
   border: none;

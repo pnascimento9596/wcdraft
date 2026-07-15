@@ -49,17 +49,34 @@ function staticFallback(request: Request): Response {
 function loadAssets(request: Request): Promise<RunOgImageAssets> {
   assetsPromise ??= (async () => {
     const base = new URL(request.url);
-    const [mark, archivoExtraBold, archivoExtraBoldExt, archivoBlack, archivoBlackExt] =
-      await Promise.all([
-        fetchTextAsset(new URL("/brand/logo-mark.svg", base)),
-        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-800-normal.woff", base)),
-        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-800-normal.woff", base)),
-        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-900-normal.woff", base)),
-        fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-900-normal.woff", base)),
-      ]);
+    const [
+      mark,
+      archivoRegular,
+      archivoRegularExt,
+      archivoMedium,
+      archivoMediumExt,
+      archivoExtraBold,
+      archivoExtraBoldExt,
+      archivoBlack,
+      archivoBlackExt,
+    ] = await Promise.all([
+      fetchTextAsset(new URL("/brand/logo-mark.svg", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-400-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-400-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-500-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-500-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-800-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-800-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-900-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/archivo/archivo-latin-ext-900-normal.woff", base)),
+    ]);
     return {
       markSvgDataUri: `data:image/svg+xml;utf8,${encodeURIComponent(mark)}`,
       fonts: {
+        archivoRegular,
+        archivoRegularExt,
+        archivoMedium,
+        archivoMediumExt,
         archivoExtraBold,
         archivoExtraBoldExt,
         archivoBlack,

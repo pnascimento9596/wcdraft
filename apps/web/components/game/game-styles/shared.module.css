@@ -28,7 +28,8 @@
 .panelTitle {
   font-family: var(--font-family);
   font-size: 1.5rem;
-  letter-spacing: 0.02em;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
 }
 .panelMeta {
   font-size: 0.78rem;
@@ -138,7 +139,8 @@
 .modeName {
   font-family: var(--font-family);
   font-size: 2.1rem;
-  letter-spacing: 0.01em;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
 }
 .modeDesc {
   color: var(--ink-soft);
@@ -167,8 +169,9 @@
   margin-top: auto;
   font-family: var(--font-family);
   font-size: 0.82rem;
+  font-weight: var(--font-weight-button);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-button);
   color: var(--accent);
   padding-top: 0.5rem;
 }
@@ -413,9 +416,9 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: var(--font-weight-heading);
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
   color: var(--tx);
 }
@@ -506,8 +509,8 @@
   color: var(--accent);
   font-family: var(--font-family);
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-weight: var(--font-weight-button);
+  letter-spacing: var(--tracking-button);
   text-transform: uppercase;
 }
 

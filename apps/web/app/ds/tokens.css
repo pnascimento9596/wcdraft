@@ -281,9 +281,9 @@ body {
 }
 .display {
   font-family: var(--font-family);
-  font-weight: 700;
+  font-weight: var(--font-weight-display);
   line-height: 0.92;
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-display);
 }
 
 @media (prefers-reduced-motion: reduce) {

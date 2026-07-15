@@ -7,6 +7,10 @@ import { RUN_OG_PALETTE as P } from "./run-og-palette";
 export interface RunOgImageAssets {
   markSvgDataUri: string;
   fonts: {
+    archivoRegular: ArrayBuffer;
+    archivoRegularExt: ArrayBuffer;
+    archivoMedium: ArrayBuffer;
+    archivoMediumExt: ArrayBuffer;
     archivoExtraBold: ArrayBuffer;
     archivoExtraBoldExt: ArrayBuffer;
     archivoBlack: ArrayBuffer;
@@ -24,6 +28,30 @@ export function renderRunOgImage(model: RunOgModel, assets: RunOgImageAssets): I
     width: RUN_OG_WIDTH,
     height: RUN_OG_HEIGHT,
     fonts: [
+      {
+        name: "Archivo",
+        data: assets.fonts.archivoRegular,
+        weight: 400,
+        style: "normal",
+      },
+      {
+        name: "Archivo",
+        data: assets.fonts.archivoRegularExt,
+        weight: 400,
+        style: "normal",
+      },
+      {
+        name: "Archivo",
+        data: assets.fonts.archivoMedium,
+        weight: 500,
+        style: "normal",
+      },
+      {
+        name: "Archivo",
+        data: assets.fonts.archivoMediumExt,
+        weight: 500,
+        style: "normal",
+      },
       {
         name: "Archivo",
         data: assets.fonts.archivoExtraBold,
@@ -189,6 +217,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                 color: P.gold,
                 fontFamily: "Archivo",
                 fontSize: 44,
+                fontWeight: 900,
+                letterSpacing: "-0.035em",
                 lineHeight: 0.9,
                 textTransform: "uppercase",
               }}
@@ -201,6 +231,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                 color: P.mutedTeal,
                 fontFamily: "Archivo",
                 fontSize: 15,
+                fontWeight: 500,
+                letterSpacing: "0.1em",
                 textTransform: "uppercase",
               }}
             >
@@ -216,6 +248,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               color: P.goldSoft,
               fontFamily: "Archivo",
               fontSize: 42,
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
               lineHeight: 0.95,
               textTransform: "uppercase",
             }}
@@ -228,6 +262,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               color: P.textStrong,
               fontFamily: "Archivo",
               fontSize: 92,
+              fontWeight: 900,
+              letterSpacing: "-0.035em",
               lineHeight: 0.9,
               textTransform: "uppercase",
             }}
@@ -538,6 +574,8 @@ function SectionTitle({ children }: { children: string }) {
         color: P.muted,
         fontFamily: "Archivo",
         fontSize: 15,
+        fontWeight: 500,
+        letterSpacing: "0.1em",
         textTransform: "uppercase",
       }}
     >

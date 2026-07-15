@@ -990,8 +990,8 @@ function ShareCardSvg({
           fill={colors.text}
           fontFamily="var(--font-family)"
           fontSize="28"
-          fontWeight="800"
-          letterSpacing="0.04em"
+          fontWeight="900"
+          letterSpacing="-0.035em"
         >
           wc
           <tspan fontWeight="900" fill="url(#wcEmerald)">
@@ -1008,8 +1008,8 @@ function ShareCardSvg({
         fill={colors.text}
         fontFamily="var(--font-family)"
         fontSize="32"
-        fontWeight="500"
-        letterSpacing="0.02em"
+        fontWeight="800"
+        letterSpacing="-0.02em"
       >
         {truncate(view.team_name, 24)}
       </text>
@@ -1022,8 +1022,8 @@ function ShareCardSvg({
         fill={headlineColor}
         fontFamily="var(--font-family)"
         fontSize="18"
-        fontWeight="500"
-        letterSpacing="0.1em"
+        fontWeight="800"
+        letterSpacing="-0.02em"
       >
         {headline}
       </text>
@@ -1037,7 +1037,7 @@ function ShareCardSvg({
         fontFamily="var(--font-family)"
         fontSize="180"
         fontWeight="900"
-        letterSpacing="-0.04em"
+        letterSpacing="-0.035em"
       >
         {view.display_record}
       </text>
@@ -1050,7 +1050,8 @@ function ShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="16"
-        letterSpacing="0.06em"
+        fontWeight="400"
+        letterSpacing="0"
       >
         {truncate(formationLabel, 48)}
       </text>
@@ -1120,6 +1121,7 @@ function ShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
+          fontWeight="500"
           letterSpacing="0.1em"
         >
           KEY PICKS
@@ -1147,6 +1149,7 @@ function ShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="11"
+        fontWeight="500"
         letterSpacing="0.1em"
       >
         wcdraft.com: draft your own XI
@@ -1213,7 +1216,8 @@ function MemoryRevealShareCardSvg({
           fill={colors.text}
           fontFamily="var(--font-family)"
           fontSize="28"
-          fontWeight="800"
+          fontWeight="900"
+          letterSpacing="-0.035em"
         >
           wc
           <tspan fontWeight="900" fill="url(#wcEmerald)">
@@ -1229,7 +1233,8 @@ function MemoryRevealShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="13"
-        fontWeight="800"
+        fontWeight="500"
+        letterSpacing="0.1em"
       >
         {revealCopy.kicker}
       </text>
@@ -1240,7 +1245,8 @@ function MemoryRevealShareCardSvg({
         fill={colors.text}
         fontFamily="var(--font-family)"
         fontSize="30"
-        fontWeight="500"
+        fontWeight="800"
+        letterSpacing="-0.02em"
       >
         {truncate(view.team_name, 25)}
       </text>
@@ -1251,7 +1257,8 @@ function MemoryRevealShareCardSvg({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="15"
-        fontWeight="500"
+        fontWeight="400"
+        letterSpacing="0"
       >
         {revealCopy.action}, ended {view.display_record} · {view.score} pts · {avgAfter} OVR
       </text>
@@ -1284,7 +1291,8 @@ function MemoryRevealShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
-          fontWeight="800"
+          fontWeight="500"
+          letterSpacing="0.1em"
         >
           LINE REVEAL
         </text>
@@ -1300,7 +1308,8 @@ function MemoryRevealShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
-          fontWeight="800"
+          fontWeight="500"
+          letterSpacing="0.1em"
         >
           RESULTING XI
         </text>
@@ -1331,7 +1340,8 @@ function MemoryRevealShareCardSvg({
           fill={colors.muted}
           fontFamily="var(--font-family)"
           fontSize="12"
-          fontWeight="800"
+          fontWeight="500"
+          letterSpacing="0.1em"
         >
           TOP REVEALS
         </text>
@@ -1412,7 +1422,8 @@ function RevealMetricBox({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="12"
-        fontWeight="800"
+        fontWeight="500"
+        letterSpacing="0.1em"
       >
         {title}
       </text>
@@ -1517,7 +1528,8 @@ function RevealXiRow({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="12"
-        fontWeight="800"
+        fontWeight="500"
+        letterSpacing="0.1em"
       >
         {truncate(starter.slot_label, 4)}
       </text>
@@ -1577,6 +1589,7 @@ function ShareStat({
         fill={colors.muted}
         fontFamily="var(--font-family)"
         fontSize="11"
+        fontWeight="500"
         letterSpacing="0.1em"
       >
         {label.toUpperCase()}

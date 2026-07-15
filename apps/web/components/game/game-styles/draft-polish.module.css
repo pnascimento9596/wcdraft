@@ -1110,7 +1110,7 @@
   }
   .formationCardCta {
     font-size: 9px;
-    letter-spacing: 0.08em;
+    letter-spacing: var(--tracking-button);
   }
   .miniPitch {
     width: 78px;
@@ -1702,8 +1702,8 @@
 
 .rareMomentTitle {
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   color: var(--gold);
   text-transform: uppercase;
 }
@@ -1844,8 +1844,8 @@
 .panelTitle {
   color: var(--ink-100);
   font-family: var(--font-family);
-  font-weight: 700;
-  letter-spacing: 0;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
 }
 

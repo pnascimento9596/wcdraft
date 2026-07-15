@@ -170,6 +170,18 @@ function localAssets(): RunOgImageAssets {
       readFileSync(new URL("../../../public/brand/logo-mark.svg", import.meta.url), "utf8"),
     )}`,
     fonts: {
+      archivoRegular: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-400-normal.woff", import.meta.url),
+      ),
+      archivoRegularExt: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-ext-400-normal.woff", import.meta.url),
+      ),
+      archivoMedium: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-500-normal.woff", import.meta.url),
+      ),
+      archivoMediumExt: readArrayBuffer(
+        new URL("../../../public/fonts/archivo/archivo-latin-ext-500-normal.woff", import.meta.url),
+      ),
       archivoExtraBold: readArrayBuffer(
         new URL("../../../public/fonts/archivo/archivo-latin-800-normal.woff", import.meta.url),
       ),
@@ -201,6 +213,10 @@ function stubOgRouteFetch() {
     "utf8",
   );
   const fonts = new Map<string, ArrayBuffer>([
+    ["/fonts/archivo/archivo-latin-400-normal.woff", assets.fonts.archivoRegular],
+    ["/fonts/archivo/archivo-latin-ext-400-normal.woff", assets.fonts.archivoRegularExt],
+    ["/fonts/archivo/archivo-latin-500-normal.woff", assets.fonts.archivoMedium],
+    ["/fonts/archivo/archivo-latin-ext-500-normal.woff", assets.fonts.archivoMediumExt],
     ["/fonts/archivo/archivo-latin-800-normal.woff", assets.fonts.archivoExtraBold],
     ["/fonts/archivo/archivo-latin-ext-800-normal.woff", assets.fonts.archivoExtraBoldExt],
     ["/fonts/archivo/archivo-latin-900-normal.woff", assets.fonts.archivoBlack],
@@ -472,11 +488,17 @@ describe("dynamic run OG model and image", () => {
       reveal: null,
     };
     const assets = localAssets();
+    const fontBytes = Object.values(assets.fonts).reduce(
+      (total, font) => total + font.byteLength,
+      0,
+    );
 
     const a = Buffer.from(await renderRunOgImage(model, assets).arrayBuffer());
     const b = Buffer.from(await renderRunOgImage(model, assets).arrayBuffer());
 
     expect(Buffer.compare(a, b)).toBe(0);
+    expect(fontBytes).toBe(147_268);
+    expect(fontBytes).toBeLessThan(500_000);
     expect(a.length).toBeLessThan(500_000);
   });
 });
