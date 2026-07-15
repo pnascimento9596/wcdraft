@@ -522,6 +522,7 @@ async function verifyModeSelectCtaDoesNotTapThrough(
     timeout: 30_000,
     waitUntil: "commit",
   });
+  await page.getByRole("heading", { name: "Lock a formation" }).waitFor();
 
   await assertNoBrowserErrors(testCase, "mode-select CTA tap target");
 }

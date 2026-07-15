@@ -141,7 +141,18 @@ describe("one-screen descriptor matrix", () => {
     );
   });
 
-  it("does not wait for a nonexistent full load after client-side draft navigation", () => {
+  it("pairs committed client routes with semantic readiness checks", () => {
+    const modeCtaCase = gameFlowSource.slice(
+      gameFlowSource.indexOf(
+        'await page.waitForURL((url) => url.pathname === "/play/draft"',
+      ),
+      gameFlowSource.indexOf(
+        'await assertNoBrowserErrors(testCase, "mode-select CTA tap target")',
+      ),
+    );
+    expect(modeCtaCase).toContain(
+      'getByRole("heading", { name: "Lock a formation" }).waitFor()',
+    );
     expect(gameFlowSource).toMatch(
       /waitForURL\(\/\\\/play\\\/draft\\\?run=\[\^&\]\+\$\/,[\s\S]*?waitUntil: "commit"/u,
     );
