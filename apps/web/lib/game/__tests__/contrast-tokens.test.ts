@@ -17,6 +17,7 @@ const globalErrorSource = readFileSync(
 );
 const manifestSource = readFileSync(new URL("../../../app/manifest.ts", import.meta.url), "utf8");
 const layoutSource = readFileSync(new URL("../../../app/layout.tsx", import.meta.url), "utf8");
+const homeSource = readFileSync(new URL("../../../app/page.tsx", import.meta.url), "utf8");
 const shareDefaultSvg = readFileSync(
   new URL("../../../public/og/share-default.svg", import.meta.url),
   "utf8",
@@ -161,7 +162,12 @@ describe("Terrace dark palette", () => {
 
   it("keeps CTA ink AA across the solid, pressed, and standalone auth fills", () => {
     const darkGlobals = varsFromBlock(globalsCss, /:root\[data-theme="dark"\]\s*\{/u);
+    const lightGlobals = varsFromBlock(globalsCss, /:root,\s*:root\[data-theme="light"\]\s*\{/u);
     const pressed = requireVar(darkGlobals, "--accent-press");
+    const globalActiveRule = cssBlock(
+      globalsCss,
+      /:where\(\s*a,\s*button,\s*summary,\s*\[role="button"\],\s*\[role="link"\],\s*\[role="menuitem"\],\s*\[role="radio"\],\s*\[role="switch"\],\s*\[role="tab"\]\s*\):active/u,
+    );
 
     expect(contrastRatio(TERRACE.onAccent, TERRACE.accent)).toBeGreaterThanOrEqual(AA_BODY);
     expect(pressed).toBe(TERRACE.accentPress);
@@ -170,9 +176,27 @@ describe("Terrace dark palette", () => {
     expect(contrastRatio(TERRACE.onAccent, pressed)).toBeCloseTo(4.5074, 3);
     expect(contrastRatio(TERRACE.onAccent, pressed)).toBeGreaterThanOrEqual(AA_BODY);
     expect(contrastRatio(TERRACE.onGold, TERRACE.gold)).toBeGreaterThanOrEqual(AA_BODY);
+    for (const backgroundName of ["--bg", "--s1", "--s2"] as const) {
+      const background = requireVar(darkGlobals, backgroundName);
+      const fadedInk = mixSrgb(TERRACE.onAccent, background, 0.82);
+      const fadedFill = mixSrgb(pressed, background, 0.82);
+      expect(contrastRatio(fadedInk, fadedFill), backgroundName).toBeLessThan(AA_BODY);
+    }
+    expect(globalActiveRule).toContain("translate: 0 1px");
+    expect(globalActiveRule).not.toContain("opacity:");
     expect(globalsCss).toMatch(
-      /\.btn--primary:active\s*\{[^}]*background:\s*var\(--accent-press\);/u,
+      /\.btn--primary:active\s*\{[^}]*translate:\s*none;[^}]*background:\s*var\(--accent-press\);/u,
     );
+    expect(homeSource).toContain('className="btn btn--primary btn--gold"');
+    expect(contrastRatio(requireVar(darkGlobals, "--gold-ink"), pressed)).toBeCloseTo(4.3715, 3);
+    expect(globalsCss).toMatch(
+      /\.btn--primary\.btn--gold:active\s*\{[^}]*background:\s*var\(--gold-solid\);/u,
+    );
+    for (const globals of [lightGlobals, darkGlobals]) {
+      expect(
+        contrastRatio(requireVar(globals, "--gold-ink"), requireVar(globals, "--gold-solid")),
+      ).toBeGreaterThanOrEqual(AA_BODY);
+    }
     expect(verifyFlowSource).toContain("--accent-press: #408964");
     expect(verifyFlowSource).toContain("button:hover { background: var(--accent-press); }");
     expect(RUN_SURFACE_PALETTE.dark.accentStrong).toBe(TERRACE.accentPress);

@@ -241,6 +241,7 @@
   transform: translateY(-1px);
 }
 .signin-form__submit:active {
+  translate: none;
   transform: translateY(0);
 }
 .signin-form__submit:focus-visible {

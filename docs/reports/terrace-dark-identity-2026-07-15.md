@@ -91,8 +91,14 @@ bone ink 300 has 5.2041, deep gold has 5.2737, and bright gold has 9.0186 on the
 surface. The first final rereview exposed that the original pressed fill `#37805b` produced
 only 3.9833 against action ink on `.btn--primary:active` and standalone auth hover. The
 smallest uniform channel lift that clears AA is +9: `#408964` produces 4.5074, while +8
-remains 4.4467. The executable inventory now covers the token plus both actual text-bearing
-state surfaces with zero known failures.
+remains 4.4467. A subsequent rereview then caught two effective-cascade failures hidden by
+that raw arithmetic: the global 0.82 active opacity reduced the primary pair to
+3.4027–3.4881 across its real dark backdrops, and the combined `btn--primary btn--gold` Daily
+CTA paired gold ink with the green pressed fill at 4.3715. Whole-element opacity is replaced
+by a color-preserving, non-reflowing one-pixel `translate`; transform-owning controls opt out
+of the extra movement. The combined Daily selector retains `--gold-solid` when active. The
+native-app-feel verifier now observes computed `translate`, rejects active opacity mutation,
+and calculates the actual Daily CTA active foreground/background contrast in both themes.
 
 Provenance remains hue-based and position remains shape-based. Page/card ratios are historical
 8.9384/7.9752, projected 7.8484/7.0027, estimate 8.0189/7.1549, manager
@@ -223,6 +229,13 @@ noted:
 - Forced core goldens — **69/69** core + **42/42** draft, 0 cached.
 - Forced data goldens — **59/59** data + **22/22** integration, 0 cached.
 - Forced leaderboard golden — **6/6**, 0 cached.
+- Cascade fix-forward native-app-feel proof — Chromium **180/180** and production-mode WebKit
+  **180/180** across four contexts and 16 presses per engine. Every Daily CTA active sample has
+  opacity 1, a real one-pixel press, and computed contrast **10.1346** in light / **8.4130** in
+  dark. Identity transforms do not count as feedback; the verifier also rejects any active
+  whole-element opacity mutation. Three exploratory direct WebKit-dev invocations encountered
+  the known dev-navigation race and emitted no metric verdict; they are not counted. The
+  repository's canonical WebKit command deliberately uses the production server and passed.
 - Protected tree objects are identical at base/head: core
   `344ced76f8d6fd1b9c959f4d3acd0308ac7acba7`, data
   `a9ca53a187d218e92e4da633acee788936e4bb45`, ETL
@@ -309,6 +322,13 @@ Base: dddf3ce50b589e409ce38197fc22bb4d2af2a42d
   confirmed the light proof was repaired, then found the pressed/hover action pairing omitted
   by the 87-pair guard. This second fix-forward minimally lifts the pressed fill, covers both
   real usages, and again requires a new exact-head review.
+- The next exact-head rereview correctly returned **FAIL** at
+  `a9f21e0e774b4b3d68eb140d611cc63afdae125b`: immutable report
+  `/tmp/terrace-final-rereview-a9f21e0.md`, SHA-256
+  `8157687c55fe3c1a9d3aaed20934cfda227f2056767d771c0373b0debee23d38`. It found the
+  whole-element opacity composite and combined primary+gold cascade failures above. This third
+  fix-forward replaces the unsafe global signal, preserves the combined CTA's gold cascade,
+  upgrades the real-browser proof, and requires another exact-head review.
 
 ## Git status
 

@@ -427,9 +427,9 @@ button {
   user-select: none;
 }
 
-/* An immediate compositor-only response avoids geometry changes and remains
-   safe when reduced motion collapses transitions globally. Component-owned
-   translateY press states can layer on top without margin/border reflow. */
+/* An independent translate preserves text/background colors and layout
+   metrics. Component-owned transform press states opt out below so their
+   existing one-pixel movement is not doubled. */
 :where(
   a,
   button,
@@ -441,7 +441,7 @@ button {
   [role="switch"],
   [role="tab"]
 ):active {
-  opacity: 0.82;
+  translate: 0 1px;
 }
 
 :focus-visible {
@@ -804,6 +804,7 @@ main {
   border-color: var(--line-strong);
 }
 .icon-btn:active {
+  translate: none;
   transform: translateY(1px);
 }
 
@@ -866,8 +867,8 @@ main {
   gap: 0.75rem;
 }
 .mobile-menu__link:active {
-  /* WebKit otherwise defers the reduced-motion opacity response by two
-     paint frames inside this momentum-scroll region. */
+  /* WebKit otherwise defers the reduced-motion active response by two paint
+     frames inside this momentum-scroll region. */
   transition-duration: 0s !important;
 }
 .mobile-menu__link:last-child {
@@ -979,9 +980,14 @@ main {
   background: color-mix(in srgb, var(--gold-solid) 88%, var(--bg-panel));
 }
 .btn--primary:active {
+  translate: none;
   transform: translateY(1px);
+  transition-duration: 0s !important;
   background: var(--accent-press);
   box-shadow: var(--e1);
+}
+.btn--primary.btn--gold:active {
+  background: var(--gold-solid);
 }
 .btn--ghost {
   background: transparent;
