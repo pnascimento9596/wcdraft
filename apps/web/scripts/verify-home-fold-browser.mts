@@ -1,1145 +1,258 @@
-import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { createRequire } from "node:module";
-import { tmpdir } from "node:os";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import net from "node:net";
-import { setTimeout as delay } from "node:timers/promises";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
-import { chromium, webkit, type BrowserType, type Page } from "playwright-core";
+import { chromium } from "playwright-core";
 
-import {
-  LEGACY_SCREENSHOT_EVIDENCE,
-  oneScreenDeviceCases,
-  type OneScreenEngine,
-} from "./one-screen-device-matrix";
-
+type Motion = "full" | "reduced";
 type Theme = "light" | "dark";
-type Motion = "no-preference" | "reduce";
-type RoutePath = "/" | "/play";
 
-type PaintRegion = {
-  readonly label: string;
-  readonly x: number;
-  readonly y: number;
-  readonly width: number;
-  readonly height: number;
-};
-
-type PaintContribution = {
-  readonly label: string;
-  readonly changedSampleRatio: number;
-};
-
-type PaintAnalysis = {
-  readonly failures: readonly string[];
-  readonly contributions: readonly PaintContribution[];
-};
-
-type SharpMetadata = {
-  readonly format?: string;
-  readonly width?: number;
-  readonly height?: number;
-};
-
-type SharpStats = {
-  readonly entropy: number;
-  readonly channels: readonly {
-    readonly min: number;
-    readonly max: number;
-    readonly stdev: number;
-  }[];
-};
-
-type SharpPipeline = {
-  png: (options: { compressionLevel: number; adaptiveFiltering: boolean }) => SharpPipeline;
-  toBuffer: () => Promise<Buffer>;
-  metadata: () => Promise<SharpMetadata>;
-  extract: (region: { left: number; top: number; width: number; height: number }) => SharpPipeline;
-  raw: () => SharpPipeline;
-  stats: () => Promise<SharpStats>;
-};
-
-type SharpFactory = (
-  input: Buffer,
-  options?: { readonly failOn?: "none" | "warning" | "error" | "truncated" },
-) => SharpPipeline;
-
-type FitMetric = {
-  readonly engine: OneScreenEngine;
-  readonly browserVersion: string;
-  readonly device: string;
-  readonly descriptorSource: string;
-  readonly viewport: { readonly width: number; readonly height: number };
-  readonly theme: Theme;
-  readonly motion: Motion;
-  readonly pathname: RoutePath;
-  readonly screenshot: string | null;
-  readonly screenshotPaintStable: boolean | null;
-  readonly screenshotCaptureCount: number | null;
-  readonly screenshotChangedSampleRatio: number | null;
-  readonly screenshotPngNormalized: boolean | null;
-  readonly screenshotPaintFailures: readonly string[];
-  readonly screenshotPaintContributions: readonly PaintContribution[];
-  readonly scrollHeight: number;
-  readonly bodyScrollHeight: number;
-  readonly innerHeight: number;
-  readonly scrollWidth: number;
-  readonly innerWidth: number;
-  readonly footerDisplay: string | null;
-  readonly renderedTheme: string | null;
-  readonly renderedReducedMotion: boolean;
-  readonly unpaintedRequiredContent: readonly string[];
-  readonly missingRequiredPaintTargets: readonly string[];
-  readonly devicePixelRatio: number;
-  readonly requiredPaintRegions: readonly PaintRegion[];
-  readonly ledeLines: number | null;
-  readonly requiredTargetCount: number;
-  readonly requiredTargetsInViewport: boolean;
-  readonly smallTargets: readonly string[];
-  readonly homeDemoPresent: boolean | null;
-  readonly homeStatCount: number | null;
-  readonly modeCardCount: number | null;
-  readonly regularModeColumns: number | null;
-  readonly progressItemCount: number | null;
-  readonly progressOneRow: boolean | null;
-  readonly dailyOneRow: boolean | null;
-  readonly cardCollisionCount: number | null;
-  readonly zoomDisabled: boolean;
-  readonly pageErrors: readonly string[];
-};
-
-type MeasuredFitMetric = Omit<
-  FitMetric,
-  | "engine"
-  | "browserVersion"
-  | "device"
-  | "descriptorSource"
-  | "viewport"
-  | "theme"
-  | "motion"
-  | "pathname"
-  | "screenshot"
-  | "screenshotPaintStable"
-  | "screenshotCaptureCount"
-  | "screenshotChangedSampleRatio"
-  | "screenshotPngNormalized"
-  | "screenshotPaintFailures"
-  | "screenshotPaintContributions"
->;
-
-type ManagedServer = {
-  readonly baseUrl: string;
-  readonly stop: () => Promise<void>;
-};
-
-const require = createRequire(import.meta.url);
-const appRoot = fileURLToPath(new URL("..", import.meta.url));
-const nextEnvPath = fileURLToPath(new URL("../next-env.d.ts", import.meta.url));
-const nextBin = require.resolve("next/dist/bin/next");
-const host = "127.0.0.1";
-const strict =
-  process.env.WCDRAFT_ONE_SCREEN_STRICT !== "0" && process.env.WCDRAFT_HOME_FOLD_STRICT !== "0";
-const screenshotTimeoutMs = 30_000;
+const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
+const baseUrl = process.env.BASE_URL ?? "http://127.0.0.1:3032";
+const phase = process.env.WCDRAFT_HOME_FOLD_PHASE ?? "capture";
+const strict = process.env.WCDRAFT_HOME_FOLD_STRICT === "1";
+const outDir =
+  process.env.WCDRAFT_HOME_FOLD_OUT_DIR ??
+  path.join(repoRoot, "docs/reports/final-polish-u2-fold-2026-07-14", phase);
+const viewports = [
+  { name: "360x800", width: 360, height: 800 },
+  { name: "390x844", width: 390, height: 844 },
+] as const;
 const themes: readonly Theme[] = ["light", "dark"];
-const motions: readonly Motion[] = ["no-preference", "reduce"];
-const routes: readonly RoutePath[] = ["/", "/play"];
-const engineEntries: readonly [OneScreenEngine, BrowserType][] = [
-  ["chromium", chromium],
-  ["webkit", webkit],
-];
-const devOverlayCss = `
-  nextjs-portal,
-  [data-nextjs-toast],
-  [data-nextjs-dialog-overlay],
-  [data-nextjs-build-indicator],
-  [data-nextjs-dev-tools-button],
-  [data-nextjs-dev-tools-panel] {
-    display: none !important;
-  }
-`;
-
-async function loadSharp(): Promise<SharpFactory> {
-  const moduleName = "sharp";
-  try {
-    return ((await import(moduleName)) as unknown as { default: SharpFactory }).default;
-  } catch {
-    const { globSync } = require("node:fs") as typeof import("node:fs");
-    const root = path.join(appRoot, "..", "..", "node_modules", ".pnpm");
-    const matches = globSync("sharp@*/node_modules/sharp/lib/index.js", { cwd: root });
-    const match = matches[0];
-    if (!match) {
-      throw new Error(
-        "sharp not found; install dev dependencies before running one-screen verification",
-      );
-    }
-    return (
-      (await import(pathToFileURL(path.join(root, match)).href)) as unknown as {
-        default: SharpFactory;
-      }
-    ).default;
-  }
-}
-
-const sharpPromise = loadSharp();
-
-function assert(condition: unknown, message: string): asserts condition {
-  if (!condition) throw new Error(message);
-}
-
-async function findFreePort(): Promise<number> {
-  return await new Promise((resolve, reject) => {
-    const server = net.createServer();
-    server.on("error", reject);
-    server.listen(0, host, () => {
-      const address = server.address();
-      assert(address && typeof address === "object", "failed to allocate one-screen port");
-      server.close((error) => (error ? reject(error) : resolve(address.port)));
-    });
-  });
-}
-
-async function waitForExit(
-  process: ChildProcessWithoutNullStreams,
-  timeoutMs: number,
-): Promise<boolean> {
-  if (process.exitCode !== null || process.signalCode !== null) return true;
-  return await new Promise((resolve) => {
-    const onExit = () => {
-      clearTimeout(timer);
-      resolve(true);
-    };
-    const timer = setTimeout(() => {
-      process.off("exit", onExit);
-      resolve(false);
-    }, timeoutMs);
-    process.once("exit", onExit);
-  });
-}
-
-async function stopProcess(process: ChildProcessWithoutNullStreams): Promise<void> {
-  if (process.exitCode !== null || process.signalCode !== null) return;
-  process.kill("SIGTERM");
-  if (await waitForExit(process, 5_000)) return;
-  process.kill("SIGKILL");
-  if (!(await waitForExit(process, 5_000))) {
-    throw new Error(`one-screen server ${process.pid?.toString() ?? "unknown"} did not stop`);
-  }
-}
-
-async function startServer(): Promise<ManagedServer> {
-  const externalBaseUrl = process.env.BASE_URL;
-  if (externalBaseUrl) return { baseUrl: externalBaseUrl, stop: async () => undefined };
-
-  const nextEnvSnapshot = await readFile(nextEnvPath).catch((error: unknown) => {
-    if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
-      return null;
-    }
-    throw error;
-  });
-  let nextEnvRestored = false;
-  const restoreNextEnv = async () => {
-    if (nextEnvRestored) return;
-    nextEnvRestored = true;
-    if (nextEnvSnapshot === null) await rm(nextEnvPath, { force: true });
-    else await writeFile(nextEnvPath, nextEnvSnapshot);
-  };
-  const port = await findFreePort();
-  const baseUrl = `http://${host}:${port.toString()}`;
-  const proc = spawn(
-    process.execPath,
-    [nextBin, "dev", "--webpack", "--hostname", host, "--port", port.toString()],
-    {
-      cwd: appRoot,
-      env: { ...globalThis.process.env, NEXT_TELEMETRY_DISABLED: "1" },
-      stdio: ["ignore", "pipe", "pipe"],
-    },
-  );
-  let logs = "";
-  const append = (chunk: Buffer) => {
-    logs = `${logs}${chunk.toString()}`.slice(-100_000);
-  };
-  proc.stdout.on("data", append);
-  proc.stderr.on("data", append);
-
-  try {
-    const deadline = Date.now() + 120_000;
-    while (Date.now() < deadline) {
-      if (proc.exitCode !== null) {
-        throw new Error(`one-screen server exited ${proc.exitCode.toString()}\n${logs}`);
-      }
-      try {
-        const response = await fetch(`${baseUrl}/`, { signal: AbortSignal.timeout(2_000) });
-        if (response.status < 500) break;
-      } catch {
-        // The server is still compiling.
-      }
-      await delay(300);
-    }
-    if (Date.now() >= deadline) {
-      throw new Error(`timed out waiting for one-screen server\n${logs}`);
-    }
-  } catch (error) {
-    await stopProcess(proc);
-    await restoreNextEnv();
-    throw error;
-  }
-
-  return {
-    baseUrl,
-    stop: async () => {
-      try {
-        await stopProcess(proc);
-      } finally {
-        await restoreNextEnv();
-      }
-    },
-  };
-}
-
-async function hideDevOverlay(page: Page): Promise<void> {
-  await page.evaluate((css) => {
-    const nonceElement = document.querySelector<HTMLScriptElement | HTMLStyleElement>(
-      "script[nonce], style[nonce]",
-    );
-    const nonce = nonceElement?.nonce ?? "";
-    if (!nonce) return;
-    const style = document.createElement("style");
-    style.nonce = nonce;
-    style.dataset.wcdraftOneScreenHarness = "dev-overlay";
-    style.textContent = css;
-    document.head.append(style);
-  }, devOverlayCss);
-}
-
-const routeReadySelectors: Readonly<Record<RoutePath, readonly string[]>> = {
-  "/": [
-    ".masthead",
-    ".hero .display",
-    ".hero .hero__sub",
-    "[data-hero-spin-demo]",
-    ".hero .hero__meta",
-  ],
-  "/play": [
-    ".masthead",
-    ".game-page--mode .page-head",
-    '[aria-label="Daily progress"]',
-    '[aria-label="Draft mode"]',
-    '[role="radio"]:nth-of-type(5)',
-    "main button.btn",
-  ],
-};
-
-async function waitForRouteReady(page: Page, pathname: RoutePath): Promise<void> {
-  await page.waitForFunction(
-    ({ expectedPath, selectors }) => {
-      if (window.location.pathname !== expectedPath) return false;
-      return selectors.every((selector) => {
-        const element = document.querySelector(selector);
-        if (!(element instanceof HTMLElement)) return false;
-        const rect = element.getBoundingClientRect();
-        if (rect.width <= 0 || rect.height <= 0) return false;
-        for (let current: HTMLElement | null = element; current; current = current.parentElement) {
-          const style = window.getComputedStyle(current);
-          if (
-            style.display === "none" ||
-            style.visibility === "hidden" ||
-            style.visibility === "collapse" ||
-            Number.parseFloat(style.opacity) <= 0.01
-          ) {
-            return false;
-          }
-        }
-        return true;
-      });
-    },
-    { expectedPath: pathname, selectors: routeReadySelectors[pathname] },
-  );
-}
-
-async function waitForInitialRouteMotion(page: Page, pathname: RoutePath): Promise<void> {
-  const animatedSurfaceSelectors = pathname === "/" ? ["main > *", ".reveal > *"] : ["main > *"];
-  await page.evaluate(
-    () =>
-      new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-      }),
-  );
-  await page.waitForFunction(
-    (selectors) =>
-      selectors.every((selector) =>
-        [...document.querySelectorAll(selector)].every((element) =>
-          element
-            .getAnimations()
-            .every(
-              (animation) => animation.playState !== "running" && animation.playState !== "pending",
-            ),
-        ),
-      ),
-    animatedSurfaceSelectors,
-    { timeout: 5_000 },
-  );
-}
-
-function metricFailures(metric: FitMetric): readonly string[] {
-  const prefix = `${metric.engine}/${metric.device}/${metric.theme}/${metric.motion}${metric.pathname}`;
-  const failures: string[] = [];
-  if (metric.scrollHeight > metric.innerHeight) {
-    failures.push(`${prefix}: document height ${metric.scrollHeight}/${metric.innerHeight}`);
-  }
-  if (metric.bodyScrollHeight > metric.innerHeight) {
-    failures.push(`${prefix}: body height ${metric.bodyScrollHeight}/${metric.innerHeight}`);
-  }
-  if (metric.scrollWidth > metric.innerWidth) {
-    failures.push(`${prefix}: document width ${metric.scrollWidth}/${metric.innerWidth}`);
-  }
-  if (metric.footerDisplay !== "none") failures.push(`${prefix}: footer is visible`);
-  if (metric.renderedTheme !== metric.theme) {
-    failures.push(`${prefix}: rendered theme is ${String(metric.renderedTheme)}`);
-  }
-  if (metric.renderedReducedMotion !== (metric.motion === "reduce")) {
-    failures.push(`${prefix}: rendered motion preference did not match`);
-  }
-  if (metric.unpaintedRequiredContent.length > 0) {
-    failures.push(
-      `${prefix}: required content is not painted ${metric.unpaintedRequiredContent.join(" | ")}`,
-    );
-  }
-  if (metric.missingRequiredPaintTargets.length > 0) {
-    failures.push(
-      `${prefix}: required paint targets are missing ` +
-        metric.missingRequiredPaintTargets.join(" | "),
-    );
-  }
-  if (!metric.requiredTargetsInViewport) failures.push(`${prefix}: required target below fold`);
-  if (metric.smallTargets.length > 0) {
-    failures.push(`${prefix}: sub-44px targets ${metric.smallTargets.join(" | ")}`);
-  }
-  if (metric.zoomDisabled) failures.push(`${prefix}: viewport metadata disables zoom`);
-  if (metric.pageErrors.length > 0) {
-    failures.push(`${prefix}: page errors ${metric.pageErrors.join(" | ")}`);
-  }
-  if (metric.screenshot !== null && metric.motion === "reduce" && !metric.screenshotPaintStable) {
-    failures.push(
-      `${prefix}: reduced-motion screenshot did not reach a stable painted frame after ` +
-        `${String(metric.screenshotCaptureCount)} captures ` +
-        `(changed sample ratio ${String(metric.screenshotChangedSampleRatio)})`,
-    );
-  }
-  if (metric.screenshot !== null && !metric.screenshotPngNormalized) {
-    failures.push(`${prefix}: screenshot was not normalized into portable PNG evidence`);
-  }
-  if (metric.screenshotPaintFailures.length > 0) {
-    failures.push(
-      `${prefix}: screenshot required regions are not painted ${metric.screenshotPaintFailures.join(
-        " | ",
-      )}`,
-    );
-  }
-
-  if (metric.pathname === "/") {
-    if ((metric.ledeLines ?? Number.POSITIVE_INFINITY) > 2) {
-      failures.push(`${prefix}: home lede uses ${String(metric.ledeLines)} lines`);
-    }
-    if (metric.requiredTargetCount !== 3) {
-      failures.push(
-        `${prefix}: expected 3 home CTAs, saw ${metric.requiredTargetCount.toString()}`,
-      );
-    }
-    if (!metric.homeDemoPresent) failures.push(`${prefix}: spin demo missing`);
-    if (metric.homeStatCount !== 3) {
-      failures.push(`${prefix}: expected 3 stats, saw ${String(metric.homeStatCount)}`);
-    }
-  } else {
-    const expectedColumns = metric.viewport.width <= 430 ? 2 : 4;
-    if (metric.modeCardCount !== 5) {
-      failures.push(`${prefix}: expected 5 mode cards, saw ${String(metric.modeCardCount)}`);
-    }
-    if (metric.regularModeColumns !== expectedColumns) {
-      failures.push(
-        `${prefix}: expected ${expectedColumns.toString()} regular columns, saw ${String(metric.regularModeColumns)}`,
-      );
-    }
-    if (metric.requiredTargetCount !== 6) {
-      failures.push(
-        `${prefix}: expected 5 cards plus dock action, saw ${metric.requiredTargetCount.toString()}`,
-      );
-    }
-    if (metric.progressItemCount !== 4 || !metric.progressOneRow) {
-      failures.push(`${prefix}: progress is not four items on one row`);
-    }
-    if (!metric.dailyOneRow) failures.push(`${prefix}: Daily card is not one visual row`);
-    if ((metric.cardCollisionCount ?? 1) > 0) {
-      failures.push(`${prefix}: ${String(metric.cardCollisionCount)} mode-card collisions`);
-    }
-  }
-  return failures;
-}
-
-async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFitMetric> {
-  return (await page.evaluate(String.raw`(() => {
-    const pathValue = ${JSON.stringify(pathname)};
-    const visible = (element) => {
-      if (!(element instanceof HTMLElement)) return false;
-      const rect = element.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return false;
-      for (let current = element; current; current = current.parentElement) {
-        const style = getComputedStyle(current);
-        if (
-          style.display === "none" ||
-          style.visibility === "hidden" ||
-          style.visibility === "collapse" ||
-          Number.parseFloat(style.opacity) <= 0.01
-        ) {
-          return false;
-        }
-      }
-      return true;
-    };
-    const rectsShareRow = (elements) => {
-      if (elements.length <= 1) return true;
-      const rects = elements.map((element) => element.getBoundingClientRect());
-      return Math.max(...rects.map((rect) => rect.top)) < Math.min(...rects.map((rect) => rect.bottom));
-    };
-    const lineCount = (element) => {
-      if (!element) return null;
-      const range = document.createRange();
-      range.selectNodeContents(element);
-      return new Set(
-        [...range.getClientRects()].map((rect) => Math.round(rect.top * 10) / 10),
-      ).size;
-    };
-    const collisionCount = (elements) => {
-      const rects = elements.map((element) => element.getBoundingClientRect());
-      let collisions = 0;
-      for (let left = 0; left < rects.length; left += 1) {
-        for (let right = left + 1; right < rects.length; right += 1) {
-          const a = rects[left];
-          const b = rects[right];
-          if (!a || !b) continue;
-          if (a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) {
-            collisions += 1;
-          }
-        }
-      }
-      return collisions;
-    };
-
-    const doc = document.documentElement;
-    const body = document.body;
-    const footer = document.querySelector(".site-footer");
-    const metaViewport = document.querySelector('meta[name="viewport"]')?.content ?? "";
-    const requiredContent =
-      pathValue === "/"
-        ? [
-            ["masthead", document.querySelector(".masthead")],
-            ["hero title", document.querySelector(".hero .display")],
-            ["hero lede", document.querySelector(".hero__sub")],
-            ["spin demo", document.querySelector("[data-hero-spin-demo]")],
-            ["stat strip", document.querySelector(".hero__meta")],
-          ]
-        : [
-            ["masthead", document.querySelector(".masthead")],
-            ["mode heading", document.querySelector(".game-page--mode .page-head")],
-            ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
-            ["mode grid", document.querySelector('[aria-label="Draft mode"]')],
-          ];
-    const mastheadPaintTargets = [
-      ["wordmark", document.querySelector(".wordmark")],
-      ["theme control", document.querySelector('[aria-label^="Switch to "]')],
-      ["menu control", document.querySelector(".menu-toggle")],
-    ];
-    const modeCardPaintTargets = Array.from({ length: 5 }, (_, index) => [
-      "mode card " + (index + 1).toString(),
-      document.querySelectorAll('[role="radio"]')[index] ?? null,
-    ]);
-    const routePaintTargets =
-      pathValue === "/"
-        ? [
-            ["hero title", document.querySelector(".hero .display")],
-            ["hero lede", document.querySelector(".hero__sub")],
-            ["spin demo", document.querySelector("[data-hero-spin-demo]")],
-            ["hero actions", document.querySelector(".hero .btn-row")],
-            ["stat strip", document.querySelector(".hero__meta")],
-          ]
-        : [
-            ["mode title", document.querySelector(".game-page--mode .display")],
-            ["mode lede", document.querySelector(".game-page--mode .lede")],
-            ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
-            ...modeCardPaintTargets,
-            ["dock action", document.querySelector("main button.btn")],
-          ];
-    const paintTargetEntries = [...mastheadPaintTargets, ...routePaintTargets];
-    const paintTargetByLabel = new Map(paintTargetEntries);
-    const expectedPaintLabels = [
-      "wordmark",
-      "theme control",
-      ...(matchMedia("(max-width: 51.999rem)").matches ? ["menu control"] : []),
-      ...(pathValue === "/"
-        ? ["hero title", "hero lede", "spin demo", "hero actions", "stat strip"]
-        : [
-            "mode title",
-            "mode lede",
-            "Daily progress",
-            "mode card 1",
-            "mode card 2",
-            "mode card 3",
-            "mode card 4",
-            "mode card 5",
-            "dock action",
-          ]),
-    ];
-    const missingRequiredPaintTargets = expectedPaintLabels.filter(
-      (label) => !visible(paintTargetByLabel.get(label)),
-    );
-    const requiredPaintRegions = expectedPaintLabels
-      .filter((label) => visible(paintTargetByLabel.get(label)))
-      .map((label) => {
-        const element = paintTargetByLabel.get(label);
-        element.setAttribute("data-wcdraft-paint-target", label);
-        const rect = element.getBoundingClientRect();
-        return {
-          label,
-          x: rect.x,
-          y: rect.y,
-          width: rect.width,
-          height: rect.height,
-        };
-      });
-    const unpaintedRequiredContent = requiredContent
-      .filter(([, element]) => !visible(element))
-      .map(([label]) => label);
-    const homeActions = [...document.querySelectorAll(".hero a")].filter(visible);
-    const modeCards = [...document.querySelectorAll('[role="radio"]')].filter(visible);
-    const dockAction = document.querySelector("main button.btn");
-    const requiredTargets =
-      pathValue === "/"
-        ? homeActions
-        : [...modeCards, ...(dockAction && visible(dockAction) ? [dockAction] : [])];
-    const smallTargets = requiredTargets
-      .map((element) => {
-        const rect = element.getBoundingClientRect();
-        return { label: element.textContent?.trim() ?? element.getAttribute("aria-label") ?? "", rect };
-      })
-      .filter(({ rect }) => rect.width < 44 || rect.height < 44)
-      .map(({ label, rect }) => label + ":" + rect.width.toFixed(1) + "x" + rect.height.toFixed(1));
-    const requiredTargetsInViewport = requiredTargets.every((element) => {
-      const rect = element.getBoundingClientRect();
-      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
-    });
-    const isDailyCard = (element) =>
-      element.textContent?.toLocaleUpperCase().includes("TODAY'S DRAFT") === true;
-    const regularCards = modeCards.filter((element) => !isDailyCard(element));
-    const regularModeColumns =
-      pathValue === "/play"
-        ? new Set(regularCards.map((element) => Math.round(element.getBoundingClientRect().left))).size
-        : null;
-    const progressItems = [
-      ...document.querySelectorAll(
-        'section[aria-label="Daily progress"] > div:first-child > span',
-      ),
-    ].filter(visible);
-    const dailyCard = modeCards.find(isDailyCard);
-    const dailyParts = dailyCard ? [...dailyCard.children].filter(visible) : [];
-
-    return {
-      scrollHeight: doc.scrollHeight,
-      bodyScrollHeight: body.scrollHeight,
-      innerHeight,
-      scrollWidth: doc.scrollWidth,
-      innerWidth,
-      footerDisplay: footer ? getComputedStyle(footer).display : null,
-      renderedTheme: doc.dataset.theme ?? null,
-      renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
-      unpaintedRequiredContent,
-      missingRequiredPaintTargets,
-      devicePixelRatio,
-      requiredPaintRegions,
-      ledeLines: lineCount(document.querySelector(".hero__sub")),
-      requiredTargetCount: requiredTargets.length,
-      requiredTargetsInViewport,
-      smallTargets,
-      homeDemoPresent:
-        pathValue === "/" ? document.querySelector("[data-hero-spin-demo]") !== null : null,
-      homeStatCount: pathValue === "/" ? document.querySelectorAll(".hero .stat").length : null,
-      modeCardCount: pathValue === "/play" ? modeCards.length : null,
-      regularModeColumns,
-      progressItemCount: pathValue === "/play" ? progressItems.length : null,
-      progressOneRow: pathValue === "/play" ? rectsShareRow(progressItems) : null,
-      dailyOneRow: pathValue === "/play" ? Boolean(dailyCard) && rectsShareRow(dailyParts) : null,
-      cardCollisionCount: pathValue === "/play" ? collisionCount(modeCards) : null,
-      zoomDisabled: /(?:user-scalable\s*=\s*no|maximum-scale\s*=\s*1(?:\.0+)?(?:\s|,|$))/iu.test(
-        metaViewport,
-      ),
-      pageErrors: [],
-    };
-  })()`)) as MeasuredFitMetric;
-}
-
-function assertCompletePng(buffer: Buffer): void {
-  const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
-  assert(buffer.subarray(0, pngSignature.length).equals(pngSignature), "invalid PNG signature");
-  let offset = pngSignature.length;
-  let sawIend = false;
-  while (offset < buffer.length) {
-    assert(offset + 12 <= buffer.length, "truncated normalized PNG chunk header");
-    const length = buffer.readUInt32BE(offset);
-    const chunkEnd = offset + 12 + length;
-    assert(chunkEnd <= buffer.length, "truncated normalized PNG chunk payload");
-    const type = buffer.toString("ascii", offset + 4, offset + 8);
-    offset = chunkEnd;
-    if (type === "IEND") {
-      sawIend = true;
-      break;
-    }
-  }
-  assert(sawIend, "normalized PNG is missing IEND");
-  assert(offset === buffer.length, "normalized PNG contains data after IEND");
-}
-
-async function captureNormalizedPng(
-  page: Page,
-  animations: "allow" | "disabled",
-  expectedWidth: number,
-  expectedHeight: number,
-): Promise<Buffer> {
-  const raw = await page.screenshot({ animations, timeout: screenshotTimeoutMs });
-  const sharp = await sharpPromise;
-  const normalized = await sharp(raw, { failOn: "warning" })
-    .png({ compressionLevel: 9, adaptiveFiltering: true })
-    .toBuffer();
-  assertCompletePng(normalized);
-  const metadata = await sharp(normalized, { failOn: "warning" }).metadata();
-  assert(metadata.format === "png", `normalized screenshot format is ${String(metadata.format)}`);
-  assert(
-    metadata.width === expectedWidth && metadata.height === expectedHeight,
-    `normalized screenshot dimensions ${String(metadata.width)}x${String(metadata.height)} ` +
-      `did not match ${expectedWidth.toString()}x${expectedHeight.toString()}`,
-  );
-  return normalized;
-}
-
-async function screenshotPaintFailures(
-  screenshot: Buffer,
-  hiddenTargetsScreenshot: Buffer,
-  regions: readonly PaintRegion[],
-  deviceScaleFactor: number,
-): Promise<PaintAnalysis> {
-  const sharp = await sharpPromise;
-  const metadata = await sharp(screenshot, { failOn: "warning" }).metadata();
-  const screenshotWidth = metadata.width ?? 0;
-  const screenshotHeight = metadata.height ?? 0;
-  const failures: string[] = [];
-  const contributions: PaintContribution[] = [];
-  const minTargetChangedSampleRatio = 0.002;
-
-  for (const region of regions) {
-    const left = Math.max(0, Math.floor(region.x * deviceScaleFactor));
-    const top = Math.max(0, Math.floor(region.y * deviceScaleFactor));
-    const right = Math.min(
-      screenshotWidth,
-      Math.ceil((region.x + region.width) * deviceScaleFactor),
-    );
-    const bottom = Math.min(
-      screenshotHeight,
-      Math.ceil((region.y + region.height) * deviceScaleFactor),
-    );
-    if (right <= left || bottom <= top) {
-      failures.push(`${region.label}: empty crop`);
-      continue;
-    }
-    // Sharp's stats() terminal ignores pending extract operations. Materialize
-    // both crops first so the statistics and target-contribution comparison are
-    // scoped to the required DOM rectangle rather than the whole screenshot.
-    const cropRegion = { left, top, width: right - left, height: bottom - top };
-    const [paintedCrop, hiddenCrop] = await Promise.all([
-      sharp(screenshot, { failOn: "warning" })
-        .extract(cropRegion)
-        .png({ compressionLevel: 9, adaptiveFiltering: true })
-        .toBuffer(),
-      sharp(hiddenTargetsScreenshot, { failOn: "warning" })
-        .extract(cropRegion)
-        .png({ compressionLevel: 9, adaptiveFiltering: true })
-        .toBuffer(),
-    ]);
-    const stats = await sharp(paintedCrop, { failOn: "warning" }).stats();
-    const colorChannels = stats.channels.slice(0, 3);
-    const maxRange = Math.max(...colorChannels.map((channel) => channel.max - channel.min));
-    const maxStdev = Math.max(...colorChannels.map((channel) => channel.stdev));
-    if (stats.entropy < 0.5 || maxRange < 24 || maxStdev < 2.5) {
-      failures.push(
-        `${region.label}: flat pixels entropy=${stats.entropy.toFixed(2)} ` +
-          `range=${maxRange.toFixed(1)} stdev=${maxStdev.toFixed(1)}`,
-      );
-    }
-    const targetChangedSampleRatio = await normalizedChangedSampleRatio(paintedCrop, hiddenCrop);
-    contributions.push({ label: region.label, changedSampleRatio: targetChangedSampleRatio });
-    if (targetChangedSampleRatio < minTargetChangedSampleRatio) {
-      failures.push(
-        `${region.label}: no semantic paint contribution ` +
-          `changedSampleRatio=${targetChangedSampleRatio.toFixed(6)}`,
-      );
-    }
-  }
-
-  return { failures, contributions };
-}
-
-async function normalizedChangedSampleRatio(left: Buffer, right: Buffer): Promise<number> {
-  if (left.equals(right)) return 0;
-  const sharp = await sharpPromise;
-  const [leftPixels, rightPixels] = await Promise.all([
-    sharp(left, { failOn: "warning" }).raw().toBuffer(),
-    sharp(right, { failOn: "warning" }).raw().toBuffer(),
-  ]);
-  assert(leftPixels.length === rightPixels.length, "normalized screenshot pixel sizes differ");
-  let changedSamples = 0;
-  for (let index = 0; index < leftPixels.length; index += 1) {
-    if (Math.abs((leftPixels[index] ?? 0) - (rightPixels[index] ?? 0)) > 2) {
-      changedSamples += 1;
-    }
-  }
-  return changedSamples / leftPixels.length;
-}
-
-async function captureHiddenPaintBaseline(
-  page: Page,
-  animations: "allow" | "disabled",
-  expectedWidth: number,
-  expectedHeight: number,
-): Promise<Buffer> {
-  await page.evaluate(() => {
-    for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
-      const previousStyle = element.getAttribute("style");
-      element.dataset.wcdraftPaintHadStyle = previousStyle === null ? "false" : "true";
-      element.dataset.wcdraftPaintPreviousStyle = previousStyle ?? "";
-      element.style.setProperty("visibility", "hidden", "important");
-    }
-  });
-  try {
-    // WebKit can return the prior compositor frame immediately after a
-    // visibility mutation even though computed style already says hidden.
-    // Cross two animation frames, then discard one normalized capture before
-    // retaining the hidden baseline used for semantic contribution checks.
-    await page.evaluate(
-      () =>
-        new Promise<void>((resolve) => {
-          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-        }),
-    );
-    await page.waitForTimeout(150);
-    await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
-    await page.waitForTimeout(100);
-    return await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
-  } finally {
-    await page.evaluate(() => {
-      for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
-        if (element.dataset.wcdraftPaintHadStyle === "true") {
-          element.setAttribute("style", element.dataset.wcdraftPaintPreviousStyle ?? "");
-        } else {
-          element.removeAttribute("style");
-        }
-        delete element.dataset.wcdraftPaintHadStyle;
-        delete element.dataset.wcdraftPaintPreviousStyle;
-      }
-    });
-  }
-}
-
-async function analyzePaintEvidence(
-  page: Page,
-  screenshot: Buffer,
-  animations: "allow" | "disabled",
-  expectedWidth: number,
-  expectedHeight: number,
-  requiredPaintRegions: readonly PaintRegion[],
-  devicePixelRatio: number,
-): Promise<PaintAnalysis> {
-  const hiddenTargetsScreenshot = await captureHiddenPaintBaseline(
-    page,
-    animations,
-    expectedWidth,
-    expectedHeight,
-  );
-  return screenshotPaintFailures(
-    screenshot,
-    hiddenTargetsScreenshot,
-    requiredPaintRegions,
-    devicePixelRatio,
-  );
-}
-
-async function captureEvidence(
-  page: Page,
-  screenshotPath: string | null,
-  motion: Motion,
-  requiredPaintRegions: readonly PaintRegion[],
-  devicePixelRatio: number,
-): Promise<{
-  readonly stable: boolean | null;
-  readonly captureCount: number | null;
-  readonly changedSampleRatio: number | null;
-  readonly normalized: boolean | null;
-  readonly paintFailures: readonly string[];
-  readonly paintContributions: readonly PaintContribution[];
-}> {
-  if (screenshotPath === null) {
-    return {
-      stable: null,
-      captureCount: null,
-      changedSampleRatio: null,
-      normalized: null,
-      paintFailures: [],
-      paintContributions: [],
-    };
-  }
-  const viewport = page.viewportSize();
-  assert(viewport, "one-screen screenshot page has no viewport");
-  const expectedWidth = Math.round(viewport.width * devicePixelRatio);
-  const expectedHeight = Math.round(viewport.height * devicePixelRatio);
-
-  if (motion === "no-preference") {
-    // Review evidence is about the finished one-screen composition, not a
-    // nondeterministic frame within the finite entrance animation.
-    const screenshot = await captureNormalizedPng(page, "disabled", expectedWidth, expectedHeight);
-    await writeFile(screenshotPath, screenshot);
-    const paintAnalysis = await analyzePaintEvidence(
-      page,
-      screenshot,
-      "disabled",
-      expectedWidth,
-      expectedHeight,
-      requiredPaintRegions,
-      devicePixelRatio,
-    );
-    return {
-      stable: null,
-      captureCount: 1,
-      changedSampleRatio: null,
-      normalized: true,
-      paintFailures: paintAnalysis.failures,
-      paintContributions: paintAnalysis.contributions,
-    };
-  }
-
-  // Playwright can emit a structurally valid PNG that some decoders render
-  // incompletely even though its pixel stream is intact. Normalize every frame
-  // through an independent decoder before comparing or writing review evidence.
-  // The UI is static except for the once-per-second countdown: demand two
-  // visually stable normalized captures separated by 500ms. The Daily card has
-  // a live countdown, so exact byte equality is accepted immediately and a
-  // tightly bounded normalized-pixel delta handles only that small text tick.
-  const compositorSettleMs = 1_500;
-  const maxCaptures = 7;
-  const maxChangedSampleRatio = 0.005;
-  await page.waitForTimeout(compositorSettleMs);
-  let previous = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
-  let changedSampleRatio = 1;
-  for (let captureCount = 2; captureCount <= maxCaptures; captureCount += 1) {
-    await page.waitForTimeout(500);
-    const current = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
-    changedSampleRatio = await normalizedChangedSampleRatio(previous, current);
-    if (changedSampleRatio <= maxChangedSampleRatio) {
-      await writeFile(screenshotPath, current);
-      const paintAnalysis = await analyzePaintEvidence(
-        page,
-        current,
-        "allow",
-        expectedWidth,
-        expectedHeight,
-        requiredPaintRegions,
-        devicePixelRatio,
-      );
-      return {
-        stable: true,
-        captureCount,
-        changedSampleRatio,
-        normalized: true,
-        paintFailures: paintAnalysis.failures,
-        paintContributions: paintAnalysis.contributions,
-      };
-    }
-    previous = current;
-  }
-  await writeFile(screenshotPath, previous);
-  const paintAnalysis = await analyzePaintEvidence(
-    page,
-    previous,
-    "allow",
-    expectedWidth,
-    expectedHeight,
-    requiredPaintRegions,
-    devicePixelRatio,
-  );
-  return {
-    stable: false,
-    captureCount: maxCaptures,
-    changedSampleRatio,
-    normalized: true,
-    paintFailures: paintAnalysis.failures,
-    paintContributions: paintAnalysis.contributions,
-  };
-}
+const motions: readonly Motion[] = ["full", "reduced"];
+const safeAreaBottoms = [0, 34] as const;
+const axeCdn = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js";
 
 async function main(): Promise<void> {
-  const outputRoot =
-    process.env.WCDRAFT_ONE_SCREEN_OUT_DIR ??
-    process.env.WCDRAFT_HOME_FOLD_OUT_DIR ??
-    (await mkdtemp(path.join(tmpdir(), "wcdraft-one-screen-")));
-  const screenshotsDir = path.join(outputRoot, "screenshots");
+  const screenshotsDir = path.join(outDir, "screenshots");
   await mkdir(screenshotsDir, { recursive: true });
-  const server = await startServer();
-  const metrics: FitMetric[] = [];
-  const resolvedDescriptors: unknown[] = [];
+  const axeSource = await fetch(axeCdn).then(async (response) => {
+    if (!response.ok)
+      throw new Error(`failed to fetch axe-core: HTTP ${response.status.toString()}`);
+    return await response.text();
+  });
+  const browser = await chromium.launch({
+    channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
+    headless: true,
+  });
+  const measurements: unknown[] = [];
 
   try {
-    for (const [engineName, browserType] of engineEntries) {
-      const deviceCases = oneScreenDeviceCases(engineName);
-      resolvedDescriptors.push(
-        ...deviceCases.map((entry) => ({
-          engine: engineName,
-          name: entry.name,
-          source: entry.source,
-          viewport: entry.descriptor.viewport,
-          screen: entry.descriptor.screen,
-          defaultBrowserType: entry.descriptor.defaultBrowserType,
-          delegatedDecision: entry.delegatedDecision ?? null,
-        })),
-      );
-      for (const deviceCase of deviceCases) {
-        // WebKit reproducibly degraded on the 64th sequential context when all
-        // 72 engine cases shared one browser: navigation first timed out, then
-        // semantic navigation exposed the same lifecycle stall at screenshot.
-        // Recycle at the device boundary so each launch owns exactly the eight
-        // theme/motion/route contexts for one descriptor.
-        const browser = await browserType.launch({ headless: true });
-        const browserVersion = browser.version();
-        try {
-          for (const theme of themes) {
-            for (const motion of motions) {
-              for (const pathname of routes) {
-                // Keep routes in separate browser contexts. Reusing a context
-                // after closing the home page produced reproducible stale/
-                // incomplete compositor paint on the subsequent /play page,
-                // despite correct DOM state and zero scroll offset.
-                const context = await browser.newContext({
-                  ...deviceCase.descriptor,
-                  baseURL: server.baseUrl,
-                  colorScheme: theme,
-                  reducedMotion: motion,
-                });
-                await context.addInitScript((selectedTheme: Theme) => {
-                  localStorage.setItem("wcdraft:theme", selectedTheme);
-                }, theme);
-                try {
-                  const page = await context.newPage();
-                  const pageErrors: string[] = [];
-                  page.on("pageerror", (error) => pageErrors.push(error.message));
-                  const response = await page.goto(pathname, { waitUntil: "domcontentloaded" });
-                  assert(response !== null, `${pathname} did not return a main-document response`);
-                  assert(
-                    response.ok(),
-                    `${pathname} returned HTTP ${response.status().toString()}`,
-                  );
-                  await waitForRouteReady(page, pathname);
-                  await page.evaluate(() => document.fonts.ready);
-                  await waitForInitialRouteMotion(page, pathname);
-                  await hideDevOverlay(page);
-                  await page.waitForTimeout(100);
-                  const measured = await measurePage(page, pathname);
-                  const screenshot =
-                    theme === "dark"
-                      ? path.join(
-                          screenshotsDir,
-                          [
-                            engineName,
-                            deviceCase.name,
-                            motion,
-                            pathname === "/" ? "home" : "play",
-                          ].join("-") + ".png",
-                        )
-                      : null;
-                  const screenshotCapture = await captureEvidence(
-                    page,
-                    screenshot,
-                    motion,
-                    measured.requiredPaintRegions,
-                    measured.devicePixelRatio,
-                  );
-                  const metric: FitMetric = {
-                    engine: engineName,
-                    browserVersion,
-                    device: deviceCase.name,
-                    descriptorSource: deviceCase.source,
-                    viewport: deviceCase.descriptor.viewport,
-                    theme,
-                    motion,
-                    pathname,
-                    screenshot,
-                    screenshotPaintStable: screenshotCapture.stable,
-                    screenshotCaptureCount: screenshotCapture.captureCount,
-                    screenshotChangedSampleRatio: screenshotCapture.changedSampleRatio,
-                    screenshotPngNormalized: screenshotCapture.normalized,
-                    screenshotPaintFailures: screenshotCapture.paintFailures,
-                    screenshotPaintContributions: screenshotCapture.paintContributions,
-                    ...measured,
-                    pageErrors,
-                  };
-                  metrics.push(metric);
-                  const failures = metricFailures(metric);
-                  process.stdout.write(
-                    `[one-screen] ${engineName} ${deviceCase.name} ${theme} ${motion} ${pathname} ` +
-                      `height=${metric.scrollHeight.toString()}/${metric.innerHeight.toString()} ` +
-                      `failures=${failures.length.toString()}\n`,
-                  );
-                  await page.close();
-                } finally {
-                  await context.close();
-                }
+    for (const viewport of viewports) {
+      for (const theme of themes) {
+        for (const motion of motions) {
+          for (const safeAreaBottom of safeAreaBottoms) {
+            const context = await browser.newContext({
+              viewport: { width: viewport.width, height: viewport.height },
+              colorScheme: theme,
+              reducedMotion: motion === "reduced" ? "reduce" : "no-preference",
+              isMobile: true,
+              hasTouch: true,
+              deviceScaleFactor: 1,
+            });
+            await context.addInitScript((selectedTheme: Theme) => {
+              window.localStorage.setItem("wcdraft:theme", selectedTheme);
+            }, theme);
+            const page = await context.newPage();
+            const errors: string[] = [];
+            page.on("console", (message) => {
+              if (
+                message.type() === "error" &&
+                !message.text().startsWith("Failed to load resource:")
+              ) {
+                errors.push(message.text());
               }
+            });
+            page.on("pageerror", (error) => errors.push(error.message));
+            await page.goto(baseUrl, { waitUntil: "networkidle" });
+            await page.getByRole("heading", { name: /Draft your/u }).waitFor();
+            if (safeAreaBottom > 0) {
+              await page.addStyleTag({
+                content: `.hero { --home-safe-area-bottom: ${safeAreaBottom.toString()}px !important; }`,
+              });
             }
+            await page
+              .locator(
+                motion === "reduced"
+                  ? '[data-hero-spin-poster][data-reduced-motion="true"]'
+                  : "[data-hero-spin-loop]",
+              )
+              .waitFor();
+            await page.evaluate(() => document.fonts.ready);
+            await page.waitForTimeout(100);
+            await page.addScriptTag({ content: axeSource });
+            const axeViolations = (await page.evaluate(`(async () => {
+            const result = await window.axe.run(document, {
+              runOnly: { type: "tag", values: ["wcag2a", "wcag2aa"] },
+            });
+            return result.violations.map((violation) =>
+              violation.impact ? violation.id + ":" + violation.impact : violation.id
+            );
+          })()`)) as string[];
+
+            const measured = (await page.evaluate(`(() => {
+            const doc = document.documentElement;
+            const body = document.body;
+            const hero = document.querySelector(".hero");
+            const demo = document.querySelector("[data-hero-spin-demo]");
+            const animatedDemo = document.querySelector("[data-hero-spin-loop]");
+            const poster = document.querySelector("[data-hero-spin-poster]");
+            const heroInner = document.querySelector(".hero__inner");
+            const heroLive = document.querySelector(".hero__live");
+            const animatedRows = animatedDemo
+              ? [...animatedDemo.children].map((element) => ({
+                  className: element.className,
+                  top: element.getBoundingClientRect().top,
+                  bottom: element.getBoundingClientRect().bottom,
+                  height: element.getBoundingClientRect().height,
+                }))
+              : [];
+            const actions = [...document.querySelectorAll(".hero a")];
+            const all = [doc, body, ...document.querySelectorAll("body *")];
+            const maxScrollWidth = Math.max(...all.map((element) => element.scrollWidth));
+            const smallTargets = actions
+              .map((element) => {
+                const rect = element.getBoundingClientRect();
+                return { text: element.textContent?.trim() ?? "", width: rect.width, height: rect.height };
+              })
+              .filter((target) => target.width < 44 || target.height < 44);
+            const rect = (element) => {
+              if (!element) return null;
+              const value = element.getBoundingClientRect();
+              return {
+                top: value.top,
+                bottom: value.bottom,
+                width: value.width,
+                height: value.height,
+              };
+            };
+            return {
+              scrollHeight: doc.scrollHeight,
+              clientHeight: doc.clientHeight,
+              verticalOverflow: Math.max(0, doc.scrollHeight - doc.clientHeight),
+              scrollWidth: doc.scrollWidth,
+              clientWidth: doc.clientWidth,
+              maxScrollWidth,
+              horizontalOverflow: maxScrollWidth > doc.clientWidth,
+              hero: rect(hero),
+              demo: rect(demo),
+              animatedDemo: rect(animatedDemo),
+              animatedRows,
+              poster: rect(poster),
+              heroInner: rect(heroInner),
+              heroLive: rect(heroLive),
+              requiredCtaBottom: Math.max(...actions.map((element) => element.getBoundingClientRect().bottom)),
+              requiredCtasInViewport: actions.every(
+                (element) => element.getBoundingClientRect().bottom <= window.innerHeight,
+              ),
+              smallTargets,
+              heroPaddingBottom: hero ? getComputedStyle(hero).paddingBottom : null,
+              homeSafeAreaBottom: hero
+                ? getComputedStyle(hero).getPropertyValue("--home-safe-area-bottom").trim()
+                : null,
+            };
+          })()`)) as {
+              scrollHeight: number;
+              clientHeight: number;
+              verticalOverflow: number;
+              scrollWidth: number;
+              clientWidth: number;
+              maxScrollWidth: number;
+              horizontalOverflow: boolean;
+              hero: { top: number; bottom: number; width: number; height: number } | null;
+              demo: { top: number; bottom: number; width: number; height: number } | null;
+              animatedDemo: { top: number; bottom: number; width: number; height: number } | null;
+              animatedRows: readonly {
+                className: string;
+                top: number;
+                bottom: number;
+                height: number;
+              }[];
+              poster: { top: number; bottom: number; width: number; height: number } | null;
+              heroInner: { top: number; bottom: number; width: number; height: number } | null;
+              heroLive: { top: number; bottom: number; width: number; height: number } | null;
+              requiredCtaBottom: number;
+              requiredCtasInViewport: boolean;
+              smallTargets: readonly { text: string; width: number; height: number }[];
+              heroPaddingBottom: string | null;
+              homeSafeAreaBottom: string | null;
+            };
+            const importantContentBottom = Math.max(
+              measured.heroInner?.bottom ?? 0,
+              measured.heroLive?.bottom ?? 0,
+            );
+            const safeAreaBoundary = viewport.height - safeAreaBottom;
+            const safeAreaClearance = safeAreaBoundary - importantContentBottom;
+            const safeAreaPaddingApplied =
+              safeAreaBottom === 0 ||
+              Number.parseFloat(measured.heroPaddingBottom ?? "0") >= safeAreaBottom;
+            const screenshot = path.join(
+              screenshotsDir,
+              `${phase}-home-${viewport.name}-${theme}-${motion}${safeAreaBottom > 0 ? `-safe${safeAreaBottom.toString()}` : ""}.png`,
+            );
+            await page.screenshot({ path: screenshot });
+            const row = {
+              viewport: viewport.name,
+              viewportWidth: viewport.width,
+              viewportHeight: viewport.height,
+              theme,
+              motion,
+              safeAreaBottom,
+              safeAreaBoundary,
+              importantContentBottom,
+              safeAreaClearance,
+              importantContentAboveSafeArea: safeAreaClearance >= 0,
+              safeAreaPaddingApplied,
+              screenshot: path.relative(repoRoot, screenshot),
+              axeViolations,
+              consoleErrors: errors,
+              ...measured,
+            };
+            measurements.push(row);
+            console.log(
+              `[home-fold:${phase}] ${viewport.name} ${theme} ${motion} safe=${safeAreaBottom.toString()}px overflow=${measured.verticalOverflow.toString()}px safeClearance=${safeAreaClearance.toFixed(2)}px safePadding=${safeAreaPaddingApplied ? "pass" : "fail"} horizontal=${measured.horizontalOverflow ? "fail" : "pass"} targets=${measured.smallTargets.length.toString()}`,
+            );
+            await context.close();
           }
-        } finally {
-          await browser.close();
         }
       }
     }
   } finally {
-    await server.stop();
+    await browser.close();
   }
 
-  const failures = metrics.flatMap(metricFailures);
-  const reportPath = path.join(outputRoot, "one-screen-fit.json");
+  const outputPath = path.join(outDir, `home-fold-${phase}.json`);
   await writeFile(
-    reportPath,
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        strict,
-        assertionScope: "document.documentElement.scrollHeight <= window.innerHeight",
-        routes,
-        themes,
-        motions,
-        resolvedDescriptors,
-        legacyScreenshotEvidenceOnly: LEGACY_SCREENSHOT_EVIDENCE,
-        metricCount: metrics.length,
-        failureCount: failures.length,
-        failures,
-        metrics,
-      },
-      null,
-      2,
-    )}\n`,
+    outputPath,
+    `${JSON.stringify({ phase, baseUrl, measurements }, null, 2)}\n`,
     "utf8",
   );
-  process.stdout.write(
-    `one-screen-fit: ${failures.length === 0 ? "ok" : "failed"} - ` +
-      `metrics=${metrics.length.toString()} failures=${failures.length.toString()} ` +
-      `report=${reportPath}\n`,
-  );
-  if (strict && failures.length > 0) {
-    throw new Error(`one-screen fit failed:\n${failures.join("\n")}`);
+  if (
+    strict &&
+    measurements.some((measurement) => {
+      const row = measurement as {
+        verticalOverflow: number;
+        horizontalOverflow: boolean;
+        requiredCtasInViewport: boolean;
+        importantContentAboveSafeArea: boolean;
+        safeAreaPaddingApplied: boolean;
+        smallTargets: readonly unknown[];
+        axeViolations: readonly unknown[];
+        consoleErrors: readonly unknown[];
+      };
+      return (
+        row.verticalOverflow !== 0 ||
+        row.horizontalOverflow ||
+        !row.requiredCtasInViewport ||
+        !row.importantContentAboveSafeArea ||
+        !row.safeAreaPaddingApplied ||
+        row.smallTargets.length > 0 ||
+        row.axeViolations.length > 0 ||
+        row.consoleErrors.length > 0
+      );
+    })
+  ) {
+    throw new Error("home fold verification failed");
   }
 }
 

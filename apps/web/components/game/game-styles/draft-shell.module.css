@@ -162,9 +162,9 @@
 
 .appBarTitle {
   font-family: var(--font-family);
-  font-weight: var(--font-weight-heading);
+  font-weight: 700;
   font-size: 18px;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-100);
 }
@@ -331,9 +331,9 @@
 
 .errorPanel {
   padding: 24px;
-  border: 1px solid color-mix(in srgb, var(--loss) 35%, transparent);
+  border: 1px solid rgba(255, 77, 99, 0.35);
   border-radius: var(--r-3);
-  background: color-mix(in srgb, var(--bg-800) 95%, var(--loss));
+  background: color-mix(in srgb, var(--bg-800) 95%, rgba(255, 77, 99, 0.12));
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -371,9 +371,8 @@
 
 .formationTitle {
   font-family: var(--font-family);
-  font-weight: var(--font-weight-heading);
+  font-weight: 700;
   font-size: 28px;
-  letter-spacing: var(--tracking-heading);
   margin: 0;
   color: var(--ink-100);
 }
@@ -457,18 +456,17 @@
 
 .formationCardName {
   font-family: var(--font-family);
-  font-weight: var(--font-weight-heading);
+  font-weight: 700;
   font-size: 23px;
   line-height: 1;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0.04em;
   color: var(--ink-100);
 }
 
 .formationCardCta {
   font-family: var(--font-family);
   font-size: 10px;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ember-bright);
 }
@@ -509,8 +507,7 @@
 }
 
 .setupRowLabel {
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -558,8 +555,7 @@
 .setupAxisLabel {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -583,8 +579,6 @@
   background: transparent;
   color: var(--ink-100);
   font-family: var(--font-family);
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
   font-size: var(--t-xs);
   line-height: 1.15;
   text-align: center;
@@ -614,8 +608,7 @@
   margin: 0;
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -1133,9 +1126,8 @@
 
 .candOverallLabel {
   font-size: var(--t-micro);
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.16em;
   color: var(--ink-400);
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
 }
 
@@ -1234,8 +1226,7 @@
 .provBadge {
   font-family: var(--font-family);
   font-size: var(--t-xs);
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 2px 8px;
   border-radius: var(--r-pill);
@@ -1430,7 +1421,7 @@
 .sheetBackdrop {
   position: fixed;
   inset: 0;
-  background: color-mix(in srgb, var(--well) 55%, transparent);
+  background: rgba(6, 9, 12, 0.55);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -1629,7 +1620,7 @@
 
 .appBarTitle {
   font-size: 19px;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0;
 }
 
 .appBarMeter {
@@ -1653,20 +1644,20 @@
 
 .formationHead::before {
   content: "Draft";
-  color: var(--accent-text);
+  color: var(--accent);
   font-family: var(--font-family);
   font-size: 11.5px;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .formationTitle {
   color: var(--ink-100);
   font-size: 30px;
-  font-weight: var(--font-weight-heading);
+  font-weight: 700;
   line-height: 0.96;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -1695,8 +1686,8 @@
   color: var(--ink-400);
   font-family: var(--font-family);
   font-size: 11.5px;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 
 .setupRowValue {
@@ -1742,14 +1733,13 @@
   background: var(--bg-800);
   color: var(--ink-300);
   font-size: 12px;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 400;
 }
 
 .setupSegBtnActive {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
-  color: var(--accent-text);
+  color: var(--accent);
 }
 
 .setupAxisNote {
@@ -1807,16 +1797,16 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 19px;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .formationCardCta {
-  color: var(--accent-text);
+  color: var(--accent);
   font-family: var(--font-family);
   font-size: 11.5px;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 400;
+  letter-spacing: 0.04em;
 }
 
 .miniPitch {

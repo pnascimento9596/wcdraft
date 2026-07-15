@@ -182,41 +182,26 @@ describe("Season 2 S5 fit teaching — engine parity and display basis", () => {
 
   it("keeps every runtime arrow aligned with the engine's winning eligibility", () => {
     let contexts = 0;
-    const failures: string[] = [];
     for (const basis of ["career", "current"] as const) {
       for (const runtimeCard of DRAFT_POOL_BUNDLE.player_cards) {
         const card = playerCardView(indexes, runtimeCard.card_id, { basis });
         for (const slotPosition of SLOT_POSITIONS) {
-          const label = `${basis}:${runtimeCard.card_id}:${slotPosition}`;
-          const impact = projectFitTeachingImpact(card, slotPosition);
+          const impact = projectFitTeachingImpact(card, slotPosition)!;
           const compatibility = positionCompatibility(card.eligible_positions, slotPosition);
           const expectedSource = bestEligibilityForSlot(card.eligible_positions, slotPosition);
-          if (positionCompatibility([expectedSource], slotPosition) !== compatibility) {
-            failures.push(`${label}: winning eligibility does not match engine compatibility`);
-          }
-          if (!impact) {
-            failures.push(`${label}: projection returned null`);
-          } else if (compatibility === 1) {
-            if (impact.position_copy !== null) {
-              failures.push(`${label}: natural fit emitted ${impact.position_copy}`);
-            }
-            if (impact.fit_copy !== null) {
-              failures.push(`${label}: natural fit emitted ${impact.fit_copy}`);
-            }
+          expect(positionCompatibility([expectedSource], slotPosition)).toBe(compatibility);
+          if (compatibility === 1) {
+            expect(impact.position_copy).toBeNull();
+            expect(impact.fit_copy).toBeNull();
           } else {
             const expectedCopy = `${expectedSource} → ${slotPosition}`;
-            if (impact.position_copy !== expectedCopy) {
-              failures.push(`${label}: ${impact.position_copy ?? "null"} !== ${expectedCopy}`);
-            }
-            if (!impact.accessible_label.includes(expectedCopy)) {
-              failures.push(`${label}: accessible label omits ${expectedCopy}`);
-            }
+            expect(impact.position_copy).toBe(expectedCopy);
+            expect(impact.accessible_label).toContain(expectedCopy);
           }
           contexts += 1;
         }
       }
     }
-    expect(failures).toEqual([]);
     expect(contexts).toBe(DRAFT_POOL_BUNDLE.player_cards.length * SLOT_POSITIONS.length * 2);
   });
 });

@@ -1,11 +1,8 @@
 import { readFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
-import { inflateSync } from "node:zlib";
 
 import { buildNarrative } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
-import { ImageResponse } from "next/og";
-import { createElement } from "react";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -30,7 +27,6 @@ import {
 } from "../run-og-sign-rate-limiter-db";
 import {
   SIGNED_RUN_OG_PREFIX,
-  SIGNED_RUN_OG_VERSION,
   assertOgSigningSecretPresent,
   sha256Hex,
   signRunOgPayload,
@@ -82,7 +78,7 @@ async function signedOgForToken(token: string): Promise<string> {
   const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
   if (verified.status !== "accepted") throw new Error(`token did not verify: ${verified.reason}`);
   const payload: SignedRunOgPayload = {
-    v: SIGNED_RUN_OG_VERSION,
+    v: 1,
     token_hash: await sha256Hex(token),
     versions: gameData.versions,
     model: verified.model,
@@ -90,10 +86,7 @@ async function signedOgForToken(token: string): Promise<string> {
   return signRunOgPayload(payload, SECRET);
 }
 
-async function signedRawOgPayload(
-  payload: unknown,
-  prefix: string = SIGNED_RUN_OG_PREFIX,
-): Promise<string> {
+async function signedRawOgPayload(payload: unknown): Promise<string> {
   const payloadB64 = Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
   const key = await crypto.subtle.importKey(
     "raw",
@@ -103,7 +96,7 @@ async function signedRawOgPayload(
     ["sign"],
   );
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payloadB64));
-  return `${prefix}${payloadB64}.${Buffer.from(sig).toString("base64url")}`;
+  return `${SIGNED_RUN_OG_PREFIX}${payloadB64}.${Buffer.from(sig).toString("base64url")}`;
 }
 
 function tamperSignedOgPayload(signed: string, mutate: (payload: Record<string, unknown>) => void) {
@@ -177,41 +170,29 @@ function localAssets(): RunOgImageAssets {
       readFileSync(new URL("../../../public/brand/logo-mark.svg", import.meta.url), "utf8"),
     )}`,
     fonts: {
-      archivoRegular: readArrayBuffer(
+      spaceGroteskSemiBold: readArrayBuffer(
         new URL(
-          "../../../public/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff",
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-600-normal.woff",
           import.meta.url,
         ),
       ),
-      archivoRegularExt: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-ext-400-normal.woff", import.meta.url),
-      ),
-      archivoMedium: readArrayBuffer(
+      spaceGroteskSemiBoldExt: readArrayBuffer(
         new URL(
-          "../../../public/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff",
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff",
           import.meta.url,
         ),
       ),
-      archivoMediumExt: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-ext-500-normal.woff", import.meta.url),
-      ),
-      archivoExtraBold: readArrayBuffer(
+      spaceGroteskBold: readArrayBuffer(
         new URL(
-          "../../../public/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff",
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-700-normal.woff",
           import.meta.url,
         ),
       ),
-      archivoExtraBoldExt: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-ext-800-normal.woff", import.meta.url),
-      ),
-      archivoBlack: readArrayBuffer(
+      spaceGroteskBoldExt: readArrayBuffer(
         new URL(
-          "../../../public/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff",
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff",
           import.meta.url,
         ),
-      ),
-      archivoBlackExt: readArrayBuffer(
-        new URL("../../../public/fonts/archivo/archivo-latin-ext-900-normal.woff", import.meta.url),
       ),
     },
   };
@@ -232,14 +213,16 @@ function stubOgRouteFetch() {
     "utf8",
   );
   const fonts = new Map<string, ArrayBuffer>([
-    ["/fonts/archivo-og-tabular/archivo-latin-400-og-tabular.woff", assets.fonts.archivoRegular],
-    ["/fonts/archivo/archivo-latin-ext-400-normal.woff", assets.fonts.archivoRegularExt],
-    ["/fonts/archivo-og-tabular/archivo-latin-500-og-tabular.woff", assets.fonts.archivoMedium],
-    ["/fonts/archivo/archivo-latin-ext-500-normal.woff", assets.fonts.archivoMediumExt],
-    ["/fonts/archivo-og-tabular/archivo-latin-800-og-tabular.woff", assets.fonts.archivoExtraBold],
-    ["/fonts/archivo/archivo-latin-ext-800-normal.woff", assets.fonts.archivoExtraBoldExt],
-    ["/fonts/archivo-og-tabular/archivo-latin-900-og-tabular.woff", assets.fonts.archivoBlack],
-    ["/fonts/archivo/archivo-latin-ext-900-normal.woff", assets.fonts.archivoBlackExt],
+    ["/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", assets.fonts.spaceGroteskSemiBold],
+    [
+      "/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff",
+      assets.fonts.spaceGroteskSemiBoldExt,
+    ],
+    ["/fonts/space-grotesk/space-grotesk-latin-700-normal.woff", assets.fonts.spaceGroteskBold],
+    [
+      "/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff",
+      assets.fonts.spaceGroteskBoldExt,
+    ],
   ]);
 
   vi.stubGlobal(
@@ -259,163 +242,6 @@ function stubOgRouteFetch() {
       return new Response("not found", { status: 404 });
     }),
   );
-}
-
-async function renderNumericBandWidth(font: ArrayBuffer, digits: string): Promise<number> {
-  const image = new ImageResponse(
-    createElement(
-      "div",
-      {
-        style: {
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#000000",
-        },
-      },
-      createElement(
-        "div",
-        {
-          style: {
-            display: "flex",
-            background: "#ff0000",
-            color: "#ffffff",
-            fontFamily: "Archivo",
-            fontSize: 60,
-            fontWeight: 500,
-            lineHeight: 1,
-          },
-        },
-        digits,
-      ),
-    ),
-    {
-      width: 500,
-      height: 160,
-      fonts: [{ name: "Archivo", data: font, weight: 500, style: "normal" }],
-    },
-  );
-  return exactRedBandWidth(Buffer.from(await image.arrayBuffer()));
-}
-
-async function renderMarketingWordmark(font: ArrayBuffer): Promise<Buffer> {
-  const image = new ImageResponse(
-    createElement(
-      "div",
-      {
-        style: {
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          background: "transparent",
-          fontFamily: "Archivo",
-          fontSize: 55,
-          fontWeight: 800,
-          letterSpacing: -1.1,
-          lineHeight: 1,
-        },
-      },
-      createElement("span", { style: { color: "#ebe6da" } }, "WC"),
-      createElement("span", { style: { color: "#3fa268" } }, "DRAFT"),
-    ),
-    {
-      width: 306,
-      height: 90,
-      fonts: [{ name: "Archivo", data: font, weight: 800, style: "normal" }],
-    },
-  );
-  return Buffer.from(await image.arrayBuffer());
-}
-
-function exactRedBandWidth(png: Buffer): number {
-  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
-  if (!png.subarray(0, signature.length).equals(signature)) {
-    throw new Error("numeric-band receipt is not a PNG");
-  }
-
-  let width = 0;
-  let height = 0;
-  let bitDepth = 0;
-  let colorType = 0;
-  const compressed: Buffer[] = [];
-  for (let offset = signature.length; offset + 12 <= png.length; ) {
-    const length = png.readUInt32BE(offset);
-    const type = png.toString("ascii", offset + 4, offset + 8);
-    const data = png.subarray(offset + 8, offset + 8 + length);
-    if (type === "IHDR") {
-      width = data.readUInt32BE(0);
-      height = data.readUInt32BE(4);
-      bitDepth = data[8]!;
-      colorType = data[9]!;
-    } else if (type === "IDAT") {
-      compressed.push(data);
-    }
-    offset += length + 12;
-    if (type === "IEND") break;
-  }
-
-  if (width <= 0 || height <= 0 || bitDepth !== 8 || ![2, 6].includes(colorType)) {
-    throw new Error(
-      `unsupported numeric-band PNG: ${width}x${height}, depth ${bitDepth}, type ${colorType}`,
-    );
-  }
-  const bytesPerPixel = colorType === 6 ? 4 : 3;
-  const stride = width * bytesPerPixel;
-  const filtered = inflateSync(Buffer.concat(compressed));
-  let previous = new Uint8Array(stride);
-  let sourceOffset = 0;
-  let minX = width;
-  let maxX = -1;
-
-  for (let y = 0; y < height; y += 1) {
-    const filter = filtered[sourceOffset++]!;
-    const row = new Uint8Array(stride);
-    for (let i = 0; i < stride; i += 1) {
-      const raw = filtered[sourceOffset++]!;
-      const left = i >= bytesPerPixel ? row[i - bytesPerPixel]! : 0;
-      const up = previous[i]!;
-      const upLeft = i >= bytesPerPixel ? previous[i - bytesPerPixel]! : 0;
-      const predictor =
-        filter === 0
-          ? 0
-          : filter === 1
-            ? left
-            : filter === 2
-              ? up
-              : filter === 3
-                ? Math.floor((left + up) / 2)
-                : filter === 4
-                  ? paeth(left, up, upLeft)
-                  : Number.NaN;
-      if (!Number.isFinite(predictor)) throw new Error(`unsupported PNG filter ${filter}`);
-      row[i] = (raw + predictor) & 0xff;
-    }
-    for (let x = 0; x < width; x += 1) {
-      const pixel = x * bytesPerPixel;
-      const opaque = colorType === 2 || row[pixel + 3]! > 0;
-      if (opaque && row[pixel] === 255 && row[pixel + 1] === 0 && row[pixel + 2] === 0) {
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
-      }
-    }
-    previous = row;
-  }
-
-  if (maxX < minX) throw new Error("numeric-band PNG contains no exact red pixels");
-  return maxX - minX + 1;
-}
-
-function paeth(left: number, up: number, upLeft: number): number {
-  const estimate = left + up - upLeft;
-  const leftDistance = Math.abs(estimate - left);
-  const upDistance = Math.abs(estimate - up);
-  const upLeftDistance = Math.abs(estimate - upLeft);
-  if (leftDistance <= upDistance && leftDistance <= upLeftDistance) return left;
-  if (upDistance <= upLeftDistance) return up;
-  return upLeft;
 }
 
 describe("dynamic run OG tokens", () => {
@@ -504,9 +330,8 @@ describe("dynamic run OG metadata decision", () => {
     expect(image.dynamic).toBe(true);
     expect(image.url).toContain("/api/og/run?");
     expect(image.url).toContain("run=t3.");
-    expect(image.url).toContain("og=ogs2.");
-    expect(image.url).toContain(`v=ogs2.${tokenHash.slice(0, 32)}`);
-    expect(image.url).not.toContain("ogs1.");
+    expect(image.url).toContain("og=ogs1.");
+    expect(image.url).toContain(`v=ogs1.${tokenHash.slice(0, 32)}`);
   });
 
   it("keeps signed historical snapshots dynamic after version anchors move", async () => {
@@ -520,7 +345,7 @@ describe("dynamic run OG metadata decision", () => {
     if (verified.status !== "accepted") return;
     const signed = await signRunOgPayload(
       {
-        v: SIGNED_RUN_OG_VERSION,
+        v: 1,
         token_hash: await sha256Hex(historicalToken),
         versions: {
           schema_version: "runtime-data-previous",
@@ -542,42 +367,6 @@ describe("dynamic run OG metadata decision", () => {
 });
 
 describe("dynamic run OG model and image", () => {
-  it("makes the fallback wordmark depend on explicit Archivo bytes", async () => {
-    const archivoExtraBold = readArrayBuffer(
-      new URL("../../../public/fonts/archivo/archivo-latin-800-normal.woff", import.meta.url),
-    );
-    const archivoRegular = readArrayBuffer(
-      new URL("../../../public/fonts/archivo/archivo-latin-400-normal.woff", import.meta.url),
-    );
-    const [first, second, fontMutation] = await Promise.all([
-      renderMarketingWordmark(archivoExtraBold),
-      renderMarketingWordmark(archivoExtraBold),
-      renderMarketingWordmark(archivoRegular),
-    ]);
-
-    expect(Buffer.compare(first, second)).toBe(0);
-    expect(Buffer.compare(first, fontMutation)).not.toBe(0);
-    await expect(renderMarketingWordmark(new Uint8Array([0, 1, 2, 3]).buffer)).rejects.toThrow();
-  });
-
-  it("uses renderer-compatible default tabular glyphs for OG data numerals", async () => {
-    const upstreamMedium = readArrayBuffer(
-      new URL("../../../public/fonts/archivo/archivo-latin-500-normal.woff", import.meta.url),
-    );
-    const tabularMedium = localAssets().fonts.archivoMedium;
-
-    const [upstreamOnes, upstreamEights, tabularOnes, tabularEights] = await Promise.all([
-      renderNumericBandWidth(upstreamMedium, "111111"),
-      renderNumericBandWidth(upstreamMedium, "888888"),
-      renderNumericBandWidth(tabularMedium, "111111"),
-      renderNumericBandWidth(tabularMedium, "888888"),
-    ]);
-
-    expect(upstreamOnes).not.toBe(upstreamEights);
-    expect(tabularOnes).toBeGreaterThan(0);
-    expect(tabularOnes).toBe(tabularEights);
-  });
-
   it("reports the real pre-Season-2 production token as wrong-season skew", () => {
     expect(
       verifyRunTokenForOg(skewFixtures.shipped_pre_s2_t3.token, {
@@ -701,17 +490,11 @@ describe("dynamic run OG model and image", () => {
       reveal: null,
     };
     const assets = localAssets();
-    const fontBytes = Object.values(assets.fonts).reduce(
-      (total, font) => total + font.byteLength,
-      0,
-    );
 
     const a = Buffer.from(await renderRunOgImage(model, assets).arrayBuffer());
     const b = Buffer.from(await renderRunOgImage(model, assets).arrayBuffer());
 
     expect(Buffer.compare(a, b)).toBe(0);
-    expect(fontBytes).toBe(150_032);
-    expect(fontBytes).toBeLessThan(500_000);
     expect(a.length).toBeLessThan(500_000);
   });
 });
@@ -752,7 +535,7 @@ describe("trusted run OG signing", () => {
     expect(verified.model.result_label).toBe(formatRunOgResult(trueSummary));
 
     const payload: SignedRunOgPayload = {
-      v: SIGNED_RUN_OG_VERSION,
+      v: 1,
       token_hash: await sha256Hex(token),
       versions: gameData.versions,
       model: verified.model,
@@ -764,7 +547,7 @@ describe("trusted run OG signing", () => {
     expect(trusted?.model.summary).toEqual(trueSummary);
   });
 
-  it("normalizes historical model payloads inside the v2 envelope", async () => {
+  it("verifies legacy signed payloads that predate the narrative field", async () => {
     const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:legacy")));
     const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
     expect(verified.status).toBe("accepted");
@@ -772,7 +555,7 @@ describe("trusted run OG signing", () => {
     const legacyModel = { ...verified.model } as Record<string, unknown>;
     delete legacyModel.narrative;
     const legacySigned = await signedRawOgPayload({
-      v: SIGNED_RUN_OG_VERSION,
+      v: 1,
       token_hash: await sha256Hex(token),
       versions: gameData.versions,
       model: legacyModel,
@@ -781,41 +564,6 @@ describe("trusted run OG signing", () => {
     const trusted = await verifySignedRunOgPayload(legacySigned, SECRET);
     expect(trusted?.model.narrative).toBe(verified.model.result_label);
     expect(trusted?.model.team_name).toBe(verified.model.team_name);
-  });
-
-  it("rejects both old ogs1 envelopes and v1 payloads after the cache cutover", async () => {
-    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
-    const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:v1-cutover")));
-    const verified = verifyRunTokenForOg(token, {
-      gameData,
-      scenario: SCENARIO_2026_BUNDLE,
-    });
-    expect(verified.status).toBe("accepted");
-    if (verified.status !== "accepted") return;
-    const oldPayload = {
-      v: 1,
-      token_hash: await sha256Hex(token),
-      versions: gameData.versions,
-      model: verified.model,
-    };
-    const oldEnvelope = await signedRawOgPayload(oldPayload, "ogs1.");
-    const oldPayloadUnderCurrentPrefix = await signedRawOgPayload(oldPayload);
-
-    for (const signed of [oldEnvelope, oldPayloadUnderCurrentPrefix]) {
-      expect(await verifySignedRunOgPayload(signed, SECRET)).toBeNull();
-      expect(shareOgImageForRunValue(token, signed, gameData.versions)).toEqual(
-        defaultRunOgImage(),
-      );
-      const response = await runOgRouteGet(
-        new Request(
-          `http://localhost/api/og/run?run=${encodeURIComponent(token)}&og=${encodeURIComponent(signed)}`,
-        ),
-      );
-      expect(response.status).toBe(307);
-      expect(response.headers.get("location")).toBe(
-        "http://localhost/brand/marketing/og-default.png",
-      );
-    }
   });
 
   it.each([
@@ -923,13 +671,8 @@ describe("trusted run OG signing", () => {
 
     const first = await handleRunOgSignPost(request(), ogSignDeps(allowOnce));
     expect(first.status).toBe(200);
-    const firstBody = (await first.json()) as {
-      signed?: unknown;
-      challenge_proof?: unknown;
-      cache_key?: unknown;
-    };
-    expect(firstBody.signed).toMatch(/^ogs2\./u);
-    expect(firstBody.cache_key).toMatch(/^ogs2\.[0-9a-f]{32}$/u);
+    const firstBody = (await first.json()) as { signed?: unknown; challenge_proof?: unknown };
+    expect(typeof firstBody.signed).toBe("string");
     expect(firstBody.challenge_proof).toMatch(/^fc1\.[0-9a-f]{64}\.[A-Za-z0-9_-]{43}$/u);
 
     const second = await handleRunOgSignPost(request(), ogSignDeps(denyIfCalled));
@@ -1045,7 +788,7 @@ describe("dynamic run OG route scope", () => {
     if (verified.status !== "accepted") return;
     const signed = await signRunOgPayload(
       {
-        v: SIGNED_RUN_OG_VERSION,
+        v: 1,
         token_hash: await sha256Hex(historicalToken),
         versions: {
           schema_version: "runtime-data-previous",
@@ -1061,7 +804,7 @@ describe("dynamic run OG route scope", () => {
     );
     const url = `http://localhost/api/og/run?run=${encodeURIComponent(
       historicalToken,
-    )}&og=${encodeURIComponent(signed)}&v=ogs2.test`;
+    )}&og=${encodeURIComponent(signed)}&v=ogs1.test`;
 
     const response = await runOgRouteGet(new Request(url));
     const bytes = Buffer.from(await response.arrayBuffer());

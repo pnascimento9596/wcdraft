@@ -11,16 +11,10 @@
   gap: 1rem;
 }
 
-.account-head h1 {
-  margin: 0.2rem 0 0;
-  font-weight: var(--font-weight-display);
-  letter-spacing: var(--tracking-display);
-}
-
+.account-head h1,
 .account-section-head h2 {
   margin: 0.2rem 0 0;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0;
 }
 
 .account-grid {
@@ -48,8 +42,7 @@
 .account-panel__label {
   font-family: var(--font-family);
   font-size: 0.78rem;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent-text);
 }
@@ -91,8 +84,6 @@
   background: transparent;
   padding: 0;
   font: inherit;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
   cursor: pointer;
 }
 
@@ -127,8 +118,7 @@
   background: var(--accent-solid);
   color: var(--accent-ink);
   font-family: var(--font-family);
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -248,8 +238,7 @@
 .account-run h3 {
   margin: 0.2rem 0 0;
   font-size: 1.1rem;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0;
 }
 
 .account-run__meta {
@@ -268,8 +257,7 @@
   color: var(--accent-text);
   padding: 0.25rem 0.55rem;
   font-size: 0.75rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 700;
   text-transform: uppercase;
 }
 

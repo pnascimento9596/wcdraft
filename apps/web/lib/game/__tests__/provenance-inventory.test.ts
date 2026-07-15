@@ -100,8 +100,8 @@ describe("provenance inventory — exhaustive badge routing", () => {
     expect(tokensCss).toMatch(/--prov-estimate:\s*#f0913f/i);
     expect(tokensCss).toMatch(/--prov-estimate:\s*#93450c/i);
     // Grey/unknown must not be aliased as estimate.
-    expect(tokensCss).toMatch(/--prov-unknown:\s*#7b867f/i);
-    expect(tokensCss).not.toMatch(/--prov-estimate:\s*#7b867f/i);
+    expect(tokensCss).toMatch(/--prov-unknown:\s*#717c75/i);
+    expect(tokensCss).not.toMatch(/--prov-estimate:\s*#717c75/i);
     expect(tokensCss).not.toMatch(/--prov-estimate:\s*#566158/i);
   });
 });

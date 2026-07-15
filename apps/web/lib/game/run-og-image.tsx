@@ -7,14 +7,10 @@ import { RUN_OG_PALETTE as P } from "./run-og-palette";
 export interface RunOgImageAssets {
   markSvgDataUri: string;
   fonts: {
-    archivoRegular: ArrayBuffer;
-    archivoRegularExt: ArrayBuffer;
-    archivoMedium: ArrayBuffer;
-    archivoMediumExt: ArrayBuffer;
-    archivoExtraBold: ArrayBuffer;
-    archivoExtraBoldExt: ArrayBuffer;
-    archivoBlack: ArrayBuffer;
-    archivoBlackExt: ArrayBuffer;
+    spaceGroteskSemiBold: ArrayBuffer;
+    spaceGroteskSemiBoldExt: ArrayBuffer;
+    spaceGroteskBold: ArrayBuffer;
+    spaceGroteskBoldExt: ArrayBuffer;
   };
 }
 
@@ -29,51 +25,27 @@ export function renderRunOgImage(model: RunOgModel, assets: RunOgImageAssets): I
     height: RUN_OG_HEIGHT,
     fonts: [
       {
-        name: "Archivo",
-        data: assets.fonts.archivoRegular,
-        weight: 400,
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskSemiBold,
+        weight: 600,
         style: "normal",
       },
       {
-        name: "Archivo",
-        data: assets.fonts.archivoRegularExt,
-        weight: 400,
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskSemiBoldExt,
+        weight: 600,
         style: "normal",
       },
       {
-        name: "Archivo",
-        data: assets.fonts.archivoMedium,
-        weight: 500,
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskBold,
+        weight: 700,
         style: "normal",
       },
       {
-        name: "Archivo",
-        data: assets.fonts.archivoMediumExt,
-        weight: 500,
-        style: "normal",
-      },
-      {
-        name: "Archivo",
-        data: assets.fonts.archivoExtraBold,
-        weight: 800,
-        style: "normal",
-      },
-      {
-        name: "Archivo",
-        data: assets.fonts.archivoExtraBoldExt,
-        weight: 800,
-        style: "normal",
-      },
-      {
-        name: "Archivo",
-        data: assets.fonts.archivoBlack,
-        weight: 900,
-        style: "normal",
-      },
-      {
-        name: "Archivo",
-        data: assets.fonts.archivoBlackExt,
-        weight: 900,
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskBoldExt,
+        weight: 700,
         style: "normal",
       },
     ],
@@ -90,8 +62,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
         position: "relative",
         background: P.pageBg,
         color: P.text,
-        fontFamily: "Archivo",
-        fontVariantNumeric: "tabular-nums",
+        fontFamily: "Space Grotesk",
         overflow: "hidden",
       }}
     >
@@ -125,10 +96,9 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           alignItems: "center",
           justifyContent: "space-between",
           color: P.muted,
-          fontFamily: "Archivo",
+          fontFamily: "Space Grotesk",
           fontSize: 16,
-          fontWeight: 500,
-          letterSpacing: "0.1em",
+          letterSpacing: 0,
           textTransform: "uppercase",
         }}
       >
@@ -217,10 +187,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               style={{
                 display: "flex",
                 color: P.gold,
-                fontFamily: "Archivo",
+                fontFamily: "Space Grotesk",
                 fontSize: 44,
-                fontWeight: 900,
-                letterSpacing: "-0.035em",
                 lineHeight: 0.9,
                 textTransform: "uppercase",
               }}
@@ -231,10 +199,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               style={{
                 display: "flex",
                 color: P.mutedTeal,
-                fontFamily: "Archivo",
+                fontFamily: "Space Grotesk",
                 fontSize: 15,
-                fontWeight: 500,
-                letterSpacing: "0.1em",
                 textTransform: "uppercase",
               }}
             >
@@ -248,10 +214,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             style={{
               display: "flex",
               color: P.goldSoft,
-              fontFamily: "Archivo",
+              fontFamily: "Space Grotesk",
               fontSize: 42,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
               lineHeight: 0.95,
               textTransform: "uppercase",
             }}
@@ -262,10 +226,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             style={{
               display: "flex",
               color: P.textStrong,
-              fontFamily: "Archivo",
+              fontFamily: "Space Grotesk",
               fontSize: 92,
-              fontWeight: 900,
-              letterSpacing: "-0.035em",
               lineHeight: 0.9,
               textTransform: "uppercase",
             }}
@@ -277,10 +239,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               display: "flex",
               marginTop: 12,
               color: P.aqua,
-              fontFamily: "Archivo",
+              fontFamily: "Space Grotesk",
               fontSize: 18,
-              fontWeight: 500,
-              letterSpacing: "0.1em",
               textTransform: "uppercase",
             }}
           >
@@ -301,7 +261,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               border: `1px solid ${P.aquaSoftLine}`,
               color: P.text,
               background: P.aquaWash,
-              fontFamily: "Archivo",
+              fontFamily: "Space Grotesk",
               fontSize: 18,
               lineHeight: 1.18,
             }}
@@ -325,10 +285,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                   border: `1px solid ${P.goldLine}`,
                   color: P.goldSoft,
                   background: P.goldWash,
-                  fontFamily: "Archivo",
+                  fontFamily: "Space Grotesk",
                   fontSize: 15,
-                  fontWeight: 500,
-                  letterSpacing: "0.1em",
                   textTransform: "uppercase",
                 }}
               >
@@ -364,13 +322,13 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                     padding: "5px 0",
                     border: `1px solid ${P.aquaLine}`,
                     color: P.aqua,
-                    fontFamily: "Archivo",
+                    fontFamily: "Space Grotesk",
                     fontSize: 14,
                   }}
                 >
                   {star.nation_code}
                 </div>
-                <div style={{ display: "flex", fontFamily: "Archivo", fontSize: 18 }}>
+                <div style={{ display: "flex", fontFamily: "Space Grotesk", fontSize: 18 }}>
                   {`${truncate(star.name, 22)} · ${star.overall}`}
                 </div>
               </div>
@@ -393,10 +351,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           display: "flex",
           justifyContent: "center",
           color: P.muted,
-          fontFamily: "Archivo",
+          fontFamily: "Space Grotesk",
           fontSize: 18,
-          fontWeight: 500,
-          letterSpacing: "0.1em",
           textTransform: "uppercase",
         }}
       >
@@ -431,7 +387,7 @@ function LineupChip({ slot, showOverall }: { slot: RunOgLineupSlot; showOverall:
           style={{
             display: "flex",
             color: P.textStrong,
-            fontFamily: "Archivo",
+            fontFamily: "Space Grotesk",
             fontSize: 13,
             lineHeight: 1.05,
           }}
@@ -442,10 +398,8 @@ function LineupChip({ slot, showOverall }: { slot: RunOgLineupSlot; showOverall:
           style={{
             display: "flex",
             color: P.aqua,
-            fontFamily: "Archivo",
+            fontFamily: "Space Grotesk",
             fontSize: 10,
-            fontWeight: 500,
-            letterSpacing: "0.1em",
             lineHeight: 1.2,
             textTransform: "uppercase",
           }}
@@ -469,7 +423,7 @@ function MemoryRevealOgPanel({ reveal }: { reveal: RunOgRevealModel }) {
         border: `1px solid ${P.aquaSoftLine}`,
         color: P.text,
         background: P.aquaWash,
-        fontFamily: "Archivo",
+        fontFamily: "Space Grotesk",
         fontSize: 17,
         lineHeight: 1.12,
       }}
@@ -480,7 +434,7 @@ function MemoryRevealOgPanel({ reveal }: { reveal: RunOgRevealModel }) {
           style={{
             display: "flex",
             color: P.goldSoft,
-            fontFamily: "Archivo",
+            fontFamily: "Space Grotesk",
             fontSize: 20,
           }}
         >
@@ -495,12 +449,12 @@ function MemoryRevealOgPanel({ reveal }: { reveal: RunOgRevealModel }) {
             justifyContent: "space-between",
             gap: 12,
             color: P.text,
-            fontFamily: "Archivo",
+            fontFamily: "Space Grotesk",
             fontSize: 17,
           }}
         >
           <span>{line.label}</span>
-          <span style={{ color: P.aqua, fontFamily: "Archivo" }}>
+          <span style={{ color: P.aqua, fontFamily: "Space Grotesk" }}>
             {formatOgNumber(line.before)} -&gt; {formatOgNumber(line.after)}
           </span>
         </div>
@@ -582,10 +536,8 @@ function SectionTitle({ children }: { children: string }) {
       style={{
         display: "flex",
         color: P.muted,
-        fontFamily: "Archivo",
+        fontFamily: "Space Grotesk",
         fontSize: 15,
-        fontWeight: 500,
-        letterSpacing: "0.1em",
         textTransform: "uppercase",
       }}
     >
@@ -613,13 +565,13 @@ function FactRow({ label, value }: { label: string; value: string }) {
           padding: "5px 0",
           border: `1px solid ${P.aquaLine}`,
           color: P.aqua,
-          fontFamily: "Archivo",
+          fontFamily: "Space Grotesk",
           fontSize: 14,
         }}
       >
         {label}
       </div>
-      <div style={{ display: "flex", fontFamily: "Archivo", fontSize: 18 }}>{value}</div>
+      <div style={{ display: "flex", fontFamily: "Space Grotesk", fontSize: 18 }}>{value}</div>
     </div>
   );
 }

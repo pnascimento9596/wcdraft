@@ -89,7 +89,7 @@
 .outcomeBigGold {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--gold) 72%, var(--ink)) 0%,
+    color-mix(in srgb, var(--gold) 72%, white) 0%,
     var(--gold) 55%,
     var(--gold-strong) 100%
   );
@@ -99,7 +99,7 @@
   /* B2 — the plate is cream in dark theme; gold text alone would fall under AA
      there. A 1px ink edge (drawn under the clipped gradient) grounds the digits
      on either plate while preserving the precious-gold fill. */
-  -webkit-text-stroke: 0.6px color-mix(in srgb, var(--gold-strong) 70%, var(--well));
+  -webkit-text-stroke: 0.6px color-mix(in srgb, var(--gold-strong) 70%, #000);
   text-shadow: 0 1px 0 color-mix(in srgb, currentColor 30%, transparent);
 }
 .outcomeWL {
@@ -115,9 +115,9 @@
   color: currentColor;
   font-family: var(--font-family);
   font-size: clamp(2.35rem, 11vw, 4.5rem);
-  font-weight: var(--font-weight-heading);
+  font-weight: 800;
   line-height: 0.95;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0;
 }
 .outcomeHeadlineGold {
   color: var(--gold);
@@ -130,8 +130,7 @@
   opacity: 0.84;
   font-family: var(--font-family);
   font-size: 0.78rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 700;
   text-transform: uppercase;
 }
 .payoffMeta span {
@@ -176,9 +175,8 @@
 .outcomeRecordSmall span {
   color: currentColor;
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
+  font-weight: 700;
   opacity: 0.88;
-  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .outcomeRecordSmall {
@@ -209,9 +207,8 @@
 }
 .oStatLabel {
   font-size: 0.72rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.1em;
   opacity: 0.8;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -220,8 +217,8 @@
 .oStatCaption {
   font-family: var(--font-family);
   font-size: 0.62rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.7;
 }
@@ -251,8 +248,8 @@
 .flagMuted {
   font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
-  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.1em;
+  font-weight: 600;
   border-radius: 999px;
   padding: 0.3rem 0.7rem;
 }
@@ -324,10 +321,10 @@
 .factualRecapKicker {
   display: block;
   margin-bottom: 0.18rem;
-  color: var(--accent-text);
+  color: var(--accent);
   font-size: 0.66rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .factualRecapGrid {
@@ -352,8 +349,8 @@
   margin: 0 0 0.6rem;
   color: var(--ink-300);
   font-size: 0.68rem;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
+  font-weight: 800;
+  letter-spacing: 0.1em;
   line-height: 1.3;
   text-transform: uppercase;
 }
@@ -386,8 +383,8 @@
 .factualDefinitionList dt {
   color: var(--ink-faint);
   font-size: 0.64rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .factualStrengthGrid dd,
@@ -461,10 +458,10 @@
   padding: 0.35rem 0.65rem;
   border: 1px solid color-mix(in srgb, var(--accent-solid) 58%, var(--line));
   border-radius: 7px;
-  color: var(--accent-text);
+  color: var(--accent);
   font-size: 0.7rem;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -533,9 +530,8 @@
   min-width: 0;
   max-width: 7.5rem;
   font-size: 0.74rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.08em;
   color: var(--ink-300);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -576,9 +572,8 @@
 .matchTag {
   font-family: var(--font-family);
   font-size: 0.66rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.06em;
   color: var(--ink-faint);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -614,9 +609,8 @@
 }
 .boxColHead {
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.12em;
   color: var(--ink-faint);
   border-bottom: 1px solid var(--line);
   padding-bottom: 0.25rem;
@@ -657,7 +651,7 @@
 }
 .boxIcon {
   flex: none;
-  color: var(--accent-text);
+  color: var(--accent-solid);
 }
 .bookingsLegend {
   display: inline-flex;
@@ -669,8 +663,6 @@
   color: var(--ink-300);
   font-family: var(--font-family);
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
 }
 .cardYellow,
@@ -708,9 +700,8 @@
 }
 .seedLabel {
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: 0.14em;
   color: var(--ink-faint);
 }
 .seedCode {
@@ -730,8 +721,8 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 0.72rem;
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .seedNote {
@@ -748,8 +739,7 @@
 .pinButton {
   min-width: 6.8rem;
   font-family: var(--font-family);
-  font-weight: var(--font-weight-button);
-  letter-spacing: var(--tracking-button);
+  letter-spacing: 0.08em;
 }
 .pinNote,
 .pinWarning {
@@ -775,11 +765,11 @@
   min-width: 0;
 }
 .memoryProgressionKicker {
-  color: var(--accent-text);
+  color: var(--accent);
   font-family: var(--font-family);
   font-size: 0.68rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .memoryProgressionTitle {
@@ -787,9 +777,8 @@
   color: var(--ink-100);
   font-family: var(--font-family);
   font-size: 1.2rem;
-  font-weight: var(--font-weight-heading);
   line-height: 1.05;
-  letter-spacing: var(--tracking-heading);
+  letter-spacing: 0;
 }
 .memoryProgression p {
   margin: 0;
@@ -835,8 +824,6 @@
   color: var(--gold);
   font-family: var(--font-family);
   font-size: 0.68rem;
-  font-weight: var(--font-weight-heading);
-  letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
 }
 .sharePreviewTeam {
@@ -912,6 +899,7 @@
   border-style: solid;
 }
 
+.outcomeHeadline,
 .outcomeBig,
 .oStatNum,
 .matchScore,

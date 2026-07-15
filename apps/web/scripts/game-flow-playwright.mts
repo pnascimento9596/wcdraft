@@ -520,35 +520,15 @@ async function verifyModeSelectCtaDoesNotTapThrough(
   await page.touchscreen.tap(hit.center.x, hit.center.y);
   await page.waitForURL((url) => url.pathname === "/play/draft" && !url.searchParams.has("mode"), {
     timeout: 30_000,
-    waitUntil: "commit",
   });
-  await page.getByRole("heading", { name: "Lock a formation" }).waitFor();
 
   await assertNoBrowserErrors(testCase, "mode-select CTA tap target");
 }
 
 const MODE_SELECT_VIEWPORTS = [
-  {
-    width: 360,
-    height: 800,
-    name: "360x800",
-    expectedColumns: 2,
-    expectedDockPosition: "sticky",
-  },
-  {
-    width: 390,
-    height: 844,
-    name: "390x844",
-    expectedColumns: 2,
-    expectedDockPosition: "sticky",
-  },
-  {
-    width: 667,
-    height: 375,
-    name: "667x375",
-    expectedColumns: 4,
-    expectedDockPosition: "static",
-  },
+  { width: 360, height: 800, name: "360x800", expectedDockPosition: "sticky" },
+  { width: 390, height: 844, name: "390x844", expectedDockPosition: "sticky" },
+  { width: 667, height: 375, name: "667x375", expectedDockPosition: "static" },
 ] as const;
 
 async function measureModeCardClearance(page: Page): Promise<number | null> {
@@ -595,10 +575,7 @@ async function verifyModeSelectCompactBoard(browser: Browser, baseUrl: string): 
       };
     });
     assert(layout, `${viewport.name} mode board did not expose layout metrics`);
-    assert(
-      layout.columns === viewport.expectedColumns,
-      `${viewport.name} mode board used ${layout.columns} columns`,
-    );
+    assert(layout.columns === 2, `${viewport.name} mode board used ${layout.columns} columns`);
     assert(
       layout.dockPosition === viewport.expectedDockPosition,
       `${viewport.name} dock position was ${layout.dockPosition}`,
@@ -767,13 +744,7 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
   await assertNoHorizontalOverflow(page, "formation setup");
   await assertFullyVisibleInViewport(page, formationLockButton, "formation lock CTA");
   await formationLockButton.click();
-  // Next's client navigation can commit the correct URL without emitting a
-  // second document `load` event. The heading wait below is the route-readiness
-  // assertion; this wait only synchronizes on the committed run-scoped URL.
-  await page.waitForURL(/\/play\/draft\?run=[^&]+$/, {
-    timeout: 30_000,
-    waitUntil: "commit",
-  });
+  await page.waitForURL(/\/play\/draft\?run=[^&]+$/, { timeout: 30_000 });
 
   await page.getByRole("heading", { name: "Choose the slot to fill" }).waitFor();
   const targetButton = page
@@ -842,16 +813,10 @@ async function verifyReviewResultsShareFlow(browser: Browser, baseUrl: string): 
   });
   await page.getByRole("button", { name: "Confirm team sheet & simulate" }).waitFor();
   await page.getByRole("button", { name: "Confirm team sheet & simulate" }).click();
-  await page.waitForURL(/\/play\/results\?run=pw-complete-classic$/, {
-    timeout: 90_000,
-    waitUntil: "commit",
-  });
+  await page.waitForURL(/\/play\/results\?run=pw-complete-classic$/, { timeout: 90_000 });
   await page.getByText("Results").first().waitFor();
   await page.getByRole("link", { name: "Share" }).click();
-  await page.waitForURL(/\/play\/share\?run=pw-complete-classic$/, {
-    timeout: 30_000,
-    waitUntil: "commit",
-  });
+  await page.waitForURL(/\/play\/share\?run=pw-complete-classic$/, { timeout: 30_000 });
   await page.getByRole("heading", { name: "The card" }).waitFor();
   await page.getByRole("button", { name: "Copy caption" }).waitFor();
 

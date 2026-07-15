@@ -3,8 +3,7 @@ import type { RunRecordVersions } from "./versions";
 
 export const RUN_OG_SIGNING_SECRET_ENV = "WCDRAFT_OG_SIGNING_SECRET" as const;
 export const RUN_OG_SIGNING_SECRET_MIN_CHARS = 32 as const;
-export const SIGNED_RUN_OG_VERSION = 2 as const;
-export const SIGNED_RUN_OG_PREFIX = "ogs2." as const;
+export const SIGNED_RUN_OG_PREFIX = "ogs1." as const;
 export const SIGNED_RUN_OG_MAX_LEN = 12000 as const;
 export const SIGNED_FRIEND_CHALLENGE_PREFIX = "fc1." as const;
 // `fc1.` + 64 lowercase hex chars + `.` + a canonical unpadded 32-byte
@@ -13,7 +12,7 @@ export const SIGNED_FRIEND_CHALLENGE_PREFIX = "fc1." as const;
 export const SIGNED_FRIEND_CHALLENGE_MAX_LEN = 112 as const;
 
 export interface SignedRunOgPayload {
-  v: typeof SIGNED_RUN_OG_VERSION;
+  v: 1;
   token_hash: string;
   versions: RunRecordVersions;
   model: RunOgModel;
@@ -168,13 +167,13 @@ export function isLikelySignedRunOg(value: unknown): value is string {
 function normalizeSignedRunOgPayload(value: unknown): SignedRunOgPayload | null {
   if (!value || typeof value !== "object") return null;
   const o = value as Record<string, unknown>;
-  if (o.v !== SIGNED_RUN_OG_VERSION) return null;
+  if (o.v !== 1) return null;
   if (typeof o.token_hash !== "string" || !HEX_64.test(o.token_hash)) return null;
   if (!isVersions(o.versions)) return null;
   const model = normalizeModel(o.model);
   if (!model) return null;
   return {
-    v: SIGNED_RUN_OG_VERSION,
+    v: 1,
     token_hash: o.token_hash,
     versions: o.versions,
     model,
@@ -199,7 +198,7 @@ function assertSignedFriendChallengePayload(
 }
 
 function friendChallengeSigningMessage(tokenHash: string): string {
-  // Domain-separated from the OG envelope HMAC. A valid `ogs2` signature can
+  // Domain-separated from the OG envelope HMAC. A valid `ogs1` signature can
   // never be substituted for an `fc1` proof, even under the same secret.
   return `wcdraft:friend-challenge:v1:${tokenHash}`;
 }

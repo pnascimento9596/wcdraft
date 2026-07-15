@@ -4,35 +4,6 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Terrace dark identity: 2026-07-15 · Archivo is now the single active shipped web and OG
-family, with mechanical `tnum` evidence and deterministic OG-only tabular derivatives.
-Dark-mode surfaces use the Terrace bone/bottle-green/vintage-gold system; every asserted
-text/background role passes. Pressed and standalone-auth action ink is 4.5074:1 without
-whole-element alpha, and the combined primary+gold Daily CTA retains its AA-safe gold fill.
-The native-app-feel browser gate computes the real active CTA cascade in both themes and passes
-360/360 assertions across Chromium and WebKit. All 122 non-typography light values retain
-their base hash,
-and the shared type system's exact two changed plus eight added light typography roles are
-separately locked under a recorded Architect-delegated decision. Provenance remains
-hue-distinguishable, and the protected medallion remains byte-identical. `/` and `/play` now
-fit the full document across Chromium and WebKit at descriptor-derived 320×568, 360×732,
-390×664, 430×740, 667×375, 768×1024, 1024×768, 1280×720, and disclosed
-1366×720 width-override viewports, both themes and motion modes: 144/144 contexts, zero
-failures, strict 44px targets, zoom preserved, and semantic screenshot-paint evidence. The
-one-screen harness now uses HTTP + visible-route readiness, waits for only the initial finite
-surface motion, bounds screenshots at 30 seconds, and recycles each browser at the device
-boundary; this closes the independently reproduced WebKit 64th-context stall without weakening
-any fit, content, target, collision, or paint assertion.
-Signed OG/card caching moved coherently from `ogs1`/v1 to `ogs2`/v2; dynamic and default
-render bytes changed to Archivo while the secret, boot assertion, friend signing, and error
-contracts remain pinned. No data artifact was regenerated: base/head core, data, and ETL tree
-objects are identical. Forced lane-boundary validation passed typecheck 9/9, lint 6/6, test
-9/9 with 2,193 passed and 10 expected skips, responsive 218/218, one-screen 144/144, build
-5/5 with 40/40 pages and both protected traces 8/8, core/draft goldens 69/42,
-data/integration goldens 59/22, and leaderboard golden 6/6. All U0–U5 fresh-context reviews
-and the independent GLM-5.2 cross-model review passed at their pinned heads. Durable evidence:
-`docs/reports/terrace-dark-identity-2026-07-15.md`.
-
 Dependency sweep and residual-polish closure: 2026-07-14 · the seven original
 Dependabot PRs are resolved through production merges `e23aeb78`, `bf646847`,
 and `7d0fe9ce`; no original dependency PR remains open. Production and Python

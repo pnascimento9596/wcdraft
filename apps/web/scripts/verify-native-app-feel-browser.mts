@@ -34,7 +34,6 @@ const viewports = [
   { name: "360x800", width: 360, height: 800 },
 ] as const;
 const themes = ["light", "dark"] as const;
-const AA_BODY = 4.5;
 
 type ElementState = {
   readonly scrollX: number;
@@ -58,10 +57,8 @@ type ElementState = {
     readonly touchAction: string;
     readonly userSelect: string;
     readonly transform: string;
-    readonly translate: string;
     readonly filter: string;
     readonly opacity: string;
-    readonly color: string;
     readonly backgroundColor: string;
     readonly transitionDuration: string;
   };
@@ -77,7 +74,6 @@ type PressMetric = {
   readonly focused: ElementState;
   readonly after: ElementState;
   readonly activeStateChanged: boolean;
-  readonly activeTextContrast: number | null;
   readonly horizontalShiftPx: number;
   readonly layoutShift: boolean;
   readonly scrollStable: boolean;
@@ -102,7 +98,7 @@ type OverscrollMetric = {
   readonly failure: string | null;
 };
 
-const pressAssertionCount = 9;
+const pressAssertionCount = 8;
 const pageAssertionCount = 7;
 const overscrollAssertionCount = 1;
 
@@ -222,10 +218,8 @@ async function readState(target: Locator): Promise<ElementState> {
         userSelect:
           style.getPropertyValue("user-select") || style.getPropertyValue("-webkit-user-select"),
         transform: style.transform,
-        translate: style.translate,
         filter: style.filter,
         opacity: style.opacity,
-        color: style.color,
         backgroundColor: style.backgroundColor,
         transitionDuration: style.transitionDuration,
       },
@@ -239,57 +233,11 @@ function sameLayout(a: ElementState, b: ElementState): boolean {
 
 function activeChanged(before: ElementState, active: ElementState): boolean {
   return (
-    normalizedTransform(before.css.transform) !== normalizedTransform(active.css.transform) ||
-    normalizedTranslate(before.css.translate) !== normalizedTranslate(active.css.translate) ||
+    before.css.transform !== active.css.transform ||
     before.css.filter !== active.css.filter ||
     before.css.opacity !== active.css.opacity ||
     before.css.backgroundColor !== active.css.backgroundColor
   );
-}
-
-function normalizedTransform(value: string): string {
-  if (value === "none") return "identity";
-  const channels = value.match(/-?[0-9.]+/gu)?.map(Number);
-  if (
-    channels?.length === 6 &&
-    channels.every((channel, index) => channel === [1, 0, 0, 1, 0, 0][index])
-  ) {
-    return "identity";
-  }
-  return value;
-}
-
-function normalizedTranslate(value: string): string {
-  if (value === "none") return "identity";
-  const channels = value.match(/-?[0-9.]+/gu)?.map(Number);
-  return channels?.every((channel) => channel === 0) ? "identity" : value;
-}
-
-function opaqueRgb(value: string): readonly [number, number, number] | null {
-  const channels = value.match(/[0-9.]+/gu)?.map(Number);
-  if (!channels || channels.length < 3 || channels.some((channel) => !Number.isFinite(channel))) {
-    return null;
-  }
-  if (channels.length >= 4 && channels[3] !== 1) return null;
-  return [channels[0]!, channels[1]!, channels[2]!];
-}
-
-function cssContrastRatio(foreground: string, background: string): number | null {
-  const fg = opaqueRgb(foreground);
-  const bg = opaqueRgb(background);
-  if (!fg || !bg) return null;
-  const luminance = (rgb: readonly [number, number, number]): number => {
-    const [red, green, blue] = rgb.map((channel) => {
-      const value = channel / 255;
-      return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-    });
-    return 0.2126 * red! + 0.7152 * green! + 0.0722 * blue!;
-  };
-  const fgLuminance = luminance(fg);
-  const bgLuminance = luminance(bg);
-  const high = Math.max(fgLuminance, bgLuminance);
-  const low = Math.min(fgLuminance, bgLuminance);
-  return (high + 0.05) / (low + 0.05);
 }
 
 async function pressWithoutNavigation(
@@ -302,7 +250,6 @@ async function pressWithoutNavigation(
     | "focused"
     | "after"
     | "activeStateChanged"
-    | "activeTextContrast"
     | "horizontalShiftPx"
     | "layoutShift"
     | "scrollStable"
@@ -335,12 +282,6 @@ async function pressWithoutNavigation(
   // value for controls inside momentum-scroll regions until the next frame.
   await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
   const active = await readState(target);
-  // Release outside the target after sampling the held frame. WebKit can
-  // otherwise synthesize a delayed link click after preventDefault and race
-  // the harness's next explicit navigation.
-  const releaseX = box.x > viewport.width / 2 ? 2 : viewport.width - 2;
-  const releaseY = box.y > viewport.height / 2 ? 2 : viewport.height - 2;
-  await page.mouse.move(releaseX, releaseY);
   await page.mouse.up();
   await target.evaluate((element) => (element as HTMLElement).focus());
   const focused = await readState(target);
@@ -359,10 +300,6 @@ async function pressWithoutNavigation(
     (state) => state.scrollX === before.scrollX && state.scrollY === before.scrollY,
   );
   const activeStateChanged = activeChanged(before, active);
-  const activeTextContrast =
-    metadata.control === "PLAY DAILY"
-      ? cssContrastRatio(active.css.color, active.css.backgroundColor)
-      : null;
   const horizontalOverflow = before.documentWidth > before.viewportWidth;
   const failures = [
     [before, active, focused, after].some((state) => state.css.tapHighlight !== "rgba(0, 0, 0, 0)")
@@ -371,13 +308,6 @@ async function pressWithoutNavigation(
     before.css.touchAction !== "manipulation" ? `touch-action=${before.css.touchAction}` : null,
     before.css.userSelect !== "none" ? `user-select=${before.css.userSelect}` : null,
     !activeStateChanged ? "no instantaneous active-state style" : null,
-    active.css.opacity !== before.css.opacity
-      ? `whole-element active opacity=${before.css.opacity}/${active.css.opacity}`
-      : null,
-    metadata.control === "PLAY DAILY" &&
-    (active.css.opacity !== "1" || activeTextContrast === null || activeTextContrast < AA_BODY)
-      ? `PLAY DAILY active contrast=${activeTextContrast?.toFixed(4) ?? "unresolved"} opacity=${active.css.opacity} color=${active.css.color} background=${active.css.backgroundColor}`
-      : null,
     horizontalShiftPx > 0.01 ? `horizontal shift=${horizontalShiftPx.toFixed(3)}px` : null,
     layoutShift ? "layout metrics changed during press/focus" : null,
     !scrollStable
@@ -394,7 +324,6 @@ async function pressWithoutNavigation(
     focused,
     after,
     activeStateChanged,
-    activeTextContrast,
     horizontalShiftPx,
     layoutShift,
     scrollStable,
@@ -645,8 +574,7 @@ const failures = [
 const assertionCount =
   metrics.length * pressAssertionCount +
   pageMetrics.length * pageAssertionCount +
-  overscrollMetrics.length * overscrollAssertionCount +
-  metrics.filter((metric) => metric.activeTextContrast !== null).length;
+  overscrollMetrics.length * overscrollAssertionCount;
 const payload = {
   phase,
   browserEngine:
