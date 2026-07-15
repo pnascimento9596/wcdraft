@@ -142,6 +142,8 @@ const host = "127.0.0.1";
 const strict =
   process.env.WCDRAFT_ONE_SCREEN_STRICT !== "0" && process.env.WCDRAFT_HOME_FOLD_STRICT !== "0";
 const screenshotTimeoutMs = 30_000;
+const shellReadyTimeoutMs = 15_000;
+const hiddenPaintBaselineAttempts = 3;
 const themes: readonly Theme[] = ["light", "dark"];
 const motions: readonly Motion[] = ["no-preference", "reduce"];
 const routes: readonly RoutePath[] = ["/", "/play"];
@@ -355,6 +357,25 @@ async function waitForRouteReady(page: Page, pathname: RoutePath): Promise<void>
       });
     },
     { expectedPath: pathname, selectors: routeReadySelectors[pathname] },
+  );
+}
+
+async function waitForShellReady(page: Page): Promise<void> {
+  // Production auth performs a bounded mount-time session read. While it is
+  // pending, AccountMenu renders a 5.5rem loading chip in the masthead; when
+  // the read settles that chip disappears on mobile and moves the theme
+  // control. Measuring paint regions before that transition creates a stale
+  // crop even though the final control is visibly painted.
+  await page.waitForFunction(
+    () => document.querySelector('[aria-label="Checking session"]') === null,
+    undefined,
+    { timeout: shellReadyTimeoutMs },
+  );
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }),
   );
 }
 
@@ -844,6 +865,15 @@ async function captureHiddenPaintBaseline(
         delete element.dataset.wcdraftPaintPreviousStyle;
       }
     });
+    // Let the restored visible frame reach WebKit's compositor before a
+    // possible retry hides the same targets again.
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        }),
+    );
+    await page.waitForTimeout(100);
   }
 }
 
@@ -856,18 +886,40 @@ async function analyzePaintEvidence(
   requiredPaintRegions: readonly PaintRegion[],
   devicePixelRatio: number,
 ): Promise<PaintAnalysis> {
-  const hiddenTargetsScreenshot = await captureHiddenPaintBaseline(
-    page,
-    animations,
-    expectedWidth,
-    expectedHeight,
-  );
-  return screenshotPaintFailures(
-    screenshot,
-    hiddenTargetsScreenshot,
-    requiredPaintRegions,
-    devicePixelRatio,
-  );
+  let bestAnalysis: PaintAnalysis | null = null;
+  for (let attempt = 1; attempt <= hiddenPaintBaselineAttempts; attempt += 1) {
+    const hiddenTargetsScreenshot = await captureHiddenPaintBaseline(
+      page,
+      animations,
+      expectedWidth,
+      expectedHeight,
+    );
+    const analysis = await screenshotPaintFailures(
+      screenshot,
+      hiddenTargetsScreenshot,
+      requiredPaintRegions,
+      devicePixelRatio,
+    );
+    if (analysis.failures.length === 0) return analysis;
+    if (
+      bestAnalysis === null ||
+      analysis.failures.length < bestAnalysis.failures.length ||
+      (analysis.failures.length === bestAnalysis.failures.length &&
+        analysis.contributions.reduce((sum, entry) => sum + entry.changedSampleRatio, 0) >
+          bestAnalysis.contributions.reduce((sum, entry) => sum + entry.changedSampleRatio, 0))
+    ) {
+      bestAnalysis = analysis;
+    }
+    // Flat pixels come from the retained painted screenshot and cannot be
+    // repaired by recapturing the hidden semantic baseline. A zero semantic
+    // delta can be a stale WebKit compositor frame, so only that class earns
+    // bounded retries; the same thresholds still adjudicate every attempt.
+    if (!analysis.failures.some((failure) => failure.includes("no semantic paint contribution"))) {
+      return analysis;
+    }
+  }
+  assert(bestAnalysis, "hidden paint analysis did not run");
+  return bestAnalysis;
 }
 
 async function captureEvidence(
@@ -1043,6 +1095,7 @@ async function main(): Promise<void> {
                     `${pathname} returned HTTP ${response.status().toString()}`,
                   );
                   await waitForRouteReady(page, pathname);
+                  await waitForShellReady(page);
                   await page.evaluate(() => document.fonts.ready);
                   await waitForInitialRouteMotion(page, pathname);
                   await hideDevOverlay(page);

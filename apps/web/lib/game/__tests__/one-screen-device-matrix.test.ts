@@ -86,6 +86,11 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).not.toContain('waitUntil: "networkidle"');
     expect(verifierSource).toMatch(/assert\(\s*response\.ok\(\)/u);
     expect(verifierSource).toContain("await waitForRouteReady(page, pathname)");
+    expect(verifierSource).toContain("await waitForShellReady(page)");
+    expect(verifierSource).toContain(
+      `document.querySelector('[aria-label="Checking session"]') === null`,
+    );
+    expect(verifierSource).toContain("const shellReadyTimeoutMs = 15_000");
     expect(verifierSource).toContain("await waitForInitialRouteMotion(page, pathname)");
     expect(verifierSource).toContain("window.location.pathname !== expectedPath");
     expect(verifierSource).toContain("routeReadySelectors[pathname]");
@@ -145,6 +150,9 @@ describe("one-screen descriptor matrix", () => {
     );
     expect(verifierSource).toContain("normalizedChangedSampleRatio(paintedCrop, hiddenCrop)");
     expect(verifierSource).toContain("const minTargetChangedSampleRatio = 0.002");
+    expect(verifierSource).toContain("const hiddenPaintBaselineAttempts = 3");
+    expect(verifierSource).toContain('failure.includes("no semantic paint contribution")');
+    expect(verifierSource).toContain("attempt <= hiddenPaintBaselineAttempts");
     expect(verifierSource).toContain("no semantic paint contribution");
     expect(verifierSource).toContain("screenshotPaintContributions");
     expect(verifierSource).toContain("stats.entropy < 0.5");
