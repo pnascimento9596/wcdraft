@@ -368,8 +368,9 @@
 .signin-sent__h {
   margin: 0;
   font-size: var(--t-d3);
+  font-weight: var(--font-weight-display);
   color: var(--ink-100);
-  letter-spacing: 0;
+  letter-spacing: var(--tracking-display);
 }
 
 .signin-sent__msg {

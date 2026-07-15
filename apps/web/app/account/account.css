@@ -11,10 +11,16 @@
   gap: 1rem;
 }
 
-.account-head h1,
+.account-head h1 {
+  margin: 0.2rem 0 0;
+  font-weight: var(--font-weight-display);
+  letter-spacing: var(--tracking-display);
+}
+
 .account-section-head h2 {
   margin: 0.2rem 0 0;
-  letter-spacing: 0;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
 }
 
 .account-grid {
@@ -240,7 +246,8 @@
 .account-run h3 {
   margin: 0.2rem 0 0;
   font-size: 1.1rem;
-  letter-spacing: 0;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
 }
 
 .account-run__meta {

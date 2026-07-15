@@ -770,7 +770,8 @@
 .submitTitle {
   font-family: var(--font-family);
   font-size: 1.3rem;
-  letter-spacing: 0.02em;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
 }
 
 .submitScore {

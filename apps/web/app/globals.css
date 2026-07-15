@@ -1229,7 +1229,7 @@ main {
 .prose h3 {
   font-size: 1.3rem;
   margin-top: 1.8rem;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-heading);
 }
 .prose p,
 .prose li {

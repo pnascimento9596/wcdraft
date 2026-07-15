@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +10,8 @@ const FONT_SOURCE_ROOTS = ["app", "components", "lib", "public/og"] as const;
 const TRACKING_SOURCE_ROOTS = ["app", "assets", "components", "lib", "public"] as const;
 const ACTIVE_EXTENSIONS = new Set([".css", ".svg", ".ts", ".tsx"]);
 const MAX_POSITIVE_TRACKING_EM = 0.1;
+const LOCKED_UPPERCASE_ROLE_INVENTORY_SHA256 =
+  "db372567988d32d4e52583440de4975d9d6e25e2101a8817d317cdec318f05f0";
 
 type TrackingDeclaration = {
   readonly file: string;
@@ -93,6 +96,11 @@ describe("Terrace typography source contract", () => {
       "utf8",
     );
     const signIn = readFileSync(path.join(WEB_ROOT, "app/sign-in/sign-in.css"), "utf8");
+    const account = readFileSync(path.join(WEB_ROOT, "app/account/account.css"), "utf8");
+    const leaderboard = readFileSync(
+      path.join(WEB_ROOT, "components/leaderboard/leaderboard.module.css"),
+      "utf8",
+    );
     const results = readFileSync(
       path.join(WEB_ROOT, "components/game/game-styles/results.module.css"),
       "utf8",
@@ -124,6 +132,22 @@ describe("Terrace typography source contract", () => {
     );
     expect(signIn).toMatch(
       /\.signin-screen__title\s*\{[^}]*letter-spacing:\s*var\(--tracking-display\);/su,
+    );
+    expect(signIn).toMatch(
+      /\.signin-sent__h\s*\{[^}]*font-weight:\s*var\(--font-weight-display\);[^}]*letter-spacing:\s*var\(--tracking-display\);/su,
+    );
+    expect(globals).toMatch(/\.prose h3\s*\{[^}]*letter-spacing:\s*var\(--tracking-heading\);/su);
+    expect(account).toMatch(
+      /\.account-head h1\s*\{[^}]*font-weight:\s*var\(--font-weight-display\);[^}]*letter-spacing:\s*var\(--tracking-display\);/su,
+    );
+    expect(account).toMatch(
+      /\.account-section-head h2\s*\{[^}]*font-weight:\s*var\(--font-weight-heading\);[^}]*letter-spacing:\s*var\(--tracking-heading\);/su,
+    );
+    expect(account).toMatch(
+      /\.account-run h3\s*\{[^}]*font-weight:\s*var\(--font-weight-heading\);[^}]*letter-spacing:\s*var\(--tracking-heading\);/su,
+    );
+    expect(leaderboard).toMatch(
+      /\.submitTitle\s*\{[^}]*font-weight:\s*var\(--font-weight-heading\);[^}]*letter-spacing:\s*var\(--tracking-heading\);/su,
     );
     expect(results).toMatch(
       /\.seedCopyButton\s*\{[^}]*font-weight:\s*var\(--font-weight-button\);[^}]*letter-spacing:\s*var\(--tracking-button\);/su,
@@ -231,13 +255,33 @@ describe("Terrace typography source contract", () => {
   });
 
   it("assigns every authored uppercase CSS seam to a locked Terrace role", () => {
-    const violations = authoredSources(["app", "components"])
-      .filter(({ file }) => file.endsWith(".css"))
-      .flatMap(({ file, source }) => [
-        ...uppercaseRoleViolations(file, source),
-        ...uppercaseOverrideViolations(file, source),
-      ]);
+    const sources = authoredSources(["app", "components"]).filter(({ file }) =>
+      file.endsWith(".css"),
+    );
+    const violations = sources.flatMap(({ file, source }) => [
+      ...uppercaseRoleViolations(file, source),
+      ...uppercaseOverrideViolations(file, source),
+    ]);
     expect(violations).toEqual([]);
+
+    const inventory = uppercaseRoleInventory(sources);
+    expect(inventory.length).toBeGreaterThan(0);
+    expect(roleInventoryHash(inventory)).toBe(LOCKED_UPPERCASE_ROLE_INVENTORY_SHA256);
+
+    const legalRoleSwap = sources.map(({ file, source }) => ({
+      file,
+      source:
+        file === "components/game/game-styles/shared.module.css"
+          ? source.replace(
+              /(?<selector>\.modeTag\s*\{[\s\S]*?font-size:\s*10px;[\s\S]*?)font-weight:\s*var\(--font-weight-medium\);\s*letter-spacing:\s*var\(--tracking-micro\);/u,
+              "$<selector>font-weight: var(--font-weight-button);\n  letter-spacing: var(--tracking-button);",
+            )
+          : source,
+    }));
+    expect(legalRoleSwap).not.toEqual(sources);
+    expect(roleInventoryHash(uppercaseRoleInventory(legalRoleSwap))).not.toBe(
+      LOCKED_UPPERCASE_ROLE_INVENTORY_SHA256,
+    );
   });
 
   it("retains the mechanical tnum request on data surfaces", () => {
@@ -381,6 +425,82 @@ function uppercaseOverrideViolations(file: string, source: string): readonly Rol
     });
   }
   return violations;
+}
+
+function uppercaseRoleInventory(
+  sources: readonly { file: string; source: string }[],
+): readonly string[] {
+  return sources
+    .flatMap(({ file, source }) => {
+      const uppercaseClasses = new Set<string>();
+      const uppercaseTags = new Set<string>();
+      for (const match of source.matchAll(
+        /([^{}]+)\{[^{}]*text-transform:\s*uppercase[^{}]*\}/gsu,
+      )) {
+        for (const selector of match[1]!.split(",")) {
+          const target =
+            selector
+              .trim()
+              .split(/[\s>+~]+/u)
+              .at(-1) ?? "";
+          for (const classMatch of target.matchAll(/\.([A-Za-z0-9_-]+)/gu)) {
+            uppercaseClasses.add(classMatch[1]!);
+          }
+          const tag = /^[A-Za-z][A-Za-z0-9-]*/u.exec(target)?.[0]?.toLowerCase();
+          if (tag) uppercaseTags.add(tag);
+        }
+      }
+
+      return [...source.matchAll(/([^{}]+)\{([^{}]*)\}/gsu)].flatMap((match) => {
+        const selector = match[1]!.trim().replace(/\s+/gu, " ");
+        const body = match[2]!;
+        const relevant = selector.split(",").some((part) => {
+          const target =
+            part
+              .trim()
+              .split(/[\s>+~]+/u)
+              .at(-1) ?? "";
+          const classes = [...target.matchAll(/\.([A-Za-z0-9_-]+)/gu)].map(
+            (classMatch) => classMatch[1]!,
+          );
+          const tag = /^[A-Za-z][A-Za-z0-9-]*/u.exec(target)?.[0]?.toLowerCase();
+          return (
+            classes.some((className) => uppercaseClasses.has(className)) ||
+            (tag !== undefined && uppercaseTags.has(tag)) ||
+            /text-transform:\s*uppercase/u.test(body)
+          );
+        });
+        if (!relevant) return [];
+
+        const weight = [...body.matchAll(/font-weight:\s*([^;]+);/gu)].at(-1)?.[1]?.trim();
+        const tracking = [...body.matchAll(/letter-spacing:\s*([^;]+);/gu)].at(-1)?.[1]?.trim();
+        if (weight === undefined && tracking === undefined) return [];
+        const role = exactRoleName(weight, tracking);
+        return [
+          `${file}|${selector}|${role}|weight=${weight ?? "inherit"}|tracking=${tracking ?? "inherit"}`,
+        ];
+      });
+    })
+    .sort();
+}
+
+function exactRoleName(weight: string | undefined, tracking: string | undefined): string {
+  const pair = `${weight ?? "inherit"}/${tracking ?? "inherit"}`;
+  const roles = new Map([
+    ["var(--font-weight-display)/var(--tracking-display)", "display"],
+    ["var(--font-weight-heading)/var(--tracking-heading)", "heading"],
+    ["var(--font-weight-medium)/var(--tracking-micro)", "micro"],
+    ["var(--font-weight-button)/var(--tracking-button)", "button"],
+    ["900/-0.035em", "display"],
+    ["800/-0.02em", "heading"],
+    ["500/0.1em", "micro"],
+    ["800/0.02em", "button"],
+  ]);
+  return roles.get(pair) ?? "partial-or-invalid";
+}
+
+function roleInventoryHash(inventory: readonly string[]): string {
+  return createHash("sha256").update(inventory.join("\n")).digest("hex");
 }
 
 function expectRoleDeclarations(

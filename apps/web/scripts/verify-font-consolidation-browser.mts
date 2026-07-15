@@ -1,5 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import net from "node:net";
 import path from "node:path";
@@ -408,17 +408,22 @@ async function measureSurface(
         },
       ];
     });
-    const displayRoleViolations = visible.flatMap((el) => {
-      if (!(el instanceof HTMLElement) || !el.classList.contains("display")) return [];
+    const semanticHeadingRoleViolations = visible.flatMap((el) => {
+      if (!(el instanceof HTMLElement) || !/^H[1-3]$/u.test(el.tagName)) return [];
       const style = window.getComputedStyle(el);
       const fontSize = Number.parseFloat(style.fontSize);
       const trackingPx =
         style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing);
       const trackingEm = Number.isFinite(fontSize) && fontSize > 0 ? trackingPx / fontSize : NaN;
       const weight = Number.parseInt(style.fontWeight, 10);
-      if (weight === 900 && Math.abs(trackingEm + 0.035) <= 0.002) return [];
+      const display = el.classList.contains("display");
+      const expectedWeight = display ? 900 : 800;
+      const expectedTracking = display ? -0.035 : -0.02;
+      if (weight === expectedWeight && Math.abs(trackingEm - expectedTracking) <= 0.002) {
+        return [];
+      }
       return [
-        `display ${el.tagName.toLowerCase()}.${Array.from(el.classList).join(".")} ${weight.toString()}/${trackingEm.toFixed(4)}em`,
+        `${display ? "display" : "heading"} ${el.tagName.toLowerCase()}.${Array.from(el.classList).join(".")} ${weight.toString()}/${trackingEm.toFixed(4)}em`,
       ];
     });
     const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight);
@@ -440,7 +445,7 @@ async function measureSurface(
             ({ node, className, text, weight, trackingEm }) =>
               `${node}${className ? `.${className.trim().replace(/\s+/gu, ".")}` : ""} ${weight.toString()}/${trackingEm.toFixed(4)}em ${JSON.stringify(text)}`,
           ),
-        ...displayRoleViolations,
+        ...semanticHeadingRoleViolations,
       ],
     };
   });
@@ -627,6 +632,47 @@ async function auditStaticSurface(
   return { surfaces, targets, errors };
 }
 
+async function auditAuthoredRoleFixture(
+  browser: Browser,
+  baseUrl: string,
+  viewport: ViewportCase,
+  theme: Theme,
+): Promise<{ surfaces: SurfaceMetric[]; targets: TargetMetric[]; errors: string[] }> {
+  const { context, page, errors } = await newAuditedPage(browser, viewport, theme);
+  const [tokens, globals, account, signIn] = await Promise.all([
+    readFile(path.join(appRoot, "app/ds/tokens.css"), "utf8"),
+    readFile(path.join(appRoot, "app/globals.css"), "utf8"),
+    readFile(path.join(appRoot, "app/account/account.css"), "utf8"),
+    readFile(path.join(appRoot, "app/sign-in/sign-in.css"), "utf8"),
+  ]);
+  // Establish the app origin without booting React. Replacing a live app
+  // document with the fixture would create a real hydration error and turn
+  // the audit itself into noise; this static asset has no client runtime.
+  await page.goto(`${baseUrl}/sw-version.js`, { waitUntil: "domcontentloaded" });
+  await page.setContent(`<!doctype html>
+    <html lang="en" data-theme="${theme}">
+      <head>
+        <base href="${baseUrl}/">
+        <title>Terrace role fixture</title>
+        <style>${tokens}\n${globals}\n${account}\n${signIn}</style>
+      </head>
+      <body>
+        <main>
+          <div class="account-head"><h1 class="display">Account fixture</h1></div>
+          <div class="account-section-head"><h2>Saved runs</h2></div>
+          <article class="account-run"><h3>Fixture team</h3></article>
+          <h2 class="signin-sent__h display">Check your email</h2>
+        </main>
+      </body>
+    </html>`);
+  await page.evaluate(async () => await document.fonts.ready);
+  const surfaces = [
+    await measureSurface(page, "authored role fixture", "/__font-role-fixture", viewport, theme),
+  ];
+  await context.close();
+  return { surfaces, targets: [], errors };
+}
+
 async function auditClassicDraftFlow(
   browser: Browser,
   baseUrl: string,
@@ -783,6 +829,7 @@ async function auditAll(baseUrl: string): Promise<Report> {
             "/how-to-play",
             "How-to-Play",
           ),
+          await auditAuthoredRoleFixture(browser, baseUrl, viewport, theme),
         ];
         for (const run of runs) {
           report.surfaces.push(...run.surfaces);
