@@ -52,7 +52,7 @@ const themeCss = `
   --font-family: "Archivo", system-ui, sans-serif;
   --error-bg: #0f100e;
   --error-ink: #ebe6da;
-  --error-accent: #3f9b68;
+  --error-accent: #3fa268;
   --error-accent-solid: #3f9268;
   --error-accent-ink: #05130c;
   --error-line: #42493f;

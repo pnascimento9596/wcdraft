@@ -180,6 +180,7 @@ describe("Terrace dark palette", () => {
 
   it("threads the palette into standalone dark and install surfaces", () => {
     expect(globalErrorSource).toContain("--error-bg: #0f100e");
+    expect(globalErrorSource).toContain("--error-accent: #3fa268");
     expect(globalErrorSource).toContain("--error-accent-solid: #3f9268");
     expect(manifestSource).toContain('background_color: "#0f100e"');
     expect(manifestSource).toContain('theme_color: "#3f9268"');
