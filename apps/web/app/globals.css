@@ -592,6 +592,14 @@ body:has([data-draft-anchored]) .site-footer {
   }
 }
 
+/* The landing and mode-selection routes are explicitly one-screen surfaces.
+   Keep the full attribution footer on every other route, matching the
+   pre-existing mobile treatment for these same surfaces. */
+body:has(.hero) .site-footer,
+body:has(.game-page--mode) .site-footer {
+  display: none;
+}
+
 .container {
   width: 100%;
   max-width: var(--container-page);
@@ -1109,14 +1117,6 @@ main {
   max-width: 34rem;
 }
 
-.hero__daily {
-  margin: -0.85rem 0 0;
-  color: var(--ink-soft);
-  font-size: 0.92rem;
-  line-height: 1.45;
-  max-width: 31rem;
-}
-
 .hero__meta {
   display: flex;
   flex-wrap: wrap;
@@ -1144,29 +1144,6 @@ main {
   text-transform: uppercase;
   letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
-}
-
-/* "Live now" status caption under the hero — honest shipped-state, not a disclaimer. */
-.hero__live {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--font-family);
-  font-size: 0.86rem;
-  line-height: 1.5;
-  letter-spacing: var(--tracking-body);
-  color: var(--ink-soft);
-  max-width: 38rem;
-}
-.hero__live::before {
-  content: "";
-  flex: none;
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 999px;
-  background: var(--accent);
-  outline: 3px solid color-mix(in srgb, var(--accent) 22%, transparent);
-  transform: translateY(0.02em);
 }
 
 /* Animated entrance for hero children (respects reduced motion via reset). */
@@ -1861,8 +1838,7 @@ main {
     padding-block: 0.55rem;
   }
 
-  /* Landing hero - keeps all stats + live caption + CTA visible, just
-     less air above/below. */
+  /* Landing hero - keeps all stats + CTAs visible with less air above/below. */
   .hero {
     padding-block: var(--m-hero-y);
   }
@@ -1929,5 +1905,15 @@ main {
     --m-page-y-game: 0.4rem;
     --m-hero-y: 1.25rem;
     --m-head-margin: 0.85rem;
+  }
+}
+
+@media (max-height: 500px) and (max-width: 51.99rem) {
+  .masthead__inner {
+    height: 3.35rem;
+  }
+
+  .mobile-menu {
+    max-block-size: calc(100svh - 3.35rem - env(safe-area-inset-top, 0px));
   }
 }

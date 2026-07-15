@@ -11,7 +11,7 @@ const TRACKING_SOURCE_ROOTS = ["app", "assets", "components", "lib", "public"] a
 const ACTIVE_EXTENSIONS = new Set([".css", ".svg", ".ts", ".tsx"]);
 const MAX_POSITIVE_TRACKING_EM = 0.1;
 const LOCKED_UPPERCASE_ROLE_INVENTORY_SHA256 =
-  "db372567988d32d4e52583440de4975d9d6e25e2101a8817d317cdec318f05f0";
+  "e04584509b77df53557eb721c66f4b98055cd259a4de2a7d80fe81cdf632f7b3";
 
 type TrackingDeclaration = {
   readonly file: string;

@@ -526,9 +526,27 @@ async function verifyModeSelectCtaDoesNotTapThrough(
 }
 
 const MODE_SELECT_VIEWPORTS = [
-  { width: 360, height: 800, name: "360x800", expectedDockPosition: "sticky" },
-  { width: 390, height: 844, name: "390x844", expectedDockPosition: "sticky" },
-  { width: 667, height: 375, name: "667x375", expectedDockPosition: "static" },
+  {
+    width: 360,
+    height: 800,
+    name: "360x800",
+    expectedColumns: 2,
+    expectedDockPosition: "sticky",
+  },
+  {
+    width: 390,
+    height: 844,
+    name: "390x844",
+    expectedColumns: 2,
+    expectedDockPosition: "sticky",
+  },
+  {
+    width: 667,
+    height: 375,
+    name: "667x375",
+    expectedColumns: 4,
+    expectedDockPosition: "static",
+  },
 ] as const;
 
 async function measureModeCardClearance(page: Page): Promise<number | null> {
@@ -575,7 +593,10 @@ async function verifyModeSelectCompactBoard(browser: Browser, baseUrl: string): 
       };
     });
     assert(layout, `${viewport.name} mode board did not expose layout metrics`);
-    assert(layout.columns === 2, `${viewport.name} mode board used ${layout.columns} columns`);
+    assert(
+      layout.columns === viewport.expectedColumns,
+      `${viewport.name} mode board used ${layout.columns} columns`,
+    );
     assert(
       layout.dockPosition === viewport.expectedDockPosition,
       `${viewport.name} dock position was ${layout.dockPosition}`,

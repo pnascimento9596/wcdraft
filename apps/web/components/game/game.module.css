@@ -104,17 +104,11 @@
 .modeTagSoon {
   composes: modeTagSoon from "./game-styles/shared.module.css";
 }
-.modeIndex {
-  composes: modeIndex from "./game-styles/shared.module.css";
-}
 .modeName {
   composes: modeName from "./game-styles/shared.module.css";
 }
 .modeDesc {
   composes: modeDesc from "./game-styles/shared.module.css";
-}
-.modePreview {
-  composes: modePreview from "./game-styles/shared.module.css";
 }
 .modeFeatures {
   composes: modeFeatures from "./game-styles/shared.module.css";
@@ -161,14 +155,8 @@
 .localProgressBandCompact {
   composes: localProgressBandCompact from "./game-styles/shared.module.css";
 }
-.localProgressPrimary {
-  composes: localProgressPrimary from "./game-styles/shared.module.css";
-}
-.localProgressBest {
-  composes: localProgressBest from "./game-styles/shared.module.css";
-}
-.localProgressStreak {
-  composes: localProgressStreak from "./game-styles/shared.module.css";
+.localProgressRow {
+  composes: localProgressRow from "./game-styles/shared.module.css";
 }
 .localProgressCountdown {
   composes: localProgressCountdown from "./game-styles/shared.module.css";
