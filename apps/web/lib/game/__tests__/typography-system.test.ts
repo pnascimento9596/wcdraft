@@ -56,6 +56,9 @@ describe("Terrace typography source contract", () => {
       expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+0100-02BA");
       expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+02C7-02CC");
       expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+02DD-02FF");
+      expect(range, `Archivo ${weight} combining-mark eligibility`).toContain("U+0300-0304");
+      expect(range, `Archivo ${weight} combining-mark eligibility`).toContain("U+0308-0309");
+      expect(range, `Archivo ${weight} combining-mark eligibility`).toContain("U+0323");
       expect(range, `Archivo ${weight} Latin-ext eligibility`).toContain("U+1D00-1DBF");
     }
   });
