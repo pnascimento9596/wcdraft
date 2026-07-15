@@ -20,14 +20,23 @@ fit the full document across Chromium and WebKit at descriptor-derived 320×568,
 1366×720 width-override viewports, both themes and motion modes: 144/144 contexts, zero
 failures, strict 44px targets, zoom preserved, and semantic screenshot-paint evidence. The
 one-screen harness now uses HTTP + visible-route readiness, waits for only the initial finite
-surface motion, bounds screenshots at 30 seconds, and recycles each browser at the device
-boundary; this closes the independently reproduced WebKit 64th-context stall without weakening
-any fit, content, target, collision, or paint assertion.
+surface motion, waits up to 15 seconds for the production auth loading shell to settle before
+measuring geometry, bounds screenshots at 30 seconds, and recycles each browser at the device
+boundary. WebKit hidden-target paint baselines receive at most three recaptures only when the
+semantic delta is zero; every retry keeps the same entropy, delta, fit, content, target, and
+collision thresholds. This closes both the independently reproduced 64th-context lifecycle stall
+and the production-only stale-paint races without weakening an assertion. The first production
+merge `9f466b70` was automatically rolled back by `2576f2d5` after the live matrix truthfully
+failed 143/144 on a visibly painted theme control whose pre-auth coordinates had gone stale; the
+repaired verifier then passed 144/144 against that immutable deployment and again in the full
+local root envelope.
 Signed OG/card caching moved coherently from `ogs1`/v1 to `ogs2`/v2; dynamic and default
 render bytes changed to Archivo while the secret, boot assertion, friend signing, and error
 contracts remain pinned. No data artifact was regenerated: base/head core, data, and ETL tree
-objects are identical. Forced lane-boundary validation passed typecheck 9/9, lint 6/6, test
-9/9 with 2,193 passed and 10 expected skips, responsive 218/218, one-screen 144/144, build
+objects are identical. Required clean-worktree root commands did invoke the repository-owned
+`ensure-generated-artifacts` materializer; it produced no tracked diff and retained the exact
+ratings and draft-pool hashes. Forced lane-boundary validation passed typecheck 9/9, lint 6/6,
+test 9/9 with 2,194 passed and 10 expected skips, responsive 218/218, one-screen 144/144, build
 5/5 with 40/40 pages and both protected traces 8/8, core/draft goldens 69/42,
 data/integration goldens 59/22, and leaderboard golden 6/6. All U0–U5 fresh-context reviews
 and the independent GLM-5.2 cross-model review passed at their pinned heads. Durable evidence:

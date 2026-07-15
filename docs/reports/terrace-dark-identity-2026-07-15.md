@@ -230,6 +230,34 @@ noted; later exact-head fix-forward evidence is labeled with its own head:
   zero target/collision failures. The retained JSON proof is
   `/tmp/terrace-one-screen-device-recycle/one-screen-fit.json`, SHA-256
   `5931632371c599b7d51bca25eb907e2438c23f9fe6f2a02e3e56da9a0ffbf105`.
+- First ship attempt `9f466b70feba9a03609cdc4ef8d8fb7248fe6831` reached Vercel `READY` and
+  passed health/build identity, schema, database, data-anchor, and OG-health checks. The mandatory
+  production matrix then completed **143/144** and exited 1: WebKit/iPhone 14 Pro Max 430×740,
+  dark/reduced-motion `/play` captured a visibly painted theme control but compared the pixels at
+  its pre-auth x-coordinate, yielding entropy 0 and semantic delta 0. The raw report is
+  `/tmp/terrace-live-one-screen-9f466b7/one-screen-fit.json`, SHA-256
+  `8fcf551365e77d82816d53c85e186cd07581b9cf08b2a88c8572fe253edf6fa3`.
+- The RED auto-revert ran immediately. Revert PR #300 passed its required aggregate, squash-merged
+  as `2576f2d50b808ec8e99ebb863a61d60d4405dccb`, reached production `READY`, and restored the exact
+  pre-lane tree (`fe1710d496c7f4165d89822e08ff842a3ddb7db0`). Live health identified the
+  revert SHA with database ready and all anchors unchanged; OG health returned OK.
+- Root cause is two bounded WebKit readiness races, not overflow or missing UI. Production auth
+  temporarily renders a 5.5rem `Checking session` chip, then removes it on mobile and shifts the
+  theme control after the old harness measured paint coordinates. Separately, WebKit can return
+  the prior visible compositor frame after all semantic targets are hidden. The fix-forward at
+  `0ed2288` waits up to 15 seconds for the auth shell to settle before measurement and permits at
+  most three hidden-baseline recaptures only after a zero semantic delta. Flat painted pixels do
+  not earn a retry, and every attempt retains the same entropy, contribution, fit, content,
+  collision, target, and zoom thresholds.
+- The unchanged verifier reran the immutable failed deployment **144/144**, proving the original
+  result was nondeterministic. The repaired verifier then passed the same immutable deployment
+  **144/144** (Chromium 72/72 + WebKit 72/72), including both observed race sites; report
+  `/tmp/terrace-fixed2-one-screen-9f466b7/one-screen-fit.json`, SHA-256
+  `820fe6292c3910f03e93c414bcbc46324d807859deea1f3974638247fdb3f54a`.
+- Exact fix-forward validation passed typecheck **9/9**, lint **6/6**, root test **9/9** in
+  15m19.771s with **2,194 passed / 10 expected skips**, responsive **218/218**, embedded
+  one-screen **144/144**, build **5/5** with **40/40** pages and protected traces **8/8 + 8/8**,
+  and forced goldens core/draft **69/42**, data/integration **59/22**, leaderboard **6**.
 - The 33-test increase over the measured 2,160-pass baseline is attributable to this lane's
   typography, contrast, device-matrix, semantic-paint, compaction, and OG regression guards.
 - `TURBO_FORCE=1 pnpm build` — **5/5 tasks**, 0 cached, **40/40 pages**; protected traces
@@ -285,13 +313,17 @@ Base: dddf3ce50b589e409ce38197fc22bb4d2af2a42d
 
 ## Not run + why
 
-- ETL, `build:compact`, Daily salt-map generation, score-distribution generation, and heavy
-  realism were not run. The dispatch forbids data regeneration, and this lane changes no
-  engine, rating, simulation, data, or CI semantics. Ordinary tests and golden verifiers read
-  and compare the already-materialized byte-pinned artifacts.
-- GitHub CI, PR merge, Vercel deployment observation, and production live verification were
-  not yet possible at report authoring because this report and `STATE.md` must first be part of
-  the exact branch head. They are mandatory ship gates, not waived work.
+- ETL, explicit `build:compact`, explicit Daily salt-map generation, explicit score-distribution
+  generation, and heavy realism were not run. Required root typecheck/build commands do depend on
+  `ensure-generated-artifacts`; in the fresh worktree that repository-owned helper materialized
+  ignored deterministic inputs and retained exact hashes: ratings
+  `896301819a2988e4e93b3038b35ffa44bcef4182b4a55ac82c7569241801cee0`, draft pool
+  `ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07`. It produced no
+  tracked data diff. This is recorded rather than falsely claiming the required root commands
+  never invoked the helper.
+- Second-attempt GitHub CI, merge, and production verification have not yet run because this
+  report and `STATE.md` must first join the exact reviewed head. The first attempt and mandatory
+  rollback are fully recorded above; none of the second-attempt ship gates is waived.
 - Physical iPhone Safari was not used. The dispatch requires repository Playwright WebKit plus
   production live verification, both of which are the machine-adjudicated gates.
 
@@ -308,8 +340,10 @@ Base: dddf3ce50b589e409ce38197fc22bb4d2af2a42d
 
 ## Commit / branch
 
-- Branch: `ws-ux/terrace-identity-20260714`
-- Base: `dddf3ce50b589e409ce38197fc22bb4d2af2a42d`
+- Branch: `ws-ux/terrace-paint-settle`
+- Base: rollback main `2576f2d50b808ec8e99ebb863a61d60d4405dccb`
+- Replayed Terrace squash: `7d98acf06b5c3e09c035caf40c2c00d8da93288b`
+- Production paint fix: `0ed2288`
 - Reviewed implementation head: `987f1b898f1e104ec0599c2fc18a967751a9c3ef`
 - Unit commits are conventional, scoped to web presentation/tests, and listed in Git history.
 - The documentation closeout commit necessarily advances the branch after the code-head
@@ -354,9 +388,11 @@ Base: dddf3ce50b589e409ce38197fc22bb4d2af2a42d
 
 ## Git status
 
-The implementation worktree was clean after committing the harness fix at `c6994f9`; only this
-report and `STATE.md` are intended for the follow-up evidence commit. The owner checkout was
-not modified.
+The fix-forward worktree was clean after committing `0ed2288`; only this report and `STATE.md`
+are intended for the evidence commit. A worktree-routing mistake briefly created an unpushed
+local commit in the previously clean owner checkout; it was detected immediately, its `main` ref
+and files were restored to exact `origin/main` `2576f2d5`, and the owner checkout is clean. No
+owner change reached a remote.
 
 ## HUMAN ACTIONS
 
