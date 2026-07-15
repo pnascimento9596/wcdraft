@@ -1146,7 +1146,7 @@ main {
   color: var(--ink-faint);
 }
 
-/* Animated entrance for hero children (respects reduced motion via reset). */
+/* Animated entrance for hero children. */
 .reveal > * {
   opacity: 0;
   transform: translateY(14px);
@@ -1171,6 +1171,17 @@ main {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* The global motion reset shortens animations, but CSS animation delays still
+ * apply. Render the final state explicitly so reduced-motion users never see
+ * delayed, opacity-zero content. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal > * {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 }
 

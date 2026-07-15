@@ -29,6 +29,8 @@ type FitMetric = {
   readonly motion: Motion;
   readonly pathname: RoutePath;
   readonly screenshot: string | null;
+  readonly screenshotPaintStable: boolean | null;
+  readonly screenshotCaptureCount: number | null;
   readonly scrollHeight: number;
   readonly bodyScrollHeight: number;
   readonly innerHeight: number;
@@ -37,6 +39,7 @@ type FitMetric = {
   readonly footerDisplay: string | null;
   readonly renderedTheme: string | null;
   readonly renderedReducedMotion: boolean;
+  readonly unpaintedRequiredContent: readonly string[];
   readonly ledeLines: number | null;
   readonly requiredTargetCount: number;
   readonly requiredTargetsInViewport: boolean;
@@ -53,6 +56,21 @@ type FitMetric = {
   readonly pageErrors: readonly string[];
 };
 
+type MeasuredFitMetric = Omit<
+  FitMetric,
+  | "engine"
+  | "browserVersion"
+  | "device"
+  | "descriptorSource"
+  | "viewport"
+  | "theme"
+  | "motion"
+  | "pathname"
+  | "screenshot"
+  | "screenshotPaintStable"
+  | "screenshotCaptureCount"
+>;
+
 type ManagedServer = {
   readonly baseUrl: string;
   readonly stop: () => Promise<void>;
@@ -64,8 +82,7 @@ const nextEnvPath = fileURLToPath(new URL("../next-env.d.ts", import.meta.url));
 const nextBin = require.resolve("next/dist/bin/next");
 const host = "127.0.0.1";
 const strict =
-  process.env.WCDRAFT_ONE_SCREEN_STRICT !== "0" &&
-  process.env.WCDRAFT_HOME_FOLD_STRICT !== "0";
+  process.env.WCDRAFT_ONE_SCREEN_STRICT !== "0" && process.env.WCDRAFT_HOME_FOLD_STRICT !== "0";
 const themes: readonly Theme[] = ["light", "dark"];
 const motions: readonly Motion[] = ["no-preference", "reduce"];
 const routes: readonly RoutePath[] = ["/", "/play"];
@@ -232,6 +249,11 @@ function metricFailures(metric: FitMetric): readonly string[] {
   if (metric.renderedReducedMotion !== (metric.motion === "reduce")) {
     failures.push(`${prefix}: rendered motion preference did not match`);
   }
+  if (metric.unpaintedRequiredContent.length > 0) {
+    failures.push(
+      `${prefix}: required content is not painted ${metric.unpaintedRequiredContent.join(" | ")}`,
+    );
+  }
   if (!metric.requiredTargetsInViewport) failures.push(`${prefix}: required target below fold`);
   if (metric.smallTargets.length > 0) {
     failures.push(`${prefix}: sub-44px targets ${metric.smallTargets.join(" | ")}`);
@@ -240,13 +262,21 @@ function metricFailures(metric: FitMetric): readonly string[] {
   if (metric.pageErrors.length > 0) {
     failures.push(`${prefix}: page errors ${metric.pageErrors.join(" | ")}`);
   }
+  if (metric.screenshot !== null && metric.motion === "reduce" && !metric.screenshotPaintStable) {
+    failures.push(
+      `${prefix}: reduced-motion screenshot did not reach a stable painted frame after ` +
+        `${String(metric.screenshotCaptureCount)} captures`,
+    );
+  }
 
   if (metric.pathname === "/") {
     if ((metric.ledeLines ?? Number.POSITIVE_INFINITY) > 2) {
       failures.push(`${prefix}: home lede uses ${String(metric.ledeLines)} lines`);
     }
     if (metric.requiredTargetCount !== 3) {
-      failures.push(`${prefix}: expected 3 home CTAs, saw ${metric.requiredTargetCount.toString()}`);
+      failures.push(
+        `${prefix}: expected 3 home CTAs, saw ${metric.requiredTargetCount.toString()}`,
+      );
     }
     if (!metric.homeDemoPresent) failures.push(`${prefix}: spin demo missing`);
     if (metric.homeStatCount !== 3) {
@@ -278,23 +308,25 @@ function metricFailures(metric: FitMetric): readonly string[] {
   return failures;
 }
 
-async function measurePage(
-  page: Page,
-  pathname: RoutePath,
-): Promise<Omit<FitMetric, "engine" | "browserVersion" | "device" | "descriptorSource" | "viewport" | "theme" | "motion" | "pathname" | "screenshot">> {
+async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFitMetric> {
   return (await page.evaluate(String.raw`(() => {
     const pathValue = ${JSON.stringify(pathname)};
     const visible = (element) => {
       if (!(element instanceof HTMLElement)) return false;
-      const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
-      return (
-        style.display !== "none" &&
-        style.visibility !== "hidden" &&
-        style.opacity !== "0" &&
-        rect.width > 0 &&
-        rect.height > 0
-      );
+      if (rect.width <= 0 || rect.height <= 0) return false;
+      for (let current = element; current; current = current.parentElement) {
+        const style = getComputedStyle(current);
+        if (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          style.visibility === "collapse" ||
+          Number.parseFloat(style.opacity) <= 0.01
+        ) {
+          return false;
+        }
+      }
+      return true;
     };
     const rectsShareRow = (elements) => {
       if (elements.length <= 1) return true;
@@ -329,6 +361,24 @@ async function measurePage(
     const body = document.body;
     const footer = document.querySelector(".site-footer");
     const metaViewport = document.querySelector('meta[name="viewport"]')?.content ?? "";
+    const requiredContent =
+      pathValue === "/"
+        ? [
+            ["masthead", document.querySelector(".masthead")],
+            ["hero title", document.querySelector(".hero .display")],
+            ["hero lede", document.querySelector(".hero__sub")],
+            ["spin demo", document.querySelector("[data-hero-spin-demo]")],
+            ["stat strip", document.querySelector(".hero__meta")],
+          ]
+        : [
+            ["masthead", document.querySelector(".masthead")],
+            ["mode heading", document.querySelector(".game-page--mode .page-head")],
+            ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
+            ["mode grid", document.querySelector('[aria-label="Draft mode"]')],
+          ];
+    const unpaintedRequiredContent = requiredContent
+      .filter(([, element]) => !visible(element))
+      .map(([label]) => label);
     const homeActions = [...document.querySelectorAll(".hero a")].filter(visible);
     const modeCards = [...document.querySelectorAll('[role="radio"]')].filter(visible);
     const dockAction = document.querySelector("main button.btn");
@@ -371,6 +421,7 @@ async function measurePage(
       footerDisplay: footer ? getComputedStyle(footer).display : null,
       renderedTheme: doc.dataset.theme ?? null,
       renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+      unpaintedRequiredContent,
       ledeLines: lineCount(document.querySelector(".hero__sub")),
       requiredTargetCount: requiredTargets.length,
       requiredTargetsInViewport,
@@ -389,18 +440,44 @@ async function measurePage(
       ),
       pageErrors: [],
     };
-  })()`)) as Omit<
-    FitMetric,
-    | "engine"
-    | "browserVersion"
-    | "device"
-    | "descriptorSource"
-    | "viewport"
-    | "theme"
-    | "motion"
-    | "pathname"
-    | "screenshot"
-  >;
+  })()`)) as MeasuredFitMetric;
+}
+
+async function captureEvidence(
+  page: Page,
+  screenshotPath: string | null,
+  motion: Motion,
+): Promise<{ readonly stable: boolean | null; readonly captureCount: number | null }> {
+  if (screenshotPath === null) return { stable: null, captureCount: null };
+
+  if (motion === "no-preference") {
+    // Review evidence is about the finished one-screen composition, not a
+    // nondeterministic frame within the finite entrance animation.
+    await page.screenshot({ path: screenshotPath, animations: "disabled" });
+    return { stable: null, captureCount: 1 };
+  }
+
+  // A geometry-only gate previously passed while reduced-motion screenshots
+  // were paint-incomplete, and two early captures could even match while both
+  // were incomplete. A direct Chromium/WebKit probe reached complete paint by
+  // 1.2s, so establish a conservative floor before comparing frames. This UI
+  // is then static except for the once-per-second countdown: demand two byte-
+  // identical captures separated by 500ms, retrying across a clock tick.
+  const compositorSettleMs = 1_500;
+  const maxCaptures = 7;
+  await page.waitForTimeout(compositorSettleMs);
+  let previous = await page.screenshot({ animations: "allow" });
+  for (let captureCount = 2; captureCount <= maxCaptures; captureCount += 1) {
+    await page.waitForTimeout(500);
+    const current = await page.screenshot({ animations: "allow" });
+    if (current.equals(previous)) {
+      await writeFile(screenshotPath, current);
+      return { stable: true, captureCount };
+    }
+    previous = current;
+  }
+  await writeFile(screenshotPath, previous);
+  return { stable: false, captureCount: maxCaptures };
 }
 
 async function main(): Promise<void> {
@@ -434,17 +511,21 @@ async function main(): Promise<void> {
         for (const deviceCase of deviceCases) {
           for (const theme of themes) {
             for (const motion of motions) {
-              const context = await browser.newContext({
-                ...deviceCase.descriptor,
-                baseURL: server.baseUrl,
-                colorScheme: theme,
-                reducedMotion: motion,
-              });
-              await context.addInitScript((selectedTheme: Theme) => {
-                localStorage.setItem("wcdraft:theme", selectedTheme);
-              }, theme);
-              try {
-                for (const pathname of routes) {
+              for (const pathname of routes) {
+                // Keep routes in separate browser contexts. Reusing a context
+                // after closing the home page produced reproducible stale/
+                // incomplete compositor paint on the subsequent /play page,
+                // despite correct DOM state and zero scroll offset.
+                const context = await browser.newContext({
+                  ...deviceCase.descriptor,
+                  baseURL: server.baseUrl,
+                  colorScheme: theme,
+                  reducedMotion: motion,
+                });
+                await context.addInitScript((selectedTheme: Theme) => {
+                  localStorage.setItem("wcdraft:theme", selectedTheme);
+                }, theme);
+                try {
                   const page = await context.newPage();
                   const pageErrors: string[] = [];
                   page.on("pageerror", (error) => pageErrors.push(error.message));
@@ -465,7 +546,7 @@ async function main(): Promise<void> {
                           ].join("-") + ".png",
                         )
                       : null;
-                  if (screenshot) await page.screenshot({ path: screenshot });
+                  const screenshotCapture = await captureEvidence(page, screenshot, motion);
                   const metric: FitMetric = {
                     engine: engineName,
                     browserVersion,
@@ -476,6 +557,8 @@ async function main(): Promise<void> {
                     motion,
                     pathname,
                     screenshot,
+                    screenshotPaintStable: screenshotCapture.stable,
+                    screenshotCaptureCount: screenshotCapture.captureCount,
                     ...measured,
                     pageErrors,
                   };
@@ -487,9 +570,9 @@ async function main(): Promise<void> {
                       `failures=${failures.length.toString()}\n`,
                   );
                   await page.close();
+                } finally {
+                  await context.close();
                 }
-              } finally {
-                await context.close();
               }
             }
           }

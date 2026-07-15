@@ -32,9 +32,9 @@ describe("one-screen descriptor matrix", () => {
     "resolves real Playwright viewports for %s",
     (engine) => {
       const cases = oneScreenDeviceCases(engine);
-      expect(cases.map((entry) => [entry.descriptor.viewport.width, entry.descriptor.viewport.height])).toEqual(
-        expectedViewports,
-      );
+      expect(
+        cases.map((entry) => [entry.descriptor.viewport.width, entry.descriptor.viewport.height]),
+      ).toEqual(expectedViewports);
       expect(cases).toHaveLength(9);
     },
   );
@@ -58,7 +58,8 @@ describe("one-screen descriptor matrix", () => {
       { name: "390x844", width: 390, height: 844 },
     ]);
     const assertionPairs = oneScreenDeviceCases("chromium").map(
-      ({ descriptor }) => `${descriptor.viewport.width.toString()}x${descriptor.viewport.height.toString()}`,
+      ({ descriptor }) =>
+        `${descriptor.viewport.width.toString()}x${descriptor.viewport.height.toString()}`,
     );
     expect(assertionPairs).not.toContain("360x800");
     expect(assertionPairs).not.toContain("390x844");
@@ -74,6 +75,27 @@ describe("one-screen descriptor matrix", () => {
     );
     expect(verifierSource).not.toContain('name: "360x800"');
     expect(verifierSource).not.toContain('name: "390x844"');
+  });
+
+  it("rejects opacity-zero required content through any ancestor", () => {
+    expect(verifierSource).toContain(
+      "for (let current = element; current; current = current.parentElement)",
+    );
+    expect(verifierSource).toContain("Number.parseFloat(style.opacity) <= 0.01");
+    expect(verifierSource).toContain("unpaintedRequiredContent");
+    expect(verifierSource).toContain("required content is not painted");
+  });
+
+  it("rejects unstable reduced-motion screenshot paint", () => {
+    expect(verifierSource).toContain("current.equals(previous)");
+    expect(verifierSource).toContain("const compositorSettleMs = 1_500");
+    expect(verifierSource).toContain("page.waitForTimeout(compositorSettleMs)");
+    expect(verifierSource).toContain("page.waitForTimeout(500)");
+    expect(verifierSource).toContain("screenshotPaintStable");
+    expect(verifierSource).toContain(
+      "reduced-motion screenshot did not reach a stable painted frame",
+    );
+    expect(verifierSource).toContain("Keep routes in separate browser contexts");
   });
 
   it("runs the descriptor gate in the normal web test envelope", () => {

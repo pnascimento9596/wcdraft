@@ -31,7 +31,8 @@ describe("one-screen information contract", () => {
     expect(progressBand).toContain("Today {formatBestScore(summary.todayBest)}");
     expect(progressBand).toContain("All-time {formatBestScore(summary.allTimeBest)}");
 
-    const featuredRule = /\.modeCardFeatured \{(?<body>[^}]*)\}/u.exec(gameStyles)?.groups?.body ?? "";
+    const featuredRule =
+      /\.modeCardFeatured \{(?<body>[^}]*)\}/u.exec(gameStyles)?.groups?.body ?? "";
     expect(featuredRule).toContain("grid-column: 1 / -1");
     expect(featuredRule).toContain("grid-template-columns: minmax(0, 1fr) auto");
     expect(featuredRule).toContain("min-height: 52px");
@@ -45,7 +46,7 @@ describe("one-screen information contract", () => {
     expect(homePage).toContain('href="/play/daily"');
     expect(homePage).toContain('href="/play"');
     expect(homePage).toContain('href="/how-to-play"');
-    expect(homePage).toContain("17 <span className=\"accent\">picks</span>");
+    expect(homePage).toContain('17 <span className="accent">picks</span>');
     expect(homePage).toContain("match run");
     expect(homePage).toContain("a perfect run");
     expect(homePage).toContain(
@@ -58,6 +59,12 @@ describe("one-screen information contract", () => {
   it("suppresses the footer only on the two one-screen routes at every width", () => {
     expect(globals).toMatch(
       /body:has\(\.hero\) \.site-footer,\s*body:has\(\.game-page--mode\) \.site-footer \{\s*display: none;/u,
+    );
+  });
+
+  it("renders reveal content immediately for reduced-motion users", () => {
+    expect(globals).toMatch(
+      /@media \(prefers-reduced-motion: reduce\) \{\s*\.reveal > \* \{\s*opacity: 1;\s*transform: none;\s*animation: none;/u,
     );
   });
 });
