@@ -27,6 +27,16 @@ type PaintRegion = {
   readonly height: number;
 };
 
+type PaintContribution = {
+  readonly label: string;
+  readonly changedSampleRatio: number;
+};
+
+type PaintAnalysis = {
+  readonly failures: readonly string[];
+  readonly contributions: readonly PaintContribution[];
+};
+
 type SharpMetadata = {
   readonly format?: string;
   readonly width?: number;
@@ -71,6 +81,7 @@ type FitMetric = {
   readonly screenshotChangedSampleRatio: number | null;
   readonly screenshotPngNormalized: boolean | null;
   readonly screenshotPaintFailures: readonly string[];
+  readonly screenshotPaintContributions: readonly PaintContribution[];
   readonly scrollHeight: number;
   readonly bodyScrollHeight: number;
   readonly innerHeight: number;
@@ -80,6 +91,7 @@ type FitMetric = {
   readonly renderedTheme: string | null;
   readonly renderedReducedMotion: boolean;
   readonly unpaintedRequiredContent: readonly string[];
+  readonly missingRequiredPaintTargets: readonly string[];
   readonly devicePixelRatio: number;
   readonly requiredPaintRegions: readonly PaintRegion[];
   readonly ledeLines: number | null;
@@ -114,6 +126,7 @@ type MeasuredFitMetric = Omit<
   | "screenshotChangedSampleRatio"
   | "screenshotPngNormalized"
   | "screenshotPaintFailures"
+  | "screenshotPaintContributions"
 >;
 
 type ManagedServer = {
@@ -323,6 +336,12 @@ function metricFailures(metric: FitMetric): readonly string[] {
       `${prefix}: required content is not painted ${metric.unpaintedRequiredContent.join(" | ")}`,
     );
   }
+  if (metric.missingRequiredPaintTargets.length > 0) {
+    failures.push(
+      `${prefix}: required paint targets are missing ` +
+        metric.missingRequiredPaintTargets.join(" | "),
+    );
+  }
   if (!metric.requiredTargetsInViewport) failures.push(`${prefix}: required target below fold`);
   if (metric.smallTargets.length > 0) {
     failures.push(`${prefix}: sub-44px targets ${metric.smallTargets.join(" | ")}`);
@@ -461,6 +480,10 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       ["theme control", document.querySelector('[aria-label^="Switch to "]')],
       ["menu control", document.querySelector(".menu-toggle")],
     ];
+    const modeCardPaintTargets = Array.from({ length: 5 }, (_, index) => [
+      "mode card " + (index + 1).toString(),
+      document.querySelectorAll('[role="radio"]')[index] ?? null,
+    ]);
     const routePaintTargets =
       pathValue === "/"
         ? [
@@ -474,15 +497,37 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["mode title", document.querySelector(".game-page--mode .display")],
             ["mode lede", document.querySelector(".game-page--mode .lede")],
             ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
-            ...[...document.querySelectorAll('[role="radio"]')].map((element, index) => [
-              "mode card " + (index + 1).toString(),
-              element,
-            ]),
+            ...modeCardPaintTargets,
             ["dock action", document.querySelector("main button.btn")],
           ];
-    const requiredPaintRegions = [...mastheadPaintTargets, ...routePaintTargets]
-      .filter(([, element]) => visible(element))
-      .map(([label, element]) => {
+    const paintTargetEntries = [...mastheadPaintTargets, ...routePaintTargets];
+    const paintTargetByLabel = new Map(paintTargetEntries);
+    const expectedPaintLabels = [
+      "wordmark",
+      "theme control",
+      ...(matchMedia("(max-width: 51.999rem)").matches ? ["menu control"] : []),
+      ...(pathValue === "/"
+        ? ["hero title", "hero lede", "spin demo", "hero actions", "stat strip"]
+        : [
+            "mode title",
+            "mode lede",
+            "Daily progress",
+            "mode card 1",
+            "mode card 2",
+            "mode card 3",
+            "mode card 4",
+            "mode card 5",
+            "dock action",
+          ]),
+    ];
+    const missingRequiredPaintTargets = expectedPaintLabels.filter(
+      (label) => !visible(paintTargetByLabel.get(label)),
+    );
+    const requiredPaintRegions = expectedPaintLabels
+      .filter((label) => visible(paintTargetByLabel.get(label)))
+      .map((label) => {
+        const element = paintTargetByLabel.get(label);
+        element.setAttribute("data-wcdraft-paint-target", label);
         const rect = element.getBoundingClientRect();
         return {
           label,
@@ -538,6 +583,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       renderedTheme: doc.dataset.theme ?? null,
       renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
       unpaintedRequiredContent,
+      missingRequiredPaintTargets,
       devicePixelRatio,
       requiredPaintRegions,
       ledeLines: lineCount(document.querySelector(".hero__sub")),
@@ -606,14 +652,17 @@ async function captureNormalizedPng(
 
 async function screenshotPaintFailures(
   screenshot: Buffer,
+  hiddenTargetsScreenshot: Buffer,
   regions: readonly PaintRegion[],
   deviceScaleFactor: number,
-): Promise<readonly string[]> {
+): Promise<PaintAnalysis> {
   const sharp = await sharpPromise;
   const metadata = await sharp(screenshot, { failOn: "warning" }).metadata();
   const screenshotWidth = metadata.width ?? 0;
   const screenshotHeight = metadata.height ?? 0;
   const failures: string[] = [];
+  const contributions: PaintContribution[] = [];
+  const minTargetChangedSampleRatio = 0.002;
 
   for (const region of regions) {
     const left = Math.max(0, Math.floor(region.x * deviceScaleFactor));
@@ -630,9 +679,21 @@ async function screenshotPaintFailures(
       failures.push(`${region.label}: empty crop`);
       continue;
     }
-    const stats = await sharp(screenshot, { failOn: "warning" })
-      .extract({ left, top, width: right - left, height: bottom - top })
-      .stats();
+    // Sharp's stats() terminal ignores pending extract operations. Materialize
+    // both crops first so the statistics and target-contribution comparison are
+    // scoped to the required DOM rectangle rather than the whole screenshot.
+    const cropRegion = { left, top, width: right - left, height: bottom - top };
+    const [paintedCrop, hiddenCrop] = await Promise.all([
+      sharp(screenshot, { failOn: "warning" })
+        .extract(cropRegion)
+        .png({ compressionLevel: 9, adaptiveFiltering: true })
+        .toBuffer(),
+      sharp(hiddenTargetsScreenshot, { failOn: "warning" })
+        .extract(cropRegion)
+        .png({ compressionLevel: 9, adaptiveFiltering: true })
+        .toBuffer(),
+    ]);
+    const stats = await sharp(paintedCrop, { failOn: "warning" }).stats();
     const colorChannels = stats.channels.slice(0, 3);
     const maxRange = Math.max(...colorChannels.map((channel) => channel.max - channel.min));
     const maxStdev = Math.max(...colorChannels.map((channel) => channel.stdev));
@@ -642,9 +703,17 @@ async function screenshotPaintFailures(
           `range=${maxRange.toFixed(1)} stdev=${maxStdev.toFixed(1)}`,
       );
     }
+    const targetChangedSampleRatio = await normalizedChangedSampleRatio(paintedCrop, hiddenCrop);
+    contributions.push({ label: region.label, changedSampleRatio: targetChangedSampleRatio });
+    if (targetChangedSampleRatio < minTargetChangedSampleRatio) {
+      failures.push(
+        `${region.label}: no semantic paint contribution ` +
+          `changedSampleRatio=${targetChangedSampleRatio.toFixed(6)}`,
+      );
+    }
   }
 
-  return failures;
+  return { failures, contributions };
 }
 
 async function normalizedChangedSampleRatio(left: Buffer, right: Buffer): Promise<number> {
@@ -664,6 +733,73 @@ async function normalizedChangedSampleRatio(left: Buffer, right: Buffer): Promis
   return changedSamples / leftPixels.length;
 }
 
+async function captureHiddenPaintBaseline(
+  page: Page,
+  animations: "allow" | "disabled",
+  expectedWidth: number,
+  expectedHeight: number,
+): Promise<Buffer> {
+  await page.evaluate(() => {
+    for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
+      const previousStyle = element.getAttribute("style");
+      element.dataset.wcdraftPaintHadStyle = previousStyle === null ? "false" : "true";
+      element.dataset.wcdraftPaintPreviousStyle = previousStyle ?? "";
+      element.style.setProperty("visibility", "hidden", "important");
+    }
+  });
+  try {
+    // WebKit can return the prior compositor frame immediately after a
+    // visibility mutation even though computed style already says hidden.
+    // Cross two animation frames, then discard one normalized capture before
+    // retaining the hidden baseline used for semantic contribution checks.
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        }),
+    );
+    await page.waitForTimeout(150);
+    await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
+    await page.waitForTimeout(100);
+    return await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
+  } finally {
+    await page.evaluate(() => {
+      for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
+        if (element.dataset.wcdraftPaintHadStyle === "true") {
+          element.setAttribute("style", element.dataset.wcdraftPaintPreviousStyle ?? "");
+        } else {
+          element.removeAttribute("style");
+        }
+        delete element.dataset.wcdraftPaintHadStyle;
+        delete element.dataset.wcdraftPaintPreviousStyle;
+      }
+    });
+  }
+}
+
+async function analyzePaintEvidence(
+  page: Page,
+  screenshot: Buffer,
+  animations: "allow" | "disabled",
+  expectedWidth: number,
+  expectedHeight: number,
+  requiredPaintRegions: readonly PaintRegion[],
+  devicePixelRatio: number,
+): Promise<PaintAnalysis> {
+  const hiddenTargetsScreenshot = await captureHiddenPaintBaseline(
+    page,
+    animations,
+    expectedWidth,
+    expectedHeight,
+  );
+  return screenshotPaintFailures(
+    screenshot,
+    hiddenTargetsScreenshot,
+    requiredPaintRegions,
+    devicePixelRatio,
+  );
+}
+
 async function captureEvidence(
   page: Page,
   screenshotPath: string | null,
@@ -676,6 +812,7 @@ async function captureEvidence(
   readonly changedSampleRatio: number | null;
   readonly normalized: boolean | null;
   readonly paintFailures: readonly string[];
+  readonly paintContributions: readonly PaintContribution[];
 }> {
   if (screenshotPath === null) {
     return {
@@ -684,6 +821,7 @@ async function captureEvidence(
       changedSampleRatio: null,
       normalized: null,
       paintFailures: [],
+      paintContributions: [],
     };
   }
   const viewport = page.viewportSize();
@@ -696,16 +834,22 @@ async function captureEvidence(
     // nondeterministic frame within the finite entrance animation.
     const screenshot = await captureNormalizedPng(page, "disabled", expectedWidth, expectedHeight);
     await writeFile(screenshotPath, screenshot);
+    const paintAnalysis = await analyzePaintEvidence(
+      page,
+      screenshot,
+      "disabled",
+      expectedWidth,
+      expectedHeight,
+      requiredPaintRegions,
+      devicePixelRatio,
+    );
     return {
       stable: null,
       captureCount: 1,
       changedSampleRatio: null,
       normalized: true,
-      paintFailures: await screenshotPaintFailures(
-        screenshot,
-        requiredPaintRegions,
-        devicePixelRatio,
-      ),
+      paintFailures: paintAnalysis.failures,
+      paintContributions: paintAnalysis.contributions,
     };
   }
 
@@ -728,27 +872,43 @@ async function captureEvidence(
     changedSampleRatio = await normalizedChangedSampleRatio(previous, current);
     if (changedSampleRatio <= maxChangedSampleRatio) {
       await writeFile(screenshotPath, current);
+      const paintAnalysis = await analyzePaintEvidence(
+        page,
+        current,
+        "allow",
+        expectedWidth,
+        expectedHeight,
+        requiredPaintRegions,
+        devicePixelRatio,
+      );
       return {
         stable: true,
         captureCount,
         changedSampleRatio,
         normalized: true,
-        paintFailures: await screenshotPaintFailures(
-          current,
-          requiredPaintRegions,
-          devicePixelRatio,
-        ),
+        paintFailures: paintAnalysis.failures,
+        paintContributions: paintAnalysis.contributions,
       };
     }
     previous = current;
   }
   await writeFile(screenshotPath, previous);
+  const paintAnalysis = await analyzePaintEvidence(
+    page,
+    previous,
+    "allow",
+    expectedWidth,
+    expectedHeight,
+    requiredPaintRegions,
+    devicePixelRatio,
+  );
   return {
     stable: false,
     captureCount: maxCaptures,
     changedSampleRatio,
     normalized: true,
-    paintFailures: await screenshotPaintFailures(previous, requiredPaintRegions, devicePixelRatio),
+    paintFailures: paintAnalysis.failures,
+    paintContributions: paintAnalysis.contributions,
   };
 }
 
@@ -840,6 +1000,7 @@ async function main(): Promise<void> {
                     screenshotChangedSampleRatio: screenshotCapture.changedSampleRatio,
                     screenshotPngNormalized: screenshotCapture.normalized,
                     screenshotPaintFailures: screenshotCapture.paintFailures,
+                    screenshotPaintContributions: screenshotCapture.paintContributions,
                     ...measured,
                     pageErrors,
                   };

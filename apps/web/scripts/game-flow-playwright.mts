@@ -765,7 +765,13 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
   await assertNoHorizontalOverflow(page, "formation setup");
   await assertFullyVisibleInViewport(page, formationLockButton, "formation lock CTA");
   await formationLockButton.click();
-  await page.waitForURL(/\/play\/draft\?run=[^&]+$/, { timeout: 30_000 });
+  // Next's client navigation can commit the correct URL without emitting a
+  // second document `load` event. The heading wait below is the route-readiness
+  // assertion; this wait only synchronizes on the committed run-scoped URL.
+  await page.waitForURL(/\/play\/draft\?run=[^&]+$/, {
+    timeout: 30_000,
+    waitUntil: "commit",
+  });
 
   await page.getByRole("heading", { name: "Choose the slot to fill" }).waitFor();
   const targetButton = page

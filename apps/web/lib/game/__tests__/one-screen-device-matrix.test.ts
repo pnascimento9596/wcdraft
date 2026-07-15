@@ -26,6 +26,10 @@ const verifierSource = readFileSync(
 const packageManifest = JSON.parse(
   readFileSync(new URL("../../../package.json", import.meta.url), "utf8"),
 ) as { scripts: Record<string, string> };
+const gameFlowSource = readFileSync(
+  new URL("../../../scripts/game-flow-playwright.mts", import.meta.url),
+  "utf8",
+);
 
 describe("one-screen descriptor matrix", () => {
   it.each(["chromium", "webkit"] satisfies readonly OneScreenEngine[])(
@@ -106,7 +110,26 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("metadata.width === expectedWidth");
     expect(verifierSource).toContain("if (left.equals(right)) return 0");
     expect(verifierSource).toContain("requiredPaintRegions");
+    expect(verifierSource).toContain("expectedPaintLabels");
+    expect(verifierSource).toContain("missingRequiredPaintTargets");
+    expect(verifierSource).toContain("required paint targets are missing");
     expect(verifierSource).toContain("screenshotPaintFailures");
+    expect(verifierSource).toContain('element.setAttribute("data-wcdraft-paint-target", label)');
+    expect(verifierSource).toContain("async function captureHiddenPaintBaseline");
+    expect(verifierSource).toContain(
+      "requestAnimationFrame(() => requestAnimationFrame(() => resolve()))",
+    );
+    expect(verifierSource).toContain(
+      "await captureNormalizedPng(page, animations, expectedWidth, expectedHeight)",
+    );
+    expect(verifierSource).toContain("const [paintedCrop, hiddenCrop] = await Promise.all");
+    expect(verifierSource).toContain(
+      'const stats = await sharp(paintedCrop, { failOn: "warning" }).stats()',
+    );
+    expect(verifierSource).toContain("normalizedChangedSampleRatio(paintedCrop, hiddenCrop)");
+    expect(verifierSource).toContain("const minTargetChangedSampleRatio = 0.002");
+    expect(verifierSource).toContain("no semantic paint contribution");
+    expect(verifierSource).toContain("screenshotPaintContributions");
     expect(verifierSource).toContain("stats.entropy < 0.5");
     expect(verifierSource).toContain("screenshot required regions are not painted");
   });
@@ -115,6 +138,15 @@ describe("one-screen descriptor matrix", () => {
     expect(packageManifest.scripts.test).toContain("tsx scripts/verify-home-fold-browser.mts");
     expect(packageManifest.scripts["verify:one-screen"]).toBe(
       "tsx scripts/verify-home-fold-browser.mts",
+    );
+  });
+
+  it("does not wait for a nonexistent full load after client-side draft navigation", () => {
+    expect(gameFlowSource).toMatch(
+      /waitForURL\(\/\\\/play\\\/draft\\\?run=\[\^&\]\+\$\/,[\s\S]*?waitUntil: "commit"/u,
+    );
+    expect(gameFlowSource).toContain(
+      'getByRole("heading", { name: "Choose the slot to fill" }).waitFor()',
     );
   });
 });
