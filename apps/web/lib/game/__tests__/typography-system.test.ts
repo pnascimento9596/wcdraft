@@ -116,6 +116,12 @@ describe("Terrace typography source contract", () => {
     expect(staticShare).toMatch(
       /<!-- Headline -->[\s\S]*font-weight="800" letter-spacing="-0\.02em"/u,
     );
+    expect(staticShare).toContain(
+      'font-weight:400;src:url("/fonts/archivo/archivo-latin-400-normal.woff2")',
+    );
+    expect(staticShare).toMatch(
+      /<!-- Footer line:[\s\S]*font-weight="500" letter-spacing="0\.1em"/u,
+    );
     expect(shareScreen).toMatch(/fontSize="18"\s+fontWeight="800"\s+letterSpacing="-0\.02em"/u);
     expect(draftPolish).toMatch(
       /\.rareMomentTitle\s*\{[^}]*font-weight:\s*var\(--font-weight-heading\);[^}]*letter-spacing:\s*var\(--tracking-heading\);/su,
@@ -125,6 +131,7 @@ describe("Terrace typography source contract", () => {
     }
     expect(runOg).toContain('fontWeight: 900,\n                letterSpacing: "-0.035em"');
     expect(runOg).toContain('fontWeight: 800,\n              letterSpacing: "-0.02em"');
+    expectUppercaseRoleAssignments(runOg);
 
     expectRoleDeclarations(
       shared,
@@ -240,4 +247,23 @@ function expectRoleDeclarations(
   expect(new Set(tracking), `.${className} tracking overrides`).toEqual(
     new Set([expectedTracking]),
   );
+}
+
+function expectUppercaseRoleAssignments(source: string): void {
+  const occurrences = [...source.matchAll(/textTransform:\s*"uppercase"/gu)];
+  expect(occurrences.length).toBeGreaterThan(0);
+  for (const occurrence of occurrences) {
+    const index = occurrence.index;
+    const blockStart = source.lastIndexOf("style={{", index);
+    expect(blockStart, "uppercase seam is not inside an inline style").toBeGreaterThanOrEqual(0);
+    const body = source.slice(blockStart, index);
+    const weight = /fontWeight:\s*(400|500|800|900),/u.exec(body)?.[1];
+    const tracking = /letterSpacing:\s*"(-?\d+(?:\.\d+)?em)",/u.exec(body)?.[1];
+    expect(weight, "uppercase seam is missing an explicit registered weight").toBeDefined();
+    expect(tracking, "uppercase seam is missing explicit role tracking").toBeDefined();
+    expect(
+      new Set(["500/0.1em", "800/-0.02em", "900/-0.035em"]),
+      `uppercase role ${weight}/${tracking}`,
+    ).toContain(`${weight}/${tracking}`);
+  }
 }

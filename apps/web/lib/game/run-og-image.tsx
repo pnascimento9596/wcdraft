@@ -126,7 +126,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           color: P.muted,
           fontFamily: "Archivo",
           fontSize: 16,
-          letterSpacing: 0,
+          fontWeight: 500,
+          letterSpacing: "0.1em",
           textTransform: "uppercase",
         }}
       >
@@ -277,6 +278,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               color: P.aqua,
               fontFamily: "Archivo",
               fontSize: 18,
+              fontWeight: 500,
+              letterSpacing: "0.1em",
               textTransform: "uppercase",
             }}
           >
@@ -323,6 +326,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                   background: P.goldWash,
                   fontFamily: "Archivo",
                   fontSize: 15,
+                  fontWeight: 500,
+                  letterSpacing: "0.1em",
                   textTransform: "uppercase",
                 }}
               >
@@ -389,6 +394,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           color: P.muted,
           fontFamily: "Archivo",
           fontSize: 18,
+          fontWeight: 500,
+          letterSpacing: "0.1em",
           textTransform: "uppercase",
         }}
       >
@@ -436,6 +443,8 @@ function LineupChip({ slot, showOverall }: { slot: RunOgLineupSlot; showOverall:
             color: P.aqua,
             fontFamily: "Archivo",
             fontSize: 10,
+            fontWeight: 500,
+            letterSpacing: "0.1em",
             lineHeight: 1.2,
             textTransform: "uppercase",
           }}

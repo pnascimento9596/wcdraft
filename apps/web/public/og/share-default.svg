@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="wcdraft — draft your all-time XI">
   <style>
+    @font-face{font-family:"Archivo";font-style:normal;font-weight:400;src:url("/fonts/archivo/archivo-latin-400-normal.woff2") format("woff2")}
     @font-face{font-family:"Archivo";font-style:normal;font-weight:500;src:url("/fonts/archivo/archivo-latin-500-normal.woff2") format("woff2")}
     @font-face{font-family:"Archivo";font-style:normal;font-weight:800;src:url("/fonts/archivo/archivo-latin-800-normal.woff2") format("woff2")}
     @font-face{font-family:"Archivo";font-style:normal;font-weight:900;src:url("/fonts/archivo/archivo-latin-900-normal.woff2") format("woff2")}
@@ -124,7 +125,7 @@
   </text>
 
   <!-- Footer line: domain + non-affiliation hint -->
-  <text x="600" y="560" text-anchor="middle" fill="#5e7068" font-family="var(--font-family)" font-size="22" letter-spacing="0.1em">
+  <text x="600" y="560" text-anchor="middle" fill="#5e7068" font-family="var(--font-family)" font-size="22" font-weight="500" letter-spacing="0.1em">
     WCDRAFT.APP · NAMES &amp; FLAG CODES ONLY
   </text>
 </svg>
