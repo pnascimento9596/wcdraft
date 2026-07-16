@@ -148,6 +148,12 @@ describe("one-screen information contract", () => {
       /\.draftShell\[data-formation-select\] \.formationCard\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/su,
     );
     expect(draftShellStyles).toMatch(
+      /@media \(max-width:\s*359px\)[^{]*\{[\s\S]*?\.draftShell\[data-formation-select\] \.formationSelect\s*\{[^}]*overflow:\s*visible;/su,
+    );
+    expect(draftShellStyles).toMatch(
+      /@media \(max-height:\s*500px\)[^{]*\{[\s\S]*?\.draftShell\[data-formation-select\] \.setupRow\s*\{[^}]*position:\s*absolute;[^}]*min-height:\s*44px;/su,
+    );
+    expect(draftShellStyles).toMatch(
       /\.draftShell\[data-formation-select\] \.miniDot\s*\{[^}]*border-radius:\s*50%;[^}]*background:\s*var\(--ink\);/su,
     );
     expect(draftShellStyles).toMatch(

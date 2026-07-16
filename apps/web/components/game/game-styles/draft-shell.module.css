@@ -2263,6 +2263,17 @@
 }
 
 @media (max-width: 359px) {
+  .draftShell[data-formation-select] {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .draftShell[data-formation-select] .formationSelect {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
   .draftShell[data-formation-select] .formationGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2274,6 +2285,7 @@
   }
 
   .draftShell[data-formation-select] .formationSelect {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     grid-template-rows: auto minmax(0, 1fr);
@@ -2284,11 +2296,24 @@
   .draftShell[data-formation-select] .formationHead {
     grid-column: 1;
     grid-row: 1;
+    min-height: 44px;
+    padding-right: 92px;
   }
 
   .draftShell[data-formation-select] .setupDisclosure {
+    position: relative;
     grid-column: 1;
     grid-row: 2;
+  }
+
+  .draftShell[data-formation-select] .setupRow {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    width: 88px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 2px 5px;
   }
 
   .draftShell[data-formation-select] .formationGrid {
