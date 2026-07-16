@@ -451,7 +451,8 @@ function metricFailures(metric: FitMetric): readonly string[] {
         metric.missingRequiredPaintTargets.join(" | "),
     );
   }
-  if (!metric.requiredTargetsReachable) failures.push(`${prefix}: required target is not reachable`);
+  if (!metric.requiredTargetsReachable)
+    failures.push(`${prefix}: required target is not reachable`);
   if (metric.strictVerticalFit && !metric.requiredTargetsInViewport) {
     failures.push(`${prefix}: required target below fold`);
   }
@@ -785,9 +786,10 @@ async function captureNormalizedPng(
   page: Page,
   animations: "allow" | "disabled",
   expectedWidth: number,
-  expectedHeight: number,
+  expectedHeight: number | null,
+  fullPage = false,
 ): Promise<Buffer> {
-  const raw = await page.screenshot({ animations, timeout: screenshotTimeoutMs });
+  const raw = await page.screenshot({ animations, fullPage, timeout: screenshotTimeoutMs });
   const sharp = await sharpPromise;
   const normalized = await sharp(raw, { failOn: "warning" })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
@@ -795,12 +797,32 @@ async function captureNormalizedPng(
   assertCompletePng(normalized);
   const metadata = await sharp(normalized, { failOn: "warning" }).metadata();
   assert(metadata.format === "png", `normalized screenshot format is ${String(metadata.format)}`);
+  const viewport = page.viewportSize();
+  assert(viewport, "normalized screenshot page has no viewport");
+  const minimumHeight = Math.round(viewport.height * (expectedWidth / viewport.width));
   assert(
-    metadata.width === expectedWidth && metadata.height === expectedHeight,
-    `normalized screenshot dimensions ${String(metadata.width)}x${String(metadata.height)} ` +
-      `did not match ${expectedWidth.toString()}x${expectedHeight.toString()}`,
+    metadata.width === expectedWidth,
+    `normalized screenshot width is ${String(metadata.width)}`,
   );
+  if (expectedHeight === null) {
+    assert(
+      (metadata.height ?? 0) >= minimumHeight,
+      `full-page screenshot height ${String(metadata.height)} is below viewport ${minimumHeight.toString()}`,
+    );
+  } else {
+    assert(
+      metadata.height === expectedHeight,
+      `normalized screenshot height ${String(metadata.height)} did not match ${expectedHeight.toString()}`,
+    );
+  }
   return normalized;
+}
+
+async function normalizedPngHeight(buffer: Buffer): Promise<number> {
+  const sharp = await sharpPromise;
+  const metadata = await sharp(buffer, { failOn: "warning" }).metadata();
+  assert(typeof metadata.height === "number", "normalized screenshot is missing its height");
+  return metadata.height;
 }
 
 async function screenshotPaintFailures(
@@ -891,6 +913,7 @@ async function captureHiddenPaintBaseline(
   animations: "allow" | "disabled",
   expectedWidth: number,
   expectedHeight: number,
+  fullPage: boolean,
 ): Promise<Buffer> {
   await page.evaluate(() => {
     for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
@@ -912,9 +935,9 @@ async function captureHiddenPaintBaseline(
         }),
     );
     await page.waitForTimeout(150);
-    await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
+    await captureNormalizedPng(page, animations, expectedWidth, expectedHeight, fullPage);
     await page.waitForTimeout(100);
-    return await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
+    return await captureNormalizedPng(page, animations, expectedWidth, expectedHeight, fullPage);
   } finally {
     await page.evaluate(() => {
       for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
@@ -947,6 +970,7 @@ async function analyzePaintEvidence(
   expectedHeight: number,
   requiredPaintRegions: readonly PaintRegion[],
   devicePixelRatio: number,
+  fullPage: boolean,
 ): Promise<PaintAnalysis> {
   let bestAnalysis: PaintAnalysis | null = null;
   for (let attempt = 1; attempt <= hiddenPaintBaselineAttempts; attempt += 1) {
@@ -955,6 +979,7 @@ async function analyzePaintEvidence(
       animations,
       expectedWidth,
       expectedHeight,
+      fullPage,
     );
     const analysis = await screenshotPaintFailures(
       screenshot,
@@ -990,6 +1015,7 @@ async function captureEvidence(
   motion: Motion,
   requiredPaintRegions: readonly PaintRegion[],
   devicePixelRatio: number,
+  captureFullPage: boolean,
 ): Promise<{
   readonly stable: boolean | null;
   readonly captureCount: number | null;
@@ -1011,12 +1037,20 @@ async function captureEvidence(
   const viewport = page.viewportSize();
   assert(viewport, "one-screen screenshot page has no viewport");
   const expectedWidth = Math.round(viewport.width * devicePixelRatio);
-  const expectedHeight = Math.round(viewport.height * devicePixelRatio);
+  const expectedViewportHeight = Math.round(viewport.height * devicePixelRatio);
+  const initialExpectedHeight = captureFullPage ? null : expectedViewportHeight;
 
   if (motion === "no-preference") {
     // Review evidence is about the finished one-screen composition, not a
     // nondeterministic frame within the finite entrance animation.
-    const screenshot = await captureNormalizedPng(page, "disabled", expectedWidth, expectedHeight);
+    const screenshot = await captureNormalizedPng(
+      page,
+      "disabled",
+      expectedWidth,
+      initialExpectedHeight,
+      captureFullPage,
+    );
+    const expectedHeight = initialExpectedHeight ?? (await normalizedPngHeight(screenshot));
     await writeFile(screenshotPath, screenshot);
     const paintAnalysis = await analyzePaintEvidence(
       page,
@@ -1026,6 +1060,7 @@ async function captureEvidence(
       expectedHeight,
       requiredPaintRegions,
       devicePixelRatio,
+      captureFullPage,
     );
     return {
       stable: null,
@@ -1048,11 +1083,24 @@ async function captureEvidence(
   const maxCaptures = 7;
   const maxChangedSampleRatio = 0.005;
   await page.waitForTimeout(compositorSettleMs);
-  let previous = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
+  let previous = await captureNormalizedPng(
+    page,
+    "allow",
+    expectedWidth,
+    initialExpectedHeight,
+    captureFullPage,
+  );
+  const expectedHeight = initialExpectedHeight ?? (await normalizedPngHeight(previous));
   let changedSampleRatio = 1;
   for (let captureCount = 2; captureCount <= maxCaptures; captureCount += 1) {
     await page.waitForTimeout(500);
-    const current = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
+    const current = await captureNormalizedPng(
+      page,
+      "allow",
+      expectedWidth,
+      expectedHeight,
+      captureFullPage,
+    );
     changedSampleRatio = await normalizedChangedSampleRatio(previous, current);
     if (changedSampleRatio <= maxChangedSampleRatio) {
       await writeFile(screenshotPath, current);
@@ -1064,6 +1112,7 @@ async function captureEvidence(
         expectedHeight,
         requiredPaintRegions,
         devicePixelRatio,
+        captureFullPage,
       );
       return {
         stable: true,
@@ -1085,6 +1134,7 @@ async function captureEvidence(
     expectedHeight,
     requiredPaintRegions,
     devicePixelRatio,
+    captureFullPage,
   );
   return {
     stable: false,
@@ -1182,6 +1232,7 @@ async function main(): Promise<void> {
                     motion,
                     measured.requiredPaintRegions,
                     measured.devicePixelRatio,
+                    !deviceCase.strictVerticalFit,
                   );
                   const metric: FitMetric = {
                     engine: engineName,

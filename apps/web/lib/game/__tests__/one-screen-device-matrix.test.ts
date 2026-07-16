@@ -88,6 +88,8 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("scrollAllowedContextCount");
     expect(verifierSource).toContain("if (!metric.requiredTargetsReachable)");
     expect(verifierSource).toContain("if (!metric.disclosureLinesReachable)");
+    expect(verifierSource).toContain("!deviceCase.strictVerticalFit");
+    expect(verifierSource).toContain("captureFullPage");
     expect(verifierSource).not.toContain('name: "360x800"');
     expect(verifierSource).not.toContain('name: "390x844"');
   });
@@ -110,7 +112,7 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("Number.parseFloat(style.opacity) <= 0.01");
     expect(verifierSource).toContain("Recycle at the device boundary");
     expect(verifierSource).toContain("const browser = await browserType.launch");
-    expect(verifierSource).toContain("animations, timeout: screenshotTimeoutMs");
+    expect(verifierSource).toContain("animations, fullPage, timeout: screenshotTimeoutMs");
     expect(verifierSource).toContain("const screenshotTimeoutMs = 30_000");
   });
 
@@ -153,7 +155,7 @@ describe("one-screen descriptor matrix", () => {
       "requestAnimationFrame(() => requestAnimationFrame(() => resolve()))",
     );
     expect(verifierSource).toContain(
-      "await captureNormalizedPng(page, animations, expectedWidth, expectedHeight)",
+      "await captureNormalizedPng(page, animations, expectedWidth, expectedHeight, fullPage)",
     );
     expect(verifierSource).toContain("const [paintedCrop, hiddenCrop] = await Promise.all");
     expect(verifierSource).toContain(
