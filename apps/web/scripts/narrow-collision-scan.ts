@@ -139,6 +139,16 @@ export async function scanNarrowCollisions(
           rect.top < innerHeight
         );
       };
+      const portalSubtreeSuppressed = (portal: HTMLElement) => {
+        for (let current: Element | null = portal; current; current = composedParent(current)) {
+          const style = getComputedStyle(current);
+          // These two properties suppress descendant paint as a group. A
+          // zero-sized host, visibility, or a non-empty clip-path does not:
+          // fixed shadow descendants can remain visible in those states.
+          if (style.display === "none" || Number(style.opacity) === 0) return true;
+        }
+        return false;
+      };
       const semanticTargetVisible = (element: Element) =>
         element.closest('[hidden], [aria-hidden="true"]') === null && elementPainted(element);
       const stableSelector = (element: Element): string => {
@@ -321,20 +331,63 @@ export async function scanNarrowCollisions(
         ];
       };
       const hitAtPoint = (x: number, y: number): Element | null => {
-        const hit = document.elementFromPoint(x, y);
+        const descendOpenShadow = (initial: Element): Element => {
+          const seen = new Set<Element>();
+          let current = initial;
+          while (current.shadowRoot && !seen.has(current)) {
+            seen.add(current);
+            const shadowRoot = current.shadowRoot as ShadowRoot & {
+              elementFromPoint?: (pointX: number, pointY: number) => Element | null;
+            };
+            const nativeNested = shadowRoot.elementFromPoint?.(x, y) ?? null;
+            const nativeRect = nativeNested?.getBoundingClientRect();
+            const nativeContainsPoint =
+              nativeRect !== undefined &&
+              x >= nativeRect.left &&
+              x <= nativeRect.right &&
+              y >= nativeRect.top &&
+              y <= nativeRect.bottom;
+            const geometricNested = [...shadowRoot.querySelectorAll<Element>("*")]
+              .filter((candidate) => {
+                const style = getComputedStyle(candidate);
+                const rect = candidate.getBoundingClientRect();
+                return (
+                  style.display !== "none" &&
+                  style.visibility !== "hidden" &&
+                  style.visibility !== "collapse" &&
+                  Number(style.opacity) !== 0 &&
+                  style.pointerEvents !== "none" &&
+                  x >= rect.left &&
+                  x <= rect.right &&
+                  y >= rect.top &&
+                  y <= rect.bottom
+                );
+              })
+              .at(-1);
+            const nested = nativeContainsPoint ? nativeNested : (geometricNested ?? null);
+            if (!nested || nested === current) break;
+            current = nested;
+          }
+          return current;
+        };
+        const initialHit = document.elementFromPoint(x, y);
+        const hit = initialHit ? descendOpenShadow(initialHit) : null;
         if (!hit) return null;
         const portalHost = nextDevPortalHost(hit);
-        if (!portalHost || elementPainted(portalHost)) return hit;
+        if (!portalHost || !portalSubtreeSuppressed(portalHost)) return hit;
 
         // WebKit can retain a stale hidden Next portal shadow hit. Continue
         // down the same browser-derived stack so the stale hit cannot conceal
         // a genuine product occluder. If no trustworthy candidate exists,
         // retain the original portal hit and fail closed.
         return (
-          document.elementsFromPoint(x, y).find((candidate) => {
-            const candidatePortal = nextDevPortalHost(candidate);
-            return !candidatePortal || elementPainted(candidatePortal);
-          }) ?? hit
+          document
+            .elementsFromPoint(x, y)
+            .map(descendOpenShadow)
+            .find((candidate) => {
+              const candidatePortal = nextDevPortalHost(candidate);
+              return !candidatePortal || !portalSubtreeSuppressed(candidatePortal);
+            }) ?? hit
         );
       };
       const related = (owner: Element, hit: Element | null) =>

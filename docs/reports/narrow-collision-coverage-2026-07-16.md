@@ -80,6 +80,14 @@ browser cannot provide one, the stale portal hit remains blocking instead of pro
 green. If the host is visible, the collision remains blocking and the selector records its actual
 boundary, for example `body>nextjs-portal::shadow #dev-dot`.
 
+A later U3 review found that host geometry was still too broad a suppression predicate: a
+`nextjs-portal` can have a 0×0 inline host while a fixed shadow child paints, and
+`clip-path:inset(0)` preserves the complete painted box. The final scanner treats a portal subtree
+as suppressed only when `display:none` or zero ancestor opacity suppresses descendant paint as a
+group. It descends open shadow hit-testing from a retargeted host to the painted descendant, with a
+geometric in-shadow fallback when the engine does not expose `ShadowRoot.elementFromPoint`.
+Visibility, host dimensions, and the mere presence of `clip`/`clip-path` never authorize skipping.
+
 The regression forces the exact stale-browser condition: a hidden portal shadow dot is returned by
 `elementFromPoint` with a stale product-overlapping rectangle. The first fix removed that false
 portal report but a fresh security review demonstrated that silently skipping the sample could
@@ -90,6 +98,12 @@ arbitrary visible shadow-root occluder remains Class A. The two documented seman
 patterns and empty known-failure list are unchanged. The final focused WebKit Group 1 rerun passed
 36/36 cells after adding detached-tree provenance; the full matrix is rerun on the fix-forward
 exact head.
+
+The committed browser regression itself now runs in native WebKit. It proves the actual retargeted
+hit shape (`document.elementFromPoint(25,25) === nextjs-portal`) while the host rectangle is 0×0 and
+the fixed dot is 100×50, then proves the same collision remains blocking under
+`clip-path:inset(0)`. The underlying-product, no-candidate fail-closed, visible Next, and arbitrary
+shadow cases remain in the same test.
 
 ### Keep the disk floor hard and the recovery target best-effort
 
@@ -349,7 +363,8 @@ checkout, and all uncertain classes remained outside the automation's eligible r
   Class B paint, native label naming, fail-closed cell cardinality/identity, and rejection of
   unknown, empty, or duplicate engine filters before server startup. The new shadow-boundary
   regression proves that a hidden Next portal's stale shadow hit cannot mask an underlying product
-  layer and that visible Next or arbitrary shadow-root occluders remain blocking.
+  layer and that visible Next or arbitrary shadow-root occluders remain blocking, including a
+  native WebKit 0×0 portal host and `clip-path:inset(0)`.
 - Pitch geometry and marking goldens: 20/20 passed; no snapshot relock.
 - Runner hygiene contract: passed with the 30 GiB hard floor, 36 GiB best-effort recovery target, bounded
   namespace/age checks, two real browser-output marker producers, guarded lane finalizer,

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright-core";
+import { chromium, webkit } from "playwright-core";
 
 import {
   INLINE_TEXT_LINK_ALLOWLIST,
@@ -354,7 +354,7 @@ describe("responsive layout contract", () => {
   });
 
   it("resolves hidden Next portal hits without masking visible shadow collisions", async () => {
-    const browser = await chromium.launch({ channel: "chrome", headless: true });
+    const browser = await webkit.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
       await page.setContent(`
@@ -363,8 +363,7 @@ describe("responsive layout contract", () => {
           #target { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px; }
           #product-occluder { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px;
             display: none; z-index: 4; }
-          nextjs-portal { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px;
-            display: none; z-index: 9999; }
+          nextjs-portal { display: none; }
         </style>
         <button id="target" aria-label="Product target">Product target</button>
         <div id="product-occluder"></div>
@@ -375,7 +374,8 @@ describe("responsive layout contract", () => {
         const target = document.querySelector<HTMLElement>("#target")!;
         const productOccluder = document.querySelector<HTMLElement>("#product-occluder")!;
         const shadow = portal.attachShadow({ mode: "open" });
-        shadow.innerHTML = '<section><div id="dev-dot">·</div></section>';
+        shadow.innerHTML =
+          '<section><div id="dev-dot" style="position:fixed;left:20px;top:20px;width:100px;height:50px;background:red;z-index:9999">·</div></section>';
         const dot = shadow.querySelector<HTMLElement>("#dev-dot")!;
         const section = shadow.querySelector<HTMLElement>("section")!;
         const registry = new WeakMap<Element, HTMLElement>();
@@ -385,9 +385,13 @@ describe("responsive layout contract", () => {
         const pageGlobal = globalThis as typeof globalThis & {
           __wcdraftNextDevPortalHosts?: WeakMap<Element, HTMLElement>;
           __wcdraftDetachedDevSection?: HTMLElement;
+          __wcdraftOriginalElementFromPoint?: typeof document.elementFromPoint;
+          __wcdraftOriginalElementsFromPoint?: typeof document.elementsFromPoint;
         };
         pageGlobal.__wcdraftNextDevPortalHosts = registry;
         pageGlobal.__wcdraftDetachedDevSection = section;
+        pageGlobal.__wcdraftOriginalElementFromPoint = document.elementFromPoint.bind(document);
+        pageGlobal.__wcdraftOriginalElementsFromPoint = document.elementsFromPoint.bind(document);
         section.remove();
         dot.getBoundingClientRect = () => new DOMRect(20, 20, 100, 50);
         document.elementFromPoint = () => dot;
@@ -418,12 +422,49 @@ describe("responsive layout contract", () => {
       await page.locator("nextjs-portal").evaluate((portal) => {
         const pageGlobal = globalThis as typeof globalThis & {
           __wcdraftDetachedDevSection?: HTMLElement;
+          __wcdraftOriginalElementFromPoint?: typeof document.elementFromPoint;
+          __wcdraftOriginalElementsFromPoint?: typeof document.elementsFromPoint;
         };
         portal.shadowRoot!.append(pageGlobal.__wcdraftDetachedDevSection!);
-        portal.style.display = "block";
+        portal.style.display = "inline";
+        document.elementFromPoint = pageGlobal.__wcdraftOriginalElementFromPoint!;
+        document.elementsFromPoint = pageGlobal.__wcdraftOriginalElementsFromPoint!;
       });
       await page.locator("#product-occluder").evaluate((occluder) => {
         occluder.style.display = "none";
+      });
+      expect(
+        await page.evaluate(() => {
+          const portal = document.querySelector<HTMLElement>("nextjs-portal")!;
+          const dot = portal.shadowRoot!.querySelector<HTMLElement>("#dev-dot")!;
+          const portalRect = portal.getBoundingClientRect();
+          const dotRect = dot.getBoundingClientRect();
+          return {
+            portalDisplay: getComputedStyle(portal).display,
+            portalRect: [portalRect.x, portalRect.y, portalRect.width, portalRect.height],
+            dotRect: [dotRect.x, dotRect.y, dotRect.width, dotRect.height],
+            nativeHit: document.elementFromPoint(25, 25)?.tagName ?? null,
+          };
+        }),
+      ).toEqual({
+        portalDisplay: "inline",
+        portalRect: [0, 0, 0, 0],
+        dotRect: [20, 20, 100, 50],
+        nativeHit: "NEXTJS-PORTAL",
+      });
+      expect(await scanNarrowCollisions(page)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            class: "A",
+            targetSelector: "#target",
+            occluderSelector: "body>nextjs-portal::shadow #dev-dot",
+          }),
+        ]),
+      );
+
+      await page.locator("nextjs-portal").evaluate((portal) => {
+        portal.style.cssText =
+          "display:block;position:fixed;left:20px;top:20px;width:100px;height:50px;clip-path:inset(0)";
       });
       expect(await scanNarrowCollisions(page)).toEqual(
         expect.arrayContaining([

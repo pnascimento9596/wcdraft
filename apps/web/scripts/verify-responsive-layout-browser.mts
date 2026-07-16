@@ -658,20 +658,14 @@ async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null>
         : [];
       let portalState: DevOverlaySuppression["portalState"] = "absent";
       if (portal) {
-        const rect = portal.getBoundingClientRect();
         const computed = getComputedStyle(portal);
         portalState =
-          computed.display !== "none" &&
-          computed.visibility !== "hidden" &&
-          computed.opacity !== "0" &&
-          rect.width > 0 &&
-          rect.height > 0
-            ? "visible"
-            : "hidden";
+          computed.display === "none" || Number(computed.opacity) === 0 ? "hidden" : "visible";
       }
-      // WebKit can retain stale shadow-child rectangles after the host is
-      // display:none. A hidden host cannot paint or receive hit-testing, so
-      // inspect child controls only when the host itself is visible.
+      // WebKit can retain stale shadow-child rectangles after display:none.
+      // Ignore them only under a property that suppresses descendant paint as
+      // a group. A zero-sized/visibility/clip-path host can still have a fixed
+      // visible shadow descendant, so those states remain fail-closed.
       const visibleControlCount =
         portalState === "visible"
           ? controls.filter((element) => {
