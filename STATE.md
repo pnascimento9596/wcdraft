@@ -22,7 +22,10 @@ remaining floor miss fails. It can
 remove only stale, prefix-bounded agent temp paths carrying the exact positive lifecycle marker
 `.wcdraft-agent-cleanup-ready=cleanup-ready-v1`, after process-cwd, command-reference, mount,
 symlink, and bidirectional linked-worktree guards. Old unmarked clones are preserved even when no
-process is momentarily observable. Responsive-shell audit outputs and auto-owned one-screen output
+process is momentarily observable. Mount, Git common-dir/worktree, process-cwd, and process-command
+probes are fail-closed: a command error, parser error, or impossible empty result preserves the
+candidate and emits a warning rather than converting uncertainty into deletion permission.
+Responsive-shell audit outputs and auto-owned one-screen output
 write the marker only after their lifecycle completes; explicitly retained evidence stays
 unmarked, and a guarded CLI supports deliberate completed-lane finalization. Two recovery windows
 recorded machine-wide `df`

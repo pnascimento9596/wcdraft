@@ -111,6 +111,40 @@ run_hygiene() {
     /bin/bash "$hygiene_script" "$phase"
 }
 
+run_hygiene_with_probe_failure() {
+  probe="$1"
+  candidate="$agent_temp_root/wcdraft-review-${probe}-probe-failure"
+  mock_bin="$probe_root/mock-$probe"
+  output="$probe_root/${probe}-probe-failure.log"
+
+  mkdir -p "$candidate" "$mock_bin"
+  printf '%s\n' "$probe-probe-failure" >"$candidate/sentinel"
+  printf '%s\n' "cleanup-ready-v1" >"$candidate/.wcdraft-agent-cleanup-ready"
+  if [ "$probe" = "git" ]; then
+    printf '%s\n' "gitdir: /definitely/missing" >"$candidate/.git"
+  fi
+  touch -t 202001010000 "$candidate"
+  printf '%s\n' '#!/bin/sh' 'exit 2' >"$mock_bin/$probe"
+  chmod +x "$mock_bin/$probe"
+
+  if ! PATH="$mock_bin:$PATH" \
+    GITHUB_WORKSPACE="$workspace" \
+    RUNNER_TOOL_CACHE="$tool_cache" \
+    RUNNER_TEMP="$runner_temp" \
+    RUNNER_NAME="wcdraft-m4" \
+    WCDRAFT_RUNNER_MIN_FREE_KB=0 \
+    WCDRAFT_RUNNER_TARGET_FREE_KB=0 \
+    WCDRAFT_RUNNER_STALE_MINUTES=60 \
+    WCDRAFT_RUNNER_FORCE_CLEANUP=1 \
+    WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+    /bin/bash "$hygiene_script" start >"$output" 2>&1; then
+    fail "runner hygiene must preserve candidates when the $probe safety probe fails"
+  fi
+  grep -Fq "safety probe failed ($probe" "$output" ||
+    fail "runner hygiene did not report the $probe safety-probe failure"
+  assert_file_content "$probe-probe-failure" "$candidate/sentinel"
+}
+
 run_hygiene_expect_floor_failure() {
   output="$probe_root/floor-failure.log"
   if GITHUB_WORKSPACE="$workspace" \
@@ -298,6 +332,9 @@ assert_file_content "owner-agent-temp" "$agent_temp_unrelated/sentinel"
 assert_file_content "active-agent-temp" "$agent_temp_active/sentinel"
 assert_file_content "linked-agent-temp" "$agent_temp_git_main/sentinel"
 assert_file_content "linked-agent-temp" "$agent_temp_git_linked/sentinel"
+for failing_probe in mount lsof ps git; do
+  run_hygiene_with_probe_failure "$failing_probe"
+done
 run_hygiene_expect_floor_failure
 run_hygiene_expect_target_warning
 
@@ -307,4 +344,4 @@ assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, exact producer-to-pruner lifecycle marker, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, fail-closed floor, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 3 marker-authorized agent temp removals, 11 sentinel checks)"
+echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, exact producer-to-pruner lifecycle marker, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 3 marker-authorized agent temp removals, 11 sentinel checks)"

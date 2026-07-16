@@ -122,19 +122,57 @@ agent_temp_cleanup_ready() {
 }
 
 agent_temp_in_use() {
-  candidate="$1"
+  local candidate="$1"
+  local common_dir=""
+  local linked_path=""
+  local line=""
+  local lsof_output=""
+  local mount_output=""
+  local probe_status=0
+  local ps_output=""
+  local worktree_output=""
   if [ -L "$candidate" ]; then
     return 0
   fi
-  if mount | awk -v candidate="$candidate" '$3 == candidate { found = 1 } END { exit found ? 0 : 1 }'; then
+  if ! mount_output="$(mount 2>/dev/null)"; then
+    echo "::warning::runner-hygiene safety probe failed (mount); preserving agent temp $candidate" >&2
     return 0
   fi
-  common_dir="$(git -C "$candidate" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
-  if [ -n "$common_dir" ]; then
+  if [ -z "$mount_output" ]; then
+    echo "::warning::runner-hygiene safety probe returned no mounts; preserving agent temp $candidate" >&2
+    return 0
+  fi
+  if awk -v candidate="$candidate" '$3 == candidate { found = 1 } END { exit found ? 0 : 1 }' <<<"$mount_output"; then
+    return 0
+  else
+    probe_status=$?
+    if [ "$probe_status" -ne 1 ]; then
+      echo "::warning::runner-hygiene safety probe failed (mount parser); preserving agent temp $candidate" >&2
+      return 0
+    fi
+  fi
+
+  if [ -e "$candidate/.git" ] || [ -L "$candidate/.git" ] || { [ -f "$candidate/HEAD" ] && [ -d "$candidate/objects" ]; }; then
+    if ! common_dir="$(git -C "$candidate" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)"; then
+      echo "::warning::runner-hygiene safety probe failed (git common dir); preserving agent temp $candidate" >&2
+      return 0
+    fi
+    if [ -z "$common_dir" ]; then
+      echo "::warning::runner-hygiene safety probe returned no common dir; preserving agent temp $candidate" >&2
+      return 0
+    fi
     case "$common_dir/" in
       "$candidate"/*) ;;
       *) return 0 ;;
     esac
+    if ! worktree_output="$(git -C "$candidate" worktree list --porcelain 2>/dev/null)"; then
+      echo "::warning::runner-hygiene safety probe failed (git worktree list); preserving agent temp $candidate" >&2
+      return 0
+    fi
+    if [ -z "$worktree_output" ]; then
+      echo "::warning::runner-hygiene safety probe returned no worktrees; preserving agent temp $candidate" >&2
+      return 0
+    fi
     while IFS= read -r line; do
       case "$line" in
         "worktree "*)
@@ -145,15 +183,49 @@ agent_temp_in_use() {
           esac
           ;;
       esac
-    done < <(git -C "$candidate" worktree list --porcelain 2>/dev/null || true)
+    done <<<"$worktree_output"
   fi
-  if lsof -a -d cwd -Fn 2>/dev/null |
-    sed -n 's/^n//p' |
-    awk -v candidate="$candidate" '$0 == candidate || index($0, candidate "/") == 1 { found = 1 } END { exit found ? 0 : 1 }'; then
+
+  if ! lsof_output="$(lsof -a -d cwd -Fn 2>/dev/null)"; then
+    echo "::warning::runner-hygiene safety probe failed (lsof); preserving agent temp $candidate" >&2
     return 0
   fi
-  if ps -axo command= | grep -F -- "$candidate" | grep -v 'grep -F' | grep -q .; then
+  if [ -z "$lsof_output" ]; then
+    echo "::warning::runner-hygiene safety probe returned no process working directories; preserving agent temp $candidate" >&2
     return 0
+  fi
+  if awk -v candidate="$candidate" '
+    /^n/ {
+      cwd = substr($0, 2)
+      if (cwd == candidate || index(cwd, candidate "/") == 1) found = 1
+    }
+    END { exit found ? 0 : 1 }
+  ' <<<"$lsof_output"; then
+    return 0
+  else
+    probe_status=$?
+    if [ "$probe_status" -ne 1 ]; then
+      echo "::warning::runner-hygiene safety probe failed (lsof parser); preserving agent temp $candidate" >&2
+      return 0
+    fi
+  fi
+
+  if ! ps_output="$(ps -axo command= 2>/dev/null)"; then
+    echo "::warning::runner-hygiene safety probe failed (ps); preserving agent temp $candidate" >&2
+    return 0
+  fi
+  if [ -z "$ps_output" ]; then
+    echo "::warning::runner-hygiene safety probe returned no processes; preserving agent temp $candidate" >&2
+    return 0
+  fi
+  if awk -v candidate="$candidate" 'index($0, candidate) > 0 { found = 1 } END { exit found ? 0 : 1 }' <<<"$ps_output"; then
+    return 0
+  else
+    probe_status=$?
+    if [ "$probe_status" -ne 1 ]; then
+      echo "::warning::runner-hygiene safety probe failed (ps parser); preserving agent temp $candidate" >&2
+      return 0
+    fi
   fi
   return 1
 }

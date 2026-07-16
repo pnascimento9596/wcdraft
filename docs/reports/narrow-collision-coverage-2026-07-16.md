@@ -277,6 +277,17 @@ also accepts and rejects trailing spaces, tabs, or carriage returns. The integra
 that real finalizer, rejects a corrupt pre-existing marker, and then proves the start hook removes
 its correctly marked output.
 
+The first fresh exact-head U3 review at
+`14bfccfb5e8c34be0c1187b7b05f2d6e34184695` correctly returned **FAIL** after mocking `lsof` to
+exit with a diagnostic error while a completed-marker candidate was still an active process's
+working directory. The old boolean pipeline treated the failed probe like an empty successful
+result, and a command-only `ps` fallback could not recover a cwd absent from the process command.
+The fix-forward makes the mount, Git common-dir/worktree, `lsof`, and `ps` probes result-aware:
+command failures, parser failures, and impossible empty outputs preserve the candidate and emit a
+warning. Adversarial tests inject status 2 for each of those four commands and prove that the
+marker-authorized sentinel survives. A normal completed candidate remains removable, so the
+change closes the fail-open edge without silently disabling bounded cleanup.
+
 The 30 GiB floor is sustainable only with lane-close cleanup plus this 36 GiB recovery target; it
 is not sustainable if reviewer clones and browser receipts accumulate indefinitely. No floor
 reduction is needed. Xcode, simulators, DerivedData, Homebrew, containers, shared caches, the owner
@@ -291,7 +302,8 @@ checkout, and all uncertain classes remained outside the automation's eligible r
 - Runner hygiene contract: passed with the 30 GiB hard floor, 36 GiB best-effort recovery target, bounded
   namespace/age checks, two real browser-output marker producers, guarded lane finalizer,
   producer-to-pruner integration, idle-unmarked preservation, process-cwd guard, and
-  bidirectional linked-worktree guard.
+  bidirectional linked-worktree guard. Four injected diagnostic failures (`mount`, `lsof`, `ps`,
+  and Git) each preserve the candidate and report the failed safety probe.
 - Web typecheck: passed.
 - Exact collision assertion: 264 metrics, 0 failures, 2 engines, 3 viewports, 2 themes, 4 groups.
 - Full pre-remediation exact-head root gates: forced typecheck 9/9 tasks, forced lint 6/6 tasks,
