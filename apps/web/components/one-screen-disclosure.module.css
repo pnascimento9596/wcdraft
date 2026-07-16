@@ -2,12 +2,12 @@
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 0.04rem;
+  gap: 0.2rem;
   width: min(calc(100% - 2 * var(--m-container-x)), var(--container-wide));
   margin: 0 auto;
-  color: var(--ink-faint);
-  font-size: clamp(0.625rem, 0.72vw, 0.72rem);
-  line-height: 1.22;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.38;
   text-align: center;
 }
 
@@ -16,9 +16,14 @@
 }
 
 .notice a {
-  color: inherit;
+  color: var(--accent-text);
   text-decoration: underline;
   text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, var(--accent-text) 45%, transparent);
+}
+
+.notice a:hover {
+  text-decoration-color: var(--accent-text);
 }
 
 @media (max-width: 63.99rem) {
@@ -29,10 +34,10 @@
 
 @media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
   .notice {
-    gap: 0;
+    gap: 0.1rem;
     margin-top: 0.2rem;
-    font-size: 0.6rem;
-    line-height: 1.12;
+    font-size: 0.75rem;
+    line-height: 1.25;
   }
 
   .afterStickyDock {

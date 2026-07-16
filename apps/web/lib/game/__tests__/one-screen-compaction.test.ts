@@ -72,6 +72,11 @@ describe("one-screen information contract", () => {
     expect(legalDisclosure).toContain(
       "wcdraft is an independent project and is not affiliated with, endorsed by, or associated",
     );
+    const disclosureStyles = source("../../../components/one-screen-disclosure.module.css");
+    expect(disclosureStyles).toMatch(/\.notice\s*\{[^}]*font-size:\s*0\.75rem;/su);
+    expect(disclosureStyles).toMatch(/\.notice\s*\{[^}]*color:\s*var\(--ink-soft\);/su);
+    expect(disclosureStyles).toMatch(/\.notice a\s*\{[^}]*color:\s*var\(--accent-text\);/su);
+    expect(homePage).toContain("heroStyles.disclosure");
   });
 
   it("renders reveal content immediately for reduced-motion users", () => {
