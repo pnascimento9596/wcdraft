@@ -711,13 +711,17 @@
   }
 
   .modeCardFeatured {
+    align-items: stretch;
     grid-template-areas:
-      "top top"
-      "desc desc"
-      "bottom bottom";
+      "top bottom"
+      "desc desc";
   }
 
   .modeCardFeatured .modeCardBottom {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3px;
     margin: 0;
     padding: 1px 0 0;
     border-top: 0;
@@ -796,8 +800,10 @@
   }
 
   .modeCard:not(.modeCardFeatured) .modeCardBottom {
-    display: flex;
-    gap: 3px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 2px;
     margin-top: 0;
     padding-top: 1px;
     border-top: 0;
@@ -808,7 +814,7 @@
     padding: 0;
     font-size: 9px;
     line-height: 1.1;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .modeCard:not(.modeCardFeatured) .modeSelectedText {
@@ -859,9 +865,12 @@
 
   .modeCardFeatured {
     grid-column: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "top bottom"
+      "desc desc";
+    align-items: stretch;
   }
 
   .modeCardFeatured .modeCardTop {
@@ -900,16 +909,34 @@
   .modeDock {
     margin-top: 3px;
     margin-bottom: 0;
-    padding-block: 5px calc(5px + env(safe-area-inset-bottom, 0px));
+    padding-block: 2px calc(2px + env(safe-area-inset-bottom, 0px));
   }
 
   .modeCardFeatured .modeCardBottom {
+    width: 60px;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-self: end;
+    gap: 0;
     padding-left: 2px;
   }
 
   .modeCardFeatured .modeCta {
     padding: 0;
-    font-size: 8px;
+    font-size: 7.5px;
     line-height: 1.1;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCta {
+    font-size: 8px;
+  }
+
+  .modeCard .modeSelectedText {
+    font-size: 7.5px;
+  }
+
+  .modeCard .modeSelectedText::before {
+    display: none;
   }
 }

@@ -46,7 +46,10 @@ describe("one-screen information contract", () => {
       /\.modeDesc\s*\{[^}]*font-weight:\s*var\(--font-weight-regular\) !important;[^}]*letter-spacing:\s*0 !important;[^}]*text-transform:\s*none !important;/su,
     );
     expect(gameStyles).toMatch(
-      /\.modeCard:not\(\.modeCardFeatured\) \.modeCardBottom\s*\{[^}]*display:\s*flex;/su,
+      /\.modeCard:not\(\.modeCardFeatured\) \.modeCardBottom\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto;/su,
+    );
+    expect(gameStyles).toMatch(
+      /\.modeCard:not\(\.modeCardFeatured\) \.modeCta\s*\{[^}]*white-space:\s*normal;/su,
     );
   });
 
