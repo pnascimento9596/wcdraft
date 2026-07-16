@@ -993,15 +993,22 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
           '[data-formation-select] button[aria-pressed="false"] [data-formation-mini-pitch] [class*="miniDot"]',
         ),
       ];
-      const probe = document.createElement("span");
-      probe.style.position = "fixed";
-      probe.style.pointerEvents = "none";
-      document.body.append(probe);
-      probe.style.background = "var(--accent)";
-      const accent = getComputedStyle(probe).backgroundColor;
-      probe.style.background = "var(--ink)";
-      const ink = getComputedStyle(probe).backgroundColor;
-      probe.remove();
+      // Resolve each token on its own attached element. Reusing one probe and
+      // mutating its background can expose the previous computed value in
+      // WebKit reduced-motion contexts because the global motion guard gives
+      // every property a minimal transition duration.
+      const resolveTokenColor = (token) => {
+        const probe = document.createElement("span");
+        probe.style.position = "fixed";
+        probe.style.pointerEvents = "none";
+        probe.style.background = token;
+        document.body.append(probe);
+        const resolved = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return resolved;
+      };
+      const accent = resolveTokenColor("var(--accent)");
+      const ink = resolveTokenColor("var(--ink)");
       return (
         selectedDots.length === 10 &&
         inactiveDots.length === 70 &&
