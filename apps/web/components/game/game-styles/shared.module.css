@@ -274,8 +274,11 @@
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "top bottom"
+    "desc desc";
   align-items: center;
-  min-height: 52px;
+  min-height: 72px;
   border-color: color-mix(in srgb, var(--gold) 58%, var(--line));
   background: color-mix(in srgb, var(--gold) 8%, var(--s1));
   box-shadow:
@@ -283,14 +286,22 @@
     var(--e1);
 }
 
-.modeCardFeatured .modeDesc,
 .modeCardFeatured .modeFeatures {
   display: none;
 }
 
 .modeCardFeatured .modeCardTop {
+  grid-area: top;
   min-width: 0;
   gap: 6px;
+}
+
+.modeCardFeatured .modeDesc {
+  grid-area: desc;
+  max-width: none;
+  min-height: 0;
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .modeCardFeatured .modeTag,
@@ -300,6 +311,7 @@
 }
 
 .modeCardFeatured .modeCardBottom {
+  grid-area: bottom;
   margin: 0;
   padding: 0 0 0 6px;
   border-top: 0;
@@ -682,16 +694,16 @@
   }
 
   .modeGrid {
-    gap: 6px;
-    margin-top: 6px;
+    gap: 4px;
+    margin-top: 4px;
   }
   .modeGridDaily {
-    gap: 6px;
+    gap: 4px;
   }
 
   .modeCard {
-    gap: 5px;
-    padding: 8px;
+    gap: 3px;
+    padding: 6px;
     border-radius: 12px;
   }
 
@@ -715,7 +727,7 @@
   }
 
   .modeDock {
-    margin: 3px calc(-1 * var(--m-container-x)) -8px;
+    margin: 3px calc(-1 * var(--m-container-x)) 0;
     padding-block: 9px calc(9px + env(safe-area-inset-bottom, 0px));
     padding-inline: var(--m-container-x);
   }
@@ -738,7 +750,7 @@
   }
 
   .modeCardFeatured {
-    min-height: 52px;
+    min-height: 68px;
   }
 
   .modeCardFeatured .modeCardBottom {
@@ -760,15 +772,19 @@
     white-space: normal;
   }
 
-  .modeCard:not(.modeCardFeatured) .modeDesc,
   .modeCard:not(.modeCardFeatured) .modeFeatures {
     display: none;
   }
 
-  .modeCard:not(.modeCardFeatured) .modeCta {
-    font-size: 11px;
+  .modeCard:not(.modeCardFeatured) .modeDesc {
+    min-height: 0;
+    max-width: none;
+    font-size: 12px;
     line-height: 1.25;
-    padding-block: 4px;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCardBottom {
+    display: none;
   }
 }
 
@@ -798,7 +814,7 @@
 
   .modeGrid,
   .modeGridDaily {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 5px;
     margin-top: 5px;
   }
@@ -807,12 +823,31 @@
   .modeCardFeatured,
   .modeCardSecondary {
     min-height: 44px;
-    padding: 6px;
-    gap: 3px;
+    padding: 2px;
+    gap: 2px;
   }
 
   .modeCardFeatured {
-    grid-column: 1 / -1;
+    grid-column: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modeCardFeatured .modeCardTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+
+  .modeCardFeatured .modeTag,
+  .modeCardFeatured .modeName {
+    white-space: normal;
+  }
+
+  .modeCardFeatured .modeDesc {
+    font-size: 12px;
+    line-height: 1.25;
   }
 
   .modeCardBottom {
@@ -820,11 +855,11 @@
   }
 
   .modeCard:not(.modeCardFeatured) .modeCardTop {
-    gap: 2px;
+    gap: 1px;
   }
 
   .modeTag {
-    padding: 2px 5px;
+    padding: 2px 3px;
     font-size: 8px;
   }
 
@@ -833,7 +868,8 @@
   }
 
   .modeDock {
-    margin-top: 5px;
+    margin-top: 3px;
+    margin-bottom: 0;
     padding-block: 5px calc(5px + env(safe-area-inset-bottom, 0px));
   }
 }

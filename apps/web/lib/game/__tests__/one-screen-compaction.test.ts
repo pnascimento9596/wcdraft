@@ -14,7 +14,7 @@ const gameStyles = source("../../../components/game/game-styles/shared.module.cs
 const responsiveContract = source("./responsive-layout-contract.test.ts");
 
 describe("one-screen information contract", () => {
-  it("removes descriptor boxes, ghost numerals, and their collision guard", () => {
+  it("uses functional body-copy descriptors without restoring descriptor boxes", () => {
     for (const authored of [modeSelect, gameFacade, gameStyles]) {
       expect(authored).not.toContain("modePreview");
       expect(authored).not.toContain("modeIndex");
@@ -22,9 +22,24 @@ describe("one-screen information contract", () => {
     expect(modeSelect).not.toMatch(/\bpreview:/u);
     expect(modeSelect).not.toMatch(/\bindex:/u);
     expect(responsiveContract).not.toContain("compact mode pill track");
+    for (const descriptor of [
+      "Everyone gets the same board today. One try.",
+      "Spin, then pick one of three players.",
+      "Spin a nation, pick anyone from its squad.",
+      "Pick from three with ratings hidden until the end.",
+      "Full squad to pick from, ratings hidden until the end.",
+    ]) {
+      expect(modeSelect).toContain(`desc: "${descriptor}"`);
+    }
+    expect(gameStyles).toMatch(
+      /\.modeCard:not\(\.modeCardFeatured\) \.modeDesc\s*\{[^}]*font-size:\s*12px;[^}]*line-height:\s*1\.25;/su,
+    );
+    expect(gameStyles).toMatch(
+      /\.modeCard:not\(\.modeCardFeatured\) \.modeCardBottom\s*\{\s*display:\s*none;/su,
+    );
   });
 
-  it("keeps progress and the featured Daily card to one visual row", () => {
+  it("keeps progress and the featured Daily header/action to one visual row", () => {
     expect(progressBand).toContain("localProgressRow");
     expect(progressBand).not.toContain("localProgressPrimary");
     expect(progressBand).not.toContain("localProgressBest");
@@ -36,10 +51,9 @@ describe("one-screen information contract", () => {
       /\.modeCardFeatured \{(?<body>[^}]*)\}/u.exec(gameStyles)?.groups?.body ?? "";
     expect(featuredRule).toContain("grid-column: 1 / -1");
     expect(featuredRule).toContain("grid-template-columns: minmax(0, 1fr) auto");
-    expect(featuredRule).toContain("min-height: 52px");
-    expect(gameStyles).toMatch(
-      /\.modeCardFeatured \.modeDesc,\s*\.modeCardFeatured \.modeFeatures \{\s*display: none;/u,
-    );
+    expect(featuredRule).toContain("min-height: 72px");
+    expect(gameStyles).toMatch(/\.modeCardFeatured \.modeFeatures \{\s*display: none;/u);
+    expect(gameStyles).toMatch(/\.modeCardFeatured \.modeDesc\s*\{[^}]*grid-area:\s*desc;/su);
   });
 
   it("keeps the demo, stat strip, and three actions after cutting redundant hero copy", () => {

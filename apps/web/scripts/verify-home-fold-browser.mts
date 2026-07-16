@@ -122,7 +122,7 @@ type FitMetric = {
   readonly regularModeColumns: number | null;
   readonly progressItemCount: number | null;
   readonly progressOneRow: boolean | null;
-  readonly dailyOneRow: boolean | null;
+  readonly dailyHeaderOneRow: boolean | null;
   readonly cardCollisionCount: number | null;
   readonly zoomDisabled: boolean;
   readonly pageErrors: readonly string[];
@@ -540,7 +540,9 @@ function metricFailures(metric: FitMetric): readonly string[] {
     if (metric.progressItemCount !== 4 || !metric.progressOneRow) {
       failures.push(`${prefix}: progress is not four items on one row`);
     }
-    if (!metric.dailyOneRow) failures.push(`${prefix}: Daily card is not one visual row`);
+    if (!metric.dailyHeaderOneRow) {
+      failures.push(`${prefix}: Daily card header and action are not one visual row`);
+    }
     if ((metric.cardCollisionCount ?? 1) > 0) {
       failures.push(`${prefix}: ${String(metric.cardCollisionCount)} mode-card collisions`);
     }
@@ -763,7 +765,11 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       ),
     ].filter(visible);
     const dailyCard = modeCards.find(isDailyCard);
-    const dailyParts = dailyCard ? [...dailyCard.children].filter(visible) : [];
+    const dailyHeaderParts = dailyCard
+      ? [...dailyCard.children].filter(
+          (element) => visible(element) && /modeCard(?:Top|Bottom)/u.test(element.className),
+        )
+      : [];
 
     return {
       scrollHeight: doc.scrollHeight,
@@ -795,7 +801,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       regularModeColumns,
       progressItemCount: pathValue === "/play" ? progressItems.length : null,
       progressOneRow: pathValue === "/play" ? rectsShareRow(progressItems) : null,
-      dailyOneRow: pathValue === "/play" ? Boolean(dailyCard) && rectsShareRow(dailyParts) : null,
+      dailyHeaderOneRow:
+        pathValue === "/play" ? Boolean(dailyCard) && rectsShareRow(dailyHeaderParts) : null,
       cardCollisionCount: pathValue === "/play" ? collisionCount(modeCards) : null,
       zoomDisabled: /(?:user-scalable\s*=\s*no|maximum-scale\s*=\s*1(?:\.0+)?(?:\s|,|$))/iu.test(
         metaViewport,

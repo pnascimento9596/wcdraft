@@ -95,6 +95,7 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("interactive scroll reachability failed");
     expect(verifierSource).toContain("scrollInteractionTargetCount");
     expect(verifierSource).toContain("modeDockDisclosureOverlapPx");
+    expect(verifierSource).toContain("dailyHeaderOneRow");
     expect(verifierSource).toContain("mode dock overlaps disclosure by");
     expect(verifierSource).toContain("Math.min(dockRect.bottom, disclosureRect.bottom)");
     expect(verifierSource).toContain("!deviceCase.strictVerticalFit");
