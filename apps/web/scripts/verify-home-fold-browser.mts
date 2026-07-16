@@ -37,6 +37,12 @@ type PaintAnalysis = {
   readonly contributions: readonly PaintContribution[];
 };
 
+type ScrollInteractionProof = {
+  readonly targetCount: number;
+  readonly passed: boolean;
+  readonly failures: readonly string[];
+};
+
 type SharpMetadata = {
   readonly format?: string;
   readonly width?: number;
@@ -93,6 +99,7 @@ type FitMetric = {
   readonly disclosureLinesInViewport: boolean;
   readonly disclosureLinesReachable: boolean;
   readonly disclosureTexts: readonly string[];
+  readonly modeDockDisclosureOverlapPx: number | null;
   readonly renderedTheme: string | null;
   readonly renderedReducedMotion: boolean;
   readonly unpaintedRequiredContent: readonly string[];
@@ -103,6 +110,10 @@ type FitMetric = {
   readonly requiredTargetCount: number;
   readonly requiredTargetsInViewport: boolean;
   readonly requiredTargetsReachable: boolean;
+  readonly scrollInteractionRequired: boolean;
+  readonly scrollInteractionTargetCount: number;
+  readonly scrollInteractionPassed: boolean;
+  readonly scrollInteractionFailures: readonly string[];
   readonly smallTargets: readonly string[];
   readonly homeDemoPresent: boolean | null;
   readonly homeStatCount: number | null;
@@ -134,6 +145,10 @@ type MeasuredFitMetric = Omit<
   | "screenshotPngNormalized"
   | "screenshotPaintFailures"
   | "screenshotPaintContributions"
+  | "scrollInteractionRequired"
+  | "scrollInteractionTargetCount"
+  | "scrollInteractionPassed"
+  | "scrollInteractionFailures"
 >;
 
 type ManagedServer = {
@@ -431,6 +446,11 @@ function metricFailures(metric: FitMetric): readonly string[] {
   if (!metric.disclosureLinesReachable) {
     failures.push(`${prefix}: disclosure lines are not reachable`);
   }
+  if ((metric.modeDockDisclosureOverlapPx ?? 0) > 0) {
+    failures.push(
+      `${prefix}: mode dock overlaps disclosure by ${String(metric.modeDockDisclosureOverlapPx)}px`,
+    );
+  }
   if (metric.strictVerticalFit && !metric.disclosureLinesInViewport) {
     failures.push(`${prefix}: disclosure lines are below the initial viewport`);
   }
@@ -453,6 +473,13 @@ function metricFailures(metric: FitMetric): readonly string[] {
   }
   if (!metric.requiredTargetsReachable)
     failures.push(`${prefix}: required target is not reachable`);
+  if (metric.scrollInteractionRequired && !metric.scrollInteractionPassed) {
+    failures.push(
+      `${prefix}: interactive scroll reachability failed ${metric.scrollInteractionFailures.join(
+        " | ",
+      )}`,
+    );
+  }
   if (metric.strictVerticalFit && !metric.requiredTargetsInViewport) {
     failures.push(`${prefix}: required target below fold`);
   }
@@ -707,6 +734,21 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       const rect = element.getBoundingClientRect();
       return rect.top >= 0 && rect.left >= 0 && rect.bottom <= reachableDocumentHeight && rect.right <= innerWidth;
     });
+    const modeDockDisclosureOverlapPx = (() => {
+      if (pathValue !== "/play") return null;
+      const dock = document.querySelector('[class*="modeDock"]');
+      const disclosure = document.querySelector(".one-screen-disclosure");
+      if (!visible(dock) || !visible(disclosure)) return null;
+      const dockRect = dock.getBoundingClientRect();
+      const disclosureRect = disclosure.getBoundingClientRect();
+      const overlapsHorizontally = dockRect.left < disclosureRect.right && dockRect.right > disclosureRect.left;
+      if (!overlapsHorizontally) return 0;
+      return Math.max(
+        0,
+        Math.min(dockRect.bottom, disclosureRect.bottom) -
+          Math.max(dockRect.top, disclosureRect.top),
+      );
+    })();
     const isDailyCard = (element) =>
       element.textContent?.toLocaleUpperCase().includes("TODAY'S DRAFT") === true;
     const regularCards = modeCards.filter((element) => !isDailyCard(element));
@@ -733,6 +775,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       disclosureLinesInViewport,
       disclosureLinesReachable,
       disclosureTexts: disclosureLines.map((element) => element.textContent?.replace(/\s+/gu, " ").trim() ?? ""),
+      modeDockDisclosureOverlapPx,
       renderedTheme: doc.dataset.theme ?? null,
       renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
       unpaintedRequiredContent,
@@ -759,6 +802,100 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       pageErrors: [],
     };
   })()`)) as MeasuredFitMetric;
+}
+
+async function proveScrollReachability(
+  page: Page,
+  pathname: RoutePath,
+): Promise<ScrollInteractionProof> {
+  return (await page.evaluate(String.raw`(async () => {
+    const pathValue = ${JSON.stringify(pathname)};
+    const controls =
+      pathValue === "/"
+        ? [...document.querySelectorAll(".hero .btn-row a")]
+        : [
+            ...document.querySelectorAll('[role="radio"]'),
+            ...document.querySelectorAll("main button.btn"),
+          ];
+    const disclosures = [
+      ...document.querySelectorAll(
+        ".one-screen-disclosure [data-disclosure-line]",
+      ),
+    ];
+    const targets = [
+      ...controls.map((element, index) => ({
+        element,
+        interactive: true,
+        label:
+          element.textContent?.replace(/\s+/gu, " ").trim() ||
+          element.getAttribute("aria-label") ||
+          "control " + String(index + 1),
+      })),
+      ...disclosures.map((element) => ({
+        element,
+        interactive: false,
+        label: "disclosure " + (element.dataset.disclosureLine ?? "unknown"),
+      })),
+    ];
+    const scrollingElements = [...document.querySelectorAll("*")]
+      .filter(
+        (element) =>
+          element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth,
+      )
+      .map((element) => ({ element, left: element.scrollLeft, top: element.scrollTop }));
+    const initialWindow = { x: window.scrollX, y: window.scrollY };
+    const failures = [];
+    const nextPaint = async () => {
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+    };
+    const restoreScroll = async () => {
+      for (const snapshot of scrollingElements) {
+        snapshot.element.scrollTo({ left: snapshot.left, top: snapshot.top, behavior: "instant" });
+      }
+      window.scrollTo({ left: initialWindow.x, top: initialWindow.y, behavior: "instant" });
+      await nextPaint();
+    };
+
+    try {
+      for (const target of targets) {
+        target.element.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
+        await nextPaint();
+        const rect = target.element.getBoundingClientRect();
+        const style = getComputedStyle(target.element);
+        const inLayoutViewport =
+          rect.width > 0 &&
+          rect.height > 0 &&
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= window.innerHeight &&
+          rect.right <= window.innerWidth;
+        const readable =
+          inLayoutViewport &&
+          style.display !== "none" &&
+          style.visibility !== "hidden" &&
+          Number.parseFloat(style.opacity) > 0.01 &&
+          target.element.innerText.trim().length > 0;
+        if (!readable) {
+          failures.push(target.label + ": did not become readable in the layout viewport");
+        }
+        if (target.interactive && inLayoutViewport) {
+          const centerX = Math.min(window.innerWidth - 1, Math.max(0, rect.left + rect.width / 2));
+          const centerY = Math.min(window.innerHeight - 1, Math.max(0, rect.top + rect.height / 2));
+          const hit = document.elementFromPoint(centerX, centerY);
+          if (!(hit === target.element || (hit !== null && target.element.contains(hit)))) {
+            failures.push(target.label + ": center point is not operable after scrolling");
+          }
+        }
+        await restoreScroll();
+      }
+    } finally {
+      await restoreScroll();
+    }
+
+    return { targetCount: targets.length, passed: failures.length === 0, failures };
+  })()`)) as ScrollInteractionProof;
 }
 
 function assertCompletePng(buffer: Buffer): void {
@@ -1214,6 +1351,9 @@ async function main(): Promise<void> {
                   await hideDevOverlay(page);
                   await page.waitForTimeout(100);
                   const measured = await measurePage(page, pathname);
+                  const scrollInteraction = deviceCase.strictVerticalFit
+                    ? { targetCount: 0, passed: true, failures: [] }
+                    : await proveScrollReachability(page, pathname);
                   const screenshot =
                     theme === "dark"
                       ? path.join(
@@ -1251,6 +1391,10 @@ async function main(): Promise<void> {
                     screenshotPngNormalized: screenshotCapture.normalized,
                     screenshotPaintFailures: screenshotCapture.paintFailures,
                     screenshotPaintContributions: screenshotCapture.paintContributions,
+                    scrollInteractionRequired: !deviceCase.strictVerticalFit,
+                    scrollInteractionTargetCount: scrollInteraction.targetCount,
+                    scrollInteractionPassed: scrollInteraction.passed,
+                    scrollInteractionFailures: scrollInteraction.failures,
                     ...measured,
                     pageErrors,
                   };
@@ -1290,7 +1434,7 @@ async function main(): Promise<void> {
           strictVerticalFit:
             "document.documentElement.scrollHeight <= window.innerHeight for every descriptor except 320x568",
           scrollAllowed:
-            "320x568 permits vertical scrolling only; reachability and all non-vertical-fit assertions remain strict",
+            "320x568 permits vertical scrolling only; committed scroll interactions must make every disclosure and required control readable or operable before restoring scroll, and all non-vertical-fit assertions remain strict",
         },
         routes,
         themes,

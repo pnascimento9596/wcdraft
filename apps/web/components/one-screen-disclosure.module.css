@@ -21,7 +21,7 @@
   text-underline-offset: 2px;
 }
 
-@media (max-width: 430px) {
+@media (max-width: 63.99rem) {
   .afterStickyDock {
     margin-block-start: 0.5rem;
   }
@@ -33,5 +33,9 @@
     margin-top: 0.2rem;
     font-size: 0.6rem;
     line-height: 1.12;
+  }
+
+  .afterStickyDock {
+    margin-top: 0.5rem;
   }
 }

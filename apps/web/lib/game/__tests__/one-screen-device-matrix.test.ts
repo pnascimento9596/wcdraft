@@ -88,6 +88,15 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("scrollAllowedContextCount");
     expect(verifierSource).toContain("if (!metric.requiredTargetsReachable)");
     expect(verifierSource).toContain("if (!metric.disclosureLinesReachable)");
+    expect(verifierSource).toContain("async function proveScrollReachability");
+    expect(verifierSource).toContain('target.element.scrollIntoView({ block: "center"');
+    expect(verifierSource).toContain("document.elementFromPoint(centerX, centerY)");
+    expect(verifierSource).toContain("await restoreScroll()");
+    expect(verifierSource).toContain("interactive scroll reachability failed");
+    expect(verifierSource).toContain("scrollInteractionTargetCount");
+    expect(verifierSource).toContain("modeDockDisclosureOverlapPx");
+    expect(verifierSource).toContain("mode dock overlaps disclosure by");
+    expect(verifierSource).toContain("Math.min(dockRect.bottom, disclosureRect.bottom)");
     expect(verifierSource).toContain("!deviceCase.strictVerticalFit");
     expect(verifierSource).toContain("captureFullPage");
     expect(verifierSource).not.toContain('name: "360x800"');
