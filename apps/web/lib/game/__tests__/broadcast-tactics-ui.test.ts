@@ -6,7 +6,7 @@ function source(path: string): string {
 }
 
 describe("broadcast tactics UI source contract", () => {
-  it("uses local Space font assets and no external font loader", () => {
+  it("uses local Archivo font assets and no external font loader", () => {
     const layout = source("../../../app/layout.tsx");
     const globals = source("../../../app/globals.css");
     const rootCss = source("../../../app/ds/tokens.css");
@@ -29,37 +29,47 @@ describe("broadcast tactics UI source contract", () => {
     expect(combined).not.toContain("fonts/" + "og");
     expect(combined).not.toContain("fonts.google" + "apis");
     expect(combined).not.toContain("g" + "static");
+    expect(combined).not.toContain("Space " + "Grotesk");
+    expect(combined).not.toContain("space-" + "grotesk");
 
-    expect(globals).toContain('font-family: "Space Grotesk"');
-    expect(globals).toContain('--font-family: "Space Grotesk", system-ui, sans-serif;');
-    expect(globals).toContain("/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2");
-    expect(globals).toContain("/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff2");
+    expect(globals).toContain('font-family: "Archivo"');
+    expect(globals).toContain('--font-family: "Archivo", system-ui, sans-serif;');
+    expect(globals).toContain("/fonts/archivo/archivo-latin-400-normal.woff2");
+    expect(globals).toContain("/fonts/archivo/archivo-latin-ext-700-normal.woff2");
     expect(combined).not.toContain("Space " + "Mono");
     expect(combined).not.toContain("space-" + "mono");
   });
 
   it("ships the requested font asset matrix", () => {
-    const groteskFiles = readdirSync(
-      new URL("../../../public/fonts/space-grotesk", import.meta.url),
+    const archivoFiles = readdirSync(
+      new URL("../../../public/fonts/archivo", import.meta.url),
     ).sort();
-    expect(groteskFiles).toEqual(
+    expect(archivoFiles).toEqual(
       expect.arrayContaining([
         "LICENSE-OFL.txt",
-        "space-grotesk-latin-400-normal.woff2",
-        "space-grotesk-latin-500-normal.woff2",
-        "space-grotesk-latin-600-normal.woff2",
-        "space-grotesk-latin-700-normal.woff2",
-        "space-grotesk-latin-ext-400-normal.woff2",
-        "space-grotesk-latin-ext-500-normal.woff2",
-        "space-grotesk-latin-ext-600-normal.woff2",
-        "space-grotesk-latin-ext-700-normal.woff2",
-        "space-grotesk-latin-600-normal.woff",
-        "space-grotesk-latin-700-normal.woff",
-        "space-grotesk-latin-ext-600-normal.woff",
-        "space-grotesk-latin-ext-700-normal.woff",
+        "archivo-latin-400-normal.woff2",
+        "archivo-latin-500-normal.woff2",
+        "archivo-latin-600-normal.woff2",
+        "archivo-latin-700-normal.woff2",
+        "archivo-latin-800-normal.woff2",
+        "archivo-latin-900-normal.woff2",
+        "archivo-latin-ext-400-normal.woff2",
+        "archivo-latin-ext-500-normal.woff2",
+        "archivo-latin-ext-600-normal.woff2",
+        "archivo-latin-ext-700-normal.woff2",
+        "archivo-latin-ext-800-normal.woff2",
+        "archivo-latin-ext-900-normal.woff2",
+        "archivo-latin-400-normal.woff",
+        "archivo-latin-500-normal.woff",
+        "archivo-latin-800-normal.woff",
+        "archivo-latin-900-normal.woff",
+        "archivo-latin-ext-400-normal.woff",
+        "archivo-latin-ext-500-normal.woff",
+        "archivo-latin-ext-800-normal.woff",
+        "archivo-latin-ext-900-normal.woff",
       ]),
     );
-    expect(groteskFiles).not.toEqual(
+    expect(archivoFiles).not.toEqual(
       expect.arrayContaining(["space-" + "mono" + "-latin-400-normal.woff2"]),
     );
   });
@@ -74,8 +84,10 @@ describe("broadcast tactics UI source contract", () => {
     expect(modeSelect).toContain('role="radiogroup"');
     expect(modeSelect).toContain("router.push(selected.href)");
     expect(modeSelect).toContain('tag: "Ranked · casual default"');
-    expect(modeSelect).toContain("RANKED · CASUAL DEFAULT");
     expect(modeSelect).toContain('"Ranked-capable"');
+    expect(modeSelect).not.toContain("preview:");
+    expect(modeSelect).not.toContain("modePreview");
+    expect(modeSelect).not.toContain("modeIndex");
 
     expect(setup).toContain("const [open, setOpen] = useState(true)");
     expect(setup).toContain('aria-label="Play type"');

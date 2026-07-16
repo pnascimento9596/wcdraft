@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
@@ -28,5 +29,20 @@ describe("vector medallion source", () => {
     expect(mobileGenerator).toContain("medallion-badge.svg");
     expect(webGenerator).not.toContain("medallion-badge-master.webp");
     expect(mobileGenerator).not.toContain("medallion-badge-master.webp");
+  });
+
+  it("keeps the default-share medallion geometry and literals byte-locked", () => {
+    const share = source("../../../public/og/share-default.svg");
+    const start = share.indexOf("  <!-- Brand mark:");
+    const end = share.indexOf("  <!-- Wordmark -->", start);
+    expect(start).toBeGreaterThanOrEqual(0);
+    expect(end).toBeGreaterThan(start);
+
+    // Remove one of the two separator newlines. The remaining newline belongs
+    // to the medallion block and keeps this hash stable across outer-art edits.
+    const medallion = share.slice(start, end).replace(/\n$/u, "");
+    expect(createHash("sha256").update(medallion).digest("hex")).toBe(
+      "7f4de85f6ace928938bd53bbf0bcdeb496b1c20dfebe1ca14951d0d0472600b6",
+    );
   });
 });

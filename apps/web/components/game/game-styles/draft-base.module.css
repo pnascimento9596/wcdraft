@@ -78,8 +78,8 @@
   border-radius: 12px;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--field) 92%, black 0%),
-    color-mix(in srgb, var(--field) 78%, black 8%)
+    color-mix(in srgb, var(--field) 92%, var(--well) 0%),
+    color-mix(in srgb, var(--field) 78%, var(--well) 8%)
   );
   overflow: hidden;
 }
@@ -215,8 +215,9 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
 .benchLabel {
   display: block;
   font-size: 0.68rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
   margin-bottom: 0.45rem;
 }
@@ -291,7 +292,7 @@ button.benchSlot:not(:disabled):hover {
 .mgrRating {
   margin-left: auto;
   font-family: var(--font-family);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* ── Spin reveal ───────────────────────────────────────────────────────── */
@@ -308,7 +309,7 @@ button.benchSlot:not(:disabled):hover {
   color: var(--bg);
 }
 .revealPanel .eyebrowAccent {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .revealTeam {
   display: flex;
@@ -324,7 +325,7 @@ button.benchSlot:not(:disabled):hover {
 .revealYear {
   font-family: var(--font-family);
   font-size: clamp(1.6rem, 5vw, 2.4rem);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .revealHint {
   font-size: 0.92rem;
@@ -388,8 +389,9 @@ button.benchSlot:not(:disabled):hover {
   gap: 0.45rem;
   font-size: 0.8rem;
   color: var(--ink-faint);
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--tracking-micro);
 }
 .sortSelect {
   font: inherit;
@@ -521,7 +523,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .candOverallLabel {
   font-size: 0.6rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
 }
 .candPositions {
@@ -542,8 +544,9 @@ button.benchSlot:not(:disabled):hover {
 .candDrafted {
   margin-left: auto;
   font-size: 0.66rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .channels {
@@ -602,7 +605,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .candManagerTag {
   margin-left: auto;
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 600;
 }
 .candAwards {
@@ -653,12 +656,12 @@ button.benchSlot:not(:disabled):hover {
 .synergyNum {
   font-family: var(--font-family);
   font-size: 2.1rem;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .deltaUp {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--teal-deep);
+  color: var(--teal-bright);
 }
 .deltaDown {
   font-size: 0.85rem;
@@ -698,8 +701,9 @@ button.benchSlot:not(:disabled):hover {
 }
 .synergyStatLabel {
   font-size: 0.64rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .clusters {
@@ -709,8 +713,9 @@ button.benchSlot:not(:disabled):hover {
 }
 .clustersLabel {
   font-size: 0.66rem;
+  font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--tracking-micro);
   color: var(--ink-faint);
 }
 .clusterTags {

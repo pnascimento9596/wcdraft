@@ -95,11 +95,11 @@ describe("mode-select sticky CTA contract", () => {
     expect(dock).toContain("background: var(--s0)");
   });
 
-  it("reserves the dock height below the mode cards", () => {
+  it("does not double-reserve the in-flow dock below the one-screen board", () => {
     const grid = block(".modeGridDaily");
-    expect(grid).toContain("--mode-dock-reserve: calc(84px + env(safe-area-inset-bottom, 0px))");
-    expect(grid).toContain("padding-block-end: var(--mode-dock-reserve)");
-    expect(grid).toContain("scroll-padding-block-end: var(--mode-dock-reserve)");
+    expect(grid).toContain("padding-block-end: 0");
+    expect(grid).toContain("scroll-padding-block-end: 0");
+    expect(grid).not.toContain("--mode-dock-reserve");
   });
 
   it("keeps taller Daily recovery docks in flow without a stale dock reserve", () => {
