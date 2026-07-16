@@ -2322,6 +2322,21 @@
     align-self: start;
   }
 
+  .draftShell[data-formation-select] .formationCard {
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 2px;
+    text-align: center;
+  }
+
+  .draftShell[data-formation-select] .formationCardBody {
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
   .draftShell[data-formation-select] .formationTitle {
     font-size: 18px;
   }

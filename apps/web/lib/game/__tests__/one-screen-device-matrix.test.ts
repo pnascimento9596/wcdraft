@@ -99,6 +99,9 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("modeDockDisclosureOverlapPx");
     expect(verifierSource).toContain("dailyHeaderOneRow");
     expect(verifierSource).toContain("formationSectionFits");
+    expect(verifierSource).toContain("formationCardContentOverflowCount");
+    expect(verifierSource).toContain("descriptorRange.getClientRects()");
+    expect(verifierSource).toContain("formation cards overflow their readable content box");
     expect(verifierSource).toContain("formationDotCount");
     expect(verifierSource).toContain("formationGoalBoxCount");
     expect(verifierSource).toContain("formationAppBarCount");

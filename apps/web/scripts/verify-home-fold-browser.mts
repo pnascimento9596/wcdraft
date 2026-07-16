@@ -141,6 +141,7 @@ type FitMetric = {
   readonly formationMinimumTextPx: number | null;
   readonly formationSectionFits: boolean | null;
   readonly formationCardCollisionCount: number | null;
+  readonly formationCardContentOverflowCount: number | null;
   readonly zoomDisabled: boolean;
   readonly pageErrors: readonly string[];
 };
@@ -669,6 +670,11 @@ function metricFailures(metric: FitMetric): readonly string[] {
         `${prefix}: ${String(metric.formationCardCollisionCount)} formation-card collisions`,
       );
     }
+    if ((metric.formationCardContentOverflowCount ?? 1) > 0) {
+      failures.push(
+        `${prefix}: ${String(metric.formationCardContentOverflowCount)} formation cards overflow their readable content box`,
+      );
+    }
   }
   return failures;
 }
@@ -1026,6 +1032,32 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             .filter(visible)
             .map((element) => Number.parseFloat(getComputedStyle(element).fontSize))
         : [];
+    const formationCardContentOverflowCount =
+      pathValue === "/play/draft"
+        ? formationCards.filter((card) => {
+            const body = card.querySelector('[class*="formationCardBody"]');
+            const descriptor = card.querySelector('[class*="formationCardDescriptor"]');
+            if (descriptor === null) return true;
+            const cardRect = card.getBoundingClientRect();
+            const descriptorRange = document.createRange();
+            descriptorRange.selectNodeContents(descriptor);
+            const descriptorRects = [...descriptorRange.getClientRects()];
+            const descriptorInsideCard =
+              descriptorRects.length > 0 &&
+              descriptorRects.every(
+                (rect) =>
+                  rect.left >= cardRect.left - 1 &&
+                  rect.right <= cardRect.right + 1 &&
+                  rect.top >= cardRect.top - 1 &&
+                  rect.bottom <= cardRect.bottom + 1,
+              );
+            return (
+              card.scrollWidth > card.clientWidth + 1 ||
+              (body !== null && body.scrollWidth > body.clientWidth + 1) ||
+              !descriptorInsideCard
+            );
+          }).length
+        : null;
 
     return {
       scrollHeight: doc.scrollHeight,
@@ -1105,6 +1137,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
           : null,
       formationCardCollisionCount:
         pathValue === "/play/draft" ? collisionCount(formationCards) : null,
+      formationCardContentOverflowCount,
       zoomDisabled: /(?:user-scalable\s*=\s*no|maximum-scale\s*=\s*1(?:\.0+)?(?:\s|,|$))/iu.test(
         metaViewport,
       ),
