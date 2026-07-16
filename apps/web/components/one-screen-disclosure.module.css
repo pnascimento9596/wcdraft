@@ -4,7 +4,7 @@
   display: grid;
   gap: 0.2rem;
   width: min(calc(100% - 2 * var(--m-container-x)), var(--container-wide));
-  margin: 0 auto;
+  margin-inline: auto;
   color: var(--ink-soft);
   font-size: 0.75rem;
   line-height: 1.38;
@@ -26,21 +26,10 @@
   text-decoration-color: var(--accent-text);
 }
 
-@media (max-width: 63.99rem) {
-  .afterStickyDock {
-    margin-block-start: 0.5rem;
-  }
-}
-
 @media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
   .notice {
     gap: 0.1rem;
-    margin-top: 0.2rem;
     font-size: 0.75rem;
     line-height: 1.25;
-  }
-
-  .afterStickyDock {
-    margin-top: 0.5rem;
   }
 }

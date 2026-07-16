@@ -1,5 +1,8 @@
 import { readFileSync } from "node:fs";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+
+import { LegalDisclosure } from "@/components/legal-disclosure";
 
 const source = (relativePath: string) =>
   readFileSync(new URL(relativePath, import.meta.url), "utf8");
@@ -8,6 +11,8 @@ const homePage = source("../../../app/page.tsx");
 const globals = source("../../../app/globals.css");
 const modeSelect = source("../../../components/game/mode-select.tsx");
 const legalDisclosure = source("../../../components/legal-disclosure.tsx");
+const homeHeroStyles = source("../../../components/home/home-hero.module.css");
+const disclosureStyles = source("../../../components/one-screen-disclosure.module.css");
 const progressBand = source("../../../components/game/local-progress-band.tsx");
 const gameFacade = source("../../../components/game/game.module.css");
 const gameStyles = source("../../../components/game/game-styles/shared.module.css");
@@ -86,11 +91,29 @@ describe("one-screen information contract", () => {
     expect(legalDisclosure).toContain(
       "wcdraft is an independent project and is not affiliated with, endorsed by, or associated",
     );
-    const disclosureStyles = source("../../../components/one-screen-disclosure.module.css");
     expect(disclosureStyles).toMatch(/\.notice\s*\{[^}]*font-size:\s*0\.75rem;/su);
     expect(disclosureStyles).toMatch(/\.notice\s*\{[^}]*color:\s*var\(--ink-soft\);/su);
     expect(disclosureStyles).toMatch(/\.notice a\s*\{[^}]*color:\s*var\(--accent-text\);/su);
     expect(homePage).toContain("heroStyles.disclosure");
+  });
+
+  it("locks the complete legal copy and lets the route shell own bottom anchoring", () => {
+    const markup = renderToStaticMarkup(LegalDisclosure({ className: "probe" }));
+    const lines = [...markup.matchAll(/<p[^>]*>(?<line>[\s\S]*?)<\/p>/gu)].map((match) =>
+      (match.groups?.line ?? "")
+        .replace(/<[^>]+>/gu, "")
+        .replace(/\s+/gu, " ")
+        .trim(),
+    );
+
+    expect(lines).toEqual([
+      "Data: The Fjelstul World Cup Database © 2023 Joshua C. Fjelstul, Ph.D., licensed CC-BY-SA 4.0 (github.com/jfjelstul/worldcup), modified.",
+      "wcdraft is an independent project and is not affiliated with, endorsed by, or associated with any official competition or governing body.",
+    ]);
+    expect(disclosureStyles).toContain("margin-inline: auto;");
+    expect(disclosureStyles).not.toMatch(/margin:\s*0 auto/u);
+    expect(disclosureStyles).not.toMatch(/position:\s*fixed/u);
+    expect(homeHeroStyles).toMatch(/\.disclosure\s*\{[^}]*margin-block-start:\s*auto;/su);
   });
 
   it("renders reveal content immediately for reduced-motion users", () => {

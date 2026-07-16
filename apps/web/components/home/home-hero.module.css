@@ -52,6 +52,12 @@
   }
 }
 
+@media (min-width: 64rem) and (max-height: 720px) {
+  .copy {
+    gap: 0.75rem;
+  }
+}
+
 @media (min-width: 90rem) {
   .heroInner {
     grid-template-columns: minmax(40rem, 0.92fr) minmax(28rem, 0.62fr);
@@ -156,7 +162,9 @@
 
 @media (max-height: 500px) and (min-width: 431px) and (max-width: 52rem) {
   .hero:global(.hero) {
-    padding-block: 0.25rem;
+    --home-masthead-height: 3.35rem;
+
+    padding-block: 0.25rem 0;
   }
 
   .heroInner {
@@ -196,7 +204,12 @@
   }
 
   .actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.3rem;
+  }
+
+  .actions > a:first-child {
+    grid-column: auto;
   }
 
   .actions > a {
@@ -252,11 +265,5 @@
 
   .disclosure {
     padding-block: 0.35rem max(0.35rem, env(safe-area-inset-bottom, 0px));
-  }
-}
-
-@media (min-width: 431px) and (max-width: 52rem) {
-  .hero:global(.hero) {
-    --home-masthead-height: 4rem;
   }
 }
