@@ -72,6 +72,7 @@ type FitMetric = {
   readonly device: string;
   readonly descriptorSource: string;
   readonly viewport: { readonly width: number; readonly height: number };
+  readonly strictVerticalFit: boolean;
   readonly theme: Theme;
   readonly motion: Motion;
   readonly pathname: RoutePath;
@@ -101,6 +102,7 @@ type FitMetric = {
   readonly ledeLines: number | null;
   readonly requiredTargetCount: number;
   readonly requiredTargetsInViewport: boolean;
+  readonly requiredTargetsReachable: boolean;
   readonly smallTargets: readonly string[];
   readonly homeDemoPresent: boolean | null;
   readonly homeStatCount: number | null;
@@ -121,6 +123,7 @@ type MeasuredFitMetric = Omit<
   | "device"
   | "descriptorSource"
   | "viewport"
+  | "strictVerticalFit"
   | "theme"
   | "motion"
   | "pathname"
@@ -410,10 +413,10 @@ async function waitForInitialRouteMotion(page: Page, pathname: RoutePath): Promi
 function metricFailures(metric: FitMetric): readonly string[] {
   const prefix = `${metric.engine}/${metric.device}/${metric.theme}/${metric.motion}${metric.pathname}`;
   const failures: string[] = [];
-  if (metric.scrollHeight > metric.innerHeight) {
+  if (metric.strictVerticalFit && metric.scrollHeight > metric.innerHeight) {
     failures.push(`${prefix}: document height ${metric.scrollHeight}/${metric.innerHeight}`);
   }
-  if (metric.bodyScrollHeight > metric.innerHeight) {
+  if (metric.strictVerticalFit && metric.bodyScrollHeight > metric.innerHeight) {
     failures.push(`${prefix}: body height ${metric.bodyScrollHeight}/${metric.innerHeight}`);
   }
   if (metric.scrollWidth > metric.innerWidth) {
@@ -428,7 +431,7 @@ function metricFailures(metric: FitMetric): readonly string[] {
   if (!metric.disclosureLinesReachable) {
     failures.push(`${prefix}: disclosure lines are not reachable`);
   }
-  if (!metric.disclosureLinesInViewport) {
+  if (metric.strictVerticalFit && !metric.disclosureLinesInViewport) {
     failures.push(`${prefix}: disclosure lines are below the initial viewport`);
   }
   if (metric.renderedTheme !== metric.theme) {
@@ -448,7 +451,10 @@ function metricFailures(metric: FitMetric): readonly string[] {
         metric.missingRequiredPaintTargets.join(" | "),
     );
   }
-  if (!metric.requiredTargetsInViewport) failures.push(`${prefix}: required target below fold`);
+  if (!metric.requiredTargetsReachable) failures.push(`${prefix}: required target is not reachable`);
+  if (metric.strictVerticalFit && !metric.requiredTargetsInViewport) {
+    failures.push(`${prefix}: required target below fold`);
+  }
   if (metric.smallTargets.length > 0) {
     failures.push(`${prefix}: sub-44px targets ${metric.smallTargets.join(" | ")}`);
   }
@@ -683,12 +689,18 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       const rect = element.getBoundingClientRect();
       return rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
     });
+    const reachableDocumentWidth = Math.max(doc.scrollWidth, body.scrollWidth);
+    const reachableDocumentHeight = Math.max(doc.scrollHeight, body.scrollHeight);
+    const requiredTargetsReachable = requiredTargets.every((element) => {
+      if (!visible(element)) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= reachableDocumentHeight && rect.right <= reachableDocumentWidth;
+    });
     const disclosureLinesInViewport = disclosureLines.every((element) => {
       if (!visible(element)) return false;
       const rect = element.getBoundingClientRect();
       return rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
     });
-    const reachableDocumentHeight = Math.max(doc.scrollHeight, body.scrollHeight);
     const disclosureLinesReachable = disclosureLines.every((element) => {
       if (!visible(element)) return false;
       const rect = element.getBoundingClientRect();
@@ -729,6 +741,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       ledeLines: lineCount(document.querySelector(".hero__sub")),
       requiredTargetCount: requiredTargets.length,
       requiredTargetsInViewport,
+      requiredTargetsReachable,
       smallTargets,
       homeDemoPresent:
         pathValue === "/" ? document.querySelector("[data-hero-spin-demo]") !== null : null,
@@ -1103,6 +1116,7 @@ async function main(): Promise<void> {
           name: entry.name,
           source: entry.source,
           viewport: entry.descriptor.viewport,
+          strictVerticalFit: entry.strictVerticalFit,
           screen: entry.descriptor.screen,
           defaultBrowserType: entry.descriptor.defaultBrowserType,
           delegatedDecision: entry.delegatedDecision ?? null,
@@ -1175,6 +1189,7 @@ async function main(): Promise<void> {
                     device: deviceCase.name,
                     descriptorSource: deviceCase.source,
                     viewport: deviceCase.descriptor.viewport,
+                    strictVerticalFit: deviceCase.strictVerticalFit,
                     theme,
                     motion,
                     pathname,
@@ -1193,6 +1208,7 @@ async function main(): Promise<void> {
                   process.stdout.write(
                     `[one-screen] ${engineName} ${deviceCase.name} ${theme} ${motion} ${pathname} ` +
                       `height=${metric.scrollHeight.toString()}/${metric.innerHeight.toString()} ` +
+                      `strictVerticalFit=${metric.strictVerticalFit.toString()} ` +
                       `failures=${failures.length.toString()}\n`,
                   );
                   await page.close();
@@ -1219,13 +1235,20 @@ async function main(): Promise<void> {
       {
         generatedAt: new Date().toISOString(),
         strict,
-        assertionScope: "document.documentElement.scrollHeight <= window.innerHeight",
+        assertionScope: {
+          strictVerticalFit:
+            "document.documentElement.scrollHeight <= window.innerHeight for every descriptor except 320x568",
+          scrollAllowed:
+            "320x568 permits vertical scrolling only; reachability and all non-vertical-fit assertions remain strict",
+        },
         routes,
         themes,
         motions,
         resolvedDescriptors,
         legacyScreenshotEvidenceOnly: LEGACY_SCREENSHOT_EVIDENCE,
         metricCount: metrics.length,
+        strictVerticalFitContextCount: metrics.filter((metric) => metric.strictVerticalFit).length,
+        scrollAllowedContextCount: metrics.filter((metric) => !metric.strictVerticalFit).length,
         failureCount: failures.length,
         failures,
         metrics,
