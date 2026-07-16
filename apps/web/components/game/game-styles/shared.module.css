@@ -754,7 +754,8 @@
 }
 
 /* Five-mode mobile/short-landscape composition: Daily keeps the broadcast
-   lead, while the four repeatable modes form a compact board below it. */
+   lead on mobile; short landscape spends width to keep every descriptor and
+   action visible in one row. */
 @media (max-width: 430px), (max-height: 500px) and (max-width: 51.99rem) {
   .modeGridDaily {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -825,7 +826,7 @@
 }
 
 /* A sticky action would consume too much of a 375px-tall landscape viewport.
-   Keep it in flow there; the four-column board remains compact and no card can
+   Keep it in flow there; the five-column board remains compact and no card can
    paint underneath the action. */
 @media (max-height: 500px) and (max-width: 63.99rem) {
   .modeGridDaily {

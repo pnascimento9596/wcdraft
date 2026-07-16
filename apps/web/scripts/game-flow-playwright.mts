@@ -546,7 +546,9 @@ const MODE_SELECT_VIEWPORTS = [
     width: 667,
     height: 375,
     name: "667x375",
-    expectedColumns: 4,
+    // Full descriptor and action copy makes a four-column wrap exceed the
+    // hard one-screen contract, so short landscape spends width in one row.
+    expectedColumns: 5,
     expectedDockPosition: "static",
   },
 ] as const;
