@@ -2,16 +2,8 @@
   "phase": "u5-webkit",
   "baseUrl": "http://127.0.0.1:3027",
   "axeSource": "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js",
-  "surfaces": [
-    "home",
-    "mode-select-available",
-    "squad-review"
-  ],
-  "viewports": [
-    "360x800",
-    "390x844",
-    "430x932"
-  ],
+  "surfaces": ["home", "mode-select-available", "squad-review"],
+  "viewports": ["360x800", "390x844", "430x932"],
   "generatedAt": "2026-07-16T01:52:57.804Z",
   "metrics": [
     {

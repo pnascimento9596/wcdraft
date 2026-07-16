@@ -2,20 +2,9 @@
   "generatedAt": "2026-07-16T01:53:15.006Z",
   "normalization": "sharp PNG compressionLevel=9 adaptiveFiltering=true",
   "theme": "light",
-  "engines": [
-    "chromium",
-    "webkit"
-  ],
-  "widths": [
-    360,
-    390,
-    430
-  ],
-  "surfaces": [
-    "home",
-    "mode-select-available",
-    "squad-review"
-  ],
+  "engines": ["chromium", "webkit"],
+  "widths": [360, 390, 430],
+  "surfaces": ["home", "mode-select-available", "squad-review"],
   "imageCount": 18,
   "images": [
     {
