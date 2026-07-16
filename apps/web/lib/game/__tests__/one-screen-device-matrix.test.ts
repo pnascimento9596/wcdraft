@@ -102,6 +102,8 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("formationDotCount");
     expect(verifierSource).toContain("formationGoalBoxCount");
     expect(verifierSource).toContain("formationAppBarCount");
+    expect(verifierSource).toContain("formationActiveMarkerColorsCorrect");
+    expect(verifierSource).toContain("formationMinimumTextPx");
     expect(verifierSource).toContain("mode dock overlaps disclosure by");
     expect(verifierSource).toContain("Math.min(dockRect.bottom, disclosureRect.bottom)");
     expect(verifierSource).toContain("!deviceCase.strictVerticalFit");

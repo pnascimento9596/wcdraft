@@ -137,6 +137,8 @@ type FitMetric = {
   readonly formationSetupNoteCount: number | null;
   readonly formationDescriptorTexts: readonly string[] | null;
   readonly formationSelectedCheckCount: number | null;
+  readonly formationActiveMarkerColorsCorrect: boolean | null;
+  readonly formationMinimumTextPx: number | null;
   readonly formationSectionFits: boolean | null;
   readonly formationCardCollisionCount: number | null;
   readonly zoomDisabled: boolean;
@@ -651,6 +653,14 @@ function metricFailures(metric: FitMetric): readonly string[] {
     if (metric.formationSelectedCheckCount !== 1) {
       failures.push(`${prefix}: selected formation does not expose one check mark`);
     }
+    if (!metric.formationActiveMarkerColorsCorrect) {
+      failures.push(`${prefix}: formation dots do not use ink/accent for inactive/active cards`);
+    }
+    if ((metric.formationMinimumTextPx ?? 0) < 12) {
+      failures.push(
+        `${prefix}: formation text falls below 12px (${String(metric.formationMinimumTextPx)}px)`,
+      );
+    }
     if (metric.strictVerticalFit && !metric.formationSectionFits) {
       failures.push(`${prefix}: formation content scrolls inside a strict one-screen context`);
     }
@@ -971,6 +981,44 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             (element) => element.textContent?.replace(/\s+/gu, " ").trim() ?? "",
           )
         : null;
+    const formationActiveMarkerColorsCorrect = (() => {
+      if (pathValue !== "/play/draft") return null;
+      const selectedDots = [
+        ...document.querySelectorAll(
+          '[data-formation-select] button[aria-pressed="true"] [data-formation-mini-pitch] [class*="miniDot"]',
+        ),
+      ];
+      const inactiveDots = [
+        ...document.querySelectorAll(
+          '[data-formation-select] button[aria-pressed="false"] [data-formation-mini-pitch] [class*="miniDot"]',
+        ),
+      ];
+      const probe = document.createElement("span");
+      probe.style.position = "fixed";
+      probe.style.pointerEvents = "none";
+      document.body.append(probe);
+      probe.style.background = "var(--accent)";
+      const accent = getComputedStyle(probe).backgroundColor;
+      probe.style.background = "var(--ink)";
+      const ink = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return (
+        selectedDots.length === 10 &&
+        inactiveDots.length === 70 &&
+        selectedDots.every((dot) => getComputedStyle(dot).backgroundColor === accent) &&
+        inactiveDots.every((dot) => getComputedStyle(dot).backgroundColor === ink)
+      );
+    })();
+    const formationTextSizes =
+      pathValue === "/play/draft"
+        ? [
+            ...document.querySelectorAll(
+              '[data-formation-select] [class*="formationSub"], [data-formation-select] [class*="setupAxisLabel"], [data-formation-select] [class*="setupSegBtn"], [data-formation-select] [class*="setupAxisNote"], [data-formation-select] [class*="formationCardName"], [data-formation-select] [class*="formationCardDescriptor"], [data-formation-select] [class*="formationCardCheck"], [data-formation-select] [class*="formationDock"] button',
+            ),
+          ]
+            .filter(visible)
+            .map((element) => Number.parseFloat(getComputedStyle(element).fontSize))
+        : [];
 
     return {
       scrollHeight: doc.scrollHeight,
@@ -1038,6 +1086,11 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       formationSelectedCheckCount:
         pathValue === "/play/draft"
           ? document.querySelectorAll('[data-formation-select] [class*="formationCardCheck"]').length
+          : null,
+      formationActiveMarkerColorsCorrect,
+      formationMinimumTextPx:
+        pathValue === "/play/draft" && formationTextSizes.length > 0
+          ? Math.min(...formationTextSizes)
           : null,
       formationSectionFits:
         pathValue === "/play/draft" && formationSection
