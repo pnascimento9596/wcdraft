@@ -353,6 +353,48 @@ describe("responsive layout contract", () => {
     }
   });
 
+  it("ignores only hidden Next portal shadow hits and preserves visible portal collisions", async () => {
+    const browser = await chromium.launch({ channel: "chrome", headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
+      await page.setContent(`
+        <style>
+          body { margin: 0; }
+          #target { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px; }
+          nextjs-portal { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px;
+            display: none; z-index: 9999; }
+        </style>
+        <button id="target" aria-label="Product target">Product target</button>
+        <nextjs-portal></nextjs-portal>
+      `);
+      await page.evaluate(() => {
+        const portal = document.querySelector<HTMLElement>("nextjs-portal")!;
+        const shadow = portal.attachShadow({ mode: "open" });
+        shadow.innerHTML = '<section><div id="dev-dot">·</div></section>';
+        const dot = shadow.querySelector<HTMLElement>("#dev-dot")!;
+        dot.getBoundingClientRect = () => new DOMRect(20, 20, 100, 50);
+        document.elementFromPoint = () => dot;
+      });
+
+      expect(await scanNarrowCollisions(page)).toEqual([]);
+
+      await page.locator("nextjs-portal").evaluate((portal) => {
+        portal.style.display = "block";
+      });
+      expect(await scanNarrowCollisions(page)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            class: "A",
+            targetSelector: "#target",
+            occluderSelector: "body>nextjs-portal::shadow #dev-dot",
+          }),
+        ]),
+      );
+    } finally {
+      await browser.close();
+    }
+  });
+
   it("filters only exact WebKit report-only CSP diagnostics", () => {
     const reportOnlyStyle =
       "[Report Only] Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.";

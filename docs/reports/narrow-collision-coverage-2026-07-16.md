@@ -60,6 +60,29 @@ intentionally pending fixture) before measuring. A Playwright execution-context/
 is retried exactly once only after re-waiting, re-preparing the fixture, and reapplying suppression;
 a second race or any other exception fails. No transient or product collision is allowlisted.
 
+### Preserve shadow-tree provenance at the WebKit hit-test boundary
+
+Protected CI run `29537066752` passed static, path selection, goldens, Gitleaks, Vercel, and every
+shown Group 1 collision cell except `daily-spin 390x844 dark` in WebKit. That cell reported the
+product text `Spin result` and `Ready to spin` under dot-only (`·`) elements with selectors such as
+`body>section...` and `body>div...`, even though its suppression receipt proved the nonce style was
+attached, the `nextjs-portal` host was hidden, and no dev-tools controls were visible.
+
+The selectors exposed the provenance bug: `Element.parentElement` stops at a shadow root, but the
+selector builder still prefixed the incomplete path with `body>`. WebKit can also return a stale
+shadow descendant from `elementFromPoint` after a hidden portal host stops painting. The scanner
+now follows composed ancestry through `ShadowRoot.host`, identifies Next portal descendants before
+classification, and discards that hit only when the portal host is demonstrably non-painting. If
+the host is visible, the collision remains blocking and the selector records its actual boundary,
+for example `body>nextjs-portal::shadow #dev-dot`.
+
+The regression forces the exact stale-browser condition: a hidden portal shadow dot is returned by
+`elementFromPoint` with a stale product-overlapping rectangle. The pre-fix scanner produced two
+Class-A reports against `Product target`; the fixed scanner produces none. The same test then makes
+the portal visible and proves the Class-A report returns with its shadow-provenance selector. The
+two documented semantic allowlist patterns and empty known-failure list are unchanged. A focused
+WebKit Group 1 rerun passed 36/36 cells, including the previously failing daily cell.
+
 ### Keep the disk floor hard and the recovery target best-effort
 
 The dispatch makes 30 GiB the standing floor, requires conservative leave-if-unsure cleanup, and
@@ -295,9 +318,11 @@ checkout, and all uncertain classes remained outside the automation's eligible r
 
 ## Validation and reviews
 
-- Focused responsive/collision contract: 21/21 passed, including browser proof for `aria-hidden`
+- Focused responsive/collision contract: 22/22 passed, including browser proof for `aria-hidden`
   Class B paint, native label naming, fail-closed cell cardinality/identity, and rejection of
-  unknown, empty, or duplicate engine filters before server startup.
+  unknown, empty, or duplicate engine filters before server startup. The new shadow-boundary
+  regression proves that only a hidden Next portal's stale shadow hit is ignored and that the same
+  portal remains blocking when visible.
 - Pitch geometry and marking goldens: 20/20 passed; no snapshot relock.
 - Runner hygiene contract: passed with the 30 GiB hard floor, 36 GiB best-effort recovery target, bounded
   namespace/age checks, two real browser-output marker producers, guarded lane finalizer,
@@ -306,6 +331,8 @@ checkout, and all uncertain classes remained outside the automation's eligible r
   and Git) each preserve the candidate and report the failed safety probe.
 - Web typecheck: passed.
 - Exact collision assertion: 264 metrics, 0 failures, 2 engines, 3 viewports, 2 themes, 4 groups.
+- Post-CI-failure focused assertion: WebKit Group 1 passed 36 metrics with 0 failures across all
+  three viewports and both themes, including `daily-spin 390x844 dark`.
 - Full pre-remediation exact-head root gates: forced typecheck 9/9 tasks, forced lint 6/6 tasks,
   forced test 9/9 tasks, and forced build 5/5 tasks with all 40 pages and both 8/8 trace sets.
   Package totals were mobile 7, core 423, DB 161, marketing 69, data 183 plus 9 skips, and web

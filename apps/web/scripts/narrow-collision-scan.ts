@@ -63,6 +63,19 @@ export async function scanNarrowCollisions(
         width: rounds(rect.width),
         height: rounds(rect.height),
       });
+      const composedParent = (element: Element): Element | null => {
+        if (element.parentElement) return element.parentElement;
+        const root = element.getRootNode();
+        return root instanceof ShadowRoot ? root.host : null;
+      };
+      const nextDevPortalHost = (element: Element): HTMLElement | null => {
+        for (let current: Element | null = element; current; current = composedParent(current)) {
+          if (current.tagName.toLowerCase() === "nextjs-portal") {
+            return current as HTMLElement;
+          }
+        }
+        return null;
+      };
       const alphaVisible = (color: string) => {
         const normalized = color.trim().toLowerCase();
         if (normalized === "transparent") return false;
@@ -89,7 +102,7 @@ export async function scanNarrowCollisions(
           ) {
             return false;
           }
-          current = current.parentElement;
+          current = composedParent(current);
         }
         const rect = element.getBoundingClientRect();
         return (
@@ -104,6 +117,39 @@ export async function scanNarrowCollisions(
       const semanticTargetVisible = (element: Element) =>
         element.closest('[hidden], [aria-hidden="true"]') === null && elementPainted(element);
       const stableSelector = (element: Element): string => {
+        const root = element.getRootNode();
+        if (root instanceof ShadowRoot) {
+          const localSelector = (() => {
+            if (element.id) return `#${CSS.escape(element.id)}`;
+            for (const attr of [
+              "data-collision-id",
+              "data-nextjs-dev-tools-button",
+              "data-next-mark",
+              "aria-label",
+              "role",
+              "name",
+            ]) {
+              const value = element.getAttribute(attr);
+              if (value !== null) {
+                return `${element.tagName.toLowerCase()}[${attr}="${CSS.escape(value)}"]`;
+              }
+            }
+            const parts: string[] = [];
+            let current: Element | null = element;
+            while (current && parts.length < 6) {
+              const parent: Element | null = current.parentElement;
+              const peers = parent
+                ? [...parent.children].filter((peer) => peer.tagName === current!.tagName)
+                : [];
+              const suffix =
+                peers.length > 1 ? `:nth-of-type(${(peers.indexOf(current) + 1).toString()})` : "";
+              parts.unshift(`${current.tagName.toLowerCase()}${suffix}`);
+              current = parent;
+            }
+            return parts.join(">");
+          })();
+          return `${stableSelector(root.host)}::shadow ${localSelector}`;
+        }
         if (element.id) return `#${CSS.escape(element.id)}`;
         for (const attr of [
           "data-collision-id",
@@ -267,24 +313,34 @@ export async function scanNarrowCollisions(
         (window.scrollY > 0 || (nestedScroller?.scrollTop ?? 0) > 0) &&
         occluder.closest('header, [role="banner"], [data-collision-scroll-shell="true"]') !== null;
       const occluderDetails = (hit: Element) => {
-        if (hit.tagName.toLowerCase() === "nextjs-portal" && hit.shadowRoot) {
-          const button = hit.shadowRoot.querySelector<Element>("[data-nextjs-dev-tools-button]");
-          if (button) {
-            const style = getComputedStyle(button);
-            return {
-              element: hit,
-              selector: "nextjs-portal::shadow [data-nextjs-dev-tools-button]",
-              name: semanticNameOf(button) || "Open Next.js Dev Tools",
-              position: style.position,
-              zIndex: style.zIndex,
-            };
-          }
+        const portalHost = nextDevPortalHost(hit);
+        // WebKit can return a stale Next dev-tools shadow descendant from
+        // elementFromPoint after the hidden host has stopped painting. The
+        // shadow child is not a product occluder in that state. Keep a visible
+        // portal blocking and preserve its shadow provenance in the finding.
+        if (portalHost && !elementPainted(portalHost)) return null;
+        if (portalHost) {
+          const portalControl =
+            hit === portalHost
+              ? portalHost.shadowRoot?.querySelector<Element>("[data-nextjs-dev-tools-button]")
+              : hit.closest<Element>(
+                  "[data-nextjs-dev-tools-button], [data-nextjs-dev-tools-panel], button, [role='button']",
+                );
+          const element = portalControl ?? hit;
+          const style = getComputedStyle(element);
+          return {
+            element,
+            selector: stableSelector(element),
+            name: semanticNameOf(element) || "Open Next.js Dev Tools",
+            position: style.position,
+            zIndex: style.zIndex,
+          };
         }
         let positionedLayer: Element | null = hit;
         while (positionedLayer && positionedLayer !== document.body) {
           const position = getComputedStyle(positionedLayer).position;
           if (position === "fixed" || position === "sticky") break;
-          positionedLayer = positionedLayer.parentElement;
+          positionedLayer = composedParent(positionedLayer);
         }
         const style = getComputedStyle(positionedLayer ?? hit);
         return {
@@ -387,6 +443,7 @@ export async function scanNarrowCollisions(
             const hit = document.elementFromPoint(point.x, point.y);
             if (related(target.owner, hit) || hit === null) continue;
             const occluder = occluderDetails(hit);
+            if (!occluder) continue;
             const occluderRect = occluder.element.getBoundingClientRect();
             const overlap = intersection(clipped, occluderRect);
             if (!overlap) continue;
