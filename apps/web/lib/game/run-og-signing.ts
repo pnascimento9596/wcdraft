@@ -3,6 +3,8 @@ import type { RunRecordVersions } from "./versions";
 
 export const RUN_OG_SIGNING_SECRET_ENV = "WCDRAFT_OG_SIGNING_SECRET" as const;
 export const RUN_OG_SIGNING_SECRET_MIN_CHARS = 32 as const;
+export const LEGACY_SIGNED_RUN_OG_VERSION = 1 as const;
+export const LEGACY_SIGNED_RUN_OG_PREFIX = "ogs1." as const;
 export const SIGNED_RUN_OG_VERSION = 2 as const;
 export const SIGNED_RUN_OG_PREFIX = "ogs2." as const;
 export const SIGNED_RUN_OG_MAX_LEN = 12000 as const;
@@ -12,12 +14,21 @@ export const SIGNED_FRIEND_CHALLENGE_PREFIX = "fc1." as const;
 // becoming separate accepted challenge identifiers.
 export const SIGNED_FRIEND_CHALLENGE_MAX_LEN = 112 as const;
 
-export interface SignedRunOgPayload {
-  v: typeof SIGNED_RUN_OG_VERSION;
+interface SignedRunOgPayloadFields {
   token_hash: string;
   versions: RunRecordVersions;
   model: RunOgModel;
 }
+
+export interface SignedRunOgPayload extends SignedRunOgPayloadFields {
+  v: typeof SIGNED_RUN_OG_VERSION;
+}
+
+export interface LegacySignedRunOgPayload extends SignedRunOgPayloadFields {
+  v: typeof LEGACY_SIGNED_RUN_OG_VERSION;
+}
+
+export type VerifiedSignedRunOgPayload = SignedRunOgPayload | LegacySignedRunOgPayload;
 
 /**
  * Stateless proof that a canonical run token passed server replay when the
@@ -83,9 +94,14 @@ export async function signRunOgPayload(
 export async function verifySignedRunOgPayload(
   value: string,
   secret: string,
-): Promise<SignedRunOgPayload | null> {
-  if (!isLikelySignedRunOg(value)) return null;
-  const rest = value.slice(SIGNED_RUN_OG_PREFIX.length);
+): Promise<VerifiedSignedRunOgPayload | null> {
+  const envelopeVersion = signedRunOgEnvelopeVersion(value);
+  if (envelopeVersion === null) return null;
+  const prefix =
+    envelopeVersion === LEGACY_SIGNED_RUN_OG_VERSION
+      ? LEGACY_SIGNED_RUN_OG_PREFIX
+      : SIGNED_RUN_OG_PREFIX;
+  const rest = value.slice(prefix.length);
   const dot = rest.lastIndexOf(".");
   if (dot <= 0 || dot === rest.length - 1) return null;
   const payloadB64 = rest.slice(0, dot);
@@ -104,7 +120,7 @@ export async function verifySignedRunOgPayload(
   } catch {
     return null;
   }
-  return normalizeSignedRunOgPayload(parsed);
+  return normalizeSignedRunOgPayload(parsed, envelopeVersion);
 }
 
 export async function signFriendChallengePayload(
@@ -157,24 +173,37 @@ export function isLikelySignedFriendChallenge(value: unknown): value is string {
 }
 
 export function isLikelySignedRunOg(value: unknown): value is string {
-  return (
-    typeof value === "string" &&
-    value.length > SIGNED_RUN_OG_PREFIX.length + 2 &&
-    value.length <= SIGNED_RUN_OG_MAX_LEN &&
-    value.startsWith(SIGNED_RUN_OG_PREFIX)
-  );
+  return signedRunOgEnvelopeVersion(value) !== null;
 }
 
-function normalizeSignedRunOgPayload(value: unknown): SignedRunOgPayload | null {
+export function signedRunOgEnvelopeVersion(
+  value: unknown,
+): typeof LEGACY_SIGNED_RUN_OG_VERSION | typeof SIGNED_RUN_OG_VERSION | null {
+  if (
+    typeof value !== "string" ||
+    value.length > SIGNED_RUN_OG_MAX_LEN ||
+    value.length <= SIGNED_RUN_OG_PREFIX.length + 2
+  ) {
+    return null;
+  }
+  if (value.startsWith(SIGNED_RUN_OG_PREFIX)) return SIGNED_RUN_OG_VERSION;
+  if (value.startsWith(LEGACY_SIGNED_RUN_OG_PREFIX)) return LEGACY_SIGNED_RUN_OG_VERSION;
+  return null;
+}
+
+function normalizeSignedRunOgPayload(
+  value: unknown,
+  expectedVersion: typeof LEGACY_SIGNED_RUN_OG_VERSION | typeof SIGNED_RUN_OG_VERSION,
+): VerifiedSignedRunOgPayload | null {
   if (!value || typeof value !== "object") return null;
   const o = value as Record<string, unknown>;
-  if (o.v !== SIGNED_RUN_OG_VERSION) return null;
+  if (o.v !== expectedVersion) return null;
   if (typeof o.token_hash !== "string" || !HEX_64.test(o.token_hash)) return null;
   if (!isVersions(o.versions)) return null;
   const model = normalizeModel(o.model);
   if (!model) return null;
   return {
-    v: SIGNED_RUN_OG_VERSION,
+    v: expectedVersion,
     token_hash: o.token_hash,
     versions: o.versions,
     model,
@@ -182,8 +211,8 @@ function normalizeSignedRunOgPayload(value: unknown): SignedRunOgPayload | null 
 }
 
 function assertSignedRunOgPayload(value: SignedRunOgPayload): SignedRunOgPayload {
-  const normalized = normalizeSignedRunOgPayload(value);
-  if (!normalized) {
+  const normalized = normalizeSignedRunOgPayload(value, SIGNED_RUN_OG_VERSION);
+  if (!normalized || normalized.v !== SIGNED_RUN_OG_VERSION) {
     throw new TypeError("signed run OG payload failed validation");
   }
   return normalized;
