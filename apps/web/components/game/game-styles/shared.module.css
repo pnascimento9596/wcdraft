@@ -446,7 +446,10 @@
   margin: 0;
   color: var(--tx2);
   font-size: 14.5px;
+  font-weight: var(--font-weight-regular) !important;
   line-height: 1.58;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 .modeFeatures,
@@ -707,6 +710,19 @@
     border-radius: 12px;
   }
 
+  .modeCardFeatured {
+    grid-template-areas:
+      "top top"
+      "desc desc"
+      "bottom bottom";
+  }
+
+  .modeCardFeatured .modeCardBottom {
+    margin: 0;
+    padding: 1px 0 0;
+    border-top: 0;
+  }
+
   .modeCard:hover,
   .modeCard:focus-visible {
     transform: none;
@@ -753,10 +769,6 @@
     min-height: 68px;
   }
 
-  .modeCardFeatured .modeCardBottom {
-    display: none;
-  }
-
   .modeCard:not(.modeCardFeatured) .modeCardTop {
     flex-direction: column;
     align-items: flex-start;
@@ -784,7 +796,25 @@
   }
 
   .modeCard:not(.modeCardFeatured) .modeCardBottom {
-    display: none;
+    display: flex;
+    gap: 3px;
+    margin-top: 0;
+    padding-top: 1px;
+    border-top: 0;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCta {
+    min-width: 0;
+    padding: 0;
+    font-size: 9px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeSelectedText {
+    gap: 2px;
+    font-size: 8px;
+    white-space: nowrap;
   }
 }
 
@@ -805,7 +835,7 @@
 
 @media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
   .localProgressBand {
-    padding-block: 6px;
+    padding-block: 0;
   }
 
   .localProgressBandCompact {
@@ -851,7 +881,7 @@
   }
 
   .modeCardBottom {
-    display: none;
+    display: flex;
   }
 
   .modeCard:not(.modeCardFeatured) .modeCardTop {
@@ -871,5 +901,15 @@
     margin-top: 3px;
     margin-bottom: 0;
     padding-block: 5px calc(5px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .modeCardFeatured .modeCardBottom {
+    padding-left: 2px;
+  }
+
+  .modeCardFeatured .modeCta {
+    padding: 0;
+    font-size: 8px;
+    line-height: 1.1;
   }
 }
