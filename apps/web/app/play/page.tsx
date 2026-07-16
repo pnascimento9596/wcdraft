@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ModeSelect } from "../../components/game/mode-select";
+import { LegalDisclosure } from "../../components/legal-disclosure";
+import disclosureStyles from "../../components/one-screen-disclosure.module.css";
 import pageStyles from "./play-page.module.css";
 
 export const metadata: Metadata = {
@@ -21,6 +23,7 @@ export default function ModeSelectPage() {
       </header>
 
       <ModeSelect />
+      <LegalDisclosure className={`one-screen-disclosure ${disclosureStyles.notice}`} />
     </div>
   );
 }

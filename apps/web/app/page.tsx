@@ -3,6 +3,8 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { HeroSpinDemo } from "../components/home/hero-spin-demo";
 import heroStyles from "../components/home/home-hero.module.css";
+import { LegalDisclosure } from "../components/legal-disclosure";
+import disclosureStyles from "../components/one-screen-disclosure.module.css";
 import { metadataBaseUrl, SITE_DESCRIPTION, SITE_NAME } from "../lib/site-metadata";
 
 export const metadata: Metadata = {
@@ -112,6 +114,7 @@ export default async function HomePage() {
           <HeroSpinDemo />
         </div>
       </div>
+      <LegalDisclosure className={`one-screen-disclosure ${disclosureStyles.notice}`} />
     </section>
   );
 }

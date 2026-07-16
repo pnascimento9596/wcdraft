@@ -1,0 +1,31 @@
+.notice {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.12rem;
+  width: min(calc(100% - 2 * var(--m-container-x)), var(--container-wide));
+  margin: clamp(0.3rem, 1vh, 0.65rem) auto 0;
+  color: var(--ink-faint);
+  font-size: clamp(0.625rem, 0.72vw, 0.72rem);
+  line-height: 1.24;
+  text-align: center;
+}
+
+.notice p {
+  margin: 0;
+}
+
+.notice a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
+  .notice {
+    gap: 0;
+    margin-top: 0.2rem;
+    font-size: 0.6rem;
+    line-height: 1.12;
+  }
+}

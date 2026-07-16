@@ -88,6 +88,10 @@ type FitMetric = {
   readonly scrollWidth: number;
   readonly innerWidth: number;
   readonly footerDisplay: string | null;
+  readonly disclosureLineCount: number;
+  readonly disclosureLinesInViewport: boolean;
+  readonly disclosureLinesReachable: boolean;
+  readonly disclosureTexts: readonly string[];
   readonly renderedTheme: string | null;
   readonly renderedReducedMotion: boolean;
   readonly unpaintedRequiredContent: readonly string[];
@@ -416,6 +420,17 @@ function metricFailures(metric: FitMetric): readonly string[] {
     failures.push(`${prefix}: document width ${metric.scrollWidth}/${metric.innerWidth}`);
   }
   if (metric.footerDisplay !== "none") failures.push(`${prefix}: footer is visible`);
+  if (metric.disclosureLineCount !== 2) {
+    failures.push(
+      `${prefix}: expected 2 disclosure lines, saw ${metric.disclosureLineCount.toString()}`,
+    );
+  }
+  if (!metric.disclosureLinesReachable) {
+    failures.push(`${prefix}: disclosure lines are not reachable`);
+  }
+  if (!metric.disclosureLinesInViewport) {
+    failures.push(`${prefix}: disclosure lines are below the initial viewport`);
+  }
   if (metric.renderedTheme !== metric.theme) {
     failures.push(`${prefix}: rendered theme is ${String(metric.renderedTheme)}`);
   }
@@ -550,6 +565,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
     const doc = document.documentElement;
     const body = document.body;
     const footer = document.querySelector(".site-footer");
+    const disclosureLines = [...document.querySelectorAll(".one-screen-disclosure [data-disclosure-line]")];
     const metaViewport = document.querySelector('meta[name="viewport"]')?.content ?? "";
     const requiredContent =
       pathValue === "/"
@@ -559,12 +575,16 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["hero lede", document.querySelector(".hero__sub")],
             ["spin demo", document.querySelector("[data-hero-spin-demo]")],
             ["stat strip", document.querySelector(".hero__meta")],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ]
         : [
             ["masthead", document.querySelector(".masthead")],
             ["mode heading", document.querySelector(".game-page--mode .page-head")],
             ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
             ["mode grid", document.querySelector('[aria-label="Draft mode"]')],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ];
     const mastheadPaintTargets = [
       ["wordmark", document.querySelector(".wordmark")],
@@ -583,6 +603,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["spin demo", document.querySelector("[data-hero-spin-demo]")],
             ["hero actions", document.querySelector(".hero .btn-row")],
             ["stat strip", document.querySelector(".hero__meta")],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ]
         : [
             ["mode title", document.querySelector(".game-page--mode .display")],
@@ -590,6 +612,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
             ...modeCardPaintTargets,
             ["dock action", document.querySelector("main button.btn")],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ];
     const paintTargetEntries = [...mastheadPaintTargets, ...routePaintTargets];
     const paintTargetByLabel = new Map(paintTargetEntries);
@@ -598,7 +622,15 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       "theme control",
       ...(matchMedia("(max-width: 51.999rem)").matches ? ["menu control"] : []),
       ...(pathValue === "/"
-        ? ["hero title", "hero lede", "spin demo", "hero actions", "stat strip"]
+        ? [
+            "hero title",
+            "hero lede",
+            "spin demo",
+            "hero actions",
+            "stat strip",
+            "attribution disclosure",
+            "not-affiliated disclosure",
+          ]
         : [
             "mode title",
             "mode lede",
@@ -609,6 +641,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             "mode card 4",
             "mode card 5",
             "dock action",
+            "attribution disclosure",
+            "not-affiliated disclosure",
           ]),
     ];
     const missingRequiredPaintTargets = expectedPaintLabels.filter(
@@ -631,7 +665,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
     const unpaintedRequiredContent = requiredContent
       .filter(([, element]) => !visible(element))
       .map(([label]) => label);
-    const homeActions = [...document.querySelectorAll(".hero a")].filter(visible);
+    const homeActions = [...document.querySelectorAll(".hero .btn-row a")].filter(visible);
     const modeCards = [...document.querySelectorAll('[role="radio"]')].filter(visible);
     const dockAction = document.querySelector("main button.btn");
     const requiredTargets =
@@ -648,6 +682,17 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
     const requiredTargetsInViewport = requiredTargets.every((element) => {
       const rect = element.getBoundingClientRect();
       return rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
+    });
+    const disclosureLinesInViewport = disclosureLines.every((element) => {
+      if (!visible(element)) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
+    });
+    const reachableDocumentHeight = Math.max(doc.scrollHeight, body.scrollHeight);
+    const disclosureLinesReachable = disclosureLines.every((element) => {
+      if (!visible(element)) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= reachableDocumentHeight && rect.right <= innerWidth;
     });
     const isDailyCard = (element) =>
       element.textContent?.toLocaleUpperCase().includes("TODAY'S DRAFT") === true;
@@ -671,6 +716,10 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       scrollWidth: doc.scrollWidth,
       innerWidth,
       footerDisplay: footer ? getComputedStyle(footer).display : null,
+      disclosureLineCount: disclosureLines.length,
+      disclosureLinesInViewport,
+      disclosureLinesReachable,
+      disclosureTexts: disclosureLines.map((element) => element.textContent?.replace(/\s+/gu, " ").trim() ?? ""),
       renderedTheme: doc.dataset.theme ?? null,
       renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
       unpaintedRequiredContent,

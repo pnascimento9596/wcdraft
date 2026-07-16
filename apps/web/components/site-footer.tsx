@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LegalDisclosure } from "./legal-disclosure";
 
 /**
  * Footer carries three non-negotiable items:
@@ -35,24 +36,7 @@ export function SiteFooter() {
           </ul>
         </nav>
 
-        <div className="site-footer__fine">
-          <p>
-            Data: The Fjelstul World Cup Database © 2023 Joshua C. Fjelstul, Ph.D., licensed
-            CC-BY-SA 4.0 (
-            <a
-              href="https://github.com/jfjelstul/worldcup"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              github.com/jfjelstul/worldcup
-            </a>
-            ), modified.
-          </p>
-          <p>
-            wcdraft is an independent project and is not affiliated with, endorsed by, or associated
-            with any official competition or governing body.
-          </p>
-        </div>
+        <LegalDisclosure className="site-footer__fine" />
       </div>
     </footer>
   );
