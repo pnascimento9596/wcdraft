@@ -55,6 +55,10 @@ venv/
 # checking this in would defeat the per-deploy cache-bust contract.
 apps/web/public/sw-version.js
 
+# Build-generated default social card. The generator and its protected inputs
+# are source; predev/prebuild owns this derived raster.
+apps/web/public/brand/marketing/og-default.png
+
 # --- Local-checkout hygiene (agent scratch + review captures) ---
 # Vercel CLI project link. Holds only project.json (projectId/orgId/projectName)
 # + README.txt — no secrets — but it is machine-local and never belongs in git.

@@ -36,7 +36,7 @@ const protectedAssets = new Map([
   [squareOgPath, "17b4d9f12d3d7dbe4ad275cd2c0a6d109ea8386b3f9117100e5c4352dfb44282"],
 ]);
 
-for (const path of [bannerPath, defaultOgPath, squareOgPath]) {
+for (const path of [bannerPath, squareOgPath]) {
   if (!existsSync(path)) throw new Error(`marketing asset is missing: ${path}`);
   if (statSync(path).size <= 0) throw new Error(`marketing asset is empty: ${path}`);
 }
