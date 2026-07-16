@@ -553,6 +553,30 @@ body:has([data-draft-anchored]) .site-footer {
   display: none;
 }
 
+/* The formation gate is also a viewport-owned game surface. It has its own
+   in-flow action row, so pass the available height through the page wrappers
+   and keep the global footer from creating document scroll. */
+body:has([data-formation-select]) .shell {
+  height: 100dvh;
+  min-height: 0;
+}
+body:has([data-formation-select]) main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+body:has([data-formation-select]) .game-page--draft {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  padding-block: 0;
+}
+body:has([data-formation-select]) .site-footer {
+  display: none;
+}
+
 @media (min-width: 64rem) {
   body:has([data-draft-desktop-shell]) .shell,
   body:has([data-review-desktop-shell]) .shell {

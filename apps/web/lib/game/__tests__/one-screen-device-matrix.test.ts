@@ -75,7 +75,9 @@ describe("one-screen descriptor matrix", () => {
   });
 
   it("adjudicates vertical fit everywhere except the explicit 320x568 scroll case", () => {
-    expect(verifierSource).toContain('const routes: readonly RoutePath[] = ["/", "/play"]');
+    expect(verifierSource).toContain(
+      'const routes: readonly RoutePath[] = ["/", "/play", "/play/draft"]',
+    );
     expect(verifierSource).toContain('["chromium", chromium]');
     expect(verifierSource).toContain('["webkit", webkit]');
     expect(verifierSource).toContain(
@@ -96,6 +98,10 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("scrollInteractionTargetCount");
     expect(verifierSource).toContain("modeDockDisclosureOverlapPx");
     expect(verifierSource).toContain("dailyHeaderOneRow");
+    expect(verifierSource).toContain("formationSectionFits");
+    expect(verifierSource).toContain("formationDotCount");
+    expect(verifierSource).toContain("formationGoalBoxCount");
+    expect(verifierSource).toContain("formationAppBarCount");
     expect(verifierSource).toContain("mode dock overlaps disclosure by");
     expect(verifierSource).toContain("Math.min(dockRect.bottom, disclosureRect.bottom)");
     expect(verifierSource).toContain("!deviceCase.strictVerticalFit");

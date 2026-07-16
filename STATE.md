@@ -84,6 +84,8 @@ measures the shell at `62.59375..835.984375`, scroll row at `128.59375..750.9843
 CTA row at `758.984375..827.984375`; full game flow passes. That post-review geometry commit voids
 the prior PASS and is awaiting a new SHA-pinned review.
 
+Formation-selector mini-pitches use uniform player markers (owner decision, 2026-07-16). Position=SHAPE remains the platform encoding on all player-identity surfaces: draft cards, choose-from-3, roster lists, team sheet, squad review, results.
+
 Terrace close-out: 2026-07-15 · `/` and `/play` now render the existing CC-BY-SA
 attribution and not-affiliated notice as human-readable one-screen content instead of hiding
 their only copy with the route footer. Historical, authentic `ogs1` envelopes are accepted on

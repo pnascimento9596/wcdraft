@@ -21,9 +21,6 @@ import { useUnsafeMutationLatch } from "@/lib/unsafe-mutation";
 import { createNewRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
-import { positionShape } from "@/lib/game/view-models";
-import { PitchMarkings } from "../pitch";
-import { DraftAppBar } from "./app-bar";
 import s from "../game.module.css";
 
 // ─── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
@@ -36,6 +33,17 @@ const DRAFT_FLOW_LABELS: Record<DraftFlow, string> = {
 const RATING_BASIS_LABELS: Record<RatingBasis, string> = {
   career: "Career",
   current: "Current",
+};
+
+const FORMATION_DESCRIPTORS: Record<SupportedFormationId, string> = {
+  "4-3-3": "Wide attack",
+  "4-2-3-1": "Compact block",
+  "4-4-2": "Two strikers",
+  "4-1-4-1": "Screened defence",
+  "3-5-2": "Midfield control",
+  "3-4-3": "Front three",
+  "3-4-2-1": "Twin creators",
+  "5-3-2": "Deep defence",
 };
 
 type DraftLane = "casual" | "ranked";
@@ -94,7 +102,7 @@ function DraftSetupDisclosure({
   ] as const;
   const summary = summaryParts.join(" · ");
   return (
-    <div>
+    <div className={s.setupDisclosure}>
       <button
         type="button"
         className={s.setupRow}
@@ -114,7 +122,7 @@ function DraftSetupDisclosure({
       {open ? (
         <div className={s.setupPanel}>
           {rankedCapable ? (
-            <div className={s.setupAxis}>
+            <div className={s.setupAxis} data-setup-axis="lane">
               <span className={s.setupAxisLabel}>Play type</span>
               <div className={s.setupSeg} role="group" aria-label="Play type">
                 {(["casual", "ranked"] as const).map((nextLane) => (
@@ -137,7 +145,7 @@ function DraftSetupDisclosure({
               </p>
             </div>
           ) : null}
-          <div className={s.setupAxis}>
+          <div className={s.setupAxis} data-setup-axis="era">
             <span className={s.setupAxisLabel}>Era</span>
             <div className={s.setupSeg} role="group" aria-label="Era preset">
               {ERA_PRESET_IDS.map((id) => (
@@ -154,7 +162,7 @@ function DraftSetupDisclosure({
               ))}
             </div>
           </div>
-          <div className={s.setupAxis}>
+          <div className={s.setupAxis} data-setup-axis="order">
             <span className={s.setupAxisLabel}>Draft order</span>
             <div className={s.setupSeg} role="group" aria-label="Draft order">
               {(["squad_first", "position_first"] as const).map((f) => (
@@ -174,7 +182,7 @@ function DraftSetupDisclosure({
               Position First: choose the slot to fill, then spin for the squad.
             </p>
           </div>
-          <div className={s.setupAxis}>
+          <div className={s.setupAxis} data-setup-axis="rating">
             <span className={s.setupAxisLabel}>Rating basis</span>
             <div className={s.setupSeg} role="group" aria-label="Rating basis">
               {SETUP_RATING_BASES.map((b) => (
@@ -364,8 +372,7 @@ export function FormationSelect({
   const locked = pending !== null || rankedIssuance.locked;
 
   return (
-    <div className={`${s.draftShell} ${s.formationSetupShell}`}>
-      <DraftAppBar spinNumber={null} progressPct={0} />
+    <div className={`${s.draftShell} ${s.formationSetupShell}`} data-formation-select>
       <section className={s.formationSelect}>
         <div className={s.formationHead}>
           <h1 className={s.formationTitle}>Lock a formation</h1>
@@ -395,11 +402,9 @@ export function FormationSelect({
           disabled={locked}
         />
         <div className={s.formationGrid}>
-          {/* ws-ux/mobile-polish-2: blurb prose dropped from the tile — at
-              tile width it truncated mid-sentence ("…"), which added noise
-              without information. The tile is shape-first: mini pitch +
-              name + lock CTA. `FormationOption.blurb` stays in the data
-              layer for surfaces with room for prose. */}
+          {/* Formation selection is the owner-approved exception to the
+              position-by-shape identity system: ten equal outfield dots and
+              one outlined goalkeeper box keep these tiny diagrams legible. */}
           {SUPPORTED_FORMATION_OPTIONS.map(({ formation_id: fid }) => {
             const active = selected === fid;
             return (
@@ -413,13 +418,16 @@ export function FormationSelect({
                 disabled={locked}
                 onClick={() => setSelected(fid)}
               >
-                <MiniPitch formation_id={fid} />
+                <MiniPitch formation_id={fid} selected={active} />
                 <div className={s.formationCardBody}>
                   <span className={s.formationCardName}>{fid}</span>
-                  <span className={s.formationCardCta}>
-                    {pending === fid ? "Locking…" : active ? "Selected" : "Lock this shape"}
-                  </span>
+                  <span className={s.formationCardDescriptor}>{FORMATION_DESCRIPTORS[fid]}</span>
                 </div>
+                {active ? (
+                  <span className={s.formationCardCheck} aria-hidden="true">
+                    ✓
+                  </span>
+                ) : null}
               </button>
             );
           })}
@@ -456,25 +464,38 @@ export function FormationSelect({
   );
 }
 
-function MiniPitch({ formation_id }: { formation_id: SupportedFormationId }) {
+function MiniPitch({
+  formation_id,
+  selected,
+}: {
+  formation_id: SupportedFormationId;
+  selected: boolean;
+}) {
   const slots = getFormationVisualSlots(formation_id);
+  const goalkeeper = slots.find((slot) => slot.position_line === "GK");
   return (
-    <div className={s.miniPitch} aria-hidden="true">
-      <PitchMarkings variant="mini" />
-      {slots.map((sl) => {
-        // Shape comes from the CORE position line (GK square / DF triangle
-        // / MF diamond / FW circle). Colour family uses the JSON visual
-        // band so a 3-5-2 wing-back stays in the midfield COLOUR but draws
-        // as a DF triangle — see formation-layout.ts.
-        const shape = positionShape(sl.position_line);
-        return (
+    <div
+      className={`${s.miniPitch} ${selected ? s.miniPitchSelected : ""}`}
+      aria-hidden="true"
+      data-formation-mini-pitch
+    >
+      <span className={s.miniHalfway} />
+      <span className={s.miniCentreCircle} />
+      {goalkeeper ? (
+        <span
+          className={s.miniGoalBox}
+          style={{ left: `${goalkeeper.x_pct}%`, top: `${goalkeeper.y_pct}%` }}
+        />
+      ) : null}
+      {slots
+        .filter((slot) => slot.position_line !== "GK")
+        .map((slot) => (
           <span
-            key={sl.slot_id}
-            className={`${s.miniDot} ${s[`miniDot_${sl.visual_line}`]!} ${s[`miniDotShape_${shape}`]!}`}
-            style={{ left: `${sl.x_pct}%`, top: `${sl.y_pct}%` }}
+            key={slot.slot_id}
+            className={s.miniDot}
+            style={{ left: `${slot.x_pct}%`, top: `${slot.y_pct}%` }}
           />
-        );
-      })}
+        ))}
     </div>
   );
 }

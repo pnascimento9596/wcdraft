@@ -16,6 +16,9 @@ const disclosureStyles = source("../../../components/one-screen-disclosure.modul
 const progressBand = source("../../../components/game/local-progress-band.tsx");
 const gameFacade = source("../../../components/game/game.module.css");
 const gameStyles = source("../../../components/game/game-styles/shared.module.css");
+const formationSetup = source("../../../components/game/draft-screen/setup.tsx");
+const draftShellStyles = source("../../../components/game/game-styles/draft-shell.module.css");
+const state = source("../../../../../STATE.md");
 const responsiveContract = source("./responsive-layout-contract.test.ts");
 
 describe("one-screen information contract", () => {
@@ -40,7 +43,10 @@ describe("one-screen information contract", () => {
       /\.modeCard:not\(\.modeCardFeatured\) \.modeDesc\s*\{[^}]*font-size:\s*12px;[^}]*line-height:\s*1\.25;/su,
     );
     expect(gameStyles).toMatch(
-      /\.modeCard:not\(\.modeCardFeatured\) \.modeCardBottom\s*\{\s*display:\s*none;/su,
+      /\.modeDesc\s*\{[^}]*font-weight:\s*var\(--font-weight-regular\) !important;[^}]*letter-spacing:\s*0 !important;[^}]*text-transform:\s*none !important;/su,
+    );
+    expect(gameStyles).toMatch(
+      /\.modeCard:not\(\.modeCardFeatured\) \.modeCardBottom\s*\{[^}]*display:\s*flex;/su,
     );
   });
 
@@ -114,6 +120,39 @@ describe("one-screen information contract", () => {
     expect(disclosureStyles).not.toMatch(/margin:\s*0 auto/u);
     expect(disclosureStyles).not.toMatch(/position:\s*fixed/u);
     expect(homeHeroStyles).toMatch(/\.disclosure\s*\{[^}]*margin-block-start:\s*auto;/su);
+  });
+
+  it("keeps formation comparison compact without weakening player-identity encoding", () => {
+    expect(formationSetup).not.toContain("DraftAppBar");
+    for (const descriptor of [
+      '"4-3-3": "Wide attack"',
+      '"4-2-3-1": "Compact block"',
+      '"4-4-2": "Two strikers"',
+      '"4-1-4-1": "Screened defence"',
+      '"3-5-2": "Midfield control"',
+      '"3-4-3": "Front three"',
+      '"3-4-2-1": "Twin creators"',
+      '"5-3-2": "Deep defence"',
+    ]) {
+      expect(formationSetup).toContain(descriptor);
+    }
+    expect(formationSetup).toContain('.filter((slot) => slot.position_line !== "GK")');
+    expect(formationSetup).toContain("miniGoalBox");
+    expect(draftShellStyles).toMatch(
+      /\.draftShell\[data-formation-select\] \.formationGrid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/su,
+    );
+    expect(draftShellStyles).toMatch(
+      /\.draftShell\[data-formation-select\] \.formationCard\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/su,
+    );
+    expect(draftShellStyles).toMatch(
+      /\.draftShell\[data-formation-select\] \.miniDot\s*\{[^}]*border-radius:\s*50%;[^}]*background:\s*var\(--ink\);/su,
+    );
+    expect(draftShellStyles).toMatch(
+      /\.miniPitchSelected \.miniDot\s*\{[^}]*background:\s*var\(--accent\);/su,
+    );
+    expect(state).toContain(
+      "Formation-selector mini-pitches use uniform player markers (owner decision, 2026-07-16). Position=SHAPE remains the platform encoding on all player-identity surfaces: draft cards, choose-from-3, roster lists, team sheet, squad review, results.",
+    );
   });
 
   it("renders reveal content immediately for reduced-motion users", () => {
