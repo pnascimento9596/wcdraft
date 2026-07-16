@@ -21,6 +21,12 @@
   text-underline-offset: 2px;
 }
 
+@media (max-width: 430px) {
+  .afterStickyDock {
+    margin-block-start: 0.5rem;
+  }
+}
+
 @media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
   .notice {
     gap: 0;
