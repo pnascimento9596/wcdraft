@@ -632,6 +632,23 @@ async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null>
       }
 
       const portal = document.querySelector<HTMLElement>("nextjs-portal");
+      type DevPortalRegistryGlobal = typeof globalThis & {
+        __wcdraftNextDevPortalHosts?: WeakMap<Element, HTMLElement>;
+      };
+      const registryGlobal = globalThis as DevPortalRegistryGlobal;
+      const devPortalHosts =
+        registryGlobal.__wcdraftNextDevPortalHosts ?? new WeakMap<Element, HTMLElement>();
+      registryGlobal.__wcdraftNextDevPortalHosts = devPortalHosts;
+      if (portal) {
+        const pending: Element[] = [portal];
+        for (let index = 0; index < pending.length; index += 1) {
+          const element = pending[index]!;
+          devPortalHosts.set(element, portal);
+          if (element.shadowRoot) {
+            pending.push(...element.shadowRoot.querySelectorAll<Element>("*"));
+          }
+        }
+      }
       const controls = portal?.shadowRoot
         ? Array.from(
             portal.shadowRoot.querySelectorAll(

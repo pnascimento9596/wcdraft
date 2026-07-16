@@ -70,18 +70,26 @@ attached, the `nextjs-portal` host was hidden, and no dev-tools controls were vi
 
 The selectors exposed the provenance bug: `Element.parentElement` stops at a shadow root, but the
 selector builder still prefixed the incomplete path with `body>`. WebKit can also return a stale
-shadow descendant from `elementFromPoint` after a hidden portal host stops painting. The scanner
-now follows composed ancestry through `ShadowRoot.host`, identifies Next portal descendants before
-classification, and discards that hit only when the portal host is demonstrably non-painting. If
-the host is visible, the collision remains blocking and the selector records its actual boundary,
-for example `body>nextjs-portal::shadow #dev-dot`.
+shadow descendant from `elementFromPoint` after a hidden portal host stops painting, and a later
+rerun proved the stale subtree can detach entirely before hit classification. Before applying the
+suppression style, the harness now records the portal and all reachable open-shadow descendants in
+a page-local `WeakMap`; the scanner supplements that registry with live composed ancestry through
+`ShadowRoot.host`. When the registered portal host is demonstrably non-painting, the scanner
+continues down the same `elementsFromPoint` stack to the first trustworthy candidate; if the
+browser cannot provide one, the stale portal hit remains blocking instead of producing a false
+green. If the host is visible, the collision remains blocking and the selector records its actual
+boundary, for example `body>nextjs-portal::shadow #dev-dot`.
 
 The regression forces the exact stale-browser condition: a hidden portal shadow dot is returned by
-`elementFromPoint` with a stale product-overlapping rectangle. The pre-fix scanner produced two
-Class-A reports against `Product target`; the fixed scanner produces none. The same test then makes
-the portal visible and proves the Class-A report returns with its shadow-provenance selector. The
-two documented semantic allowlist patterns and empty known-failure list are unchanged. A focused
-WebKit Group 1 rerun passed 36/36 cells, including the previously failing daily cell.
+`elementFromPoint` with a stale product-overlapping rectangle. The first fix removed that false
+portal report but a fresh security review demonstrated that silently skipping the sample could
+mask a genuine product occluder underneath it. The final regression therefore proves four states:
+the detached stale portal alone clears to the product target, a real product layer beneath it
+remains a Class-A finding, the visible portal remains Class A with shadow provenance, and an
+arbitrary visible shadow-root occluder remains Class A. The two documented semantic allowlist
+patterns and empty known-failure list are unchanged. The final focused WebKit Group 1 rerun passed
+36/36 cells after adding detached-tree provenance; the full matrix is rerun on the fix-forward
+exact head.
 
 ### Keep the disk floor hard and the recovery target best-effort
 
@@ -266,6 +274,25 @@ The 24 pre-inventoried deletions were:
 /private/tmp/terrace-closeout-one-screen-final2
 ```
 
+Protected CI run `29538664360` later exercised the hard floor correctly in its path-detector
+preparation: safe marker cleanup ended at 30,527,704 KiB, below the 31,457,280 KiB floor, so path
+detection and every product gate stayed closed. Before any further deletion,
+`/tmp/pr304-runner-recovery-128441f-inventory.json` recorded 1,396 exact candidates totaling
+8,206,520 KiB plus seven younger skips. Eligibility was restricted to direct children of the two
+approved temp roots, aged at least 60 minutes, under the generated-output prefixes
+`wcdraft-ci-*`, `wcdraft-one-screen-*`, or `wcdraft-sw-version-path-*`. Every candidate was checked
+against process cwd and command references, Git backing, mounts, and symlinks. The inventory
+explicitly excludes all `terrace-*` evidence, both active lane worktrees, the owner checkout,
+shared Playwright and pnpm caches, and every non-WCDraft class.
+
+The exact-path removal result is
+`/tmp/pr304-runner-recovery-128441f-result.json`: all 1,396 inventoried candidates were still safe
+at deletion time, none needed a last-second preserve, and free space moved from 30,473,144 KiB to
+38,710,112 KiB, an **8,236,968 KiB observed machine-wide delta**. The candidate `du` total and the
+APFS `df` delta remain intentionally separate. Seven younger WCDraft outputs were listed but not
+deleted, and all Terrace worktree/evidence paths remained present. Replacement CI is rerun on the
+code-fix exact head rather than treating this infrastructure failure as a product result.
+
 The original result JSON incorrectly substituted eleven `terrace-closeout-u5-*` names for the
 eleven small, pre-inventoried Terrace paths actually present in the raw deletion output. No lane
 deletion command or output names those substituted paths, so their separate disappearance is not
@@ -321,8 +348,8 @@ checkout, and all uncertain classes remained outside the automation's eligible r
 - Focused responsive/collision contract: 22/22 passed, including browser proof for `aria-hidden`
   Class B paint, native label naming, fail-closed cell cardinality/identity, and rejection of
   unknown, empty, or duplicate engine filters before server startup. The new shadow-boundary
-  regression proves that only a hidden Next portal's stale shadow hit is ignored and that the same
-  portal remains blocking when visible.
+  regression proves that a hidden Next portal's stale shadow hit cannot mask an underlying product
+  layer and that visible Next or arbitrary shadow-root occluders remain blocking.
 - Pitch geometry and marking goldens: 20/20 passed; no snapshot relock.
 - Runner hygiene contract: passed with the 30 GiB hard floor, 36 GiB best-effort recovery target, bounded
   namespace/age checks, two real browser-output marker producers, guarded lane finalizer,

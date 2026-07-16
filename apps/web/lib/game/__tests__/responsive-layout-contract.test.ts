@@ -353,7 +353,7 @@ describe("responsive layout contract", () => {
     }
   });
 
-  it("ignores only hidden Next portal shadow hits and preserves visible portal collisions", async () => {
+  it("resolves hidden Next portal hits without masking visible shadow collisions", async () => {
     const browser = await chromium.launch({ channel: "chrome", headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
@@ -361,25 +361,69 @@ describe("responsive layout contract", () => {
         <style>
           body { margin: 0; }
           #target { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px; }
+          #product-occluder { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px;
+            display: none; z-index: 4; }
           nextjs-portal { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px;
             display: none; z-index: 9999; }
         </style>
         <button id="target" aria-label="Product target">Product target</button>
+        <div id="product-occluder"></div>
         <nextjs-portal></nextjs-portal>
       `);
       await page.evaluate(() => {
         const portal = document.querySelector<HTMLElement>("nextjs-portal")!;
+        const target = document.querySelector<HTMLElement>("#target")!;
+        const productOccluder = document.querySelector<HTMLElement>("#product-occluder")!;
         const shadow = portal.attachShadow({ mode: "open" });
         shadow.innerHTML = '<section><div id="dev-dot">·</div></section>';
         const dot = shadow.querySelector<HTMLElement>("#dev-dot")!;
+        const section = shadow.querySelector<HTMLElement>("section")!;
+        const registry = new WeakMap<Element, HTMLElement>();
+        registry.set(portal, portal);
+        registry.set(section, portal);
+        registry.set(dot, portal);
+        const pageGlobal = globalThis as typeof globalThis & {
+          __wcdraftNextDevPortalHosts?: WeakMap<Element, HTMLElement>;
+          __wcdraftDetachedDevSection?: HTMLElement;
+        };
+        pageGlobal.__wcdraftNextDevPortalHosts = registry;
+        pageGlobal.__wcdraftDetachedDevSection = section;
+        section.remove();
         dot.getBoundingClientRect = () => new DOMRect(20, 20, 100, 50);
         document.elementFromPoint = () => dot;
+        document.elementsFromPoint = () => [
+          dot,
+          ...(productOccluder.style.display === "block" ? [productOccluder] : []),
+          target,
+          document.body,
+          document.documentElement,
+        ];
       });
 
       expect(await scanNarrowCollisions(page)).toEqual([]);
 
+      await page.locator("#product-occluder").evaluate((occluder) => {
+        occluder.style.display = "block";
+      });
+      expect(await scanNarrowCollisions(page)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            class: "A",
+            targetSelector: "#target",
+            occluderSelector: "#product-occluder",
+          }),
+        ]),
+      );
+
       await page.locator("nextjs-portal").evaluate((portal) => {
+        const pageGlobal = globalThis as typeof globalThis & {
+          __wcdraftDetachedDevSection?: HTMLElement;
+        };
+        portal.shadowRoot!.append(pageGlobal.__wcdraftDetachedDevSection!);
         portal.style.display = "block";
+      });
+      await page.locator("#product-occluder").evaluate((occluder) => {
+        occluder.style.display = "none";
       });
       expect(await scanNarrowCollisions(page)).toEqual(
         expect.arrayContaining([
@@ -387,6 +431,35 @@ describe("responsive layout contract", () => {
             class: "A",
             targetSelector: "#target",
             occluderSelector: "body>nextjs-portal::shadow #dev-dot",
+          }),
+        ]),
+      );
+
+      await page.evaluate(() => {
+        document.querySelector<HTMLElement>("nextjs-portal")!.style.display = "none";
+        const target = document.querySelector<HTMLElement>("#target")!;
+        const host = document.createElement("div");
+        host.id = "product-shadow";
+        host.style.cssText = "position:fixed;left:20px;top:20px;width:100px;height:50px;z-index:5";
+        document.body.append(host);
+        const shadow = host.attachShadow({ mode: "open" });
+        shadow.innerHTML = '<div id="shadow-blocker"></div>';
+        const blocker = shadow.querySelector<HTMLElement>("#shadow-blocker")!;
+        blocker.getBoundingClientRect = () => new DOMRect(20, 20, 100, 50);
+        document.elementFromPoint = () => blocker;
+        document.elementsFromPoint = () => [
+          blocker,
+          target,
+          document.body,
+          document.documentElement,
+        ];
+      });
+      expect(await scanNarrowCollisions(page)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            class: "A",
+            targetSelector: "#target",
+            occluderSelector: "#product-shadow::shadow #shadow-blocker",
           }),
         ]),
       );

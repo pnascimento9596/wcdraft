@@ -68,9 +68,34 @@ export async function scanNarrowCollisions(
         const root = element.getRootNode();
         return root instanceof ShadowRoot ? root.host : null;
       };
+      type DevPortalRegistryGlobal = typeof globalThis & {
+        __wcdraftNextDevPortalHosts?: WeakMap<Element, HTMLElement>;
+      };
+      const registryGlobal = globalThis as DevPortalRegistryGlobal;
+      const devPortalHosts =
+        registryGlobal.__wcdraftNextDevPortalHosts ?? new WeakMap<Element, HTMLElement>();
+      registryGlobal.__wcdraftNextDevPortalHosts = devPortalHosts;
+      const registerDevPortal = (portal: HTMLElement) => {
+        const visit = (element: Element) => {
+          devPortalHosts.set(element, portal);
+          if (element.shadowRoot) {
+            for (const nested of element.shadowRoot.querySelectorAll<Element>("*")) visit(nested);
+          }
+        };
+        visit(portal);
+        if (portal.shadowRoot) {
+          for (const element of portal.shadowRoot.querySelectorAll<Element>("*")) visit(element);
+        }
+      };
+      for (const portal of document.querySelectorAll<HTMLElement>("nextjs-portal")) {
+        registerDevPortal(portal);
+      }
       const nextDevPortalHost = (element: Element): HTMLElement | null => {
+        const registeredPortal = devPortalHosts.get(element);
+        if (registeredPortal) return registeredPortal;
         for (let current: Element | null = element; current; current = composedParent(current)) {
           if (current.tagName.toLowerCase() === "nextjs-portal") {
+            devPortalHosts.set(element, current as HTMLElement);
             return current as HTMLElement;
           }
         }
@@ -149,6 +174,13 @@ export async function scanNarrowCollisions(
             return parts.join(">");
           })();
           return `${stableSelector(root.host)}::shadow ${localSelector}`;
+        }
+        const registeredPortal = nextDevPortalHost(element);
+        if (registeredPortal && registeredPortal !== element) {
+          const localSelector = element.id
+            ? `#${CSS.escape(element.id)}`
+            : element.tagName.toLowerCase();
+          return `${stableSelector(registeredPortal)}::shadow ${localSelector}`;
         }
         if (element.id) return `#${CSS.escape(element.id)}`;
         for (const attr of [
@@ -288,6 +320,23 @@ export async function scanNarrowCollisions(
           },
         ];
       };
+      const hitAtPoint = (x: number, y: number): Element | null => {
+        const hit = document.elementFromPoint(x, y);
+        if (!hit) return null;
+        const portalHost = nextDevPortalHost(hit);
+        if (!portalHost || elementPainted(portalHost)) return hit;
+
+        // WebKit can retain a stale hidden Next portal shadow hit. Continue
+        // down the same browser-derived stack so the stale hit cannot conceal
+        // a genuine product occluder. If no trustworthy candidate exists,
+        // retain the original portal hit and fail closed.
+        return (
+          document.elementsFromPoint(x, y).find((candidate) => {
+            const candidatePortal = nextDevPortalHost(candidate);
+            return !candidatePortal || elementPainted(candidatePortal);
+          }) ?? hit
+        );
+      };
       const related = (owner: Element, hit: Element | null) =>
         hit !== null && (hit === owner || owner.contains(hit) || hit.contains(owner));
       const interactiveAncestor = (element: Element) => element.closest(interactiveSelector);
@@ -314,11 +363,6 @@ export async function scanNarrowCollisions(
         occluder.closest('header, [role="banner"], [data-collision-scroll-shell="true"]') !== null;
       const occluderDetails = (hit: Element) => {
         const portalHost = nextDevPortalHost(hit);
-        // WebKit can return a stale Next dev-tools shadow descendant from
-        // elementFromPoint after the hidden host has stopped painting. The
-        // shadow child is not a product occluder in that state. Keep a visible
-        // portal blocking and preserve its shadow provenance in the finding.
-        if (portalHost && !elementPainted(portalHost)) return null;
         if (portalHost) {
           const portalControl =
             hit === portalHost
@@ -440,10 +484,9 @@ export async function scanNarrowCollisions(
           const clipped = visibleRect(target.owner, target.rect);
           if (!clipped) continue;
           for (const point of samplePoints(clipped)) {
-            const hit = document.elementFromPoint(point.x, point.y);
+            const hit = hitAtPoint(point.x, point.y);
             if (related(target.owner, hit) || hit === null) continue;
             const occluder = occluderDetails(hit);
-            if (!occluder) continue;
             const occluderRect = occluder.element.getBoundingClientRect();
             const overlap = intersection(clipped, occluderRect);
             if (!overlap) continue;
@@ -504,7 +547,7 @@ export async function scanNarrowCollisions(
             candidate.style.setProperty("pointer-events", "auto", "important");
             try {
               for (const point of samplePoints(overlap)) {
-                const hit = document.elementFromPoint(point.x, point.y);
+                const hit = hitAtPoint(point.x, point.y);
                 if (!related(candidate, hit)) continue;
                 const style = getComputedStyle(candidate);
                 pushFinding({
