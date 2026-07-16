@@ -3,8 +3,35 @@
 set -euo pipefail
 
 phase="${1:-}"
-threshold_kb="${WCDRAFT_RUNNER_MIN_FREE_KB:-20971520}"
-stale_days="${WCDRAFT_RUNNER_STALE_DAYS:-7}"
+floor_kb="${WCDRAFT_RUNNER_MIN_FREE_KB:-31457280}"
+target_kb="${WCDRAFT_RUNNER_TARGET_FREE_KB:-37748736}"
+stale_minutes="${WCDRAFT_RUNNER_STALE_MINUTES:-60}"
+force_cleanup="${WCDRAFT_RUNNER_FORCE_CLEANUP:-0}"
+configured_agent_temp_root="${WCDRAFT_AGENT_TEMP_ROOT:-/private/tmp}"
+agent_temp_roots=("$configured_agent_temp_root")
+if [ -z "${WCDRAFT_AGENT_TEMP_ROOT:-}" ] && [ -n "${TMPDIR:-}" ]; then
+  agent_temp_roots+=("$TMPDIR")
+fi
+agent_temp_root="$configured_agent_temp_root"
+agent_temp_cleanup_marker=".wcdraft-agent-cleanup-ready"
+
+for required_command in git lsof mount ps find awk sed grep cat; do
+  if ! command -v "$required_command" >/dev/null 2>&1; then
+    echo "::error::required runner hygiene command is missing: $required_command" >&2
+    exit 1
+  fi
+done
+
+case "$floor_kb:$target_kb:$stale_minutes:$force_cleanup" in
+  *[!0-9:]*|*::*|:*|*:)
+    echo "::error::runner hygiene numeric configuration is invalid" >&2
+    exit 1
+    ;;
+esac
+if [ "$target_kb" -lt "$floor_kb" ]; then
+  echo "::error::runner hygiene target must be at or above its floor" >&2
+  exit 1
+fi
 
 require_directory() {
   if [ ! -d "$1" ]; then
@@ -58,6 +85,79 @@ safe_remove_runner_path() {
   rm -rf -- "$candidate"
 }
 
+safe_remove_agent_temp_path() {
+  candidate="$1"
+  case "$candidate/" in
+    "$agent_temp_root"/*) ;;
+    *)
+      echo "::error::refusing to remove agent temp outside its root: $candidate" >&2
+      exit 1
+      ;;
+  esac
+  case "$(basename "$candidate")" in
+    wcdraft-*|terrace-*|wave2-*) ;;
+    *)
+      echo "::error::refusing unrecognized agent temp path: $candidate" >&2
+      exit 1
+      ;;
+  esac
+  if ! agent_temp_cleanup_ready "$candidate"; then
+    echo "runner-hygiene: skipped agent temp without positive completion marker $candidate"
+    return 0
+  fi
+  if agent_temp_in_use "$candidate"; then
+    echo "runner-hygiene: skipped in-use, mounted, symlinked, or linked agent temp $candidate"
+    return 0
+  fi
+  echo "runner-hygiene: pruning stale agent temp $candidate"
+  rm -rf -- "$candidate"
+}
+
+agent_temp_cleanup_ready() {
+  candidate="$1"
+  marker="$candidate/$agent_temp_cleanup_marker"
+  [ -f "$marker" ] || return 1
+  [ ! -L "$marker" ] || return 1
+  [ "$(cat "$marker")" = "cleanup-ready-v1" ] || return 1
+}
+
+agent_temp_in_use() {
+  candidate="$1"
+  if [ -L "$candidate" ]; then
+    return 0
+  fi
+  if mount | awk -v candidate="$candidate" '$3 == candidate { found = 1 } END { exit found ? 0 : 1 }'; then
+    return 0
+  fi
+  common_dir="$(git -C "$candidate" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+  if [ -n "$common_dir" ]; then
+    case "$common_dir/" in
+      "$candidate"/*) ;;
+      *) return 0 ;;
+    esac
+    while IFS= read -r line; do
+      case "$line" in
+        "worktree "*)
+          linked_path="${line#worktree }"
+          case "$linked_path/" in
+            "$candidate"/*) ;;
+            *) return 0 ;;
+          esac
+          ;;
+      esac
+    done < <(git -C "$candidate" worktree list --porcelain 2>/dev/null || true)
+  fi
+  if lsof -a -d cwd -Fn 2>/dev/null |
+    sed -n 's/^n//p' |
+    awk -v candidate="$candidate" '$0 == candidate || index($0, candidate "/") == 1 { found = 1 } END { exit found ? 0 : 1 }'; then
+    return 0
+  fi
+  if ps -axo command= | grep -F -- "$candidate" | grep -v 'grep -F' | grep -q .; then
+    return 0
+  fi
+  return 1
+}
+
 scrub_job_temp_files() {
   safe_remove_runner_path "$runner_temp/gitleaks.tmp"
   rm -f -- "$runner_temp/neon-ephemeral.env" "$runner_temp"/realism-*.log
@@ -76,15 +176,35 @@ if [ "$phase" = "start" ]; then
   scrub_job_temp_files
 
   before_kb="$(free_kb)"
-  echo "runner-hygiene: free_kb=$before_kb threshold_kb=$threshold_kb"
-  if [ "$before_kb" -lt "$threshold_kb" ]; then
+  echo "runner-hygiene: free_kb=$before_kb floor_kb=$floor_kb target_kb=$target_kb"
+  if [ "$before_kb" -lt "$target_kb" ] || [ "$force_cleanup" = "1" ]; then
+    seen_agent_temp_roots=":"
+    for configured_root in "${agent_temp_roots[@]}"; do
+      [ -d "$configured_root" ] || continue
+      agent_temp_root="$(cd "$configured_root" && pwd -P)"
+      case "$seen_agent_temp_roots" in
+        *":$agent_temp_root:"*) continue ;;
+      esac
+      seen_agent_temp_roots="$seen_agent_temp_roots$agent_temp_root:"
+      for candidate in \
+        "$agent_temp_root"/wcdraft-* \
+        "$agent_temp_root"/terrace-* \
+        "$agent_temp_root"/wave2-*; do
+        [ -e "$candidate" ] || continue
+        if ! find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
+          continue
+        fi
+        safe_remove_agent_temp_path "$candidate"
+      done
+    done
+
     for candidate in "$work_root"/*; do
       [ -d "$candidate" ] || continue
       [ "$candidate" = "$active_container" ] && continue
       case "$(basename "$candidate")" in
         _actions|_diag|_temp|_tool|_update) continue ;;
       esac
-      if find "$candidate" -prune -mtime "+$stale_days" -print -quit | grep -q .; then
+      if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
         safe_remove_runner_path "$candidate"
       fi
     done
@@ -92,7 +212,7 @@ if [ "$phase" = "start" ]; then
     if [ -d "$cache_root" ]; then
       for candidate in "$cache_root"/*; do
         [ -e "$candidate" ] || continue
-        if find "$candidate" -prune -mtime "+$stale_days" -print -quit | grep -q .; then
+        if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
           safe_remove_runner_path "$candidate"
         fi
       done
@@ -100,14 +220,19 @@ if [ "$phase" = "start" ]; then
 
     for candidate in "$runner_temp"/*; do
       [ -e "$candidate" ] || continue
-      if find "$candidate" -prune -mtime "+$stale_days" -print -quit | grep -q .; then
+      if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
         safe_remove_runner_path "$candidate"
       fi
     done
 
     after_kb="$(free_kb)"
-    if [ "$after_kb" -lt "$threshold_kb" ]; then
-      echo "::warning::runner-owned cleanup completed, but host free space remains below 20 GiB: ${after_kb} KiB"
+    echo "runner-hygiene: after_free_kb=$after_kb floor_kb=$floor_kb target_kb=$target_kb"
+    if [ "$after_kb" -lt "$floor_kb" ]; then
+      echo "::error::runner-owned cleanup completed, but host free space remains below the configured floor (${floor_kb} KiB): ${after_kb} KiB" >&2
+      exit 1
+    fi
+    if [ "$after_kb" -lt "$target_kb" ]; then
+      echo "::warning::runner-owned cleanup completed, but host free space remains below the best-effort pre-lane target (${target_kb} KiB): ${after_kb} KiB" >&2
     fi
   fi
   exit 0
