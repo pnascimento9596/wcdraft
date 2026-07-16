@@ -150,6 +150,12 @@ describe("one-screen information contract", () => {
     expect(draftShellStyles).toMatch(
       /\.miniPitchSelected \.miniDot\s*\{[^}]*background:\s*var\(--accent\);/su,
     );
+    expect(draftShellStyles).toMatch(
+      /\.formationCardDescriptor\s*\{[^}]*font-weight:\s*var\(--font-weight-medium\) !important;[^}]*letter-spacing:\s*var\(--tracking-micro\) !important;[^}]*text-transform:\s*none !important;/su,
+    );
+    expect(draftShellStyles).toMatch(
+      /\.formationCardSelected \.formationCardName,[^{]*\.formationCardPending \.formationCardName\s*\{[^}]*color:\s*var\(--accent-text\);/su,
+    );
     expect(state).toContain(
       "Formation-selector mini-pitches use uniform player markers (owner decision, 2026-07-16). Position=SHAPE remains the platform encoding on all player-identity surfaces: draft cards, choose-from-3, roster lists, team sheet, squad review, results.",
     );

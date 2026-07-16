@@ -2168,7 +2168,15 @@
   color: var(--ink-400);
   font-family: var(--font-family);
   font-size: 10.5px;
+  font-weight: var(--font-weight-medium) !important;
   line-height: 1.08;
+  letter-spacing: var(--tracking-micro) !important;
+  text-transform: none !important;
+}
+
+.draftShell[data-formation-select] .formationCardSelected .formationCardName,
+.draftShell[data-formation-select] .formationCardPending .formationCardName {
+  color: var(--accent-text);
 }
 
 .formationCardCheck {
