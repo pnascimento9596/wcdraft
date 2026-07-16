@@ -240,7 +240,12 @@ async function verifyInteractiveOpenDraft(browser: Browser, viewport: ViewportCa
   await page.getByText("Open Draft").first().waitFor();
   metrics.push(await measure(page, "open setup", viewport, theme));
 
-  await page.getByRole("button", { name: /4-3-3[\s\S]*(Selected|Lock this shape)/ }).click();
+  const formation433 = page.getByRole("button", { name: "4-3-3 Wide attack", exact: true });
+  await formation433.click();
+  assert(
+    (await formation433.getAttribute("aria-pressed")) === "true",
+    "4-3-3 formation did not expose its selected state",
+  );
   await page.getByRole("button", { name: /Lock 4-3-3/ }).click();
   await page.waitForURL(/\/play\/draft\?run=[^&]+$/, { timeout: 30_000 });
   await page.getByText("Open").first().waitFor();
