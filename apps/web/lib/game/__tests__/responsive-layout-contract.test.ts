@@ -61,7 +61,11 @@ describe("responsive layout contract", () => {
   });
 
   it("allowlists only prose links that remain in text flow", () => {
-    expect(INLINE_TEXT_LINK_ALLOWLIST).toEqual([".prose p a[href]", ".prose li a[href]"]);
+    expect(INLINE_TEXT_LINK_ALLOWLIST).toEqual([
+      ".prose p a[href]",
+      ".prose li a[href]",
+      ".one-screen-disclosure a[href]",
+    ]);
   });
 
   it("keeps target failures additive with the existing strict gates", () => {

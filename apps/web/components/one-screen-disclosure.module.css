@@ -1,0 +1,41 @@
+.notice {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.04rem;
+  width: min(calc(100% - 2 * var(--m-container-x)), var(--container-wide));
+  margin: 0 auto;
+  color: var(--ink-faint);
+  font-size: clamp(0.625rem, 0.72vw, 0.72rem);
+  line-height: 1.22;
+  text-align: center;
+}
+
+.notice p {
+  margin: 0;
+}
+
+.notice a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 63.99rem) {
+  .afterStickyDock {
+    margin-block-start: 0.5rem;
+  }
+}
+
+@media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
+  .notice {
+    gap: 0;
+    margin-top: 0.2rem;
+    font-size: 0.6rem;
+    line-height: 1.12;
+  }
+
+  .afterStickyDock {
+    margin-top: 0.5rem;
+  }
+}

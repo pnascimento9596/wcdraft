@@ -7,6 +7,7 @@ const source = (relativePath: string) =>
 const homePage = source("../../../app/page.tsx");
 const globals = source("../../../app/globals.css");
 const modeSelect = source("../../../components/game/mode-select.tsx");
+const legalDisclosure = source("../../../components/legal-disclosure.tsx");
 const progressBand = source("../../../components/game/local-progress-band.tsx");
 const gameFacade = source("../../../components/game/game.module.css");
 const gameStyles = source("../../../components/game/game-styles/shared.module.css");
@@ -56,9 +57,20 @@ describe("one-screen information contract", () => {
     expect(homePage).not.toContain("hero__live");
   });
 
-  it("suppresses the footer only on the two one-screen routes at every width", () => {
+  it("replaces the hidden full footer with exact readable disclosure lines", () => {
     expect(globals).toMatch(
       /body:has\(\.hero\) \.site-footer,\s*body:has\(\.game-page--mode\) \.site-footer \{\s*display: none;/u,
+    );
+    for (const page of [homePage, source("../../../app/play/page.tsx")]) {
+      expect(page).toContain("<LegalDisclosure");
+      expect(page).toContain("one-screen-disclosure");
+    }
+    expect(legalDisclosure).toContain("The Fjelstul World Cup Database © 2023 Joshua C. Fjelstul");
+    expect(legalDisclosure).toContain("licensed CC-BY-SA");
+    expect(legalDisclosure).toContain("github.com/jfjelstul/worldcup");
+    expect(legalDisclosure).toContain("), modified.");
+    expect(legalDisclosure).toContain(
+      "wcdraft is an independent project and is not affiliated with, endorsed by, or associated",
     );
   });
 

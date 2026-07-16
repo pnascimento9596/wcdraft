@@ -37,6 +37,12 @@ type PaintAnalysis = {
   readonly contributions: readonly PaintContribution[];
 };
 
+type ScrollInteractionProof = {
+  readonly targetCount: number;
+  readonly passed: boolean;
+  readonly failures: readonly string[];
+};
+
 type SharpMetadata = {
   readonly format?: string;
   readonly width?: number;
@@ -72,6 +78,7 @@ type FitMetric = {
   readonly device: string;
   readonly descriptorSource: string;
   readonly viewport: { readonly width: number; readonly height: number };
+  readonly strictVerticalFit: boolean;
   readonly theme: Theme;
   readonly motion: Motion;
   readonly pathname: RoutePath;
@@ -88,6 +95,11 @@ type FitMetric = {
   readonly scrollWidth: number;
   readonly innerWidth: number;
   readonly footerDisplay: string | null;
+  readonly disclosureLineCount: number;
+  readonly disclosureLinesInViewport: boolean;
+  readonly disclosureLinesReachable: boolean;
+  readonly disclosureTexts: readonly string[];
+  readonly modeDockDisclosureOverlapPx: number | null;
   readonly renderedTheme: string | null;
   readonly renderedReducedMotion: boolean;
   readonly unpaintedRequiredContent: readonly string[];
@@ -97,6 +109,11 @@ type FitMetric = {
   readonly ledeLines: number | null;
   readonly requiredTargetCount: number;
   readonly requiredTargetsInViewport: boolean;
+  readonly requiredTargetsReachable: boolean;
+  readonly scrollInteractionRequired: boolean;
+  readonly scrollInteractionTargetCount: number;
+  readonly scrollInteractionPassed: boolean;
+  readonly scrollInteractionFailures: readonly string[];
   readonly smallTargets: readonly string[];
   readonly homeDemoPresent: boolean | null;
   readonly homeStatCount: number | null;
@@ -117,6 +134,7 @@ type MeasuredFitMetric = Omit<
   | "device"
   | "descriptorSource"
   | "viewport"
+  | "strictVerticalFit"
   | "theme"
   | "motion"
   | "pathname"
@@ -127,6 +145,10 @@ type MeasuredFitMetric = Omit<
   | "screenshotPngNormalized"
   | "screenshotPaintFailures"
   | "screenshotPaintContributions"
+  | "scrollInteractionRequired"
+  | "scrollInteractionTargetCount"
+  | "scrollInteractionPassed"
+  | "scrollInteractionFailures"
 >;
 
 type ManagedServer = {
@@ -406,16 +428,32 @@ async function waitForInitialRouteMotion(page: Page, pathname: RoutePath): Promi
 function metricFailures(metric: FitMetric): readonly string[] {
   const prefix = `${metric.engine}/${metric.device}/${metric.theme}/${metric.motion}${metric.pathname}`;
   const failures: string[] = [];
-  if (metric.scrollHeight > metric.innerHeight) {
+  if (metric.strictVerticalFit && metric.scrollHeight > metric.innerHeight) {
     failures.push(`${prefix}: document height ${metric.scrollHeight}/${metric.innerHeight}`);
   }
-  if (metric.bodyScrollHeight > metric.innerHeight) {
+  if (metric.strictVerticalFit && metric.bodyScrollHeight > metric.innerHeight) {
     failures.push(`${prefix}: body height ${metric.bodyScrollHeight}/${metric.innerHeight}`);
   }
   if (metric.scrollWidth > metric.innerWidth) {
     failures.push(`${prefix}: document width ${metric.scrollWidth}/${metric.innerWidth}`);
   }
   if (metric.footerDisplay !== "none") failures.push(`${prefix}: footer is visible`);
+  if (metric.disclosureLineCount !== 2) {
+    failures.push(
+      `${prefix}: expected 2 disclosure lines, saw ${metric.disclosureLineCount.toString()}`,
+    );
+  }
+  if (!metric.disclosureLinesReachable) {
+    failures.push(`${prefix}: disclosure lines are not reachable`);
+  }
+  if ((metric.modeDockDisclosureOverlapPx ?? 0) > 0) {
+    failures.push(
+      `${prefix}: mode dock overlaps disclosure by ${String(metric.modeDockDisclosureOverlapPx)}px`,
+    );
+  }
+  if (metric.strictVerticalFit && !metric.disclosureLinesInViewport) {
+    failures.push(`${prefix}: disclosure lines are below the initial viewport`);
+  }
   if (metric.renderedTheme !== metric.theme) {
     failures.push(`${prefix}: rendered theme is ${String(metric.renderedTheme)}`);
   }
@@ -433,7 +471,18 @@ function metricFailures(metric: FitMetric): readonly string[] {
         metric.missingRequiredPaintTargets.join(" | "),
     );
   }
-  if (!metric.requiredTargetsInViewport) failures.push(`${prefix}: required target below fold`);
+  if (!metric.requiredTargetsReachable)
+    failures.push(`${prefix}: required target is not reachable`);
+  if (metric.scrollInteractionRequired && !metric.scrollInteractionPassed) {
+    failures.push(
+      `${prefix}: interactive scroll reachability failed ${metric.scrollInteractionFailures.join(
+        " | ",
+      )}`,
+    );
+  }
+  if (metric.strictVerticalFit && !metric.requiredTargetsInViewport) {
+    failures.push(`${prefix}: required target below fold`);
+  }
   if (metric.smallTargets.length > 0) {
     failures.push(`${prefix}: sub-44px targets ${metric.smallTargets.join(" | ")}`);
   }
@@ -550,6 +599,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
     const doc = document.documentElement;
     const body = document.body;
     const footer = document.querySelector(".site-footer");
+    const disclosureLines = [...document.querySelectorAll(".one-screen-disclosure [data-disclosure-line]")];
     const metaViewport = document.querySelector('meta[name="viewport"]')?.content ?? "";
     const requiredContent =
       pathValue === "/"
@@ -559,12 +609,16 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["hero lede", document.querySelector(".hero__sub")],
             ["spin demo", document.querySelector("[data-hero-spin-demo]")],
             ["stat strip", document.querySelector(".hero__meta")],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ]
         : [
             ["masthead", document.querySelector(".masthead")],
             ["mode heading", document.querySelector(".game-page--mode .page-head")],
             ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
             ["mode grid", document.querySelector('[aria-label="Draft mode"]')],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ];
     const mastheadPaintTargets = [
       ["wordmark", document.querySelector(".wordmark")],
@@ -583,6 +637,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["spin demo", document.querySelector("[data-hero-spin-demo]")],
             ["hero actions", document.querySelector(".hero .btn-row")],
             ["stat strip", document.querySelector(".hero__meta")],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ]
         : [
             ["mode title", document.querySelector(".game-page--mode .display")],
@@ -590,6 +646,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
             ...modeCardPaintTargets,
             ["dock action", document.querySelector("main button.btn")],
+            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ];
     const paintTargetEntries = [...mastheadPaintTargets, ...routePaintTargets];
     const paintTargetByLabel = new Map(paintTargetEntries);
@@ -598,7 +656,15 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       "theme control",
       ...(matchMedia("(max-width: 51.999rem)").matches ? ["menu control"] : []),
       ...(pathValue === "/"
-        ? ["hero title", "hero lede", "spin demo", "hero actions", "stat strip"]
+        ? [
+            "hero title",
+            "hero lede",
+            "spin demo",
+            "hero actions",
+            "stat strip",
+            "attribution disclosure",
+            "not-affiliated disclosure",
+          ]
         : [
             "mode title",
             "mode lede",
@@ -609,6 +675,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             "mode card 4",
             "mode card 5",
             "dock action",
+            "attribution disclosure",
+            "not-affiliated disclosure",
           ]),
     ];
     const missingRequiredPaintTargets = expectedPaintLabels.filter(
@@ -631,7 +699,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
     const unpaintedRequiredContent = requiredContent
       .filter(([, element]) => !visible(element))
       .map(([label]) => label);
-    const homeActions = [...document.querySelectorAll(".hero a")].filter(visible);
+    const homeActions = [...document.querySelectorAll(".hero .btn-row a")].filter(visible);
     const modeCards = [...document.querySelectorAll('[role="radio"]')].filter(visible);
     const dockAction = document.querySelector("main button.btn");
     const requiredTargets =
@@ -649,6 +717,38 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       const rect = element.getBoundingClientRect();
       return rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
     });
+    const reachableDocumentWidth = Math.max(doc.scrollWidth, body.scrollWidth);
+    const reachableDocumentHeight = Math.max(doc.scrollHeight, body.scrollHeight);
+    const requiredTargetsReachable = requiredTargets.every((element) => {
+      if (!visible(element)) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= reachableDocumentHeight && rect.right <= reachableDocumentWidth;
+    });
+    const disclosureLinesInViewport = disclosureLines.every((element) => {
+      if (!visible(element)) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
+    });
+    const disclosureLinesReachable = disclosureLines.every((element) => {
+      if (!visible(element)) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.bottom <= reachableDocumentHeight && rect.right <= innerWidth;
+    });
+    const modeDockDisclosureOverlapPx = (() => {
+      if (pathValue !== "/play") return null;
+      const dock = document.querySelector('[class*="modeDock"]');
+      const disclosure = document.querySelector(".one-screen-disclosure");
+      if (!visible(dock) || !visible(disclosure)) return null;
+      const dockRect = dock.getBoundingClientRect();
+      const disclosureRect = disclosure.getBoundingClientRect();
+      const overlapsHorizontally = dockRect.left < disclosureRect.right && dockRect.right > disclosureRect.left;
+      if (!overlapsHorizontally) return 0;
+      return Math.max(
+        0,
+        Math.min(dockRect.bottom, disclosureRect.bottom) -
+          Math.max(dockRect.top, disclosureRect.top),
+      );
+    })();
     const isDailyCard = (element) =>
       element.textContent?.toLocaleUpperCase().includes("TODAY'S DRAFT") === true;
     const regularCards = modeCards.filter((element) => !isDailyCard(element));
@@ -671,6 +771,11 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       scrollWidth: doc.scrollWidth,
       innerWidth,
       footerDisplay: footer ? getComputedStyle(footer).display : null,
+      disclosureLineCount: disclosureLines.length,
+      disclosureLinesInViewport,
+      disclosureLinesReachable,
+      disclosureTexts: disclosureLines.map((element) => element.textContent?.replace(/\s+/gu, " ").trim() ?? ""),
+      modeDockDisclosureOverlapPx,
       renderedTheme: doc.dataset.theme ?? null,
       renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
       unpaintedRequiredContent,
@@ -680,6 +785,7 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       ledeLines: lineCount(document.querySelector(".hero__sub")),
       requiredTargetCount: requiredTargets.length,
       requiredTargetsInViewport,
+      requiredTargetsReachable,
       smallTargets,
       homeDemoPresent:
         pathValue === "/" ? document.querySelector("[data-hero-spin-demo]") !== null : null,
@@ -696,6 +802,100 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       pageErrors: [],
     };
   })()`)) as MeasuredFitMetric;
+}
+
+async function proveScrollReachability(
+  page: Page,
+  pathname: RoutePath,
+): Promise<ScrollInteractionProof> {
+  return (await page.evaluate(String.raw`(async () => {
+    const pathValue = ${JSON.stringify(pathname)};
+    const controls =
+      pathValue === "/"
+        ? [...document.querySelectorAll(".hero .btn-row a")]
+        : [
+            ...document.querySelectorAll('[role="radio"]'),
+            ...document.querySelectorAll("main button.btn"),
+          ];
+    const disclosures = [
+      ...document.querySelectorAll(
+        ".one-screen-disclosure [data-disclosure-line]",
+      ),
+    ];
+    const targets = [
+      ...controls.map((element, index) => ({
+        element,
+        interactive: true,
+        label:
+          element.textContent?.replace(/\s+/gu, " ").trim() ||
+          element.getAttribute("aria-label") ||
+          "control " + String(index + 1),
+      })),
+      ...disclosures.map((element) => ({
+        element,
+        interactive: false,
+        label: "disclosure " + (element.dataset.disclosureLine ?? "unknown"),
+      })),
+    ];
+    const scrollingElements = [...document.querySelectorAll("*")]
+      .filter(
+        (element) =>
+          element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth,
+      )
+      .map((element) => ({ element, left: element.scrollLeft, top: element.scrollTop }));
+    const initialWindow = { x: window.scrollX, y: window.scrollY };
+    const failures = [];
+    const nextPaint = async () => {
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+    };
+    const restoreScroll = async () => {
+      for (const snapshot of scrollingElements) {
+        snapshot.element.scrollTo({ left: snapshot.left, top: snapshot.top, behavior: "instant" });
+      }
+      window.scrollTo({ left: initialWindow.x, top: initialWindow.y, behavior: "instant" });
+      await nextPaint();
+    };
+
+    try {
+      for (const target of targets) {
+        target.element.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
+        await nextPaint();
+        const rect = target.element.getBoundingClientRect();
+        const style = getComputedStyle(target.element);
+        const inLayoutViewport =
+          rect.width > 0 &&
+          rect.height > 0 &&
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= window.innerHeight &&
+          rect.right <= window.innerWidth;
+        const readable =
+          inLayoutViewport &&
+          style.display !== "none" &&
+          style.visibility !== "hidden" &&
+          Number.parseFloat(style.opacity) > 0.01 &&
+          target.element.innerText.trim().length > 0;
+        if (!readable) {
+          failures.push(target.label + ": did not become readable in the layout viewport");
+        }
+        if (target.interactive && inLayoutViewport) {
+          const centerX = Math.min(window.innerWidth - 1, Math.max(0, rect.left + rect.width / 2));
+          const centerY = Math.min(window.innerHeight - 1, Math.max(0, rect.top + rect.height / 2));
+          const hit = document.elementFromPoint(centerX, centerY);
+          if (!(hit === target.element || (hit !== null && target.element.contains(hit)))) {
+            failures.push(target.label + ": center point is not operable after scrolling");
+          }
+        }
+        await restoreScroll();
+      }
+    } finally {
+      await restoreScroll();
+    }
+
+    return { targetCount: targets.length, passed: failures.length === 0, failures };
+  })()`)) as ScrollInteractionProof;
 }
 
 function assertCompletePng(buffer: Buffer): void {
@@ -723,9 +923,10 @@ async function captureNormalizedPng(
   page: Page,
   animations: "allow" | "disabled",
   expectedWidth: number,
-  expectedHeight: number,
+  expectedHeight: number | null,
+  fullPage = false,
 ): Promise<Buffer> {
-  const raw = await page.screenshot({ animations, timeout: screenshotTimeoutMs });
+  const raw = await page.screenshot({ animations, fullPage, timeout: screenshotTimeoutMs });
   const sharp = await sharpPromise;
   const normalized = await sharp(raw, { failOn: "warning" })
     .png({ compressionLevel: 9, adaptiveFiltering: true })
@@ -733,12 +934,32 @@ async function captureNormalizedPng(
   assertCompletePng(normalized);
   const metadata = await sharp(normalized, { failOn: "warning" }).metadata();
   assert(metadata.format === "png", `normalized screenshot format is ${String(metadata.format)}`);
+  const viewport = page.viewportSize();
+  assert(viewport, "normalized screenshot page has no viewport");
+  const minimumHeight = Math.round(viewport.height * (expectedWidth / viewport.width));
   assert(
-    metadata.width === expectedWidth && metadata.height === expectedHeight,
-    `normalized screenshot dimensions ${String(metadata.width)}x${String(metadata.height)} ` +
-      `did not match ${expectedWidth.toString()}x${expectedHeight.toString()}`,
+    metadata.width === expectedWidth,
+    `normalized screenshot width is ${String(metadata.width)}`,
   );
+  if (expectedHeight === null) {
+    assert(
+      (metadata.height ?? 0) >= minimumHeight,
+      `full-page screenshot height ${String(metadata.height)} is below viewport ${minimumHeight.toString()}`,
+    );
+  } else {
+    assert(
+      metadata.height === expectedHeight,
+      `normalized screenshot height ${String(metadata.height)} did not match ${expectedHeight.toString()}`,
+    );
+  }
   return normalized;
+}
+
+async function normalizedPngHeight(buffer: Buffer): Promise<number> {
+  const sharp = await sharpPromise;
+  const metadata = await sharp(buffer, { failOn: "warning" }).metadata();
+  assert(typeof metadata.height === "number", "normalized screenshot is missing its height");
+  return metadata.height;
 }
 
 async function screenshotPaintFailures(
@@ -829,6 +1050,7 @@ async function captureHiddenPaintBaseline(
   animations: "allow" | "disabled",
   expectedWidth: number,
   expectedHeight: number,
+  fullPage: boolean,
 ): Promise<Buffer> {
   await page.evaluate(() => {
     for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
@@ -850,9 +1072,9 @@ async function captureHiddenPaintBaseline(
         }),
     );
     await page.waitForTimeout(150);
-    await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
+    await captureNormalizedPng(page, animations, expectedWidth, expectedHeight, fullPage);
     await page.waitForTimeout(100);
-    return await captureNormalizedPng(page, animations, expectedWidth, expectedHeight);
+    return await captureNormalizedPng(page, animations, expectedWidth, expectedHeight, fullPage);
   } finally {
     await page.evaluate(() => {
       for (const element of document.querySelectorAll<HTMLElement>("[data-wcdraft-paint-target]")) {
@@ -885,6 +1107,7 @@ async function analyzePaintEvidence(
   expectedHeight: number,
   requiredPaintRegions: readonly PaintRegion[],
   devicePixelRatio: number,
+  fullPage: boolean,
 ): Promise<PaintAnalysis> {
   let bestAnalysis: PaintAnalysis | null = null;
   for (let attempt = 1; attempt <= hiddenPaintBaselineAttempts; attempt += 1) {
@@ -893,6 +1116,7 @@ async function analyzePaintEvidence(
       animations,
       expectedWidth,
       expectedHeight,
+      fullPage,
     );
     const analysis = await screenshotPaintFailures(
       screenshot,
@@ -928,6 +1152,7 @@ async function captureEvidence(
   motion: Motion,
   requiredPaintRegions: readonly PaintRegion[],
   devicePixelRatio: number,
+  captureFullPage: boolean,
 ): Promise<{
   readonly stable: boolean | null;
   readonly captureCount: number | null;
@@ -949,12 +1174,20 @@ async function captureEvidence(
   const viewport = page.viewportSize();
   assert(viewport, "one-screen screenshot page has no viewport");
   const expectedWidth = Math.round(viewport.width * devicePixelRatio);
-  const expectedHeight = Math.round(viewport.height * devicePixelRatio);
+  const expectedViewportHeight = Math.round(viewport.height * devicePixelRatio);
+  const initialExpectedHeight = captureFullPage ? null : expectedViewportHeight;
 
   if (motion === "no-preference") {
     // Review evidence is about the finished one-screen composition, not a
     // nondeterministic frame within the finite entrance animation.
-    const screenshot = await captureNormalizedPng(page, "disabled", expectedWidth, expectedHeight);
+    const screenshot = await captureNormalizedPng(
+      page,
+      "disabled",
+      expectedWidth,
+      initialExpectedHeight,
+      captureFullPage,
+    );
+    const expectedHeight = initialExpectedHeight ?? (await normalizedPngHeight(screenshot));
     await writeFile(screenshotPath, screenshot);
     const paintAnalysis = await analyzePaintEvidence(
       page,
@@ -964,6 +1197,7 @@ async function captureEvidence(
       expectedHeight,
       requiredPaintRegions,
       devicePixelRatio,
+      captureFullPage,
     );
     return {
       stable: null,
@@ -986,11 +1220,24 @@ async function captureEvidence(
   const maxCaptures = 7;
   const maxChangedSampleRatio = 0.005;
   await page.waitForTimeout(compositorSettleMs);
-  let previous = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
+  let previous = await captureNormalizedPng(
+    page,
+    "allow",
+    expectedWidth,
+    initialExpectedHeight,
+    captureFullPage,
+  );
+  const expectedHeight = initialExpectedHeight ?? (await normalizedPngHeight(previous));
   let changedSampleRatio = 1;
   for (let captureCount = 2; captureCount <= maxCaptures; captureCount += 1) {
     await page.waitForTimeout(500);
-    const current = await captureNormalizedPng(page, "allow", expectedWidth, expectedHeight);
+    const current = await captureNormalizedPng(
+      page,
+      "allow",
+      expectedWidth,
+      expectedHeight,
+      captureFullPage,
+    );
     changedSampleRatio = await normalizedChangedSampleRatio(previous, current);
     if (changedSampleRatio <= maxChangedSampleRatio) {
       await writeFile(screenshotPath, current);
@@ -1002,6 +1249,7 @@ async function captureEvidence(
         expectedHeight,
         requiredPaintRegions,
         devicePixelRatio,
+        captureFullPage,
       );
       return {
         stable: true,
@@ -1023,6 +1271,7 @@ async function captureEvidence(
     expectedHeight,
     requiredPaintRegions,
     devicePixelRatio,
+    captureFullPage,
   );
   return {
     stable: false,
@@ -1054,6 +1303,7 @@ async function main(): Promise<void> {
           name: entry.name,
           source: entry.source,
           viewport: entry.descriptor.viewport,
+          strictVerticalFit: entry.strictVerticalFit,
           screen: entry.descriptor.screen,
           defaultBrowserType: entry.descriptor.defaultBrowserType,
           delegatedDecision: entry.delegatedDecision ?? null,
@@ -1101,6 +1351,9 @@ async function main(): Promise<void> {
                   await hideDevOverlay(page);
                   await page.waitForTimeout(100);
                   const measured = await measurePage(page, pathname);
+                  const scrollInteraction = deviceCase.strictVerticalFit
+                    ? { targetCount: 0, passed: true, failures: [] }
+                    : await proveScrollReachability(page, pathname);
                   const screenshot =
                     theme === "dark"
                       ? path.join(
@@ -1119,6 +1372,7 @@ async function main(): Promise<void> {
                     motion,
                     measured.requiredPaintRegions,
                     measured.devicePixelRatio,
+                    !deviceCase.strictVerticalFit,
                   );
                   const metric: FitMetric = {
                     engine: engineName,
@@ -1126,6 +1380,7 @@ async function main(): Promise<void> {
                     device: deviceCase.name,
                     descriptorSource: deviceCase.source,
                     viewport: deviceCase.descriptor.viewport,
+                    strictVerticalFit: deviceCase.strictVerticalFit,
                     theme,
                     motion,
                     pathname,
@@ -1136,6 +1391,10 @@ async function main(): Promise<void> {
                     screenshotPngNormalized: screenshotCapture.normalized,
                     screenshotPaintFailures: screenshotCapture.paintFailures,
                     screenshotPaintContributions: screenshotCapture.paintContributions,
+                    scrollInteractionRequired: !deviceCase.strictVerticalFit,
+                    scrollInteractionTargetCount: scrollInteraction.targetCount,
+                    scrollInteractionPassed: scrollInteraction.passed,
+                    scrollInteractionFailures: scrollInteraction.failures,
                     ...measured,
                     pageErrors,
                   };
@@ -1144,6 +1403,7 @@ async function main(): Promise<void> {
                   process.stdout.write(
                     `[one-screen] ${engineName} ${deviceCase.name} ${theme} ${motion} ${pathname} ` +
                       `height=${metric.scrollHeight.toString()}/${metric.innerHeight.toString()} ` +
+                      `strictVerticalFit=${metric.strictVerticalFit.toString()} ` +
                       `failures=${failures.length.toString()}\n`,
                   );
                   await page.close();
@@ -1170,13 +1430,20 @@ async function main(): Promise<void> {
       {
         generatedAt: new Date().toISOString(),
         strict,
-        assertionScope: "document.documentElement.scrollHeight <= window.innerHeight",
+        assertionScope: {
+          strictVerticalFit:
+            "document.documentElement.scrollHeight <= window.innerHeight for every descriptor except 320x568",
+          scrollAllowed:
+            "320x568 permits vertical scrolling only; committed scroll interactions must make every disclosure and required control readable or operable before restoring scroll, and all non-vertical-fit assertions remain strict",
+        },
         routes,
         themes,
         motions,
         resolvedDescriptors,
         legacyScreenshotEvidenceOnly: LEGACY_SCREENSHOT_EVIDENCE,
         metricCount: metrics.length,
+        strictVerticalFitContextCount: metrics.filter((metric) => metric.strictVerticalFit).length,
+        scrollAllowedContextCount: metrics.filter((metric) => !metric.strictVerticalFit).length,
         failureCount: failures.length,
         failures,
         metrics,

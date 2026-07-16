@@ -4,6 +4,26 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Terrace close-out: 2026-07-15 · `/` and `/play` now render the existing CC-BY-SA
+attribution and not-affiliated notice as human-readable one-screen content instead of hiding
+their only copy with the route footer. Historical, authentic `ogs1` envelopes are accepted on
+the read path with their exact v1 message/HMAC and token-hash binding, rendered with current
+Archivo assets, and publicly re-keyed under `ogs2`; all writers remain v2-only and malformed,
+tampered, forged, foreign, unsigned, or token-mismatched values retain the default-card 307.
+The default OG raster is now build-owned, ignored, generated when absent, and rejected if it is
+ever recommitted, eliminating the false macOS-committed-versus-Vercel-Linux byte claim. The
+one-screen matrix remains 144 contexts: 128 retain strict full-document vertical fit, while the
+16 retained 320×568 contexts may scroll vertically but still prove horizontal fit, 44px
+controls, semantic paint, exact theme/motion state, zoom, zero page errors, disclosure/dock
+separation, and real scroll/read/hit reachability with restored scroll state. Eighteen normalized
+light-mode screenshots document home, mode select, and squad review at 360/390/430 across both
+engines without changing a light or dark palette value. The implementation did not regenerate
+or change a data artifact; base/head core, data, and ETL Git trees remain byte-identical. A U4
+reviewer clean clone transitively ran the data artifact-ensuring build while establishing absent
+workspace outputs for root typecheck; that disposable checkout ended clean and shipped no byte.
+Durable evidence:
+`docs/reports/terrace-closeout-2026-07-15.md` and its `light-mode/` artifact directory.
+
 Terrace dark identity: 2026-07-15 · Archivo is now the single active shipped web and OG
 family, with mechanical `tnum` evidence and deterministic OG-only tabular derivatives.
 Dark-mode surfaces use the Terrace bone/bottle-green/vintage-gold system; every asserted

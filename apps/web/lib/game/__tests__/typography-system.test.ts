@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -418,14 +419,18 @@ describe("Terrace typography source contract", () => {
     expect(staticShare).toContain('font-feature-settings:"tnum" 1');
   });
 
-  it("pins the deterministic Archivo default OG without changing protected marketing art", () => {
+  it("keeps the deterministic Archivo default OG build-owned without changing protected art", () => {
     const generator = readFileSync(
       path.join(WEB_ROOT, "scripts/generate-marketing-assets.mjs"),
       "utf8",
     );
-    const defaultOg = readFileSync(path.join(WEB_ROOT, "public/brand/marketing/og-default.png"));
     const banner = readFileSync(path.join(WEB_ROOT, "public/brand/marketing/banner.png"));
     const square = readFileSync(path.join(WEB_ROOT, "public/brand/marketing/og-square.png"));
+    const trackedDefaultOg = spawnSync(
+      "git",
+      ["ls-files", "--error-unmatch", "apps/web/public/brand/marketing/og-default.png"],
+      { cwd: path.join(WEB_ROOT, "../.."), encoding: "utf8" },
+    );
 
     expect(generator).toContain("archivo-latin-800-normal.woff");
     expect(generator).toContain("new ImageResponse(");
@@ -433,12 +438,10 @@ describe("Terrace typography source contract", () => {
     expect(generator).toContain("data: toArrayBuffer(archivoFont)");
     expect(generator).not.toContain("space-" + "grotesk");
     expect(generator).toContain("writeFileSync(defaultOgPath, best.buffer)");
-    expect(defaultOg.readUInt32BE(16)).toBe(1200);
-    expect(defaultOg.readUInt32BE(20)).toBe(630);
-    expect(defaultOg.byteLength).toBeLessThanOrEqual(300 * 1024);
-    expect(createHash("sha256").update(defaultOg).digest("hex")).toBe(
-      "5f1af97f956ba67d52de6a9cb25231a234e4399cccaa4830db6165a3080cdb01",
+    expect(generator).not.toContain(
+      "for (const path of [bannerPath, defaultOgPath, squareOgPath])",
     );
+    expect(trackedDefaultOg.status, trackedDefaultOg.stdout || trackedDefaultOg.stderr).not.toBe(0);
     expect(createHash("sha256").update(banner).digest("hex")).toBe(
       "809a8dfe09b8396fc65083fee5981a128e6407cfd66513988d1f0df678936331",
     );

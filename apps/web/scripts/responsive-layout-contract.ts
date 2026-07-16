@@ -5,7 +5,11 @@ export const MIN_INTERACTION_TARGET_PX = 44;
  * Action links (history cards, navigation, buttons styled as links) are
  * intentionally absent so the browser harness adjudicates their full target.
  */
-export const INLINE_TEXT_LINK_ALLOWLIST = [".prose p a[href]", ".prose li a[href]"] as const;
+export const INLINE_TEXT_LINK_ALLOWLIST = [
+  ".prose p a[href]",
+  ".prose li a[href]",
+  ".one-screen-disclosure a[href]",
+] as const;
 
 export type DevOverlaySuppression = {
   readonly suppression: "enabled" | "disabled";

@@ -40,6 +40,10 @@ describe("one-screen descriptor matrix", () => {
         cases.map((entry) => [entry.descriptor.viewport.width, entry.descriptor.viewport.height]),
       ).toEqual(expectedViewports);
       expect(cases).toHaveLength(9);
+      expect(cases.filter((entry) => entry.strictVerticalFit)).toHaveLength(8);
+      expect(cases.filter((entry) => !entry.strictVerticalFit)).toHaveLength(1);
+      expect(cases[0]?.strictVerticalFit).toBe(false);
+      expect(cases.slice(1).every((entry) => entry.strictVerticalFit)).toBe(true);
     },
   );
 
@@ -50,7 +54,8 @@ describe("one-screen descriptor matrix", () => {
     expect(chromium[7]?.source).toBe("Desktop Chrome");
     expect(webkit[7]?.source).toBe("Desktop Safari");
     for (const cases of [chromium, webkit]) {
-      expect(cases.filter((entry) => entry.delegatedDecision)).toHaveLength(1);
+      expect(cases.filter((entry) => entry.delegatedDecision)).toHaveLength(2);
+      expect(cases[0]?.delegatedDecision).toContain("320x568 may scroll vertically");
       expect(cases[8]?.delegatedDecision).toContain("no built-in 1366 descriptor");
       expect(cases[8]?.descriptor.viewport.height).toBe(cases[7]?.descriptor.viewport.height);
     }
@@ -69,14 +74,31 @@ describe("one-screen descriptor matrix", () => {
     expect(assertionPairs).not.toContain("390x844");
   });
 
-  it("strictly adjudicates full-document fit for both routes and engines", () => {
+  it("adjudicates vertical fit everywhere except the explicit 320x568 scroll case", () => {
     expect(verifierSource).toContain('const routes: readonly RoutePath[] = ["/", "/play"]');
     expect(verifierSource).toContain('["chromium", chromium]');
     expect(verifierSource).toContain('["webkit", webkit]');
-    expect(verifierSource).toContain("if (metric.scrollHeight > metric.innerHeight)");
     expect(verifierSource).toContain(
-      'assertionScope: "document.documentElement.scrollHeight <= window.innerHeight"',
+      "if (metric.strictVerticalFit && metric.scrollHeight > metric.innerHeight)",
     );
+    expect(verifierSource).toContain(
+      '"document.documentElement.scrollHeight <= window.innerHeight for every descriptor except 320x568"',
+    );
+    expect(verifierSource).toContain("strictVerticalFitContextCount");
+    expect(verifierSource).toContain("scrollAllowedContextCount");
+    expect(verifierSource).toContain("if (!metric.requiredTargetsReachable)");
+    expect(verifierSource).toContain("if (!metric.disclosureLinesReachable)");
+    expect(verifierSource).toContain("async function proveScrollReachability");
+    expect(verifierSource).toContain('target.element.scrollIntoView({ block: "center"');
+    expect(verifierSource).toContain("document.elementFromPoint(centerX, centerY)");
+    expect(verifierSource).toContain("await restoreScroll()");
+    expect(verifierSource).toContain("interactive scroll reachability failed");
+    expect(verifierSource).toContain("scrollInteractionTargetCount");
+    expect(verifierSource).toContain("modeDockDisclosureOverlapPx");
+    expect(verifierSource).toContain("mode dock overlaps disclosure by");
+    expect(verifierSource).toContain("Math.min(dockRect.bottom, disclosureRect.bottom)");
+    expect(verifierSource).toContain("!deviceCase.strictVerticalFit");
+    expect(verifierSource).toContain("captureFullPage");
     expect(verifierSource).not.toContain('name: "360x800"');
     expect(verifierSource).not.toContain('name: "390x844"');
   });
@@ -99,7 +121,7 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("Number.parseFloat(style.opacity) <= 0.01");
     expect(verifierSource).toContain("Recycle at the device boundary");
     expect(verifierSource).toContain("const browser = await browserType.launch");
-    expect(verifierSource).toContain("animations, timeout: screenshotTimeoutMs");
+    expect(verifierSource).toContain("animations, fullPage, timeout: screenshotTimeoutMs");
     expect(verifierSource).toContain("const screenshotTimeoutMs = 30_000");
   });
 
@@ -142,7 +164,7 @@ describe("one-screen descriptor matrix", () => {
       "requestAnimationFrame(() => requestAnimationFrame(() => resolve()))",
     );
     expect(verifierSource).toContain(
-      "await captureNormalizedPng(page, animations, expectedWidth, expectedHeight)",
+      "await captureNormalizedPng(page, animations, expectedWidth, expectedHeight, fullPage)",
     );
     expect(verifierSource).toContain("const [paintedCrop, hiddenCrop] = await Promise.all");
     expect(verifierSource).toContain(

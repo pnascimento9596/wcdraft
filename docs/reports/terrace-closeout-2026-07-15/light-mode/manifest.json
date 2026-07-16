@@ -1,0 +1,137 @@
+{
+  "generatedAt": "2026-07-16T01:53:15.006Z",
+  "normalization": "sharp PNG compressionLevel=9 adaptiveFiltering=true",
+  "theme": "light",
+  "engines": ["chromium", "webkit"],
+  "widths": [360, 390, 430],
+  "surfaces": ["home", "mode-select-available", "squad-review"],
+  "imageCount": 18,
+  "images": [
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-home-360x800-light.png",
+      "width": 360,
+      "height": 800,
+      "bytes": 153883,
+      "sha256": "d175ecf45e044a99c5f119192105695a1ff0cf21793f3f1f581d6083a1b2b974"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-home-390x844-light.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 161208,
+      "sha256": "ce15aa189bcd9109be22333988ae085bcfceb98bbf89d0a352d34fc67cc09961"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-home-430x932-light.png",
+      "width": 430,
+      "height": 932,
+      "bytes": 175048,
+      "sha256": "88bcb46003be7f0401e0d2aec7d5a32e60f0fea0643a5af6bcf547343ad1cdc4"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-mode-select-available-360x800-light.png",
+      "width": 360,
+      "height": 800,
+      "bytes": 127705,
+      "sha256": "a5036ea53451c6c4ca19d63f8e11129892526c5393208861226035d3ed5ab521"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-mode-select-available-390x844-light.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 136170,
+      "sha256": "381cdf93c54031aa5bb9494e79727f91cf441d2573b432ee23e90d717ea2777c"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-mode-select-available-430x932-light.png",
+      "width": 430,
+      "height": 932,
+      "bytes": 148057,
+      "sha256": "2f4f1e434f9b4ba4bf908fe171498bd6159f1cf2aecbbb95846728ac0062d239"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-squad-review-360x800-light.png",
+      "width": 360,
+      "height": 958,
+      "bytes": 117429,
+      "sha256": "8763e3c98d0a60d109d22158de7a678de9c1023153b48acb2aefd32dee45c2a7"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-squad-review-390x844-light.png",
+      "width": 390,
+      "height": 939,
+      "bytes": 121964,
+      "sha256": "ed03689c664a8dc997bfa27f4f61a8fab57038cb901b2311be94388c04f5e503"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-squad-review-430x932-light.png",
+      "width": 430,
+      "height": 932,
+      "bytes": 124353,
+      "sha256": "0e47c07bf2631a91f80e98d057b2fda0165a36df984d4447e7ecb6f44e9b7907"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-home-360x800-light.png",
+      "width": 360,
+      "height": 800,
+      "bytes": 180742,
+      "sha256": "15b3423ec1a86c181e227d7274aa3f23418a4132b4d71fe0ac19dd0f237065ce"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-home-390x844-light.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 189031,
+      "sha256": "d9463d02513ac56e3562ea8453cd192b6fe941903d1354f03263d3d2520bbc1b"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-home-430x932-light.png",
+      "width": 430,
+      "height": 932,
+      "bytes": 206325,
+      "sha256": "628ad9e408b99babaf62e32a005e120afd22c32f6f45368ab210a7f600870445"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-mode-select-available-360x800-light.png",
+      "width": 360,
+      "height": 800,
+      "bytes": 152046,
+      "sha256": "6874bea7f120c71ffbcdfd5ca2569d5d56c3085cdefcc4b622e088acd285c750"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-mode-select-available-390x844-light.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 162366,
+      "sha256": "bf256704e805d388f41efcef794cda5e534a42b6d409629e2de1b7a22dab0c96"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-mode-select-available-430x932-light.png",
+      "width": 430,
+      "height": 932,
+      "bytes": 177463,
+      "sha256": "361f81b3c3960c8c867083390e5cd12250dc2a6f9d8e4140cc5b4903682e095e"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-squad-review-360x800-light.png",
+      "width": 360,
+      "height": 958,
+      "bytes": 130273,
+      "sha256": "4e33641f172bd67d554ff179b08119f86cbba8444baa0343898d052eb6776385"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-squad-review-390x844-light.png",
+      "width": 390,
+      "height": 939,
+      "bytes": 136807,
+      "sha256": "75b211b0ef59ea819512ce54fb31ac0925747d6bfdfa46486669627ef28bdd27"
+    },
+    {
+      "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/webkit/screenshots/u5-webkit-squad-review-430x932-light.png",
+      "width": 430,
+      "height": 932,
+      "bytes": 141070,
+      "sha256": "c0fcb5b9186db2a8a2d8ec214b20604a886e07612e34b66d75f8325ce854ddbc"
+    }
+  ]
+}

@@ -1,5 +1,12 @@
 import { decodeRunToken, type RunTokenOgSummary } from "./run-token";
-import { isLikelySignedRunOg, SIGNED_RUN_OG_PREFIX, SIGNED_RUN_OG_VERSION } from "./run-og-signing";
+import {
+  LEGACY_SIGNED_RUN_OG_PREFIX,
+  LEGACY_SIGNED_RUN_OG_VERSION,
+  isLikelySignedRunOg,
+  signedRunOgEnvelopeVersion,
+  SIGNED_RUN_OG_PREFIX,
+  SIGNED_RUN_OG_VERSION,
+} from "./run-og-signing";
 import { RUN_OG_HEIGHT, RUN_OG_IMAGE_ROUTE, RUN_OG_WIDTH } from "./run-og-constants";
 import type { RunRecordVersions } from "./versions";
 import { OG_DEFAULT_IMAGE, OG_DEFAULT_IMAGE_ALT } from "../site-metadata";
@@ -69,8 +76,13 @@ export function shareOgImageForRunValue(
 }
 
 function readSignedRunOgCacheHint(value: string): { tokenHash: string; version: number } | null {
-  if (!isLikelySignedRunOg(value)) return null;
-  const rest = value.slice(SIGNED_RUN_OG_PREFIX.length);
+  const envelopeVersion = signedRunOgEnvelopeVersion(value);
+  if (envelopeVersion === null) return null;
+  const prefix =
+    envelopeVersion === LEGACY_SIGNED_RUN_OG_VERSION
+      ? LEGACY_SIGNED_RUN_OG_PREFIX
+      : SIGNED_RUN_OG_PREFIX;
+  const rest = value.slice(prefix.length);
   const dot = rest.lastIndexOf(".");
   if (dot <= 0) return null;
   const payloadB64 = rest.slice(0, dot);
@@ -82,10 +94,10 @@ function readSignedRunOgCacheHint(value: string): { tokenHash: string; version: 
   }
   if (!parsed || typeof parsed !== "object") return null;
   const payload = parsed as Record<string, unknown>;
-  if (payload.v !== SIGNED_RUN_OG_VERSION) return null;
+  if (payload.v !== envelopeVersion) return null;
   const tokenHash = payload.token_hash;
   if (typeof tokenHash !== "string" || !/^[0-9a-f]{64}$/u.test(tokenHash)) return null;
-  return { tokenHash, version: payload.v };
+  return { tokenHash, version: SIGNED_RUN_OG_VERSION };
 }
 
 function base64UrlDecodeToString(value: string): string {

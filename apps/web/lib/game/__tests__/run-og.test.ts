@@ -29,6 +29,8 @@ import {
   type RunOgSignRateLimiter,
 } from "../run-og-sign-rate-limiter-db";
 import {
+  LEGACY_SIGNED_RUN_OG_PREFIX,
+  LEGACY_SIGNED_RUN_OG_VERSION,
   SIGNED_RUN_OG_PREFIX,
   SIGNED_RUN_OG_VERSION,
   assertOgSigningSecretPresent,
@@ -107,14 +109,16 @@ async function signedRawOgPayload(
 }
 
 function tamperSignedOgPayload(signed: string, mutate: (payload: Record<string, unknown>) => void) {
-  const rest = signed.slice(SIGNED_RUN_OG_PREFIX.length);
+  const prefixEnd = signed.indexOf(".") + 1;
+  const prefix = signed.slice(0, prefixEnd);
+  const rest = signed.slice(prefixEnd);
   const dot = rest.lastIndexOf(".");
   const payload = JSON.parse(
     Buffer.from(rest.slice(0, dot), "base64url").toString("utf8"),
   ) as Record<string, unknown>;
   mutate(payload);
   const payloadB64 = Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
-  return `${SIGNED_RUN_OG_PREFIX}${payloadB64}.${rest.slice(dot + 1)}`;
+  return `${prefix}${payloadB64}.${rest.slice(dot + 1)}`;
 }
 
 function corruptSignedOgSignature(signed: string): string {
@@ -717,6 +721,26 @@ describe("dynamic run OG model and image", () => {
 });
 
 describe("trusted run OG signing", () => {
+  it("only emits current-version envelopes", async () => {
+    const token = encodeRunToken(complete());
+    const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+
+    const signed = await signRunOgPayload(
+      {
+        v: SIGNED_RUN_OG_VERSION,
+        token_hash: await sha256Hex(token),
+        versions: gameData.versions,
+        model: verified.model,
+      },
+      SECRET,
+    );
+
+    expect(signed).toMatch(/^ogs2\./u);
+    expect(signed).not.toMatch(/^ogs1\./u);
+  });
+
   it("mutation: an illegal pick is rejected and never receives a signed model", () => {
     const body = decodeV3(encodeRunToken(complete()));
     const first = body.pl.find((p) => p.k === "p");
@@ -783,7 +807,7 @@ describe("trusted run OG signing", () => {
     expect(trusted?.model.team_name).toBe(verified.model.team_name);
   });
 
-  it("rejects both old ogs1 envelopes and v1 payloads after the cache cutover", async () => {
+  it("rejects envelope/payload version mismatches", async () => {
     vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
     const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:v1-cutover")));
     const verified = verifyRunTokenForOg(token, {
@@ -798,10 +822,16 @@ describe("trusted run OG signing", () => {
       versions: gameData.versions,
       model: verified.model,
     };
-    const oldEnvelope = await signedRawOgPayload(oldPayload, "ogs1.");
     const oldPayloadUnderCurrentPrefix = await signedRawOgPayload(oldPayload);
+    const currentPayloadUnderOldPrefix = await signedRawOgPayload(
+      {
+        ...oldPayload,
+        v: SIGNED_RUN_OG_VERSION,
+      },
+      LEGACY_SIGNED_RUN_OG_PREFIX,
+    );
 
-    for (const signed of [oldEnvelope, oldPayloadUnderCurrentPrefix]) {
+    for (const signed of [oldPayloadUnderCurrentPrefix, currentPayloadUnderOldPrefix]) {
       expect(await verifySignedRunOgPayload(signed, SECRET)).toBeNull();
       expect(shareOgImageForRunValue(token, signed, gameData.versions)).toEqual(
         defaultRunOgImage(),
@@ -1030,6 +1060,79 @@ describe("dynamic run OG route scope", () => {
     expect(Buffer.compare(firstBytes, secondBytes)).toBe(0);
     expect(firstBytes.length).toBeLessThan(500_000);
     expect(elapsedMs).toBeLessThan(3_000);
+  });
+
+  it("accepts v1 only on the read path, rekeys it to ogs2, and rejects v1 attacks", async () => {
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    stubOgRouteFetch();
+    const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:v1-durability")));
+    const verified = verifyRunTokenForOg(token, {
+      gameData,
+      scenario: SCENARIO_2026_BUNDLE,
+    });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+
+    const legacyPayload = {
+      v: LEGACY_SIGNED_RUN_OG_VERSION,
+      token_hash: await sha256Hex(token),
+      versions: gameData.versions,
+      model: verified.model,
+    };
+    const validV1 = await signedRawOgPayload(legacyPayload, LEGACY_SIGNED_RUN_OG_PREFIX);
+    const validV2 = await signedOgForToken(token);
+    const tamperedV1 = tamperSignedOgPayload(validV1, (payload) => {
+      const model = payload.model as Record<string, unknown>;
+      model.result_label = "8-0 - FORGED";
+    });
+    const forgedSignatureV1 = corruptSignedOgSignature(validV1);
+
+    const trustedLegacy = await verifySignedRunOgPayload(validV1, SECRET);
+    expect(trustedLegacy?.v).toBe(LEGACY_SIGNED_RUN_OG_VERSION);
+    expect(await verifySignedRunOgPayload(tamperedV1, SECRET)).toBeNull();
+    expect(await verifySignedRunOgPayload(forgedSignatureV1, SECRET)).toBeNull();
+
+    const descriptor = shareOgImageForRunValue(token, validV1, gameData.versions);
+    expect(descriptor.dynamic).toBe(true);
+    const descriptorUrl = new URL(descriptor.url, "http://localhost");
+    expect(descriptorUrl.searchParams.get("og")).toBe(validV1);
+    expect(descriptorUrl.searchParams.get("v")).toBe(
+      `ogs2.${legacyPayload.token_hash.slice(0, 32)}`,
+    );
+
+    const route = (og: string) =>
+      runOgRouteGet(
+        new Request(
+          `http://localhost/api/og/run?run=${encodeURIComponent(token)}&og=${encodeURIComponent(og)}&v=ogs2.${legacyPayload.token_hash.slice(0, 32)}`,
+        ),
+      );
+    const [legacyResponse, currentResponse, tamperedResponse, forgedResponse] = await Promise.all([
+      route(validV1),
+      route(validV2),
+      route(tamperedV1),
+      route(forgedSignatureV1),
+    ]);
+
+    for (const response of [legacyResponse, currentResponse]) {
+      expect(response.status).toBe(200);
+      expect(response.headers.get("content-type")).toBe("image/png");
+      expect(response.headers.get("cache-control")).toBe(TRUSTED_IMAGE_CACHE);
+      expect((await response.arrayBuffer()).byteLength).toBeGreaterThan(1_000);
+    }
+    for (const response of [tamperedResponse, forgedResponse]) {
+      expect(response.status).toBe(307);
+      expect(response.headers.get("location")).toBe(
+        "http://localhost/brand/marketing/og-default.png",
+      );
+    }
+    expect(shareOgImageForRunValue(token, "ogs1.malformed", gameData.versions)).toEqual(
+      defaultRunOgImage(),
+    );
+    const malformed = await route("ogs1.malformed");
+    expect(malformed.status).toBe(307);
+    expect(malformed.headers.get("location")).toBe(
+      "http://localhost/brand/marketing/og-default.png",
+    );
   });
 
   it("renders a version-moved signed snapshot instead of falling back to default", async () => {
