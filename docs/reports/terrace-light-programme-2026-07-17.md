@@ -5,7 +5,7 @@
 - Base: `1b2281e9c9f64bc13effacb2d2a071d518addfb7`
 - Branch: `ws-ux/terrace-light-programme`
 - PR: #309
-- Status: implementation complete; full U2 validation, exact-head reviews, merge, deploy, and
+- Status: implementation and full U2 validation complete; exact-head reviews, merge, deploy, and
   production live verification remain before this lane is shipped.
 
 ## Summary
@@ -62,28 +62,28 @@ OG is not theme-aware. `run-og-palette.ts` binds the sole renderer palette to
 All ratios were computed from the shipped candidate bytes with the repository's sRGB/WCAG
 helpers. None of the requested paper text targets needed luminance adjustment.
 
-| Role / stop | Target | Shipped | Page `#f1ecdf` | Card `#faf7ee` | Raised `#fefef5` |
-| --- | --- | --- | ---: | ---: | ---: |
-| page / paper | `#f1ecdf` | `#f1ecdf` | structural | structural | structural |
-| card | `#faf7ee` | `#faf7ee` | structural | structural | structural |
-| raised (derived) | relative ramp | `#fefef5` | structural | structural | structural |
-| sunken / well (derived) | relative ramp | `#e8e2d1` | structural | structural | structural |
-| hairline | `#ddd6c4` | `#ddd6c4` | structural | structural | structural |
-| ink 100 | `#16180f` | `#16180f` | 15.1954 | 16.7315 | 17.6752 |
-| ink 200 (derived) | relative ramp | `#333529` | 10.5848 | 11.6549 | 12.3122 |
-| ink 300 / `tx2` (derived) | relative ramp | `#4c4d40` | 7.2881 | 8.0248 | 8.4774 |
-| ink 400 / secondary | `#5c5c4e` | `#5c5c4e` | 5.7507 | 6.3321 | 6.6892 |
-| green text | `#0f5f3f` | `#0f5f3f` | 6.5240 | 7.1836 | 7.5887 |
-| gold text | `#7a5a12` | `#7a5a12` | 5.3972 | 5.9428 | 6.2780 |
+| Role / stop               | Target        | Shipped   | Page `#f1ecdf` | Card `#faf7ee` | Raised `#fefef5` |
+| ------------------------- | ------------- | --------- | -------------: | -------------: | ---------------: |
+| page / paper              | `#f1ecdf`     | `#f1ecdf` |     structural |     structural |       structural |
+| card                      | `#faf7ee`     | `#faf7ee` |     structural |     structural |       structural |
+| raised (derived)          | relative ramp | `#fefef5` |     structural |     structural |       structural |
+| sunken / well (derived)   | relative ramp | `#e8e2d1` |     structural |     structural |       structural |
+| hairline                  | `#ddd6c4`     | `#ddd6c4` |     structural |     structural |       structural |
+| ink 100                   | `#16180f`     | `#16180f` |        15.1954 |        16.7315 |          17.6752 |
+| ink 200 (derived)         | relative ramp | `#333529` |        10.5848 |        11.6549 |          12.3122 |
+| ink 300 / `tx2` (derived) | relative ramp | `#4c4d40` |         7.2881 |         8.0248 |           8.4774 |
+| ink 400 / secondary       | `#5c5c4e`     | `#5c5c4e` |         5.7507 |         6.3321 |           6.6892 |
+| green text                | `#0f5f3f`     | `#0f5f3f` |         6.5240 |         7.1836 |           7.5887 |
+| gold text                 | `#7a5a12`     | `#7a5a12` |         5.3972 |         5.9428 |           6.2780 |
 
 The disabled ink stop derives to `#a09e8c`; it retains the old ramp position and remains a
 non-body disabled/faint stop. The old/new ink normalized luminance positions differ by at most
 0.0029. The paper/card/raised relative position differs by less than 0.0011.
 
-| Structural pair | Shipped | Ratio | Adjudication |
-| --- | --- | ---: | --- |
-| actual dark on-green ink / green fill | `#05130c` / `#3f9268` | 4.9984 | preserved exactly |
-| on-gold ink / gold fill | `#1a1305` / `#d4a94e` | 8.4130 | preserved exactly |
+| Structural pair                          | Shipped               |  Ratio | Adjudication                                   |
+| ---------------------------------------- | --------------------- | -----: | ---------------------------------------------- |
+| actual dark on-green ink / green fill    | `#05130c` / `#3f9268` | 4.9984 | preserved exactly                              |
+| on-gold ink / gold fill                  | `#1a1305` / `#d4a94e` | 8.4130 | preserved exactly                              |
 | rejected hand-provided bone / green fill | `#ebe6da` / `#3f9268` | 3.0534 | not AA body text and not the current dark stop |
 
 Existing `--accent`/`--gold`/`--ember` aliases had mixed structural and text use. Programme maps
@@ -163,14 +163,14 @@ The clean control command passed all six controls in Chromium and WebKit before 
 mutations. Each valid mutation was applied alone, run in both engines against the same optimized
 production server, observed red on its intended control, and exactly restored before the next.
 
-| Deliberate mutation | Chromium | WebKit | Intended red |
-| --- | ---: | ---: | --- |
-| disable Class-B candidate enumeration | `class-b-fires 0` | `class-b-fires 0` | positive control absent |
-| treat every pointer-transparent candidate as painted | `class-b-transparent-clear 2` | `class-b-transparent-clear 2` | transparent negative fires |
-| suppress fixed-over-fixed Class A | `class-a-fires 0` | `class-a-fires 0` | positive control absent |
-| force the separated Class-A fixture to overlap | `class-a-separated-clear 2` | `class-a-separated-clear 2` | separated negative fires |
-| broaden same-control allowlist beyond hairline contact | `same-interactive-blocker 0` | `same-interactive-blocker 0` | blocker incorrectly allowed |
-| broaden scrolling-shell allowlist to pinned targets | `scrolling-shell-pinned-blocker 0` | `scrolling-shell-pinned-blocker 0` | pinned blocker incorrectly allowed |
+| Deliberate mutation                                    |                           Chromium |                             WebKit | Intended red                       |
+| ------------------------------------------------------ | ---------------------------------: | ---------------------------------: | ---------------------------------- |
+| disable Class-B candidate enumeration                  |                  `class-b-fires 0` |                  `class-b-fires 0` | positive control absent            |
+| treat every pointer-transparent candidate as painted   |      `class-b-transparent-clear 2` |      `class-b-transparent-clear 2` | transparent negative fires         |
+| suppress fixed-over-fixed Class A                      |                  `class-a-fires 0` |                  `class-a-fires 0` | positive control absent            |
+| force the separated Class-A fixture to overlap         |        `class-a-separated-clear 2` |        `class-a-separated-clear 2` | separated negative fires           |
+| broaden same-control allowlist beyond hairline contact |       `same-interactive-blocker 0` |       `same-interactive-blocker 0` | blocker incorrectly allowed        |
+| broaden scrolling-shell allowlist to pinned targets    | `scrolling-shell-pinned-blocker 0` | `scrolling-shell-pinned-blocker 0` | pinned blocker incorrectly allowed |
 
 Two intermediate mutation designs were explicitly rejected rather than counted: changing only
 the literal `transparent` parser branch stayed green because browsers expose computed transparent

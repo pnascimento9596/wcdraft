@@ -4,20 +4,9 @@
   "collisionMode": "off",
   "baseUrl": "http://127.0.0.1:3049",
   "axeSource": "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js",
-  "surfaces": [
-    "home",
-    "mode-select-available",
-    "draft-setup",
-    "squad-review"
-  ],
-  "viewports": [
-    "390x844",
-    "360x800",
-    "430x932"
-  ],
-  "themes": [
-    "light"
-  ],
+  "surfaces": ["home", "mode-select-available", "draft-setup", "squad-review"],
+  "viewports": ["390x844", "360x800", "430x932"],
+  "themes": ["light"],
   "generatedAt": "2026-07-17T22:01:32.125Z",
   "metrics": [
     {
