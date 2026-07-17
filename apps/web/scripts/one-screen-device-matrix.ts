@@ -19,7 +19,7 @@ function namedDescriptor(name: string): DeviceDescriptor {
 }
 
 /**
- * Assertion matrix for the two one-screen routes.
+ * Assertion matrix for the three one-screen routes.
  *
  * Every case is a Playwright 1.61.1 built-in descriptor except the explicitly
  * disclosed 1366-width desktop intent. Playwright has no 1366 descriptor, so

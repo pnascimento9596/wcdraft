@@ -274,8 +274,11 @@
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "top bottom"
+    "desc desc";
   align-items: center;
-  min-height: 52px;
+  min-height: 72px;
   border-color: color-mix(in srgb, var(--gold) 58%, var(--line));
   background: color-mix(in srgb, var(--gold) 8%, var(--s1));
   box-shadow:
@@ -283,14 +286,22 @@
     var(--e1);
 }
 
-.modeCardFeatured .modeDesc,
 .modeCardFeatured .modeFeatures {
   display: none;
 }
 
 .modeCardFeatured .modeCardTop {
+  grid-area: top;
   min-width: 0;
   gap: 6px;
+}
+
+.modeCardFeatured .modeDesc {
+  grid-area: desc;
+  max-width: none;
+  min-height: 0;
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .modeCardFeatured .modeTag,
@@ -300,6 +311,7 @@
 }
 
 .modeCardFeatured .modeCardBottom {
+  grid-area: bottom;
   margin: 0;
   padding: 0 0 0 6px;
   border-top: 0;
@@ -434,7 +446,10 @@
   margin: 0;
   color: var(--tx2);
   font-size: 14.5px;
+  font-weight: var(--font-weight-regular) !important;
   line-height: 1.58;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 .modeFeatures,
@@ -682,17 +697,34 @@
   }
 
   .modeGrid {
-    gap: 6px;
-    margin-top: 6px;
+    gap: 4px;
+    margin-top: 4px;
   }
   .modeGridDaily {
-    gap: 6px;
+    gap: 4px;
   }
 
   .modeCard {
-    gap: 5px;
-    padding: 8px;
+    gap: 3px;
+    padding: 6px;
     border-radius: 12px;
+  }
+
+  .modeCardFeatured {
+    align-items: stretch;
+    grid-template-areas:
+      "top bottom"
+      "desc desc";
+  }
+
+  .modeCardFeatured .modeCardBottom {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3px;
+    margin: 0;
+    padding: 1px 0 0;
+    border-top: 0;
   }
 
   .modeCard:hover,
@@ -715,14 +747,15 @@
   }
 
   .modeDock {
-    margin: 3px calc(-1 * var(--m-container-x)) -8px;
+    margin: 3px calc(-1 * var(--m-container-x)) 0;
     padding-block: 9px calc(9px + env(safe-area-inset-bottom, 0px));
     padding-inline: var(--m-container-x);
   }
 }
 
 /* Five-mode mobile/short-landscape composition: Daily keeps the broadcast
-   lead, while the four repeatable modes form a compact board below it. */
+   lead on mobile; short landscape spends width to keep every descriptor and
+   action visible in one row. */
 @media (max-width: 430px), (max-height: 500px) and (max-width: 51.99rem) {
   .modeGridDaily {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -738,11 +771,7 @@
   }
 
   .modeCardFeatured {
-    min-height: 52px;
-  }
-
-  .modeCardFeatured .modeCardBottom {
-    display: none;
+    min-height: 68px;
   }
 
   .modeCard:not(.modeCardFeatured) .modeCardTop {
@@ -760,20 +789,52 @@
     white-space: normal;
   }
 
-  .modeCard:not(.modeCardFeatured) .modeDesc,
   .modeCard:not(.modeCardFeatured) .modeFeatures {
     display: none;
   }
 
-  .modeCard:not(.modeCardFeatured) .modeCta {
-    font-size: 11px;
+  .modeCard:not(.modeCardFeatured) .modeDesc {
+    min-height: 0;
+    max-width: none;
+    font-size: 12px;
     line-height: 1.25;
-    padding-block: 4px;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCardBottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 2px;
+    margin-top: 0;
+    padding-top: 1px;
+    border-top: 0;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCta {
+    min-width: 0;
+    padding: 0;
+    font-size: 9px;
+    line-height: 1.1;
+    white-space: normal;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeSelectedText {
+    gap: 2px;
+    font-size: 8px;
+    white-space: nowrap;
+  }
+}
+
+/* The retained 320px tier may scroll vertically. Keep its action in normal
+   flow so the last mode row remains readable and tappable above the dock. */
+@media (max-width: 359px) {
+  .modeDock {
+    position: static;
   }
 }
 
 /* A sticky action would consume too much of a 375px-tall landscape viewport.
-   Keep it in flow there; the four-column board remains compact and no card can
+   Keep it in flow there; the five-column board remains compact and no card can
    paint underneath the action. */
 @media (max-height: 500px) and (max-width: 63.99rem) {
   .modeGridDaily {
@@ -789,7 +850,7 @@
 
 @media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
   .localProgressBand {
-    padding-block: 6px;
+    padding-block: 0;
   }
 
   .localProgressBandCompact {
@@ -798,7 +859,7 @@
 
   .modeGrid,
   .modeGridDaily {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 5px;
     margin-top: 5px;
   }
@@ -807,24 +868,46 @@
   .modeCardFeatured,
   .modeCardSecondary {
     min-height: 44px;
-    padding: 6px;
-    gap: 3px;
-  }
-
-  .modeCardFeatured {
-    grid-column: 1 / -1;
-  }
-
-  .modeCardBottom {
-    display: none;
-  }
-
-  .modeCard:not(.modeCardFeatured) .modeCardTop {
+    padding: 2px;
     gap: 2px;
   }
 
+  .modeCardFeatured {
+    grid-column: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "top bottom"
+      "desc desc";
+    align-items: stretch;
+  }
+
+  .modeCardFeatured .modeCardTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+  }
+
+  .modeCardFeatured .modeTag,
+  .modeCardFeatured .modeName {
+    white-space: normal;
+  }
+
+  .modeCardFeatured .modeDesc {
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .modeCardBottom {
+    display: flex;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCardTop {
+    gap: 1px;
+  }
+
   .modeTag {
-    padding: 2px 5px;
+    padding: 2px 3px;
     font-size: 8px;
   }
 
@@ -833,7 +916,36 @@
   }
 
   .modeDock {
-    margin-top: 5px;
-    padding-block: 5px calc(5px + env(safe-area-inset-bottom, 0px));
+    margin-top: 3px;
+    margin-bottom: 0;
+    padding-block: 2px calc(2px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .modeCardFeatured .modeCardBottom {
+    width: 60px;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-self: end;
+    gap: 0;
+    padding-left: 2px;
+  }
+
+  .modeCardFeatured .modeCta {
+    padding: 0;
+    font-size: 7.5px;
+    line-height: 1.1;
+  }
+
+  .modeCard:not(.modeCardFeatured) .modeCta {
+    font-size: 8px;
+  }
+
+  .modeCard .modeSelectedText {
+    font-size: 7.5px;
+  }
+
+  .modeCard .modeSelectedText::before {
+    display: none;
   }
 }

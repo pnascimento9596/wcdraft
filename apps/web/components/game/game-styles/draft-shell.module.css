@@ -2015,3 +2015,346 @@
     margin-inline: 0;
   }
 }
+
+/* ── Terrace formation selector ──────────────────────────────────────────
+   This screen is intentionally denser than the live draft. The mini-pitch is
+   a formation-comparison diagram, not a player-identity surface: ten equal
+   outfield dots and an outlined goalkeeper box are the owner-approved local
+   exception to position-by-shape. */
+.setupDisclosure {
+  min-width: 0;
+}
+
+.draftShell[data-formation-select] {
+  height: 100%;
+  min-height: 0;
+  gap: 0;
+  padding: 6px 0 0;
+  overflow: hidden;
+}
+
+.draftShell[data-formation-select] .formationSelect {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 5px;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.draftShell[data-formation-select] .formationHead {
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+}
+
+.draftShell[data-formation-select] .formationHead::before {
+  content: none;
+}
+
+.draftShell[data-formation-select] .formationTitle {
+  font-size: clamp(22px, 6vw, 27px);
+  line-height: 1;
+}
+
+.draftShell[data-formation-select] .formationSub {
+  max-width: none;
+  font-size: 12px;
+  line-height: 1.24;
+}
+
+.draftShell[data-formation-select] .setupRow {
+  min-height: 44px;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 9px 9px 0 0;
+}
+
+.draftShell[data-formation-select] .setupRowValue {
+  display: none;
+}
+
+.draftShell[data-formation-select] .setupPanel {
+  gap: 2px;
+  padding: 2px 4px 4px;
+  border-radius: 0 0 9px 9px;
+}
+
+.draftShell[data-formation-select] .setupAxis {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  min-height: 44px;
+  gap: 3px;
+}
+
+.draftShell[data-formation-select] .setupAxis[data-setup-axis="era"] .setupSeg {
+  grid-column: 2 / 4;
+}
+
+.draftShell[data-formation-select] .setupAxisLabel {
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+.draftShell[data-formation-select] .setupSeg {
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  gap: 2px;
+}
+
+.draftShell[data-formation-select] .setupSegBtn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 2px 3px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.draftShell[data-formation-select] .setupAxisNote {
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+.draftShell[data-formation-select] .formationGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(44px, auto);
+  gap: 4px;
+}
+
+.draftShell[data-formation-select] .formationCard {
+  min-width: 44px;
+  min-height: 44px;
+  flex-direction: row;
+  justify-content: center;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 8px;
+  box-shadow: none;
+  text-align: left;
+}
+
+.draftShell[data-formation-select] .formationCard:hover,
+.draftShell[data-formation-select] .formationCard:focus-visible {
+  transform: none;
+}
+
+.draftShell[data-formation-select] .formationCardSelected,
+.draftShell[data-formation-select] .formationCardPending {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.draftShell[data-formation-select] .formationCardSelected::after,
+.draftShell[data-formation-select] .formationCardPending::after {
+  display: none;
+}
+
+.draftShell[data-formation-select] .formationCardBody {
+  width: auto;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.draftShell[data-formation-select] .formationCardName {
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.formationCardDescriptor {
+  color: var(--ink-400);
+  font-family: var(--font-family);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium) !important;
+  line-height: 1.08;
+  letter-spacing: var(--tracking-micro) !important;
+  text-transform: none !important;
+}
+
+.draftShell[data-formation-select] .formationCardSelected .formationCardName,
+.draftShell[data-formation-select] .formationCardPending .formationCardName {
+  color: var(--accent-text);
+}
+
+.formationCardCheck {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: var(--font-weight-heading);
+  line-height: 1;
+}
+
+.draftShell[data-formation-select] .miniPitch {
+  width: 30px;
+  max-width: none;
+  aspect-ratio: 5 / 6;
+  border: 0.75px solid var(--line);
+  border-radius: 3px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.draftShell[data-formation-select] .miniDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: none;
+  transform: translate(-50%, -50%);
+}
+
+.miniHalfway,
+.miniCentreCircle,
+.miniGoalBox {
+  position: absolute;
+  z-index: 0;
+  border-color: var(--line);
+  pointer-events: none;
+}
+
+.miniHalfway {
+  top: 50%;
+  right: 0;
+  left: 0;
+  border-top: 0.75px solid var(--line);
+}
+
+.miniCentreCircle {
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border: 0.75px solid var(--line);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.miniGoalBox {
+  width: 8px;
+  height: 5px;
+  border: 1px solid var(--ink);
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+}
+
+.draftShell[data-formation-select] .miniPitchSelected .miniDot {
+  background: var(--accent);
+}
+
+.miniPitchSelected .miniGoalBox {
+  border-color: var(--accent);
+}
+
+.draftShell[data-formation-select] .formationDock {
+  flex: 0 0 auto;
+  margin: auto 0 0;
+  padding: 5px 0 max(5px, env(safe-area-inset-bottom, 0px));
+  background: var(--bg-850);
+}
+
+.draftShell[data-formation-select] .formationDock :global(.btn) {
+  min-height: 44px;
+}
+
+@media (max-width: 359px) {
+  .draftShell[data-formation-select] {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .draftShell[data-formation-select] .formationSelect {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
+  .draftShell[data-formation-select] .formationGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
+  .draftShell[data-formation-select] {
+    padding-top: 0;
+  }
+
+  .draftShell[data-formation-select] .formationSelect {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0 7px;
+    overflow: hidden;
+  }
+
+  .draftShell[data-formation-select] .formationHead {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 44px;
+    padding-right: 92px;
+  }
+
+  .draftShell[data-formation-select] .setupDisclosure {
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .draftShell[data-formation-select] .setupRow {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    width: 88px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 2px 5px;
+  }
+
+  .draftShell[data-formation-select] .formationGrid {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: start;
+  }
+
+  .draftShell[data-formation-select] .formationCard {
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 2px;
+    text-align: center;
+  }
+
+  .draftShell[data-formation-select] .formationCardBody {
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .draftShell[data-formation-select] .formationTitle {
+    font-size: 18px;
+  }
+
+  .draftShell[data-formation-select] .formationSub {
+    font-size: 12px;
+    line-height: 1.15;
+  }
+
+  .draftShell[data-formation-select] .setupAxisNote {
+    font-size: 12px;
+    line-height: 1.05;
+  }
+
+  .draftShell[data-formation-select] .setupPanel {
+    padding-bottom: 3px;
+  }
+
+  .draftShell[data-formation-select] .formationDock {
+    padding-block: 0 max(0px, env(safe-area-inset-bottom, 0px));
+  }
+}

@@ -18,7 +18,7 @@ import {
 
 type Theme = "light" | "dark";
 type Motion = "no-preference" | "reduce";
-type RoutePath = "/" | "/play";
+type RoutePath = "/" | "/play" | "/play/draft";
 
 type PaintRegion = {
   readonly label: string;
@@ -100,6 +100,8 @@ type FitMetric = {
   readonly disclosureLinesInViewport: boolean;
   readonly disclosureLinesReachable: boolean;
   readonly disclosureTexts: readonly string[];
+  readonly disclosurePosition: string | null;
+  readonly disclosureBottomGapPx: number | null;
   readonly modeDockDisclosureOverlapPx: number | null;
   readonly renderedTheme: string | null;
   readonly renderedReducedMotion: boolean;
@@ -122,8 +124,24 @@ type FitMetric = {
   readonly regularModeColumns: number | null;
   readonly progressItemCount: number | null;
   readonly progressOneRow: boolean | null;
-  readonly dailyOneRow: boolean | null;
+  readonly dailyHeaderOneRow: boolean | null;
   readonly cardCollisionCount: number | null;
+  readonly modeDescriptorsUseBodyTypography: boolean | null;
+  readonly modeCardBottomCount: number | null;
+  readonly formationCardCount: number | null;
+  readonly formationColumns: number | null;
+  readonly formationDotCount: number | null;
+  readonly formationGoalBoxCount: number | null;
+  readonly formationShapeMarkerCount: number | null;
+  readonly formationAppBarCount: number | null;
+  readonly formationSetupNoteCount: number | null;
+  readonly formationDescriptorTexts: readonly string[] | null;
+  readonly formationSelectedCheckCount: number | null;
+  readonly formationActiveMarkerColorsCorrect: boolean | null;
+  readonly formationMinimumTextPx: number | null;
+  readonly formationSectionFits: boolean | null;
+  readonly formationCardCollisionCount: number | null;
+  readonly formationCardContentOverflowCount: number | null;
   readonly zoomDisabled: boolean;
   readonly pageErrors: readonly string[];
 };
@@ -169,7 +187,21 @@ const shellReadyTimeoutMs = 15_000;
 const hiddenPaintBaselineAttempts = 3;
 const themes: readonly Theme[] = ["light", "dark"];
 const motions: readonly Motion[] = ["no-preference", "reduce"];
-const routes: readonly RoutePath[] = ["/", "/play"];
+const routes: readonly RoutePath[] = ["/", "/play", "/play/draft"];
+const legalDisclosureTexts = [
+  "Data: The Fjelstul World Cup Database © 2023 Joshua C. Fjelstul, Ph.D., licensed CC-BY-SA 4.0 (github.com/jfjelstul/worldcup), modified.",
+  "wcdraft is an independent project and is not affiliated with, endorsed by, or associated with any official competition or governing body.",
+] as const;
+const formationDescriptors = [
+  "Wide attack",
+  "Compact block",
+  "Two strikers",
+  "Screened defence",
+  "Midfield control",
+  "Front three",
+  "Twin creators",
+  "Deep defence",
+] as const;
 const engineEntries: readonly [OneScreenEngine, BrowserType][] = [
   ["chromium", chromium],
   ["webkit", webkit],
@@ -354,6 +386,15 @@ const routeReadySelectors: Readonly<Record<RoutePath, readonly string[]>> = {
     '[role="radio"]:nth-of-type(5)',
     "main button.btn",
   ],
+  "/play/draft": [
+    ".masthead",
+    "[data-formation-select]",
+    "[data-formation-select] h1",
+    '[data-formation-select] [aria-label="Era preset"]',
+    "[data-formation-select] [class*='formationGrid']",
+    "[data-formation-select] button[class*='formationCard']:nth-of-type(8)",
+    "[data-formation-select] [class*='formationDock'] button",
+  ],
 };
 
 async function waitForRouteReady(page: Page, pathname: RoutePath): Promise<void> {
@@ -439,20 +480,38 @@ function metricFailures(metric: FitMetric): readonly string[] {
     failures.push(`${prefix}: document width ${metric.scrollWidth}/${metric.innerWidth}`);
   }
   if (metric.footerDisplay !== "none") failures.push(`${prefix}: footer is visible`);
-  if (metric.disclosureLineCount !== 2) {
+  const expectsDisclosure = metric.pathname !== "/play/draft";
+  if (expectsDisclosure) {
+    if (metric.disclosureLineCount !== 2) {
+      failures.push(
+        `${prefix}: expected 2 disclosure lines, saw ${metric.disclosureLineCount.toString()}`,
+      );
+    }
+    if (JSON.stringify(metric.disclosureTexts) !== JSON.stringify(legalDisclosureTexts)) {
+      failures.push(`${prefix}: legal disclosure copy changed`);
+    }
+    if (!metric.disclosureLinesReachable) {
+      failures.push(`${prefix}: disclosure lines are not reachable`);
+    }
+    if (metric.disclosurePosition === "fixed") {
+      failures.push(`${prefix}: disclosure uses fixed positioning`);
+    }
+    if ((metric.disclosureBottomGapPx ?? Number.POSITIVE_INFINITY) > 1) {
+      failures.push(
+        `${prefix}: disclosure is ${String(metric.disclosureBottomGapPx)}px above its route shell`,
+      );
+    }
+  } else if (metric.disclosureLineCount !== 0) {
     failures.push(
-      `${prefix}: expected 2 disclosure lines, saw ${metric.disclosureLineCount.toString()}`,
+      `${prefix}: formation route unexpectedly renders ${metric.disclosureLineCount.toString()} disclosure lines`,
     );
-  }
-  if (!metric.disclosureLinesReachable) {
-    failures.push(`${prefix}: disclosure lines are not reachable`);
   }
   if ((metric.modeDockDisclosureOverlapPx ?? 0) > 0) {
     failures.push(
       `${prefix}: mode dock overlaps disclosure by ${String(metric.modeDockDisclosureOverlapPx)}px`,
     );
   }
-  if (metric.strictVerticalFit && !metric.disclosureLinesInViewport) {
+  if (expectsDisclosure && metric.strictVerticalFit && !metric.disclosureLinesInViewport) {
     failures.push(`${prefix}: disclosure lines are below the initial viewport`);
   }
   if (metric.renderedTheme !== metric.theme) {
@@ -522,7 +581,7 @@ function metricFailures(metric: FitMetric): readonly string[] {
     if (metric.homeStatCount !== 3) {
       failures.push(`${prefix}: expected 3 stats, saw ${String(metric.homeStatCount)}`);
     }
-  } else {
+  } else if (metric.pathname === "/play") {
     const expectedColumns = metric.viewport.width <= 430 ? 2 : 4;
     if (metric.modeCardCount !== 5) {
       failures.push(`${prefix}: expected 5 mode cards, saw ${String(metric.modeCardCount)}`);
@@ -540,9 +599,81 @@ function metricFailures(metric: FitMetric): readonly string[] {
     if (metric.progressItemCount !== 4 || !metric.progressOneRow) {
       failures.push(`${prefix}: progress is not four items on one row`);
     }
-    if (!metric.dailyOneRow) failures.push(`${prefix}: Daily card is not one visual row`);
+    if (!metric.dailyHeaderOneRow) {
+      failures.push(`${prefix}: Daily card header and action are not one visual row`);
+    }
     if ((metric.cardCollisionCount ?? 1) > 0) {
       failures.push(`${prefix}: ${String(metric.cardCollisionCount)} mode-card collisions`);
+    }
+    if (!metric.modeDescriptorsUseBodyTypography) {
+      failures.push(`${prefix}: mode descriptors are not untracked regular-weight body copy`);
+    }
+    if (metric.modeCardBottomCount !== 5) {
+      failures.push(
+        `${prefix}: expected 5 visible per-card action labels, saw ${String(metric.modeCardBottomCount)}`,
+      );
+    }
+  } else {
+    const expectedColumns = metric.viewport.width < 360 ? 2 : 3;
+    if (metric.formationCardCount !== 8) {
+      failures.push(
+        `${prefix}: expected 8 formation cards, saw ${String(metric.formationCardCount)}`,
+      );
+    }
+    if (metric.formationColumns !== expectedColumns) {
+      failures.push(
+        `${prefix}: expected ${expectedColumns.toString()} formation columns, saw ${String(metric.formationColumns)}`,
+      );
+    }
+    if (metric.requiredTargetCount !== 20) {
+      failures.push(
+        `${prefix}: expected setup toggle, 10 setup choices, 8 formations, and dock action; saw ${metric.requiredTargetCount.toString()} targets`,
+      );
+    }
+    if (metric.formationDotCount !== 80 || metric.formationGoalBoxCount !== 8) {
+      failures.push(
+        `${prefix}: expected 80 uniform dots and 8 goalkeeper boxes; saw ${String(metric.formationDotCount)} and ${String(metric.formationGoalBoxCount)}`,
+      );
+    }
+    if (metric.formationShapeMarkerCount !== 0) {
+      failures.push(
+        `${prefix}: selector leaked ${String(metric.formationShapeMarkerCount)} position-shape markers`,
+      );
+    }
+    if (metric.formationAppBarCount !== 0) {
+      failures.push(`${prefix}: duplicate draft app bar is still rendered`);
+    }
+    if (metric.formationSetupNoteCount !== 3) {
+      failures.push(
+        `${prefix}: expected 3 visible setup notes, saw ${String(metric.formationSetupNoteCount)}`,
+      );
+    }
+    if (JSON.stringify(metric.formationDescriptorTexts) !== JSON.stringify(formationDescriptors)) {
+      failures.push(`${prefix}: formation descriptors changed or are missing`);
+    }
+    if (metric.formationSelectedCheckCount !== 1) {
+      failures.push(`${prefix}: selected formation does not expose one check mark`);
+    }
+    if (!metric.formationActiveMarkerColorsCorrect) {
+      failures.push(`${prefix}: formation dots do not use ink/accent for inactive/active cards`);
+    }
+    if ((metric.formationMinimumTextPx ?? 0) < 12) {
+      failures.push(
+        `${prefix}: formation text falls below 12px (${String(metric.formationMinimumTextPx)}px)`,
+      );
+    }
+    if (metric.strictVerticalFit && !metric.formationSectionFits) {
+      failures.push(`${prefix}: formation content scrolls inside a strict one-screen context`);
+    }
+    if ((metric.formationCardCollisionCount ?? 1) > 0) {
+      failures.push(
+        `${prefix}: ${String(metric.formationCardCollisionCount)} formation-card collisions`,
+      );
+    }
+    if ((metric.formationCardContentOverflowCount ?? 1) > 0) {
+      failures.push(
+        `${prefix}: ${String(metric.formationCardContentOverflowCount)} formation cards overflow their readable content box`,
+      );
     }
   }
   return failures;
@@ -601,6 +732,11 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
     const body = document.body;
     const footer = document.querySelector(".site-footer");
     const disclosureLines = [...document.querySelectorAll(".one-screen-disclosure [data-disclosure-line]")];
+    const modeCards = [...document.querySelectorAll('[role="radio"]')].filter(visible);
+    const formationCards = [...document.querySelectorAll('[data-formation-select] button[class*="formationCard"]')].filter(visible);
+    const formationSetupButtons = [...document.querySelectorAll('[data-formation-select] button[class*="setupSegBtn"]')].filter(visible);
+    const formationSetupToggle = document.querySelector('[data-formation-select] button[class*="setupRow"]');
+    const formationDockAction = document.querySelector('[data-formation-select] [class*="formationDock"] button');
     const metaViewport = document.querySelector('meta[name="viewport"]')?.content ?? "";
     const requiredContent =
       pathValue === "/"
@@ -613,14 +749,22 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
             ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ]
-        : [
-            ["masthead", document.querySelector(".masthead")],
-            ["mode heading", document.querySelector(".game-page--mode .page-head")],
-            ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
-            ["mode grid", document.querySelector('[aria-label="Draft mode"]')],
-            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
-            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
-          ];
+        : pathValue === "/play"
+          ? [
+              ["masthead", document.querySelector(".masthead")],
+              ["mode heading", document.querySelector(".game-page--mode .page-head")],
+              ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
+              ["mode grid", document.querySelector('[aria-label="Draft mode"]')],
+              ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+              ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
+            ]
+          : [
+              ["masthead", document.querySelector(".masthead")],
+              ["formation heading", document.querySelector('[data-formation-select] h1')],
+              ["formation setup", document.querySelector('[data-formation-select] [class*="setupDisclosure"]')],
+              ["formation grid", document.querySelector('[data-formation-select] [class*="formationGrid"]')],
+              ["formation dock", formationDockAction],
+            ];
     const mastheadPaintTargets = [
       ["wordmark", document.querySelector(".wordmark")],
       ["theme control", document.querySelector('[aria-label^="Switch to "]')],
@@ -629,6 +773,10 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
     const modeCardPaintTargets = Array.from({ length: 5 }, (_, index) => [
       "mode card " + (index + 1).toString(),
       document.querySelectorAll('[role="radio"]')[index] ?? null,
+    ]);
+    const formationCardPaintTargets = Array.from({ length: 8 }, (_, index) => [
+      "formation card " + (index + 1).toString(),
+      formationCards[index] ?? null,
     ]);
     const routePaintTargets =
       pathValue === "/"
@@ -641,15 +789,22 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
             ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
           ]
-        : [
-            ["mode title", document.querySelector(".game-page--mode .display")],
-            ["mode lede", document.querySelector(".game-page--mode .lede")],
-            ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
-            ...modeCardPaintTargets,
-            ["dock action", document.querySelector("main button.btn")],
-            ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
-            ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
-          ];
+        : pathValue === "/play"
+          ? [
+              ["mode title", document.querySelector(".game-page--mode .display")],
+              ["mode lede", document.querySelector(".game-page--mode .lede")],
+              ["Daily progress", document.querySelector('[aria-label="Daily progress"]')],
+              ...modeCardPaintTargets,
+              ["dock action", document.querySelector("main button.btn")],
+              ["attribution disclosure", document.querySelector('[data-disclosure-line="attribution"]')],
+              ["not-affiliated disclosure", document.querySelector('[data-disclosure-line="not-affiliated"]')],
+            ]
+          : [
+              ["formation title", document.querySelector('[data-formation-select] h1')],
+              ["formation setup", document.querySelector('[data-formation-select] [class*="setupDisclosure"]')],
+              ...formationCardPaintTargets,
+              ["formation dock", formationDockAction],
+            ];
     const paintTargetEntries = [...mastheadPaintTargets, ...routePaintTargets];
     const paintTargetByLabel = new Map(paintTargetEntries);
     const expectedPaintLabels = [
@@ -666,19 +821,33 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
             "attribution disclosure",
             "not-affiliated disclosure",
           ]
-        : [
-            "mode title",
-            "mode lede",
-            "Daily progress",
-            "mode card 1",
-            "mode card 2",
-            "mode card 3",
-            "mode card 4",
-            "mode card 5",
-            "dock action",
-            "attribution disclosure",
-            "not-affiliated disclosure",
-          ]),
+        : pathValue === "/play"
+          ? [
+              "mode title",
+              "mode lede",
+              "Daily progress",
+              "mode card 1",
+              "mode card 2",
+              "mode card 3",
+              "mode card 4",
+              "mode card 5",
+              "dock action",
+              "attribution disclosure",
+              "not-affiliated disclosure",
+            ]
+          : [
+              "formation title",
+              "formation setup",
+              "formation card 1",
+              "formation card 2",
+              "formation card 3",
+              "formation card 4",
+              "formation card 5",
+              "formation card 6",
+              "formation card 7",
+              "formation card 8",
+              "formation dock",
+            ]),
     ];
     const missingRequiredPaintTargets = expectedPaintLabels.filter(
       (label) => !visible(paintTargetByLabel.get(label)),
@@ -701,12 +870,18 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       .filter(([, element]) => !visible(element))
       .map(([label]) => label);
     const homeActions = [...document.querySelectorAll(".hero .btn-row a")].filter(visible);
-    const modeCards = [...document.querySelectorAll('[role="radio"]')].filter(visible);
     const dockAction = document.querySelector("main button.btn");
     const requiredTargets =
       pathValue === "/"
         ? homeActions
-        : [...modeCards, ...(dockAction && visible(dockAction) ? [dockAction] : [])];
+        : pathValue === "/play"
+          ? [...modeCards, ...(dockAction && visible(dockAction) ? [dockAction] : [])]
+          : [
+              ...(formationSetupToggle && visible(formationSetupToggle) ? [formationSetupToggle] : []),
+              ...formationSetupButtons,
+              ...formationCards,
+              ...(formationDockAction && visible(formationDockAction) ? [formationDockAction] : []),
+            ];
     const smallTargets = requiredTargets
       .map((element) => {
         const rect = element.getBoundingClientRect();
@@ -735,10 +910,24 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       const rect = element.getBoundingClientRect();
       return rect.top >= 0 && rect.left >= 0 && rect.bottom <= reachableDocumentHeight && rect.right <= innerWidth;
     });
+    const disclosure = document.querySelector(".one-screen-disclosure");
+    const disclosureShell =
+      pathValue === "/"
+        ? document.querySelector(".hero")
+        : pathValue === "/play"
+          ? document.querySelector(".game-page--mode")
+          : null;
+    const disclosurePosition = visible(disclosure) ? getComputedStyle(disclosure).position : null;
+    const disclosureBottomGapPx =
+      visible(disclosure) && visible(disclosureShell)
+        ? Math.abs(
+            disclosure.getBoundingClientRect().bottom -
+              disclosureShell.getBoundingClientRect().bottom,
+          )
+        : null;
     const modeDockDisclosureOverlapPx = (() => {
       if (pathValue !== "/play") return null;
       const dock = document.querySelector('[class*="modeDock"]');
-      const disclosure = document.querySelector(".one-screen-disclosure");
       if (!visible(dock) || !visible(disclosure)) return null;
       const dockRect = dock.getBoundingClientRect();
       const disclosureRect = disclosure.getBoundingClientRect();
@@ -763,7 +952,112 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       ),
     ].filter(visible);
     const dailyCard = modeCards.find(isDailyCard);
-    const dailyParts = dailyCard ? [...dailyCard.children].filter(visible) : [];
+    const dailyHeaderParts = dailyCard
+      ? [...dailyCard.children].filter(
+          (element) => visible(element) && /modeCard(?:Top|Bottom)/u.test(element.className),
+        )
+      : [];
+    const modeDescriptors = modeCards
+      .map((card) => card.querySelector('[class*="modeDesc"]'))
+      .filter(visible);
+    const modeDescriptorsUseBodyTypography =
+      pathValue === "/play"
+        ? modeDescriptors.length === 5 &&
+          modeDescriptors.every((element) => {
+            const style = getComputedStyle(element);
+            return (
+              Number.parseFloat(style.fontSize) >= 12 &&
+              Number.parseInt(style.fontWeight, 10) === 400 &&
+              (style.letterSpacing === "normal" || Number.parseFloat(style.letterSpacing) === 0) &&
+              style.textTransform === "none"
+            );
+          })
+        : null;
+    const modeCardBottomCount =
+      pathValue === "/play"
+        ? modeCards.filter((card) => visible(card.querySelector('[class*="modeCardBottom"]'))).length
+        : null;
+    const formationSection = document.querySelector('[data-formation-select] [class*="formationSelect"]');
+    const formationSetupNotes = [
+      ...document.querySelectorAll('[data-formation-select] [class*="setupAxisNote"]'),
+    ].filter(visible);
+    const formationDescriptorTexts =
+      pathValue === "/play/draft"
+        ? [...document.querySelectorAll('[data-formation-select] [class*="formationCardDescriptor"]')].map(
+            (element) => element.textContent?.replace(/\s+/gu, " ").trim() ?? "",
+          )
+        : null;
+    const formationActiveMarkerColorsCorrect = (() => {
+      if (pathValue !== "/play/draft") return null;
+      const selectedDots = [
+        ...document.querySelectorAll(
+          '[data-formation-select] button[aria-pressed="true"] [data-formation-mini-pitch] [class*="miniDot"]',
+        ),
+      ];
+      const inactiveDots = [
+        ...document.querySelectorAll(
+          '[data-formation-select] button[aria-pressed="false"] [data-formation-mini-pitch] [class*="miniDot"]',
+        ),
+      ];
+      // Resolve each token on its own attached element. Reusing one probe and
+      // mutating its background can expose the previous computed value in
+      // WebKit reduced-motion contexts because the global motion guard gives
+      // every property a minimal transition duration.
+      const resolveTokenColor = (token) => {
+        const probe = document.createElement("span");
+        probe.style.position = "fixed";
+        probe.style.pointerEvents = "none";
+        probe.style.background = token;
+        document.body.append(probe);
+        const resolved = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return resolved;
+      };
+      const accent = resolveTokenColor("var(--accent)");
+      const ink = resolveTokenColor("var(--ink)");
+      return (
+        selectedDots.length === 10 &&
+        inactiveDots.length === 70 &&
+        selectedDots.every((dot) => getComputedStyle(dot).backgroundColor === accent) &&
+        inactiveDots.every((dot) => getComputedStyle(dot).backgroundColor === ink)
+      );
+    })();
+    const formationTextSizes =
+      pathValue === "/play/draft"
+        ? [
+            ...document.querySelectorAll(
+              '[data-formation-select] [class*="formationSub"], [data-formation-select] [class*="setupAxisLabel"], [data-formation-select] [class*="setupSegBtn"], [data-formation-select] [class*="setupAxisNote"], [data-formation-select] [class*="formationCardName"], [data-formation-select] [class*="formationCardDescriptor"], [data-formation-select] [class*="formationCardCheck"], [data-formation-select] [class*="formationDock"] button',
+            ),
+          ]
+            .filter(visible)
+            .map((element) => Number.parseFloat(getComputedStyle(element).fontSize))
+        : [];
+    const formationCardContentOverflowCount =
+      pathValue === "/play/draft"
+        ? formationCards.filter((card) => {
+            const body = card.querySelector('[class*="formationCardBody"]');
+            const descriptor = card.querySelector('[class*="formationCardDescriptor"]');
+            if (descriptor === null) return true;
+            const cardRect = card.getBoundingClientRect();
+            const descriptorRange = document.createRange();
+            descriptorRange.selectNodeContents(descriptor);
+            const descriptorRects = [...descriptorRange.getClientRects()];
+            const descriptorInsideCard =
+              descriptorRects.length > 0 &&
+              descriptorRects.every(
+                (rect) =>
+                  rect.left >= cardRect.left - 1 &&
+                  rect.right <= cardRect.right + 1 &&
+                  rect.top >= cardRect.top - 1 &&
+                  rect.bottom <= cardRect.bottom + 1,
+              );
+            return (
+              card.scrollWidth > card.clientWidth + 1 ||
+              (body !== null && body.scrollWidth > body.clientWidth + 1) ||
+              !descriptorInsideCard
+            );
+          }).length
+        : null;
 
     return {
       scrollHeight: doc.scrollHeight,
@@ -776,6 +1070,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       disclosureLinesInViewport,
       disclosureLinesReachable,
       disclosureTexts: disclosureLines.map((element) => element.textContent?.replace(/\s+/gu, " ").trim() ?? ""),
+      disclosurePosition,
+      disclosureBottomGapPx,
       modeDockDisclosureOverlapPx,
       renderedTheme: doc.dataset.theme ?? null,
       renderedReducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -795,8 +1091,53 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       regularModeColumns,
       progressItemCount: pathValue === "/play" ? progressItems.length : null,
       progressOneRow: pathValue === "/play" ? rectsShareRow(progressItems) : null,
-      dailyOneRow: pathValue === "/play" ? Boolean(dailyCard) && rectsShareRow(dailyParts) : null,
+      dailyHeaderOneRow:
+        pathValue === "/play" ? Boolean(dailyCard) && rectsShareRow(dailyHeaderParts) : null,
       cardCollisionCount: pathValue === "/play" ? collisionCount(modeCards) : null,
+      modeDescriptorsUseBodyTypography,
+      modeCardBottomCount,
+      formationCardCount: pathValue === "/play/draft" ? formationCards.length : null,
+      formationColumns:
+        pathValue === "/play/draft"
+          ? new Set(
+              formationCards.map((element) => Math.round(element.getBoundingClientRect().left)),
+            ).size
+          : null,
+      formationDotCount:
+        pathValue === "/play/draft"
+          ? document.querySelectorAll('[data-formation-mini-pitch] [class*="miniDot"]').length
+          : null,
+      formationGoalBoxCount:
+        pathValue === "/play/draft"
+          ? document.querySelectorAll('[data-formation-mini-pitch] [class*="miniGoalBox"]').length
+          : null,
+      formationShapeMarkerCount:
+        pathValue === "/play/draft"
+          ? document.querySelectorAll('[data-formation-mini-pitch] [class*="miniDotShape_"]').length
+          : null,
+      formationAppBarCount:
+        pathValue === "/play/draft"
+          ? document.querySelectorAll('[data-formation-select] [class*="draftAppBar"]').length
+          : null,
+      formationSetupNoteCount:
+        pathValue === "/play/draft" ? formationSetupNotes.length : null,
+      formationDescriptorTexts,
+      formationSelectedCheckCount:
+        pathValue === "/play/draft"
+          ? document.querySelectorAll('[data-formation-select] [class*="formationCardCheck"]').length
+          : null,
+      formationActiveMarkerColorsCorrect,
+      formationMinimumTextPx:
+        pathValue === "/play/draft" && formationTextSizes.length > 0
+          ? Math.min(...formationTextSizes)
+          : null,
+      formationSectionFits:
+        pathValue === "/play/draft" && formationSection
+          ? formationSection.scrollHeight <= formationSection.clientHeight + 1
+          : null,
+      formationCardCollisionCount:
+        pathValue === "/play/draft" ? collisionCount(formationCards) : null,
+      formationCardContentOverflowCount,
       zoomDisabled: /(?:user-scalable\s*=\s*no|maximum-scale\s*=\s*1(?:\.0+)?(?:\s|,|$))/iu.test(
         metaViewport,
       ),
@@ -814,15 +1155,22 @@ async function proveScrollReachability(
     const controls =
       pathValue === "/"
         ? [...document.querySelectorAll(".hero .btn-row a")]
-        : [
-            ...document.querySelectorAll('[role="radio"]'),
-            ...document.querySelectorAll("main button.btn"),
-          ];
+        : pathValue === "/play"
+          ? [
+              ...document.querySelectorAll('[role="radio"]'),
+              ...document.querySelectorAll("main button.btn"),
+            ]
+          : [
+              ...document.querySelectorAll('[data-formation-select] button[class*="setupRow"]'),
+              ...document.querySelectorAll('[data-formation-select] button[class*="setupSegBtn"]'),
+              ...document.querySelectorAll('[data-formation-select] button[class*="formationCard"]'),
+              ...document.querySelectorAll('[data-formation-select] [class*="formationDock"] button'),
+            ];
     const disclosures = [
       ...document.querySelectorAll(
         ".one-screen-disclosure [data-disclosure-line]",
       ),
-    ];
+    ].filter(() => pathValue !== "/play/draft");
     const targets = [
       ...controls.map((element, index) => ({
         element,
@@ -1312,7 +1660,8 @@ async function main(): Promise<void> {
       );
       for (const deviceCase of deviceCases) {
         // WebKit reproducibly degraded on the 64th sequential context when all
-        // 72 engine cases shared one browser: navigation first timed out, then
+        // Long sequential engine runs previously stalled after dozens of contexts:
+        // navigation first timed out, then
         // semantic navigation exposed the same lifecycle stall at screenshot.
         // Recycle at the device boundary so each launch owns exactly the eight
         // theme/motion/route contexts for one descriptor.
@@ -1355,18 +1704,12 @@ async function main(): Promise<void> {
                   const scrollInteraction = deviceCase.strictVerticalFit
                     ? { targetCount: 0, passed: true, failures: [] }
                     : await proveScrollReachability(page, pathname);
-                  const screenshot =
-                    theme === "dark"
-                      ? path.join(
-                          screenshotsDir,
-                          [
-                            engineName,
-                            deviceCase.name,
-                            motion,
-                            pathname === "/" ? "home" : "play",
-                          ].join("-") + ".png",
-                        )
-                      : null;
+                  const routeLabel =
+                    pathname === "/" ? "home" : pathname === "/play" ? "play" : "formation";
+                  const screenshot = path.join(
+                    screenshotsDir,
+                    [engineName, deviceCase.name, theme, motion, routeLabel].join("-") + ".png",
+                  );
                   const screenshotCapture = await captureEvidence(
                     page,
                     screenshot,

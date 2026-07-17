@@ -21,8 +21,11 @@ const modeCss = readFileSync(
 
 describe("mobile compaction contract", () => {
   it("sizes landing and mode surfaces from the small viewport and safe-area-aware masthead", () => {
-    const shellHeight = "calc(100svh - 3.35rem - 1px - env(safe-area-inset-top, 0px))";
-    expect(homeHeroCss).toContain(shellHeight);
+    const shellHeight = "calc(100dvh - 3.35rem - 1px - env(safe-area-inset-top, 0px))";
+    expect(homeHeroCss).toContain(
+      "calc(100dvh - var(--home-masthead-height) - 1px - env(safe-area-inset-top, 0px))",
+    );
+    expect(homeHeroCss).toContain("--home-masthead-height: 3.35rem;");
     expect(playPageCss).toContain(shellHeight);
     expect(homeHeroCss).not.toContain("100vh");
     expect(playPageCss).not.toContain("100vh");
@@ -30,7 +33,9 @@ describe("mobile compaction contract", () => {
 
   it("reserves the physical bottom safe area without changing rectangular-viewport density", () => {
     expect(homeHeroCss).toContain("--home-safe-area-bottom: env(safe-area-inset-bottom, 0px);");
-    expect(homeHeroCss).toContain("padding-block-end: max(0.5rem, var(--home-safe-area-bottom));");
+    expect(homeHeroCss).toContain(
+      "padding-block: 0.6rem max(0.6rem, env(safe-area-inset-bottom, 0px));",
+    );
     expect(homeHeroCss).toContain("calc(0.5rem - var(--home-safe-area-bottom) / 8)");
     expect(homeHeroCss).toContain("calc(0.25rem - var(--home-safe-area-bottom) / 16)");
   });
@@ -42,7 +47,6 @@ describe("mobile compaction contract", () => {
   });
 
   it("retains the 44px floor through full-card and dock-button targets", () => {
-    expect(modeCss).toContain("min-height: 52px");
     expect(modeCss).toContain("min-height: 44px");
     expect(modeCss).toContain(".modeDock :global(.btn)");
   });

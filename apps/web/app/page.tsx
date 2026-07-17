@@ -90,7 +90,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="hero__meta">
+          <div className={`hero__meta ${heroStyles.statStrip}`}>
             <div className="stat">
               <span className="stat__num">
                 17 <span className="accent">picks</span>
@@ -114,7 +114,9 @@ export default async function HomePage() {
           <HeroSpinDemo />
         </div>
       </div>
-      <LegalDisclosure className={`one-screen-disclosure ${disclosureStyles.notice}`} />
+      <LegalDisclosure
+        className={`one-screen-disclosure ${disclosureStyles.notice} ${heroStyles.disclosure}`}
+      />
     </section>
   );
 }

@@ -24,7 +24,7 @@ export default function ModeSelectPage() {
 
       <ModeSelect />
       <LegalDisclosure
-        className={`one-screen-disclosure ${disclosureStyles.notice} ${disclosureStyles.afterStickyDock}`}
+        className={`one-screen-disclosure ${disclosureStyles.notice} ${pageStyles.disclosure}`}
       />
     </div>
   );

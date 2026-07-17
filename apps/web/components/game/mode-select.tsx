@@ -36,7 +36,7 @@ const MODE_COPY: Record<
   daily: {
     title: "Today's Draft",
     tag: "Daily",
-    desc: "One shared draft for everyone today. A new one drops daily at 00:00 UTC.",
+    desc: "Everyone gets the same board today. One try.",
     chips: ["Same draft", "Beat today"],
     cta: "Play daily",
     href: "/play/daily",
@@ -46,7 +46,7 @@ const MODE_COPY: Record<
     title: DRAFT_MODE_COPY.classic.label,
     // Short tags/chips so 360–390px cards do not clip mid-phrase (Q5 craft).
     tag: "Ranked · casual default",
-    desc: DRAFT_MODE_COPY.classic.description,
+    desc: "Spin, then pick one of three players.",
     chips: ["3 choices", "Ranked-capable", "Synergy"],
     cta: "Start drafting",
     href: "/play/draft",
@@ -54,7 +54,7 @@ const MODE_COPY: Record<
   open: {
     title: DRAFT_MODE_COPY.open.label,
     tag: "Casual",
-    desc: DRAFT_MODE_COPY.open.description,
+    desc: "Spin a nation, pick anyone from its squad.",
     chips: ["Full roster", "Casual", "Shareable"],
     cta: "Open draft",
     href: "/play/draft?mode=open",
@@ -62,7 +62,7 @@ const MODE_COPY: Record<
   hidden: {
     title: DRAFT_MODE_COPY.hidden.label,
     tag: "Ranked · casual default",
-    desc: DRAFT_MODE_COPY.hidden.description,
+    desc: "Pick from three with ratings hidden until the end.",
     chips: ["Ratings hidden", "3 choices", "Ranked-capable"],
     cta: "Draft from memory",
     href: "/play/draft?mode=hidden",
@@ -71,7 +71,7 @@ const MODE_COPY: Record<
   open_hidden: {
     title: DRAFT_MODE_COPY.open_hidden.label,
     tag: "Casual",
-    desc: DRAFT_MODE_COPY.open_hidden.description,
+    desc: "Full squad to pick from, ratings hidden until the end.",
     chips: ["Full roster", "Ratings hidden", "Shareable"],
     cta: "Blind Open",
     href: "/play/draft?mode=open_hidden",

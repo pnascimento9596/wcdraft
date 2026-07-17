@@ -529,6 +529,13 @@ async function verifyModeSelectCtaDoesNotTapThrough(
 
 const MODE_SELECT_VIEWPORTS = [
   {
+    width: 320,
+    height: 568,
+    name: "320x568",
+    expectedColumns: 2,
+    expectedDockPosition: "static",
+  },
+  {
     width: 360,
     height: 800,
     name: "360x800",
@@ -546,7 +553,9 @@ const MODE_SELECT_VIEWPORTS = [
     width: 667,
     height: 375,
     name: "667x375",
-    expectedColumns: 4,
+    // Full descriptor and action copy makes a four-column wrap exceed the
+    // hard one-screen contract, so short landscape spends width in one row.
+    expectedColumns: 5,
     expectedDockPosition: "static",
   },
 ] as const;
@@ -762,7 +771,12 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
     await page.getByRole("button", { name: /Draft setup/ }).click();
   }
   await draftOrderGroup.getByRole("button", { name: "Position First" }).click();
-  await page.getByRole("button", { name: /4-3-3[\s\S]*(Selected|Lock this shape)/ }).click();
+  const formation433 = page.getByRole("button", { name: "4-3-3 Wide attack", exact: true });
+  await formation433.click();
+  assert(
+    (await formation433.getAttribute("aria-pressed")) === "true",
+    "4-3-3 formation did not expose its selected state",
+  );
   const formationLockButton = page.getByRole("button", { name: /Lock 4-3-3/ });
   await assertNoHorizontalOverflow(page, "formation setup");
   await assertFullyVisibleInViewport(page, formationLockButton, "formation lock CTA");

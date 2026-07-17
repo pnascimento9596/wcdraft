@@ -18,6 +18,7 @@ export type DevOverlaySuppression = {
   readonly nonceSource: "property" | "missing";
   readonly styleNonceMatches: boolean;
   readonly styleSheetAttached: boolean;
+  readonly portalProvenance: "absent" | "next-app-wrapper" | "unverified";
   readonly portalState: "absent" | "hidden" | "visible";
   readonly visibleControlCount: number;
 };
@@ -329,6 +330,7 @@ function devOverlayFailures(metric: ResponsiveMetricForAdjudication): string[] {
     if (!overlay.styleNonceMatches) reasons.push("style nonce mismatch");
     if (!overlay.styleSheetAttached) reasons.push("style sheet rejected");
   }
+  if (overlay.portalProvenance === "unverified") reasons.push("unverified Next portal");
   if (overlay.portalState === "visible") reasons.push("Next portal visible");
   if (overlay.visibleControlCount > 0) {
     reasons.push(`${overlay.visibleControlCount.toString()} dev-tools controls visible`);

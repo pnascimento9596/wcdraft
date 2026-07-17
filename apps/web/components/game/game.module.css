@@ -1285,6 +1285,12 @@
   composes: formationCardCta from "./game-styles/draft-shell.module.css";
   composes: formationCardCta from "./game-styles/draft-polish.module.css";
 }
+.formationCardDescriptor {
+  composes: formationCardDescriptor from "./game-styles/draft-shell.module.css";
+}
+.formationCardCheck {
+  composes: formationCardCheck from "./game-styles/draft-shell.module.css";
+}
 .formationError {
   composes: formationError from "./game-styles/draft-shell.module.css";
 }
@@ -1296,6 +1302,9 @@
 }
 .setupRow {
   composes: setupRow from "./game-styles/draft-shell.module.css";
+}
+.setupDisclosure {
+  composes: setupDisclosure from "./game-styles/draft-shell.module.css";
 }
 .setupRowLabel {
   composes: setupRowLabel from "./game-styles/draft-shell.module.css";
@@ -1349,9 +1358,21 @@
   composes: miniPitch from "./game-styles/draft-shell.module.css";
   composes: miniPitch from "./game-styles/draft-polish.module.css";
 }
+.miniPitchSelected {
+  composes: miniPitchSelected from "./game-styles/draft-shell.module.css";
+}
 .miniDot {
   composes: miniDot from "./game-styles/draft-shell.module.css";
   composes: miniDot from "./game-styles/draft-polish.module.css";
+}
+.miniHalfway {
+  composes: miniHalfway from "./game-styles/draft-shell.module.css";
+}
+.miniCentreCircle {
+  composes: miniCentreCircle from "./game-styles/draft-shell.module.css";
+}
+.miniGoalBox {
+  composes: miniGoalBox from "./game-styles/draft-shell.module.css";
 }
 .miniDot_gk {
   composes: miniDot_gk from "./game-styles/draft-shell.module.css";

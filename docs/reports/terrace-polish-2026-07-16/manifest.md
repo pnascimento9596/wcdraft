@@ -1,0 +1,48 @@
+# Terrace polish screenshot manifest
+
+This directory contains the 36 required no-preference screenshots: home, mode select, and
+lock-a-formation at the registered 360, 390, and 430 mobile widths; light and dark themes; and
+Chromium plus WebKit. The source matrix passed 216/216 with zero failures. Its retained receipt is
+`/private/tmp/terrace-final-one-screen/one-screen-fit.json`, SHA-256
+`5e528a7c6a7971106da6619dfd5d9ccc2499207e4e8ab474cff12193faac73ec`.
+
+## SHA-256
+
+```text
+62a9cd4740f73d79d8eff78b1a743a7c102af0c80d1aed6d19a0edae673a81d7  chromium-360-mobile-dark-no-preference-formation.png
+10304c101a2e3dd9747f28a4c9d8dee6550ba8a1439220950141aeb5e2186fe1  chromium-360-mobile-dark-no-preference-home.png
+d8b19ff4dde802610012702be2f4b601797206a69708dee59295ba7ae7eee77b  chromium-360-mobile-dark-no-preference-play.png
+c7b5f730af086ac8feb7fe8f3459e26d2b418d44f11b431f183fa3200ab3ff11  chromium-360-mobile-light-no-preference-formation.png
+9a7c9c48f8237362374e815b924e2f2acbdbd37fec1342b741b78f63dd2bd1bb  chromium-360-mobile-light-no-preference-home.png
+778dfff476c2ed65bfaade352c7de7289afde342eeed7e66b95260fd811b62ab  chromium-360-mobile-light-no-preference-play.png
+33477fbbed1478e3a51a7148e1165edd1ba797cca5c4b9ccb97e0cfac688025b  chromium-390-mobile-dark-no-preference-formation.png
+be8d3938c6a608a752268437b01ff864eaf5f94dcb5fa523d4dcfb9d19c2a429  chromium-390-mobile-dark-no-preference-home.png
+3d09081487d1f58557c33296d453fee97d928c8ad68b46a0bec5671d0d977f7c  chromium-390-mobile-dark-no-preference-play.png
+a28632a4eb0b4063557eda7f31abcafb3d332a390398ee3d9e26cb7c71ac1930  chromium-390-mobile-light-no-preference-formation.png
+aec10fa83a913b265b4c69cfadc9baf0315722433231c119860320ec3cd25888  chromium-390-mobile-light-no-preference-home.png
+b64cdd14e474c9c356f9090c62d3894327d1d0b2f8486ebd2627b6a42d106ddd  chromium-390-mobile-light-no-preference-play.png
+4b852f5178b7d5aa28951857d31e88add0992bc745e112af8ec372ebc20d3fa5  chromium-430-mobile-dark-no-preference-formation.png
+8b9d35aec846b4fe867581e3a642a2e3a4daf015583a7bddeb92a860bf03b20f  chromium-430-mobile-dark-no-preference-home.png
+566331a267e7dbddd4269ae43da10d7257c1cd618c280456a5418c01dcd7526e  chromium-430-mobile-dark-no-preference-play.png
+f91b6d734d6f8f8bc649baea936c38243a824bab023ac56801b561043ee0acb0  chromium-430-mobile-light-no-preference-formation.png
+1e9933cbdf80a5c9651d7cb00726243386ba85c016860851ccf7888acae9cb9e  chromium-430-mobile-light-no-preference-home.png
+a977f584ad14e5ca70f7ba30abd62d216250881364c3cc586c90f1e105a87d52  chromium-430-mobile-light-no-preference-play.png
+cb6a092f45378d920ad1187bc931aa7e4cbbfbb916de19d6b83544da8f3a9c47  webkit-360-mobile-dark-no-preference-formation.png
+e20e54589d2222fd8de7ae1e02bfe59c59d35ec8e0f8735ac1159a4e55e1e1a0  webkit-360-mobile-dark-no-preference-home.png
+9f068aafd0ac4fcb0f72ed53de7ca93318a3758a73ec3f73b3bc4a0b99ef81a5  webkit-360-mobile-dark-no-preference-play.png
+0e33f8d38ea10722d9226e53da1eb752078cf7fe9202076d31e335dc5a25c963  webkit-360-mobile-light-no-preference-formation.png
+d7bc55b093f2d1570be507349e7dc1497b0f9a13430514203c2aec84305efeb5  webkit-360-mobile-light-no-preference-home.png
+bb48e634a44efb022bc19561a9e5e60a6fba39eac754ef999da2783eb2ade119  webkit-360-mobile-light-no-preference-play.png
+ac337660e6b6aa7b0fe14406acce10cdb11df2c26b34ebf2d0108e324031207a  webkit-390-mobile-dark-no-preference-formation.png
+e8a71228dbf3ba800857be42166e150fc28fce1f8492ef8f8bd715712cb0a004  webkit-390-mobile-dark-no-preference-home.png
+79ad64d0b7e59ad8b6e49064509e02ea29893a86581473a18391a23e6899f458  webkit-390-mobile-dark-no-preference-play.png
+3594a37f2064fc8412a4b22aa40be558fa384749e051012c7125680f7a49a17f  webkit-390-mobile-light-no-preference-formation.png
+8e388f10902652eb824f8d2a10e1cb13b9e4bd2f5af6b634a31e08876ce3715d  webkit-390-mobile-light-no-preference-home.png
+76e6b550133353994da4d17d9d2b58fbc666e427688ae164851afdb67abdd03c  webkit-390-mobile-light-no-preference-play.png
+0e35c25638154f94e574630f5081ba448fa917ee1c844aa331906e8bcf729c3e  webkit-430-mobile-dark-no-preference-formation.png
+989d72e19b4c6d275bd27d996c4e13c19b8967c54c38e143b8efb0d49dec2e09  webkit-430-mobile-dark-no-preference-home.png
+d75709a4aab0c6c1f592b0abb26ca05a64a9306c8cfe47ffae547ce8c6552d39  webkit-430-mobile-dark-no-preference-play.png
+32912195a31e5760ff47bd28a49ce9bf32b8432e37a2e089b3e6b5f3784246eb  webkit-430-mobile-light-no-preference-formation.png
+707d6fb7ff5e41eb201c7fff9b215f07f4461eee8b1e8629f0d11615fc64e09d  webkit-430-mobile-light-no-preference-home.png
+7774dd7b26e64a305043ec195ca0f806ea7a6fac0bcbd6e9f21d2498fa05b27c  webkit-430-mobile-light-no-preference-play.png
+```
