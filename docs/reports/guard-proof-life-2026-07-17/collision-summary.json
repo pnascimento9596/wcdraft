@@ -11,12 +11,12 @@
     "consoleErrors": 0
   },
   "findings": {
-    "total": 4488,
-    "classA": 4488,
+    "total": 4489,
+    "classA": 4489,
     "classB": 0,
     "unexpected": 0,
-    "sameInteractiveComposition": 52,
-    "scrollingUnderAppShell": 4436
+    "sameInteractiveComposition": 36,
+    "scrollingUnderAppShell": 4453
   },
   "freshCurrentMainDevelopmentBaseline": {
     "cells": 264,
@@ -45,7 +45,7 @@
     "home": 8,
     "how-to-play": 496,
     "leaderboard": 1374,
-    "mode-select-available": 52,
+    "mode-select-available": 53,
     "position-target": 0,
     "privacy": 728,
     "results": 626,
@@ -59,18 +59,18 @@
     "team-sheet": 248
   },
   "rawReceiptSha256": {
-    "g1-chromium": "15e64418494e06ea0d83548c313d395f40807e8db33dd232cabe826a57b26d96",
-    "g1-webkit": "9c9c2aeed36913c485f38dce345b91c9e1ea82b623dfdfa5cbbb111c3d18e290",
-    "g2-chromium": "5780ca13f2ed72b4d68257d8293c675d4182d586555cf1dd46d2b82e7bcf9189",
-    "g2-webkit": "e8ba096205323c1d40ca11991c1a154e958e6c6573952ff1097f3303ce11ffbc",
-    "g3-chromium": "1bc2784107f27444980483160ceddeddfebfc6e47f1764f8000132bc18afe5b8",
-    "g3-webkit": "2808725546e4335b93ba013ba2f5b6e0bd3f811fa8e49ddf210a76f943413514",
-    "g4-chromium": "9ed6b4dd52e94569e72cba031529b2ed636456fdeafb1d55cc01f0e5985b4d4a",
-    "g4-webkit": "e1903e84805cd617b4afad40ec1edb92b6445ce9017778556b517557e01024e2"
+    "g1-chromium": "fa94179452c1c80595827f0e27e0be080657fbfb26c297a64415081c7c9a314e",
+    "g1-webkit": "bae99b170bff432d76be212a7b69c1f4044872b31ba97ff9414afa2cec32bbad",
+    "g2-chromium": "44acb597a2b6ee205719da6fa372cb1150c00d13045e572c4cc0e3d5b34439ea",
+    "g2-webkit": "b0fb7a6aaa3e4a80b80a5cfc6cdd0d5e841c18a8a8184473b2fb3febc94dca3a",
+    "g3-chromium": "62fb985d0eb7168b9ee91b6115ae040fd3a4e3421861ceb96d66183b22fc3066",
+    "g3-webkit": "4126ebd7d897f0bfbef4bfa992250a2453e1572435ef1265fc914e22bf8c879b",
+    "g4-chromium": "dc1b1319e302e92758939e5b567ad58dd3e8a65d5aad6f7582fa345feed8e6e3",
+    "g4-webkit": "f79556e1769875e5bfd4513a6b6f086ce0ee30a7fafc5458ba68b0ab582dc5f5"
   },
   "postReviewFinding": {
-    "status": "blocking",
-    "supersedesZeroUnexpectedClaim": true,
+    "status": "resolved-in-product",
+    "supersedesZeroUnexpectedClaim": false,
     "cause": "same-interactive-composition allowed substantive text overlap inside one semantic control",
     "guardAction": "allow only non-box intersection contact of at most 1px on either axis",
     "strictReproduction": {
@@ -84,7 +84,13 @@
       "themes": ["light", "dark"],
       "examples": ["Today's Draft under Play daily →", "Daily under Today's Draft at 320x568"]
     },
-    "productAction": "none; product geometry is outside this lane",
+    "productAction": "separate selected Daily pill/title, descriptor, and CTA into explicit rows at widths through 430px and in short landscape",
+    "strictAfter": {
+      "cells": 12,
+      "unexpectedModeSelectFindingsTotal": 0,
+      "fullMatrixCells": 264,
+      "fullMatrixFailures": 0
+    },
     "knownFailureAdded": false
   }
 }

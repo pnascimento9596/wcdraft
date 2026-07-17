@@ -7,16 +7,14 @@ Branch: `ws-ux/guard-proof-life`
 
 ## Summary
 
-The collision guard now scans the optimized `next build` artifact through `next start`, and its
-six permanent browser-session controls prove Class A, Class B, both clear cases, and both
-allowlist boundaries in Chromium and WebKit. An initial production-target matrix passed 264/264
-with 4,488 Class A findings only because the same-control pattern allowed substantive text-on-text
-overlap. Fresh-context U4 review caught the visible result in both 360px mode-select captures.
-After tightening that pattern to hairline contact only, the controls still pass but the strict
-matrix correctly fails on `Today's Draft` under `Play daily →` (and, at 320px, `Daily` under the
-title). Product geometry is explicitly out of scope, so the lane is blocked and is not shipped.
-The guard machinery that existed only to suppress and authenticate Next development chrome was
-deleted locally.
+The collision guard scans the optimized `next build` artifact through `next start`, and its six
+permanent browser-session controls prove Class A, Class B, both clear cases, and both allowlist
+boundaries in Chromium and WebKit. The tightened same-control rule exposed a real selected-Daily
+card collision instead of absorbing it. The product fix assigns the pill/title, descriptor, and
+in-card CTA to separate rows at narrow widths and short landscape. The complete exact-code matrix
+now passes 264/264 with 4,489 Class A findings, zero Class B product findings, zero unexpected
+findings, and the exact known-failure list empty. The guard machinery that existed only to suppress
+and authenticate Next development chrome remains deleted.
 
 All 12 generated rasters are byte-identical to the corresponding production responses, so none
 was deleted. All 18 historical light-mode captures contain the Next development-tools button and
@@ -24,9 +22,11 @@ are stale after PR #307. Their manifest is additively annotated, and a dev-chrom
 replacement contains 24 screenshots covering home, mode select, formation setup, and squad review
 at 360/390/430 in both engines.
 
-The product source, product geometry, colour values, core, data, ETL, schema, ratings, simulation,
-leaderboard, auth, and mobile trees are outside the diff. The validation and independent-review
-sections below are completed at the lane boundary; unknowns remain explicitly marked until then.
+The only product-source change is bounded Daily-card geometry plus the tests and browser assertion
+that bind it. Colour values, core, data, ETL, schema, ratings, simulation, leaderboard, auth, and
+mobile remain outside the diff. Local validation is complete; final exact-head independent reviews,
+protected CI, merge, deployment observation, and live verification are recorded outside this
+pre-review commit so their evidence cannot invalidate the reviewed head.
 
 ## U0 — evidence-only verification
 
@@ -171,6 +171,35 @@ scrolling-under-app-shell:
   finding.targetPosition !== "sticky"
 ```
 
+### U1 product fix and redundancy adjudication
+
+At `max-width: 430px`, the featured Daily card now uses one grid column with explicit top,
+descriptor, and bottom rows. The same separation applies in short landscape because the five-card
+board otherwise remains horizontally dense even above 430px. Wider layouts retain the existing
+one-row presentation. No copy, colour token, font rule, selection behavior, target size, or route
+transition changed.
+
+The five descriptors remain verbatim:
+
+1. `Everyone gets the same board today. One try.`
+2. `Spin, then pick one of three players.`
+3. `Spin a nation, pick anyone from its squad.`
+4. `Pick from three with ratings hidden until the end.`
+5. `Full squad to pick from, ratings hidden until the end.`
+
+The in-card `Play daily →` CTA remains. All five cards are full-card radio controls and each carries
+an in-card mode-specific action label; removing only Daily's label would save space by breaking a
+consistent affordance. The sticky dock is the actual navigation control, while the card CTA explains
+what selecting that radio mode will do. Row separation resolves the collision without deleting
+load-bearing copy or creating a one-card exception.
+
+Before the fix, the tightened group-1 scan reported 8 unexpected mode-select findings per engine:
+two at each 320px theme (`Daily`/title and title/CTA) and one at each 360px and 390px theme
+(title/CTA), for 16 unexpected findings across 12 cells. After the fix, every one of those 12 cells
+has zero unexpected findings. At 320px, the remaining literal Daily-card contacts are all adjudicated
+hairline glyph-boundary contacts; every 360px and 390px Daily cell has zero literal collision. The
+full matrix confirms no displacement into another surface.
+
 ## U2 — optimized production target and finding reconciliation
 
 `test-responsive-shell-fit.mts` now builds once through Turbo, starts the optimized artifact on a
@@ -179,27 +208,30 @@ the permanent controls and requested browser matrices against that server. The d
 dev-only surface is `dev-overlay-suppression.ts`, its callers/types, nonce provenance and
 wrapper/portal shape checks, fail-closed suppression path, and suppression-only tests.
 
-The pre-review matrix passed 264/264 with the following raw totals, but its zero-unexpected verdict
-is superseded because the old same-control predicate absorbed substantive text overlap:
+The final matrix passed 264/264 with the following raw totals. The superseded scan is retained to
+show how the product fix and narrowed adjudication changed the inventory:
 
 | Inventory                       | Cells | Class A | Class B |     Same control |     Scroll shell |  Unexpected |
 | ------------------------------- | ----: | ------: | ------: | ---------------: | ---------------: | ----------: |
 | Historical report-only dev scan |   252 |     808 |       0 | mixed historical | mixed historical | report-only |
 | Fresh current-main dev baseline |   264 |   4,499 |       0 |               52 |            4,447 |           0 |
 | Superseded optimized scan       |   264 |   4,488 |       0 |               52 |            4,436 |           0 |
+| Final optimized scan            |   264 |   4,489 |       0 |               36 |            4,453 |           0 |
 
-The like-for-like fresh-base comparison is a net drop of 11 findings, entirely in the scrolling
-shell rule; same-control coverage is unchanged. The older 808 inventory used 21 route states and
-an earlier sampling/adjudication envelope. It included 212 findings naming Next development
-chrome, all of which are necessarily absent under `next start`; it is not numerically comparable
-to the current 22-state bounded-scroll inventory. The current production total being 3,680 higher
-than that historical total is therefore coverage expansion, not unexplained loss. The per-surface
-totals and SHA-256s of all eight final raw receipts are committed in
+Against the like-for-like fresh-current-main development baseline, the final production inventory
+drops by 10: same-control findings drop by 16 because the substantive Daily-card contacts were
+fixed, while bounded scrolling-shell sampling increases by 6. This is smaller than the 212
+development-tools findings named in the older 808-finding report-only inventory, so it does not
+trigger the dispatch's unexplained-loss red flag. That older scan used 21 route states, earlier
+sampling/adjudication, and development chrome; its 212 `nextjs-portal` findings cannot exist under
+`next start` and its total is not numerically comparable to the current 22-state bounded-scroll
+inventory. The final production total being 3,681 higher than 808 is coverage expansion, not a
+missing-chrome claim. The per-surface totals and SHA-256s of all eight final raw receipts are committed in
 `docs/reports/guard-proof-life-2026-07-17/collision-summary.json`.
 
-The post-review exact-code group-1 scan is intentionally red: it reports the mode-select title/CTA
-overlap across the narrow production cells. No exact deferral or known failure was added. The full
-264-cell gate is therefore not represented as passing at the current head.
+The root test then ran all four groups again in one uninterrupted orchestration and reported
+`metrics=264 failures=0`. No allowlist was added or broadened and
+`NARROW_COLLISION_KNOWN_FAILURES` remains exactly `[]`.
 
 ## U3 — raster action
 
@@ -215,9 +247,11 @@ receipts and one manifest. It covers four surfaces × three widths × two engine
 Both engine receipts contain 12/12 metrics, zero console errors, zero axe violations, zero
 horizontal overflow, and no dev portal. Those receipts deliberately have `collisionMode: off`, so
 their empty `collisionFindings` arrays are not collision claims. Fresh-context visual review found
-the selected-card title overlapping the inline daily CTA in both 360px captures; the strict scanner
-then reproduced it as an unexpected Class A text collision. The original dated manifest was
-annotated; its 18 PNGs were not rewritten.
+the selected-card title overlapping the inline Daily CTA in both 360px captures; the strict scanner
+then reproduced it as an unexpected Class A text collision. U1 fixes that geometry in product CSS,
+and both the focused 12-cell comparison and complete 264-cell strict scan are green. The original
+dated manifest was annotated; its 18 PNGs were not rewritten. Light-mode redesign remains deferred;
+the evidence pointer is unchanged.
 
 ## Architect-delegated decisions
 
@@ -244,11 +278,19 @@ annotated; its 18 PNGs were not rewritten.
    setting for this transport mismatch. Unknown browser diagnostics still fail the collision
    gate; only the exact locked report-only messages are accepted. Product CSP source and the
    production deployment's enforced policy are unchanged.
+5. **Keep Daily's in-card CTA and separate its rows.** The five mode cards are full-card radio
+   controls with consistent mode-specific action labels; removing only Daily's label would make its
+   affordance structurally different even though the sticky dock performs navigation. The bounded
+   row separation is the least-behavior-changing fix: it preserves all descriptors, selection and
+   navigation semantics, 44px targets, colors, and the wider layout while clearing the strict gate.
 
 ## Files
 
 - Scanner proof and adjudication: `apps/web/scripts/narrow-collision-scan.ts`,
   `narrow-collision-proof-controls.ts`, `responsive-layout-contract.ts`.
+- Daily geometry and its contracts: `apps/web/components/game/game-styles/shared.module.css`,
+  `apps/web/lib/game/__tests__/one-screen-compaction.test.ts`,
+  `one-screen-device-matrix.test.ts`, and `apps/web/scripts/verify-home-fold-browser.mts`.
 - Production wrapper and browser harness: `apps/web/scripts/test-responsive-shell-fit.mts`,
   `verify-responsive-layout-browser.mts`, `apps/web/package.json`.
 - Deleted dev-only machinery: `apps/web/scripts/dev-overlay-suppression.ts` and suppression-only
@@ -259,29 +301,28 @@ annotated; its 18 PNGs were not rewritten.
 
 ## Validation run
 
-- Focused collision contract: **20/20 passed** at the post-review head.
-- Web typecheck: passed.
+- Focused Daily geometry contracts: **18/18 passed**; web typecheck passed.
 - Optimized-production proof controls: **6 controls × 2 engines passed**; observed counts per
   engine were 2, 0, 2, 0, 1, and 2.
-- Pre-review optimized-production collision matrix: **264/264**, 4,488 literal findings, 0
-  unexpected, 0 browser errors; this result is superseded because it allowlisted substantive
-  same-control text overlap.
-- Post-review focused group-1 strict matrix: **FAIL as designed**. Each engine reports 8 unexpected
-  mode-select findings across 6 cells (320/360/390 × both themes), for 16 findings across 12 cells
-  total; the two 360px light failures match the committed U4 rasters. This is the shipping blocker,
-  not an accepted known failure. Classic-pick's 36 former same-control findings remain green because
-  they are 1px glyph-boundary contact, the exact boundary the narrowed pattern retains.
+- Each deliberate defect was re-applied alone and made only its named control red in both engines:
+  disable Class B enumeration → `class-b-fires` 0; force transparent paint →
+  `class-b-transparent-clear` 2; skip fixed-over-fixed Class A → `class-a-fires` 0; substitute
+  separated hit geometry → `class-a-separated-clear` 2; broaden same-control to any shared
+  ancestor → `same-interactive-blocker` 0; broaden scrolling shell to any intentional shell →
+  `scrolling-shell-pinned-blocker` 0. Exact source was restored and the clean 12-control run passed.
+- Final optimized-production collision matrix: **264/264**, 4,489 literal Class A findings,
+  0 Class B product findings, 0 unexpected, and 0 browser errors. The root test ran all four groups
+  to completion in one orchestration; this is not a group-1-only inference.
 - Fresh light capture: **24/24 dev-chrome-free captures**, with 12/12 axe/console/overflow metrics
   in each engine receipt; collision measurement was off for this screenshot pass.
 - Uncached root typecheck: **9/9 tasks**, 0 cached.
 - Uncached root lint: **6/6 tasks**, 0 cached; repository format check clean.
-- Uncached root test: **9/9 tasks**, 0 cached, completed in 29m01s:
+- Uncached root test: **9/9 tasks**, 0 cached, completed in 30m48.663s:
   - core 423, database 161, data 183 + 9 expected skips, marketing 69, mobile 7, web
-    1,366 + 1 expected skip = **2,209 passed / 10 expected skips**;
+    1,367 + 1 expected skip = **2,210 passed / 10 expected skips**;
   - game-flow Playwright passed;
   - permanent proof controls passed in both engines;
-  - responsive shell **218/218**, pre-review collision **264/264** (superseded as described above),
-    one-screen **216/216**.
+  - responsive shell **218/218**, final collision **264/264**, one-screen **216/216**.
 - Uncached root build: **5/5 tasks**, 0 cached, 40/40 pages; `/api/og/sign` and
   `/api/challenge/verify` each include 8/8 protected runtime-data traces.
 - Dedicated uncached goldens without regeneration or re-lock: core **69/69**, draft **42/42**,
@@ -291,13 +332,18 @@ annotated; its 18 PNGs were not rewritten.
 - Strict font/a11y audit: **60 surfaces / 44 targets**, zero failures, axe violations, non-Archivo
   families, tracking-role violations, target failures, or horizontal overflow. Receipt
   `/tmp/wcdraft-guard-font-a11y.json`, SHA-256
-  `a3bd4c287ff12f9c5ac32df2718cb61f3f1c35a21624a990c24fc680a8920be8`.
-- The source tracking guard passed within the 1,366-test web suite.
+  `3c57db51580b55e604bd6a0e1319222508fae5a5af5649ad4efc8912c2ec551a`.
+- The source tracking guard passed within the 1,367-test web suite. Ratings and draft-pool hashes
+  remained exact, no tracked data changed, and no golden was regenerated or re-locked.
 
 ## Independent reviews
 
-The exact-head evidence reviews are complete except for U5, whose fresh-context child remained
-unresponsive and was interrupted after bounded retries; no U5 verdict is fabricated.
+The table preserves the blocked-head review history. Those U0-U4/cross-model verdicts are not
+represented as final-head approval because U1 changes the reviewed code. The required fresh-context
+and cross-model reviews run only after this report commit establishes the exact candidate head;
+their verbatim artifacts, hashes, and durable PR citations are release evidence rather than a
+post-review commit that would void them. U5 was independently re-observed at implementation head
+`452b39de4d450f013a4ee2222e5d97454192a256` and returned PASS.
 
 | Unit                             | Verdict                | Verbatim artifact                                  | SHA-256                                                            |
 | -------------------------------- | ---------------------- | -------------------------------------------------- | ------------------------------------------------------------------ |
@@ -309,36 +355,39 @@ unresponsive and was interrupted after bounded retries; no U5 verdict is fabrica
 | U4 initial                       | FAIL, fixed forward    | `/tmp/wcdraft-guard-u4-review.txt`                 | `2732dd759027caae1b2a4081b1bafc03d088bc939979057fcea0e375a92bb97e` |
 | U4 exact-head re-review          | PASS, shipping blocked | `/tmp/wcdraft-guard-u4-rereview.txt`               | `1175f52aca02c736fdb8b7116d9c56c32283781b9eeda96d8f2294e5104450a1` |
 | U1/U2 cross-model GLM exact head | PASS, shipping blocked | `/tmp/wcdraft-guard-crossmodel-rereview-final.txt` | `749b849cfc432535476806319286af8cac366170acf41dd358a24751b3eb9ae7` |
-| U5                               | Unavailable            | no artifact produced                               | n/a                                                                |
+| U5 final observation             | PASS                   | `/tmp/wcdraft-guard-u5-final-review.txt`           | `c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431` |
 
-The initial U4 FAIL is the review that exposed the real product collision. The canonical U4
-fix-forward rerun rebuilt the exact head and passed all 6 controls in both engines; a divergent
-direct probe was traced to a symlinked stale build and bypassed lifecycle. The strict product scan
-remains red in both engines, as required for honest blocking.
+The initial U4 FAIL is the review that exposed the real product collision. Its historical PASS
+re-review proved the guard but remained shipping-blocked. U1 fixes the product geometry; the final
+exact-head reviewers must independently prove both the fix and the unchanged guard before merge.
 
 ## U5 — runner end observation
 
-Lane-start free space was 44,798,148 KiB (42.72 GiB). The blocked-lane closeout measurement was
-56,914,412 KiB (54.28 GiB), so the 30 GiB floor held without manual intervention. U0 proved that
-all three lifecycle components had executed since PR #306, but this lane has no evidence that they
-reclaimed a real production-root path during this run; the increase in headroom is therefore not
-attributed to them. No manual sweep or reclamation was performed.
+The resumed lane began with approximately 53 GiB free in the direct U0 observation. The earliest
+raw protected-CI start reading was 54,500,980 KiB; the final independent observation was 51,235,324
+KiB. Every production hygiene invocation remained above its 37,748,736 KiB target. No production
+invocation printed `pruning` or `after_free_kb`, so no real production-root reclamation is attributed
+to this lane. The only pruning occurred inside the isolated contract probe with a synthetic root.
 
-Post-merge cleanup is **NOT RUN** because merge, deployment, and live verification never occurred.
-The implementation worktree, reviewer clones, and `/tmp` verdict artifacts intentionally remain for
-continuation; claiming that this lane cleaned its own artifacts would be false. A fresh-context U5
-reviewer was launched read-only but remained unresponsive through bounded waits and finalize
-requests, then was interrupted without producing an artifact or changing state.
+GitHub Actions run `29606985824` completed successfully at the exact implementation head and its
+aggregate gate passed. The one-screen lifecycle wrote `cleanup-ready-v1` only to its disposable
+output, while `/private/tmp/wcdraft-guard-proof-20260717` stayed unmarked, linked to the owner Git
+common directory, and preserved. At the observation end, runner `wcdraft-m4` was online and idle.
+The verbatim PASS is `/tmp/wcdraft-guard-u5-final-review.txt` with SHA-256
+`c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431`.
+
+Post-merge cleanup remains **NOT RUN at this pre-review commit**. Its precondition is successful
+merge plus live verification; the final release record must report the actual cleanup and end-space
+measurement rather than pre-claiming them here.
 
 ## Not run and why
 
-- The full 264-cell strict matrix was not rerun after the honest same-control tightening because
-  focused group 1 already failed the required gate in both engines with the exact product finding;
-  running the remaining groups cannot turn that gate green.
-- PR creation, protected CI, merge, Vercel READY observation, and production live verification were
-  not run because local required validation is red.
-- Post-merge worktree/reviewer-clone cleanup and the remote merged-branch sweep were not run because
-  their merge-plus-live-verify precondition was never reached. No manual runner sweep was performed.
+- Final exact-head fresh-context and cross-model review are intentionally not run until this
+  report/STATE commit establishes the immutable candidate they must review.
+- Final-head protected CI, merge, Vercel READY observation, production live verification, and
+  post-merge cleanup are downstream of those reviews. The draft PR exists and implementation-head
+  CI is green; no production claim is made in this pre-review artifact.
+- No manual runner sweep was performed.
 
 ## Risks and carryovers
 
@@ -347,29 +396,28 @@ requests, then was interrupted without producing an artifact or changing state.
 - Product-route Class B remains zero, which is an observed application state rather than a guard
   blind spot because the permanent positive and transparent controls execute the same scanner.
 - Raster equality must be remeasured after Sharp, Node, generation-code, or deploy-platform changes.
-- Ship, READY observation, and live checks were not run because the exact-head strict collision gate
-  is red on an out-of-scope product-geometry defect. Cleanup remains pending while the blocked lane
-  is preserved for continuation; this report does not claim any merge or production change.
+- The geometry fix is intentionally limited to widths through 430px and short landscape; the full
+  one-screen, responsive-shell, native-feel, and collision matrices bound its measured blast radius.
+- Ship, READY observation, live checks, and cleanup remain pending at this pre-review commit.
 
 ## Commit, branch, and git status
 
 - Branch: `ws-ux/guard-proof-life`
-- Exact independently reviewed implementation head: `35a34200c1526d380294c992c36619977420a2d5`
-- Implementation commits: `03d78b8`, `0c47aef`, `35a3420`; this report-only closeout is the
-  following commit
-- Status before this report-only closeout commit: clean, 3 commits ahead of local `origin/main`
-- Push/PR/merge/deploy: not run because the strict required gate is red
+- Preserved blocked-lane tip: `ceffdc0f8b12a174b5f398e36aefdc52c247c170`
+- Daily geometry implementation head: `452b39de4d450f013a4ee2222e5d97454192a256`
+- Draft PR: #308, opened before U1; branch was pushed and remotely confirmed before any product edit
+- This report/STATE closeout is the next commit and becomes the final candidate-review head
+- Merge/deploy/live verification: pending required final-head reviews and protected CI
 
 ## HUMAN ACTIONS
 
-One new authorization is irreducible: dispatch a separate product-geometry lane to fix the
-mode-select selected-card title/CTA overlap at 320/360/390 in both engines. This YELLOW lane cannot
-make that product change, and it cannot satisfy the mandatory full-green ship gate without it. Do
-not broaden the allowlist or add a known failure as a substitute.
+None at the pre-review boundary. The corrected dispatch authorizes the bounded product geometry
+fix, all local gates are green, and the remaining review/ship/live/cleanup sequence is autonomous.
 
 ## Explicit invariants
 
-- Zero product geometry changed.
+- Product geometry changed only for selected Daily content separation at narrow widths and short
+  landscape.
 - Zero colour values changed in either theme.
 - No tracked core/data/ETL/mobile diff.
 - Ratings SHA-256 remains
