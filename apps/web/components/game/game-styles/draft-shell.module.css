@@ -210,7 +210,7 @@
 }
 
 .appBarModeChip b {
-  color: var(--gold);
+  color: var(--gold-bright);
   font-weight: 700;
 }
 

@@ -76,7 +76,7 @@
   font-size: clamp(2.6rem, 10vw, 4.5rem);
   font-weight: var(--font-weight-heading);
   line-height: 0.85;
-  color: var(--gold);
+  color: var(--gold-bright);
   letter-spacing: var(--tracking-heading);
 }
 .shareRecord {
@@ -273,7 +273,7 @@
 
 .shareHeadline,
 .shareRecordNum {
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .shareTeam,

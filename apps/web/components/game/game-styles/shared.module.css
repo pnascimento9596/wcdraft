@@ -320,7 +320,7 @@
 .modeCardFeatured .modeTag {
   border-color: color-mix(in srgb, var(--gold) 48%, transparent);
   background: color-mix(in srgb, var(--gold) 14%, transparent);
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .modeCardFeatured .modeTagDot,
@@ -329,7 +329,7 @@
 }
 
 .modeCardFeatured .modeCta {
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .modeCardSecondary {

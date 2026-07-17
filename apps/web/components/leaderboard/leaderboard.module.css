@@ -311,7 +311,7 @@
   padding-right: 0.2rem;
 }
 .rowRankTop {
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .rowMain {
@@ -468,7 +468,7 @@
   font-family: var(--font-family);
   font-size: 1.05rem;
   line-height: 1;
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .resultPill span {
@@ -863,7 +863,7 @@
   color: var(--accent-text);
 }
 .outcomeTitleGold {
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 .outcomeTitleBad {
   color: var(--loss);

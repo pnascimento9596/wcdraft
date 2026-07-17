@@ -623,7 +623,7 @@ button.benchSlot:not(:disabled):hover {
   padding: 0.16rem 0.55rem;
 }
 :root[data-theme="dark"] .award {
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 .emptyList {
   color: var(--ink-faint);
