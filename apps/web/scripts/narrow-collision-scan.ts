@@ -75,31 +75,8 @@ export async function scanNarrowCollisions(
       const devPortalHosts =
         registryGlobal.__wcdraftNextDevPortalHosts ?? new WeakMap<Element, HTMLElement>();
       registryGlobal.__wcdraftNextDevPortalHosts = devPortalHosts;
-      const registerDevPortal = (portal: HTMLElement) => {
-        const visit = (element: Element) => {
-          devPortalHosts.set(element, portal);
-          if (element.shadowRoot) {
-            for (const nested of element.shadowRoot.querySelectorAll<Element>("*")) visit(nested);
-          }
-        };
-        visit(portal);
-        if (portal.shadowRoot) {
-          for (const element of portal.shadowRoot.querySelectorAll<Element>("*")) visit(element);
-        }
-      };
-      for (const portal of document.querySelectorAll<HTMLElement>("nextjs-portal")) {
-        registerDevPortal(portal);
-      }
       const nextDevPortalHost = (element: Element): HTMLElement | null => {
-        const registeredPortal = devPortalHosts.get(element);
-        if (registeredPortal) return registeredPortal;
-        for (let current: Element | null = element; current; current = composedParent(current)) {
-          if (current.tagName.toLowerCase() === "nextjs-portal") {
-            devPortalHosts.set(element, current as HTMLElement);
-            return current as HTMLElement;
-          }
-        }
-        return null;
+        return devPortalHosts.get(element) ?? null;
       };
       const alphaVisible = (color: string) => {
         const normalized = color.trim().toLowerCase();

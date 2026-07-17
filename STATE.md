@@ -13,10 +13,13 @@ same-control composition and content scrolling beneath a semantic fixed/sticky a
 is surface-named, and the exact known-failures list is empty. The reported lower-left `N` was
 measured in all 24 requested development cells and proven to be Next.js development chrome,
 absent from production; nonce-bearing suppression is positively verified before product scanning.
-Before hiding development chrome, the harness records the portal and its open-shadow descendants
-in a page-local weak registry so WebKit retains provable provenance even if the stale hit tree later
-detaches from its host. The scanner also resolves live composed-tree ancestry: when WebKit returns
-a registered stale `elementFromPoint` result from a non-painting hidden `nextjs-portal`, it
+Before hiding development chrome, the harness requires the installed App Router shape—exactly one
+`body > script[data-nextjs-dev-overlay="true"]` wrapper with exactly one direct-child portal—and
+records that portal and its open-shadow descendants in a page-local weak registry. Suppression
+targets the wrapper as a paint group, so WebKit retains provable provenance even if the stale hit
+tree later detaches from its host. A bare or differently wrapped `nextjs-portal` is unverified,
+remains visible, and fails closed. The scanner also resolves live composed-tree ancestry: when
+WebKit returns a registered stale `elementFromPoint` result from a non-painting hidden portal, it
 continues down `elementsFromPoint` to the first trustworthy candidate and retains the stale portal
 as a blocking failure if none exists. A real product layer beneath the stale hit, a visible portal,
 and an arbitrary visible shadow occluder all remain blocking with explicit `::shadow` provenance.
@@ -102,7 +105,10 @@ failures. Formation is exactly 732/732 at 360px, 664/664 at 390px, and 740/740 a
 engine/theme/motion combination, so the 360px exception was not invoked. The general collision
 gate passes 264/264 with no product allowlist or known-failure change. Its scanner now discards
 only impossible stale hits whose `ownerDocument` is not the current page, while an adversarial
-WebKit test proves that a current-page blocker beneath such a stale hit still fails closed.
+WebKit test proves that a current-page blocker beneath such a stale hit still fails closed. The
+dev-overlay gate also verifies the exact App Router wrapper/direct-child provenance, uses the
+request nonce DOM property when browsers redact its content attribute, and grants stale-hit
+treatment only to portal nodes entered through that verified wrapper registry.
 Thirty-six no-preference screenshots cover all three routes at 360/390/430, both themes, and both
 engines under `docs/reports/terrace-polish-2026-07-16/`. No palette literal, core/data/ETL tree,
 rating artifact, runtime manifest anchor, or draft-pool SHA changed.

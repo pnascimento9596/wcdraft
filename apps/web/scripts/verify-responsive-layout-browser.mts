@@ -48,6 +48,7 @@ import {
   type NarrowCollisionRawFinding,
 } from "./responsive-layout-contract";
 import { scanNarrowCollisions } from "./narrow-collision-scan";
+import { suppressDevOverlayInDocument } from "./dev-overlay-suppression";
 
 type ViewportCase = {
   readonly name: string;
@@ -131,12 +132,7 @@ const OUT_DIR =
   path.join(REPO_ROOT, "docs/reports/desktop-responsive-2026-07-06", PHASE);
 const AXE_CDN = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js";
 const DEV_OVERLAY_CSS = `
-  nextjs-portal,
-  [data-nextjs-toast],
-  [data-nextjs-dialog-overlay],
-  [data-nextjs-build-indicator],
-  [data-nextjs-dev-tools-button],
-  [data-nextjs-dev-tools-panel] {
+  body > script[data-nextjs-dev-overlay="true"] {
     display: none !important;
   }
 `;
@@ -612,88 +608,10 @@ async function settle(page: Page, waitForNetworkIdle = true): Promise<void> {
 async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null> {
   if (!DEV_SERVER) return null;
   const suppression = process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0" ? "disabled" : "enabled";
-  return await page.evaluate(
-    ({ css, requestedSuppression }) => {
-      const nonceElement = document.querySelector<HTMLScriptElement | HTMLStyleElement>(
-        "script[nonce], style[nonce]",
-      );
-      const nonceAttributeLength = nonceElement?.getAttribute("nonce")?.length ?? null;
-      const requestNonce = nonceElement?.nonce ?? "";
-      let styleNonceMatches = false;
-      let styleSheetAttached = false;
-      if (requestedSuppression === "enabled" && requestNonce) {
-        const style = document.createElement("style");
-        style.nonce = requestNonce;
-        style.dataset.wcdraftResponsiveHarness = "dev-overlay";
-        style.textContent = css;
-        document.head.append(style);
-        styleNonceMatches = style.nonce === requestNonce;
-        styleSheetAttached = style.sheet !== null;
-      }
-
-      const portal = document.querySelector<HTMLElement>("nextjs-portal");
-      type DevPortalRegistryGlobal = typeof globalThis & {
-        __wcdraftNextDevPortalHosts?: WeakMap<Element, HTMLElement>;
-      };
-      const registryGlobal = globalThis as DevPortalRegistryGlobal;
-      const devPortalHosts =
-        registryGlobal.__wcdraftNextDevPortalHosts ?? new WeakMap<Element, HTMLElement>();
-      registryGlobal.__wcdraftNextDevPortalHosts = devPortalHosts;
-      if (portal) {
-        const pending: Element[] = [portal];
-        for (let index = 0; index < pending.length; index += 1) {
-          const element = pending[index]!;
-          devPortalHosts.set(element, portal);
-          if (element.shadowRoot) {
-            pending.push(...element.shadowRoot.querySelectorAll<Element>("*"));
-          }
-        }
-      }
-      const controls = portal?.shadowRoot
-        ? Array.from(
-            portal.shadowRoot.querySelectorAll(
-              "[data-nextjs-dev-tools-button], [data-nextjs-dev-tools-panel], button, [role='button']",
-            ),
-          )
-        : [];
-      let portalState: DevOverlaySuppression["portalState"] = "absent";
-      if (portal) {
-        const computed = getComputedStyle(portal);
-        portalState =
-          computed.display === "none" || Number(computed.opacity) === 0 ? "hidden" : "visible";
-      }
-      // WebKit can retain stale shadow-child rectangles after display:none.
-      // Ignore them only under a property that suppresses descendant paint as
-      // a group. A zero-sized/visibility/clip-path host can still have a fixed
-      // visible shadow descendant, so those states remain fail-closed.
-      const visibleControlCount =
-        portalState === "visible"
-          ? controls.filter((element) => {
-              const rect = element.getBoundingClientRect();
-              const computed = getComputedStyle(element);
-              return (
-                computed.display !== "none" &&
-                computed.visibility !== "hidden" &&
-                computed.opacity !== "0" &&
-                rect.width > 0 &&
-                rect.height > 0
-              );
-            }).length
-          : 0;
-
-      return {
-        suppression: requestedSuppression,
-        nonceAttributeLength,
-        noncePropertyLength: requestNonce.length,
-        nonceSource: requestNonce ? ("property" as const) : ("missing" as const),
-        styleNonceMatches,
-        styleSheetAttached,
-        portalState,
-        visibleControlCount,
-      };
-    },
-    { css: DEV_OVERLAY_CSS, requestedSuppression: suppression },
-  );
+  return await page.evaluate(suppressDevOverlayInDocument, {
+    css: DEV_OVERLAY_CSS,
+    requestedSuppression: suppression,
+  });
 }
 
 async function mockOgSignFailure(page: Page): Promise<void> {

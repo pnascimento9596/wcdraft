@@ -24,6 +24,7 @@ import {
   type ResponsiveMetricForAdjudication,
 } from "../../../scripts/responsive-layout-contract";
 import { scanNarrowCollisions } from "../../../scripts/narrow-collision-scan";
+import { suppressDevOverlayInDocument } from "../../../scripts/dev-overlay-suppression";
 
 const globalsCss = readFileSync(
   fileURLToPath(new URL("../../../app/globals.css", import.meta.url)),
@@ -266,12 +267,35 @@ describe("responsive layout contract", () => {
             nonceSource: "property",
             styleNonceMatches: true,
             styleSheetAttached: true,
+            portalProvenance: "next-app-wrapper",
             portalState: "hidden",
             visibleControlCount: 0,
           },
         }),
       ),
     ).toEqual([]);
+  });
+
+  it("rejects a style nonce mismatch even when the verified portal is hidden", () => {
+    expect(
+      responsiveMetricFailures(
+        metric({
+          devOverlay: {
+            suppression: "enabled",
+            nonceAttributeLength: 0,
+            noncePropertyLength: 22,
+            nonceSource: "property",
+            styleNonceMatches: false,
+            styleSheetAttached: true,
+            portalProvenance: "next-app-wrapper",
+            portalState: "hidden",
+            visibleControlCount: 0,
+          },
+        }),
+      ),
+    ).toEqual([
+      "history 1024x768 light: dev overlay suppression failed (style nonce mismatch; attribute nonce length=0, property nonce length=22)",
+    ]);
   });
 
   it("fails strict adjudication when dev-overlay suppression is only attempted", () => {
@@ -285,6 +309,7 @@ describe("responsive layout contract", () => {
             nonceSource: "missing",
             styleNonceMatches: false,
             styleSheetAttached: false,
+            portalProvenance: "next-app-wrapper",
             portalState: "visible",
             visibleControlCount: 1,
           },
@@ -306,6 +331,7 @@ describe("responsive layout contract", () => {
             nonceSource: "property",
             styleNonceMatches: false,
             styleSheetAttached: false,
+            portalProvenance: "absent",
             portalState: "absent",
             visibleControlCount: 0,
           },
@@ -318,6 +344,88 @@ describe("responsive layout contract", () => {
 
   it("keeps null as the valid non-dev overlay sentinel", () => {
     expect(responsiveMetricFailures(metric({ devOverlay: null }))).toEqual([]);
+  });
+
+  it("suppresses the exact Next App Router overlay wrapper as a paint group", async () => {
+    const browser = await webkit.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
+      await page.setContent(`
+        <style nonce="request-nonce">body { margin: 0; }</style>
+      `);
+      await page.evaluate(() => {
+        const overlayRoot = document.createElement("script");
+        overlayRoot.dataset.nextjsDevOverlay = "true";
+        overlayRoot.style.cssText = "display:block;position:absolute";
+        const portal = document.createElement("nextjs-portal");
+        overlayRoot.append(portal);
+        document.body.append(overlayRoot);
+        const root = portal.attachShadow({ mode: "open" });
+        root.innerHTML = `
+          <style data-nextjs-dev-tool-style="true">:host { all: initial; }</style>
+          <div data-nextjs-toast="true">
+            <button
+              data-nextjs-dev-tools-button="true"
+              aria-label="Open Next.js Dev Tools"
+            >Open</button>
+          </div>
+        `;
+      });
+
+      const result = await page.evaluate(suppressDevOverlayInDocument, {
+        css: 'body > script[data-nextjs-dev-overlay="true"] { display: none !important; }',
+        requestedSuppression: "enabled" as const,
+      });
+      expect(result).toMatchObject({
+        noncePropertyLength: 13,
+        nonceSource: "property",
+        styleNonceMatches: true,
+        styleSheetAttached: true,
+        portalProvenance: "next-app-wrapper",
+        portalState: "hidden",
+        visibleControlCount: 0,
+      });
+      expect(await page.locator("nextjs-portal").count()).toBe(1);
+      expect(
+        await page
+          .locator('body > script[data-nextjs-dev-overlay="true"]')
+          .evaluate((root) => getComputedStyle(root).display),
+      ).toBe("none");
+      expect(responsiveMetricFailures(metric({ devOverlay: result }))).toEqual([]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  it("leaves an unverified nextjs-portal visible and fails closed", async () => {
+    const browser = await webkit.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
+      await page.setContent(`
+        <style nonce="request-nonce">body { margin: 0; }</style>
+        <nextjs-portal></nextjs-portal>
+      `);
+      await page.locator("nextjs-portal").evaluate((portal) => {
+        const root = portal.attachShadow({ mode: "open" });
+        root.innerHTML = '<button aria-label="Product control">Product</button>';
+      });
+
+      const result = await page.evaluate(suppressDevOverlayInDocument, {
+        css: 'body > script[data-nextjs-dev-overlay="true"] { display: none !important; }',
+        requestedSuppression: "enabled" as const,
+      });
+      expect(result).toMatchObject({
+        portalProvenance: "unverified",
+        portalState: "visible",
+        visibleControlCount: 1,
+      });
+      expect(await page.locator("nextjs-portal").count()).toBe(1);
+      expect(responsiveMetricFailures(metric({ devOverlay: result }))).toEqual([
+        "history 1024x768 light: dev overlay suppression failed (unverified Next portal, Next portal visible, 1 dev-tools controls visible; attribute nonce length=13, property nonce length=13)",
+      ]);
+    } finally {
+      await browser.close();
+    }
   });
 
   it("keeps collision discovery default-closed over every App Router page", () => {
