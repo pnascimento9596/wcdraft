@@ -529,6 +529,13 @@ async function verifyModeSelectCtaDoesNotTapThrough(
 
 const MODE_SELECT_VIEWPORTS = [
   {
+    width: 320,
+    height: 568,
+    name: "320x568",
+    expectedColumns: 2,
+    expectedDockPosition: "static",
+  },
+  {
     width: 360,
     height: 800,
     name: "360x800",

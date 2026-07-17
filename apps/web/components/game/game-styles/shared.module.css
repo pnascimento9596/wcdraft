@@ -825,6 +825,14 @@
   }
 }
 
+/* The retained 320px tier may scroll vertically. Keep its action in normal
+   flow so the last mode row remains readable and tappable above the dock. */
+@media (max-width: 359px) {
+  .modeDock {
+    position: static;
+  }
+}
+
 /* A sticky action would consume too much of a 375px-tall landscape viewport.
    Keep it in flow there; the five-column board remains compact and no card can
    paint underneath the action. */

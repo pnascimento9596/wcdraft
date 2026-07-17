@@ -331,6 +331,11 @@ export async function scanNarrowCollisions(
         ];
       };
       const hitAtPoint = (x: number, y: number): Element | null => {
+        // WebKit can transiently return a node retained from the document that
+        // existed before navigation. A foreign-document node cannot paint over
+        // the current page, so continue through the current document's hit stack.
+        const belongsToCurrentDocument = (candidate: Element | null): candidate is Element =>
+          candidate !== null && candidate.ownerDocument === document;
         const descendOpenShadow = (initial: Element): Element => {
           const seen = new Set<Element>();
           let current = initial;
@@ -339,7 +344,8 @@ export async function scanNarrowCollisions(
             const shadowRoot = current.shadowRoot as ShadowRoot & {
               elementFromPoint?: (pointX: number, pointY: number) => Element | null;
             };
-            const nativeNested = shadowRoot.elementFromPoint?.(x, y) ?? null;
+            const nativeCandidate = shadowRoot.elementFromPoint?.(x, y) ?? null;
+            const nativeNested = belongsToCurrentDocument(nativeCandidate) ? nativeCandidate : null;
             const nativeRect = nativeNested?.getBoundingClientRect();
             const nativeContainsPoint =
               nativeRect !== undefined &&
@@ -371,7 +377,15 @@ export async function scanNarrowCollisions(
           return current;
         };
         const initialHit = document.elementFromPoint(x, y);
-        const hit = initialHit ? descendOpenShadow(initialHit) : null;
+        const stackHits = () =>
+          document
+            .elementsFromPoint(x, y)
+            .filter(belongsToCurrentDocument)
+            .map(descendOpenShadow)
+            .filter(belongsToCurrentDocument);
+        const hit = belongsToCurrentDocument(initialHit)
+          ? descendOpenShadow(initialHit)
+          : (stackHits()[0] ?? null);
         if (!hit) return null;
         const portalHost = nextDevPortalHost(hit);
         if (!portalHost || !portalSubtreeSuppressed(portalHost)) return hit;
@@ -381,13 +395,10 @@ export async function scanNarrowCollisions(
         // a genuine product occluder. If no trustworthy candidate exists,
         // retain the original portal hit and fail closed.
         return (
-          document
-            .elementsFromPoint(x, y)
-            .map(descendOpenShadow)
-            .find((candidate) => {
-              const candidatePortal = nextDevPortalHost(candidate);
-              return !candidatePortal || !portalSubtreeSuppressed(candidatePortal);
-            }) ?? hit
+          stackHits().find((candidate) => {
+            const candidatePortal = nextDevPortalHost(candidate);
+            return !candidatePortal || !portalSubtreeSuppressed(candidatePortal);
+          }) ?? hit
         );
       };
       const related = (owner: Element, hit: Element | null) =>

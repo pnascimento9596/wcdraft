@@ -235,7 +235,7 @@ describe("responsive layout contract", () => {
 
   it("keeps the rendered formation setup dock in flow at narrow widths", () => {
     expect(draftSetupSource).toContain(
-      "<div className={`${s.draftShell} ${s.formationSetupShell}`}>",
+      "<div className={`${s.draftShell} ${s.formationSetupShell}`} data-formation-select>",
     );
     expect(gameModuleCss).toMatch(
       /\.formationSetupShell \{\s*composes: formationSetupShell from "\.\/game-styles\/draft-shell\.module\.css";\s*\}/u,
@@ -580,6 +580,60 @@ describe("responsive layout contract", () => {
             class: "A",
             targetSelector: "#target",
             occluderSelector: "#product-shadow::shadow #shadow-blocker",
+          }),
+        ]),
+      );
+    } finally {
+      await browser.close();
+    }
+  });
+
+  it("ignores foreign-document stale hits without masking current-page collisions", async () => {
+    const browser = await webkit.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
+      await page.setContent(`
+        <style>
+          body { margin: 0; }
+          #target { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px; }
+          #product-occluder { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px;
+            display: none; z-index: 4; }
+        </style>
+        <button id="target" aria-label="Product target">Product target</button>
+        <div id="product-occluder">Current product blocker</div>
+      `);
+      await page.evaluate(() => {
+        const target = document.querySelector<HTMLElement>("#target")!;
+        const productOccluder = document.querySelector<HTMLElement>("#product-occluder")!;
+        const foreignDocument = document.implementation.createHTMLDocument("stale page");
+        const staleDot = foreignDocument.createElement("div");
+        staleDot.textContent = "·";
+        staleDot.getBoundingClientRect = () => new DOMRect(20, 20, 100, 50);
+        const pageGlobal = globalThis as typeof globalThis & {
+          __wcdraftForeignDocument?: Document;
+        };
+        pageGlobal.__wcdraftForeignDocument = foreignDocument;
+        document.elementFromPoint = () => staleDot;
+        document.elementsFromPoint = () => [
+          staleDot,
+          ...(productOccluder.style.display === "block" ? [productOccluder] : []),
+          target,
+          document.body,
+          document.documentElement,
+        ];
+      });
+
+      expect(await scanNarrowCollisions(page)).toEqual([]);
+
+      await page.locator("#product-occluder").evaluate((occluder) => {
+        occluder.style.display = "block";
+      });
+      expect(await scanNarrowCollisions(page)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            class: "A",
+            targetSelector: "#target",
+            occluderSelector: "#product-occluder",
           }),
         ]),
       );

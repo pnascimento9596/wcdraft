@@ -129,6 +129,12 @@ describe("mode-select sticky CTA contract", () => {
     expect(shortViewport).toContain(".modeDock");
     expect(shortViewport).toContain("position: static");
   });
+
+  it("keeps the dock in flow on the retained 320px tier", () => {
+    const narrowViewport = css.slice(css.indexOf("@media (max-width: 359px)"));
+    expect(narrowViewport).toContain(".modeDock");
+    expect(narrowViewport).toContain("position: static");
+  });
 });
 
 describe("build stamp", () => {

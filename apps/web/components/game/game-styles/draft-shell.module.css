@@ -2251,7 +2251,6 @@
 }
 
 .draftShell[data-formation-select] .formationDock {
-  position: static;
   flex: 0 0 auto;
   margin: auto 0 0;
   padding: 5px 0 max(5px, env(safe-area-inset-bottom, 0px));

@@ -82,9 +82,30 @@ covered by a SHA-pinned PASS. A subsequent repository-wide run correctly rejecte
 layout because its CTA sat at `1435.375px` in an 844px viewport. The bounded-shell revision now
 measures the shell at `62.59375..835.984375`, scroll row at `128.59375..750.984375`, and disjoint
 CTA row at `758.984375..827.984375`; full game flow passes. That post-review geometry commit voids
-the prior PASS and is awaiting a new SHA-pinned review.
+the prior PASS, then received a new SHA-pinned PASS and shipped through PR #306 as production
+main `cc226371`; its 18-cell three-route, 2-cell squad-review, and theme/disclosure live gates all
+passed without an auto-revert.
 
 Formation-selector mini-pitches use uniform player markers (owner decision, 2026-07-16). Position=SHAPE remains the platform encoding on all player-identity surfaces: draft cards, choose-from-3, roster lists, team sheet, squad review, results.
+
+Terrace polish: 2026-07-16 · `/` keeps its exact legal copy in two readable 12px lines and anchors
+the disclosure to the shell bottom with a flex spacer; `/play` adds the five owner-approved
+functional mode descriptors verbatim and uses the same disclosure treatment. Lock-a-formation
+removes the branding-only second app bar, compresses all eight formation cards into a three-column
+grid at every registered width from 360px upward, and renders each selector-only pitch with ten
+uniform outfield dots plus one outlined goal box. Its two-word character lines are `Wide attack`,
+`Compact block`, `Two strikers`, `Screened defence`, `Midfield control`, `Front three`,
+`Twin creators`, and `Deep defence`. The expanded browser matrix passes 216/216 contexts across
+three routes, nine viewport descriptors, two themes, two motion modes, and Chromium plus WebKit:
+192 strict-fit contexts and the 24 pre-existing scroll-permitted 320x568 contexts, all with zero
+failures. Formation is exactly 732/732 at 360px, 664/664 at 390px, and 740/740 at 430px in every
+engine/theme/motion combination, so the 360px exception was not invoked. The general collision
+gate passes 264/264 with no product allowlist or known-failure change. Its scanner now discards
+only impossible stale hits whose `ownerDocument` is not the current page, while an adversarial
+WebKit test proves that a current-page blocker beneath such a stale hit still fails closed.
+Thirty-six no-preference screenshots cover all three routes at 360/390/430, both themes, and both
+engines under `docs/reports/terrace-polish-2026-07-16/`. No palette literal, core/data/ETL tree,
+rating artifact, runtime manifest anchor, or draft-pool SHA changed.
 
 Terrace close-out: 2026-07-15 · `/` and `/play` now render the existing CC-BY-SA
 attribution and not-affiliated notice as human-readable one-screen content instead of hiding
