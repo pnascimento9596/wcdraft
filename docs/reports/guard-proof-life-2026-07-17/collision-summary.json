@@ -67,5 +67,24 @@
     "g3-webkit": "2808725546e4335b93ba013ba2f5b6e0bd3f811fa8e49ddf210a76f943413514",
     "g4-chromium": "9ed6b4dd52e94569e72cba031529b2ed636456fdeafb1d55cc01f0e5985b4d4a",
     "g4-webkit": "e1903e84805cd617b4afad40ec1edb92b6445ce9017778556b517557e01024e2"
+  },
+  "postReviewFinding": {
+    "status": "blocking",
+    "supersedesZeroUnexpectedClaim": true,
+    "cause": "same-interactive-composition allowed substantive text overlap inside one semantic control",
+    "guardAction": "allow only non-box intersection contact of at most 1px on either axis",
+    "strictReproduction": {
+      "group": 1,
+      "engines": ["chromium", "webkit"],
+      "unexpectedModeSelectFindingsPerEngine": 8,
+      "failingModeSelectCellsPerEngine": 6,
+      "unexpectedModeSelectFindingsTotal": 16,
+      "failingModeSelectCellsTotal": 12,
+      "viewports": ["320x568", "360x800", "390x844"],
+      "themes": ["light", "dark"],
+      "examples": ["Today's Draft under Play daily →", "Daily under Today's Draft at 320x568"]
+    },
+    "productAction": "none; product geometry is outside this lane",
+    "knownFailureAdded": false
   }
 }

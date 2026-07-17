@@ -6,6 +6,12 @@
   "widths": [360, 390, 430],
   "surfaces": ["home", "mode-select-available", "draft-setup", "squad-review"],
   "imageCount": 24,
+  "measurementScope": {
+    "devChrome": "absent",
+    "axeConsoleOverflow": "measured in receipts",
+    "collisionMode": "off",
+    "visualFinding": "At 360x800 in both engines, the selected-card title Today's Draft overlaps the inline Play daily action. The strict collision gate reproduces this after the same-control allowlist is narrowed; product geometry is outside this lane."
+  },
   "receipts": [
     "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/responsive-guard-light-prod-chromium.json",
     "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/responsive-guard-light-prod-webkit.json"

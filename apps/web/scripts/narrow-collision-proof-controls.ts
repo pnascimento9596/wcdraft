@@ -46,7 +46,7 @@ async function installFixture(page: Page, kind: FixtureKind): Promise<void> {
     fixture.id = "proof-fixture";
     if (fixtureKind === "same-interactive") {
       fixture.innerHTML =
-        '<button id="proof-control"><span id="proof-target">Proof target</span><span id="proof-occluder" aria-hidden="true"></span></button>';
+        '<button id="proof-control"><span id="proof-target">Proof target</span><span id="proof-occluder">Blocking text</span></button>';
     } else if (fixtureKind === "scrolling-shell") {
       fixture.innerHTML =
         '<button id="proof-target" aria-label="Proof target">Proof target</button><div id="proof-scroll-spacer"><header id="proof-occluder" role="banner" aria-label="Proof shell"></header></div>';
@@ -99,6 +99,10 @@ async function installFixture(page: Page, kind: FixtureKind): Promise<void> {
         inset: 0 !important;
         width: auto !important;
         height: auto !important;
+      }
+      #proof-control #proof-occluder {
+        color: rgb(180, 20, 20) !important;
+        background: transparent !important;
       }
       #proof-scroll-spacer {
         display: block !important;
@@ -169,7 +173,12 @@ async function runForEngine(
 
     assert(
       sameInteractive.some(
-        (finding) => finding.sharedInteractiveAncestor && finding.occluderOpaqueBoxPaint,
+        (finding) =>
+          finding.sharedInteractiveAncestor &&
+          !finding.occluderOpaqueBoxPaint &&
+          finding.targetKind === "text" &&
+          finding.intersectionRect.width > 1 &&
+          finding.intersectionRect.height > 1,
       ),
       `${engine}: same-interactive control did not exercise the allowlist predicate boundary`,
     );

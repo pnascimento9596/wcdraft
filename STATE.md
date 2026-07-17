@@ -20,7 +20,12 @@ receipt. Permanent production-target controls now prove in both engines that Cla
 opaque pointer-transparent paint and stays clear when transparent, Class A fires and stays clear
 when moved away, and both allowlists reject adversarial blockers. Each control was separately
 proven to fail under an actual temporary scanner/adjudicator defect. The same-control pattern now
-accepts only non-box sibling paint; opaque backgrounds, images, borders, and shadows stay blocking.
+accepts only hairline (at most 1px on one axis) non-box glyph-boundary contact; substantive text
+overlap plus opaque backgrounds, images, borders, and shadows stay blocking. This tightening
+exposed an existing product collision on mode select: `Today's Draft` overlaps `Play daily →` at
+320/360/390 in both engines. Product geometry is explicitly outside this
+YELLOW lane, so the strict matrix is correctly red and this lane is blocked from merge until a
+separate product-geometry fix lands; no known-failure or broader allowlist hides it.
 The scrolling-shell pattern accepts only in-flow content and cannot absorb fixed/sticky targets.
 Neither pattern is surface-named, and the exact known-failures list remains empty.
 Real product collisions found while closing the inventory were fixed with geometry only, including
@@ -28,7 +33,7 @@ WebKit-only 320px formation hit-target overlap, while canonical formation coordi
 remain unchanged. All 12 predev/prebuild-generated rasters are byte-identical to their resolved
 production URLs as measured on 2026-07-17, so every tracked artifact remains; the URL/SHA table is
 the durable remeasurement procedure for future Sharp/Node changes. The contaminated historical
-18-image light-mode manifest is additively annotated, and its clean 24-image replacement is
+18-image light-mode manifest is additively annotated, and its dev-chrome-free 24-image replacement is
 `docs/reports/guard-proof-life-2026-07-17/light-mode/manifest.json`. Runner hygiene now enforces a
 30 GiB hard floor plus a 36 GiB best-effort pre-lane
 target: bounded cleanup starts below the target, a remaining target miss warns, and only a

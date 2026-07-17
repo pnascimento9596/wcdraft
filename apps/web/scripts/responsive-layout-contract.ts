@@ -80,8 +80,11 @@ export const NARROW_COLLISION_ALLOWLIST_PATTERNS: readonly NarrowCollisionAllowl
   {
     id: "same-interactive-composition",
     rationale:
-      "Non-box sibling paint inside one semantic control shares its hit target; opaque backgrounds, images, borders, and shadows remain blocking.",
-    matches: (finding) => finding.sharedInteractiveAncestor && !finding.occluderOpaqueBoxPaint,
+      "Hairline glyph-boundary contact inside one semantic control shares its hit target; substantive text overlap, opaque backgrounds, images, borders, and shadows remain blocking.",
+    matches: (finding) =>
+      finding.sharedInteractiveAncestor &&
+      !finding.occluderOpaqueBoxPaint &&
+      (finding.intersectionRect.width <= 1 || finding.intersectionRect.height <= 1),
   },
   {
     id: "scrolling-under-app-shell",

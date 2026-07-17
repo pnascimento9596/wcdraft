@@ -478,7 +478,7 @@ describe("responsive layout contract", () => {
       {
         id: "same-interactive-composition",
         rationale:
-          "Non-box sibling paint inside one semantic control shares its hit target; opaque backgrounds, images, borders, and shadows remain blocking.",
+          "Hairline glyph-boundary contact inside one semantic control shares its hit target; substantive text overlap, opaque backgrounds, images, borders, and shadows remain blocking.",
       },
       {
         id: "scrolling-under-app-shell",
@@ -509,7 +509,10 @@ describe("responsive layout contract", () => {
           viewport: "320x568",
           theme: "light",
           engine: "chromium",
-          finding: collision({ sharedInteractiveAncestor: true }),
+          finding: collision({
+            sharedInteractiveAncestor: true,
+            intersectionRect: { x: 10, y: 10, width: 44, height: 1 },
+          }),
         }),
       ).toMatchObject({
         disposition: "allowlisted",
@@ -525,6 +528,19 @@ describe("responsive layout contract", () => {
         finding: collision({
           sharedInteractiveAncestor: true,
           occluderOpaqueBoxPaint: true,
+        }),
+      }).disposition,
+    ).toBe("unexpected");
+    expect(
+      adjudicateNarrowCollision({
+        surface: "text-overlap",
+        viewport: "320x568",
+        theme: "light",
+        engine: "chromium",
+        finding: collision({
+          targetKind: "text",
+          sharedInteractiveAncestor: true,
+          intersectionRect: { x: 10, y: 10, width: 8, height: 8 },
         }),
       }).disposition,
     ).toBe("unexpected");

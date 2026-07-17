@@ -9,14 +9,18 @@ Branch: `ws-ux/guard-proof-life`
 
 The collision guard now scans the optimized `next build` artifact through `next start`, and its
 six permanent browser-session controls prove Class A, Class B, both clear cases, and both
-allowlist boundaries in Chromium and WebKit. The final production-target matrix passed 264/264
-with 4,488 Class A findings, zero Class B product findings, zero unexpected findings, and zero
-browser errors. The guard machinery that existed only to suppress and authenticate Next
-development chrome was deleted.
+allowlist boundaries in Chromium and WebKit. An initial production-target matrix passed 264/264
+with 4,488 Class A findings only because the same-control pattern allowed substantive text-on-text
+overlap. Fresh-context U4 review caught the visible result in both 360px mode-select captures.
+After tightening that pattern to hairline contact only, the controls still pass but the strict
+matrix correctly fails on `Today's Draft` under `Play daily →` (and, at 320px, `Daily` under the
+title). Product geometry is explicitly out of scope, so the lane is blocked and is not shipped.
+The guard machinery that existed only to suppress and authenticate Next development chrome was
+deleted locally.
 
 All 12 generated rasters are byte-identical to the corresponding production responses, so none
 was deleted. All 18 historical light-mode captures contain the Next development-tools button and
-are stale after PR #307. Their manifest is additively annotated, and a clean optimized-production
+are stale after PR #307. Their manifest is additively annotated, and a dev-chrome-free optimized-production
 replacement contains 24 screenshots covering home, mode select, formation setup, and squad review
 at 360/390/430 in both engines.
 
@@ -141,14 +145,14 @@ against `/` in a real Chromium/WebKit session. It runs under the same optimized-
 as the matrix. `verify:narrow-collision-controls` is explicit, and the default web responsive test
 runs the controls before the shell/matrix work, keeping them in root CI.
 
-| Control                          | Expected proof                                              | Final result per engine | Deliberate defect that made it red                                 |
-| -------------------------------- | ----------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------ |
-| `class-b-fires`                  | opaque pointer-transparent higher paint is reported         | 2 unexpected findings   | disable Class B enumeration                                        |
-| `class-b-transparent-clear`      | transparent pointer-transparent element is clear            | 0                       | force transparent elements through `paints`                        |
-| `class-a-fires`                  | opaque pointer-active blocker is reported                   | 2                       | ignore fixed-over-fixed Class A                                    |
-| `class-a-separated-clear`        | same blocker moved away is clear                            | 0                       | substitute a non-overlap element into Class A hit resolution       |
-| `same-interactive-blocker`       | opaque sibling paint inside one button is still reported    | 1                       | broaden the pattern back to every shared interactive ancestor      |
-| `scrolling-shell-pinned-blocker` | pinned target under semantic sticky shell is still reported | 2                       | broaden the pattern back to every intentional scroll-shell finding |
+| Control                          | Expected proof                                               | Final result per engine | Deliberate defect that made it red                                 |
+| -------------------------------- | ------------------------------------------------------------ | ----------------------- | ------------------------------------------------------------------ |
+| `class-b-fires`                  | opaque pointer-transparent higher paint is reported          | 2 unexpected findings   | disable Class B enumeration                                        |
+| `class-b-transparent-clear`      | transparent pointer-transparent element is clear             | 0                       | force transparent elements through `paints`                        |
+| `class-a-fires`                  | opaque pointer-active blocker is reported                    | 2                       | ignore fixed-over-fixed Class A                                    |
+| `class-a-separated-clear`        | same blocker moved away is clear                             | 0                       | substitute a non-overlap element into Class A hit resolution       |
+| `same-interactive-blocker`       | substantive text overlap inside one button is still reported | 1                       | broaden the pattern to allow every non-box same-control overlap    |
+| `scrolling-shell-pinned-blocker` | pinned target under semantic sticky shell is still reported  | 2                       | broaden the pattern back to every intentional scroll-shell finding |
 
 The temporary defects were applied one at a time, each named control failed, and the exact source
 was restored before the clean two-engine run. The independent reviewers re-execute these mutations
@@ -158,7 +162,9 @@ The narrowed allowlists are:
 
 ```ts
 same-interactive-composition:
-  finding.sharedInteractiveAncestor && !finding.occluderOpaqueBoxPaint
+  finding.sharedInteractiveAncestor &&
+  !finding.occluderOpaqueBoxPaint &&
+  (finding.intersectionRect.width <= 1 || finding.intersectionRect.height <= 1)
 scrolling-under-app-shell:
   finding.intentionalScrollShell &&
   finding.targetPosition !== "fixed" &&
@@ -173,13 +179,14 @@ the permanent controls and requested browser matrices against that server. The d
 dev-only surface is `dev-overlay-suppression.ts`, its callers/types, nonce provenance and
 wrapper/portal shape checks, fail-closed suppression path, and suppression-only tests.
 
-The final exact-code matrix passed 264/264 with:
+The pre-review matrix passed 264/264 with the following raw totals, but its zero-unexpected verdict
+is superseded because the old same-control predicate absorbed substantive text overlap:
 
 | Inventory                       | Cells | Class A | Class B |     Same control |     Scroll shell |  Unexpected |
 | ------------------------------- | ----: | ------: | ------: | ---------------: | ---------------: | ----------: |
 | Historical report-only dev scan |   252 |     808 |       0 | mixed historical | mixed historical | report-only |
 | Fresh current-main dev baseline |   264 |   4,499 |       0 |               52 |            4,447 |           0 |
-| Final optimized-production scan |   264 |   4,488 |       0 |               52 |            4,436 |           0 |
+| Superseded optimized scan       |   264 |   4,488 |       0 |               52 |            4,436 |           0 |
 
 The like-for-like fresh-base comparison is a net drop of 11 findings, entirely in the scrolling
 shell rule; same-control coverage is unchanged. The older 808 inventory used 21 route states and
@@ -190,20 +197,27 @@ than that historical total is therefore coverage expansion, not unexplained loss
 totals and SHA-256s of all eight final raw receipts are committed in
 `docs/reports/guard-proof-life-2026-07-17/collision-summary.json`.
 
+The post-review exact-code group-1 scan is intentionally red: it reports the mode-select title/CTA
+overlap across the narrow production cells. No exact deferral or known failure was added. The full
+264-cell gate is therefore not represented as passing at the current head.
+
 ## U3 — raster action
 
 No raster was deleted or changed. All 12 measured pairs are identical, and the tracked inputs are
 still needed by the build-time file-convention and public-asset consumers. `STATE.md` replaces the
 unmeasured carryover with the measured verdict and remeasurement rule.
 
-## U4 — clean light-mode evidence
+## U4 — dev-chrome-free light-mode evidence and product finding
 
-The clean replacement is
+The dev-chrome-free replacement is
 `docs/reports/guard-proof-life-2026-07-17/light-mode/manifest.json`: 24 images plus two raw browser
 receipts and one manifest. It covers four surfaces × three widths × two engines × light theme.
 Both engine receipts contain 12/12 metrics, zero console errors, zero axe violations, zero
-horizontal overflow, and no dev portal. Representative images from every surface and both engines
-were visually inspected. The original dated manifest was annotated; its 18 PNGs were not rewritten.
+horizontal overflow, and no dev portal. Those receipts deliberately have `collisionMode: off`, so
+their empty `collisionFindings` arrays are not collision claims. Fresh-context visual review found
+the selected-card title overlapping the inline daily CTA in both 360px captures; the strict scanner
+then reproduced it as an unexpected Class A text collision. The original dated manifest was
+annotated; its 18 PNGs were not rewritten.
 
 ## Architect-delegated decisions
 
@@ -245,13 +259,20 @@ were visually inspected. The original dated manifest was annotated; its 18 PNGs 
 
 ## Validation run
 
-- Focused collision contract: **19/19 passed**.
+- Focused collision contract: **20/20 passed** at the post-review head.
 - Web typecheck: passed.
 - Optimized-production proof controls: **6 controls × 2 engines passed**; observed counts per
   engine were 2, 0, 2, 0, 1, and 2.
-- Optimized-production collision matrix after the final request-failure tightening: **264/264**, 0
-  failures, 4,488 literal findings, 0 unexpected, 0 browser errors.
-- Fresh light capture: **24/24**, with 12/12 clean metrics in each engine receipt.
+- Pre-review optimized-production collision matrix: **264/264**, 4,488 literal findings, 0
+  unexpected, 0 browser errors; this result is superseded because it allowlisted substantive
+  same-control text overlap.
+- Post-review focused group-1 strict matrix: **FAIL as designed**. Each engine reports 8 unexpected
+  mode-select findings across 6 cells (320/360/390 × both themes), for 16 findings across 12 cells
+  total; the two 360px light failures match the committed U4 rasters. This is the shipping blocker,
+  not an accepted known failure. Classic-pick's 36 former same-control findings remain green because
+  they are 1px glyph-boundary contact, the exact boundary the narrowed pattern retains.
+- Fresh light capture: **24/24 dev-chrome-free captures**, with 12/12 axe/console/overflow metrics
+  in each engine receipt; collision measurement was off for this screenshot pass.
 - Uncached root typecheck: **9/9 tasks**, 0 cached.
 - Uncached root lint: **6/6 tasks**, 0 cached; repository format check clean.
 - Uncached root test: **9/9 tasks**, 0 cached, completed in 29m01s:
@@ -289,7 +310,9 @@ the post-merge cleanup observation. No manual sweep is authorized or performed.
 - Product-route Class B remains zero, which is an observed application state rather than a guard
   blind spot because the permanent positive and transparent controls execute the same scanner.
 - Raster equality must be remeasured after Sharp, Node, generation-code, or deploy-platform changes.
-- Ship, READY observation, live checks, and cleanup remain pending; this report does not claim them.
+- Ship, READY observation, and live checks were not run because the exact-head strict collision gate
+  is red on an out-of-scope product-geometry defect. Cleanup remains pending while the blocked lane
+  is preserved for continuation; this report does not claim any merge or production change.
 
 ## Explicit invariants
 
