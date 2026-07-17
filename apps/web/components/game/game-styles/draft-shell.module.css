@@ -1950,6 +1950,13 @@
     padding: 12px 16px calc(84px + env(safe-area-inset-bottom, 0px));
   }
 
+  /* Setup scrolls with the document, not the anchored in-shell draft row.
+     Keep its action in flow on narrow viewports so it cannot cover setup
+     segments or formation cards before the user reaches the page bottom. */
+  .formationDock {
+    position: static;
+  }
+
   .formationSelect {
     gap: 12px;
     padding-top: 12px;

@@ -33,6 +33,16 @@ const responsiveHarness = readFileSync(
   fileURLToPath(new URL("../../../scripts/verify-responsive-layout-browser.mts", import.meta.url)),
   "utf8",
 );
+const draftShellCss = readFileSync(
+  fileURLToPath(
+    new URL("../../../components/game/game-styles/draft-shell.module.css", import.meta.url),
+  ),
+  "utf8",
+);
+const draftSetupSource = readFileSync(
+  fileURLToPath(new URL("../../../components/game/draft-screen/setup.tsx", import.meta.url)),
+  "utf8",
+);
 const appRoot = fileURLToPath(new URL("../../../app", import.meta.url));
 
 function appPageRoutes(directory = appRoot, segments: string[] = []): string[] {
@@ -174,6 +184,13 @@ describe("responsive layout contract", () => {
       "mode-select-checking 1024x768 light: mode dock initial clearance unavailable",
       "mode-select-checking 1024x768 light: mode dock terminal clearance unavailable",
     ]);
+  });
+
+  it("keeps the rendered formation setup dock in flow at narrow widths", () => {
+    expect(draftSetupSource).toContain("<div className={s.formationDock}>");
+    expect(draftShellCss).toMatch(
+      /@media \(max-width: 430px\)[\s\S]*?\.formationDock \{\s*position: static;\s*\}/u,
+    );
   });
 
   it("uses the DOM nonce property when CSP hides the nonce attribute", () => {

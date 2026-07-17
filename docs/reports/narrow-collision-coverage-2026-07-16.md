@@ -357,6 +357,52 @@ is not sustainable if reviewer clones and browser receipts accumulate indefinite
 reduction is needed. Xcode, simulators, DerivedData, Homebrew, containers, shared caches, the owner
 checkout, and all uncertain classes remained outside the automation's eligible roots.
 
+## Production failure, automatic rollback, and fix-forward
+
+PR #304 merged as `214ac9c530d9eecc3a36764c734c95db7a660042`. Vercel's active
+GitHub-linked-deployment incident delayed the canonical production build in `INITIALIZING`; after
+recovery it reached READY, owned the production aliases, and `/api/health` identified that exact
+merge SHA with the expected data, engine, draft-pool, schema, and DB anchors. The required live
+18-cell command then passed all 12 `home` and `mode-select-available` cells but failed all six
+`draft-setup` cells. Unexpected Class-A counts were 14, 14, 12, 12, 11, and 11 for
+320-light, 320-dark, 390-light, 390-dark, 360-light, and 360-dark respectively. The findings were
+real configuration/formation controls under the sticky `Lock 4-3-3 & spin` layer; none was
+allowlisted.
+
+The automatic rollback immediately restored production to the last known-good deployment and
+canceled the redundant recovery deployment before it could re-promote the failed tree. Source
+revert PR #305 passed protected CI and merged as
+`8a0b914babb9361c7808a34b0618c9a20caa254a`. Because the manual rollback pinned the custom domains
+to the older byte-identical artifact, the READY revert deployment was explicitly promoted.
+`wcdraft.com`, `www.wcdraft.com`, `origin/main`, and no-cache health then converged on `8a0b914b`;
+OG health remained `{"ok":true}`. Exact failed evidence remains at
+`/tmp/wcdraft-live-pr304-three-route/responsive-live-pr304-three-route.json`, with a reduced
+draft-setup extraction at `/tmp/pr304-draft-setup-live-failures.json`.
+
+Browser inspection of the preserved failed deployment proved that setup renders
+`game_formationDock… draft-shell_formationDock…` as the sticky action container. The attempted
+geometry rule targeted `.draftShellAnchored > .lockBar`, a different component/class, so it could
+not affect setup. The fix-forward keeps the rendered `.formationDock` in normal flow only at
+`max-width: 430px`; desktop setup retains sticky behavior. A focused source contract asserts both
+the `s.formationDock` render and the narrow `position: static` rule. The scanner, the two documented
+pattern exceptions, and the empty known-failures list are unchanged.
+
+Pre-commit fix-forward receipts:
+
+- focused responsive/collision contract: 23/23;
+- direct setup matrix with the proper development-chrome envelope: Chromium 6/6 and WebKit 6/6;
+- optimized production build: 4/4 package tasks, 40/40 pages, and 8/8 runtime-data traces for both
+  protected routes;
+- production-equivalent no-suppression three-route assertion: 18/18 cells;
+- production-equivalent squad-review assertion: 2/2 cells;
+- production-equivalent root browser inspection: exact light and dark themes, with the full
+  CC-BY-SA attribution and not-affiliated disclosure visible in both;
+- complete public collision assertion: 264/264 cells, 0 failures, 2 engines, 3 viewports, 2 themes,
+  4 groups.
+
+Fresh exact-head reviews, replacement protected CI, merge, deploy observation, and the same live
+18+2+theme/disclosure matrix remain mandatory before Terrace may resume.
+
 ## Validation and reviews
 
 - Focused responsive/collision contract: 22/22 passed, including browser proof for `aria-hidden`

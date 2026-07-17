@@ -51,6 +51,28 @@ for eleven small inventoried paths in the raw deletion output; the durable repor
 ledger correction and its exact path reconciliation. Durable evidence:
 `docs/reports/narrow-collision-coverage-2026-07-16.md`.
 
+The first production release of this lane, PR #304 at `214ac9c5`, failed its mandatory live
+18-cell assertion after health had identified the exact merged build. All 12 home and mode-select
+cells passed, but all six `draft-setup` width/theme cells reported unexpected Class-A product
+controls beneath the sticky `Lock 4-3-3 & spin` action (14, 14, 12, 12, 11, and 11 failures).
+Production was immediately rolled back to the last known-good artifact, the redundant recovery
+deployment was canceled, and source revert PR #305 merged as `8a0b914b`; that READY artifact was
+explicitly promoted so `wcdraft.com`, `www.wcdraft.com`, `origin/main`, and no-cache health all
+converged on the exact revert SHA. The preserved failed receipt is
+`/tmp/wcdraft-live-pr304-three-route/responsive-live-pr304-three-route.json`.
+
+The fix-forward root cause was a geometry selector mismatch, not a scanner exception: formation
+setup renders `s.formationDock`, while the attempted in-flow rule targeted the unrelated
+`.draftShellAnchored > .lockBar`. Narrow setup now makes the actual `.formationDock` static at
+`max-width: 430px`; wider setup retains sticky behavior, and no allowlist or known-failure entry
+changed. A source contract binds the rendered setup class to that narrow CSS rule. Measured
+fix-forward proof includes 23/23 focused contract tests; 6/6 Chromium and 6/6 WebKit setup cells;
+an optimized production build with 4/4 package tasks, 40/40 pages, and both protected routes at
+8/8 runtime-data traces; the exact production-equivalent three-route matrix at 18/18; squad review
+at 2/2; visible root attribution and not-affiliated disclosure in exact light and dark themes; and
+the complete public collision gate at 264/264 cells with zero failures. Fresh exact-head review,
+protected CI, merge, deployment observation, and the same production live matrix remain mandatory.
+
 Terrace close-out: 2026-07-15 · `/` and `/play` now render the existing CC-BY-SA
 attribution and not-affiliated notice as human-readable one-screen content instead of hiding
 their only copy with the route footer. Historical, authentic `ogs1` envelopes are accepted on
