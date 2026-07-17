@@ -88,10 +88,18 @@
 @media (max-width: 430px) {
   .draftShellAnchored .draftAppBar {
     margin: 8px 8px 0;
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr) 108px;
+  }
+  .draftShellAnchored .appBarBrand,
+  .draftShellAnchored .appBarModeChip,
+  .draftShellAnchored .appBarMeter {
+    min-width: 0;
   }
   .draftScroll {
     gap: 8px;
     padding: 8px 8px 16px;
+    margin-bottom: 4px;
   }
   .draftAttribution {
     font-size: 10px;
@@ -220,7 +228,8 @@
 
 @media (max-width: 430px) {
   .appBarModeChip {
-    max-width: 36vw;
+    min-width: 0;
+    max-width: none;
   }
 
   .appBarModeChip i {
@@ -1352,6 +1361,13 @@
   touch-action: manipulation;
 }
 
+/* The anchored shell already owns a dedicated scroll row above this CTA.
+   Keep the CTA explicitly in flow so sticky positioning cannot cover the
+   last painted pixels inside that nested scroller. */
+.draftShellAnchored > .lockBar {
+  position: static;
+}
+
 .lockInfo {
   min-width: 0;
   font-size: var(--t-sm);
@@ -1934,6 +1950,36 @@
     padding: 12px 16px calc(84px + env(safe-area-inset-bottom, 0px));
   }
 
+  /* Setup owns a bounded shell below the mobile masthead. Formation content
+     scrolls in its own row, while the action remains an in-flow sibling: the
+     CTA stays visible without painting over setup controls or formation cards. */
+  .formationSetupShell {
+    height: calc(
+      100svh - 3.35rem - 1px - env(safe-area-inset-top, 0px) - var(--m-page-y-game) -
+        var(--m-page-y-game)
+    );
+    min-height: 0;
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .formationSetupShell .formationSelect {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-inline: 16px;
+    padding-bottom: 16px;
+  }
+
+  .formationDock {
+    flex: 0 0 auto;
+    position: static;
+    margin: 0;
+  }
+
   .formationSelect {
     gap: 12px;
     padding-top: 12px;
@@ -1963,5 +2009,9 @@
   .formationDock {
     margin-inline: -6px;
     padding-inline: 6px;
+  }
+
+  .formationSetupShell .formationDock {
+    margin-inline: 0;
   }
 }

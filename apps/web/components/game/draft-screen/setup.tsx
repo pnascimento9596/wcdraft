@@ -364,7 +364,7 @@ export function FormationSelect({
   const locked = pending !== null || rankedIssuance.locked;
 
   return (
-    <div className={s.draftShell}>
+    <div className={`${s.draftShell} ${s.formationSetupShell}`}>
       <DraftAppBar spinNumber={null} progressPct={0} />
       <section className={s.formationSelect}>
         <div className={s.formationHead}>

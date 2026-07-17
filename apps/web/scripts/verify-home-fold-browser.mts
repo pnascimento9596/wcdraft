@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { chromium, webkit, type BrowserType, type Page } from "playwright-core";
 
+import { markAgentTempCleanupReady } from "./agent-temp-lifecycle";
 import {
   LEGACY_SCREENSHOT_EVIDENCE,
   oneScreenDeviceCases,
@@ -1284,10 +1285,10 @@ async function captureEvidence(
 }
 
 async function main(): Promise<void> {
+  const configuredOutputRoot =
+    process.env.WCDRAFT_ONE_SCREEN_OUT_DIR ?? process.env.WCDRAFT_HOME_FOLD_OUT_DIR;
   const outputRoot =
-    process.env.WCDRAFT_ONE_SCREEN_OUT_DIR ??
-    process.env.WCDRAFT_HOME_FOLD_OUT_DIR ??
-    (await mkdtemp(path.join(tmpdir(), "wcdraft-one-screen-")));
+    configuredOutputRoot ?? (await mkdtemp(path.join(tmpdir(), "wcdraft-one-screen-")));
   const screenshotsDir = path.join(outputRoot, "screenshots");
   await mkdir(screenshotsDir, { recursive: true });
   const server = await startServer();
@@ -1461,6 +1462,7 @@ async function main(): Promise<void> {
   if (strict && failures.length > 0) {
     throw new Error(`one-screen fit failed:\n${failures.join("\n")}`);
   }
+  if (configuredOutputRoot === undefined) await markAgentTempCleanupReady(outputRoot, tmpdir());
 }
 
 await main();
