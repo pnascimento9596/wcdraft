@@ -6,7 +6,6 @@ import { describe, expect, it } from "vitest";
 import { RUN_SURFACE_PALETTE } from "../run-palette";
 
 const AA_BODY = 4.5;
-const AA_LARGE = 3.0;
 const RAMP_POSITION_TOLERANCE = 0.006;
 
 const tokensCss = readFileSync(new URL("../../../app/ds/tokens.css", import.meta.url), "utf8");
@@ -27,13 +26,16 @@ const verifyFlowSource = readFileSync(
   "utf8",
 );
 
-/**
- * These are the existing light-theme structural brand solids. They are fills,
- * mark chrome, and large display accents rather than body text on light paper.
- */
-const LIGHT_BRAND_SOLIDS = {
-  emerald: "#2ecf92",
-  gold: "#f5b62a",
+const PROGRAMME = {
+  page: "#f1ecdf",
+  card: "#faf7ee",
+  raised: "#fefef5",
+  well: "#e8e2d1",
+  border: "#ddd6c4",
+  ink: "#16180f",
+  inkSecondary: "#5c5c4e",
+  accentText: "#0f5f3f",
+  goldText: "#7a5a12",
 } as const;
 
 const TERRACE = {
@@ -248,54 +250,62 @@ describe("Terrace dark palette", () => {
   });
 });
 
-describe("Terrace light-mode immutability", () => {
-  it("locks the base light values and the exact shared typography consequence", () => {
-    const inventory = [
-      ...customPropertyInventory(tokensCss, /\[data-theme="light"\]\s*\{/u, "tokens"),
-      ...customPropertyInventory(
-        globalsCss,
-        /:root,\s*:root\[data-theme="light"\]\s*\{/u,
-        "globals",
-      ),
-    ];
-    const sharedTypographyNames = new Set([
-      "--font-family",
-      "--font-weight-bold",
-      "--font-weight-display",
-      "--font-weight-heading",
-      "--font-weight-button",
-      "--tracking-display",
-      "--tracking-heading",
-      "--tracking-body",
-      "--tracking-micro",
-      "--tracking-button",
-    ]);
-    const sharedTypography = inventory.filter(([, name]) => sharedTypographyNames.has(name));
-    const preservedBaseValues = inventory.filter(([, name]) => !sharedTypographyNames.has(name));
+describe("Terrace light Programme palette", () => {
+  it("maps Programme onto both existing token surfaces without flattening their roles", () => {
+    const lightTokens = varsFromBlock(tokensCss, /\[data-theme="light"\]\s*\{/u);
+    const lightGlobals = varsFromBlock(globalsCss, /:root,\s*:root\[data-theme="light"\]\s*\{/u);
 
-    expect(preservedBaseValues).toHaveLength(122);
-    expect(createHash("sha256").update(JSON.stringify(preservedBaseValues)).digest("hex")).toBe(
-      "ce8624f9c559a92f30ea2ecc20b098170e412a8bd48238e31971960a392c59ef",
-    );
-    expect(sharedTypography).toEqual([
-      ["globals", "--font-family", '"Archivo", system-ui, sans-serif'],
-      ["globals", "--font-weight-bold", "800"],
-      ["globals", "--font-weight-display", "900"],
-      ["globals", "--font-weight-heading", "800"],
-      ["globals", "--font-weight-button", "800"],
-      ["globals", "--tracking-display", "-0.035em"],
-      ["globals", "--tracking-heading", "-0.02em"],
-      ["globals", "--tracking-body", "0"],
-      ["globals", "--tracking-micro", "0.1em"],
-      ["globals", "--tracking-button", "0.02em"],
-    ]);
+    expect(requireVar(lightTokens, "--bg-void")).toBe(PROGRAMME.page);
+    expect(requireVar(lightTokens, "--bg-850")).toBe(PROGRAMME.page);
+    expect(requireVar(lightTokens, "--bg-800")).toBe(PROGRAMME.card);
+    expect(requireVar(lightTokens, "--bg-750")).toBe(PROGRAMME.raised);
+    expect(requireVar(lightTokens, "--bg-650")).toBe(PROGRAMME.well);
+    expect(requireVar(lightTokens, "--line")).toBe(PROGRAMME.border);
+    expect(requireVar(lightTokens, "--ink-100")).toBe(PROGRAMME.ink);
+    expect(requireVar(lightTokens, "--ink-400")).toBe(PROGRAMME.inkSecondary);
+    expect(requireVar(lightTokens, "--teal-bright")).toBe(PROGRAMME.accentText);
+    expect(requireVar(lightTokens, "--ember")).toBe(TERRACE.accent);
+    expect(requireVar(lightTokens, "--ember-bright")).toBe(PROGRAMME.accentText);
+    expect(requireVar(lightTokens, "--gold")).toBe(TERRACE.gold);
+    expect(requireVar(lightTokens, "--gold-bright")).toBe(PROGRAMME.goldText);
+
+    expect(requireVar(lightGlobals, "--bg")).toBe(PROGRAMME.page);
+    expect(requireVar(lightGlobals, "--s1")).toBe(PROGRAMME.card);
+    expect(requireVar(lightGlobals, "--s2")).toBe(PROGRAMME.raised);
+    expect(requireVar(lightGlobals, "--well")).toBe(PROGRAMME.well);
+    expect(requireVar(lightGlobals, "--line")).toBe(PROGRAMME.border);
+    expect(requireVar(lightGlobals, "--tx")).toBe(PROGRAMME.ink);
+    expect(requireVar(lightGlobals, "--tx3")).toBe(PROGRAMME.inkSecondary);
+    expect(requireVar(lightGlobals, "--accent")).toBe(TERRACE.accent);
+    expect(requireVar(lightGlobals, "--accent-solid")).toBe(TERRACE.accent);
+    expect(requireVar(lightGlobals, "--accent-text")).toBe(PROGRAMME.accentText);
+    expect(requireVar(lightGlobals, "--gold")).toBe(TERRACE.gold);
+    expect(requireVar(lightGlobals, "--gold-solid")).toBe(TERRACE.gold);
+    expect(requireVar(lightGlobals, "--gold-strong")).toBe(PROGRAMME.goldText);
+    expect(requireVar(lightGlobals, "--accent-ink")).toBe(TERRACE.onAccent);
+    expect(requireVar(lightGlobals, "--accent-on-solid")).toBe(TERRACE.onAccent);
+    expect(requireVar(lightGlobals, "--gold-ink")).toBe(TERRACE.onGold);
   });
 
-  it("keeps low ink and text-facing accents AA on light paper", () => {
+  it("preserves the current surface and ink ramps' relative-luminance steps", () => {
+    expectRampPositions(
+      ["#f1ecdf", "#fbf8f0", "#ffffff"],
+      [PROGRAMME.page, PROGRAMME.card, PROGRAMME.raised],
+    );
+    expectRampPositions(
+      ["#16211a", "#2f3a33", "#46524b", "#566158", "#9aa399"],
+      [PROGRAMME.ink, "#333529", "#4c4d40", PROGRAMME.inkSecondary, "#a09e8c"],
+    );
+  });
+
+  it("keeps every light body-text stop AA on every actual paper surface", () => {
     const lightTokens = varsFromBlock(tokensCss, /\[data-theme="light"\]\s*\{/u);
     const lightGlobals = varsFromBlock(globalsCss, /:root,\s*:root\[data-theme="light"\]\s*\{/u);
 
     for (const fg of [
+      "--ink-100",
+      "--ink-200",
+      "--ink-300",
       "--ink-400",
       "--cyan",
       "--cyan-bright",
@@ -303,13 +313,9 @@ describe("Terrace light-mode immutability", () => {
       "--teal",
       "--teal-bright",
       "--teal-deep",
-      "--ember",
       "--ember-bright",
-      "--ember-deep",
-      "--gold",
       "--gold-bright",
       "--gold-deep",
-      "--amber",
       "--amber-bright",
       "--win",
       "--loss",
@@ -322,23 +328,18 @@ describe("Terrace light-mode immutability", () => {
       "--prov-manager",
       "--prov-legend",
       "--prov-unknown",
-      "--pos-gk",
-      "--pos-def",
-      "--pos-mid",
-      "--pos-fwd",
     ] as const) {
-      expectContrast(lightTokens, fg, lightTokens, [
-        "--bg-900",
-        "--bg-800",
-        "--bg-void",
-        "--bg-750",
-      ]);
+      expectContrast(lightTokens, fg, lightTokens, ["--bg-900", "--bg-800", "--bg-750"]);
     }
 
     for (const fg of [
+      "--tx",
+      "--tx2",
       "--tx3",
-      "--accent",
-      "--gold",
+      "--accent-deep",
+      "--accent-text",
+      "--gold-strong",
+      "--gold-deep",
       "--hist",
       "--proj",
       "--est",
@@ -347,23 +348,53 @@ describe("Terrace light-mode immutability", () => {
       "--neg",
       "--field",
     ] as const) {
-      expectContrast(lightGlobals, fg, lightGlobals, ["--s0", "--s1", "--bg", "--s2"]);
+      expectContrast(lightGlobals, fg, lightGlobals, ["--bg", "--s1", "--s2"]);
     }
   });
 
-  it("preserves the light structural-brand exemption", () => {
+  it("keeps structural solids separate and preserves the actual dark on-fill inks", () => {
     const lightGlobals = varsFromBlock(globalsCss, /:root,\s*:root\[data-theme="light"\]\s*\{/u);
-    const lightTokens = varsFromBlock(tokensCss, /\[data-theme="light"\]\s*\{/u);
 
-    expect(requireVar(lightGlobals, "--accent-solid")).toBe(LIGHT_BRAND_SOLIDS.emerald);
-    expect(requireVar(lightGlobals, "--gold-solid")).toBe(LIGHT_BRAND_SOLIDS.gold);
-    expect(requireVar(lightTokens, "--teal")).not.toBe(LIGHT_BRAND_SOLIDS.emerald);
-    expect(requireVar(lightTokens, "--gold")).not.toBe(LIGHT_BRAND_SOLIDS.gold);
-    expect(
-      contrastRatio(LIGHT_BRAND_SOLIDS.emerald, requireVar(lightGlobals, "--s0")),
-    ).toBeLessThan(AA_BODY);
-    expect(contrastRatio(LIGHT_BRAND_SOLIDS.emerald, TERRACE.page)).toBeGreaterThanOrEqual(
-      AA_LARGE,
+    expect(requireVar(lightGlobals, "--accent-solid")).toBe(TERRACE.accent);
+    expect(requireVar(lightGlobals, "--gold-solid")).toBe(TERRACE.gold);
+    expect(contrastRatio(TERRACE.accent, PROGRAMME.card)).toBeLessThan(AA_BODY);
+    expect(contrastRatio(TERRACE.gold, PROGRAMME.card)).toBeLessThan(AA_BODY);
+    expect(contrastRatio(PROGRAMME.accentText, PROGRAMME.card)).toBeGreaterThanOrEqual(AA_BODY);
+    expect(contrastRatio(PROGRAMME.goldText, PROGRAMME.card)).toBeGreaterThanOrEqual(AA_BODY);
+    expect(contrastRatio(TERRACE.onAccent, TERRACE.accent)).toBeGreaterThanOrEqual(AA_BODY);
+    expect(contrastRatio(TERRACE.onGold, TERRACE.gold)).toBeGreaterThanOrEqual(AA_BODY);
+    expect(contrastRatio("#ebe6da", TERRACE.accent)).toBeLessThan(AA_BODY);
+  });
+
+  it("keeps the five provenance hues AA and mutually distinguishable on both papers", () => {
+    const lightTokens = varsFromBlock(tokensCss, /\[data-theme="light"\]\s*\{/u);
+    const hues = [
+      requireVar(lightTokens, "--prov-historical"),
+      requireVar(lightTokens, "--prov-projected"),
+      requireVar(lightTokens, "--prov-estimate"),
+      requireVar(lightTokens, "--prov-manager"),
+      requireVar(lightTokens, "--prov-unknown"),
+    ];
+
+    for (const hue of hues) {
+      expect(contrastRatio(hue, PROGRAMME.page), `${hue} on page`).toBeGreaterThanOrEqual(AA_BODY);
+      expect(contrastRatio(hue, PROGRAMME.card), `${hue} on card`).toBeGreaterThanOrEqual(AA_BODY);
+    }
+    for (let left = 0; left < hues.length; left += 1) {
+      for (let right = left + 1; right < hues.length; right += 1) {
+        expect(deltaE76(hues[left]!, hues[right]!)).toBeGreaterThanOrEqual(15);
+      }
+    }
+  });
+
+  it("locks every dark/shared token byte while light Programme evolves independently", () => {
+    const darkInventory = [
+      ...customPropertyInventory(tokensCss, /:root\s*\{/u, "tokens"),
+      ...customPropertyInventory(globalsCss, /:root\[data-theme="dark"\]\s*\{/u, "globals"),
+    ];
+    expect(darkInventory).toHaveLength(164);
+    expect(createHash("sha256").update(JSON.stringify(darkInventory)).digest("hex")).toBe(
+      "92f49ea9bdb1226a647fa6f69173d8065f1d2d1e89758ec978801f991493bbae",
     );
   });
 });

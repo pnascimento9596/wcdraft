@@ -73,8 +73,8 @@
 .historyRecordGold {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--gold) 72%, var(--ink)) 0%,
-    var(--gold) 55%,
+    color-mix(in srgb, var(--gold-bright) 72%, var(--ink)) 0%,
+    var(--gold-bright) 55%,
     var(--gold-strong) 100%
   );
   -webkit-background-clip: text;
@@ -279,7 +279,7 @@
 }
 
 .historyRecordGold {
-  color: var(--gold);
+  color: var(--gold-bright);
   background: none;
 }
 

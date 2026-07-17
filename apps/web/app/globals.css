@@ -165,54 +165,54 @@
   --tracking-micro: 0.1em;
   --tracking-button: 0.02em;
 
-  --bg: #e7e1d2;
+  --bg: #f1ecdf;
   --s0: #f1ecdf;
-  --s1: #fbf8f0;
-  --s2: #ffffff;
-  --s3: #ffffff;
-  --well: #e7e0cf;
+  --s1: #faf7ee;
+  --s2: #fefef5;
+  --s3: #fefef5;
+  --well: #e8e2d1;
 
-  --line-1: rgba(24, 36, 28, 0.1);
-  --line: rgba(24, 36, 28, 0.16);
-  --line-2: rgba(24, 36, 28, 0.28);
+  --line-1: #e5dece;
+  --line: #ddd6c4;
+  --line-2: #cec6b0;
   --line-strong: var(--line-2);
 
-  --tx: #16211a;
-  --tx2: #46524b;
-  --tx3: #566158;
-  --tx4: #9aa399;
+  --tx: #16180f;
+  --tx2: #4c4d40;
+  --tx3: #5c5c4e;
+  --tx4: #a09e8c;
 
-  --accent: #067044;
-  --accent-solid: #2ecf92;
-  --accent-ink: #06130d;
-  --accent-press: #25b07c;
-  --accent-deep: #067044;
+  --accent: #3f9268;
+  --accent-solid: #3f9268;
+  --accent-ink: #05130c;
+  --accent-press: #408964;
+  --accent-deep: #0f5f3f;
   --accent-wash: color-mix(in srgb, var(--accent) 16%, transparent);
-  --accent-line: rgba(6, 112, 68, 0.42);
+  --accent-line: color-mix(in srgb, var(--accent-solid) 42%, transparent);
   --accent-strong: var(--accent-press);
-  --accent-text: var(--accent);
-  --accent-on-solid: #ffffff;
+  --accent-text: #0f5f3f;
+  --accent-on-solid: #05130c;
 
-  --gold: #765100;
-  --gold-solid: #f5b62a;
-  --gold-ink: #1a1403;
-  --gold-strong: #765100;
-  --gold-deep: #765100;
-  --gold-wash: rgba(245, 182, 42, 0.22);
+  --gold: #d4a94e;
+  --gold-solid: #d4a94e;
+  --gold-ink: #1a1305;
+  --gold-strong: #7a5a12;
+  --gold-deep: #7a5a12;
+  --gold-wash: color-mix(in srgb, var(--gold-solid) 22%, transparent);
 
   --hist: #0d687f;
   --proj: #4655b8;
   --est: #93450c;
   --mgr: #566472;
-  --unk: #566158;
+  --unk: #566156;
   --neg: #a83228;
 
-  --e1: 0 1px 2px rgba(40, 50, 44, 0.1);
-  --e2: 0 2px 9px rgba(40, 50, 44, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --e3: 0 16px 36px rgba(40, 50, 44, 0.18);
-  --well-shadow: inset 0 1px 3px rgba(40, 50, 44, 0.16), inset 0 0 0 1px rgba(40, 50, 44, 0.05);
-  --pitch: rgba(20, 90, 60, 0.055);
-  --scrim: rgba(30, 40, 34, 0.34);
+  --e1: 0 1px 2px rgba(22, 24, 15, 0.1);
+  --e2: 0 2px 9px rgba(22, 24, 15, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --e3: 0 16px 36px rgba(22, 24, 15, 0.18);
+  --well-shadow: inset 0 1px 3px rgba(22, 24, 15, 0.16), inset 0 0 0 1px rgba(22, 24, 15, 0.05);
+  --pitch: rgba(63, 146, 104, 0.055);
+  --scrim: rgba(22, 24, 15, 0.34);
 
   --bg-panel: var(--s1);
   --bg-sunken: var(--well);
@@ -221,7 +221,7 @@
   --ink-soft: var(--tx2);
   --ink-faint: var(--tx3);
   --brand-wordmark-accent: var(--accent);
-  --footer-wordmark-accent: #2ecf92;
+  --footer-wordmark-accent: #3f9268;
   --field: #1f6a47;
   --field-ink: #f2ecdc;
   --grain-opacity: 0.025;
@@ -1141,7 +1141,7 @@ main {
 .hero h1 .gold,
 .stat__num .gold {
   /* Gold reserved for pick/win/legend/perfect-run moments only. */
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 .hero__sub {
   max-width: 34rem;

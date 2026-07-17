@@ -274,6 +274,7 @@ describe("responsive layout contract", () => {
   it("bounds production-only transport and fixture exceptions to the loopback contract", () => {
     expect(productionHarness).toContain("destination.origin === expectedOrigin");
     expect(responsiveHarness).toContain("requestUrl.origin !== new URL(BASE_URL).origin");
+    expect(responsiveHarness).toContain('serviceWorkers: "block"');
     expect(responsiveHarness).toContain("url.origin === expectedOrigin");
     expect(responsiveHarness).toContain('url.pathname === "/api/challenge/verify"');
     expect(responsiveHarness).toContain('method === "POST"');

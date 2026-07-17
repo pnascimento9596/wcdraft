@@ -219,7 +219,7 @@
 }
 
 .faceYear {
-  color: var(--gold);
+  color: var(--gold-bright);
   font-family: var(--font-family);
   font-size: 0.72rem;
   font-weight: 800;
@@ -297,7 +297,7 @@
 }
 
 .cardOvr {
-  color: var(--gold);
+  color: var(--gold-bright);
   font-family: var(--font-family);
   font-size: 0.78rem;
   font-weight: 800;

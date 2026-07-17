@@ -89,8 +89,8 @@
 .outcomeBigGold {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--gold) 72%, var(--ink)) 0%,
-    var(--gold) 55%,
+    color-mix(in srgb, var(--gold-bright) 72%, var(--ink)) 0%,
+    var(--gold-bright) 55%,
     var(--gold-strong) 100%
   );
   -webkit-background-clip: text;
@@ -120,7 +120,7 @@
   letter-spacing: var(--tracking-heading);
 }
 .outcomeHeadlineGold {
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 .payoffMeta {
   display: flex;
@@ -292,7 +292,7 @@
   font-size: clamp(2.35rem, 8vw, 3rem);
   line-height: 0.95;
   /* Decorative quote mark (aria-hidden) — gold canonical, muted. */
-  color: color-mix(in srgb, var(--gold) 46%, transparent);
+  color: color-mix(in srgb, var(--gold-bright) 46%, transparent);
 }
 /* Narration is sans, upright, and wraps cleanly inside its card. */
 .narrativeText {
@@ -838,7 +838,7 @@
   min-width: 0;
 }
 .sharePreviewHeadline {
-  color: var(--gold);
+  color: var(--gold-bright);
   font-family: var(--font-family);
   font-size: 0.68rem;
   font-weight: var(--font-weight-heading);
@@ -936,14 +936,14 @@
 }
 
 .outcomeBigGold {
-  color: var(--gold);
+  color: var(--gold-bright);
   background: none;
   -webkit-text-stroke: 0;
   text-shadow: none;
 }
 
 .outcomeHeadlineGold {
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .flagGood {

@@ -165,22 +165,22 @@
    chevrons, track fills) follow the same deepened ramps so the palette
    stays coherent. */
 [data-theme="light"] {
-  --bg-void: #e7e1d2;
+  --bg-void: #f1ecdf;
   --bg-900: #f1ecdf;
   --bg-850: #f1ecdf;
-  --bg-800: #fbf8f0;
-  --bg-750: #ffffff;
-  --bg-700: #ffffff;
-  --bg-650: #e7e0cf;
-  --line: rgba(24, 36, 28, 0.16);
-  --line-1: rgba(24, 36, 28, 0.1);
-  --line-2: rgba(24, 36, 28, 0.28);
+  --bg-800: #faf7ee;
+  --bg-750: #fefef5;
+  --bg-700: #fefef5;
+  --bg-650: #e8e2d1;
+  --line: #ddd6c4;
+  --line-1: #e5dece;
+  --line-2: #cec6b0;
   --line-strong: var(--line-2);
-  --ink-100: #16211a;
-  --ink-200: #2f3a33;
-  --ink-300: #46524b;
-  --ink-400: #566158;
-  --ink-500: #9aa399;
+  --ink-100: #16180f;
+  --ink-200: #333529;
+  --ink-300: #4c4d40;
+  --ink-400: #5c5c4e;
+  --ink-500: #a09e8c;
 
   /* Accent ramps — deepened so accent-as-text reads on paper. "bright"
      means "emphasis text", not "lighter", in this theme. */
@@ -188,22 +188,23 @@
   --cyan-bright: #0d687f;
   --cyan-deep: #0d687f;
 
-  --gold: #765100;
-  --gold-bright: #765100;
-  --gold-deep: #765100;
+  --gold: #d4a94e;
+  --gold-bright: #7a5a12;
+  --gold-deep: #7a5a12;
   --brand-mark-gold-start: #765100;
   --brand-mark-gold-mid: #f5b62a;
   --brand-mark-gold-end: #f5b62a;
 
-  --teal: #067044;
-  --teal-bright: #067044;
-  --teal-deep: #067044;
+  --teal: #0f5f3f;
+  --teal-bright: #0f5f3f;
+  --teal-deep: #0f5f3f;
 
-  --ember: #067044;
-  --ember-bright: #067044;
-  --ember-deep: #067044;
-  --amber: #765100;
-  --amber-bright: #765100;
+  /* Legacy components use ember as structural chrome and ember-bright as text. */
+  --ember: #3f9268;
+  --ember-bright: #0f5f3f;
+  --ember-deep: #408964;
+  --amber: #d4a94e;
+  --amber-bright: #7a5a12;
 
   /* Lock / committed — steel flips dark for text + borders on paper. */
   --lock: #5a6372;
@@ -211,7 +212,7 @@
   --lock-rgb: 90, 99, 114;
 
   /* Functional states as text on pale surfaces. */
-  --win: #765100;
+  --win: #7a5a12;
   --loss: #a83228;
   --draw: #5d6570;
   --warn: #825400;
@@ -223,7 +224,7 @@
   --prov-estimate: #93450c;
   --prov-manager: #566472;
   --prov-legend: #765100;
-  --prov-unknown: #566158;
+  --prov-unknown: #566156;
 
   --prov-historical-rgb: 13, 104, 127;
   --prov-projected-rgb: 70, 85, 184;
@@ -232,20 +233,20 @@
   --prov-legend-rgb: 118, 81, 0;
 
   /* Position legend tints (decorative dots only). */
-  --pos-gk: #566158;
-  --pos-def: #566158;
-  --pos-mid: #566158;
-  --pos-fwd: #765100;
+  --pos-gk: #5c5c4e;
+  --pos-def: #5c5c4e;
+  --pos-mid: #5c5c4e;
+  --pos-fwd: #d4a94e;
 
   /* Pitch chalk + chip lines flip to dark ink on the pale pitch. */
-  --pitch-line: rgba(6, 112, 68, 0.42);
-  --pitch-slot-line: rgba(24, 36, 28, 0.28);
-  --pitch-accent-mute: rgba(24, 36, 28, 0.28);
+  --pitch-line: rgba(63, 146, 104, 0.42);
+  --pitch-slot-line: #cec6b0;
+  --pitch-accent-mute: #cec6b0;
 
   /* Paper-weight elevation (heavy black halos look dirty on cream). */
-  --sh-1: 0 1px 2px rgba(40, 50, 44, 0.1);
-  --sh-2: 0 2px 9px rgba(40, 50, 44, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --sh-3: 0 16px 36px rgba(40, 50, 44, 0.18);
+  --sh-1: 0 1px 2px rgba(22, 24, 15, 0.1);
+  --sh-2: 0 2px 9px rgba(22, 24, 15, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --sh-3: 0 16px 36px rgba(22, 24, 15, 0.18);
 }
 
 * {

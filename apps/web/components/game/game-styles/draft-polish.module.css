@@ -1735,7 +1735,7 @@
   font-size: 13px;
   font-weight: var(--font-weight-heading);
   letter-spacing: var(--tracking-heading);
-  color: var(--gold);
+  color: var(--gold-bright);
   text-transform: uppercase;
 }
 
@@ -1781,7 +1781,7 @@
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-bright);
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   background: color-mix(in srgb, var(--gold) 10%, transparent);
 }

@@ -275,7 +275,7 @@
 
 .account-badge--gold {
   border-color: var(--gold);
-  color: var(--gold);
+  color: var(--gold-bright);
 }
 
 .account-picks {
