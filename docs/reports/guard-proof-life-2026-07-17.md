@@ -1,8 +1,8 @@
 # Guard proof of life, production target, raster measurement, and evidence recapture
 
-Date: 2026-07-17  
-Risk: YELLOW  
-Base: `76a1d2140871acb9048cdfc47797d7310d1a680f` (PR #307)  
+Date: 2026-07-17
+Risk: YELLOW
+Base: `76a1d2140871acb9048cdfc47797d7310d1a680f` (PR #307)
 Branch: `ws-ux/guard-proof-life`
 
 ## Summary

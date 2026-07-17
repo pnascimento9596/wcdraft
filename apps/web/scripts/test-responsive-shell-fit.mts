@@ -269,8 +269,11 @@ async function verifyProductionRouteContracts(server: NextProductionServer): Pro
   const location = response.headers.get("location");
   assert(location, "production /account redirect omitted Location");
   const destination = new URL(location, server.baseUrl);
+  const expectedOrigin = new URL(server.baseUrl).origin;
   assert(
-    destination.pathname === "/sign-in" && destination.searchParams.get("next") === "/account",
+    destination.origin === expectedOrigin &&
+      destination.pathname === "/sign-in" &&
+      destination.searchParams.get("next") === "/account",
     `production /account redirected to unexpected destination ${destination.toString()}`,
   );
   console.log("production-route-contract: ok /account -> /sign-in?next=/account");

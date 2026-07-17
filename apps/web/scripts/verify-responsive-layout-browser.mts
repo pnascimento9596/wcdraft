@@ -520,7 +520,8 @@ async function makeContext(
     deviceScaleFactor: 1,
   });
   await context.route("**/*", async (route, request) => {
-    if (request.resourceType() !== "document") {
+    const requestUrl = new URL(request.url());
+    if (request.resourceType() !== "document" || requestUrl.origin !== new URL(BASE_URL).origin) {
       await route.continue();
       return;
     }
@@ -647,24 +648,33 @@ async function mockOgSignFailure(page: Page): Promise<void> {
 
 async function mockFriendChallenge(page: Page): Promise<void> {
   const body = JSON.stringify({ ok: true, challenge: verifiedChallenge });
-  await page.addInitScript({
-    content: `{
+  await page.addInitScript(
+    ({ expectedOrigin, responseBody }) => {
       const originalFetch = globalThis.fetch.bind(globalThis);
-      globalThis.fetch = function(input, init) {
-        const requestUrl = typeof input === "string" || input instanceof URL
-          ? input.toString()
-          : input.url;
-        const pathname = new URL(requestUrl, globalThis.location.href).pathname;
-        if (pathname === "/api/challenge/verify") {
-          return Promise.resolve(new Response(${JSON.stringify(body)}, {
-            status: 200,
-            headers: { "content-type": "application/json" },
-          }));
+      globalThis.fetch = function (input, init) {
+        const requestUrl =
+          typeof input === "string" || input instanceof URL ? input.toString() : input.url;
+        const url = new URL(requestUrl, globalThis.location.href);
+        const method = (
+          init?.method ?? (input instanceof Request ? input.method : "GET")
+        ).toUpperCase();
+        if (
+          url.origin === expectedOrigin &&
+          url.pathname === "/api/challenge/verify" &&
+          method === "POST"
+        ) {
+          return Promise.resolve(
+            new Response(responseBody, {
+              status: 200,
+              headers: { "content-type": "application/json" },
+            }),
+          );
         }
         return originalFetch(input, init);
       };
-    }`,
-  });
+    },
+    { expectedOrigin: new URL(BASE_URL).origin, responseBody: body },
+  );
 }
 
 function surfaceCases(): readonly SurfaceCase[] {

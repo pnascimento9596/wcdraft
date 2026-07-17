@@ -33,6 +33,10 @@ const responsiveHarness = readFileSync(
   fileURLToPath(new URL("../../../scripts/verify-responsive-layout-browser.mts", import.meta.url)),
   "utf8",
 );
+const productionHarness = readFileSync(
+  fileURLToPath(new URL("../../../scripts/test-responsive-shell-fit.mts", import.meta.url)),
+  "utf8",
+);
 const draftShellCss = readFileSync(
   fileURLToPath(
     new URL("../../../components/game/game-styles/draft-shell.module.css", import.meta.url),
@@ -265,6 +269,14 @@ describe("responsive layout contract", () => {
     const recipeSurfaces = NARROW_COLLISION_ROUTE_RECIPES.flatMap(({ surfaces }) => surfaces);
     expect(new Set(recipeSurfaces)).toEqual(new Set(groupedSurfaces));
     expect(recipeSurfaces).toHaveLength(groupedSurfaces.length);
+  });
+
+  it("bounds production-only transport and fixture exceptions to the loopback contract", () => {
+    expect(productionHarness).toContain("destination.origin === expectedOrigin");
+    expect(responsiveHarness).toContain("requestUrl.origin !== new URL(BASE_URL).origin");
+    expect(responsiveHarness).toContain("url.origin === expectedOrigin");
+    expect(responsiveHarness).toContain('url.pathname === "/api/challenge/verify"');
+    expect(responsiveHarness).toContain('method === "POST"');
   });
 
   it("runs every collision group by default and rejects invalid filters", () => {
