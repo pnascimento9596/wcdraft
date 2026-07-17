@@ -38,9 +38,7 @@ export default function HowToPlayPage() {
 
       <section className="steps" aria-label="Draft flow">
         <article className="step">
-          <span className="step__num" aria-hidden="true">
-            01
-          </span>
+          <span className="step__num">01</span>
           <h2>Spin</h2>
           <p>
             A spin lands on one national team from one tournament year. Era setup decides which
@@ -49,9 +47,7 @@ export default function HowToPlayPage() {
         </article>
 
         <article className="step">
-          <span className="step__num" aria-hidden="true">
-            02
-          </span>
+          <span className="step__num">02</span>
           <h2>Pick</h2>
           <p>
             Take one legal player choice, or spend the spin on a manager. Once your manager is
@@ -60,9 +56,7 @@ export default function HowToPlayPage() {
         </article>
 
         <article className="step">
-          <span className="step__num" aria-hidden="true">
-            03
-          </span>
+          <span className="step__num">03</span>
           <h2>Place</h2>
           <p>
             Your locked formation gives you eleven starters and five bench slots. Player picks lock
@@ -71,9 +65,7 @@ export default function HowToPlayPage() {
         </article>
 
         <article className="step">
-          <span className="step__num" aria-hidden="true">
-            04
-          </span>
+          <span className="step__num">04</span>
           <h2>Simulate</h2>
           <p>
             The finished squad plays three group matches and five knockout rounds. A flawless run is

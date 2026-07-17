@@ -1284,19 +1284,16 @@ main {
   position: absolute;
   top: 0.6rem;
   right: 0.9rem;
-  pointer-events: none;
 }
 .step h2,
 .step h3 {
   font-size: 1.35rem;
   margin-bottom: 0.5rem;
-  padding-right: 4.25rem;
   position: relative;
 }
 .step p {
   color: var(--ink-soft);
   font-size: 0.97rem;
-  padding-right: 4.25rem;
   position: relative;
 }
 .step__hint {
