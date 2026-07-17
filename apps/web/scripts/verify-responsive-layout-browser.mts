@@ -518,6 +518,11 @@ async function makeContext(
     isMobile: mobile,
     hasTouch: mobile,
     deviceScaleFactor: 1,
+    // The responsive fixtures mock leaderboard/challenge APIs at the browser
+    // context boundary. A newly activated production service worker can bypass
+    // that route interception and leak the unconfigured local API's 503 into a
+    // later cell, making matrix results depend on registration timing.
+    serviceWorkers: "block",
   });
   await context.route("**/*", async (route, request) => {
     const requestUrl = new URL(request.url());

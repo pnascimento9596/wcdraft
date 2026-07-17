@@ -4,6 +4,27 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Terrace light Programme: 2026-07-17 · Light now uses paper `#f1ecdf`, card `#faf7ee`,
+hairline `#ddd6c4`, primary/secondary ink `#16180f`/`#5c5c4e`, and AA text ramps
+`#0f5f3f`/`#7a5a12`; structural green/gold are the exact dark fills
+`#3f9268`/`#d4a94e`. The actual dark on-green ink remains `#05130c` at 4.9984:1; the
+dispatch-proposed bone was rejected because it is neither the current dark stop nor AA. Unknown
+provenance moved mechanically from `#566158` to `#566156`, the smallest correction that restores
+the ΔE76 15 inventory floor against manager slate while retaining AA. No dark value, geometry,
+OG path, core/data/ETL byte, rating hash, or draft-pool hash changed. The deterministic responsive
+harness now blocks production service-worker activation so its mocked API fixtures cannot leak an
+unconfigured local 503; product service-worker behavior is unchanged.
+
+Measured release proof is typecheck 9/9, lint 6/6, tests 9/9 with 2,213 passed and 10 expected
+skips, responsive shell 218/218, narrow collisions 264/264, one-screen/disclosure 216/216, build
+5/5 with 40/40 pages and both protected traces 8/8, font/accessibility 60 surfaces plus 44 targets,
+native-app-feel 180/180 in each engine, and fresh forced goldens at 69 core, 42 draft, 59 data,
+22 integration, and 6 leaderboard assertions without re-locking. Every one of the six collision
+controls went red on its own deliberate mutation in Chromium and WebKit, then the restored clean
+baseline passed. The new 24-image light evidence and hashes are
+`docs/reports/terrace-light-programme-2026-07-17/light-mode/manifest.md`; full rationale and raw
+receipt pointers are `docs/reports/terrace-light-programme-2026-07-17.md`.
+
 Narrow collision proof of life and production target: 2026-07-17 · The default-closed
 `pnpm --filter @wcdraft/web verify:narrow-collisions` gate maps every App Router page to a
 deterministic recipe and runs 264 cells: 22 route/states across 320/360/390, both themes, and
