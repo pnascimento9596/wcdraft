@@ -28,6 +28,9 @@ agent_temp_git_main="$agent_temp_root/wcdraft-review-main-repo"
 agent_temp_git_linked="$agent_temp_root/wcdraft-review-linked-child"
 active_pid=""
 default_root_probe=""
+real_root_candidate=""
+mutation_root_candidate=""
+mutated_hygiene_script="$probe_root/self-hosted-runner-hygiene-prune-disabled.sh"
 
 cleanup() {
   if [ -n "$active_pid" ]; then
@@ -36,6 +39,12 @@ cleanup() {
   fi
   if [ -n "$default_root_probe" ]; then
     rm -rf -- "$default_root_probe"
+  fi
+  if [ -n "$real_root_candidate" ]; then
+    rm -rf -- "$real_root_candidate"
+  fi
+  if [ -n "$mutation_root_candidate" ]; then
+    rm -rf -- "$mutation_root_candidate"
   fi
   rm -rf -- "$probe_root"
 }
@@ -177,6 +186,36 @@ run_hygiene_expect_target_warning() {
   fi
   grep -Fq '::warning::runner-owned cleanup completed, but host free space remains below the best-effort pre-lane target' "$output" ||
     fail "runner hygiene target miss did not emit the required warning"
+}
+
+create_real_root_candidate() {
+  local label="$1"
+  local candidate=""
+  candidate="$(mktemp -d /private/tmp/wcdraft-runner-hygiene-realpath.XXXXXX)"
+  printf '%s\n' "$label" >"$candidate/sentinel"
+  printf '%s\n' "cleanup-ready-v1" >"$candidate/.wcdraft-agent-cleanup-ready"
+  touch -t 200001010000 "$candidate"
+  printf '%s\n' "$candidate"
+}
+
+run_real_root_prune_contract() {
+  local script_path="$1"
+  local candidate="$2"
+  local output="$3"
+  if ! env -u WCDRAFT_AGENT_TEMP_ROOT \
+    GITHUB_WORKSPACE="$workspace" \
+    RUNNER_TOOL_CACHE="$tool_cache" \
+    RUNNER_TEMP="$runner_temp" \
+    RUNNER_NAME="wcdraft-m4" \
+    WCDRAFT_RUNNER_MIN_FREE_KB=0 \
+    WCDRAFT_RUNNER_TARGET_FREE_KB=0 \
+    WCDRAFT_RUNNER_STALE_MINUTES=10000000 \
+    WCDRAFT_RUNNER_FORCE_CLEANUP=1 \
+    /bin/bash "$script_path" start >"$output" 2>&1; then
+    return 1
+  fi
+  grep -Fq "runner-hygiene: pruning stale agent temp $candidate" "$output" || return 1
+  [ ! -e "$candidate" ] || return 1
 }
 
 actor_guard="if: \${{ github.actor != 'dependabot[bot]' }}"
@@ -332,6 +371,32 @@ assert_file_content "owner-agent-temp" "$agent_temp_unrelated/sentinel"
 assert_file_content "active-agent-temp" "$agent_temp_active/sentinel"
 assert_file_content "linked-agent-temp" "$agent_temp_git_main/sentinel"
 assert_file_content "linked-agent-temp" "$agent_temp_git_linked/sentinel"
+
+real_root_candidate="$(create_real_root_candidate real-root-prune)"
+real_root_output="$probe_root/real-root-prune.log"
+run_real_root_prune_contract "$hygiene_script" "$real_root_candidate" "$real_root_output" ||
+  fail "runner hygiene did not prune its marked, stale candidate through the real /private/tmp default root"
+real_root_candidate=""
+
+sed 's/safe_remove_agent_temp_path "$candidate"/echo "runner-hygiene: mutation disabled agent temp prune $candidate"/' \
+  "$hygiene_script" >"$mutated_hygiene_script"
+chmod +x "$mutated_hygiene_script"
+grep -Fq 'runner-hygiene: mutation disabled agent temp prune $candidate' "$mutated_hygiene_script" ||
+  fail "runner hygiene negative control did not disable the agent-temp prune call"
+if grep -Fq '        safe_remove_agent_temp_path "$candidate"' "$mutated_hygiene_script"; then
+  fail "runner hygiene negative control left the production prune call enabled"
+fi
+
+mutation_root_candidate="$(create_real_root_candidate real-root-prune-disabled)"
+mutation_root_output="$probe_root/real-root-prune-disabled.log"
+if run_real_root_prune_contract \
+  "$mutated_hygiene_script" "$mutation_root_candidate" "$mutation_root_output"; then
+  fail "real-root prune contract stayed green when agent-temp pruning was disabled"
+fi
+grep -Fq "runner-hygiene: mutation disabled agent temp prune $mutation_root_candidate" \
+  "$mutation_root_output" || fail "real-root negative control failed for an unintended reason"
+assert_file_content "real-root-prune-disabled" "$mutation_root_candidate/sentinel"
+
 for failing_probe in mount lsof ps git; do
   run_hygiene_with_probe_failure "$failing_probe"
 done
@@ -344,4 +409,4 @@ assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, exact producer-to-pruner lifecycle marker, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 3 marker-authorized agent temp removals, 11 sentinel checks)"
+echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, exact producer-to-pruner lifecycle marker, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 real /private/tmp prune, 1 prune-disabled mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 3 marker-authorized agent temp removals, 11 sentinel checks)"
