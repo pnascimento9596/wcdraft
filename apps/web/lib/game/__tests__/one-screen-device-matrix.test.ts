@@ -97,7 +97,7 @@ describe("one-screen descriptor matrix", () => {
     expect(verifierSource).toContain("interactive scroll reachability failed");
     expect(verifierSource).toContain("scrollInteractionTargetCount");
     expect(verifierSource).toContain("modeDockDisclosureOverlapPx");
-    expect(verifierSource).toContain("dailyHeaderOneRow");
+    expect(verifierSource).toContain("dailyContentCollisionCount");
     expect(verifierSource).toContain("formationSectionFits");
     expect(verifierSource).toContain("formationCardContentOverflowCount");
     expect(verifierSource).toContain("descriptorRange.getClientRects()");

@@ -1,0 +1,96 @@
+{
+  "generatedAt": "2026-07-17",
+  "target": "optimized next build + next start",
+  "matrix": {
+    "cells": 264,
+    "routeStates": 22,
+    "engines": 2,
+    "viewports": 3,
+    "themes": 2,
+    "failures": 0,
+    "consoleErrors": 0
+  },
+  "findings": {
+    "total": 4489,
+    "classA": 4489,
+    "classB": 0,
+    "unexpected": 0,
+    "sameInteractiveComposition": 36,
+    "scrollingUnderAppShell": 4453
+  },
+  "freshCurrentMainDevelopmentBaseline": {
+    "cells": 264,
+    "total": 4499,
+    "classA": 4499,
+    "classB": 0,
+    "sameInteractiveComposition": 52,
+    "scrollingUnderAppShell": 4447
+  },
+  "historicalReportOnlyBaseline": {
+    "cells": 252,
+    "total": 808,
+    "classA": 808,
+    "classB": 0,
+    "nextDevelopmentToolsNamed": 212,
+    "source": "docs/reports/narrow-collision-coverage-2026-07-16.md"
+  },
+  "productionFindingsBySurface": {
+    "account": 24,
+    "attribution": 120,
+    "challenge-setup": 106,
+    "classic-pick": 36,
+    "contact": 82,
+    "daily-spin": 76,
+    "history": 128,
+    "home": 8,
+    "how-to-play": 496,
+    "leaderboard": 1374,
+    "mode-select-available": 53,
+    "position-target": 0,
+    "privacy": 728,
+    "results": 626,
+    "settings": 104,
+    "share-author": 36,
+    "share-recipient": 0,
+    "sign-in": 24,
+    "sign-up": 0,
+    "spin-stage": 28,
+    "squad-review": 192,
+    "team-sheet": 248
+  },
+  "rawReceiptSha256": {
+    "g1-chromium": "fa94179452c1c80595827f0e27e0be080657fbfb26c297a64415081c7c9a314e",
+    "g1-webkit": "bae99b170bff432d76be212a7b69c1f4044872b31ba97ff9414afa2cec32bbad",
+    "g2-chromium": "44acb597a2b6ee205719da6fa372cb1150c00d13045e572c4cc0e3d5b34439ea",
+    "g2-webkit": "b0fb7a6aaa3e4a80b80a5cfc6cdd0d5e841c18a8a8184473b2fb3febc94dca3a",
+    "g3-chromium": "62fb985d0eb7168b9ee91b6115ae040fd3a4e3421861ceb96d66183b22fc3066",
+    "g3-webkit": "4126ebd7d897f0bfbef4bfa992250a2453e1572435ef1265fc914e22bf8c879b",
+    "g4-chromium": "dc1b1319e302e92758939e5b567ad58dd3e8a65d5aad6f7582fa345feed8e6e3",
+    "g4-webkit": "f79556e1769875e5bfd4513a6b6f086ce0ee30a7fafc5458ba68b0ab582dc5f5"
+  },
+  "postReviewFinding": {
+    "status": "resolved-in-product",
+    "supersedesZeroUnexpectedClaim": false,
+    "cause": "same-interactive-composition allowed substantive text overlap inside one semantic control",
+    "guardAction": "allow only non-box intersection contact of at most 1px on either axis",
+    "strictReproduction": {
+      "group": 1,
+      "engines": ["chromium", "webkit"],
+      "unexpectedModeSelectFindingsPerEngine": 8,
+      "failingModeSelectCellsPerEngine": 6,
+      "unexpectedModeSelectFindingsTotal": 16,
+      "failingModeSelectCellsTotal": 12,
+      "viewports": ["320x568", "360x800", "390x844"],
+      "themes": ["light", "dark"],
+      "examples": ["Today's Draft under Play daily →", "Daily under Today's Draft at 320x568"]
+    },
+    "productAction": "separate selected Daily pill/title, descriptor, and CTA into explicit rows at widths through 430px and in short landscape",
+    "strictAfter": {
+      "cells": 12,
+      "unexpectedModeSelectFindingsTotal": 0,
+      "fullMatrixCells": 264,
+      "fullMatrixFailures": 0
+    },
+    "knownFailureAdded": false
+  }
+}

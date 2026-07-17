@@ -17,12 +17,9 @@ import {
 
 const require = createRequire(import.meta.url);
 const appRoot = fileURLToPath(new URL("..", import.meta.url));
-const nextEnvPath = fileURLToPath(new URL("../next-env.d.ts", import.meta.url));
+const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));
 const nextBin = require.resolve("next/dist/bin/next");
 const tsxBin = require.resolve("tsx/cli");
-const copyWebAssetsScript = fileURLToPath(
-  new URL("../../../packages/data/scripts/copy-web-assets.mjs", import.meta.url),
-);
 const host = "127.0.0.1";
 
 const shellSurfaces = [
@@ -51,7 +48,7 @@ type ProcessExit = {
   readonly expected: boolean;
 };
 
-type NextDevServer = {
+type NextProductionServer = {
   readonly baseUrl: string;
   readonly exited: Promise<ProcessExit>;
   readonly persistDiagnostics: (outDir: string) => Promise<{
@@ -73,10 +70,6 @@ type AuditMetric = {
   readonly smallTargets?: readonly unknown[];
   readonly consoleErrors?: readonly unknown[];
   readonly collisionFindings?: readonly { readonly disposition?: string }[];
-  readonly devOverlay?: {
-    readonly portalState?: string;
-    readonly visibleControlCount?: number;
-  } | null;
 };
 
 type AuditResult = { metrics: number; failures: number; outDir: string };
@@ -96,27 +89,6 @@ async function findFreePort(): Promise<number> {
       server.close((err) => (err ? reject(err) : resolve(port)));
     });
   });
-}
-
-async function snapshotFile(
-  filePath: string,
-): Promise<{ path: string; contents: Uint8Array | null }> {
-  try {
-    return { path: filePath, contents: await readFile(filePath) };
-  } catch (err) {
-    if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
-      return { path: filePath, contents: null };
-    }
-    throw err;
-  }
-}
-
-async function restoreFile(snapshot: { path: string; contents: Uint8Array | null }): Promise<void> {
-  if (snapshot.contents === null) {
-    await rm(snapshot.path, { force: true });
-    return;
-  }
-  await writeFile(snapshot.path, snapshot.contents);
 }
 
 async function waitForProcessExit(
@@ -154,7 +126,7 @@ async function waitForServer(baseUrl: string, proc: ChildProcessWithoutNullStrea
   let lastError = "server did not respond";
   while (Date.now() < deadline) {
     if (proc.exitCode !== null) {
-      throw new Error(`Next dev server exited early with code ${proc.exitCode}`);
+      throw new Error(`Next production server exited early with code ${proc.exitCode}`);
     }
     try {
       const response = await fetch(`${baseUrl}/play`, {
@@ -167,28 +139,22 @@ async function waitForServer(baseUrl: string, proc: ChildProcessWithoutNullStrea
     }
     await delay(500);
   }
-  throw new Error(`Timed out waiting for Next dev server: ${lastError}`);
+  throw new Error(`Timed out waiting for Next production server: ${lastError}`);
 }
 
-async function startNextDev(): Promise<NextDevServer> {
+async function startNextProduction(): Promise<NextProductionServer> {
   const port = await findFreePort();
   const baseUrl = `http://${host}:${port}`;
-  const nextEnvSnapshot = await snapshotFile(nextEnvPath);
-  let restoredNextEnv = false;
-  const restoreNextEnv = async () => {
-    if (restoredNextEnv) return;
-    restoredNextEnv = true;
-    await restoreFile(nextEnvSnapshot);
-  };
   const proc = spawn(
     process.execPath,
-    [nextBin, "dev", "--webpack", "--hostname", host, "--port", String(port)],
+    [nextBin, "start", "--hostname", host, "--port", String(port)],
     {
       cwd: appRoot,
       env: {
         ...process.env,
         LEADERBOARD_ENABLED: process.env.LEADERBOARD_ENABLED ?? "1",
         NEXT_TELEMETRY_DISABLED: "1",
+        WCDRAFT_CSP_REPORT_ONLY: process.env.WCDRAFT_CSP_REPORT_ONLY ?? "1",
       },
       stdio: ["ignore", "pipe", "pipe"],
     },
@@ -215,7 +181,6 @@ async function startNextDev(): Promise<NextDevServer> {
   });
   await waitForServer(baseUrl, proc).catch(async (err) => {
     await stopProcess(proc);
-    await restoreNextEnv();
     throw new Error(`${err instanceof Error ? err.message : String(err)}\n\n${logs}`);
   });
   const persistDiagnostics = async (outDir: string) => {
@@ -247,21 +212,17 @@ async function startNextDev(): Promise<NextDevServer> {
     persistDiagnostics,
     stop: async () => {
       stopRequested = true;
-      try {
-        await stopProcess(proc);
-        await Promise.all(
-          Array.from(diagnosticDirs, async (outDir) => await persistDiagnostics(outDir)),
-        );
-      } finally {
-        await restoreNextEnv();
-      }
+      await stopProcess(proc);
+      await Promise.all(
+        Array.from(diagnosticDirs, async (outDir) => await persistDiagnostics(outDir)),
+      );
     },
   };
 }
 
-async function copyWebAssets(): Promise<void> {
-  const proc = spawn(process.execPath, [copyWebAssetsScript], {
-    cwd: appRoot,
+async function buildProductionApp(): Promise<void> {
+  const proc = spawn("pnpm", ["exec", "turbo", "run", "build", "--filter=@wcdraft/web"], {
+    cwd: repoRoot,
     env: process.env,
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -273,12 +234,53 @@ async function copyWebAssets(): Promise<void> {
   proc.stderr.on("data", append);
   const code = await new Promise<number | null>((resolve) => proc.once("exit", resolve));
   if (code !== 0) {
-    throw new Error(`copy-web-assets failed with code ${code}\n\n${output}`);
+    throw new Error(`production build failed with code ${String(code)}\n\n${output}`);
   }
 }
 
+async function runProofControls(server: NextProductionServer): Promise<void> {
+  const proc = spawn(process.execPath, [tsxBin, "scripts/narrow-collision-proof-controls.ts"], {
+    cwd: appRoot,
+    env: {
+      ...process.env,
+      BASE_URL: server.baseUrl,
+    },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let output = "";
+  const append = (chunk: Buffer) => {
+    output = `${output}${chunk.toString()}`.slice(-30_000);
+  };
+  proc.stdout.on("data", append);
+  proc.stderr.on("data", append);
+  const code = await new Promise<number | null>((resolve) => proc.once("exit", resolve));
+  if (code !== 0) {
+    throw new Error(`collision proof controls failed with code ${String(code)}\n\n${output}`);
+  }
+  process.stdout.write(output);
+}
+
+async function verifyProductionRouteContracts(server: NextProductionServer): Promise<void> {
+  const response = await fetch(`${server.baseUrl}/account`, { redirect: "manual" });
+  assert(
+    response.status === 307 || response.status === 308,
+    `production /account expected a redirect but returned HTTP ${response.status.toString()}`,
+  );
+  const location = response.headers.get("location");
+  assert(location, "production /account redirect omitted Location");
+  const destination = new URL(location, server.baseUrl);
+  const expectedOrigin = new URL(server.baseUrl).origin;
+  assert(
+    destination.origin === expectedOrigin &&
+      destination.pathname === "/sign-in" &&
+      destination.searchParams.get("next") === "/account",
+    `production /account redirected to unexpected destination ${destination.toString()}`,
+  );
+  console.log("production-route-contract: ok /account -> /sign-in?next=/account");
+}
+
 async function runAudit(opts: {
-  server: NextDevServer;
+  server: NextProductionServer;
   phase: string;
   surfaces: string;
   viewports: string;
@@ -294,8 +296,6 @@ async function runAudit(opts: {
       WCDRAFT_RESPONSIVE_OUT_DIR: outDir,
       WCDRAFT_RESPONSIVE_PHASE: opts.phase,
       WCDRAFT_RESPONSIVE_STRICT: "1",
-      WCDRAFT_RESPONSIVE_DEV_SERVER: "1",
-      WCDRAFT_HIDE_DEV_OVERLAY: "1",
       WCDRAFT_RESPONSIVE_SURFACES: opts.surfaces,
       WCDRAFT_RESPONSIVE_VIEWPORTS: opts.viewports,
       WCDRAFT_RESPONSIVE_ENGINE: opts.engine ?? "chromium",
@@ -319,7 +319,7 @@ async function runAudit(opts: {
     const diagnostics = await opts.server.persistDiagnostics(outDir);
     throw new Error(
       [
-        `Next dev server exited during responsive audit ${opts.phase}`,
+        `Next production server exited during responsive audit ${opts.phase}`,
         `exit code=${String(outcome.exit.code)} signal=${String(outcome.exit.signal)}`,
         `server log=${diagnostics.logPath}`,
         `server exit=${diagnostics.exitPath}`,
@@ -346,8 +346,6 @@ async function runAudit(opts: {
   const failures = result.metrics.filter((metric) => {
     if (opts.collisions === "strict") {
       if ((metric.consoleErrors?.length ?? 0) > 0) return true;
-      if (metric.devOverlay?.portalState === "visible") return true;
-      if ((metric.devOverlay?.visibleControlCount ?? 0) > 0) return true;
       return (
         metric.collisionFindings?.some((finding) => finding.disposition === "unexpected") === true
       );
@@ -380,13 +378,18 @@ const collisionGroupFilter = parseNarrowCollisionGroups(
   NARROW_COLLISION_SURFACE_GROUPS.length,
 );
 const collisionEngines = parseNarrowCollisionEngines(process.env.WCDRAFT_COLLISION_ENGINES);
-await copyWebAssets();
-const server = await startNextDev();
+await buildProductionApp();
+const server = await startNextProduction();
 const completedAuditDirs: string[] = [];
 const keepBrowserEvidence = process.env.WCDRAFT_KEEP_BROWSER_EVIDENCE === "1";
 const collisionGateOnly = process.env.WCDRAFT_COLLISION_GATE_ONLY === "1";
+const collisionControlsOnly = process.env.WCDRAFT_COLLISION_CONTROLS_ONLY === "1";
 try {
+  await verifyProductionRouteContracts(server);
   if (!collisionGateOnly) {
+    await runProofControls(server);
+  }
+  if (!collisionGateOnly && !collisionControlsOnly) {
     const desktop = await runAudit({
       server,
       phase: "ci-desktop-shell",
@@ -435,47 +438,49 @@ try {
   }
 
   const collisionAudits: AuditResult[] = [];
-  for (const [index, surfaces] of NARROW_COLLISION_SURFACE_GROUPS.entries()) {
-    const group = index + 1;
-    if (collisionGroupFilter.size > 0 && !collisionGroupFilter.has(group)) continue;
-    const results = await Promise.all(
-      collisionEngines.map(
-        async (engine) =>
-          await runAudit({
-            server,
-            phase: `ci-narrow-collisions-g${group.toString()}-${engine}`,
-            surfaces: surfaces.join(","),
-            viewports: "320x568,360x800,390x844",
-            engine,
-            collisions: "strict",
-          }),
-      ),
+  if (!collisionControlsOnly) {
+    for (const [index, surfaces] of NARROW_COLLISION_SURFACE_GROUPS.entries()) {
+      const group = index + 1;
+      if (collisionGroupFilter.size > 0 && !collisionGroupFilter.has(group)) continue;
+      const results = await Promise.all(
+        collisionEngines.map(
+          async (engine) =>
+            await runAudit({
+              server,
+              phase: `ci-narrow-collisions-g${group.toString()}-${engine}`,
+              surfaces: surfaces.join(","),
+              viewports: "320x568,360x800,390x844",
+              engine,
+              collisions: "strict",
+            }),
+        ),
+      );
+      collisionAudits.push(...results);
+      completedAuditDirs.push(...results.map(({ outDir }) => outDir));
+    }
+    const collisionMetrics = collisionAudits.reduce((sum, audit) => sum + audit.metrics, 0);
+    const collisionFailures = collisionAudits.reduce((sum, audit) => sum + audit.failures, 0);
+    const selectedCollisionGroups = NARROW_COLLISION_SURFACE_GROUPS.filter(
+      (_surfaces, index) => collisionGroupFilter.size === 0 || collisionGroupFilter.has(index + 1),
     );
-    collisionAudits.push(...results);
-    completedAuditDirs.push(...results.map(({ outDir }) => outDir));
+    const expectedCollisionMetrics = expectedNarrowCollisionMetrics({
+      groups: selectedCollisionGroups,
+      engines: collisionEngines.length,
+      viewports: 3,
+      themes: 2,
+    });
+    assert(
+      collisionMetrics === expectedCollisionMetrics,
+      `narrow collision gate expected ${expectedCollisionMetrics.toString()} cells but recorded ${collisionMetrics.toString()}`,
+    );
+    assert(
+      collisionFailures === 0,
+      `narrow collision gate found ${collisionFailures.toString()} failing cells`,
+    );
+    console.log(
+      `narrow-collisions: ok metrics=${collisionMetrics.toString()} failures=${collisionFailures.toString()} engines=${collisionEngines.length.toString()} viewports=3 themes=2 groups=${(collisionGroupFilter.size || NARROW_COLLISION_SURFACE_GROUPS.length).toString()}`,
+    );
   }
-  const collisionMetrics = collisionAudits.reduce((sum, audit) => sum + audit.metrics, 0);
-  const collisionFailures = collisionAudits.reduce((sum, audit) => sum + audit.failures, 0);
-  const selectedCollisionGroups = NARROW_COLLISION_SURFACE_GROUPS.filter(
-    (_surfaces, index) => collisionGroupFilter.size === 0 || collisionGroupFilter.has(index + 1),
-  );
-  const expectedCollisionMetrics = expectedNarrowCollisionMetrics({
-    groups: selectedCollisionGroups,
-    engines: collisionEngines.length,
-    viewports: 3,
-    themes: 2,
-  });
-  assert(
-    collisionMetrics === expectedCollisionMetrics,
-    `narrow collision gate expected ${expectedCollisionMetrics.toString()} cells but recorded ${collisionMetrics.toString()}`,
-  );
-  assert(
-    collisionFailures === 0,
-    `narrow collision gate found ${collisionFailures.toString()} failing cells`,
-  );
-  console.log(
-    `narrow-collisions: ok metrics=${collisionMetrics.toString()} failures=${collisionFailures.toString()} engines=${collisionEngines.length.toString()} viewports=3 themes=2 groups=${(collisionGroupFilter.size || NARROW_COLLISION_SURFACE_GROUPS.length).toString()}`,
-  );
 } finally {
   await server.stop();
   if (!keepBrowserEvidence) {

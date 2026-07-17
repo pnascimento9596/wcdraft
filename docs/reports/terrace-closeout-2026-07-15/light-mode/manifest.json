@@ -6,6 +6,12 @@
   "widths": [360, 390, 430],
   "surfaces": ["home", "mode-select-available", "squad-review"],
   "imageCount": 18,
+  "historicalCorrection": {
+    "annotatedAt": "2026-07-17",
+    "status": "contaminated-and-stale",
+    "note": "All 18 historical captures contain the lower-left Next.js development-tools button. That control is development chrome, not wcdraft product UI. These captures are also stale after PR #307 changed home and mode-select and added the current formation setup presentation.",
+    "replacement": "docs/reports/guard-proof-life-2026-07-17/light-mode/manifest.json"
+  },
   "images": [
     {
       "path": "docs/reports/terrace-closeout-2026-07-15/light-mode/chromium/screenshots/u5-chromium-home-360x800-light.png",

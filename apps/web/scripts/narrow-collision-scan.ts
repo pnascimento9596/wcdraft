@@ -68,16 +68,6 @@ export async function scanNarrowCollisions(
         const root = element.getRootNode();
         return root instanceof ShadowRoot ? root.host : null;
       };
-      type DevPortalRegistryGlobal = typeof globalThis & {
-        __wcdraftNextDevPortalHosts?: WeakMap<Element, HTMLElement>;
-      };
-      const registryGlobal = globalThis as DevPortalRegistryGlobal;
-      const devPortalHosts =
-        registryGlobal.__wcdraftNextDevPortalHosts ?? new WeakMap<Element, HTMLElement>();
-      registryGlobal.__wcdraftNextDevPortalHosts = devPortalHosts;
-      const nextDevPortalHost = (element: Element): HTMLElement | null => {
-        return devPortalHosts.get(element) ?? null;
-      };
       const alphaVisible = (color: string) => {
         const normalized = color.trim().toLowerCase();
         if (normalized === "transparent") return false;
@@ -116,16 +106,6 @@ export async function scanNarrowCollisions(
           rect.top < innerHeight
         );
       };
-      const portalSubtreeSuppressed = (portal: HTMLElement) => {
-        for (let current: Element | null = portal; current; current = composedParent(current)) {
-          const style = getComputedStyle(current);
-          // These two properties suppress descendant paint as a group. A
-          // zero-sized host, visibility, or a non-empty clip-path does not:
-          // fixed shadow descendants can remain visible in those states.
-          if (style.display === "none" || Number(style.opacity) === 0) return true;
-        }
-        return false;
-      };
       const semanticTargetVisible = (element: Element) =>
         element.closest('[hidden], [aria-hidden="true"]') === null && elementPainted(element);
       const stableSelector = (element: Element): string => {
@@ -133,14 +113,7 @@ export async function scanNarrowCollisions(
         if (root instanceof ShadowRoot) {
           const localSelector = (() => {
             if (element.id) return `#${CSS.escape(element.id)}`;
-            for (const attr of [
-              "data-collision-id",
-              "data-nextjs-dev-tools-button",
-              "data-next-mark",
-              "aria-label",
-              "role",
-              "name",
-            ]) {
+            for (const attr of ["data-collision-id", "aria-label", "role", "name"]) {
               const value = element.getAttribute(attr);
               if (value !== null) {
                 return `${element.tagName.toLowerCase()}[${attr}="${CSS.escape(value)}"]`;
@@ -162,22 +135,8 @@ export async function scanNarrowCollisions(
           })();
           return `${stableSelector(root.host)}::shadow ${localSelector}`;
         }
-        const registeredPortal = nextDevPortalHost(element);
-        if (registeredPortal && registeredPortal !== element) {
-          const localSelector = element.id
-            ? `#${CSS.escape(element.id)}`
-            : element.tagName.toLowerCase();
-          return `${stableSelector(registeredPortal)}::shadow ${localSelector}`;
-        }
         if (element.id) return `#${CSS.escape(element.id)}`;
-        for (const attr of [
-          "data-collision-id",
-          "data-nextjs-dev-tools-button",
-          "data-next-mark",
-          "aria-label",
-          "role",
-          "name",
-        ]) {
+        for (const attr of ["data-collision-id", "aria-label", "role", "name"]) {
           const value = element.getAttribute(attr);
           if (value !== null) {
             return `${element.tagName.toLowerCase()}[${attr}="${CSS.escape(value)}"]`;
@@ -360,23 +319,9 @@ export async function scanNarrowCollisions(
             .filter(belongsToCurrentDocument)
             .map(descendOpenShadow)
             .filter(belongsToCurrentDocument);
-        const hit = belongsToCurrentDocument(initialHit)
+        return belongsToCurrentDocument(initialHit)
           ? descendOpenShadow(initialHit)
           : (stackHits()[0] ?? null);
-        if (!hit) return null;
-        const portalHost = nextDevPortalHost(hit);
-        if (!portalHost || !portalSubtreeSuppressed(portalHost)) return hit;
-
-        // WebKit can retain a stale hidden Next portal shadow hit. Continue
-        // down the same browser-derived stack so the stale hit cannot conceal
-        // a genuine product occluder. If no trustworthy candidate exists,
-        // retain the original portal hit and fail closed.
-        return (
-          stackHits().find((candidate) => {
-            const candidatePortal = nextDevPortalHost(candidate);
-            return !candidatePortal || !portalSubtreeSuppressed(candidatePortal);
-          }) ?? hit
-        );
       };
       const related = (owner: Element, hit: Element | null) =>
         hit !== null && (hit === owner || owner.contains(hit) || hit.contains(owner));
@@ -403,24 +348,6 @@ export async function scanNarrowCollisions(
         (window.scrollY > 0 || (nestedScroller?.scrollTop ?? 0) > 0) &&
         occluder.closest('header, [role="banner"], [data-collision-scroll-shell="true"]') !== null;
       const occluderDetails = (hit: Element) => {
-        const portalHost = nextDevPortalHost(hit);
-        if (portalHost) {
-          const portalControl =
-            hit === portalHost
-              ? portalHost.shadowRoot?.querySelector<Element>("[data-nextjs-dev-tools-button]")
-              : hit.closest<Element>(
-                  "[data-nextjs-dev-tools-button], [data-nextjs-dev-tools-panel], button, [role='button']",
-                );
-          const element = portalControl ?? hit;
-          const style = getComputedStyle(element);
-          return {
-            element,
-            selector: stableSelector(element),
-            name: semanticNameOf(element) || "Open Next.js Dev Tools",
-            position: style.position,
-            zIndex: style.zIndex,
-          };
-        }
         let positionedLayer: Element | null = hit;
         while (positionedLayer && positionedLayer !== document.body) {
           const position = getComputedStyle(positionedLayer).position;
@@ -477,14 +404,8 @@ export async function scanNarrowCollisions(
         }
         return [...controls, ...textTargets];
       };
-      const paints = (candidate: HTMLElement) => {
+      const opaqueBoxPaint = (candidate: Element) => {
         const style = getComputedStyle(candidate);
-        const hasText = [...candidate.childNodes].some(
-          (node) =>
-            node.nodeType === Node.TEXT_NODE &&
-            (node.textContent?.trim().length ?? 0) > 0 &&
-            alphaVisible(style.color),
-        );
         const hasBackground =
           style.backgroundImage !== "none" || alphaVisible(style.backgroundColor);
         const hasBorder = ["Top", "Right", "Bottom", "Left"].some((side) => {
@@ -498,12 +419,21 @@ export async function scanNarrowCollisions(
           );
         });
         return (
-          hasText ||
           hasBackground ||
           hasBorder ||
           style.boxShadow !== "none" ||
           ["IMG", "SVG", "CANVAS", "VIDEO"].includes(candidate.tagName)
         );
+      };
+      const paints = (candidate: HTMLElement) => {
+        const style = getComputedStyle(candidate);
+        const hasText = [...candidate.childNodes].some(
+          (node) =>
+            node.nodeType === Node.TEXT_NODE &&
+            (node.textContent?.trim().length ?? 0) > 0 &&
+            alphaVisible(style.color),
+        );
+        return hasText || opaqueBoxPaint(candidate);
       };
       const pushFinding = (finding: NarrowCollisionRawFinding) => {
         const key = [
@@ -547,8 +477,10 @@ export async function scanNarrowCollisions(
               scrollY: Math.round(window.scrollY),
               nestedScrollerSelector,
               nestedScrollTop: nestedScroller ? Math.round(nestedScroller.scrollTop) : null,
+              targetPosition: getComputedStyle(target.owner).position,
               occluderPosition: occluder.position,
               occluderZIndex: occluder.zIndex,
+              occluderOpaqueBoxPaint: opaqueBoxPaint(occluder.element),
               intentionalScrollShell: intentionalScrollShell(
                 occluder.element,
                 occluder.position,
@@ -607,8 +539,10 @@ export async function scanNarrowCollisions(
                   scrollY: Math.round(window.scrollY),
                   nestedScrollerSelector,
                   nestedScrollTop: nestedScroller ? Math.round(nestedScroller.scrollTop) : null,
+                  targetPosition: getComputedStyle(target.owner).position,
                   occluderPosition: style.position,
                   occluderZIndex: style.zIndex,
+                  occluderOpaqueBoxPaint: opaqueBoxPaint(candidate),
                   intentionalScrollShell: intentionalScrollShell(
                     candidate,
                     style.position,

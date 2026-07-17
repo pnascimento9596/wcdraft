@@ -24,7 +24,6 @@ import {
   type ResponsiveMetricForAdjudication,
 } from "../../../scripts/responsive-layout-contract";
 import { scanNarrowCollisions } from "../../../scripts/narrow-collision-scan";
-import { suppressDevOverlayInDocument } from "../../../scripts/dev-overlay-suppression";
 
 const globalsCss = readFileSync(
   fileURLToPath(new URL("../../../app/globals.css", import.meta.url)),
@@ -32,6 +31,10 @@ const globalsCss = readFileSync(
 );
 const responsiveHarness = readFileSync(
   fileURLToPath(new URL("../../../scripts/verify-responsive-layout-browser.mts", import.meta.url)),
+  "utf8",
+);
+const productionHarness = readFileSync(
+  fileURLToPath(new URL("../../../scripts/test-responsive-shell-fit.mts", import.meta.url)),
   "utf8",
 );
 const draftShellCss = readFileSync(
@@ -122,8 +125,10 @@ function collision(overrides: Partial<NarrowCollisionRawFinding> = {}): NarrowCo
     scrollY: 0,
     nestedScrollerSelector: null,
     nestedScrollTop: null,
+    targetPosition: "static",
     occluderPosition: "absolute",
     occluderZIndex: "2",
+    occluderOpaqueBoxPaint: false,
     sharedInteractiveAncestor: false,
     sharedFormationRegion: false,
     intentionalScrollShell: false,
@@ -152,7 +157,6 @@ function metric(
     smallTargets: [],
     axeViolations: [],
     consoleErrors: [],
-    devOverlay: null,
     ...overrides,
   };
 }
@@ -256,178 +260,6 @@ describe("responsive layout contract", () => {
     ]);
   });
 
-  it("uses the DOM nonce property when CSP hides the nonce attribute", () => {
-    expect(
-      responsiveMetricFailures(
-        metric({
-          devOverlay: {
-            suppression: "enabled",
-            nonceAttributeLength: 0,
-            noncePropertyLength: 22,
-            nonceSource: "property",
-            styleNonceMatches: true,
-            styleSheetAttached: true,
-            portalProvenance: "next-app-wrapper",
-            portalState: "hidden",
-            visibleControlCount: 0,
-          },
-        }),
-      ),
-    ).toEqual([]);
-  });
-
-  it("rejects a style nonce mismatch even when the verified portal is hidden", () => {
-    expect(
-      responsiveMetricFailures(
-        metric({
-          devOverlay: {
-            suppression: "enabled",
-            nonceAttributeLength: 0,
-            noncePropertyLength: 22,
-            nonceSource: "property",
-            styleNonceMatches: false,
-            styleSheetAttached: true,
-            portalProvenance: "next-app-wrapper",
-            portalState: "hidden",
-            visibleControlCount: 0,
-          },
-        }),
-      ),
-    ).toEqual([
-      "history 1024x768 light: dev overlay suppression failed (style nonce mismatch; attribute nonce length=0, property nonce length=22)",
-    ]);
-  });
-
-  it("fails strict adjudication when dev-overlay suppression is only attempted", () => {
-    expect(
-      responsiveMetricFailures(
-        metric({
-          devOverlay: {
-            suppression: "enabled",
-            nonceAttributeLength: 0,
-            noncePropertyLength: 0,
-            nonceSource: "missing",
-            styleNonceMatches: false,
-            styleSheetAttached: false,
-            portalProvenance: "next-app-wrapper",
-            portalState: "visible",
-            visibleControlCount: 1,
-          },
-        }),
-      ),
-    ).toEqual([
-      "history 1024x768 light: dev overlay suppression failed (request nonce property missing, style nonce mismatch, style sheet rejected, Next portal visible, 1 dev-tools controls visible; attribute nonce length=0, property nonce length=0)",
-    ]);
-  });
-
-  it("rejects a dev diagnostic opt-out even when no overlay geometry is visible", () => {
-    expect(
-      responsiveMetricFailures(
-        metric({
-          devOverlay: {
-            suppression: "disabled",
-            nonceAttributeLength: 0,
-            noncePropertyLength: 22,
-            nonceSource: "property",
-            styleNonceMatches: false,
-            styleSheetAttached: false,
-            portalProvenance: "absent",
-            portalState: "absent",
-            visibleControlCount: 0,
-          },
-        }),
-      ),
-    ).toEqual([
-      "history 1024x768 light: dev overlay suppression failed (suppression disabled; attribute nonce length=0, property nonce length=22)",
-    ]);
-  });
-
-  it("keeps null as the valid non-dev overlay sentinel", () => {
-    expect(responsiveMetricFailures(metric({ devOverlay: null }))).toEqual([]);
-  });
-
-  it("suppresses the exact Next App Router overlay wrapper as a paint group", async () => {
-    const browser = await webkit.launch({ headless: true });
-    try {
-      const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
-      await page.setContent(`
-        <style nonce="request-nonce">body { margin: 0; }</style>
-      `);
-      await page.evaluate(() => {
-        const overlayRoot = document.createElement("script");
-        overlayRoot.dataset.nextjsDevOverlay = "true";
-        overlayRoot.style.cssText = "display:block;position:absolute";
-        const portal = document.createElement("nextjs-portal");
-        overlayRoot.append(portal);
-        document.body.append(overlayRoot);
-        const root = portal.attachShadow({ mode: "open" });
-        root.innerHTML = `
-          <style data-nextjs-dev-tool-style="true">:host { all: initial; }</style>
-          <div data-nextjs-toast="true">
-            <button
-              data-nextjs-dev-tools-button="true"
-              aria-label="Open Next.js Dev Tools"
-            >Open</button>
-          </div>
-        `;
-      });
-
-      const result = await page.evaluate(suppressDevOverlayInDocument, {
-        css: 'body > script[data-nextjs-dev-overlay="true"] { display: none !important; }',
-        requestedSuppression: "enabled" as const,
-      });
-      expect(result).toMatchObject({
-        noncePropertyLength: 13,
-        nonceSource: "property",
-        styleNonceMatches: true,
-        styleSheetAttached: true,
-        portalProvenance: "next-app-wrapper",
-        portalState: "hidden",
-        visibleControlCount: 0,
-      });
-      expect(await page.locator("nextjs-portal").count()).toBe(1);
-      expect(
-        await page
-          .locator('body > script[data-nextjs-dev-overlay="true"]')
-          .evaluate((root) => getComputedStyle(root).display),
-      ).toBe("none");
-      expect(responsiveMetricFailures(metric({ devOverlay: result }))).toEqual([]);
-    } finally {
-      await browser.close();
-    }
-  });
-
-  it("leaves an unverified nextjs-portal visible and fails closed", async () => {
-    const browser = await webkit.launch({ headless: true });
-    try {
-      const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
-      await page.setContent(`
-        <style nonce="request-nonce">body { margin: 0; }</style>
-        <nextjs-portal></nextjs-portal>
-      `);
-      await page.locator("nextjs-portal").evaluate((portal) => {
-        const root = portal.attachShadow({ mode: "open" });
-        root.innerHTML = '<button aria-label="Product control">Product</button>';
-      });
-
-      const result = await page.evaluate(suppressDevOverlayInDocument, {
-        css: 'body > script[data-nextjs-dev-overlay="true"] { display: none !important; }',
-        requestedSuppression: "enabled" as const,
-      });
-      expect(result).toMatchObject({
-        portalProvenance: "unverified",
-        portalState: "visible",
-        visibleControlCount: 1,
-      });
-      expect(await page.locator("nextjs-portal").count()).toBe(1);
-      expect(responsiveMetricFailures(metric({ devOverlay: result }))).toEqual([
-        "history 1024x768 light: dev overlay suppression failed (unverified Next portal, Next portal visible, 1 dev-tools controls visible; attribute nonce length=13, property nonce length=13)",
-      ]);
-    } finally {
-      await browser.close();
-    }
-  });
-
   it("keeps collision discovery default-closed over every App Router page", () => {
     expect([...NARROW_COLLISION_PAGE_ROUTES].sort()).toEqual(appPageRoutes().sort());
     expect(NARROW_COLLISION_ROUTE_RECIPES.map(({ route }) => route).sort()).toEqual(
@@ -437,6 +269,14 @@ describe("responsive layout contract", () => {
     const recipeSurfaces = NARROW_COLLISION_ROUTE_RECIPES.flatMap(({ surfaces }) => surfaces);
     expect(new Set(recipeSurfaces)).toEqual(new Set(groupedSurfaces));
     expect(recipeSurfaces).toHaveLength(groupedSurfaces.length);
+  });
+
+  it("bounds production-only transport and fixture exceptions to the loopback contract", () => {
+    expect(productionHarness).toContain("destination.origin === expectedOrigin");
+    expect(responsiveHarness).toContain("requestUrl.origin !== new URL(BASE_URL).origin");
+    expect(responsiveHarness).toContain("url.origin === expectedOrigin");
+    expect(responsiveHarness).toContain('url.pathname === "/api/challenge/verify"');
+    expect(responsiveHarness).toContain('method === "POST"');
   });
 
   it("runs every collision group by default and rejects invalid filters", () => {
@@ -540,162 +380,6 @@ describe("responsive layout contract", () => {
     }
   });
 
-  it("resolves hidden Next portal hits without masking visible shadow collisions", async () => {
-    const browser = await webkit.launch({ headless: true });
-    try {
-      const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
-      await page.setContent(`
-        <style>
-          body { margin: 0; }
-          #target { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px; }
-          #product-occluder { position: fixed; left: 20px; top: 20px; width: 100px; height: 50px;
-            display: none; z-index: 4; }
-          nextjs-portal { display: none; }
-        </style>
-        <button id="target" aria-label="Product target">Product target</button>
-        <div id="product-occluder"></div>
-        <nextjs-portal></nextjs-portal>
-      `);
-      await page.evaluate(() => {
-        const portal = document.querySelector<HTMLElement>("nextjs-portal")!;
-        const target = document.querySelector<HTMLElement>("#target")!;
-        const productOccluder = document.querySelector<HTMLElement>("#product-occluder")!;
-        const shadow = portal.attachShadow({ mode: "open" });
-        shadow.innerHTML =
-          '<section><div id="dev-dot" style="position:fixed;left:20px;top:20px;width:100px;height:50px;background:red;z-index:9999">·</div></section>';
-        const dot = shadow.querySelector<HTMLElement>("#dev-dot")!;
-        const section = shadow.querySelector<HTMLElement>("section")!;
-        const registry = new WeakMap<Element, HTMLElement>();
-        registry.set(portal, portal);
-        registry.set(section, portal);
-        registry.set(dot, portal);
-        const pageGlobal = globalThis as typeof globalThis & {
-          __wcdraftNextDevPortalHosts?: WeakMap<Element, HTMLElement>;
-          __wcdraftDetachedDevSection?: HTMLElement;
-          __wcdraftOriginalElementFromPoint?: typeof document.elementFromPoint;
-          __wcdraftOriginalElementsFromPoint?: typeof document.elementsFromPoint;
-        };
-        pageGlobal.__wcdraftNextDevPortalHosts = registry;
-        pageGlobal.__wcdraftDetachedDevSection = section;
-        pageGlobal.__wcdraftOriginalElementFromPoint = document.elementFromPoint.bind(document);
-        pageGlobal.__wcdraftOriginalElementsFromPoint = document.elementsFromPoint.bind(document);
-        section.remove();
-        dot.getBoundingClientRect = () => new DOMRect(20, 20, 100, 50);
-        document.elementFromPoint = () => dot;
-        document.elementsFromPoint = () => [
-          dot,
-          ...(productOccluder.style.display === "block" ? [productOccluder] : []),
-          target,
-          document.body,
-          document.documentElement,
-        ];
-      });
-
-      expect(await scanNarrowCollisions(page)).toEqual([]);
-
-      await page.locator("#product-occluder").evaluate((occluder) => {
-        occluder.style.display = "block";
-      });
-      expect(await scanNarrowCollisions(page)).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            class: "A",
-            targetSelector: "#target",
-            occluderSelector: "#product-occluder",
-          }),
-        ]),
-      );
-
-      await page.locator("nextjs-portal").evaluate((portal) => {
-        const pageGlobal = globalThis as typeof globalThis & {
-          __wcdraftDetachedDevSection?: HTMLElement;
-          __wcdraftOriginalElementFromPoint?: typeof document.elementFromPoint;
-          __wcdraftOriginalElementsFromPoint?: typeof document.elementsFromPoint;
-        };
-        portal.shadowRoot!.append(pageGlobal.__wcdraftDetachedDevSection!);
-        portal.style.display = "inline";
-        document.elementFromPoint = pageGlobal.__wcdraftOriginalElementFromPoint!;
-        document.elementsFromPoint = pageGlobal.__wcdraftOriginalElementsFromPoint!;
-      });
-      await page.locator("#product-occluder").evaluate((occluder) => {
-        occluder.style.display = "none";
-      });
-      expect(
-        await page.evaluate(() => {
-          const portal = document.querySelector<HTMLElement>("nextjs-portal")!;
-          const dot = portal.shadowRoot!.querySelector<HTMLElement>("#dev-dot")!;
-          const portalRect = portal.getBoundingClientRect();
-          const dotRect = dot.getBoundingClientRect();
-          return {
-            portalDisplay: getComputedStyle(portal).display,
-            portalRect: [portalRect.x, portalRect.y, portalRect.width, portalRect.height],
-            dotRect: [dotRect.x, dotRect.y, dotRect.width, dotRect.height],
-            nativeHit: document.elementFromPoint(25, 25)?.tagName ?? null,
-          };
-        }),
-      ).toEqual({
-        portalDisplay: "inline",
-        portalRect: [0, 0, 0, 0],
-        dotRect: [20, 20, 100, 50],
-        nativeHit: "NEXTJS-PORTAL",
-      });
-      expect(await scanNarrowCollisions(page)).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            class: "A",
-            targetSelector: "#target",
-            occluderSelector: "body>nextjs-portal::shadow #dev-dot",
-          }),
-        ]),
-      );
-
-      await page.locator("nextjs-portal").evaluate((portal) => {
-        portal.style.cssText =
-          "display:block;position:fixed;left:20px;top:20px;width:100px;height:50px;clip-path:inset(0)";
-      });
-      expect(await scanNarrowCollisions(page)).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            class: "A",
-            targetSelector: "#target",
-            occluderSelector: "body>nextjs-portal::shadow #dev-dot",
-          }),
-        ]),
-      );
-
-      await page.evaluate(() => {
-        document.querySelector<HTMLElement>("nextjs-portal")!.style.display = "none";
-        const target = document.querySelector<HTMLElement>("#target")!;
-        const host = document.createElement("div");
-        host.id = "product-shadow";
-        host.style.cssText = "position:fixed;left:20px;top:20px;width:100px;height:50px;z-index:5";
-        document.body.append(host);
-        const shadow = host.attachShadow({ mode: "open" });
-        shadow.innerHTML = '<div id="shadow-blocker"></div>';
-        const blocker = shadow.querySelector<HTMLElement>("#shadow-blocker")!;
-        blocker.getBoundingClientRect = () => new DOMRect(20, 20, 100, 50);
-        document.elementFromPoint = () => blocker;
-        document.elementsFromPoint = () => [
-          blocker,
-          target,
-          document.body,
-          document.documentElement,
-        ];
-      });
-      expect(await scanNarrowCollisions(page)).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            class: "A",
-            targetSelector: "#target",
-            occluderSelector: "#product-shadow::shadow #shadow-blocker",
-          }),
-        ]),
-      );
-    } finally {
-      await browser.close();
-    }
-  });
-
   it("ignores foreign-document stale hits without masking current-page collisions", async () => {
     const browser = await webkit.launch({ headless: true });
     try {
@@ -755,9 +439,13 @@ describe("responsive layout contract", () => {
       "[Report Only] Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.";
     const reportOnlyFrame =
       "The Content Security Policy directive 'frame-ancestors' is ignored when delivered in a report-only policy.";
+    const reportOnlyUpgrade =
+      "The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.";
     expect(isExpectedBrowserDiagnostic("webkit", reportOnlyStyle)).toBe(true);
     expect(isExpectedBrowserDiagnostic("webkit", reportOnlyFrame)).toBe(true);
+    expect(isExpectedBrowserDiagnostic("webkit", reportOnlyUpgrade)).toBe(true);
     expect(isExpectedBrowserDiagnostic("chromium", reportOnlyStyle)).toBe(false);
+    expect(isExpectedBrowserDiagnostic("chromium", reportOnlyUpgrade)).toBe(true);
     expect(
       isExpectedBrowserDiagnostic(
         "webkit",
@@ -790,12 +478,12 @@ describe("responsive layout contract", () => {
       {
         id: "same-interactive-composition",
         rationale:
-          "Sibling paint layers inside one semantic control share its hit target; the control border box remains independently adjudicated.",
+          "Hairline glyph-boundary contact inside one semantic control shares its hit target; substantive text overlap, opaque backgrounds, images, borders, and shadows remain blocking.",
       },
       {
         id: "scrolling-under-app-shell",
         rationale:
-          "After user-equivalent scrolling, content may pass beneath a semantic fixed or sticky app shell; arbitrary positioned layers and initial-paint overlaps remain blocking.",
+          "After user-equivalent scrolling, in-flow content may pass beneath a semantic fixed or sticky app shell; pinned controls, arbitrary positioned layers, and initial-paint overlaps remain blocking.",
       },
     ]);
     expect(NARROW_COLLISION_KNOWN_FAILURES).toEqual([]);
@@ -821,13 +509,41 @@ describe("responsive layout contract", () => {
           viewport: "320x568",
           theme: "light",
           engine: "chromium",
-          finding: collision({ sharedInteractiveAncestor: true }),
+          finding: collision({
+            sharedInteractiveAncestor: true,
+            intersectionRect: { x: 10, y: 10, width: 44, height: 1 },
+          }),
         }),
       ).toMatchObject({
         disposition: "allowlisted",
         ruleId: "same-interactive-composition",
       });
     }
+    expect(
+      adjudicateNarrowCollision({
+        surface: "opaque-sibling",
+        viewport: "320x568",
+        theme: "light",
+        engine: "chromium",
+        finding: collision({
+          sharedInteractiveAncestor: true,
+          occluderOpaqueBoxPaint: true,
+        }),
+      }).disposition,
+    ).toBe("unexpected");
+    expect(
+      adjudicateNarrowCollision({
+        surface: "text-overlap",
+        viewport: "320x568",
+        theme: "light",
+        engine: "chromium",
+        finding: collision({
+          targetKind: "text",
+          sharedInteractiveAncestor: true,
+          intersectionRect: { x: 10, y: 10, width: 8, height: 8 },
+        }),
+      }).disposition,
+    ).toBe("unexpected");
   });
 
   it("never exempts overlaps merely because controls share a formation", () => {
@@ -861,5 +577,18 @@ describe("responsive layout contract", () => {
         finding: collision({ occluderPosition: "sticky", intentionalScrollShell: true }),
       }),
     ).toMatchObject({ disposition: "allowlisted", ruleId: "scrolling-under-app-shell" });
+    expect(
+      adjudicateNarrowCollision({
+        surface: "pinned-target",
+        viewport: "360x800",
+        theme: "dark",
+        engine: "chromium",
+        finding: collision({
+          targetPosition: "fixed",
+          occluderPosition: "sticky",
+          intentionalScrollShell: true,
+        }),
+      }).disposition,
+    ).toBe("unexpected");
   });
 });
