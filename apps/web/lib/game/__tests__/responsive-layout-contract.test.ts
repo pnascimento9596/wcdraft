@@ -45,6 +45,49 @@ const draftSetupSource = readFileSync(
 );
 const appRoot = fileURLToPath(new URL("../../../app", import.meta.url));
 
+function cssAncestorPreludesAt(source: string, targetIndex: number): string[] {
+  const stack: { prelude: string; itemStart: number }[] = [{ prelude: "", itemStart: 0 }];
+  for (let index = 0; index < targetIndex; index++) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      if (commentEnd < 0 || commentEnd >= targetIndex) break;
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      const quote = character;
+      for (index += 1; index < targetIndex; index++) {
+        if (source[index] === "\\") index += 1;
+        else if (source[index] === quote) break;
+      }
+      continue;
+    }
+    if (character === "{") {
+      const parent = stack.at(-1)!;
+      const prelude = source
+        .slice(parent.itemStart, index)
+        .replace(/\/\*[\s\S]*?\*\//gu, "")
+        .trim();
+      stack.push({ prelude, itemStart: index + 1 });
+    } else if (character === ";") {
+      stack.at(-1)!.itemStart = index + 1;
+    } else if (character === "}") {
+      if (stack.length === 1) throw new Error("unexpected closing CSS brace");
+      stack.pop();
+      stack.at(-1)!.itemStart = index + 1;
+    }
+  }
+  return stack.slice(1).map(({ prelude }) => prelude);
+}
+
+function formationDockStaticContexts(source: string): string[][] {
+  return [...source.matchAll(/\.formationDock\s*\{\s*position:\s*static;\s*\}/gu)].map((match) =>
+    cssAncestorPreludesAt(source, match.index),
+  );
+}
+
 function appPageRoutes(directory = appRoot, segments: string[] = []): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     if (entry.isFile() && entry.name === "page.tsx") {
@@ -188,9 +231,15 @@ describe("responsive layout contract", () => {
 
   it("keeps the rendered formation setup dock in flow at narrow widths", () => {
     expect(draftSetupSource).toContain("<div className={s.formationDock}>");
-    expect(draftShellCss).toMatch(
-      /@media \(max-width: 430px\)[\s\S]*?\.formationDock \{\s*position: static;\s*\}/u,
-    );
+    expect(formationDockStaticContexts(draftShellCss)).toEqual([["@media (max-width: 430px)"]]);
+
+    const staticRule = ".formationDock { position: static; }";
+    expect(
+      formationDockStaticContexts(`@media (max-width: 430px) { .other {} } ${staticRule}`),
+    ).toEqual([[]]);
+    expect(formationDockStaticContexts(`@media (max-width: 431px) { ${staticRule} }`)).toEqual([
+      ["@media (max-width: 431px)"],
+    ]);
   });
 
   it("uses the DOM nonce property when CSP hides the nonce attribute", () => {

@@ -387,6 +387,15 @@ not affect setup. The fix-forward keeps the rendered `.formationDock` in normal 
 the `s.formationDock` render and the narrow `position: static` rule. The scanner, the two documented
 pattern exceptions, and the empty known-failures list are unchanged.
 
+The first fresh exact-head reviewer reproduced every runtime gate but failed SHA `bd03a6f2`
+because the initial source assertion could scan past the closing brace of an earlier 430px media
+query and falsely pass after moving the static rule outside that query or changing its actual
+boundary to 431px. The fix-forward assertion is now brace-aware: it finds the static
+`.formationDock` rule, requires its immediate CSS ancestor to be exactly
+`@media (max-width: 430px)`, and includes explicit unscoped and 431px mutation fixtures. This
+review-driven test correction does not change runtime CSS or scanner behavior and requires a new
+exact-head review.
+
 Pre-commit fix-forward receipts:
 
 - focused responsive/collision contract: 23/23;
@@ -400,7 +409,7 @@ Pre-commit fix-forward receipts:
 - complete public collision assertion: 264/264 cells, 0 failures, 2 engines, 3 viewports, 2 themes,
   4 groups.
 
-Fresh exact-head reviews, replacement protected CI, merge, deploy observation, and the same live
+Fresh exact-head review, replacement protected CI, merge, deploy observation, and the same live
 18+2+theme/disclosure matrix remain mandatory before Terrace may resume.
 
 ## Validation and reviews

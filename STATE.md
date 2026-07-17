@@ -72,6 +72,11 @@ an optimized production build with 4/4 package tasks, 40/40 pages, and both prot
 at 2/2; visible root attribution and not-affiliated disclosure in exact light and dark themes; and
 the complete public collision gate at 264/264 cells with zero failures. Fresh exact-head review,
 protected CI, merge, deployment observation, and the same production live matrix remain mandatory.
+The first fresh reviewer reproduced those runtime gates but correctly rejected `bd03a6f2`: its
+source-test regex could cross media-query braces and falsely pass an unscoped or 431px mutation.
+The assertion is now brace-aware, requires the static rule's immediate ancestor to be the exact
+430px media query, and carries negative fixtures for both mutations; this test-only correction is
+awaiting a new SHA-pinned review.
 
 Terrace close-out: 2026-07-15 · `/` and `/play` now render the existing CC-BY-SA
 attribution and not-affiliated notice as human-readable one-screen content instead of hiding
