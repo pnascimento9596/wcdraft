@@ -1950,11 +1950,34 @@
     padding: 12px 16px calc(84px + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Setup scrolls with the document, not the anchored in-shell draft row.
-     Keep its action in flow on narrow viewports so it cannot cover setup
-     segments or formation cards before the user reaches the page bottom. */
+  /* Setup owns a bounded shell below the mobile masthead. Formation content
+     scrolls in its own row, while the action remains an in-flow sibling: the
+     CTA stays visible without painting over setup controls or formation cards. */
+  .formationSetupShell {
+    height: calc(
+      100svh - 3.35rem - 1px - env(safe-area-inset-top, 0px) - var(--m-page-y-game) -
+        var(--m-page-y-game)
+    );
+    min-height: 0;
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .formationSetupShell .formationSelect {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-inline: 16px;
+    padding-bottom: 16px;
+  }
+
   .formationDock {
+    flex: 0 0 auto;
     position: static;
+    margin: 0;
   }
 
   .formationSelect {
@@ -1986,5 +2009,9 @@
   .formationDock {
     margin-inline: -6px;
     padding-inline: 6px;
+  }
+
+  .formationSetupShell .formationDock {
+    margin-inline: 0;
   }
 }

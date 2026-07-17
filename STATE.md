@@ -63,9 +63,11 @@ converged on the exact revert SHA. The preserved failed receipt is
 
 The fix-forward root cause was a geometry selector mismatch, not a scanner exception: formation
 setup renders `s.formationDock`, while the attempted in-flow rule targeted the unrelated
-`.draftShellAnchored > .lockBar`. Narrow setup now makes the actual `.formationDock` static at
-`max-width: 430px`; wider setup retains sticky behavior, and no allowlist or known-failure entry
-changed. A source contract binds the rendered setup class to that narrow CSS rule. Measured
+`.draftShellAnchored > .lockBar`. Narrow setup now uses a bounded shell whose formation content
+scrolls in one flex row and whose actual `.formationDock` is a separate static row at
+`max-width: 430px`; the CTA stays visible without covering content. Wider setup retains sticky
+behavior, and no allowlist or known-failure entry changed. A source contract binds the facade
+export and rendered setup classes to that narrow scroll/static geometry. Measured
 fix-forward proof includes 23/23 focused contract tests; 6/6 Chromium and 6/6 WebKit setup cells;
 an optimized production build with 4/4 package tasks, 40/40 pages, and both protected routes at
 8/8 runtime-data traces; the exact production-equivalent three-route matrix at 18/18; squad review
@@ -76,7 +78,11 @@ The first fresh reviewer reproduced those runtime gates but correctly rejected `
 source-test regex could cross media-query braces and falsely pass an unscoped or 431px mutation.
 The assertion is now brace-aware, requires the static rule's immediate ancestor to be the exact
 430px media query, and carries negative fixtures for both mutations; this test-only correction is
-awaiting a new SHA-pinned review.
+covered by a SHA-pinned PASS. A subsequent repository-wide run correctly rejected the static-only
+layout because its CTA sat at `1435.375px` in an 844px viewport. The bounded-shell revision now
+measures the shell at `62.59375..835.984375`, scroll row at `128.59375..750.984375`, and disjoint
+CTA row at `758.984375..827.984375`; full game flow passes. That post-review geometry commit voids
+the prior PASS and is awaiting a new SHA-pinned review.
 
 Terrace close-out: 2026-07-15 · `/` and `/play` now render the existing CC-BY-SA
 attribution and not-affiliated notice as human-readable one-screen content instead of hiding

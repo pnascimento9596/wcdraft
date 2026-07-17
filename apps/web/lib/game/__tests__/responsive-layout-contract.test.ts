@@ -39,6 +39,10 @@ const draftShellCss = readFileSync(
   ),
   "utf8",
 );
+const gameModuleCss = readFileSync(
+  fileURLToPath(new URL("../../../components/game/game.module.css", import.meta.url)),
+  "utf8",
+);
 const draftSetupSource = readFileSync(
   fileURLToPath(new URL("../../../components/game/draft-screen/setup.tsx", import.meta.url)),
   "utf8",
@@ -83,8 +87,8 @@ function cssAncestorPreludesAt(source: string, targetIndex: number): string[] {
 }
 
 function formationDockStaticContexts(source: string): string[][] {
-  return [...source.matchAll(/\.formationDock\s*\{\s*position:\s*static;\s*\}/gu)].map((match) =>
-    cssAncestorPreludesAt(source, match.index),
+  return [...source.matchAll(/\.formationDock\s*\{[^{}]*position:\s*static;[^{}]*\}/gu)].map(
+    (match) => cssAncestorPreludesAt(source, match.index),
   );
 }
 
@@ -230,8 +234,17 @@ describe("responsive layout contract", () => {
   });
 
   it("keeps the rendered formation setup dock in flow at narrow widths", () => {
+    expect(draftSetupSource).toContain(
+      "<div className={`${s.draftShell} ${s.formationSetupShell}`}>",
+    );
+    expect(gameModuleCss).toMatch(
+      /\.formationSetupShell \{\s*composes: formationSetupShell from "\.\/game-styles\/draft-shell\.module\.css";\s*\}/u,
+    );
     expect(draftSetupSource).toContain("<div className={s.formationDock}>");
     expect(formationDockStaticContexts(draftShellCss)).toEqual([["@media (max-width: 430px)"]]);
+    expect(draftShellCss).toMatch(
+      /\.formationSetupShell \.formationSelect \{[^}]*flex: 1 1 auto;[^}]*overflow-y: auto;/u,
+    );
 
     const staticRule = ".formationDock { position: static; }";
     expect(

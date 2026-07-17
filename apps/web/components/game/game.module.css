@@ -1291,6 +1291,9 @@
 .formationDock {
   composes: formationDock from "./game-styles/draft-shell.module.css";
 }
+.formationSetupShell {
+  composes: formationSetupShell from "./game-styles/draft-shell.module.css";
+}
 .setupRow {
   composes: setupRow from "./game-styles/draft-shell.module.css";
 }

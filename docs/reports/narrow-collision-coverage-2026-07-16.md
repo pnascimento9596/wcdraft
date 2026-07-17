@@ -382,10 +382,12 @@ draft-setup extraction at `/tmp/pr304-draft-setup-live-failures.json`.
 Browser inspection of the preserved failed deployment proved that setup renders
 `game_formationDock… draft-shell_formationDock…` as the sticky action container. The attempted
 geometry rule targeted `.draftShellAnchored > .lockBar`, a different component/class, so it could
-not affect setup. The fix-forward keeps the rendered `.formationDock` in normal flow only at
-`max-width: 430px`; desktop setup retains sticky behavior. A focused source contract asserts both
-the `s.formationDock` render and the narrow `position: static` rule. The scanner, the two documented
-pattern exceptions, and the empty known-failures list are unchanged.
+not affect setup. The fix-forward uses a bounded narrow setup shell: the formation content scrolls
+inside its own flex row and the rendered `.formationDock` is a separate normal-flow row only at
+`max-width: 430px`. The CTA therefore stays visible without covering setup content; desktop setup
+retains sticky behavior. A focused source contract asserts the facade export, rendered shell/dock
+classes, scroll row, and narrow `position: static` rule. The scanner, the two documented pattern
+exceptions, and the empty known-failures list are unchanged.
 
 The first fresh exact-head reviewer reproduced every runtime gate but failed SHA `bd03a6f2`
 because the initial source assertion could scan past the closing brace of an earlier 430px media
@@ -395,6 +397,14 @@ boundary to 431px. The fix-forward assertion is now brace-aware: it finds the st
 `@media (max-width: 430px)`, and includes explicit unscoped and 431px mutation fixtures. This
 review-driven test correction does not change runtime CSS or scanner behavior and requires a new
 exact-head review.
+
+The first repository-wide test run then caught a second fail-closed issue: the initial static-only
+geometry placed the lock action at `1435.375px` in the 844px viewport, violating the existing
+game-flow above-fold assertion. The bounded-shell revision measured the setup shell at
+`62.59375..835.984375`, its scroll row at `128.59375..750.984375`, and the disjoint CTA row at
+`758.984375..827.984375`; document height remained exactly 844px. The complete game-flow browser
+script then passed. Because this geometry and its facade export changed after the prior PASS, that
+review is void and a new exact-head review is mandatory.
 
 Pre-commit fix-forward receipts:
 
