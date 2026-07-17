@@ -49,7 +49,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
   width: 56px;
   height: 56px;
   border-radius: var(--r-pill);

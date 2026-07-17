@@ -676,15 +676,6 @@
   border-right: 3px solid transparent;
   border-bottom: 6px solid currentColor;
 }
-
-@media (max-width: 340px) {
-  .squadStage .pitch {
-    /* The 44px interaction floor overtakes the nominal 14cqw chip height
-       at this shell width. A taller pitch separates percentage-positioned
-       rows while preserving canonical slot coordinates and the resolver. */
-    aspect-ratio: 100 / 116;
-  }
-}
 /* Legend removed in UX-COMPACT — the SynergyBar at the top of the
    section is now the single source of synergy nomenclature. The class
    is kept for back-compat; render path no longer emits it. */
@@ -1270,11 +1261,6 @@
   }
   .reviewShell .squadStage .pitch {
     max-width: 248px;
-    /* At this capped width, the 44px control floor is taller than 14cqw.
-       Give the percentage-positioned rows enough vertical distance to keep
-       every swap target's hitbox disjoint without changing canonical slot
-       coordinates or the pitch resolver/golden contract. */
-    aspect-ratio: 100 / 116;
   }
   .reviewShell .managerSlot {
     display: grid;
@@ -1393,12 +1379,11 @@
   }
   .reviewShell .simPanel {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
     gap: 5px;
   }
   .reviewShell .simNote {
-    grid-column: 1 / -1;
     font-size: 10px;
     line-height: 1.2;
   }
@@ -1407,12 +1392,6 @@
     padding: 6px 8px;
     font-size: 10px;
     white-space: nowrap;
-  }
-
-  @media (max-width: 340px) {
-    .reviewShell .simPanel {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 
   /* ── Share screen ─────────────────────────────────────────────── */
