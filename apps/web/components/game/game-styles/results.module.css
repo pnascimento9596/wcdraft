@@ -473,6 +473,12 @@
   background: color-mix(in srgb, var(--accent-solid) 10%, transparent);
 }
 
+@media (max-width: 380px) {
+  .factualRecapGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (min-width: 44rem) {
   .factualRecapGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));

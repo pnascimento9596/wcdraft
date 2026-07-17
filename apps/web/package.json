@@ -26,6 +26,8 @@
     "verify:club-crests-browser": "tsx scripts/verify-club-crests-browser.mts",
     "verify:open-draft-browser": "tsx scripts/verify-open-draft-browser-proof.mts",
     "test:responsive:shell": "tsx scripts/test-responsive-shell-fit.mts",
+    "verify:narrow-collisions": "WCDRAFT_COLLISION_GATE_ONLY=1 tsx scripts/test-responsive-shell-fit.mts",
+    "mark:agent-temp-cleanup-ready": "tsx scripts/mark-agent-temp-cleanup-ready.mts",
     "verify:responsive-layout": "tsx scripts/verify-responsive-layout-browser.mts",
     "preverify:home-fold": "pnpm run runtime:materialize",
     "verify:home-fold": "tsx scripts/verify-home-fold-browser.mts",
