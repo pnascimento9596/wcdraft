@@ -1,0 +1,207 @@
+{
+  "generatedAt": "2026-07-17T14:30:55.361Z",
+  "target": "optimized next build + next start on loopback; document CSP transport normalized by removing upgrade-insecure-requests only",
+  "theme": "light",
+  "engines": ["chromium", "webkit"],
+  "widths": [360, 390, 430],
+  "surfaces": ["home", "mode-select-available", "draft-setup", "squad-review"],
+  "imageCount": 24,
+  "receipts": [
+    "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/responsive-guard-light-prod-chromium.json",
+    "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/responsive-guard-light-prod-webkit.json"
+  ],
+  "images": [
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-draft-setup-360x800-light.png",
+      "engine": "chromium",
+      "width": 360,
+      "height": 800,
+      "bytes": 92269,
+      "sha256": "bab206943cb321f3879e15d5fdf0a42aa6acdb68ffcace4e2eac58b913a509a5"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-draft-setup-390x844-light.png",
+      "engine": "chromium",
+      "width": 390,
+      "height": 844,
+      "bytes": 96479,
+      "sha256": "f7ce4bc3cfc26b71837b6663e3f0c14141e841c528981dd4471ed6f06cb4174f"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-draft-setup-430x932-light.png",
+      "engine": "chromium",
+      "width": 430,
+      "height": 932,
+      "bytes": 100225,
+      "sha256": "abfcf8e625d03d7a4a605792030f6f7a7ee337eee61b99fda88cfd1bad9b5a47"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-home-360x800-light.png",
+      "engine": "chromium",
+      "width": 360,
+      "height": 800,
+      "bytes": 162222,
+      "sha256": "2a7ceef3ce88e9f20529439354eed8239bf1a0aa40261b64dc24ed29aab53ff9"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-home-390x844-light.png",
+      "engine": "chromium",
+      "width": 390,
+      "height": 844,
+      "bytes": 169748,
+      "sha256": "987f8b003865480473883d3b62ea1e40a4c88d4fb9c022a21212264154475233"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-home-430x932-light.png",
+      "engine": "chromium",
+      "width": 430,
+      "height": 932,
+      "bytes": 184089,
+      "sha256": "f52323b76a631b05a5036b7a6d5dc81c9be24eda1cd023e7098bef34613513e1"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-mode-select-available-360x800-light.png",
+      "engine": "chromium",
+      "width": 360,
+      "height": 800,
+      "bytes": 145529,
+      "sha256": "1610befb1fd9d5444e26b6734001bd27a4fa6b9c49f3c5a8121f0de529b64661"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-mode-select-available-390x844-light.png",
+      "engine": "chromium",
+      "width": 390,
+      "height": 844,
+      "bytes": 154359,
+      "sha256": "3c45e95482036c41a30e61a02cac7e08f4502b5c46d2bd332a16752e29867e9b"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-mode-select-available-430x932-light.png",
+      "engine": "chromium",
+      "width": 430,
+      "height": 932,
+      "bytes": 167502,
+      "sha256": "a57ec26b93cfa2d54f3a24488da20d64e0679b42c0bb1cc052bfe33b34cc2699"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-squad-review-360x800-light.png",
+      "engine": "chromium",
+      "width": 360,
+      "height": 989,
+      "bytes": 119376,
+      "sha256": "7fa53d8cd806a1e000e585ddfef88cc5b7d19f17e3b8b6dbcfc0dbf0a2f6525f"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-squad-review-390x844-light.png",
+      "engine": "chromium",
+      "width": 390,
+      "height": 994,
+      "bytes": 123598,
+      "sha256": "f8580a935f9a2acef24f1ca2d0c51d3edc23ce0159ad5e9eb1019f10fd33d33e"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/chromium/screenshots/guard-light-prod-chromium-squad-review-430x932-light.png",
+      "engine": "chromium",
+      "width": 430,
+      "height": 994,
+      "bytes": 126359,
+      "sha256": "0244ee00e0ab424e8ccbb9fa6c1d2f56dc42dea9f269c8fa2cebbfc510a51202"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-draft-setup-360x800-light.png",
+      "engine": "webkit",
+      "width": 360,
+      "height": 800,
+      "bytes": 121047,
+      "sha256": "78da65ed3a378dddf790271aa173d11fa1bf5516049d3e22b282d6ecb7d3acdb"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-draft-setup-390x844-light.png",
+      "engine": "webkit",
+      "width": 390,
+      "height": 844,
+      "bytes": 130031,
+      "sha256": "3735e1b3405123ef4f976b920a4ad7f979be7513aaeb66e282d86ac511a40d21"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-draft-setup-430x932-light.png",
+      "engine": "webkit",
+      "width": 430,
+      "height": 932,
+      "bytes": 135673,
+      "sha256": "d2402e6a318d0b6cfd742ae0ff52a3de6c3fc6126e036ce4e101f2b191e0b0df"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-home-360x800-light.png",
+      "engine": "webkit",
+      "width": 360,
+      "height": 800,
+      "bytes": 237076,
+      "sha256": "bbf1ce7c6d2514498838927aa9a75aab64011101d25d693d03c22df88804c389"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-home-390x844-light.png",
+      "engine": "webkit",
+      "width": 390,
+      "height": 844,
+      "bytes": 253773,
+      "sha256": "909146cce879aa205158cf78b1e7a886d5c04811a227021ef59eddf5d7079128"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-home-430x932-light.png",
+      "engine": "webkit",
+      "width": 430,
+      "height": 932,
+      "bytes": 281185,
+      "sha256": "1d344e987ab38702d13f5ff7f65956529d883a14b5cbb0024b1d382ee85ce18a"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-mode-select-available-360x800-light.png",
+      "engine": "webkit",
+      "width": 360,
+      "height": 800,
+      "bytes": 204112,
+      "sha256": "4624c9e4fe68206b05cb2e32db2aca3d2ce0758a8400493b843c45c5f24539e6"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-mode-select-available-390x844-light.png",
+      "engine": "webkit",
+      "width": 390,
+      "height": 844,
+      "bytes": 221834,
+      "sha256": "a5f88de6e61ac8a1cff96a593db890eeb1eab0be14fa8b58504c5e6c7313a018"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-mode-select-available-430x932-light.png",
+      "engine": "webkit",
+      "width": 430,
+      "height": 932,
+      "bytes": 247111,
+      "sha256": "3746ca209321f5f7f191eea7c2e2aa4aa144871de033997c252f6501b43b4b16"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-squad-review-360x800-light.png",
+      "engine": "webkit",
+      "width": 360,
+      "height": 989,
+      "bytes": 150931,
+      "sha256": "1cba0efb8d589e7cc8f839adb470cd0c20451a6d3ca3cc1cfeb34532bc97e4b0"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-squad-review-390x844-light.png",
+      "engine": "webkit",
+      "width": 390,
+      "height": 994,
+      "bytes": 160543,
+      "sha256": "9dce87ce689d63de528e91bdb33b00d72906dbc3e26af8dbb3acbcf6ab65bbba"
+    },
+    {
+      "path": "docs/reports/guard-proof-life-2026-07-17/light-mode/webkit/screenshots/guard-light-prod-webkit-squad-review-430x932-light.png",
+      "engine": "webkit",
+      "width": 430,
+      "height": 994,
+      "bytes": 166117,
+      "sha256": "c14fcd7f14c16d6c8d0c26d0f4bfa60d39604e0a3deb37d9d00bcdd1010f002e"
+    }
+  ]
+}

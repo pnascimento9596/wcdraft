@@ -11,18 +11,6 @@ export const INLINE_TEXT_LINK_ALLOWLIST = [
   ".one-screen-disclosure a[href]",
 ] as const;
 
-export type DevOverlaySuppression = {
-  readonly suppression: "enabled" | "disabled";
-  readonly nonceAttributeLength: number | null;
-  readonly noncePropertyLength: number;
-  readonly nonceSource: "property" | "missing";
-  readonly styleNonceMatches: boolean;
-  readonly styleSheetAttached: boolean;
-  readonly portalProvenance: "absent" | "next-app-wrapper" | "unverified";
-  readonly portalState: "absent" | "hidden" | "visible";
-  readonly visibleControlCount: number;
-};
-
 export type NarrowCollisionClass = "A" | "B";
 export type NarrowCollisionTargetKind = "control" | "text";
 export type NarrowCollisionSample =
@@ -63,8 +51,10 @@ export type NarrowCollisionRawFinding = {
   readonly scrollY: number;
   readonly nestedScrollerSelector: string | null;
   readonly nestedScrollTop: number | null;
+  readonly targetPosition: string;
   readonly occluderPosition: string;
   readonly occluderZIndex: string;
+  readonly occluderOpaqueBoxPaint: boolean;
   readonly sharedInteractiveAncestor: boolean;
   readonly sharedFormationRegion: boolean;
   readonly intentionalScrollShell: boolean;
@@ -90,14 +80,15 @@ export const NARROW_COLLISION_ALLOWLIST_PATTERNS: readonly NarrowCollisionAllowl
   {
     id: "same-interactive-composition",
     rationale:
-      "Sibling paint layers inside one semantic control share its hit target; the control border box remains independently adjudicated.",
-    matches: (finding) => finding.sharedInteractiveAncestor,
+      "Non-box sibling paint inside one semantic control shares its hit target; opaque backgrounds, images, borders, and shadows remain blocking.",
+    matches: (finding) => finding.sharedInteractiveAncestor && !finding.occluderOpaqueBoxPaint,
   },
   {
     id: "scrolling-under-app-shell",
     rationale:
-      "After user-equivalent scrolling, content may pass beneath a semantic fixed or sticky app shell; arbitrary positioned layers and initial-paint overlaps remain blocking.",
-    matches: (finding) => finding.intentionalScrollShell,
+      "After user-equivalent scrolling, in-flow content may pass beneath a semantic fixed or sticky app shell; pinned controls, arbitrary positioned layers, and initial-paint overlaps remain blocking.",
+    matches: (finding) =>
+      finding.intentionalScrollShell && !["fixed", "sticky"].includes(finding.targetPosition),
   },
 ] as const;
 
@@ -293,7 +284,6 @@ export type ResponsiveMetricForAdjudication = {
   readonly smallTargets: readonly string[];
   readonly axeViolations: readonly string[];
   readonly consoleErrors: readonly string[];
-  readonly devOverlay: DevOverlaySuppression | null;
   readonly collisionFindings?: readonly NarrowCollisionFinding[];
 };
 
@@ -302,9 +292,16 @@ const WEBKIT_REPORT_ONLY_DIAGNOSTICS = new Set([
   "The Content Security Policy directive 'frame-ancestors' is ignored when delivered in a report-only policy.",
 ]);
 
+const CROSS_ENGINE_REPORT_ONLY_DIAGNOSTICS = new Set([
+  "The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.",
+]);
+
 /** Exact browser diagnostics that do not represent an enforced page failure. */
 export function isExpectedBrowserDiagnostic(engine: string, message: string): boolean {
-  return engine === "webkit" && WEBKIT_REPORT_ONLY_DIAGNOSTICS.has(message);
+  return (
+    CROSS_ENGINE_REPORT_ONLY_DIAGNOSTICS.has(message) ||
+    (engine === "webkit" && WEBKIT_REPORT_ONLY_DIAGNOSTICS.has(message))
+  );
 }
 
 export function isRetryableCollisionNavigationError(error: unknown): boolean {
@@ -317,36 +314,11 @@ export function isRetryableCollisionNavigationError(error: unknown): boolean {
   );
 }
 
-function devOverlayFailures(metric: ResponsiveMetricForAdjudication): string[] {
-  if (metric.devOverlay === null) return [];
-  const overlay = metric.devOverlay;
-  const reasons: string[] = [];
-  if (overlay.suppression === "disabled") {
-    reasons.push("suppression disabled");
-  } else {
-    if (overlay.nonceSource !== "property" || overlay.noncePropertyLength === 0) {
-      reasons.push("request nonce property missing");
-    }
-    if (!overlay.styleNonceMatches) reasons.push("style nonce mismatch");
-    if (!overlay.styleSheetAttached) reasons.push("style sheet rejected");
-  }
-  if (overlay.portalProvenance === "unverified") reasons.push("unverified Next portal");
-  if (overlay.portalState === "visible") reasons.push("Next portal visible");
-  if (overlay.visibleControlCount > 0) {
-    reasons.push(`${overlay.visibleControlCount.toString()} dev-tools controls visible`);
-  }
-  if (reasons.length === 0) return [];
-  return [
-    `dev overlay suppression failed (${reasons.join(", ")}; attribute nonce length=${String(overlay.nonceAttributeLength)}, property nonce length=${overlay.noncePropertyLength.toString()})`,
-  ];
-}
-
 /** Signals that make a collision scan itself fail or become unreliable. */
 export function narrowCollisionMetricFailures(metric: ResponsiveMetricForAdjudication): string[] {
   const engine = metric.engine ? ` ${metric.engine}` : "";
   const prefix = `${metric.surface} ${metric.viewport} ${metric.theme}${engine}`;
   const failures = metric.consoleErrors.map((error) => `${prefix}: console ${error}`);
-  failures.push(...devOverlayFailures(metric).map((failure) => `${prefix}: ${failure}`));
   const unexpectedCollisions = (metric.collisionFindings ?? []).filter(
     (finding) => finding.disposition === "unexpected",
   );

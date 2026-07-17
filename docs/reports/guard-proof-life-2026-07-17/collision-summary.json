@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-07-17",
+  "target": "optimized next build + next start",
+  "matrix": {
+    "cells": 264,
+    "routeStates": 22,
+    "engines": 2,
+    "viewports": 3,
+    "themes": 2,
+    "failures": 0,
+    "consoleErrors": 0
+  },
+  "findings": {
+    "total": 4488,
+    "classA": 4488,
+    "classB": 0,
+    "unexpected": 0,
+    "sameInteractiveComposition": 52,
+    "scrollingUnderAppShell": 4436
+  },
+  "freshCurrentMainDevelopmentBaseline": {
+    "cells": 264,
+    "total": 4499,
+    "classA": 4499,
+    "classB": 0,
+    "sameInteractiveComposition": 52,
+    "scrollingUnderAppShell": 4447
+  },
+  "historicalReportOnlyBaseline": {
+    "cells": 252,
+    "total": 808,
+    "classA": 808,
+    "classB": 0,
+    "nextDevelopmentToolsNamed": 212,
+    "source": "docs/reports/narrow-collision-coverage-2026-07-16.md"
+  },
+  "productionFindingsBySurface": {
+    "account": 24,
+    "attribution": 120,
+    "challenge-setup": 106,
+    "classic-pick": 36,
+    "contact": 82,
+    "daily-spin": 76,
+    "history": 128,
+    "home": 8,
+    "how-to-play": 496,
+    "leaderboard": 1374,
+    "mode-select-available": 52,
+    "position-target": 0,
+    "privacy": 728,
+    "results": 626,
+    "settings": 104,
+    "share-author": 36,
+    "share-recipient": 0,
+    "sign-in": 24,
+    "sign-up": 0,
+    "spin-stage": 28,
+    "squad-review": 192,
+    "team-sheet": 248
+  },
+  "rawReceiptSha256": {
+    "g1-chromium": "15e64418494e06ea0d83548c313d395f40807e8db33dd232cabe826a57b26d96",
+    "g1-webkit": "9c9c2aeed36913c485f38dce345b91c9e1ea82b623dfdfa5cbbb111c3d18e290",
+    "g2-chromium": "5780ca13f2ed72b4d68257d8293c675d4182d586555cf1dd46d2b82e7bcf9189",
+    "g2-webkit": "e8ba096205323c1d40ca11991c1a154e958e6c6573952ff1097f3303ce11ffbc",
+    "g3-chromium": "1bc2784107f27444980483160ceddeddfebfc6e47f1764f8000132bc18afe5b8",
+    "g3-webkit": "2808725546e4335b93ba013ba2f5b6e0bd3f811fa8e49ddf210a76f943413514",
+    "g4-chromium": "9ed6b4dd52e94569e72cba031529b2ed636456fdeafb1d55cc01f0e5985b4d4a",
+    "g4-webkit": "e1903e84805cd617b4afad40ec1edb92b6445ce9017778556b517557e01024e2"
+  }
+}

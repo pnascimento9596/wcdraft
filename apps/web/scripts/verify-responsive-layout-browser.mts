@@ -43,12 +43,10 @@ import {
   isExpectedBrowserDiagnostic,
   isRetryableCollisionNavigationError,
   responsiveMetricFailures,
-  type DevOverlaySuppression,
   type NarrowCollisionFinding,
   type NarrowCollisionRawFinding,
 } from "./responsive-layout-contract";
 import { scanNarrowCollisions } from "./narrow-collision-scan";
-import { suppressDevOverlayInDocument } from "./dev-overlay-suppression";
 
 type ViewportCase = {
   readonly name: string;
@@ -99,7 +97,6 @@ type SurfaceMetric = {
   readonly axeViolations: readonly string[];
   readonly desktopSignals: Record<string, boolean | number | string | null>;
   readonly consoleErrors: readonly string[];
-  readonly devOverlay: DevOverlaySuppression | null;
   readonly collisionFindings: readonly NarrowCollisionFinding[];
 };
 
@@ -107,7 +104,6 @@ const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3027";
 const PHASE = process.env.WCDRAFT_RESPONSIVE_PHASE ?? "capture";
 const STRICT = process.env.WCDRAFT_RESPONSIVE_STRICT === "1";
-const DEV_SERVER = process.env.WCDRAFT_RESPONSIVE_DEV_SERVER === "1";
 const ENGINE = process.env.WCDRAFT_RESPONSIVE_ENGINE === "webkit" ? "webkit" : "chromium";
 const COLLISION_MODE =
   process.env.WCDRAFT_RESPONSIVE_COLLISIONS === "report"
@@ -127,15 +123,16 @@ const SURFACE_FILTER = new Set(
     .map((item) => item.trim())
     .filter(Boolean),
 );
+const THEME_FILTER = new Set(
+  (process.env.WCDRAFT_RESPONSIVE_THEMES ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean),
+);
 const OUT_DIR =
   process.env.WCDRAFT_RESPONSIVE_OUT_DIR ??
   path.join(REPO_ROOT, "docs/reports/desktop-responsive-2026-07-06", PHASE);
 const AXE_CDN = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js";
-const DEV_OVERLAY_CSS = `
-  body > script[data-nextjs-dev-overlay="true"] {
-    display: none !important;
-  }
-`;
 const gameData = buildGameDataFromBundles();
 
 const viewports: readonly ViewportCase[] = [
@@ -150,8 +147,9 @@ const viewports: readonly ViewportCase[] = [
   { name: "1920x1080", width: 1920, height: 1080 },
   { name: "390x844", width: 390, height: 844 },
   { name: "360x800", width: 360, height: 800 },
+  { name: "430x932", width: 430, height: 932 },
 ];
-const themes: readonly Theme[] = ["light", "dark"];
+const availableThemes: readonly Theme[] = ["light", "dark"];
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -521,6 +519,27 @@ async function makeContext(
     hasTouch: mobile,
     deviceScaleFactor: 1,
   });
+  await context.route("**/*", async (route, request) => {
+    if (request.resourceType() !== "document") {
+      await route.continue();
+      return;
+    }
+    const response = await route.fetch({ maxRedirects: 0 });
+    if (response.status() >= 300 && response.status() < 400) {
+      await route.continue();
+      return;
+    }
+    const headers = response.headers();
+    for (const name of ["content-security-policy", "content-security-policy-report-only"]) {
+      const value = headers[name];
+      if (value === undefined) continue;
+      headers[name] = value
+        .split(";")
+        .filter((directive) => directive.trim() !== "upgrade-insecure-requests")
+        .join(";");
+    }
+    await route.fulfill({ response, headers });
+  });
   await context.addInitScript(
     ({ selectedTheme, storage, spinSkipReady }) => {
       window.localStorage.setItem("wcdraft:theme", selectedTheme);
@@ -564,6 +583,17 @@ async function makeContext(
     }
   });
   page.on("pageerror", (err) => errors.push(err.message));
+  page.on("requestfailed", (request) => {
+    const errorText = request.failure()?.errorText ?? "unknown browser failure";
+    const url = new URL(request.url());
+    const expectedNextPrefetchCancellation =
+      errorText === "net::ERR_ABORTED" &&
+      request.resourceType() === "fetch" &&
+      url.origin === new URL(BASE_URL).origin &&
+      url.searchParams.has("_rsc");
+    if (expectedNextPrefetchCancellation) return;
+    errors.push(`request failed ${request.method()} ${url.pathname}: ${errorText}`);
+  });
   page.on("response", (response) => {
     if (response.status() < 400) return;
     const pathname = new URL(response.url()).pathname;
@@ -605,15 +635,6 @@ async function settle(page: Page, waitForNetworkIdle = true): Promise<void> {
   await page.waitForTimeout(250);
 }
 
-async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null> {
-  if (!DEV_SERVER) return null;
-  const suppression = process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0" ? "disabled" : "enabled";
-  return await page.evaluate(suppressDevOverlayInDocument, {
-    css: DEV_OVERLAY_CSS,
-    requestedSuppression: suppression,
-  });
-}
-
 async function mockOgSignFailure(page: Page): Promise<void> {
   await page.route("**/api/og/sign", async (route) => {
     await route.fulfill({
@@ -625,12 +646,24 @@ async function mockOgSignFailure(page: Page): Promise<void> {
 }
 
 async function mockFriendChallenge(page: Page): Promise<void> {
-  await page.route("**/api/challenge/verify", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ ok: true, challenge: verifiedChallenge }),
-    });
+  const body = JSON.stringify({ ok: true, challenge: verifiedChallenge });
+  await page.addInitScript({
+    content: `{
+      const originalFetch = globalThis.fetch.bind(globalThis);
+      globalThis.fetch = function(input, init) {
+        const requestUrl = typeof input === "string" || input instanceof URL
+          ? input.toString()
+          : input.url;
+        const pathname = new URL(requestUrl, globalThis.location.href).pathname;
+        if (pathname === "/api/challenge/verify") {
+          return Promise.resolve(new Response(${JSON.stringify(body)}, {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          }));
+        }
+        return originalFetch(input, init);
+      };
+    }`,
   });
 }
 
@@ -907,7 +940,38 @@ function surfaceCases(): readonly SurfaceCase[] {
       route: mockFriendChallenge,
       primaryAction: { role: "button", name: "Play this board" },
       prepare: async (page) => {
-        await page.getByRole("heading", { name: "You're playing a friend's board" }).waitFor();
+        await page
+          .getByRole("heading", { name: "You're playing a friend's board" })
+          .waitFor({ timeout: 30_000 })
+          .catch(async (error) => {
+            const body = (
+              await page
+                .locator("body")
+                .innerText()
+                .catch(() => "<body unavailable>")
+            )
+              .replace(/\s+/gu, " ")
+              .slice(0, 500);
+            const resources = await page
+              .evaluate(() =>
+                performance
+                  .getEntriesByType("resource")
+                  .map((entry) => ({ name: entry.name, duration: Math.round(entry.duration) }))
+                  .filter(({ name }) => name.includes("/data/wcdraft/"))
+                  .slice(-8),
+              )
+              .catch(() => []);
+            const serviceWorkerState = await page
+              .evaluate(() => ({
+                present: "serviceWorker" in navigator,
+                controller:
+                  "serviceWorker" in navigator && navigator.serviceWorker.controller !== null,
+              }))
+              .catch(() => ({ present: false, controller: false }));
+            throw new Error(
+              `friend-board fixture did not render at ${page.url()}: ${body}; serviceWorker=${JSON.stringify(serviceWorkerState)}; runtime resources=${JSON.stringify(resources)}; ${error instanceof Error ? error.message : String(error)}`,
+            );
+          });
       },
     },
     {
@@ -946,12 +1010,13 @@ function surfaceCases(): readonly SurfaceCase[] {
     },
     {
       label: "account",
-      path: "/account",
+      path: "/sign-in?next=%2Faccount",
       primaryAction: { role: "link", name: /Sign in|Start/u },
       prepare: async (page) => {
         await page.getByRole("heading").first().waitFor();
+        const url = new URL(page.url());
         assert(
-          new URL(page.url()).pathname === "/sign-in",
+          url.pathname === "/sign-in" && url.searchParams.get("next") === "/account",
           `account collision fixture must prove the unauthenticated redirect, got ${page.url()}`,
         );
       },
@@ -1191,10 +1256,16 @@ async function captureSurface(
   try {
     await surface.route?.(page);
     await page.goto(`${BASE_URL}${surface.path}`, { waitUntil: "domcontentloaded" });
-    await surface.prepare?.(page);
+    try {
+      await surface.prepare?.(page);
+    } catch (error) {
+      throw new Error(
+        `${surface.label} preparation failed; browser errors=${JSON.stringify(errors)}; ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error },
+      );
+    }
     await settle(page, surface.waitForNetworkIdle !== false);
     const modeDockClearances = await measureModeDockClearance(page, surface);
-    let devOverlay: DevOverlaySuppression | null = null;
     let rawCollisionFindings: readonly NarrowCollisionRawFinding[] = [];
     let stableCollisionMeasurement:
       | {
@@ -1204,7 +1275,6 @@ async function captureSurface(
       | undefined;
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        devOverlay = await hideDevOverlay(page);
         rawCollisionFindings = COLLISION_MODE === "off" ? [] : await scanNarrowCollisions(page);
         if (COLLISION_MODE !== "off") {
           stableCollisionMeasurement = {
@@ -1270,7 +1340,6 @@ async function captureSurface(
       primaryActionInViewport: primaryAction.inViewport,
       axeViolations,
       consoleErrors: errors,
-      devOverlay,
       collisionFindings,
       ...baseMetric,
       ...modeDockClearances,
@@ -1320,6 +1389,16 @@ async function main(): Promise<void> {
   const selectedViewports = viewports.filter(
     (viewport) => VIEWPORT_FILTER.size === 0 || VIEWPORT_FILTER.has(viewport.name),
   );
+  const unknownThemeFilters = [...THEME_FILTER].filter(
+    (theme) => !(availableThemes as readonly string[]).includes(theme),
+  );
+  assert(
+    unknownThemeFilters.length === 0,
+    `unknown responsive theme filters: ${unknownThemeFilters.join(", ")}`,
+  );
+  const selectedThemes = availableThemes.filter(
+    (theme) => THEME_FILTER.size === 0 || THEME_FILTER.has(theme),
+  );
   const recordMetric = (metric: SurfaceMetric) => {
     metrics.push(metric);
     const failures =
@@ -1335,7 +1414,7 @@ async function main(): Promise<void> {
     for (const surface of selectedSurfaces) {
       if (COLLISION_MODE === "off") {
         for (const viewport of selectedViewports) {
-          for (const theme of themes) {
+          for (const theme of selectedThemes) {
             recordMetric(await captureSurface(browser, axeSource, surface, viewport, theme));
           }
         }
@@ -1343,7 +1422,7 @@ async function main(): Promise<void> {
       }
       const surfaceMetrics = await Promise.all(
         selectedViewports.flatMap((viewport) =>
-          themes.map(
+          selectedThemes.map(
             async (theme) => await captureSurface(browser, axeSource, surface, viewport, theme),
           ),
         ),
@@ -1355,7 +1434,7 @@ async function main(): Promise<void> {
   }
   const expectedMetricIdentities = selectedSurfaces.flatMap((surface) =>
     selectedViewports.flatMap((viewport) =>
-      themes.map((theme) => `${surface.label}|${viewport.name}|${theme}|${ENGINE}`),
+      selectedThemes.map((theme) => `${surface.label}|${viewport.name}|${theme}|${ENGINE}`),
     ),
   );
   const actualMetricIdentities = metrics.map(
@@ -1377,6 +1456,7 @@ async function main(): Promise<void> {
     axeSource: AXE_CDN,
     surfaces: selectedSurfaces.map((surface) => surface.label),
     viewports: selectedViewports.map((viewport) => viewport.name),
+    themes: selectedThemes,
     generatedAt: new Date().toISOString(),
     metrics,
   };
