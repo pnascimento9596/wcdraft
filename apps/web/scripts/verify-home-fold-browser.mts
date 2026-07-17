@@ -124,7 +124,7 @@ type FitMetric = {
   readonly regularModeColumns: number | null;
   readonly progressItemCount: number | null;
   readonly progressOneRow: boolean | null;
-  readonly dailyHeaderOneRow: boolean | null;
+  readonly dailyContentCollisionCount: number | null;
   readonly cardCollisionCount: number | null;
   readonly modeDescriptorsUseBodyTypography: boolean | null;
   readonly modeCardBottomCount: number | null;
@@ -599,8 +599,10 @@ function metricFailures(metric: FitMetric): readonly string[] {
     if (metric.progressItemCount !== 4 || !metric.progressOneRow) {
       failures.push(`${prefix}: progress is not four items on one row`);
     }
-    if (!metric.dailyHeaderOneRow) {
-      failures.push(`${prefix}: Daily card header and action are not one visual row`);
+    if ((metric.dailyContentCollisionCount ?? 1) > 0) {
+      failures.push(
+        `${prefix}: ${String(metric.dailyContentCollisionCount)} Daily card content collisions`,
+      );
     }
     if ((metric.cardCollisionCount ?? 1) > 0) {
       failures.push(`${prefix}: ${String(metric.cardCollisionCount)} mode-card collisions`);
@@ -952,10 +954,14 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       ),
     ].filter(visible);
     const dailyCard = modeCards.find(isDailyCard);
-    const dailyHeaderParts = dailyCard
-      ? [...dailyCard.children].filter(
-          (element) => visible(element) && /modeCard(?:Top|Bottom)/u.test(element.className),
-        )
+    const dailyContentParts = dailyCard
+      ? [...dailyCard.children].flatMap((element) => {
+          if (!visible(element)) return [];
+          if (/modeCard(?:Top|Bottom)/u.test(element.className)) {
+            return [...element.children].filter(visible);
+          }
+          return /modeDesc/u.test(element.className) ? [element] : [];
+        })
       : [];
     const modeDescriptors = modeCards
       .map((card) => card.querySelector('[class*="modeDesc"]'))
@@ -1091,8 +1097,8 @@ async function measurePage(page: Page, pathname: RoutePath): Promise<MeasuredFit
       regularModeColumns,
       progressItemCount: pathValue === "/play" ? progressItems.length : null,
       progressOneRow: pathValue === "/play" ? rectsShareRow(progressItems) : null,
-      dailyHeaderOneRow:
-        pathValue === "/play" ? Boolean(dailyCard) && rectsShareRow(dailyHeaderParts) : null,
+      dailyContentCollisionCount:
+        pathValue === "/play" ? collisionCount(dailyContentParts) : null,
       cardCollisionCount: pathValue === "/play" ? collisionCount(modeCards) : null,
       modeDescriptorsUseBodyTypography,
       modeCardBottomCount,

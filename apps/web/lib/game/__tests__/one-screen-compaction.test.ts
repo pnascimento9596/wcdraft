@@ -53,7 +53,7 @@ describe("one-screen information contract", () => {
     );
   });
 
-  it("keeps progress and the featured Daily header/action to one visual row", () => {
+  it("keeps progress compact and gives every Daily content band its own row", () => {
     expect(progressBand).toContain("localProgressRow");
     expect(progressBand).not.toContain("localProgressPrimary");
     expect(progressBand).not.toContain("localProgressBest");
@@ -68,6 +68,12 @@ describe("one-screen information contract", () => {
     expect(featuredRule).toContain("min-height: 72px");
     expect(gameStyles).toMatch(/\.modeCardFeatured \.modeFeatures \{\s*display: none;/u);
     expect(gameStyles).toMatch(/\.modeCardFeatured \.modeDesc\s*\{[^}]*grid-area:\s*desc;/su);
+    expect(gameStyles).toMatch(
+      /@media \(max-width: 430px\) \{[\s\S]*?\.modeCardFeatured \{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*grid-template-areas:\s*"top"\s*"desc"\s*"bottom";/u,
+    );
+    expect(gameStyles).toMatch(
+      /@media \(max-height: 500px\) and \(min-width: 431px\)[\s\S]*?\.modeCardFeatured \{[^}]*grid-column:\s*auto;[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*grid-template-areas:\s*"top"\s*"desc"\s*"bottom";/u,
+    );
   });
 
   it("keeps the demo, stat strip, and three actions after cutting redundant hero copy", () => {
