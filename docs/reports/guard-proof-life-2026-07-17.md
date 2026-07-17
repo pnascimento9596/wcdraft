@@ -280,7 +280,8 @@ annotated; its 18 PNGs were not rewritten.
     1,366 + 1 expected skip = **2,209 passed / 10 expected skips**;
   - game-flow Playwright passed;
   - permanent proof controls passed in both engines;
-  - responsive shell **218/218**, collision **264/264**, one-screen **216/216**.
+  - responsive shell **218/218**, pre-review collision **264/264** (superseded as described above),
+    one-screen **216/216**.
 - Uncached root build: **5/5 tasks**, 0 cached, 40/40 pages; `/api/og/sign` and
   `/api/challenge/verify` each include 8/8 protected runtime-data traces.
 - Dedicated uncached goldens without regeneration or re-lock: core **69/69**, draft **42/42**,
@@ -295,13 +296,49 @@ annotated; its 18 PNGs were not rewritten.
 
 ## Independent reviews
 
-Per-unit fresh-context and U1/U2 cross-model verdicts are pending the exact implementation commit.
-They will be persisted verbatim here or in adjacent files before the PR is merged.
+The exact-head evidence reviews are complete except for U5, whose fresh-context child remained
+unresponsive and was interrupted after bounded retries; no U5 verdict is fabricated.
+
+| Unit                             | Verdict                | Verbatim artifact                                  | SHA-256                                                            |
+| -------------------------------- | ---------------------- | -------------------------------------------------- | ------------------------------------------------------------------ |
+| U0                               | PASS                   | `/tmp/wcdraft-guard-u0-review.txt`                 | `b9ffb880b6408623ae9a90f22f8c382ea191096843b0b5f937d7cd4187bbe04b` |
+| U1                               | PASS                   | `/tmp/wcdraft-guard-u1-review.txt`                 | `f2000d41576afd1f17b704fc08e6586c16771669bc1a874c886628b86e90c1f5` |
+| U2 initial                       | FAIL, fixed forward    | `/tmp/wcdraft-guard-u2-review.txt`                 | `a70cee71d208f57d8cdf1116caa614173be3e9c31e7643b29363b34c99e7b44c` |
+| U2 exact-head re-review          | PASS, shipping blocked | `/tmp/wcdraft-guard-u2-rereview.txt`               | `8e0fef5e13245648a1cf2593cbb1cfc7c9584c8854788a2bd7782825676a0988` |
+| U3                               | PASS                   | `/tmp/wcdraft-guard-u3-review.txt`                 | `2c13809978e6f7747c7f347a3dfdf333ae5e06d55f481b61a362c06618779403` |
+| U4 initial                       | FAIL, fixed forward    | `/tmp/wcdraft-guard-u4-review.txt`                 | `2732dd759027caae1b2a4081b1bafc03d088bc939979057fcea0e375a92bb97e` |
+| U4 exact-head re-review          | PASS, shipping blocked | `/tmp/wcdraft-guard-u4-rereview.txt`               | `1175f52aca02c736fdb8b7116d9c56c32283781b9eeda96d8f2294e5104450a1` |
+| U1/U2 cross-model GLM exact head | PASS, shipping blocked | `/tmp/wcdraft-guard-crossmodel-rereview-final.txt` | `749b849cfc432535476806319286af8cac366170acf41dd358a24751b3eb9ae7` |
+| U5                               | Unavailable            | no artifact produced                               | n/a                                                                |
+
+The initial U4 FAIL is the review that exposed the real product collision. The canonical U4
+fix-forward rerun rebuilt the exact head and passed all 6 controls in both engines; a divergent
+direct probe was traced to a symlinked stale build and bypassed lifecycle. The strict product scan
+remains red in both engines, as required for honest blocking.
 
 ## U5 — runner end observation
 
-End-of-lane free space, lifecycle activity, surviving lane artifacts, and floor status are pending
-the post-merge cleanup observation. No manual sweep is authorized or performed.
+Lane-start free space was 44,798,148 KiB (42.72 GiB). The blocked-lane closeout measurement was
+56,914,412 KiB (54.28 GiB), so the 30 GiB floor held without manual intervention. U0 proved that
+all three lifecycle components had executed since PR #306, but this lane has no evidence that they
+reclaimed a real production-root path during this run; the increase in headroom is therefore not
+attributed to them. No manual sweep or reclamation was performed.
+
+Post-merge cleanup is **NOT RUN** because merge, deployment, and live verification never occurred.
+The implementation worktree, reviewer clones, and `/tmp` verdict artifacts intentionally remain for
+continuation; claiming that this lane cleaned its own artifacts would be false. A fresh-context U5
+reviewer was launched read-only but remained unresponsive through bounded waits and finalize
+requests, then was interrupted without producing an artifact or changing state.
+
+## Not run and why
+
+- The full 264-cell strict matrix was not rerun after the honest same-control tightening because
+  focused group 1 already failed the required gate in both engines with the exact product finding;
+  running the remaining groups cannot turn that gate green.
+- PR creation, protected CI, merge, Vercel READY observation, and production live verification were
+  not run because local required validation is red.
+- Post-merge worktree/reviewer-clone cleanup and the remote merged-branch sweep were not run because
+  their merge-plus-live-verify precondition was never reached. No manual runner sweep was performed.
 
 ## Risks and carryovers
 
@@ -313,6 +350,22 @@ the post-merge cleanup observation. No manual sweep is authorized or performed.
 - Ship, READY observation, and live checks were not run because the exact-head strict collision gate
   is red on an out-of-scope product-geometry defect. Cleanup remains pending while the blocked lane
   is preserved for continuation; this report does not claim any merge or production change.
+
+## Commit, branch, and git status
+
+- Branch: `ws-ux/guard-proof-life`
+- Exact independently reviewed implementation head: `35a34200c1526d380294c992c36619977420a2d5`
+- Implementation commits: `03d78b8`, `0c47aef`, `35a3420`; this report-only closeout is the
+  following commit
+- Status before this report-only closeout commit: clean, 3 commits ahead of local `origin/main`
+- Push/PR/merge/deploy: not run because the strict required gate is red
+
+## HUMAN ACTIONS
+
+One new authorization is irreducible: dispatch a separate product-geometry lane to fix the
+mode-select selected-card title/CTA overlap at 320/360/390 in both engines. This YELLOW lane cannot
+make that product change, and it cannot satisfy the mandatory full-green ship gate without it. Do
+not broaden the allowlist or add a known failure as a substitute.
 
 ## Explicit invariants
 
