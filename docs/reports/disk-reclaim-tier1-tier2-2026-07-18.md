@@ -85,7 +85,7 @@ Deleted revisions 1208/1223/webkit-2287 from both caches (total 1,914,048 KiB). 
 RESOLVE_OK browser=chromium version=149.0.7827.55 body=ok
 RESOLVE_OK browser=webkit version=26.5 body=ok
 ```
-Responsive-shell production smoke (Chromium engine): `responsive-shell-fit: ok` — desktop 84, mobile 56, interactions 40, mode-setup 30, mobile-nav 8 (218/218); narrow-collisions 264/264 engines=2. WebKit engine pass recorded in `/tmp/reclaim-u0/responsive-webkit.out` when complete.
+Responsive-shell production smoke (Chromium engine): `responsive-shell-fit: ok` — desktop 84, mobile 56, interactions 40, mode-setup 30, mobile-nav 8 (218/218); narrow-collisions 264/264 engines=2. WebKit engine: `responsive-shell-fit: ok` 218/218 + narrow-collisions 264/264 engines=2 (same harness).
 
 ### 4.2 Hygiene reinstall
 
