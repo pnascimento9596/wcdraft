@@ -13,7 +13,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { autoDraft, type DraftMode, type EraPresetId } from "@wcdraft/core";
+import { autoDraft, type DraftMode, type EraPresetId, type RatingBasis } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import type { RunRecordVersions } from "../data";
@@ -45,6 +45,7 @@ function buildOpenOriginRecord(
   seed: string,
   eraPreset: EraPresetId = "all_time",
   mode: Extract<DraftMode, "open" | "open_hidden"> = "open",
+  ratingBasis: RatingBasis = "career",
 ): RunRecordV1 {
   const draft = autoDraft({
     run_id: `token-${mode}-origin-${eraPreset}`,
@@ -56,6 +57,7 @@ function buildOpenOriginRecord(
     rating_version: gameData.versions.rating_version,
     engine_version: gameData.versions.engine_version,
     era_preset: eraPreset,
+    rating_basis: ratingBasis,
     dataset: gameData.draftDataset,
   });
   return {
@@ -259,6 +261,25 @@ describe("run-token — Open Draft t4 replay", () => {
       expect(JSON.stringify(replayed)).toBe(JSON.stringify(record.draft));
     }
   });
+
+  it.each(["career", "current"] as const)(
+    "round-trips a post-fence t4 token under the %s rating basis",
+    (basis) => {
+      const record = buildOpenOriginRecord(
+        gameData,
+        `wcdraft:open-token:basis:${basis}`,
+        "all_time",
+        "open",
+        basis,
+      );
+      const token = encodeRunToken(record);
+      const decoded = decodeRunToken(token);
+      if (decoded?.v !== 4) throw new Error("expected basis-aware t4 token");
+      expect(decoded.rb).toBe(basis);
+      expect(versionsAgree(decoded, gameData.versions)).toBe(true);
+      expect(reconstructDraftFromToken(decoded, gameData)).toEqual(record.draft);
+    },
+  );
 
   it.each([
     ["Open Draft", origin],

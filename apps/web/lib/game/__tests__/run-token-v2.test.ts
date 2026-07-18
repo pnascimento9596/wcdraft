@@ -416,6 +416,26 @@ describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
     expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
   });
 
+  it("immediate pre-basis shipped t3 token: only the engine fence trips skew", () => {
+    const decoded = decodeRunToken(skewFixtures.shipped_pre_basis_t3.token);
+    expect(decoded).not.toBeNull();
+    expect(decoded!.v).toBe(3);
+    expect(skewFixtures.shipped_pre_basis_source.production_main_commit).toBe(
+      "735e0ecc127ac13b90527141b5fb43c019f0b03e",
+    );
+    expect(skewFixtures.shipped_pre_basis_source.body_sha256).toBe(
+      "408f7ca241ef208b792cef3b804e37fe3d388d3551c3fe5a7221c05515aa60b3",
+    );
+    expect(decoded!.ev).toBe("engine-2026.07.14-squad-depth");
+    expect(decoded!.sv).toBe(gameData.versions.schema_version);
+    expect(decoded!.dv).toBe(gameData.versions.dataset_version);
+    expect(decoded!.rv).toBe(gameData.versions.rating_version);
+    expect(decoded!.uv).toBe(gameData.versions.ruleset_version);
+    expect(decoded!.hv).toBe(gameData.versions.data_bundle_hash);
+    expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
+    expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
+  });
+
   it("prev-build t1 token: decodes, default config, trips skew", () => {
     const decoded = decodeRunToken(skewFixtures.prev_t1.token);
     expect(decoded).not.toBeNull();
