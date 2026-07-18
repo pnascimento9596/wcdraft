@@ -12,8 +12,10 @@ gate. Treat every merge as a live ship; run live sanity after risky merges.
 
 ## Workflow
 
-- One task = one fresh `/tmp` worktree off freshly-fetched main:
-  `git fetch origin && git worktree add /tmp/<task> -b ws-<area>/<topic> origin/main`.
+- Create every disposable implementer, reviewer, cross-model, replay, or repro clone with
+  `pnpm --filter @wcdraft/web create:disposable-clone --label <label> --ref <remote-ref> [--branch <branch>]`.
+  Run its printed `MARK_COMPLETE_COMMAND` when the purpose ends. Raw disposable clones/worktrees
+  and any unmarked clone left behind are review defects.
 - Branch names: `ws-<area>/<topic>` (established areas: f4, merit, ux, core, fix, mem, meta).
 - Conventional commits (`feat(web): …`, `fix(rating): …`, `docs(plans): …`).
 - Stage with explicit paths: `git add <path>…` — NEVER `git add -A`/`-u`, never `git stash`.

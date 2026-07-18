@@ -1,6 +1,6 @@
 import { markAgentTempCleanupReady } from "./agent-temp-lifecycle";
 
-const candidate = process.argv[2];
+const candidate = process.argv[2] === "--" ? process.argv[3] : process.argv[2];
 if (!candidate) {
   throw new Error("usage: mark-agent-temp-cleanup-ready.mts <completed-agent-temp-path>");
 }

@@ -6,6 +6,7 @@ phase="${1:-}"
 floor_kb="${WCDRAFT_RUNNER_MIN_FREE_KB:-31457280}"
 target_kb="${WCDRAFT_RUNNER_TARGET_FREE_KB:-37748736}"
 stale_minutes="${WCDRAFT_RUNNER_STALE_MINUTES:-60}"
+residue_minutes="${WCDRAFT_AGENT_TEMP_RESIDUE_MINUTES:-60}"
 force_cleanup="${WCDRAFT_RUNNER_FORCE_CLEANUP:-0}"
 maintenance_mode="${WCDRAFT_RUNNER_MAINTENANCE_MODE:-0}"
 trigger="${WCDRAFT_RUNNER_TRIGGER:-ci-job}"
@@ -16,6 +17,7 @@ if [ -z "${WCDRAFT_AGENT_TEMP_ROOT:-}" ] && [ -n "${TMPDIR:-}" ]; then
 fi
 agent_temp_root="$configured_agent_temp_root"
 agent_temp_cleanup_marker=".wcdraft-agent-cleanup-ready"
+agent_temp_pending_marker=".wcdraft-agent-cleanup-pending"
 
 for required_command in git lsof mount ps find awk sed grep cat du sort head mkdir date; do
   if ! command -v "$required_command" >/dev/null 2>&1; then
@@ -24,7 +26,7 @@ for required_command in git lsof mount ps find awk sed grep cat du sort head mkd
   fi
 done
 
-case "$floor_kb:$target_kb:$stale_minutes:$force_cleanup:$maintenance_mode" in
+case "$floor_kb:$target_kb:$stale_minutes:$residue_minutes:$force_cleanup:$maintenance_mode" in
   *[!0-9:]*|*::*|:*|*:)
     echo "::error::runner hygiene numeric configuration is invalid" >&2
     exit 1
@@ -163,6 +165,66 @@ agent_temp_cleanup_ready() {
   [ -f "$marker" ] || return 1
   [ ! -L "$marker" ] || return 1
   [ "$(cat "$marker")" = "cleanup-ready-v1" ] || return 1
+}
+
+audit_unmarked_agent_temp_residue() {
+  local candidate=""
+  local candidate_kb=""
+  local configured_root=""
+  local count=0
+  local pending_marker=""
+  local registration=""
+  local resolved_root=""
+  local seen_roots=":"
+
+  for configured_root in "${agent_temp_roots[@]}"; do
+    [ -d "$configured_root" ] || continue
+    if ! resolved_root="$(cd "$configured_root" && pwd -P)"; then
+      echo "::warning::runner-hygiene unmarked-residue audit could not resolve root $configured_root" >&2
+      continue
+    fi
+    case "$seen_roots" in
+      *":$resolved_root:"*) continue ;;
+    esac
+    seen_roots="$seen_roots$resolved_root:"
+
+    for candidate in \
+      "$resolved_root"/wcdraft-* \
+      "$resolved_root"/terrace-* \
+      "$resolved_root"/wave2-*; do
+      [ -d "$candidate" ] || continue
+      [ ! -L "$candidate" ] || continue
+      case "$candidate" in
+        *$'\n'*|*$'\r'*|*$'\t'*) continue ;;
+      esac
+      if ! find "$candidate" -prune -mmin "+$residue_minutes" -print -quit 2>/dev/null | grep -q .; then
+        continue
+      fi
+      if agent_temp_cleanup_ready "$candidate"; then
+        continue
+      fi
+
+      pending_marker="$candidate/$agent_temp_pending_marker"
+      registration="unregistered"
+      if [ -e "$candidate/$agent_temp_cleanup_marker" ] || [ -L "$candidate/$agent_temp_cleanup_marker" ]; then
+        registration="invalid-completion-marker"
+      elif [ -f "$pending_marker" ] && [ ! -L "$pending_marker" ] &&
+        [ "$(cat "$pending_marker" 2>/dev/null || true)" = "cleanup-pending-v1" ]; then
+        registration="pending"
+      elif [ -e "$pending_marker" ] || [ -L "$pending_marker" ]; then
+        registration="invalid-pending-marker"
+      fi
+      if ! candidate_kb="$(du -sk "$candidate" 2>/dev/null | awk 'NR == 1 { print $1 }')" ||
+        [ -z "$candidate_kb" ]; then
+        candidate_kb="unavailable"
+      fi
+      count=$((count + 1))
+      echo "::warning::runner-hygiene unmarked agent temp residue path=$candidate registration=$registration candidate_kb=$candidate_kb threshold_minutes=$residue_minutes"
+    done
+  done
+
+  echo "runner-hygiene: unmarked-residue-audit count=$count threshold_minutes=$residue_minutes"
+  return 0
 }
 
 agent_temp_in_use() {
@@ -338,6 +400,8 @@ if [ "$phase" = "start" ]; then
     echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
     exit 1
   fi
+
+  audit_unmarked_agent_temp_residue
 
   if [ "$maintenance_mode" != "1" ]; then
     scrub_job_temp_files

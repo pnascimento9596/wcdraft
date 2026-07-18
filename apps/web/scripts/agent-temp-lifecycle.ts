@@ -1,38 +1,81 @@
-import { lstat, readFile, realpath, writeFile } from "node:fs/promises";
+import { lstat, readFile, realpath, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { tmpdir } from "node:os";
 
 export const AGENT_TEMP_CLEANUP_MARKER = ".wcdraft-agent-cleanup-ready";
 export const AGENT_TEMP_CLEANUP_MARKER_VALUE = "cleanup-ready-v1";
+export const AGENT_TEMP_PENDING_MARKER = ".wcdraft-agent-cleanup-pending";
+export const AGENT_TEMP_PENDING_MARKER_VALUE = "cleanup-pending-v1";
 
 function isAlreadyExistsError(error: unknown): error is NodeJS.ErrnoException {
   return Boolean(error && typeof error === "object" && "code" in error && error.code === "EEXIST");
+}
+
+function isNotFoundError(error: unknown): error is NodeJS.ErrnoException {
+  return Boolean(error && typeof error === "object" && "code" in error && error.code === "ENOENT");
+}
+
+async function resolveAgentTempRoots(configuredRoot?: string): Promise<string[]> {
+  const configuredRoots = configuredRoot
+    ? [configuredRoot]
+    : process.env.WCDRAFT_AGENT_TEMP_ROOT
+      ? [process.env.WCDRAFT_AGENT_TEMP_ROOT]
+      : ["/private/tmp", tmpdir()];
+  return [...new Set(await Promise.all(configuredRoots.map(async (root) => realpath(root))))];
+}
+
+async function validateAgentTempCandidate(
+  candidate: string,
+  configuredRoot?: string,
+): Promise<string> {
+  const roots = await resolveAgentTempRoots(configuredRoot);
+  const candidateStats = await lstat(candidate);
+  if (!candidateStats.isDirectory() || candidateStats.isSymbolicLink()) {
+    throw new Error(`agent-temp candidate must be a real directory: ${candidate}`);
+  }
+  const resolvedCandidate = await realpath(candidate);
+  if (!roots.includes(path.dirname(resolvedCandidate))) {
+    throw new Error(
+      `agent-temp candidate must be a direct child of ${roots.join(" or ")}: ${candidate}`,
+    );
+  }
+  if (!/^(?:wcdraft|terrace|wave2)-/u.test(path.basename(resolvedCandidate))) {
+    throw new Error(`agent-temp candidate has an unsupported lifecycle prefix: ${candidate}`);
+  }
+  return resolvedCandidate;
+}
+
+export async function registerAgentTempCleanupPending(
+  candidate: string,
+  configuredRoot?: string,
+): Promise<void> {
+  const resolvedCandidate = await validateAgentTempCandidate(candidate, configuredRoot);
+  const marker = path.join(resolvedCandidate, AGENT_TEMP_PENDING_MARKER);
+  await writeFile(marker, `${AGENT_TEMP_PENDING_MARKER_VALUE}\n`, {
+    encoding: "utf8",
+    flag: "wx",
+  });
 }
 
 export async function markAgentTempCleanupReady(
   candidate: string,
   configuredRoot?: string,
 ): Promise<void> {
-  const configuredRoots = configuredRoot
-    ? [configuredRoot]
-    : process.env.WCDRAFT_AGENT_TEMP_ROOT
-      ? [process.env.WCDRAFT_AGENT_TEMP_ROOT]
-      : ["/private/tmp", tmpdir()];
-  const roots = [
-    ...new Set(await Promise.all(configuredRoots.map(async (root) => realpath(root)))),
-  ];
-  const candidateStats = await lstat(candidate);
-  if (!candidateStats.isDirectory() || candidateStats.isSymbolicLink()) {
-    throw new Error(`cleanup-ready candidate must be a real directory: ${candidate}`);
-  }
-  const resolvedCandidate = await realpath(candidate);
-  if (!roots.includes(path.dirname(resolvedCandidate))) {
-    throw new Error(
-      `cleanup-ready candidate must be a direct child of ${roots.join(" or ")}: ${candidate}`,
-    );
-  }
-  if (!/^(?:wcdraft|terrace|wave2)-/u.test(path.basename(resolvedCandidate))) {
-    throw new Error(`cleanup-ready candidate has an unsupported lifecycle prefix: ${candidate}`);
+  const resolvedCandidate = await validateAgentTempCandidate(candidate, configuredRoot);
+  const pendingMarker = path.join(resolvedCandidate, AGENT_TEMP_PENDING_MARKER);
+  let hasPendingMarker = false;
+  try {
+    const pendingStats = await lstat(pendingMarker);
+    if (!pendingStats.isFile() || pendingStats.isSymbolicLink()) {
+      throw new Error(`cleanup-pending marker must be a regular file: ${pendingMarker}`);
+    }
+    const pending = (await readFile(pendingMarker, "utf8")).replace(/\n+$/u, "");
+    if (pending !== AGENT_TEMP_PENDING_MARKER_VALUE) {
+      throw new Error(`cleanup-pending marker has an unexpected value: ${pendingMarker}`);
+    }
+    hasPendingMarker = true;
+  } catch (error) {
+    if (!isNotFoundError(error)) throw error;
   }
 
   const marker = path.join(resolvedCandidate, AGENT_TEMP_CLEANUP_MARKER);
@@ -51,5 +94,9 @@ export async function markAgentTempCleanupReady(
     if (existing !== AGENT_TEMP_CLEANUP_MARKER_VALUE) {
       throw new Error(`cleanup-ready marker has an unexpected value: ${marker}`, { cause: error });
     }
+  }
+
+  if (hasPendingMarker) {
+    await unlink(pendingMarker);
   }
 }
