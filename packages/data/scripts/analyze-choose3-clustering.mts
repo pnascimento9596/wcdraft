@@ -36,6 +36,11 @@ const THRESHOLDS = Object.freeze([0, 1, 2]);
 const BASES = Object.freeze(["career", "current"] as const);
 const FLOWS = Object.freeze(["squad_first", "position_first"] as const);
 const ESTIMATE_BASES = new Set(["career_stature_estimate", "baseline_anchor_estimate"]);
+const PROVENANCE_CODES = Object.freeze({
+  measured_performance: 0,
+  baseline_anchor_estimate: 1,
+  career_stature_estimate: 2,
+} as const);
 const BUNDLE_REL = "packages/data/src/generated/draft-pool.compact.json.br";
 const MANIFEST_REL = "packages/data/src/generated/manifest.json";
 const CORE_DRAFT_REL = "packages/core/src/draft.ts";
@@ -144,6 +149,12 @@ function choose3(n: number): number {
 
 function isEstimate(basis: RuntimeBasisRating): boolean {
   return ESTIMATE_BASES.has(basis.overall_basis);
+}
+
+function provenanceCode(name: string): number {
+  const code = PROVENANCE_CODES[name as keyof typeof PROVENANCE_CODES];
+  if (code === undefined) throw new Error(`unregistered overall_basis provenance ${name}`);
+  return code;
 }
 
 function selectedBasis(rating: RuntimeRating, basis: RatingBasis): RuntimeBasisRating {
@@ -357,12 +368,6 @@ function observeOffer(
   const visiblePositions = cards.map(
     (card) => card.position_listed ?? card.eligible_positions[0] ?? "MF",
   );
-  const channels = basisRatings.map((rating) => [
-    rating.attack,
-    rating.midfield,
-    rating.defense,
-    rating.goalkeeping,
-  ]);
   let tieMask = 0;
   all.forEach((tied, index) => {
     if (tied) tieMask |= 1 << index;
@@ -382,14 +387,12 @@ function observeOffer(
     visibleUniquePositions: new Set(visiblePositions).size,
     tuple: [
       draftOrdinal,
-      candidateSeedIndex,
       spin.index + 1,
       cardIds,
       overalls,
-      channels,
       enginePositions,
       visiblePositions,
-      basisRatings.map((rating) => rating.overall_basis),
+      basisRatings.map((rating) => provenanceCode(rating.overall_basis)),
       spread,
       adjacentGaps,
       fullNumericTriple ? tieMask : null,
@@ -729,14 +732,12 @@ function cellOutput(cell: CellRun) {
     ]),
     offer_records_schema: [
       "draft_ordinal",
-      "candidate_seed_index",
       "pick_index_1_to_17",
       "card_ids_visible_order",
       "display_overalls_visible_order",
-      "display_channels_att_mid_def_gk_visible_order",
       "engine_position_buckets_eligible_positions_0",
       "visible_positions_position_listed_fallback_eligible_positions_0",
-      "visible_overall_basis_provenance",
+      "visible_overall_basis_provenance_codes",
       "spread_max_minus_min",
       "sorted_adjacent_gaps_low_mid_and_mid_high",
       "tie_threshold_bitmask_bit0_eq0_bit1_le1_bit2_le2",
@@ -887,6 +888,7 @@ function main() {
         "same classic/squad_first/all_time/career createDraft path with a deterministic per-UTC-date parent seed and optional published salt",
     },
     offer_record_encoding: {
+      visible_overall_basis_provenance_codes: PROVENANCE_CODES,
       provenance_mask_bits: {
         "1": "same exact non-estimate overall_basis in at least one tied pair",
         "2": "same exact estimate overall_basis in at least one tied pair",

@@ -1,8 +1,11 @@
 # Choose-from-3 Clustering Measurement
 
-Date: 2026-07-17  
-Base: `origin/main` at `fc1748f4e4eaaa0994530c83db81582e82e7687c`  
-Risk: YELLOW, read-only measurement over shipped code and the shipped runtime bundle  
+Date: 2026-07-17
+
+Base: `origin/main` at `fc1748f4e4eaaa0994530c83db81582e82e7687c`
+
+Risk: YELLOW, read-only measurement over shipped code and the shipped runtime bundle
+
 Scope: measurement only; no rating, data, tiering, product, or simulation change
 
 ## Plain-language summary
@@ -69,7 +72,8 @@ The display path is basis-correct: the draft screen passes `DraftState.rating_ba
 Current selects `basis_ratings.current`; the chosen basis's OVR, ATT, MID, DEF, GK, provenance,
 and `overall_basis` reach `CandidateCard` (`apps/web/lib/game/adapters.ts:63-111,166-203,316-344`;
 `apps/web/components/game/candidate-card.tsx:194-208,251-257`). The raw JSON records every
-rendered OVR and channel tuple.
+rendered OVR and visible provenance; the shipped channel mapping is confirmed from the same
+selected-basis adapter path but channel clustering is not a requested aggregate.
 
 Engine position diversity uses `eligible_positions[0]`; the card renders
 `position_listed ?? eligible_positions[0]`. Those fields differ on 280/12,219 shipped cards, so
@@ -304,10 +308,10 @@ cmp /tmp/choose3-clustering.json \
   docs/reports/choose3-clustering-measurement-2026-07-17.json
 ```
 
-The compact JSON includes 270,336 per-offer records: raw visible OVR triples, four rendered
-channels per card, spreads, adjacent gaps, threshold masks, both position definitions,
-provenance, pick index, seed/draft identity, full cell summaries, per-pick curves, pool histograms,
-input fingerprints, and convergence prefixes.
+The compact JSON includes 270,336 per-offer records: raw visible OVR triples, spreads, adjacent
+gaps, threshold masks, both position definitions, provenance, pick index, seed/draft identity,
+full cell summaries, per-pick curves, pool histograms, input fingerprints, and convergence
+prefixes.
 
 No rating changed; no curve or tiering logic changed; no ETL source, compact bundle, manifest,
 golden, canary, lambda, realism band, or Daily salt map is in the diff. The analyzer reads the
