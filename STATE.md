@@ -4,6 +4,23 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Choose-from-3 clustering baseline: 2026-07-17 · **MEASURED, no rating movement**. A deterministic
+shipped-path simulation ran 1,024 complete 17-spin drafts in each of 16 era × rendered-basis ×
+draft-flow cells, with a 2,048-draft-per-cell convergence holdout. In the canonical ranked config
+(All-time · Squad First · Career), full-offer tie rates are **11.09%** at ΔOVR 0 (95% clustered CI
+10.62–11.56%), **41.31%** at ΔOVR ≤1 (40.56–42.06%), and **74.49%** at ΔOVR ≤2
+(73.85–75.12%). After removing visibly estimated candidates and retaining offers with at least two
+non-estimate candidates, the rates are **11.08% / 40.44% / 71.75%**. Estimate-involved tied offers
+account for 105/1,931 exact ties, 601/7,191 Δ≤1 ties, and 1,386/12,967 Δ≤2 ties. The uniform
+three-card All-time Career pool baselines are 12.86% / 34.77% / 52.26%, separating the display
+histogram from the squad/tier/position offer path. The dispatched 927 estimate cohort is
+Career-only; Current visibly has 388. Current offers are still selected with Career
+`choice_overall`, then rendered with Current OVR/channels, exactly as shipped. No rating, curve,
+tier logic, data artifact, or golden moved; merit-v4.7 remains unopened and conditional on the
+owner's playthrough evidence. Full method, 16-cell tables, per-pick curves, pool histograms,
+per-offer records, and PR #311 checkout forensics:
+`docs/reports/choose3-clustering-measurement-2026-07-17.md`.
+
 G1/V1 override channel-scale verdict: 2026-07-17 · **RETIRED**. The merit-v4.5
 defect was real, and merit-v4.6 intentionally fixed it by preserving owner display pins while
 curve-inverting their internal score before channel materialization. Full shipped-artifact proof
