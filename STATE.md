@@ -58,6 +58,24 @@ recommendation is a dedicated runner plus mandatory lifecycle completion for eve
 review/replay clone. No product code, runtime bundle, schema, rating, draft, sim, auth, leaderboard,
 or deploy behavior changed. Evidence: `docs/reports/runner-disk-scheduling-2026-07-18.md`.
 
+Disposable-clone lifecycle: 2026-07-18 · every sanctioned implementer, fresh-context reviewer,
+cross-model, replay, and repro clone is created through the `@wcdraft/web`
+`create:disposable-clone` helper. It allocates a direct-child agent-temp path, writes
+`.wcdraft-agent-cleanup-pending=cleanup-pending-v1` before Git population, keeps both lifecycle
+markers out of clone-local status, and prints the existing positive completion transition. Raw
+disposable clones/worktrees and unmarked leftovers are agent-review defects. The hygiene start now
+reports, but never fails merely because of, every aged direct-child path without the exact completion
+marker. Real controls prove a helper-created marked clone is pruned, an unmarked helper clone is
+preserved and reported, and disabling the audit makes the contract red.
+
+The first real 60-minute residue audit found 9 unregistered test-output paths totaling only 744 KiB;
+it deleted nothing. Dedicated hardware is still recommended: the 36-to-30 GiB buffer is consumed in
+about **51 minutes** at the observed 7.01 GiB/hour incident rate, while a newly completed clone first
+becomes stale at 60 minutes and the 15-minute timer makes the normal reclaim window 60-75 minutes
+(7.01-8.76 GiB at that rate). Mandatory markers stop indefinite retention, not active-clone peak
+concurrency. No product, runtime, data, schema, rating, draft, sim, auth, leaderboard, or deploy
+contract changed. Evidence: `docs/reports/disposable-clone-lifecycle-2026-07-18.md`.
+
 Terrace light Programme: 2026-07-17 · Light now uses paper `#f1ecdf`, card `#faf7ee`,
 hairline `#ddd6c4`, primary/secondary ink `#16180f`/`#5c5c4e`, and AA text ramps
 `#0f5f3f`/`#7a5a12`; structural green/gold are the exact dark fills
