@@ -40,6 +40,7 @@ mutated_audit_script="$probe_root/self-hosted-runner-hygiene-audit-disabled.sh"
 disposable_source="$probe_root/disposable-source"
 helper_created_marked=""
 helper_created_unmarked=""
+helper_failed_candidate=""
 
 cleanup() {
   if [ -n "$active_pid" ]; then
@@ -54,6 +55,9 @@ cleanup() {
   fi
   if [ -n "$mutation_root_candidate" ]; then
     rm -rf -- "$mutation_root_candidate"
+  fi
+  if [ -n "$helper_failed_candidate" ]; then
+    rm -rf -- "$helper_failed_candidate"
   fi
   rm -rf -- "$probe_root"
 }
@@ -143,6 +147,42 @@ create_disposable_clone() {
   [ -z "$(git -C "$candidate" status --porcelain)" ] ||
     fail "disposable clone helper left its lifecycle registration visible to git"
   printf '%s\n' "$candidate"
+}
+
+assert_failed_clone_recovery_command() {
+  local output="$probe_root/disposable-clone-failure.log"
+  local recovery_output="$probe_root/disposable-clone-recovery.log"
+  local completion_command=""
+
+  if (
+    cd "$repo_root"
+    WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+      pnpm --filter @wcdraft/web create:disposable-clone \
+        --label helper-fetch-failure \
+        --source "$probe_root/missing-disposable-source" \
+        --ref HEAD
+  ) >"$output" 2>&1; then
+    fail "disposable clone helper unexpectedly succeeded with a missing fetch source"
+  fi
+
+  helper_failed_candidate="$(sed -n 's/^DISPOSABLE_CLONE_PATH=//p' "$output" | tail -1)"
+  completion_command="$(sed -n 's/^MARK_COMPLETE_COMMAND=//p' "$output" | tail -1)"
+  [ -n "$helper_failed_candidate" ] ||
+    fail "failed disposable clone did not print its registered residue path"
+  [ -n "$completion_command" ] ||
+    fail "failed disposable clone did not print its recovery completion command"
+  assert_file_content \
+    "cleanup-pending-v1" \
+    "$helper_failed_candidate/.wcdraft-agent-cleanup-pending"
+
+  if ! /bin/sh -c "$completion_command" >"$recovery_output" 2>&1; then
+    fail "failed disposable clone printed a recovery command that did not execute"
+  fi
+  assert_file_content \
+    "cleanup-ready-v1" \
+    "$helper_failed_candidate/.wcdraft-agent-cleanup-ready"
+  [ ! -e "$helper_failed_candidate/.wcdraft-agent-cleanup-pending" ] ||
+    fail "failed disposable clone recovery left the pending registration behind"
 }
 
 run_residue_audit_contract() {
@@ -446,6 +486,7 @@ git -C "$disposable_source" -c user.name="runner-hygiene-probe" \
   -c user.email="runner-hygiene-probe@invalid" commit -qm "seed disposable clone source"
 helper_created_marked="$(create_disposable_clone helper-marked)"
 helper_created_unmarked="$(create_disposable_clone helper-unmarked)"
+assert_failed_clone_recovery_command
 (
   cd "$repo_root"
   WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \

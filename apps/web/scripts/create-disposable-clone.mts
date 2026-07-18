@@ -68,20 +68,28 @@ function shellQuote(value: string): string {
 }
 
 const options = parseArgs(process.argv.slice(2));
+const repoRoot = await runGit(["rev-parse", "--show-toplevel"]);
 const configuredRoot = process.env.WCDRAFT_AGENT_TEMP_ROOT ?? "/private/tmp";
 const root = await realpath(configuredRoot);
 const candidate = await mkdtemp(path.join(root, `wcdraft-${options.label}-`));
 await registerAgentTempCleanupPending(candidate, root);
 
-const markComplete = [
+const cloneMarkComplete = [
+  `WCDRAFT_AGENT_TEMP_ROOT=${shellQuote(root)}`,
   "pnpm --dir",
   shellQuote(candidate),
   "--filter @wcdraft/web mark:agent-temp-cleanup-ready",
   shellQuote(candidate),
 ].join(" ");
+const recoveryMarkComplete = [
+  `WCDRAFT_AGENT_TEMP_ROOT=${shellQuote(root)}`,
+  "pnpm --dir",
+  shellQuote(repoRoot),
+  "--filter @wcdraft/web mark:agent-temp-cleanup-ready",
+  shellQuote(candidate),
+].join(" ");
 
 try {
-  const repoRoot = await runGit(["rev-parse", "--show-toplevel"]);
   const source =
     options.source ??
     (await runGit(["-C", repoRoot, "remote", "get-url", "origin"]).catch(() => repoRoot));
@@ -107,11 +115,12 @@ try {
     await runGit(["-C", candidate, "checkout", "--detach", "FETCH_HEAD"]);
   }
   console.log(`DISPOSABLE_CLONE_PATH=${candidate}`);
-  console.log(`MARK_COMPLETE_COMMAND=${markComplete}`);
+  console.log(`MARK_COMPLETE_COMMAND=${cloneMarkComplete}`);
 } catch (error) {
   console.error(
     `agent-temp-lifecycle: clone creation failed; registered residue preserved at ${candidate}`,
   );
-  console.error(`agent-temp-lifecycle: mark complete after inspection with: ${markComplete}`);
+  console.error(`DISPOSABLE_CLONE_PATH=${candidate}`);
+  console.error(`MARK_COMPLETE_COMMAND=${recoveryMarkComplete}`);
   throw error;
 }
