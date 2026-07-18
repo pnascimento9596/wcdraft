@@ -166,6 +166,33 @@ run_residue_audit_contract() {
   grep -Fq 'runner-hygiene: unmarked-residue-audit count=' "$output" || return 1
 }
 
+run_residue_audit_with_du_failure() {
+  local candidate="$1"
+  local mock_bin="$probe_root/mock-residue-du"
+  local output="$probe_root/residue-du-failure.log"
+  mkdir -p "$mock_bin"
+  printf '%s\n' '#!/bin/sh' 'exit 2' >"$mock_bin/du"
+  chmod +x "$mock_bin/du"
+
+  if ! PATH="$mock_bin:$PATH" \
+    GITHUB_WORKSPACE="$workspace" \
+    RUNNER_TOOL_CACHE="$tool_cache" \
+    RUNNER_TEMP="$runner_temp" \
+    RUNNER_NAME="wcdraft-m4" \
+    WCDRAFT_RUNNER_MIN_FREE_KB=0 \
+    WCDRAFT_RUNNER_TARGET_FREE_KB=0 \
+    WCDRAFT_RUNNER_STALE_MINUTES=60 \
+    WCDRAFT_AGENT_TEMP_RESIDUE_MINUTES=1 \
+    WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+    /bin/bash "$hygiene_script" start >"$output" 2>&1; then
+    fail "report-only residue audit made hygiene fail when size measurement was unavailable"
+  fi
+  grep -Fq "::warning::runner-hygiene unmarked agent temp residue path=$candidate registration=pending candidate_kb=unavailable" \
+    "$output" || fail "residue audit did not report unavailable size without failing"
+  grep -Fq 'runner-hygiene: unmarked-residue-audit count=' "$output" ||
+    fail "residue audit omitted its summary after size-measurement failure"
+}
+
 run_hygiene() {
   phase="$1"
   force_cleanup="${2:-0}"
@@ -514,6 +541,7 @@ assert_file_content "outside-sentinel" "$outside_sentinel"
 assert_file_content "helper-clone-sentinel" "$helper_created_unmarked/sentinel"
 grep -Fq "::warning::runner-hygiene unmarked agent temp residue path=$helper_created_unmarked registration=pending" \
   "$initial_hygiene_output" || fail "unmarked helper-created clone was not reported by the audit"
+run_residue_audit_with_du_failure "$helper_created_unmarked"
 assert_file_content "idle-unmarked-agent-temp" "$agent_temp_idle_unmarked/sentinel"
 assert_file_content "corrupt-marker-agent-temp" "$agent_temp_corrupt_marker/sentinel"
 assert_file_content "corrupt-pending-agent-temp" "$agent_temp_corrupt_pending/sentinel"
@@ -587,4 +615,4 @@ assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, compact RUNNER_DISK failure inventory, pre-deletion recovery JSON, exact producer-to-pruner lifecycle marker, create-time pending registration, paired completion command, git-local marker excludes, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 helper-created marked clone pruned, 1 helper-created unmarked clone preserved and reported, 1 audit-disabled mutation red, 1 real /private/tmp prune, 1 prune-disabled real-root mutation red, 1 prune-disabled below-floor pre-job mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, maintenance-mode runner-root preservation, 18 self-hosted job bindings across 5 workflows, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 4 marker-authorized agent temp removals, 13 sentinel checks)"
+echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, compact RUNNER_DISK failure inventory, pre-deletion recovery JSON, exact producer-to-pruner lifecycle marker, create-time pending registration, paired completion command, git-local marker excludes, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 helper-created marked clone pruned, 1 helper-created unmarked clone preserved and reported, 1 audit-size-failure report-only preserve, 1 audit-disabled mutation red, 1 real /private/tmp prune, 1 prune-disabled real-root mutation red, 1 prune-disabled below-floor pre-job mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, maintenance-mode runner-root preservation, 18 self-hosted job bindings across 5 workflows, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 4 marker-authorized agent temp removals, 13 sentinel checks)"

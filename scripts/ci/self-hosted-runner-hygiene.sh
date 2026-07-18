@@ -214,8 +214,10 @@ audit_unmarked_agent_temp_residue() {
       elif [ -e "$pending_marker" ] || [ -L "$pending_marker" ]; then
         registration="invalid-pending-marker"
       fi
-      candidate_kb="$(du -sk "$candidate" 2>/dev/null | awk 'NR == 1 { print $1 }')"
-      [ -n "$candidate_kb" ] || candidate_kb="unavailable"
+      if ! candidate_kb="$(du -sk "$candidate" 2>/dev/null | awk 'NR == 1 { print $1 }')" ||
+        [ -z "$candidate_kb" ]; then
+        candidate_kb="unavailable"
+      fi
       count=$((count + 1))
       echo "::warning::runner-hygiene unmarked agent temp residue path=$candidate registration=$registration candidate_kb=$candidate_kb threshold_minutes=$residue_minutes"
     done
