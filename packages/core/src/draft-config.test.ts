@@ -103,7 +103,7 @@ describe("createDraft DC-1 config recording + honesty gates", () => {
     const withoutBasisDependentOffers = (state: typeof draft) => ({
       ...state,
       rating_basis: "career" as const,
-      spins: state.spins.map(({ rolled_card_ids: _offers, ...spin }) => spin),
+      spins: state.spins.map((spin) => ({ ...spin, rolled_card_ids: [] })),
     });
 
     // The seeded tournament/nation topology, draw weights, manager offers,
