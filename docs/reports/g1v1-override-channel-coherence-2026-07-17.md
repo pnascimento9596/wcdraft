@@ -1,8 +1,11 @@
 # G1/V1 Override Channel-Scale Coherence
 
-Date: 2026-07-17  
-Base: `origin/main` at `8a06b12d64ac053f3310ee924a841258fbcb7b0f`  
-Risk: YELLOW, read-only measurement of shipped artifacts  
+Date: 2026-07-17
+
+Base: `origin/main` at `8a06b12d64ac053f3310ee924a841258fbcb7b0f`
+
+Risk: YELLOW, read-only measurement of shipped artifacts
+
 Verdict: **RETIRE**
 
 ## Summary
