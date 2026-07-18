@@ -72,4 +72,47 @@ jq -e '
   (.after_kb | type == "number")
 ' "$receipt" >/dev/null || fail "maintenance receipt schema drifted"
 
-echo "runner disk maintenance contract: PASS (15-minute RunAtLoad schedule, idle-runner guard, maintenance-mode scope, installed-script pin, launchctl bootstrap + kickstart, JSON execution receipt)"
+mkdir -p "$fake_runner/bin"
+ln -s /bin/sleep "$fake_runner/bin/Runner.Worker"
+"$fake_runner/bin/Runner.Worker" 30 &
+worker_pid=$!
+for _ in 1 2 3 4 5; do
+  if ps -axo command= | awk -v worker="$fake_runner/bin/Runner.Worker" \
+    '$1 == worker { found = 1 } END { exit(found ? 0 : 1) }'; then
+    break
+  fi
+  sleep 1
+done
+ps -axo command= | awk -v worker="$fake_runner/bin/Runner.Worker" \
+  '$1 == worker { found = 1 } END { exit(found ? 0 : 1) }' ||
+  fail "active Runner.Worker probe did not start"
+WCDRAFT_RUNNER_ROOT="$fake_runner" \
+  WCDRAFT_AGENT_TEMP_ROOT="$probe_root/agent-temp" \
+  "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh"
+kill "$worker_pid" 2>/dev/null || true
+wait "$worker_pid" 2>/dev/null || true
+find "$fake_runner/_work/_diag/wcdraft-runner-maintenance" -type f -name 'receipt-*.json' \
+  -exec jq -e 'select(.status == "SKIPPED" and .reason == "runner-worker-active")' {} \; \
+  | grep -q . || fail "active Runner.Worker did not produce a skip receipt"
+
+lock_dir="$fake_runner/_work/_diag/wcdraft-runner-maintenance/lock"
+mkdir "$lock_dir"
+WCDRAFT_RUNNER_ROOT="$fake_runner" \
+  WCDRAFT_AGENT_TEMP_ROOT="$probe_root/agent-temp" \
+  "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh"
+rmdir "$lock_dir"
+find "$fake_runner/_work/_diag/wcdraft-runner-maintenance" -type f -name 'receipt-*.json' \
+  -exec jq -e 'select(.status == "SKIPPED" and .reason == "maintenance-lock-held")' {} \; \
+  | grep -q . || fail "held maintenance lock did not produce a skip receipt"
+
+stale_lock_output="$probe_root/stale-lock.log"
+mkdir "$lock_dir"
+touch -t 200001010000 "$lock_dir"
+WCDRAFT_RUNNER_ROOT="$fake_runner" \
+  WCDRAFT_AGENT_TEMP_ROOT="$probe_root/agent-temp" \
+  "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh" >"$stale_lock_output"
+grep -Fq 'RUNNER_DISK_MAINTENANCE status=PASS' "$stale_lock_output" ||
+  fail "stale empty maintenance lock was not safely reclaimed"
+[ ! -e "$lock_dir" ] || fail "reclaimed maintenance lock survived successful cleanup"
+
+echo "runner disk maintenance contract: PASS (15-minute RunAtLoad schedule, active-worker and held-lock skip receipts, stale-lock recovery, maintenance-mode scope, installed-script pin, launchctl bootstrap + kickstart, JSON execution receipt)"

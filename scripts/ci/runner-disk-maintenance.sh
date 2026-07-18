@@ -12,6 +12,7 @@ tool_cache="$work_root/_tool"
 workspace="$work_root/_maintenance/wcdraft"
 diag_root="$work_root/_diag/wcdraft-runner-maintenance"
 lock_dir="$diag_root/lock"
+lock_owner="$lock_dir/owner.pid"
 started_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 stamp="$(date -u +'%Y%m%dT%H%M%SZ')"
 
@@ -23,7 +24,7 @@ case "$runner_root" in
     ;;
 esac
 
-for required_command in date df mkdir ps grep awk; do
+for required_command in date df mkdir ps grep awk cat find rmdir; do
   if ! command -v "$required_command" >/dev/null 2>&1; then
     echo "RUNNER_DISK_MAINTENANCE status=FAIL reason=missing-command command=$required_command" >&2
     exit 1
@@ -54,15 +55,56 @@ write_receipt() {
   echo "RUNNER_DISK_MAINTENANCE status=$status trigger=launchd-interval reason=$reason before_kb=$before_kb after_kb=$after_kb receipt=$receipt"
 }
 
+acquire_lock() {
+  local existing_pid=""
+  local existing_command=""
+
+  if mkdir "$lock_dir" 2>/dev/null; then
+    printf '%s\n' "$$" >"$lock_owner"
+    return 0
+  fi
+
+  if [ -f "$lock_owner" ] && [ ! -L "$lock_owner" ]; then
+    existing_pid="$(cat "$lock_owner" 2>/dev/null || true)"
+  fi
+  case "$existing_pid" in
+    ''|*[!0-9]*) ;;
+    *)
+      existing_command="$(ps -p "$existing_pid" -o command= 2>/dev/null || true)"
+      if kill -0 "$existing_pid" 2>/dev/null &&
+        printf '%s\n' "$existing_command" | grep -F "$script_dir/runner-disk-maintenance.sh" >/dev/null 2>&1; then
+        return 1
+      fi
+      ;;
+  esac
+
+  if [ -z "$existing_pid" ] &&
+    ! find "$lock_dir" -prune -mmin +30 -print -quit 2>/dev/null | grep -q .; then
+    return 1
+  fi
+  find "$lock_owner" -type f -delete 2>/dev/null || true
+  rmdir "$lock_dir" 2>/dev/null || return 1
+  mkdir "$lock_dir" 2>/dev/null || return 1
+  printf '%s\n' "$$" >"$lock_owner"
+}
+
+release_lock() {
+  find "$lock_owner" -type f -delete 2>/dev/null || true
+  rmdir "$lock_dir" 2>/dev/null || true
+}
+
 before_kb="$(free_kb)"
 
-if ! mkdir "$lock_dir" 2>/dev/null; then
+if ! acquire_lock; then
   write_receipt "SKIPPED" "maintenance-lock-held" "$before_kb" "$before_kb"
   exit 0
 fi
-trap 'rmdir "$lock_dir" 2>/dev/null || true' EXIT
+trap release_lock EXIT
 
-if ps -axo command= | grep -F "$runner_root/bin/Runner.Worker" | grep -v grep >/dev/null 2>&1; then
+if ps -axo command= | awk -v worker="$runner_root/bin/Runner.Worker" '
+  $1 == worker { found = 1 }
+  END { exit(found ? 0 : 1) }
+'; then
   write_receipt "SKIPPED" "runner-worker-active" "$before_kb" "$before_kb"
   exit 0
 fi
