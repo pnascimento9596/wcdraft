@@ -4,6 +4,22 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+G1/V1 override channel-scale verdict: 2026-07-17 · **RETIRED**. The merit-v4.5
+defect was real, and merit-v4.6 intentionally fixed it by preserving owner display pins while
+curve-inverting their internal score before channel materialization. Full shipped-artifact proof
+covered 12,219 cards × Career/Current = 24,438 basis observations: 0/97,752 channel
+non-reshaping failures; 0/4,956 effective override/basis authority failures; exact override
+inverse residual max/p99/p50 `0.000000494 / 0.000000494 / 0.000000198`, with 0 over `1e-5`;
+and 0 forward-roundtrip failures. Source coverage is 2,336/2,516 resolved owner rows, folded to
+2,265 effective Career cards, with all 180 misses still unmatched and zero forced components.
+All 541 Career-stature-estimate Career rows and baseline-anchor-estimate rows (386 Career, 388
+Current) have 0 display/channel coherence failures and retain the orange Estimate provenance
+hue. Natural integer-OVR centered inverse residual max/p99/p50 is
+`8.435675614 / 2.051511106 / 0.294545976`; this is expected many-to-one quantization, corroborated
+by continuous display residual max `0.499997803` and 0 roundtrip failures. No rating or data
+changed; no artifact regenerated; rating and draft-pool SHA anchors remain unchanged. Evidence:
+`docs/reports/g1v1-override-channel-coherence-2026-07-17.md`.
+
 Runner hygiene real-root proof: 2026-07-17 · `scripts/ci/self-hosted-runner-hygiene.sh` is
 retained unchanged. Its production root is correctly `/private/tmp` when
 `WCDRAFT_AGENT_TEMP_ROOT` is unset; observed production runs did not prune because host free space

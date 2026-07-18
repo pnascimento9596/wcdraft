@@ -1,0 +1,249 @@
+{
+  "verdict": "RETIRE",
+  "method": {
+    "population": "Every shipped runtime rating, Career and Current bases; no sampling.",
+    "inverse_residual_note": "Natural rows store integer display OVERALL, so score - curve^-1(integer OVERALL) includes expected display quantization. Exact >1e-5 drift adjudication applies to owner overrides, whose internal target is the curve inverse by contract. Baseline-anchor estimates are checked by capped forward round-trip because their [66,73] display cap is non-invertible.",
+    "drift_limit": 0.00001,
+    "curve": {
+      "raw_floor": 20,
+      "raw_median": 41.84577933310018,
+      "raw_p95": 59.14638138639868,
+      "raw_max": 100
+    },
+    "floor_channel": 20,
+    "channel_spread": {
+      "FW": {
+        "attack": 1,
+        "midfield": 0.6,
+        "defense": 0.3,
+        "goalkeeping": 0
+      },
+      "MF": {
+        "attack": 0.65,
+        "midfield": 1,
+        "defense": 0.6,
+        "goalkeeping": 0
+      },
+      "DF": {
+        "attack": 0.35,
+        "midfield": 0.6,
+        "defense": 1,
+        "goalkeeping": 0
+      },
+      "GK": {
+        "attack": 0.05,
+        "midfield": 0.2,
+        "defense": 0.55,
+        "goalkeeping": 1
+      }
+    }
+  },
+  "anchors": {
+    "schema_version": "runtime-data-2.10.0",
+    "engine_version": "engine-2026.07.14-squad-depth",
+    "rating_version_historical": "wc-perf-6.6.0",
+    "rating_version_projected": "proj-career-5.6.0",
+    "draft_pool": {
+      "brotli_impl_version": "1.1.0",
+      "bytes": 68380413,
+      "bytes_brotli": 1311661,
+      "bytes_gzip": 2788737,
+      "compressed_bytes": 1311661,
+      "compressed_sha256": "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d",
+      "options": {
+        "mode": "text",
+        "quality": 11,
+        "size_hint": 68380413
+      },
+      "path": "draft-pool.compact.json",
+      "raw_sha256": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07",
+      "sha256": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07"
+    }
+  },
+  "population": {
+    "cards": 12219,
+    "player_cards": 12219,
+    "basis_observations": 24438,
+    "basis_counts": {
+      "career": 12219,
+      "current": 12219
+    },
+    "career_override_source_rows": 2516,
+    "career_override_resolved_rows": 2336,
+    "career_override_unmatched_rows": 180,
+    "career_override_effective_cards": 2265,
+    "career_override_resolution_unique_cards": 2265,
+    "current_only_override_source_rows": 515,
+    "current_only_override_resolved_rows": 515,
+    "current_only_override_effective_cards": 515,
+    "manifest_career_stature_estimate_cards": 541,
+    "manifest_baseline_anchor_estimate_cards": 386
+  },
+  "inversion_coherence": {
+    "quantized_residual_all_non_capped": {
+      "count": 23664,
+      "max": 8.435675614,
+      "p99": 2.051511106,
+      "p50": 0.294545976
+    },
+    "quantized_residual_max_examples": [
+      {
+        "card_id": "P-89519:1978",
+        "basis": "career",
+        "overall": 88,
+        "internal": 67.582057,
+        "residual": 8.435675614
+      },
+      {
+        "card_id": "P-89519:1978",
+        "basis": "current",
+        "overall": 88,
+        "internal": 67.582057,
+        "residual": 8.435675614
+      },
+      {
+        "card_id": "P-16991:1974",
+        "basis": "current",
+        "overall": 88,
+        "internal": 67.417286,
+        "residual": 8.270904614
+      },
+      {
+        "card_id": "P-71260:1990",
+        "basis": "career",
+        "overall": 88,
+        "internal": 67.417286,
+        "residual": 8.270904614
+      },
+      {
+        "card_id": "P-71260:1990",
+        "basis": "current",
+        "overall": 88,
+        "internal": 67.417286,
+        "residual": 8.270904614
+      }
+    ],
+    "quantized_residual_by_basis": {
+      "career": {
+        "count": 11833,
+        "max": 8.435675614,
+        "p99": 2.713101865,
+        "p50": 0.30677411
+      },
+      "current": {
+        "count": 11831,
+        "max": 8.435675614,
+        "p99": 1.262246774,
+        "p50": 0.278194431
+      }
+    },
+    "forward_roundtrip_failures": 0,
+    "continuous_display_residual_non_capped": {
+      "count": 23610,
+      "max": 0.499997803,
+      "p99": 0.492930891,
+      "p50": 0.181645219
+    },
+    "baseline_capped_observations": 774,
+    "override_exact_residual": {
+      "count": 4956,
+      "max": 4.94e-7,
+      "p99": 4.94e-7,
+      "p50": 1.98e-7
+    },
+    "override_residuals_over_1e_5": 0
+  },
+  "channel_non_reshaping": {
+    "observations": 97752,
+    "failures": 0,
+    "examples": []
+  },
+  "override_authority": {
+    "career_observations": 2265,
+    "current_observations": 2691,
+    "total_observations": 4956,
+    "failures": 0,
+    "examples": []
+  },
+  "honest_misses": {
+    "unmatched_rows": 180,
+    "overlap_with_resolved_source_lines": 0,
+    "unexpected_manual_components_on_non_effective_cards": 0
+  },
+  "estimate_provenance": {
+    "career_stature_estimate": {
+      "cards": 541,
+      "observations_by_basis": {
+        "career": 541,
+        "current": 0
+      },
+      "observations": 541,
+      "display_failures": 0,
+      "channel_failures": 0,
+      "badge_contract": "apps/web/lib/game/view-models.ts::provenanceBadgeKind => estimate/orange hue"
+    },
+    "baseline_anchor_estimate": {
+      "cards": 388,
+      "observations_by_basis": {
+        "career": 386,
+        "current": 388
+      },
+      "observations": 774,
+      "display_failures": 0,
+      "channel_failures": 0,
+      "badge_contract": "apps/web/lib/game/view-models.ts::provenanceBadgeKind => estimate/orange hue"
+    }
+  },
+  "input_fingerprints": {
+    "bundle": {
+      "path": "packages/data/src/generated/draft-pool.compact.json.br",
+      "bytes": 1311661,
+      "sha256": "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d"
+    },
+    "manifest": {
+      "path": "packages/data/src/generated/manifest.json",
+      "bytes": 7141,
+      "sha256": "214df946a291016f34ae689a1c2e52a857ae5590e1aa66870ec12b172211eb82"
+    },
+    "curve": {
+      "path": "etl/src/wcdraft_etl/display_curve.py",
+      "bytes": 13956,
+      "sha256": "ad4751a63c5850a6281868431d211bb35ce73572f097f7626b8686dce375fa76"
+    },
+    "ratingComponents": {
+      "path": "etl/src/wcdraft_etl/rating_components.py",
+      "bytes": 25250,
+      "sha256": "e611c8d32818f532ce26e617fc8ffd88854a03afefa903cd54146cb34ea8aeef"
+    },
+    "careerEffective": {
+      "path": "etl/output/manual-ratings-v4.5-effective.csv",
+      "bytes": 181503,
+      "sha256": "31a32becb3d029c80708be10d7168883d4fe15ca0abf523dae70229745826bb8"
+    },
+    "careerResolution": {
+      "path": "etl/output/manual-ratings-v4.5-resolution.csv",
+      "bytes": 261378,
+      "sha256": "3f841d19a0f6586e21580787a99020bba335bca22d5a18f278dbb1eb5270dfe9"
+    },
+    "careerUnmatched": {
+      "path": "etl/output/manual-ratings-v4.5-unmatched.csv",
+      "bytes": 15346,
+      "sha256": "6e2bdbf550b368e23da3f6f7c420e66d2267799df338f861905ff5228ef106c4"
+    },
+    "careerSummary": {
+      "path": "etl/output/manual-ratings-v4.5-summary.json",
+      "bytes": 539,
+      "sha256": "43ca30121b372f80b69a23ed811e3546b13e009232d75f8ed32c07ce0ae66e15"
+    },
+    "currentEffective": {
+      "path": "etl/output/manual-ratings-v4.4-effective.csv",
+      "bytes": 42506,
+      "sha256": "52ae0d2b5faec8bff00c1e4e5d6c67f3e54468b87af80867ccd1ffd091a12d72"
+    },
+    "currentSummary": {
+      "path": "etl/output/manual-ratings-v4.4-summary.json",
+      "bytes": 315,
+      "sha256": "347eb185d92e70002b940e5b9ca5ce30a15a0006942f29f6d2e56b35b8682ac2"
+    }
+  }
+}
