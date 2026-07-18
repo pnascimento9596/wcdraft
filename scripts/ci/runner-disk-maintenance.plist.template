@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.wcdraft.runner-disk-maintenance</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__RUNNER_ROOT__/wcdraft-maintenance/runner-disk-maintenance.sh</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>900</integer>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>StandardOutPath</key>
+  <string>__USER_ROOT__/Library/Logs/com.wcdraft.runner-disk-maintenance/stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>__USER_ROOT__/Library/Logs/com.wcdraft.runner-disk-maintenance/stderr.log</string>
+</dict>
+</plist>

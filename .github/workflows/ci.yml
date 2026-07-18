@@ -173,6 +173,9 @@ jobs:
       - name: Runner hygiene contract probe
         run: scripts/ci/self-hosted-runner-hygiene.test.sh
 
+      - name: Runner disk maintenance contract probe
+        run: scripts/ci/runner-disk-maintenance.test.sh
+
       - name: DB readiness CI contract probe
         run: scripts/ci/require-neon-for-db-paths.test.sh
 

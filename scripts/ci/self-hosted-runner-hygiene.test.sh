@@ -6,6 +6,9 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 hygiene_script="$repo_root/scripts/ci/self-hosted-runner-hygiene.sh"
 workflow="$repo_root/.github/workflows/ci.yml"
 etl_workflow="$repo_root/.github/workflows/etl.yml"
+marketing_workflow="$repo_root/.github/workflows/marketing-x.yml"
+nightly_workflow="$repo_root/.github/workflows/nightly-heavy.yml"
+migration_workflow="$repo_root/.github/workflows/production-db-migrate.yml"
 responsive_shell_producer="$repo_root/apps/web/scripts/test-responsive-shell-fit.mts"
 one_screen_producer="$repo_root/apps/web/scripts/verify-home-fold-browser.mts"
 probe_root="$(mktemp -d "${TMPDIR:-/tmp}/wcdraft-runner-hygiene.XXXXXX")"
@@ -169,6 +172,36 @@ run_hygiene_expect_floor_failure() {
   fi
   grep -Fq '::error::runner-owned cleanup completed, but host free space remains below the configured floor' "$output" ||
     fail "runner hygiene floor failure did not emit the required error"
+  grep -Fq '::error::RUNNER_DISK status=FAIL' "$output" ||
+    fail "runner hygiene floor failure did not emit the compact RUNNER_DISK diagnostic"
+  grep -Fq 'largest_consumers=' "$output" ||
+    fail "runner hygiene floor failure did not name its largest consumers"
+  grep -Fq 'agent-named:' "$output" ||
+    fail "runner hygiene floor failure did not identify agent-named consumers"
+}
+
+run_prune_disabled_expect_floor_failure() {
+  output="$probe_root/prune-disabled-floor-failure.log"
+  if GITHUB_WORKSPACE="$workspace" \
+    RUNNER_TOOL_CACHE="$tool_cache" \
+    RUNNER_TEMP="$runner_temp" \
+    RUNNER_NAME="wcdraft-m4" \
+    WCDRAFT_RUNNER_MIN_FREE_KB=999999999 \
+    WCDRAFT_RUNNER_TARGET_FREE_KB=999999999 \
+    WCDRAFT_RUNNER_STALE_MINUTES=60 \
+    WCDRAFT_RUNNER_FORCE_CLEANUP=1 \
+    WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+    /bin/bash "$mutated_hygiene_script" start >"$output" 2>&1; then
+    fail "pre-job disk gate stayed green when pruning was disabled below the floor"
+  fi
+  grep -Fq 'runner-hygiene: mutation disabled agent temp prune' "$output" ||
+    fail "pre-job negative control did not disable pruning"
+  grep -Fq '::error::RUNNER_DISK status=FAIL' "$output" ||
+    fail "pre-job negative control failed without the RUNNER_DISK diagnostic"
+  grep -Fq 'largest_consumers=' "$output" ||
+    fail "pre-job negative control omitted largest-consumer evidence"
+  grep -Fq 'agent-named:' "$output" ||
+    fail "pre-job negative control did not identify the preserved agent consumer"
 }
 
 run_hygiene_expect_target_warning() {
@@ -236,6 +269,12 @@ grep -Fq '::error::runner-owned cleanup completed, but host free space remains b
   fail "runner hygiene must fail when cleanup cannot restore the configured floor"
 grep -Fq '::warning::runner-owned cleanup completed, but host free space remains below the best-effort pre-lane target' "$hygiene_script" ||
   fail "runner hygiene must report a best-effort target miss without weakening the hard floor"
+grep -Fq '::error::RUNNER_DISK status=FAIL' "$hygiene_script" ||
+  fail "runner hygiene must emit one compact disk-floor diagnostic"
+grep -Fq 'record_recovery_json' "$hygiene_script" ||
+  fail "runner hygiene must write recovery JSON before bounded deletion"
+grep -Fq 'maintenance mode preserves runner work, cache, and temp roots' "$hygiene_script" ||
+  fail "host maintenance must not race runner-owned work/cache/temp roots"
 grep -Fq 'wcdraft-*|terrace-*|wave2-*' "$hygiene_script" ||
   fail "runner hygiene must keep agent-temp deletion prefix bounded"
 grep -Fq '.wcdraft-agent-cleanup-ready' "$hygiene_script" ||
@@ -263,6 +302,9 @@ assert_job_contains "$workflow" static "$static_dispatch_ref_guard"
 for job in verify golden realism etl db-rollback-check etl-rating gitleaks; do
   assert_job_contains "$workflow" "$job" "needs: changes"
 done
+for job in changes static verify golden realism etl db-rollback-check etl-rating gitleaks aggregate; do
+  assert_job_contains "$workflow" "$job" 'uses: ./.github/actions/self-hosted-runner-hygiene'
+done
 assert_job_contains "$workflow" aggregate "      - changes"
 assert_job_contains "$workflow" aggregate "$aggregate_guard"
 assert_job_contains "$workflow" aggregate "$aggregate_name_expression"
@@ -275,6 +317,18 @@ assert_job_contains "$etl_workflow" changes "$actor_guard"
 for job in etl rating-lock-matrix; do
   assert_job_contains "$etl_workflow" "$job" "needs: changes"
 done
+for job in changes etl rating-lock-matrix; do
+  assert_job_contains "$etl_workflow" "$job" 'uses: ./.github/actions/self-hosted-runner-hygiene'
+done
+
+assert_job_set "$marketing_workflow" "pack"
+assert_job_contains "$marketing_workflow" pack 'uses: ./.github/actions/self-hosted-runner-hygiene'
+assert_job_set "$nightly_workflow" "daily-seed-salt-map realism rating-lock-matrix"
+for job in daily-seed-salt-map realism rating-lock-matrix; do
+  assert_job_contains "$nightly_workflow" "$job" 'uses: ./.github/actions/self-hosted-runner-hygiene'
+done
+assert_job_set "$migration_workflow" "migrate"
+assert_job_contains "$migration_workflow" migrate 'uses: ./.github/actions/self-hosted-runner-hygiene'
 
 if actor_can_run "dependabot[bot]"; then
   fail "Dependabot actor must not reach self-hosted jobs"
@@ -396,6 +450,7 @@ fi
 grep -Fq "runner-hygiene: mutation disabled agent temp prune $mutation_root_candidate" \
   "$mutation_root_output" || fail "real-root negative control failed for an unintended reason"
 assert_file_content "real-root-prune-disabled" "$mutation_root_candidate/sentinel"
+run_prune_disabled_expect_floor_failure
 
 for failing_probe in mount lsof ps git; do
   run_hygiene_with_probe_failure "$failing_probe"
@@ -403,10 +458,20 @@ done
 run_hygiene_expect_floor_failure
 run_hygiene_expect_target_warning
 
+recovery_receipt="$(find "$work_root/_diag/wcdraft-runner-hygiene" -type f -name 'recovery-*.json' -print -quit)"
+[ -n "$recovery_receipt" ] || fail "bounded deletion did not write recovery JSON"
+jq -e '
+  .schema == "wcdraft-runner-recovery-v1" and
+  (.recorded_at | type == "string") and
+  (.trigger | type == "string") and
+  (.candidate | type == "string") and
+  (.candidate_kb | type == "number")
+' "$recovery_receipt" >/dev/null || fail "recovery JSON schema drifted"
+
 printf '%s\n' "stale-finish-download" >"$runner_temp/gitleaks.tmp"
 run_hygiene finish
 assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, exact producer-to-pruner lifecycle marker, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 real /private/tmp prune, 1 prune-disabled mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 3 marker-authorized agent temp removals, 11 sentinel checks)"
+echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, compact RUNNER_DISK failure inventory, pre-deletion recovery JSON, exact producer-to-pruner lifecycle marker, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 real /private/tmp prune, 1 prune-disabled real-root mutation red, 1 prune-disabled below-floor pre-job mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, maintenance-mode runner-root preservation, 18 self-hosted job bindings across 5 workflows, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 3 marker-authorized agent temp removals, 11 sentinel checks)"

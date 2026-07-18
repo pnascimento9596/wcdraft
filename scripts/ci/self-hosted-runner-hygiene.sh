@@ -7,6 +7,8 @@ floor_kb="${WCDRAFT_RUNNER_MIN_FREE_KB:-31457280}"
 target_kb="${WCDRAFT_RUNNER_TARGET_FREE_KB:-37748736}"
 stale_minutes="${WCDRAFT_RUNNER_STALE_MINUTES:-60}"
 force_cleanup="${WCDRAFT_RUNNER_FORCE_CLEANUP:-0}"
+maintenance_mode="${WCDRAFT_RUNNER_MAINTENANCE_MODE:-0}"
+trigger="${WCDRAFT_RUNNER_TRIGGER:-ci-job}"
 configured_agent_temp_root="${WCDRAFT_AGENT_TEMP_ROOT:-/private/tmp}"
 agent_temp_roots=("$configured_agent_temp_root")
 if [ -z "${WCDRAFT_AGENT_TEMP_ROOT:-}" ] && [ -n "${TMPDIR:-}" ]; then
@@ -15,14 +17,14 @@ fi
 agent_temp_root="$configured_agent_temp_root"
 agent_temp_cleanup_marker=".wcdraft-agent-cleanup-ready"
 
-for required_command in git lsof mount ps find awk sed grep cat; do
+for required_command in git lsof mount ps find awk sed grep cat du sort head mkdir date; do
   if ! command -v "$required_command" >/dev/null 2>&1; then
     echo "::error::required runner hygiene command is missing: $required_command" >&2
     exit 1
   fi
 done
 
-case "$floor_kb:$target_kb:$stale_minutes:$force_cleanup" in
+case "$floor_kb:$target_kb:$stale_minutes:$force_cleanup:$maintenance_mode" in
   *[!0-9:]*|*::*|:*|*:)
     echo "::error::runner hygiene numeric configuration is invalid" >&2
     exit 1
@@ -50,6 +52,44 @@ runner_temp="$(cd "$RUNNER_TEMP" && pwd -P)"
 work_root="$(cd "$(dirname "$tool_cache")" && pwd -P)"
 active_container="$(dirname "$workspace")"
 cache_root="$tool_cache/wcdraft-cache"
+recovery_root="$work_root/_diag/wcdraft-runner-hygiene"
+recovery_counter=0
+
+json_escape() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  value="${value//$'\n'/\\n}"
+  value="${value//$'\r'/\\r}"
+  value="${value//$'\t'/\\t}"
+  printf '%s' "$value"
+}
+
+record_recovery_json() {
+  local candidate="$1"
+  local ownership="$2"
+  local reason="$3"
+  local candidate_kb="-1"
+  local receipt=""
+  local recorded_at=""
+
+  mkdir -p "$recovery_root"
+  if measured_kb="$(du -sk "$candidate" 2>/dev/null | awk 'NR == 1 { print $1 }')" &&
+    [ -n "$measured_kb" ]; then
+    candidate_kb="$measured_kb"
+  fi
+  recorded_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+  recovery_counter=$((recovery_counter + 1))
+  receipt="$recovery_root/recovery-$(date -u +'%Y%m%dT%H%M%SZ')-$$-$recovery_counter.json"
+  printf '{\n  "schema": "wcdraft-runner-recovery-v1",\n  "recorded_at": "%s",\n  "trigger": "%s",\n  "ownership": "%s",\n  "reason": "%s",\n  "candidate": "%s",\n  "candidate_kb": %s\n}\n' \
+    "$(json_escape "$recorded_at")" \
+    "$(json_escape "$trigger")" \
+    "$(json_escape "$ownership")" \
+    "$(json_escape "$reason")" \
+    "$(json_escape "$candidate")" \
+    "$candidate_kb" >"$receipt"
+  echo "runner-hygiene: recovery_json=$receipt candidate=$candidate"
+}
 
 case "$workspace/" in
   "$work_root"/*) ;;
@@ -69,6 +109,7 @@ esac
 
 safe_remove_runner_path() {
   candidate="$1"
+  reason="${2:-bounded-runner-path}"
   case "$candidate/" in
     "$work_root"/*) ;;
     *)
@@ -82,6 +123,8 @@ safe_remove_runner_path() {
       exit 1
       ;;
   esac
+  [ -e "$candidate" ] || return 0
+  record_recovery_json "$candidate" "agent/CI-owned" "$reason"
   rm -rf -- "$candidate"
 }
 
@@ -110,6 +153,7 @@ safe_remove_agent_temp_path() {
     return 0
   fi
   echo "runner-hygiene: pruning stale agent temp $candidate"
+  record_recovery_json "$candidate" "agent/CI-owned-positive-marker" "marked-stale-agent-temp"
   rm -rf -- "$candidate"
 }
 
@@ -231,12 +275,62 @@ agent_temp_in_use() {
 }
 
 scrub_job_temp_files() {
-  safe_remove_runner_path "$runner_temp/gitleaks.tmp"
-  rm -f -- "$runner_temp/neon-ephemeral.env" "$runner_temp"/realism-*.log
+  safe_remove_runner_path "$runner_temp/gitleaks.tmp" "job-temp-gitleaks"
+  for candidate in "$runner_temp/neon-ephemeral.env" "$runner_temp"/realism-*.log; do
+    [ -e "$candidate" ] || continue
+    safe_remove_runner_path "$candidate" "job-temp-file"
+  done
 }
 
 free_kb() {
   df -Pk "$work_root" | awk 'NR == 2 { print $4 }'
+}
+
+emit_largest_consumers() {
+  local inventory="$runner_temp/runner-disk-consumers.$$"
+  local candidate=""
+  local configured_root=""
+  local resolved_root=""
+  : >"$inventory"
+
+  for configured_root in "${agent_temp_roots[@]}"; do
+    [ -d "$configured_root" ] || continue
+    resolved_root="$(cd "$configured_root" && pwd -P)"
+    for candidate in \
+      "$resolved_root"/wcdraft-* \
+      "$resolved_root"/terrace-* \
+      "$resolved_root"/wave2-*; do
+      [ -e "$candidate" ] || continue
+      case "$candidate" in
+        *$'\n'*|*$'\r'*|*$'\t'*) continue ;;
+      esac
+      du -sk "$candidate" 2>/dev/null | awk -v ownership="agent-named" \
+        '{ printf "%s\t%s\t%s\n", $1, ownership, $2 }' >>"$inventory" || true
+    done
+  done
+
+  for candidate in "$work_root"/*; do
+    [ -e "$candidate" ] || continue
+    case "$candidate" in
+      *$'\n'*|*$'\r'*|*$'\t'*) continue ;;
+    esac
+    du -sk "$candidate" 2>/dev/null | awk -v ownership="runner-owned" \
+      '{ printf "%s\t%s\t%s\n", $1, ownership, $2 }' >>"$inventory" || true
+  done
+
+  if [ -s "$inventory" ]; then
+    sort -nr "$inventory" | head -5 | awk -F '\t' '
+      BEGIN { printf "largest_consumers=" }
+      {
+        if (NR > 1) printf ","
+        printf "%s:%sKiB:%s", $2, $1, $3
+      }
+      END { printf "\n" }
+    '
+  else
+    echo "largest_consumers=unavailable"
+  fi
+  rm -f -- "$inventory"
 }
 
 if [ "$phase" = "start" ]; then
@@ -245,7 +339,9 @@ if [ "$phase" = "start" ]; then
     exit 1
   fi
 
-  scrub_job_temp_files
+  if [ "$maintenance_mode" != "1" ]; then
+    scrub_job_temp_files
+  fi
 
   before_kb="$(free_kb)"
   echo "runner-hygiene: free_kb=$before_kb floor_kb=$floor_kb target_kb=$target_kb"
@@ -270,42 +366,54 @@ if [ "$phase" = "start" ]; then
       done
     done
 
-    for candidate in "$work_root"/*; do
-      [ -d "$candidate" ] || continue
-      [ "$candidate" = "$active_container" ] && continue
-      case "$(basename "$candidate")" in
-        _actions|_diag|_temp|_tool|_update) continue ;;
-      esac
-      if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
-        safe_remove_runner_path "$candidate"
-      fi
-    done
-
-    if [ -d "$cache_root" ]; then
-      for candidate in "$cache_root"/*; do
-        [ -e "$candidate" ] || continue
+    if [ "$maintenance_mode" != "1" ]; then
+      for candidate in "$work_root"/*; do
+        [ -d "$candidate" ] || continue
+        [ "$candidate" = "$active_container" ] && continue
+        case "$(basename "$candidate")" in
+          _actions|_diag|_temp|_tool|_update) continue ;;
+        esac
         if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
-          safe_remove_runner_path "$candidate"
+          safe_remove_runner_path "$candidate" "stale-runner-work-container"
         fi
       done
-    fi
 
-    for candidate in "$runner_temp"/*; do
-      [ -e "$candidate" ] || continue
-      if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
-        safe_remove_runner_path "$candidate"
+      if [ -d "$cache_root" ]; then
+        for candidate in "$cache_root"/*; do
+          [ -e "$candidate" ] || continue
+          if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
+            safe_remove_runner_path "$candidate" "stale-declared-runner-cache"
+          fi
+        done
       fi
-    done
+
+      for candidate in "$runner_temp"/*; do
+        [ -e "$candidate" ] || continue
+        case "$candidate" in
+          "$runner_temp/runner-disk-consumers."*) continue ;;
+        esac
+        if find "$candidate" -prune -mmin "+$stale_minutes" -print -quit | grep -q .; then
+          safe_remove_runner_path "$candidate" "stale-runner-temp"
+        fi
+      done
+    else
+      echo "runner-hygiene: maintenance mode preserves runner work, cache, and temp roots"
+    fi
 
     after_kb="$(free_kb)"
     echo "runner-hygiene: after_free_kb=$after_kb floor_kb=$floor_kb target_kb=$target_kb"
     if [ "$after_kb" -lt "$floor_kb" ]; then
+      largest_consumers="$(emit_largest_consumers)"
+      echo "::error::RUNNER_DISK status=FAIL trigger=$trigger free_kb=$after_kb floor_kb=$floor_kb target_kb=$target_kb $largest_consumers" >&2
       echo "::error::runner-owned cleanup completed, but host free space remains below the configured floor (${floor_kb} KiB): ${after_kb} KiB" >&2
       exit 1
     fi
     if [ "$after_kb" -lt "$target_kb" ]; then
       echo "::warning::runner-owned cleanup completed, but host free space remains below the best-effort pre-lane target (${target_kb} KiB): ${after_kb} KiB" >&2
     fi
+    echo "RUNNER_DISK status=PASS trigger=$trigger before_kb=$before_kb after_kb=$after_kb floor_kb=$floor_kb target_kb=$target_kb cleanup=attempted"
+  else
+    echo "RUNNER_DISK status=PASS trigger=$trigger before_kb=$before_kb after_kb=$before_kb floor_kb=$floor_kb target_kb=$target_kb cleanup=not-required"
   fi
   exit 0
 fi
