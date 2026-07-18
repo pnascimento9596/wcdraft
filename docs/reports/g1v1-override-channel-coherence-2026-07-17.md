@@ -80,8 +80,15 @@ wrong: merit-v4.6 was the intentional Red correction for this precise merit-v4.5
   the full union population is used.
 - `etl/tests/test_unified_display.py:123-129` proves every attainable integer display target
   round-trips through the inverse.
-- `etl/tests/test_unified_display.py:132-181` proves manual display authority, shared-curve mapping
-  across both eras, and fresh channel materialization from internal scores.
+- `etl/tests/test_unified_display.py:132-181` proves top-level/Career manual display authority,
+  shared-curve mapping across both eras, and fresh top-level/Career channel materialization from
+  internal scores. It does not by itself prove v4.4 Current-only authority.
+- `etl/tests/test_manual_overrides_v45.py:24-99` directly proves the v4.3+v4.5 path: 36 recovered
+  rows, 2,336 resolved / 180 unmatched source rows, frozen-curve inverse pins on both Career and
+  Current, and v4.4 precedence on Current.
+- `etl/tests/test_manual_overrides_v44.py:58-103` directly proves the v4.4 Current-only path:
+  frozen-curve inverse targets, Career non-movement, v4.4-over-v4.3 Current precedence, and
+  untouched non-overrides.
 - `manual_overrides.manual_overall` and `manual_current_overall` reject stored internal drift over
   `1e-5` (`etl/src/wcdraft_etl/manual_overrides.py:945-985`).
 - `packages/core/src/choice-overall-invariant.guard.test.ts:1-69` statically forbids
