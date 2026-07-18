@@ -40,7 +40,14 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { buildDraftCatalog, type CreateDraftParams, type DraftState } from "@wcdraft/core";
+import {
+  buildDraftCatalog,
+  ERA_PRESET_IDS,
+  type CreateDraftParams,
+  type DraftFlow,
+  type DraftState,
+  type EraPresetId,
+} from "@wcdraft/core";
 
 import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST } from "../../src/index.js";
 
@@ -69,6 +76,8 @@ interface CanaryPick {
 }
 
 interface CanarySeedRecord {
+  era_preset: EraPresetId;
+  draft_flow: DraftFlow;
   seed_index: number;
   parent_seed: string;
   manager_card_id: string | null;
@@ -80,6 +89,7 @@ interface CanaryGolden {
   policy: "strategicAutoDraft";
   seed_prefix: string;
   formation_id: string;
+  configuration_count: number;
   n_seeds: number;
   rating_version: string;
   engine_version: string;
@@ -90,7 +100,8 @@ interface CanaryGolden {
 const GOLDEN_DOC = [
   "DECOUPLING GUARD #2 — strategic-pick canary.",
   "Locks the exact strategicAutoDraft pick sequence for the first N_SEEDS",
-  "seeds of the realism harness. Trips when a display-curve change (e.g. a",
+  "seeds in every Career era preset and both draft flows. Trips when a",
+  "display-curve or offer-tiering change (e.g. a",
   "stature-driven `overall` rescale) flips a `pickBest` tie ordering and",
   "silently invalidates the λ-calibration basis (the realism gate's Wilson",
   "bands shift with the landings on re-lock, so they do NOT catch the flip).",
@@ -111,30 +122,39 @@ function extractCanaryPicks(state: DraftState): CanaryPick[] {
 
 function runCanary(): CanaryGolden {
   const dataset = buildRealismDataset();
-  const catalog = buildDraftCatalog(dataset);
   const ctx = buildPolicyContext(DRAFT_POOL_BUNDLE.player_cards, DRAFT_POOL_BUNDLE.ratings);
 
   const records: CanarySeedRecord[] = [];
-  for (let i = 0; i < N_SEEDS; i++) {
-    const parent_seed = `${DEFAULT_SEED_PREFIX}:${String(i).padStart(4, "0")}`;
-    const params: CreateDraftParams & { dataset: typeof dataset } = {
-      run_id: `canary-strategicAutoDraft-${String(i).padStart(4, "0")}`,
-      parent_seed,
-      formation_id: "4-3-3",
-      mode: "classic",
-      team_name: `Canary XI #${i}`,
-      dataset_version: RUNTIME_DATA_MANIFEST.dataset_version,
-      rating_version: COMBINED_RATING_VERSION,
-      engine_version: RUNTIME_DATA_MANIFEST.engine_version,
-      dataset,
-    };
-    const state = runAutoDraftPolicy(catalog, params, ctx, "strategic");
-    records.push({
-      seed_index: i,
-      parent_seed,
-      manager_card_id: state.manager_card_id as string | null,
-      picks: extractCanaryPicks(state),
-    });
+  for (const era_preset of ERA_PRESET_IDS) {
+    const catalog = buildDraftCatalog(dataset, era_preset);
+    for (const draft_flow of ["squad_first", "position_first"] as const) {
+      for (let i = 0; i < N_SEEDS; i++) {
+        const parent_seed = `${DEFAULT_SEED_PREFIX}:${era_preset}:${draft_flow}:${String(i).padStart(4, "0")}`;
+        const params: CreateDraftParams & { dataset: typeof dataset } = {
+          run_id: `canary-strategicAutoDraft-${era_preset}-${draft_flow}-${String(i).padStart(4, "0")}`,
+          parent_seed,
+          formation_id: "4-3-3",
+          mode: "classic",
+          team_name: `Canary XI ${era_preset} ${draft_flow} #${i}`,
+          dataset_version: RUNTIME_DATA_MANIFEST.dataset_version,
+          rating_version: COMBINED_RATING_VERSION,
+          engine_version: RUNTIME_DATA_MANIFEST.engine_version,
+          era_preset,
+          draft_flow,
+          rating_basis: "career",
+          dataset,
+        };
+        const state = runAutoDraftPolicy(catalog, params, ctx, "strategic");
+        records.push({
+          era_preset,
+          draft_flow,
+          seed_index: i,
+          parent_seed,
+          manager_card_id: state.manager_card_id as string | null,
+          picks: extractCanaryPicks(state),
+        });
+      }
+    }
   }
 
   return {
@@ -142,6 +162,7 @@ function runCanary(): CanaryGolden {
     policy: "strategicAutoDraft",
     seed_prefix: DEFAULT_SEED_PREFIX,
     formation_id: "4-3-3",
+    configuration_count: ERA_PRESET_IDS.length * 2,
     n_seeds: N_SEEDS,
     rating_version: COMBINED_RATING_VERSION,
     engine_version: RUNTIME_DATA_MANIFEST.engine_version,
@@ -153,7 +174,7 @@ function runCanary(): CanaryGolden {
 const REGEN = process.env.WCDRAFT_CANARY_REGEN === "1";
 
 describe("strategic-pick canary — locks pickBest tie-order under display `overall`", () => {
-  it("first 5 strategicAutoDraft seeds match the locked pick sequence (byte-stable)", () => {
+  it("first 5 strategicAutoDraft seeds in all 8 Career cells match byte-for-byte", () => {
     const computed = runCanary();
 
     if (REGEN) {

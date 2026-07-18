@@ -14,6 +14,7 @@ import {
   serverScenarioBundle,
 } from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
+import skewFixtures from "../../game/__tests__/fixtures/run-token-skew.json" with { type: "json" };
 import {
   deriveAndCacheLineupInspector,
   resetLineupInspectorCacheForTests,
@@ -227,6 +228,7 @@ describe("POST /api/leaderboard/lineup token classes", () => {
     ["malformed", "not-a-token", 400, "MALFORMED_TOKEN"],
     ["legacy t1", legacyT1Token(), 422, "UNSUPPORTED_TOKEN"],
     ["foreign build", foreignBuildToken(), 404, "DIFFERENT_BUILD"],
+    ["immediate pre-basis build", skewFixtures.shipped_pre_basis_t3.token, 404, "DIFFERENT_BUILD"],
     ["out-of-range t3 pick", illegalPickToken(), 422, "ILLEGAL_PICK"],
   ])("%s returns an honest error", async (_label, token, status, code) => {
     const res = await handleLeaderboardLineupPost(postReq(token), deps());

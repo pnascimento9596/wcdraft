@@ -109,10 +109,12 @@ export interface DraftPlayerCard {
   /** Per-card coarse eligibility; MUST be non-empty (drives `positionCompatibility`). */
   eligible_positions: readonly Position[];
   /**
-   * Optional quality projection used only to spread choose-from-3 offers across
-   * rating tiers. Missing/null stays honest and falls back to canonical order.
+   * Optional display-value projection used only to spread choose-from-3 offers
+   * across rating tiers. Production supplies both selected-basis values; the
+   * scalar form remains the compatibility shape for Career-only fixtures.
+   * Missing/null stays honest and falls back to canonical order.
    */
-  choice_overall?: number | null;
+  choice_overall?: number | null | Readonly<Record<RatingBasis, number | null>>;
 }
 
 /**
@@ -563,8 +565,8 @@ function isEntrySelectable(
   return false;
 }
 
-function openDraftCardRank(card: DraftPlayerCard): number {
-  const overall = choiceOverall(card);
+function openDraftCardRank(card: DraftPlayerCard, ratingBasis: RatingBasis): number {
+  const overall = resolveChoiceOverall(card, ratingBasis);
   return overall ?? -1;
 }
 
@@ -577,9 +579,13 @@ const BLIND_OPEN_POSITION_ORDER: Readonly<Record<Position, number>> = Object.fre
   FW: 3,
 });
 
-function compareOpenDraftCards(a: DraftPlayerCard, b: DraftPlayerCard): number {
-  const ao = openDraftCardRank(a);
-  const bo = openDraftCardRank(b);
+function compareOpenDraftCards(
+  a: DraftPlayerCard,
+  b: DraftPlayerCard,
+  ratingBasis: RatingBasis,
+): number {
+  const ao = openDraftCardRank(a, ratingBasis);
+  const bo = openDraftCardRank(b, ratingBasis);
   if (ao !== bo) return bo - ao;
   return compareCardId(cardIdFor(a), cardIdFor(b));
 }
@@ -595,8 +601,11 @@ function compareOpenDraftCardsForOrder(
   a: DraftPlayerCard,
   b: DraftPlayerCard,
   order: OpenDraftCardOrder,
+  ratingBasis: RatingBasis,
 ): number {
-  return order === "blind" ? compareBlindOpenDraftCards(a, b) : compareOpenDraftCards(a, b);
+  return order === "blind"
+    ? compareBlindOpenDraftCards(a, b)
+    : compareOpenDraftCards(a, b, ratingBasis);
 }
 
 function openDraftOrderForMode(mode: DraftMode): OpenDraftCardOrder {
@@ -607,6 +616,7 @@ function openDraftPlayerCards(
   catalog: DraftCatalog,
   nation_id: string,
   excluded: ReadonlySet<string>,
+  ratingBasis: RatingBasis,
   displayOrder: OpenDraftCardOrder = "rating",
 ): DraftPlayerCard[] {
   const bestByPlayer = new Map<string, DraftPlayerCard>();
@@ -615,13 +625,13 @@ function openDraftPlayerCards(
     for (const card of entry.roster) {
       if (excluded.has(card.player_id)) continue;
       const prior = bestByPlayer.get(card.player_id);
-      if (!prior || compareOpenDraftCards(card, prior) < 0) {
+      if (!prior || compareOpenDraftCards(card, prior, ratingBasis) < 0) {
         bestByPlayer.set(card.player_id, card);
       }
     }
   }
   return [...bestByPlayer.values()].sort((a, b) =>
-    compareOpenDraftCardsForOrder(a, b, displayOrder),
+    compareOpenDraftCardsForOrder(a, b, displayOrder, ratingBasis),
   );
 }
 
@@ -630,11 +640,13 @@ function openDraftPlayerChoices(
   nation_id: string,
   priorPlayerPicks: readonly string[],
   mode: DraftMode,
+  ratingBasis: RatingBasis,
 ): CardId[] {
   return openDraftPlayerCards(
     catalog,
     nation_id,
     new Set(priorPlayerPicks),
+    ratingBasis,
     openDraftOrderForMode(mode),
   ).map((card) => cardIdFor(card));
 }
@@ -662,8 +674,9 @@ function isOpenEntrySelectable(
   entry: TnEntry,
   excluded: ReadonlySet<string>,
   managerPicked: boolean,
+  ratingBasis: RatingBasis,
 ): boolean {
-  if (openDraftPlayerCards(catalog, entry.nation_id, excluded).length > 0) return true;
+  if (openDraftPlayerCards(catalog, entry.nation_id, excluded, ratingBasis).length > 0) return true;
   return openDraftManagerChoices(catalog, entry.nation_id, managerPicked).length > 0;
 }
 
@@ -719,6 +732,7 @@ function drawSpinEntry(
   excluded: ReadonlySet<string>,
   managerPicked: boolean,
   mode: DraftMode,
+  ratingBasis: RatingBasis,
 ): WeightedDrawResult {
   const startIdx = weightedStartIndex(catalog, u);
   const n = catalog.pairs.length;
@@ -728,7 +742,7 @@ function drawSpinEntry(
   let scanned = 0;
   const selectable = (entry: TnEntry) =>
     isOpenDraftMode(mode)
-      ? isOpenEntrySelectable(catalog, entry, excluded, managerPicked)
+      ? isOpenEntrySelectable(catalog, entry, excluded, managerPicked, ratingBasis)
       : isEntrySelectable(entry, excluded, managerPicked);
   while (!selectable(catalog.pairs[idx]!)) {
     idx = (idx + 1) % n;
@@ -776,12 +790,20 @@ function compareCardId(a: CardId | string, b: CardId | string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-function choiceOverall(card: DraftPlayerCard): number | null {
+export function resolveChoiceOverall(
+  card: DraftPlayerCard,
+  ratingBasis: RatingBasis,
+): number | null {
   // ENG-08 invariant: display values are permitted for offer tiering only.
   // Never read choice_overall for scoring, sim, best-XI, or team strength.
-  return typeof card.choice_overall === "number" && Number.isFinite(card.choice_overall)
-    ? card.choice_overall
-    : null;
+  const configured = card.choice_overall;
+  const value =
+    configured !== null && typeof configured === "object"
+      ? configured[ratingBasis]
+      : ratingBasis === "career"
+        ? configured
+        : null;
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
 function primaryPosition(card: DraftPlayerCard): Position {
@@ -800,10 +822,13 @@ function shuffled<T>(items: readonly T[], rngSeed: string): T[] {
   return out;
 }
 
-function rankedChoiceCandidates(cards: readonly DraftPlayerCard[]): ChoiceCandidate[] {
+function rankedChoiceCandidates(
+  cards: readonly DraftPlayerCard[],
+  ratingBasis: RatingBasis,
+): ChoiceCandidate[] {
   const ranked = [...cards].sort((a, b) => {
-    const ao = choiceOverall(a);
-    const bo = choiceOverall(b);
+    const ao = resolveChoiceOverall(a, ratingBasis);
+    const bo = resolveChoiceOverall(b, ratingBasis);
     if (ao !== null && bo !== null && ao !== bo) return bo - ao;
     if (ao !== null && bo === null) return -1;
     if (ao === null && bo !== null) return 1;
@@ -825,6 +850,7 @@ function selectDiverseChoice(
   pool: readonly ChoiceCandidate[],
   selected: readonly ChoiceCandidate[],
   rngSeed: string,
+  ratingBasis: RatingBasis,
 ): ChoiceCandidate {
   const selectedPositions = new Set(selected.map((c) => c.position_bucket));
   const selectedTiers = new Set(selected.map((c) => c.tier));
@@ -834,7 +860,7 @@ function selectDiverseChoice(
     let score = 0;
     if (!selectedPositions.has(candidate.position_bucket)) score += 4;
     if (!selectedTiers.has(candidate.tier)) score += 3;
-    const overall = choiceOverall(candidate.card);
+    const overall = resolveChoiceOverall(candidate.card, ratingBasis);
     if (overall !== null) score += overall / 1000;
     if (score > bestScore) {
       bestScore = score;
@@ -852,6 +878,7 @@ function selectPlayerChoices(
   index: number,
   priorPlayerPicks: readonly string[],
   draft_seed: string,
+  ratingBasis: RatingBasis,
 ): CardId[] {
   const excluded = new Set(priorPlayerPicks);
   const legal = entry.roster.filter((card) => !excluded.has(card.player_id));
@@ -875,14 +902,14 @@ function selectPlayerChoices(
     "draft",
     `choices:${index}:${entry.tournament_id}:${entry.nation_id}:${priorPlayerPicks.join(",")}`,
   );
-  const candidates = rankedChoiceCandidates(legal);
+  const candidates = rankedChoiceCandidates(legal, ratingBasis);
   const selected: ChoiceCandidate[] = [];
   const selectedIds = new Set<string>();
 
   for (const tier of shuffled([0, 1, 2], `${choiceSeed}:tiers`)) {
     const pool = candidates.filter((c) => c.tier === tier && !selectedIds.has(c.card_id));
     if (pool.length === 0) continue;
-    const picked = selectDiverseChoice(pool, selected, `${choiceSeed}:tier:${tier}`);
+    const picked = selectDiverseChoice(pool, selected, `${choiceSeed}:tier:${tier}`, ratingBasis);
     selected.push(picked);
     selectedIds.add(picked.card_id);
   }
@@ -890,7 +917,12 @@ function selectPlayerChoices(
   while (selected.length < MAX_PLAYER_CHOICES_PER_SPIN) {
     const pool = candidates.filter((c) => !selectedIds.has(c.card_id));
     if (pool.length === 0) break;
-    const picked = selectDiverseChoice(pool, selected, `${choiceSeed}:fill:${selected.length}`);
+    const picked = selectDiverseChoice(
+      pool,
+      selected,
+      `${choiceSeed}:fill:${selected.length}`,
+      ratingBasis,
+    );
     selected.push(picked);
     selectedIds.add(picked.card_id);
   }
@@ -916,6 +948,7 @@ function rollPendingSpinFromEntry(
   draw_probability: number,
   draft_seed: string,
   mode: DraftMode,
+  ratingBasis: RatingBasis,
   /**
    * DC-3 — the committed position-first target, or null under squad_first.
    * Exposure follows the target: a `"manager"` target offers ONLY the coach;
@@ -928,8 +961,8 @@ function rollPendingSpinFromEntry(
     target_slot_id === "manager"
       ? []
       : isOpenDraftMode(mode)
-        ? openDraftPlayerChoices(catalog, entry.nation_id, priorPlayerPicks, mode)
-        : selectPlayerChoices(entry, index, priorPlayerPicks, draft_seed);
+        ? openDraftPlayerChoices(catalog, entry.nation_id, priorPlayerPicks, mode, ratingBasis)
+        : selectPlayerChoices(entry, index, priorPlayerPicks, draft_seed, ratingBasis);
   const offerCoach = target_slot_id === null ? !managerPicked : target_slot_id === "manager";
   const rolled_manager_card_id: ManagerCardId | null =
     !isOpenDraftMode(mode) && offerCoach && entry.coach
@@ -1021,6 +1054,7 @@ function rebuildSpins(
   draft_seed: string,
   spins: readonly Spin[],
   mode: DraftMode,
+  ratingBasis: RatingBasis,
 ): Spin[] {
   const rng = createRng(draft_seed);
   const priorPlayerPicks: string[] = [];
@@ -1039,7 +1073,14 @@ function rebuildSpins(
       continue;
     }
     const excluded = new Set(priorPlayerPicks);
-    const { entry, draw_probability } = drawSpinEntry(catalog, u, excluded, managerPicked, mode);
+    const { entry, draw_probability } = drawSpinEntry(
+      catalog,
+      u,
+      excluded,
+      managerPicked,
+      mode,
+      ratingBasis,
+    );
     out.push(
       rollPendingSpinFromEntry(
         catalog,
@@ -1050,6 +1091,7 @@ function rebuildSpins(
         draw_probability,
         draft_seed,
         mode,
+        ratingBasis,
       ),
     );
   }
@@ -1061,7 +1103,12 @@ function rebuildSpins(
  * produce the freshly-created draft's pending spin list. Each draw consumes
  * exactly one `rng.next()` from the seeded `"draft"` substream.
  */
-function buildInitialSpins(catalog: DraftCatalog, draft_seed: string, mode: DraftMode): Spin[] {
+function buildInitialSpins(
+  catalog: DraftCatalog,
+  draft_seed: string,
+  mode: DraftMode,
+  ratingBasis: RatingBasis,
+): Spin[] {
   const rng = createRng(draft_seed);
   const excluded = new Set<string>();
   const spins: Spin[] = [];
@@ -1073,9 +1120,20 @@ function buildInitialSpins(catalog: DraftCatalog, draft_seed: string, mode: Draf
       excluded,
       /*managerPicked*/ false,
       mode,
+      ratingBasis,
     );
     spins.push(
-      rollPendingSpinFromEntry(catalog, entry, i, [], false, draw_probability, draft_seed, mode),
+      rollPendingSpinFromEntry(
+        catalog,
+        entry,
+        i,
+        [],
+        false,
+        draw_probability,
+        draft_seed,
+        mode,
+        ratingBasis,
+      ),
     );
   }
   return spins;
@@ -1237,7 +1295,7 @@ export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): D
   const spins =
     draft_flow === "position_first"
       ? Array.from({ length: SPIN_COUNT }, (_, i) => buildAwaitingSpin(i))
-      : buildInitialSpins(catalog, draft_seed, mode);
+      : buildInitialSpins(catalog, draft_seed, mode, rating_basis);
   const squad = buildSquad(params.formation_id);
 
   // ENGINE-V2 E-1 (squad_first only — position_first has no draws yet):
@@ -1402,6 +1460,7 @@ export function selectDraftTarget(
     excluded,
     managerPicked,
     state.mode,
+    state.rating_basis,
   );
 
   // Honest dead-end checks BEFORE committing anything.
@@ -1416,7 +1475,7 @@ export function selectDraftTarget(
     }
   } else {
     const anyPlayerLeft = isOpenDraftMode(state.mode)
-      ? openDraftPlayerCards(catalog, entry.nation_id, excluded).length > 0
+      ? openDraftPlayerCards(catalog, entry.nation_id, excluded, state.rating_basis).length > 0
       : entry.roster.some((c) => !excluded.has(c.player_id));
     if (!anyPlayerLeft) {
       throw new DraftTargetDeadEndError(
@@ -1434,6 +1493,7 @@ export function selectDraftTarget(
     draw_probability,
     state.draft_seed,
     state.mode,
+    state.rating_basis,
     target,
   );
   const spins = state.spins.map((s) => (s.index === active.index ? rolled : s));
@@ -1556,6 +1616,7 @@ export function pickPlayer(
         catalog,
         active.nation_id,
         new Set(active.excluded_player_ids),
+        state.rating_basis,
         openDraftOrderForMode(state.mode),
       ).find((c) => c.player_id === parsed.player_id && c.tournament_id === parsed.tournament_id)
     : entry.roster.find((c) => c.player_id === parsed.player_id);
@@ -1608,7 +1669,7 @@ export function pickPlayer(
   // spins are unmaterialized placeholders until their targets are committed.
   const spins = positionFirst
     ? withPick
-    : rebuildSpins(catalog, state.draft_seed, withPick, state.mode);
+    : rebuildSpins(catalog, state.draft_seed, withPick, state.mode, state.rating_basis);
 
   return finalize(state, spins, squad, state.manager_card_id);
 }
@@ -1670,7 +1731,7 @@ export function pickManager(
   const withPick = state.spins.map((s) => (s.index === active.index ? pickedSpin : s));
   const spins = positionFirst
     ? withPick
-    : rebuildSpins(catalog, state.draft_seed, withPick, state.mode);
+    : rebuildSpins(catalog, state.draft_seed, withPick, state.mode, state.rating_basis);
   // Squad untouched: the manager never occupies a SquadSlot.
   return finalize(state, spins, state.squad, mgr);
 }

@@ -28,7 +28,7 @@ import {
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIR, "..", "..", "..");
-const SCRIPT_VERSION = "choose3-clustering-1.0.0";
+const SCRIPT_VERSION = "choose3-clustering-1.2.0";
 const MEASUREMENT_DRAFTS = 1024;
 const HOLDOUT_DRAFTS = 2048;
 const PREFIXES = Object.freeze([256, 512, MEASUREMENT_DRAFTS, HOLDOUT_DRAFTS]);
@@ -111,6 +111,7 @@ interface DraftObservation {
   candidateSeedIndex: number;
   managerPickIndex: number;
   managerTargetDeadEnds: number;
+  managerCardId: string;
   offers: OfferObservation[];
 }
 
@@ -253,7 +254,7 @@ function maxRateShift(
 
 function buildDataset(bundle: RuntimeBundle): DraftDataset {
   // This is the exact narrow mapping used by apps/web/lib/game/data.ts::buildDraftDataset.
-  // Critically, choice_overall stays the top-level Career display alias even for Current runs.
+  // The core resolver selects the configured display basis from this dual-value input.
   const ratingByCardId = new Map(bundle.ratings.map((rating) => [rating.card_id, rating]));
   return {
     players: bundle.player_cards.map((card) => ({
@@ -261,7 +262,10 @@ function buildDataset(bundle: RuntimeBundle): DraftDataset {
       tournament_id: card.tournament_id,
       nation_id: card.nation_id,
       eligible_positions: card.eligible_positions,
-      choice_overall: ratingByCardId.get(card.card_id)?.overall ?? null,
+      choice_overall: {
+        career: ratingByCardId.get(card.card_id)?.overall ?? null,
+        current: ratingByCardId.get(card.card_id)?.basis_ratings.current.overall ?? null,
+      },
     })),
     managers: bundle.manager_cards.map((manager) => ({
       manager_id: manager.manager_id,
@@ -486,7 +490,13 @@ function simulateDraft(
   if (managerPickIndex === 0 || state.manager_card_id === null) {
     throw new Error("completed draft has no manager pick");
   }
-  return { candidateSeedIndex, managerPickIndex, managerTargetDeadEnds, offers };
+  return {
+    candidateSeedIndex,
+    managerPickIndex,
+    managerTargetDeadEnds,
+    managerCardId: state.manager_card_id,
+    offers,
+  };
 }
 
 function runCell(
@@ -723,12 +733,14 @@ function cellOutput(cell: CellRun) {
       "candidate_seed_index",
       "manager_pick_index",
       "manager_target_dead_end_attempts",
+      "selected_manager_card_id",
     ],
     draft_records: drafts.map((draft, draftOrdinal) => [
       draftOrdinal,
       draft.candidateSeedIndex,
       draft.managerPickIndex,
       draft.managerTargetDeadEnds,
+      draft.managerCardId,
     ]),
     offer_records_schema: [
       "draft_ordinal",
@@ -812,7 +824,7 @@ function main() {
 
   const output = {
     schema_version: SCRIPT_VERSION,
-    measurement_date: "2026-07-17",
+    measurement_date: "2026-07-18",
     method: {
       measurement_drafts_per_cell: MEASUREMENT_DRAFTS,
       holdout_drafts_per_cell: HOLDOUT_DRAFTS,
@@ -847,7 +859,7 @@ function main() {
       prefixes: prefixSummaries,
     },
     inputs: {
-      base_commit: "fc1748f4e4eaaa0994530c83db81582e82e7687c",
+      base_commit: "565b87f8d96f5781fb72b8283d754c1c4f2ddf9a",
       bundle_path: BUNDLE_REL,
       bundle_compressed_bytes: bundleCompressed.length,
       bundle_compressed_sha256: sha256(bundleCompressed),
@@ -878,7 +890,7 @@ function main() {
       offer_construction:
         "calls buildDraftCatalog/createDraft/selectDraftTarget/pickPlayer/pickManager/stepDraft from packages/core/src; no tiering logic is reimplemented",
       tier_input:
-        "top-level Career display overall through DraftPlayerCard.choice_overall for both rating bases",
+        "selected-basis display overall through the core DraftPlayerCard.choice_overall resolver",
       visible_values: "selected basis: top-level Career alias or basis_ratings.current",
       candidate_frame:
         "era-weighted tournament-nation pair, then globally deduped remaining squad roster; not a flat draw from the era pool",

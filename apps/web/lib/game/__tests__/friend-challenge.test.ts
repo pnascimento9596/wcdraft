@@ -319,6 +319,25 @@ describe("same-seed friend challenge contract", () => {
     });
   });
 
+  it("fails the immediate pre-basis token closed as DIFFERENT_BUILD without a score", async () => {
+    const token = skewFixtures.shipped_pre_basis_t3.token;
+    const result = await verifyFriendChallengeForPlay(
+      token,
+      await proofFor(token),
+      validation,
+      SECRET,
+    );
+    expect(result).toEqual({
+      status: "accepted",
+      challenge: expect.objectContaining({
+        status: "DIFFERENT_BUILD",
+        parentSeed: "wcdraft:basis-tiering:prechange:v1",
+        challengerDisplay: "a friend",
+        challengerScore: null,
+      }),
+    });
+  });
+
   it("accepts covered Daily links and fails closed outside published coverage", async () => {
     const published = gameData.dailySeedSaltMap?.dates[0];
     if (!published) throw new Error("daily fixture missing");

@@ -15,6 +15,7 @@ import {
   buildCardId,
   validateSquad,
   DraftStateSchema,
+  resolveChoiceOverall,
 } from "./index.js";
 import {
   RARE_YEAR_CUTOFF,
@@ -139,8 +140,8 @@ describe("draft — fixed seed reproduces identical 17-spin sequence (ENGINE-V2 
             !excluded.has(card.player_id),
         )
         .sort((a, b) => {
-          const ao = a.choice_overall ?? Number.NEGATIVE_INFINITY;
-          const bo = b.choice_overall ?? Number.NEGATIVE_INFINITY;
+          const ao = resolveChoiceOverall(a, "career") ?? Number.NEGATIVE_INFINITY;
+          const bo = resolveChoiceOverall(b, "career") ?? Number.NEGATIVE_INFINITY;
           if (ao !== bo) return bo - ao;
           return buildCardId(a.player_id, a.tournament_id) <
             buildCardId(b.player_id, b.tournament_id)

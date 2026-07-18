@@ -90,7 +90,7 @@ describe("merit-v4.6 ratings-coverage acceptance probes", () => {
     expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.10.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.6.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.6.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.07.14-squad-depth");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.07.18-basis-aware-tiering");
   });
 
   it("keeps the pre-registered elite European anchors unchanged", () => {

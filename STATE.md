@@ -4,22 +4,27 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Choose-from-3 clustering baseline: 2026-07-17 · **MEASURED, no rating movement**. A deterministic
-shipped-path simulation ran 1,024 complete 17-spin drafts in each of 16 era × rendered-basis ×
-draft-flow cells, with a 2,048-draft-per-cell convergence holdout. In the canonical ranked config
-(All-time · Squad First · Career), full-offer tie rates are **11.09%** at ΔOVR 0 (95% clustered CI
-10.62–11.56%), **41.31%** at ΔOVR ≤1 (40.56–42.06%), and **74.49%** at ΔOVR ≤2
-(73.85–75.12%). After removing visibly estimated candidates and retaining offers with at least two
-non-estimate candidates, the rates are **11.08% / 40.44% / 71.75%**. Estimate-involved tied offers
-account for 105/1,931 exact ties, 601/7,191 Δ≤1 ties, and 1,386/12,967 Δ≤2 ties. The uniform
-three-card All-time Career pool baselines are 12.86% / 34.77% / 52.26%, separating the display
-histogram from the squad/tier/position offer path. The dispatched 927 estimate cohort is
-Career-only; Current visibly has 388. Current offers are still selected with Career
-`choice_overall`, then rendered with Current OVR/channels, exactly as shipped. No rating, curve,
-tier logic, data artifact, or golden moved; merit-v4.7 remains unopened and conditional on the
-owner's playthrough evidence. Full method, 16-cell tables, per-pick curves, pool histograms,
-per-offer records, and PR #311 checkout forensics:
-`docs/reports/choose3-clustering-measurement-2026-07-17.md`.
+Basis-aware offer tiering baseline: 2026-07-18 · **MEASURED, no rating movement**. Offer tiering
+operates on the display value of the **selected rating basis**. ENG-08 is unchanged: display values
+are permitted for offer tiering ONLY — never scoring, sim, or best-XI. Basis-aware tiering is an
+application of ENG-08, not an amendment to it. The engine anchor is
+`engine-2026.07.18-basis-aware-tiering`; schema `runtime-data-2.10.0`, rating anchors
+`wc-perf-6.6.0` / `proj-career-5.6.0`, draft-pool/scenario bytes, and ranked season
+`season-2026-squad-depth` are unchanged.
+
+The PR #312 analyzer was re-run with the same fixed seeds: 1,024 complete drafts in each of 16 era
+× basis × flow cells plus a 2,048-draft-per-cell convergence holdout. All eight Career cells are
+byte-identical before/after across 8,192 measurement drafts, proving zero Career pick flips. In
+the canonical ranked config (All-time · Squad First · Career), full-offer tie rates remain
+**11.09% / 41.31% / 74.49%** at ΔOVR 0 / ≤1 / ≤2. The corrected All-time · Squad First · Current
+baseline is **14.45%** exact (95% clustered CI 13.93–14.97%), **47.48%** at Δ≤1
+(46.75–48.22%), and **80.96%** at Δ≤2 (80.39–81.54%), replacing the Career-tiered contaminated
+**16.79% / 50.85% / 79.74%** values. Across all eight Current cells, 93,988/131,072 selected
+player identities differ: 8,170 first divergences directly attributable to selected-basis tiering
+and 85,818 downstream divergences after drafted-player state changed; unexplained flips: **0**.
+Full attribution is preserved outside Git with its SHA-256 in the committed comparison. Evidence:
+`docs/reports/choose3-basis-aware-comparison-2026-07-18.json` and
+`docs/reports/basis-aware-offer-tiering-2026-07-18.md`.
 
 G1/V1 override channel-scale verdict: 2026-07-17 · **RETIRED**. The merit-v4.5
 defect was real, and merit-v4.6 intentionally fixed it by preserving owner display pins while
@@ -2949,11 +2954,11 @@ internal sim score/channel inputs to `display_curve^-1(owner display)` before
 channel materialization.
 
 Current repo runtime anchor:
-`runtime-data-2.9.0` / `engine-2026.06.30-manager-attrition` / `wc-perf-6.6.0` /
+`runtime-data-2.10.0` / `engine-2026.07.18-basis-aware-tiering` / `wc-perf-6.6.0` /
 `proj-career-5.6.0`, dataset `2026-07-01`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
 knockout slots `62`. Explicit active leaderboard season id:
-`season-2026-manager-attrition`.
+`season-2026-squad-depth`.
 
 X marketing lane:
 source assets are present on `origin/main` as of
@@ -3152,9 +3157,9 @@ broken-pipe MCP transport error.
   neutralization, #136/#142 performance and atomic versioned delivery, #139 a11y
   and candidate render memoization, #140 safe patch dependencies.
 - Runtime data delivery is atomic/versioned at
-  `/data/wcdraft/runtime-data-2.9.0/`; fixed legacy `/data/wcdraft/*` paths remain
-  for old clients/server readers and `runtime-data-2.8.0` is retained for N+1
-  propagation.
+  `/data/wcdraft/runtime-data-2.10.0/`; fixed legacy `/data/wcdraft/*` paths remain
+  for old clients/server readers and `runtime-data-2.9.0` plus `runtime-data-2.8.0`
+  are retained under the current-plus-two retention policy.
 - Trusted OG is DONE-LIVE via #143: `/api/og/sign` validates replay tokens against
   the current manifest, reconstructs the draft, runs the deterministic engine, and
   signs the canonical OG render model plus token hash; `/api/og/run` verifies the
@@ -3163,27 +3168,27 @@ broken-pipe MCP transport error.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
-| Field                                | Value                                                                                                        |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| schema_version                       | runtime-data-2.9.0                                                                                           |
-| dataset_version                      | 2026-07-01                                                                                                   |
-| ruleset_version                      | ruleset-2026.06.04                                                                                           |
-| engine_version                       | engine-2026.06.30-manager-attrition                                                                          |
-| rating_version (historical)          | wc-perf-6.6.0                                                                                                |
-| rating_version (projected)           | proj-career-5.6.0                                                                                            |
-| career_stature                       | career-stature-4.1.0                                                                                         |
-| merit source set                     | merit-source-set-2.2.0                                                                                       |
-| active source set                    | active-career-source-set-2.2.0                                                                               |
-| runtime legend census                | 295                                                                                                          |
-| runtime ratings                      | 12,219                                                                                                       |
-| Career basis counts                  | 11,292 measured · 541 career-stature · 386 baseline                                                          |
-| career-stature table                 | 847 players · 209 material · 114 source-derived legends                                                      |
-| explicit leaderboard season id       | season-2026-manager-attrition                                                                                |
-| compact brotli total (legacy 3-file) | 2,231,500 measured bytes (manifest + draft + scenario)                                                       |
-| all tracked compact `.br` total      | 2,233,894 repository bytes (manifest + draft + scenario + score distribution + daily seed map)               |
-| served draft-pool br artifact        | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; decompressed sha `461601…` |
-| compact sha256                       | manifest `aa70f018…` · draft `461601…` · scenario `7846fa3a…`                                                |
-| generated artifact locks             | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes     |
+| Field                                | Value                                                                                                         |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| schema_version                       | runtime-data-2.10.0                                                                                           |
+| dataset_version                      | 2026-07-01                                                                                                    |
+| ruleset_version                      | ruleset-2026.06.04                                                                                            |
+| engine_version                       | engine-2026.07.18-basis-aware-tiering                                                                         |
+| rating_version (historical)          | wc-perf-6.6.0                                                                                                 |
+| rating_version (projected)           | proj-career-5.6.0                                                                                             |
+| career_stature                       | career-stature-4.1.0                                                                                          |
+| merit source set                     | merit-source-set-2.2.0                                                                                        |
+| active source set                    | active-career-source-set-2.2.0                                                                                |
+| runtime legend census                | 295                                                                                                           |
+| runtime ratings                      | 12,219                                                                                                        |
+| Career basis counts                  | 11,292 measured · 541 career-stature · 386 baseline                                                           |
+| career-stature table                 | 847 players · 209 material · 114 source-derived legends                                                       |
+| explicit leaderboard season id       | season-2026-squad-depth                                                                                       |
+| compact brotli total (legacy 3-file) | 1,318,014 measured bytes (manifest + draft + scenario)                                                        |
+| all tracked compact `.br` total      | 1,320,293 repository bytes (manifest + draft + scenario + score distribution + daily seed map)                |
+| served draft-pool br artifact        | 1,311,661 bytes at `/data/wcdraft/runtime-data-2.10.0/draft-pool.compact.json.br`; decompressed sha `ae5376…` |
+| compact sha256                       | manifest `13dc2384…` · draft `ae5376c9…` · scenario `50c45d0e…`                                               |
+| generated artifact locks             | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `ae5376c9…` / 68,380,413 bytes     |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 
@@ -3353,7 +3358,7 @@ web static assets.
 - `WCDRAFT_CSP_REPORT_ONLY` is an optional build/test cache-keyed override declared in
   `turbo.json`; it is not a required production secret. `WCDRAFT_LEADERBOARD_SEASON_ID`
   is the optional explicit aggregate season-id override and is also declared in
-  `turbo.json`; the code default is `season-2026-manager-attrition`.
+  `turbo.json`; the code default is `season-2026-squad-depth`.
   `LEADERBOARD_REQUIRE_ACCOUNT` is retired as an env lever and removed from
   Turbo env lists; ranked submit requires an account in code without reading
   that flag.

@@ -95,7 +95,7 @@ describe("GET /api/health readiness contract", () => {
     expect(DATA_MANIFEST_ANCHOR).toEqual({
       schema_version: "runtime-data-2.10.0",
       dataset_version: "2026-07-01",
-      engine_version: "engine-2026.07.14-squad-depth",
+      engine_version: "engine-2026.07.18-basis-aware-tiering",
       rating_version_historical: "wc-perf-6.6.0",
       rating_version_projected: "proj-career-5.6.0",
       ruleset_version: "ruleset-2026.06.04",

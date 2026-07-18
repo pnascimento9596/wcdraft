@@ -41,10 +41,12 @@ import {
   buildCardId,
   buildDraftCatalog,
   createDraft,
+  DraftTargetDeadEndError,
   isDraftComplete,
   pickManager,
   pickPlayer,
   positionCompatibility,
+  selectDraftTarget,
   slotPositionLine,
   type CardId,
   type CreateDraftParams,
@@ -252,6 +254,21 @@ export function runAutoDraftPolicy(
     const active = activeSpin(state);
     if (!active) throw new RangeError("runAutoDraftPolicy: complete with no active spin");
     const needManager = state.manager_card_id === null;
+    if (state.draft_flow === "position_first") {
+      if (needManager) {
+        try {
+          state = pickManager(catalog, selectDraftTarget(catalog, state, "manager"));
+          continue;
+        } catch (error) {
+          if (!(error instanceof DraftTargetDeadEndError)) throw error;
+        }
+      }
+      const slot = firstVacantSlot(state);
+      if (slot === null) {
+        throw new RangeError("runAutoDraftPolicy: position-first draft has no vacant player slot");
+      }
+      state = selectDraftTarget(catalog, state, slot.slot_id);
+    }
     if (needManager && active.rolled_manager_card_id !== null) {
       state = pickManager(catalog, state);
       continue;
@@ -267,7 +284,7 @@ export function strategicAutoDraft(
   input: CreateDraftParams & { dataset: DraftDataset; ctx: PolicyContext },
 ): DraftState {
   const { dataset, ctx, ...params } = input;
-  const catalog = buildDraftCatalog(dataset);
+  const catalog = buildDraftCatalog(dataset, params.era_preset);
   return runAutoDraftPolicy(catalog, params, ctx, "strategic");
 }
 
@@ -275,7 +292,7 @@ export function greedyOverallAutoDraft(
   input: CreateDraftParams & { dataset: DraftDataset; ctx: PolicyContext },
 ): DraftState {
   const { dataset, ctx, ...params } = input;
-  const catalog = buildDraftCatalog(dataset);
+  const catalog = buildDraftCatalog(dataset, params.era_preset);
   return runAutoDraftPolicy(catalog, params, ctx, "greedy");
 }
 

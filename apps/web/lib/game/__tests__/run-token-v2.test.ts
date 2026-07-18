@@ -45,7 +45,7 @@ import { dailyChallengeForDate } from "../daily";
 
 import skewFixtures from "./fixtures/run-token-skew.json" with { type: "json" };
 
-import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
+import { buildGameDataFromBundles, buildOriginRecord, PARENT_SEED } from "./run-token.test-harness";
 
 const gameData: GameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
@@ -312,16 +312,24 @@ describe("t2 — replay carries the rating basis (both bases live)", () => {
     expect(draft.rating_basis).toBe("current");
   });
 
-  it("the basis is the ONLY difference vs a career replay (spins are basis-independent)", () => {
-    const current = reconstructDraftFromToken(
-      decodeRunToken(tamperedV3((b) => (b.rb = "current")))!,
-      gameData,
-    );
-    const career = reconstructDraftFromToken(
-      decodeRunToken(tamperedV3((b) => (b.rb = "career")))!,
-      gameData,
-    );
-    expect({ ...current, rating_basis: "career" }).toEqual(career);
+  it.each(["career", "current"] as const)(
+    "a freshly authored %s token round-trips to its exact selected-basis draft",
+    (basis) => {
+      const record = buildOriginRecord(gameData, `${PARENT_SEED}:${basis}`, basis);
+      const decoded = decodeRunToken(encodeRunToken(record));
+      expect(decoded).not.toBeNull();
+      expect(tokenDraftConfig(decoded!).rating_basis).toBe(basis);
+      expect(JSON.stringify(reconstructDraftFromToken(decoded!, gameData))).toBe(
+        JSON.stringify(record.draft),
+      );
+    },
+  );
+
+  it("the selected basis may change the reconstructed offer stream", () => {
+    const career = buildOriginRecord(gameData, `${PARENT_SEED}:basis-delta`, "career");
+    const current = buildOriginRecord(gameData, `${PARENT_SEED}:basis-delta`, "current");
+    expect(current.draft.rating_basis).toBe("current");
+    expect(current.draft.spins).not.toEqual(career.draft.spins);
   });
 });
 
@@ -406,6 +414,26 @@ describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
     expect(decoded!.rv).toBe(gameData.versions.rating_version);
     expect(decoded!.hv).toBe(gameData.versions.data_bundle_hash);
     expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
+  });
+
+  it("immediate pre-basis shipped t3 token: only the engine fence trips skew", () => {
+    const decoded = decodeRunToken(skewFixtures.shipped_pre_basis_t3.token);
+    expect(decoded).not.toBeNull();
+    expect(decoded!.v).toBe(3);
+    expect(skewFixtures.shipped_pre_basis_source.production_main_commit).toBe(
+      "735e0ecc127ac13b90527141b5fb43c019f0b03e",
+    );
+    expect(skewFixtures.shipped_pre_basis_source.body_sha256).toBe(
+      "408f7ca241ef208b792cef3b804e37fe3d388d3551c3fe5a7221c05515aa60b3",
+    );
+    expect(decoded!.ev).toBe("engine-2026.07.14-squad-depth");
+    expect(decoded!.sv).toBe(gameData.versions.schema_version);
+    expect(decoded!.dv).toBe(gameData.versions.dataset_version);
+    expect(decoded!.rv).toBe(gameData.versions.rating_version);
+    expect(decoded!.uv).toBe(gameData.versions.ruleset_version);
+    expect(decoded!.hv).toBe(gameData.versions.data_bundle_hash);
+    expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
+    expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
   });
 
   it("prev-build t1 token: decodes, default config, trips skew", () => {

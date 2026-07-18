@@ -99,11 +99,21 @@ describe("createDraft DC-1 config recording + honesty gates", () => {
   it("records rating_basis 'current' (selected-basis lane — both bases live)", () => {
     const draft = createDraft(catalog, { ...PARAMS, rating_basis: "current" });
     expect(draft.rating_basis).toBe("current");
-    // Spins/draws are basis-independent (the basis only re-rates the squad
-    // downstream), so a current-basis draft has the same spin structure as the
-    // default — the byte-equal proof would differ only in the recorded basis.
     const career = createDraft(catalog, { ...PARAMS, rating_basis: "career" });
-    expect({ ...draft, rating_basis: "career" }).toEqual(career);
+    const withoutBasisDependentOffers = (state: typeof draft) => ({
+      ...state,
+      rating_basis: "career" as const,
+      spins: state.spins.map((spin) => ({ ...spin, rolled_card_ids: [] })),
+    });
+
+    // The seeded tournament/nation topology, draw weights, manager offers,
+    // exclusions, and unresolved-state fields remain basis-independent.
+    expect(withoutBasisDependentOffers(draft)).toEqual(withoutBasisDependentOffers(career));
+    // Player offers intentionally differ because the same tiering algorithm
+    // now ranks its candidate values under the selected display basis.
+    expect(draft.spins.map((spin) => spin.rolled_card_ids)).not.toEqual(
+      career.spins.map((spin) => spin.rolled_card_ids),
+    );
   });
 
   it("refuses an era_preset that does not match the catalog's era stamp (DC-2 coherence)", () => {
