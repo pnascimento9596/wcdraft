@@ -146,7 +146,22 @@ create_disposable_clone() {
     fail "disposable clone helper did not locally exclude its completion marker"
   [ -z "$(git -C "$candidate" status --porcelain)" ] ||
     fail "disposable clone helper left its lifecycle registration visible to git"
+  printf '%s\n' "$output" >"$probe_root/$label.helper-output"
   printf '%s\n' "$candidate"
+}
+
+mark_disposable_clone_from_printed_command() {
+  local label="$1"
+  local completion_command=""
+  local output="$probe_root/$label.helper-output"
+  local completion_output="$probe_root/$label.helper-completion-output"
+
+  completion_command="$(sed -n 's/^MARK_COMPLETE_COMMAND=//p' "$output" | tail -1)"
+  [ -n "$completion_command" ] ||
+    fail "disposable clone helper output lost its paired completion command"
+  if ! /bin/sh -c "$completion_command" >"$completion_output" 2>&1; then
+    fail "disposable clone helper printed a completion command that did not execute"
+  fi
 }
 
 assert_failed_clone_recovery_command() {
@@ -487,11 +502,7 @@ git -C "$disposable_source" -c user.name="runner-hygiene-probe" \
 helper_created_marked="$(create_disposable_clone helper-marked)"
 helper_created_unmarked="$(create_disposable_clone helper-unmarked)"
 assert_failed_clone_recovery_command
-(
-  cd "$repo_root"
-  WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
-    pnpm --filter @wcdraft/web mark:agent-temp-cleanup-ready "$helper_created_marked"
-)
+mark_disposable_clone_from_printed_command helper-marked
 assert_file_content "cleanup-ready-v1" "$helper_created_marked/.wcdraft-agent-cleanup-ready"
 [ ! -e "$helper_created_marked/.wcdraft-agent-cleanup-pending" ] ||
   fail "completion transition left the pending registration behind"
