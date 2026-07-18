@@ -21,14 +21,14 @@ const dataset: DraftDataset = {
       tournament_id: 1,
       nation_id: "n1",
       eligible_positions: ["FW"],
-      choice_overall: 95,
+      choice_overall: { career: 95, current: 70 },
     },
     {
       player_id: "dup",
       tournament_id: 2,
       nation_id: "n1",
       eligible_positions: ["GK"],
-      choice_overall: 80,
+      choice_overall: { career: 80, current: 99 },
     },
     {
       player_id: "keeper",
@@ -47,7 +47,10 @@ const dataset: DraftDataset = {
   ],
 };
 
-function openSpinCardIds(mode: Extract<DraftMode, "open" | "open_hidden">): string[] {
+function openSpinCardIds(
+  mode: Extract<DraftMode, "open" | "open_hidden">,
+  rating_basis: "career" | "current" = "career",
+): string[] {
   const catalog = buildDraftCatalog(dataset);
   const draft = createDraft(catalog, {
     run_id: `open-card-space-${mode}`,
@@ -58,6 +61,7 @@ function openSpinCardIds(mode: Extract<DraftMode, "open" | "open_hidden">): stri
     dataset_version: "test-dataset",
     rating_version: "test-rating",
     engine_version: "test-engine",
+    rating_basis,
   });
   const spin = activeSpin(draft);
   expect(spin).not.toBeNull();
@@ -78,5 +82,17 @@ describe("open draft card space", () => {
     expect(blindOpen).toEqual([keeperCard, midCard, expectedDupCard]);
     expect(blindOpen).toContain(expectedDupCard);
     expect(blindOpen).not.toContain(rejectedDupCard);
+  });
+
+  it("Open and Blind Open choose a duplicate player's representative card from the selected basis", () => {
+    const careerDup = buildCardId("dup", 1);
+    const currentDup = buildCardId("dup", 2);
+
+    expect(openSpinCardIds("open", "career")).toContain(careerDup);
+    expect(openSpinCardIds("open", "career")).not.toContain(currentDup);
+    expect(openSpinCardIds("open", "current")).toContain(currentDup);
+    expect(openSpinCardIds("open", "current")).not.toContain(careerDup);
+    expect(openSpinCardIds("open_hidden", "current")).toContain(currentDup);
+    expect(openSpinCardIds("open_hidden", "current")).not.toContain(careerDup);
   });
 });

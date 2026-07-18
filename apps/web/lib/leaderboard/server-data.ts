@@ -40,14 +40,17 @@ import type { ValidationData } from "./validate";
 
 /** Build the `DraftDataset` consumed by `createDraft`/`buildDraftCatalog`. */
 function buildDataset(draftPool: DraftPoolBundle): DraftDataset {
-  const ratingByCardId = new Map(draftPool.ratings.map((r) => [r.card_id, r.overall]));
+  const ratingByCardId = new Map(draftPool.ratings.map((r) => [r.card_id, r]));
   return {
     players: draftPool.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
-      choice_overall: ratingByCardId.get(c.card_id) ?? null,
+      choice_overall: {
+        career: ratingByCardId.get(c.card_id)?.overall ?? null,
+        current: ratingByCardId.get(c.card_id)?.basis_ratings.current.overall ?? null,
+      },
     })),
     managers: draftPool.manager_cards.map((m) => ({
       manager_id: m.manager_id,

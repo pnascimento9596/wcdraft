@@ -2,7 +2,7 @@
 // records. Extracted from run-token.test.ts so the DC-1 `t2.` suite
 // (run-token-v2.test.ts) exercises the exact same construction path.
 
-import { autoDraft, buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
+import { autoDraft, buildDraftCatalog, type DraftDataset, type RatingBasis } from "@wcdraft/core";
 import {
   DAILY_SEED_SALT_MAP_BUNDLE,
   DRAFT_POOL_BUNDLE,
@@ -17,14 +17,17 @@ import type { RunRecordV1 } from "../run-record";
 export const PARENT_SEED = "wcdraft:e2e-real-run:v1:14";
 
 export function buildDataset(): DraftDataset {
-  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r.overall]));
+  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r]));
   return {
     players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
-      choice_overall: ratingByCardId.get(c.card_id) ?? null,
+      choice_overall: {
+        career: ratingByCardId.get(c.card_id)?.overall ?? null,
+        current: ratingByCardId.get(c.card_id)?.basis_ratings.current.overall ?? null,
+      },
     })),
     managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
       manager_id: m.manager_id,
@@ -57,7 +60,11 @@ export function buildGameDataFromBundles(): GameData {
   };
 }
 
-export function buildOriginRecord(gameData: GameData, seed = PARENT_SEED): RunRecordV1 {
+export function buildOriginRecord(
+  gameData: GameData,
+  seed = PARENT_SEED,
+  rating_basis: RatingBasis = "career",
+): RunRecordV1 {
   const draft = autoDraft({
     run_id: "token-origin",
     parent_seed: seed,
@@ -67,6 +74,7 @@ export function buildOriginRecord(gameData: GameData, seed = PARENT_SEED): RunRe
     dataset_version: gameData.versions.dataset_version,
     rating_version: gameData.versions.rating_version,
     engine_version: gameData.versions.engine_version,
+    rating_basis,
     dataset: gameData.draftDataset,
   });
   return {

@@ -40,14 +40,17 @@ import { SETUP_RATING_BASES } from "@/components/game/draft-screen";
 // ─── Harness (mirrors memory-hidden-mode.test.ts) ────────────────────────────
 
 function buildDataset(): DraftDataset {
-  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r.overall]));
+  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r]));
   return {
     players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
-      choice_overall: ratingByCardId.get(c.card_id) ?? null,
+      choice_overall: {
+        career: ratingByCardId.get(c.card_id)?.overall ?? null,
+        current: ratingByCardId.get(c.card_id)?.basis_ratings.current.overall ?? null,
+      },
     })),
     managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
       manager_id: m.manager_id,

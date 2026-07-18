@@ -45,7 +45,7 @@ import { dailyChallengeForDate } from "../daily";
 
 import skewFixtures from "./fixtures/run-token-skew.json" with { type: "json" };
 
-import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
+import { buildGameDataFromBundles, buildOriginRecord, PARENT_SEED } from "./run-token.test-harness";
 
 const gameData: GameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
@@ -312,16 +312,24 @@ describe("t2 — replay carries the rating basis (both bases live)", () => {
     expect(draft.rating_basis).toBe("current");
   });
 
-  it("the basis is the ONLY difference vs a career replay (spins are basis-independent)", () => {
-    const current = reconstructDraftFromToken(
-      decodeRunToken(tamperedV3((b) => (b.rb = "current")))!,
-      gameData,
-    );
-    const career = reconstructDraftFromToken(
-      decodeRunToken(tamperedV3((b) => (b.rb = "career")))!,
-      gameData,
-    );
-    expect({ ...current, rating_basis: "career" }).toEqual(career);
+  it.each(["career", "current"] as const)(
+    "a freshly authored %s token round-trips to its exact selected-basis draft",
+    (basis) => {
+      const record = buildOriginRecord(gameData, `${PARENT_SEED}:${basis}`, basis);
+      const decoded = decodeRunToken(encodeRunToken(record));
+      expect(decoded).not.toBeNull();
+      expect(tokenDraftConfig(decoded!).rating_basis).toBe(basis);
+      expect(JSON.stringify(reconstructDraftFromToken(decoded!, gameData))).toBe(
+        JSON.stringify(record.draft),
+      );
+    },
+  );
+
+  it("the selected basis may change the reconstructed offer stream", () => {
+    const career = buildOriginRecord(gameData, `${PARENT_SEED}:basis-delta`, "career");
+    const current = buildOriginRecord(gameData, `${PARENT_SEED}:basis-delta`, "current");
+    expect(current.draft.rating_basis).toBe("current");
+    expect(current.draft.spins).not.toEqual(career.draft.spins);
   });
 });
 

@@ -245,6 +245,7 @@ export type {
 export {
   buildDraftCatalog,
   filterDraftDataset,
+  resolveChoiceOverall,
   MAX_PLAYER_CHOICES_PER_SPIN,
   createDraft,
   activeSpin,
