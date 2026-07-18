@@ -80,9 +80,10 @@ wrong: merit-v4.6 was the intentional Red correction for this precise merit-v4.5
   the full union population is used.
 - `etl/tests/test_unified_display.py:123-129` proves every attainable integer display target
   round-trips through the inverse.
-- `etl/tests/test_unified_display.py:132-181` proves top-level/Career manual display authority,
-  shared-curve mapping across both eras, and fresh top-level/Career channel materialization from
-  internal scores. It does not by itself prove v4.4 Current-only authority.
+- `etl/tests/test_unified_display.py:132-164` proves top-level/Career manual display authority and
+  shared-curve mapping across both eras; `etl/tests/test_unified_display.py:179-195` separately
+  proves fresh top-level/Career channel materialization from internal scores. Neither test by
+  itself proves v4.4 Current-only authority.
 - `etl/tests/test_manual_overrides_v45.py:24-99` directly proves the v4.3+v4.5 path: 36 recovered
   rows, 2,336 resolved / 180 unmatched source rows, frozen-curve inverse pins on both Career and
   Current, and v4.4 precedence on Current.
