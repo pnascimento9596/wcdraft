@@ -76,7 +76,7 @@ await registerAgentTempCleanupPending(candidate, root);
 const markComplete = [
   "pnpm --dir",
   shellQuote(candidate),
-  "--filter @wcdraft/web mark:agent-temp-cleanup-ready --",
+  "--filter @wcdraft/web mark:agent-temp-cleanup-ready",
   shellQuote(candidate),
 ].join(" ");
 

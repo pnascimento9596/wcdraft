@@ -132,6 +132,9 @@ create_disposable_clone() {
     fail "disposable clone helper escaped the configured direct-child root"
   printf '%s\n' "$output" | grep -Fq 'MARK_COMPLETE_COMMAND=' ||
     fail "disposable clone helper did not print its paired completion command"
+  if printf '%s\n' "$output" | grep -F 'MARK_COMPLETE_COMMAND=' | grep -Fq ' -- '; then
+    fail "disposable clone helper printed a pnpm separator that becomes the candidate argument"
+  fi
   assert_file_content "cleanup-pending-v1" "$candidate/.wcdraft-agent-cleanup-pending"
   grep -Fxq '.wcdraft-agent-cleanup-pending' "$candidate/.git/info/exclude" ||
     fail "disposable clone helper did not locally exclude its pending marker"
@@ -419,7 +422,7 @@ helper_created_unmarked="$(create_disposable_clone helper-unmarked)"
 (
   cd "$repo_root"
   WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
-    pnpm exec tsx apps/web/scripts/mark-agent-temp-cleanup-ready.mts "$helper_created_marked"
+    pnpm --filter @wcdraft/web mark:agent-temp-cleanup-ready "$helper_created_marked"
 )
 assert_file_content "cleanup-ready-v1" "$helper_created_marked/.wcdraft-agent-cleanup-ready"
 [ ! -e "$helper_created_marked/.wcdraft-agent-cleanup-pending" ] ||
