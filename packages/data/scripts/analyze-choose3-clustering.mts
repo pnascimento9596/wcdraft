@@ -850,7 +850,7 @@ function main() {
       prefixes: prefixSummaries,
     },
     inputs: {
-      base_commit: "fc1748f4e4eaaa0994530c83db81582e82e7687c",
+      base_commit: "7c17615fb3afd564c13fd6f5dc2075a5f9e55e3f",
       bundle_path: BUNDLE_REL,
       bundle_compressed_bytes: bundleCompressed.length,
       bundle_compressed_sha256: sha256(bundleCompressed),

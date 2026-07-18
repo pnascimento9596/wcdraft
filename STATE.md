@@ -4,22 +4,27 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Choose-from-3 clustering baseline: 2026-07-17 · **MEASURED, no rating movement**. A deterministic
-shipped-path simulation ran 1,024 complete 17-spin drafts in each of 16 era × rendered-basis ×
-draft-flow cells, with a 2,048-draft-per-cell convergence holdout. In the canonical ranked config
-(All-time · Squad First · Career), full-offer tie rates are **11.09%** at ΔOVR 0 (95% clustered CI
-10.62–11.56%), **41.31%** at ΔOVR ≤1 (40.56–42.06%), and **74.49%** at ΔOVR ≤2
-(73.85–75.12%). After removing visibly estimated candidates and retaining offers with at least two
-non-estimate candidates, the rates are **11.08% / 40.44% / 71.75%**. Estimate-involved tied offers
-account for 105/1,931 exact ties, 601/7,191 Δ≤1 ties, and 1,386/12,967 Δ≤2 ties. The uniform
-three-card All-time Career pool baselines are 12.86% / 34.77% / 52.26%, separating the display
-histogram from the squad/tier/position offer path. The dispatched 927 estimate cohort is
-Career-only; Current visibly has 388. Current offers are still selected with Career
-`choice_overall`, then rendered with Current OVR/channels, exactly as shipped. No rating, curve,
-tier logic, data artifact, or golden moved; merit-v4.7 remains unopened and conditional on the
-owner's playthrough evidence. Full method, 16-cell tables, per-pick curves, pool histograms,
-per-offer records, and PR #311 checkout forensics:
-`docs/reports/choose3-clustering-measurement-2026-07-17.md`.
+Basis-aware offer tiering baseline: 2026-07-18 · **MEASURED, no rating movement**. Offer tiering
+operates on the display value of the **selected rating basis**. ENG-08 is unchanged: display values
+are permitted for offer tiering ONLY — never scoring, sim, or best-XI. Basis-aware tiering is an
+application of ENG-08, not an amendment to it. The engine anchor is
+`engine-2026.07.18-basis-aware-tiering`; schema `runtime-data-2.10.0`, rating anchors
+`wc-perf-6.6.0` / `proj-career-5.6.0`, draft-pool/scenario bytes, and ranked season
+`season-2026-squad-depth` are unchanged.
+
+The PR #312 analyzer was re-run with the same fixed seeds: 1,024 complete drafts in each of 16 era
+× basis × flow cells plus a 2,048-draft-per-cell convergence holdout. All eight Career cells are
+byte-identical before/after across 8,192 measurement drafts, proving zero Career pick flips. In
+the canonical ranked config (All-time · Squad First · Career), full-offer tie rates remain
+**11.09% / 41.31% / 74.49%** at ΔOVR 0 / ≤1 / ≤2. The corrected All-time · Squad First · Current
+baseline is **14.45%** exact (95% clustered CI 13.93–14.97%), **47.48%** at Δ≤1
+(46.75–48.22%), and **80.96%** at Δ≤2 (80.39–81.54%), replacing the Career-tiered contaminated
+**16.79% / 50.85% / 79.74%** values. Across all eight Current cells, 93,988/131,072 selected
+player identities differ: 8,170 first divergences directly attributable to selected-basis tiering
+and 85,818 downstream divergences after drafted-player state changed; unexplained flips: **0**.
+Full attribution is preserved outside Git with its SHA-256 in the committed comparison. Evidence:
+`docs/reports/choose3-basis-aware-comparison-2026-07-18.json` and
+`docs/reports/basis-aware-offer-tiering-2026-07-18.md`.
 
 G1/V1 override channel-scale verdict: 2026-07-17 · **RETIRED**. The merit-v4.5
 defect was real, and merit-v4.6 intentionally fixed it by preserving owner display pins while
@@ -2949,11 +2954,11 @@ internal sim score/channel inputs to `display_curve^-1(owner display)` before
 channel materialization.
 
 Current repo runtime anchor:
-`runtime-data-2.9.0` / `engine-2026.06.30-manager-attrition` / `wc-perf-6.6.0` /
+`runtime-data-2.10.0` / `engine-2026.07.18-basis-aware-tiering` / `wc-perf-6.6.0` /
 `proj-career-5.6.0`, dataset `2026-07-01`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
 knockout slots `62`. Explicit active leaderboard season id:
-`season-2026-manager-attrition`.
+`season-2026-squad-depth`.
 
 X marketing lane:
 source assets are present on `origin/main` as of
