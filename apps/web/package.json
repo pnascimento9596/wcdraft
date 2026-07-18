@@ -28,6 +28,7 @@
     "test:responsive:shell": "tsx scripts/test-responsive-shell-fit.mts",
     "verify:narrow-collisions": "WCDRAFT_COLLISION_GATE_ONLY=1 tsx scripts/test-responsive-shell-fit.mts",
     "verify:narrow-collision-controls": "WCDRAFT_COLLISION_CONTROLS_ONLY=1 tsx scripts/test-responsive-shell-fit.mts",
+    "create:disposable-clone": "tsx scripts/create-disposable-clone.mts",
     "mark:agent-temp-cleanup-ready": "tsx scripts/mark-agent-temp-cleanup-ready.mts",
     "verify:responsive-layout": "tsx scripts/verify-responsive-layout-browser.mts",
     "preverify:home-fold": "pnpm run runtime:materialize",

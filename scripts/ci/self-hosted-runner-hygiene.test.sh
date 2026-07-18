@@ -11,6 +11,7 @@ nightly_workflow="$repo_root/.github/workflows/nightly-heavy.yml"
 migration_workflow="$repo_root/.github/workflows/production-db-migrate.yml"
 responsive_shell_producer="$repo_root/apps/web/scripts/test-responsive-shell-fit.mts"
 one_screen_producer="$repo_root/apps/web/scripts/verify-home-fold-browser.mts"
+disposable_clone_helper="$repo_root/apps/web/scripts/create-disposable-clone.mts"
 probe_root="$(mktemp -d "${TMPDIR:-/tmp}/wcdraft-runner-hygiene.XXXXXX")"
 work_root="$probe_root/_work"
 runner_temp="$work_root/_temp"
@@ -22,6 +23,7 @@ agent_temp_root="$probe_root/agent-temp"
 agent_temp_stale="$agent_temp_root/wcdraft-ci-stale"
 agent_temp_idle_unmarked="$agent_temp_root/wcdraft-review-inflight-idle"
 agent_temp_corrupt_marker="$agent_temp_root/wcdraft-review-corrupt-marker"
+agent_temp_corrupt_pending="$agent_temp_root/wcdraft-review-corrupt-pending"
 agent_temp_fresh="$agent_temp_root/wcdraft-review-fresh"
 agent_temp_unrelated="$agent_temp_root/owner-stale"
 agent_temp_terrace="$agent_temp_root/terrace-complete-stale"
@@ -34,6 +36,10 @@ default_root_probe=""
 real_root_candidate=""
 mutation_root_candidate=""
 mutated_hygiene_script="$probe_root/self-hosted-runner-hygiene-prune-disabled.sh"
+mutated_audit_script="$probe_root/self-hosted-runner-hygiene-audit-disabled.sh"
+disposable_source="$probe_root/disposable-source"
+helper_created_marked=""
+helper_created_unmarked=""
 
 cleanup() {
   if [ -n "$active_pid" ]; then
@@ -106,6 +112,55 @@ assert_file_content() {
 
 assert_runner_temp_scrubbed() {
   [ ! -e "$runner_temp/gitleaks.tmp" ] || fail "runner gitleaks temp survived: $runner_temp/gitleaks.tmp"
+}
+
+create_disposable_clone() {
+  local label="$1"
+  local output=""
+  local candidate=""
+  output="$(
+    (
+    cd "$repo_root"
+    WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+      pnpm --filter @wcdraft/web create:disposable-clone \
+        --label "$label" --source "$disposable_source" --ref HEAD
+    )
+  )"
+  candidate="$(printf '%s\n' "$output" | sed -n 's/^DISPOSABLE_CLONE_PATH=//p')"
+  [ -n "$candidate" ] || fail "disposable clone helper did not print its path"
+  [ "$(cd "$(dirname "$candidate")" && pwd -P)" = "$(cd "$agent_temp_root" && pwd -P)" ] ||
+    fail "disposable clone helper escaped the configured direct-child root"
+  printf '%s\n' "$output" | grep -Fq 'MARK_COMPLETE_COMMAND=' ||
+    fail "disposable clone helper did not print its paired completion command"
+  assert_file_content "cleanup-pending-v1" "$candidate/.wcdraft-agent-cleanup-pending"
+  grep -Fxq '.wcdraft-agent-cleanup-pending' "$candidate/.git/info/exclude" ||
+    fail "disposable clone helper did not locally exclude its pending marker"
+  grep -Fxq '.wcdraft-agent-cleanup-ready' "$candidate/.git/info/exclude" ||
+    fail "disposable clone helper did not locally exclude its completion marker"
+  [ -z "$(git -C "$candidate" status --porcelain)" ] ||
+    fail "disposable clone helper left its lifecycle registration visible to git"
+  printf '%s\n' "$candidate"
+}
+
+run_residue_audit_contract() {
+  local script_path="$1"
+  local candidate="$2"
+  local output="$3"
+  if ! GITHUB_WORKSPACE="$workspace" \
+    RUNNER_TOOL_CACHE="$tool_cache" \
+    RUNNER_TEMP="$runner_temp" \
+    RUNNER_NAME="wcdraft-m4" \
+    WCDRAFT_RUNNER_MIN_FREE_KB=0 \
+    WCDRAFT_RUNNER_TARGET_FREE_KB=0 \
+    WCDRAFT_RUNNER_STALE_MINUTES=60 \
+    WCDRAFT_AGENT_TEMP_RESIDUE_MINUTES=1 \
+    WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+    /bin/bash "$script_path" start >"$output" 2>&1; then
+    return 1
+  fi
+  grep -Fq "::warning::runner-hygiene unmarked agent temp residue path=$candidate registration=pending" \
+    "$output" || return 1
+  grep -Fq 'runner-hygiene: unmarked-residue-audit count=' "$output" || return 1
 }
 
 run_hygiene() {
@@ -279,6 +334,10 @@ grep -Fq 'wcdraft-*|terrace-*|wave2-*' "$hygiene_script" ||
   fail "runner hygiene must keep agent-temp deletion prefix bounded"
 grep -Fq '.wcdraft-agent-cleanup-ready' "$hygiene_script" ||
   fail "runner hygiene must require positive lifecycle completion evidence"
+grep -Fq 'audit_unmarked_agent_temp_residue' "$hygiene_script" ||
+  fail "runner hygiene must report aged unmarked agent-temp residue"
+grep -Fq 'registerAgentTempCleanupPending' "$disposable_clone_helper" ||
+  fail "disposable clone helper must register pending state before use"
 grep -Fq 'markAgentTempCleanupReady(outDir, tmpdir())' "$responsive_shell_producer" ||
   fail "responsive browser lifecycle must positively finalize completed auto-owned temp output"
 grep -Fq 'markAgentTempCleanupReady(outputRoot, tmpdir())' "$one_screen_producer" ||
@@ -344,17 +403,36 @@ mkdir -p \
   "$agent_temp_stale" \
   "$agent_temp_idle_unmarked" \
   "$agent_temp_corrupt_marker" \
+  "$agent_temp_corrupt_pending" \
   "$agent_temp_fresh" \
   "$agent_temp_unrelated" \
   "$agent_temp_terrace" \
   "$agent_temp_wave2" \
   "$agent_temp_active"
+git init -q "$disposable_source"
+printf '%s\n' "helper-clone-sentinel" >"$disposable_source/sentinel"
+git -C "$disposable_source" add sentinel
+git -C "$disposable_source" -c user.name="runner-hygiene-probe" \
+  -c user.email="runner-hygiene-probe@invalid" commit -qm "seed disposable clone source"
+helper_created_marked="$(create_disposable_clone helper-marked)"
+helper_created_unmarked="$(create_disposable_clone helper-unmarked)"
+(
+  cd "$repo_root"
+  WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+    pnpm exec tsx apps/web/scripts/mark-agent-temp-cleanup-ready.mts "$helper_created_marked"
+)
+assert_file_content "cleanup-ready-v1" "$helper_created_marked/.wcdraft-agent-cleanup-ready"
+[ ! -e "$helper_created_marked/.wcdraft-agent-cleanup-pending" ] ||
+  fail "completion transition left the pending registration behind"
+touch -t 202001010000 "$helper_created_marked" "$helper_created_unmarked"
 printf '%s\n' "workspace-sentinel" >"$workspace_sentinel"
 printf '%s\n' "outside-sentinel" >"$outside_sentinel"
 printf '%s\n' "stale-agent-temp" >"$agent_temp_stale/sentinel"
 printf '%s\n' "idle-unmarked-agent-temp" >"$agent_temp_idle_unmarked/sentinel"
 printf '%s\n' "corrupt-marker-agent-temp" >"$agent_temp_corrupt_marker/sentinel"
 printf '%s\n' "cleanup-ready-v1 " >"$agent_temp_corrupt_marker/.wcdraft-agent-cleanup-ready"
+printf '%s\n' "corrupt-pending-agent-temp" >"$agent_temp_corrupt_pending/sentinel"
+printf '%s\n' "cleanup-pending-v1 " >"$agent_temp_corrupt_pending/.wcdraft-agent-cleanup-pending"
 printf '%s\n' "fresh-agent-temp" >"$agent_temp_fresh/sentinel"
 printf '%s\n' "owner-agent-temp" >"$agent_temp_unrelated/sentinel"
 printf '%s\n' "terrace-agent-temp" >"$agent_temp_terrace/sentinel"
@@ -375,6 +453,15 @@ if (
 ); then
   fail "lifecycle producer must reject a marker whose value the pruner rejects"
 fi
+if (
+  cd "$repo_root"
+  WCDRAFT_AGENT_TEMP_ROOT="$agent_temp_root" \
+    pnpm exec tsx apps/web/scripts/mark-agent-temp-cleanup-ready.mts "$agent_temp_corrupt_pending"
+); then
+  fail "lifecycle producer must reject corrupt pending registration"
+fi
+[ ! -e "$agent_temp_corrupt_pending/.wcdraft-agent-cleanup-ready" ] ||
+  fail "corrupt pending registration became cleanup eligible"
 default_root_probe="$(mktemp -d /private/tmp/wcdraft-marker-default.XXXXXX)"
 (
   cd "$repo_root"
@@ -389,6 +476,7 @@ touch -t 202001010000 \
   "$agent_temp_stale" \
   "$agent_temp_idle_unmarked" \
   "$agent_temp_corrupt_marker" \
+  "$agent_temp_corrupt_pending" \
   "$agent_temp_unrelated" \
   "$agent_temp_terrace" \
   "$agent_temp_wave2" \
@@ -411,15 +499,21 @@ git -C "$workspace" -c user.name="runner-hygiene-probe" \
   -c user.email="runner-hygiene-probe@invalid" commit -qm "seed workspace sentinel"
 
 printf '%s\n' "stale-start-download" >"$runner_temp/gitleaks.tmp"
-run_hygiene start 1
+initial_hygiene_output="$probe_root/initial-hygiene.log"
+run_hygiene start 1 | tee "$initial_hygiene_output"
 assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 [ ! -e "$agent_temp_stale" ] || fail "stale WCDraft CI temp survived"
 [ ! -e "$agent_temp_terrace" ] || fail "stale Terrace temp survived"
 [ ! -e "$agent_temp_wave2" ] || fail "stale wave2 temp survived"
+[ ! -e "$helper_created_marked" ] || fail "marked helper-created clone survived the real pruner"
+assert_file_content "helper-clone-sentinel" "$helper_created_unmarked/sentinel"
+grep -Fq "::warning::runner-hygiene unmarked agent temp residue path=$helper_created_unmarked registration=pending" \
+  "$initial_hygiene_output" || fail "unmarked helper-created clone was not reported by the audit"
 assert_file_content "idle-unmarked-agent-temp" "$agent_temp_idle_unmarked/sentinel"
 assert_file_content "corrupt-marker-agent-temp" "$agent_temp_corrupt_marker/sentinel"
+assert_file_content "corrupt-pending-agent-temp" "$agent_temp_corrupt_pending/sentinel"
 assert_file_content "fresh-agent-temp" "$agent_temp_fresh/sentinel"
 assert_file_content "owner-agent-temp" "$agent_temp_unrelated/sentinel"
 assert_file_content "active-agent-temp" "$agent_temp_active/sentinel"
@@ -452,6 +546,22 @@ grep -Fq "runner-hygiene: mutation disabled agent temp prune $mutation_root_cand
 assert_file_content "real-root-prune-disabled" "$mutation_root_candidate/sentinel"
 run_prune_disabled_expect_floor_failure
 
+sed 's/^  audit_unmarked_agent_temp_residue$/  echo "runner-hygiene: mutation disabled unmarked residue audit"/' \
+  "$hygiene_script" >"$mutated_audit_script"
+chmod +x "$mutated_audit_script"
+grep -Fq 'runner-hygiene: mutation disabled unmarked residue audit' "$mutated_audit_script" ||
+  fail "unmarked-residue negative control did not disable the production audit call"
+if grep -Fxq '  audit_unmarked_agent_temp_residue' "$mutated_audit_script"; then
+  fail "unmarked-residue negative control left the production audit call enabled"
+fi
+audit_mutation_output="$probe_root/audit-disabled.log"
+if run_residue_audit_contract \
+  "$mutated_audit_script" "$helper_created_unmarked" "$audit_mutation_output"; then
+  fail "unmarked-residue contract stayed green when the audit was disabled"
+fi
+grep -Fq 'runner-hygiene: mutation disabled unmarked residue audit' "$audit_mutation_output" ||
+  fail "unmarked-residue negative control failed for an unintended reason"
+
 for failing_probe in mount lsof ps git; do
   run_hygiene_with_probe_failure "$failing_probe"
 done
@@ -474,4 +584,4 @@ assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, compact RUNNER_DISK failure inventory, pre-deletion recovery JSON, exact producer-to-pruner lifecycle marker, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 real /private/tmp prune, 1 prune-disabled real-root mutation red, 1 prune-disabled below-floor pre-job mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, maintenance-mode runner-root preservation, 18 self-hosted job bindings across 5 workflows, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 3 marker-authorized agent temp removals, 11 sentinel checks)"
+echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, compact RUNNER_DISK failure inventory, pre-deletion recovery JSON, exact producer-to-pruner lifecycle marker, create-time pending registration, paired completion command, git-local marker excludes, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 helper-created marked clone pruned, 1 helper-created unmarked clone preserved and reported, 1 audit-disabled mutation red, 1 real /private/tmp prune, 1 prune-disabled real-root mutation red, 1 prune-disabled below-floor pre-job mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, maintenance-mode runner-root preservation, 18 self-hosted job bindings across 5 workflows, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 4 marker-authorized agent temp removals, 13 sentinel checks)"
