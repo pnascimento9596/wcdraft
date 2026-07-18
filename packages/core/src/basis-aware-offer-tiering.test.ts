@@ -64,7 +64,7 @@ describe("basis-aware offer tiering", () => {
     expect(resolveChoiceOverall(card, "career")).toBe(100);
     expect(resolveChoiceOverall(card, "current")).toBe(60);
     expect(resolveChoiceOverall({ ...card, choice_overall: 77 }, "career")).toBe(77);
-    expect(resolveChoiceOverall({ ...card, choice_overall: 77 }, "current")).toBe(77);
+    expect(resolveChoiceOverall({ ...card, choice_overall: 77 }, "current")).toBeNull();
     expect(resolveChoiceOverall({ ...card, choice_overall: null }, "current")).toBeNull();
   });
 

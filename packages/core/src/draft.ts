@@ -798,7 +798,11 @@ export function resolveChoiceOverall(
   // Never read choice_overall for scoring, sim, best-XI, or team strength.
   const configured = card.choice_overall;
   const value =
-    configured !== null && typeof configured === "object" ? configured[ratingBasis] : configured;
+    configured !== null && typeof configured === "object"
+      ? configured[ratingBasis]
+      : ratingBasis === "career"
+        ? configured
+        : null;
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
