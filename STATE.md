@@ -76,6 +76,19 @@ becomes stale at 60 minutes and the 15-minute timer makes the normal reclaim win
 concurrency. No product, runtime, data, schema, rating, draft, sim, auth, leaderboard, or deploy
 contract changed. Evidence: `docs/reports/disposable-clone-lifecycle-2026-07-18.md`.
 
+Hygiene install drift guard: 2026-07-18 · CI now fails with `HYGIENE_INSTALL_DRIFT` when the
+LaunchAgent-installed copies of `self-hosted-runner-hygiene.sh` and `runner-disk-maintenance.sh`
+under `$WCDRAFT_RUNNER_ROOT/wcdraft-maintenance` diverge by SHA-256 from the same files at repository
+HEAD. The check skips cleanly when the install root is unreachable (`WCDRAFT_HYGIENE_DRIFT_REQUIRE=0`
+or missing root on non-self-hosted runners) and hard-fails when the install is expected. The red
+control uses a fixture directory (`WCDRAFT_HYGIENE_DRIFT_FIXTURE`) that injects simulated drift
+without desyncing the live install. Measured on `wcdraft-m4` before this lane's reinstall: installed
+hygiene SHA `9e589fb4…` ≠ origin/main `e4411630…` (missing #315 residue audit). Reinstall via
+`scripts/ci/install-runner-disk-maintenance.sh install` restored match; kickstart receipt showed
+`runner-hygiene: unmarked-residue-audit count=29`. No product, runtime, data, schema, rating, draft,
+sim, auth, leaderboard, or deploy contract changed. Host disk reclaim (trash/npm/docker/opencode
+backup/.next/authorized grok worktrees) is recorded only in the lane report, not here.
+
 Terrace light Programme: 2026-07-17 · Light now uses paper `#f1ecdf`, card `#faf7ee`,
 hairline `#ddd6c4`, primary/secondary ink `#16180f`/`#5c5c4e`, and AA text ramps
 `#0f5f3f`/`#7a5a12`; structural green/gold are the exact dark fills
