@@ -176,6 +176,12 @@ jobs:
       - name: Runner disk maintenance contract probe
         run: scripts/ci/runner-disk-maintenance.test.sh
 
+      - name: Hygiene install drift contract probe
+        run: scripts/ci/check-hygiene-install-drift.test.sh
+
+      - name: Hygiene install drift check
+        run: scripts/ci/check-hygiene-install-drift.sh
+
       - name: DB readiness CI contract probe
         run: scripts/ci/require-neon-for-db-paths.test.sh
 
