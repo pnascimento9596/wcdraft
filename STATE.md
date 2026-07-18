@@ -89,6 +89,13 @@ hygiene SHA `9e589fb4…` ≠ origin/main `e4411630…` (missing #315 residue au
 sim, auth, leaderboard, or deploy contract changed. Host disk reclaim (trash/npm/docker/opencode
 backup/.next/authorized grok worktrees) is recorded only in the lane report, not here.
 
+PR #316 post-hoc independent review: 2026-07-18 · review-of-record for merge
+`521ff6247be73de78da90cb4833482b2690baabf` is **PASS** via Claude Code CLI
+`claude-opus-4-8` effort high (fresh disposable clone). GLM 5.2 was unreachable (Ollama
+weekly 429; OpenCode abort). Standing reminder: **"unavailable in this runtime" is never
+satisfied by self-review** — the substitution ladder ends at a second fresh-context
+subagent, recorded. Evidence: `docs/reports/pr316-posthoc-review-2026-07-18.md`.
+
 Terrace light Programme: 2026-07-17 · Light now uses paper `#f1ecdf`, card `#faf7ee`,
 hairline `#ddd6c4`, primary/secondary ink `#16180f`/`#5c5c4e`, and AA text ramps
 `#0f5f3f`/`#7a5a12`; structural green/gold are the exact dark fills
