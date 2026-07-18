@@ -4,6 +4,16 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Runner hygiene real-root proof: 2026-07-17 · `scripts/ci/self-hosted-runner-hygiene.sh` is
+retained unchanged. Its production root is correctly `/private/tmp` when
+`WCDRAFT_AGENT_TEMP_ROOT` is unset; observed production runs did not prune because host free space
+remained above the 36 GiB best-effort target, not because the root or guard was broken. The
+contract now creates a marked stale `/private/tmp/wcdraft-runner-hygiene-realpath.*` candidate,
+forces the real default-root path through the production script, and proves the candidate is
+removed. A prune-disabled mutated copy must fail the same contract and preserve its sentinel.
+The real-root scan uses a 10,000,000-minute cutoff so no contemporary task output can qualify.
+Evidence and diagnosis are in `docs/reports/runner-hygiene-realpath-2026-07-17.md`.
+
 Terrace light Programme: 2026-07-17 · Light now uses paper `#f1ecdf`, card `#faf7ee`,
 hairline `#ddd6c4`, primary/secondary ink `#16180f`/`#5c5c4e`, and AA text ramps
 `#0f5f3f`/`#7a5a12`; structural green/gold are the exact dark fills
