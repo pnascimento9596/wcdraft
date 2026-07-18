@@ -24,19 +24,46 @@ case "$runner_root" in
     ;;
 esac
 
-for required_command in date df mkdir ps grep awk cat find rmdir; do
+for required_command in date df mkdir ps grep awk cat find rmdir mv; do
   if ! command -v "$required_command" >/dev/null 2>&1; then
     echo "RUNNER_DISK_MAINTENANCE status=FAIL reason=missing-command command=$required_command" >&2
     exit 1
   fi
 done
 
-if [ ! -x "$hygiene_script" ]; then
-  echo "RUNNER_DISK_MAINTENANCE status=FAIL reason=missing-hygiene-script path=$hygiene_script" >&2
+ensure_exact_directory() {
+  local candidate="$1"
+  local resolved=""
+  if [ -L "$candidate" ] || { [ -e "$candidate" ] && [ ! -d "$candidate" ]; }; then
+    echo "RUNNER_DISK_MAINTENANCE status=FAIL reason=unsafe-directory path=$candidate" >&2
+    exit 1
+  fi
+  if [ ! -d "$candidate" ]; then
+    mkdir "$candidate"
+  fi
+  resolved="$(cd "$candidate" && pwd -P)"
+  if [ "$resolved" != "$candidate" ]; then
+    echo "RUNNER_DISK_MAINTENANCE status=FAIL reason=redirected-directory path=$candidate resolved=$resolved" >&2
+    exit 1
+  fi
+}
+
+for exact_directory in \
+  "$work_root" \
+  "$runner_temp" \
+  "$tool_cache" \
+  "$work_root/_maintenance" \
+  "$workspace" \
+  "$work_root/_diag" \
+  "$diag_root"; do
+  ensure_exact_directory "$exact_directory"
+done
+
+if [ ! -x "$hygiene_script" ] || [ -L "$hygiene_script" ]; then
+  echo "RUNNER_DISK_MAINTENANCE status=FAIL reason=missing-or-redirected-hygiene-script path=$hygiene_script" >&2
   exit 1
 fi
 
-mkdir -p "$runner_temp" "$tool_cache" "$workspace" "$diag_root"
 receipt="$diag_root/receipt-$stamp-$$.json"
 
 free_kb() {
@@ -58,10 +85,15 @@ write_receipt() {
 acquire_lock() {
   local existing_pid=""
   local existing_command=""
+  local retired_lock="$diag_root/stale-lock-$stamp-$$"
 
   if mkdir "$lock_dir" 2>/dev/null; then
     printf '%s\n' "$$" >"$lock_owner"
     return 0
+  fi
+
+  if [ -L "$lock_dir" ] || [ ! -d "$lock_dir" ]; then
+    return 1
   fi
 
   if [ -f "$lock_owner" ] && [ ! -L "$lock_owner" ]; then
@@ -82,15 +114,29 @@ acquire_lock() {
     ! find "$lock_dir" -prune -mmin +30 -print -quit 2>/dev/null | grep -q .; then
     return 1
   fi
-  find "$lock_owner" -type f -delete 2>/dev/null || true
-  rmdir "$lock_dir" 2>/dev/null || return 1
+  if [ -e "$retired_lock" ] || [ -L "$retired_lock" ]; then
+    return 1
+  fi
+  mv "$lock_dir" "$retired_lock" 2>/dev/null || return 1
+  find "$retired_lock" -depth -delete 2>/dev/null || return 1
   mkdir "$lock_dir" 2>/dev/null || return 1
   printf '%s\n' "$$" >"$lock_owner"
 }
 
 release_lock() {
-  find "$lock_owner" -type f -delete 2>/dev/null || true
-  rmdir "$lock_dir" 2>/dev/null || true
+  local recorded_pid=""
+  local released_lock="$diag_root/released-lock-$stamp-$$"
+  if [ -L "$lock_dir" ] || [ ! -d "$lock_dir" ] || [ -L "$lock_owner" ] ||
+    [ ! -f "$lock_owner" ]; then
+    return 0
+  fi
+  recorded_pid="$(cat "$lock_owner" 2>/dev/null || true)"
+  [ "$recorded_pid" = "$$" ] || return 0
+  if [ -e "$released_lock" ] || [ -L "$released_lock" ]; then
+    return 0
+  fi
+  mv "$lock_dir" "$released_lock" 2>/dev/null || return 0
+  find "$released_lock" -depth -delete 2>/dev/null || true
 }
 
 before_kb="$(free_kb)"

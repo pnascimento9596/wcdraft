@@ -97,7 +97,7 @@ RUNNER_DISK status=FAIL trigger=pre-job free_kb=... floor_kb=31457280 target_kb=
 
 Consumer discovery is read-only and restricted to direct agent-named temporary roots plus the
 runner's bounded work roots. Before removing any eligible root, the script writes
-`wcdraft-runner-recovery-v1` JSON with path, byte size, ownership class, reason, and timestamp.
+`wcdraft-runner-recovery-v1` JSON with path, measured KiB, ownership class, reason, and timestamp.
 
 ### Between-lane trigger
 
@@ -128,18 +128,26 @@ deletion it wrote `recovery-20260718T151444Z-51550-1.json`, recording schema
 `wcdraft-runner-maintenance-v1`, status `PASS`, reason `hygiene-completed`, 78,638,496 KiB before
 and 78,646,636 KiB after. The candidate no longer existed after completion.
 
-The final wrapper adds PID-owned lock recovery: a live matching owner remains a conservative skip,
+The wrapper adds PID-owned lock recovery: a live matching owner remains a conservative skip,
 a just-created empty lock remains a skip, a dead recorded owner is reclaimed, and only an empty
 ownerless lock older than 30 minutes can be reclaimed. Its first reinstall probe exposed a safe
 false positive in the worker guard because a diagnostic shell command merely contained the worker
 path. The guard was tightened from substring matching to an exact first process argument and the
-behavioral worker test was updated. Final installed wrapper SHA-256 is
-`ca088f50104aa46a4d34b4915b8fc7e0480e72dae19cf9bdb6e798b97a1c9364`; installed hygiene
+behavioral worker test was updated. A fresh exact-head review at `7020a20` then rejected two
+symlink-containment gaps: a redirected lock could expose an external `owner.pid` to deletion, and a
+redirected install root could expose external files to install/uninstall. The fix-forward validates
+every maintenance/install ancestor as an exact real directory, rejects redirected scripts and
+lock roots, and atomically renames only the validated lock directory before bounded deletion.
+Behavioral controls prove that install, uninstall, and lock recovery preserve external sentinels.
+
+The fixed source was installed while runner id 21 was online and idle. Final installed wrapper
+SHA-256 is `b14f215a693aacfb370c6bb8d99ed8b8970e6acbb13cfc307f7cc4238838e867`; installed hygiene
 SHA-256 is `9e589fb4549e29bee713e4b8856888ee26258df4d41f0529bbe8c89a4a297b90`, both equal to the
-repository copies. The final RunAtLoad execution passed at 2026-07-18T16:14:14Z and wrote
-`receipt-20260718T161414Z-66450.json`; it safely removed three now-stale, positively marked output
-roots from this lane's completed browser phases, wrote recovery metadata for each, and preserved
-the unmarked active worktree and test scratch.
+repository copies. The install-triggered execution exited 0 at 2026-07-18T16:29:17Z and wrote
+`receipt-20260718T162903Z-21314.json` with status `PASS`, reason `hygiene-completed`, 71,458,748 KiB
+before and 71,459,988 KiB after. An earlier exact-source execution at 16:14:14Z safely removed three
+now-stale, positively marked output roots from this lane's completed browser phases, wrote recovery
+metadata for each, and preserved the unmarked active worktree and test scratch.
 
 ### Negative controls
 
@@ -155,8 +163,9 @@ The positive controls prove marked stale removal, recovery JSON written before r
 marker value, regular-directory/direct-child containment, linked-worktree protection, active and
 unmarked preservation, corrupt-marker preservation, and maintenance-mode runner-root retention.
 The host wrapper behaviorally proves a live exact-path `Runner.Worker` skip, a held-lock skip, and
-safe recovery of a stale empty lock. The workflow inventory assertion binds all 18 self-hosted job
-definitions.
+safe recovery of a stale empty lock. It also proves that stale runner workspace, tool-cache, and
+runner-temp entries remain untouched in maintenance mode. The workflow inventory assertion binds
+all 18 self-hosted job definitions.
 
 ## U2: sustainability verdict
 
@@ -179,18 +188,22 @@ every disposable clone. Raising thresholds alone is not a fix; it only moves the
 
 ## Validation and review
 
-Narrow validation completed at checkpoint `68d8d78`:
+Narrow validation completed at checkpoint `68d8d78`, then re-executed after the containment
+fix-forward:
 
 - shell syntax: 5/5 scripts passed `bash -n`;
-- maintenance installer/LaunchAgent contract: 1/1 suite passed;
+- maintenance installer/LaunchAgent contract: 1/1 suite passed, including redirected install,
+  uninstall, and lock negative controls plus behavioral runner-root preservation;
 - hygiene contract: 1/1 suite passed, including both negative controls, 4 expected unsafe-probe
   failures, the below-floor gate, maintenance preservation, recovery JSON, and 18/18 bindings;
 - `git diff --check`: passed.
 - `actionlint`: the changed `ci.yml` passed; the repository-wide command exited 0 with existing
   ShellCheck findings in untouched nightly and production-migration workflow steps.
 
-Full repository gates, exact-head independent reviews, protected CI, and the final shipping receipt
-are appended only after they execute; no future result is represented as complete here.
+The first exact-head independent review at `7020a20` was FAIL for the two symlink-containment gaps
+described above. That verdict invalidated the earlier cross-model PASS and forced this fix-forward.
+Fresh reviews and protected CI must evaluate the new commit; no stale verdict is represented as a
+merge authorization.
 
 The first local full-envelope attempt completed typecheck 9/9, lint 6/6, and 2,226 unit/package
 tests with 10 expected skips. Game flow passed; all six collision mutations fired in Chromium and

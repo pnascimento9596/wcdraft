@@ -40,6 +40,21 @@ grep -Fq 'WCDRAFT_RUNNER_MAINTENANCE_MODE=1' "$maintenance_script" ||
 grep -Fq 'runner-worker-active' "$maintenance_script" ||
   fail "host maintenance must skip an active Runner.Worker"
 
+external_install_root="$probe_root/external-install-root"
+mkdir "$external_install_root"
+printf '%s\n' "external-install-sentinel" >"$external_install_root/sentinel"
+ln -s "$external_install_root" "$fake_runner/wcdraft-maintenance"
+if WCDRAFT_RUNNER_ROOT="$fake_runner" \
+  WCDRAFT_USER_ROOT="$fake_user" \
+  WCDRAFT_LAUNCHCTL_BIN="$mock_launchctl" \
+  WCDRAFT_TEST_LAUNCHCTL_LOG="$launchctl_log" \
+  WCDRAFT_MAINTENANCE_ALLOW_FAKE_RUNNER=1 \
+  "$installer" install >/dev/null 2>&1; then
+  fail "installer followed a symlinked install root"
+fi
+[ -f "$external_install_root/sentinel" ] || fail "installer deleted external install sentinel"
+unlink "$fake_runner/wcdraft-maintenance"
+
 WCDRAFT_RUNNER_ROOT="$fake_runner" \
   WCDRAFT_USER_ROOT="$fake_user" \
   WCDRAFT_LAUNCHCTL_BIN="$mock_launchctl" \
@@ -58,9 +73,26 @@ grep -Fq "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh" "$install
 grep -Fq 'bootstrap' "$launchctl_log" || fail "installer did not bootstrap launchd"
 grep -Fq 'kickstart' "$launchctl_log" || fail "installer did not create an immediate real execution"
 
+mkdir -p \
+  "$fake_runner/_work/_maintenance/wcdraft/stale-workspace" \
+  "$fake_runner/_work/_tool/stale-tool-cache" \
+  "$fake_runner/_work/_temp/stale-runner-temp"
+touch -t 200001010000 \
+  "$fake_runner/_work/_maintenance/wcdraft/stale-workspace" \
+  "$fake_runner/_work/_tool/stale-tool-cache" \
+  "$fake_runner/_work/_temp/stale-runner-temp"
+
 WCDRAFT_RUNNER_ROOT="$fake_runner" \
   WCDRAFT_AGENT_TEMP_ROOT="$probe_root/agent-temp" \
   "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh"
+
+for preserved_runner_path in \
+  "$fake_runner/_work/_maintenance/wcdraft/stale-workspace" \
+  "$fake_runner/_work/_tool/stale-tool-cache" \
+  "$fake_runner/_work/_temp/stale-runner-temp"; do
+  [ -d "$preserved_runner_path" ] ||
+    fail "maintenance mode removed runner-owned path: $preserved_runner_path"
+done
 
 receipt="$(find "$fake_runner/_work/_diag/wcdraft-runner-maintenance" -type f -name 'receipt-*.json' -print -quit)"
 [ -n "$receipt" ] || fail "maintenance execution did not create a receipt"
@@ -105,6 +137,18 @@ find "$fake_runner/_work/_diag/wcdraft-runner-maintenance" -type f -name 'receip
   -exec jq -e 'select(.status == "SKIPPED" and .reason == "maintenance-lock-held")' {} \; \
   | grep -q . || fail "held maintenance lock did not produce a skip receipt"
 
+external_lock="$probe_root/external-lock"
+mkdir "$external_lock"
+printf '%s\n' "999999999" >"$external_lock/owner.pid"
+printf '%s\n' "external-lock-sentinel" >"$external_lock/sentinel"
+ln -s "$external_lock" "$lock_dir"
+WCDRAFT_RUNNER_ROOT="$fake_runner" \
+  WCDRAFT_AGENT_TEMP_ROOT="$probe_root/agent-temp" \
+  "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh" >/dev/null
+[ -f "$external_lock/owner.pid" ] || fail "symlinked lock deleted an external owner file"
+[ -f "$external_lock/sentinel" ] || fail "symlinked lock deleted an external sentinel"
+unlink "$lock_dir"
+
 stale_lock_output="$probe_root/stale-lock.log"
 mkdir "$lock_dir"
 touch -t 200001010000 "$lock_dir"
@@ -115,4 +159,36 @@ grep -Fq 'RUNNER_DISK_MAINTENANCE status=PASS' "$stale_lock_output" ||
   fail "stale empty maintenance lock was not safely reclaimed"
 [ ! -e "$lock_dir" ] || fail "reclaimed maintenance lock survived successful cleanup"
 
-echo "runner disk maintenance contract: PASS (15-minute RunAtLoad schedule, active-worker and held-lock skip receipts, stale-lock recovery, maintenance-mode scope, installed-script pin, launchctl bootstrap + kickstart, JSON execution receipt)"
+saved_install_root="$probe_root/saved-install-root"
+mv "$fake_runner/wcdraft-maintenance" "$saved_install_root"
+printf '%s\n' "external-hygiene" >"$external_install_root/self-hosted-runner-hygiene.sh"
+printf '%s\n' "external-wrapper" >"$external_install_root/runner-disk-maintenance.sh"
+ln -s "$external_install_root" "$fake_runner/wcdraft-maintenance"
+if WCDRAFT_RUNNER_ROOT="$fake_runner" \
+  WCDRAFT_USER_ROOT="$fake_user" \
+  WCDRAFT_LAUNCHCTL_BIN="$mock_launchctl" \
+  WCDRAFT_TEST_LAUNCHCTL_LOG="$launchctl_log" \
+  WCDRAFT_MAINTENANCE_ALLOW_FAKE_RUNNER=1 \
+  "$installer" uninstall >/dev/null 2>&1; then
+  fail "uninstaller followed a symlinked install root"
+fi
+grep -Fq 'external-hygiene' "$external_install_root/self-hosted-runner-hygiene.sh" ||
+  fail "uninstaller altered an external hygiene script"
+grep -Fq 'external-wrapper' "$external_install_root/runner-disk-maintenance.sh" ||
+  fail "uninstaller altered an external maintenance wrapper"
+unlink "$fake_runner/wcdraft-maintenance"
+mv "$saved_install_root" "$fake_runner/wcdraft-maintenance"
+
+WCDRAFT_RUNNER_ROOT="$fake_runner" \
+  WCDRAFT_USER_ROOT="$fake_user" \
+  WCDRAFT_LAUNCHCTL_BIN="$mock_launchctl" \
+  WCDRAFT_TEST_LAUNCHCTL_LOG="$launchctl_log" \
+  WCDRAFT_MAINTENANCE_ALLOW_FAKE_RUNNER=1 \
+  "$installer" uninstall >/dev/null
+[ ! -e "$installed_plist" ] || fail "uninstall retained the LaunchAgent plist"
+[ ! -e "$fake_runner/wcdraft-maintenance/self-hosted-runner-hygiene.sh" ] ||
+  fail "uninstall retained the installed hygiene script"
+[ ! -e "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh" ] ||
+  fail "uninstall retained the installed maintenance wrapper"
+
+echo "runner disk maintenance contract: PASS (15-minute RunAtLoad schedule, active-worker and held-lock skip receipts, symlink containment, stale-lock recovery, install/uninstall boundaries, maintenance-mode scope, installed-script pin, launchctl bootstrap + kickstart, JSON execution receipt)"

@@ -16,6 +16,38 @@ label="com.wcdraft.runner-disk-maintenance"
 launchctl_bin="${WCDRAFT_LAUNCHCTL_BIN:-/bin/launchctl}"
 gui_domain="gui/$(id -u)"
 
+ensure_exact_directory() {
+  local candidate="$1"
+  local resolved=""
+  if [ -L "$candidate" ] || { [ -e "$candidate" ] && [ ! -d "$candidate" ]; }; then
+    echo "runner disk maintenance: refusing redirected directory: $candidate" >&2
+    exit 1
+  fi
+  if [ ! -d "$candidate" ]; then
+    mkdir "$candidate"
+  fi
+  resolved="$(cd "$candidate" && pwd -P)"
+  if [ "$resolved" != "$candidate" ]; then
+    echo "runner disk maintenance: directory resolved outside its exact path: $candidate -> $resolved" >&2
+    exit 1
+  fi
+}
+
+validate_existing_directory() {
+  local candidate="$1"
+  local resolved=""
+  [ -e "$candidate" ] || return 0
+  if [ -L "$candidate" ] || [ ! -d "$candidate" ]; then
+    echo "runner disk maintenance: refusing redirected directory: $candidate" >&2
+    exit 1
+  fi
+  resolved="$(cd "$candidate" && pwd -P)"
+  if [ "$resolved" != "$candidate" ]; then
+    echo "runner disk maintenance: directory resolved outside its exact path: $candidate -> $resolved" >&2
+    exit 1
+  fi
+}
+
 if [ "$runner_root" != "$user_root/actions-runner-wcdraft" ]; then
   echo "runner disk maintenance: runner root must be the user's exact actions-runner-wcdraft directory" >&2
   exit 1
@@ -36,7 +68,15 @@ fi
 
 case "$operation" in
   install)
-    mkdir -p "$install_root/recovery" "$launch_agents_root" "$logs_root"
+    for exact_directory in \
+      "$user_root/Library" \
+      "$user_root/Library/Logs" \
+      "$launch_agents_root" \
+      "$logs_root" \
+      "$install_root" \
+      "$install_root/recovery"; do
+      ensure_exact_directory "$exact_directory"
+    done
     stamp="$(date -u +'%Y%m%dT%H%M%SZ')"
     for existing in \
       "$install_root/self-hosted-runner-hygiene.sh" \
@@ -66,6 +106,12 @@ case "$operation" in
     echo "runner disk maintenance: installed label=$label interval_seconds=900 plist=$plist"
     ;;
   uninstall)
+    for exact_directory in \
+      "$user_root/Library" \
+      "$launch_agents_root" \
+      "$install_root"; do
+      validate_existing_directory "$exact_directory"
+    done
     "$launchctl_bin" bootout "$gui_domain" "$plist" >/dev/null 2>&1 || true
     find "$plist" -type f -delete 2>/dev/null || true
     find "$install_root/self-hosted-runner-hygiene.sh" \
