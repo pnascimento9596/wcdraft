@@ -75,6 +75,9 @@ for (const beforeCell of before.cells.filter((cell) => cell.rating_basis === "cu
     if (beforeDraft[2] !== afterDraft[2]) {
       fail(`${beforeCell.cell_id} draft ${draftOrdinal} changed manager pick index`);
     }
+    if (beforeDraft[4] !== afterDraft[4]) {
+      fail(`${beforeCell.cell_id} draft ${draftOrdinal} changed selected manager card`);
+    }
     let priorPlayerFlip = false;
     let draftFlipped = false;
     for (let pickIndex = 1; pickIndex <= 17; pickIndex += 1) {
@@ -109,6 +112,7 @@ for (const beforeCell of before.cells.filter((cell) => cell.rating_basis === "cu
         cell_id: beforeCell.cell_id,
         draft_ordinal: draftOrdinal,
         candidate_seed_index: beforeDraft[1],
+        selected_manager_card_id: beforeDraft[4],
         pick_index: pickIndex,
         attribution,
         before_selected_card_id: beforeCard,
@@ -163,12 +167,12 @@ for (const beforeCell of before.cells.filter((cell) => cell.rating_basis === "cu
 }
 
 const attribution = {
-  schema_version: "choose3-basis-flip-attribution-1.0.0",
+  schema_version: "choose3-basis-flip-attribution-1.1.0",
   method: {
     selected_pick_definition:
       "visible offer index 0 at every player pick; the manager pick index is excluded",
     direct:
-      "the first selected-card divergence in a draft; all prior selected player identities are byte-identical, so pre-pick state is identical and the divergence is directly caused by selected-basis offer tiering",
+      "the first selected-card divergence in a draft; candidate seed, selected manager identity and pick index, and all prior selected player identities are byte-identical, so pre-pick state is identical and the divergence is directly caused by selected-basis offer tiering",
     cascade:
       "a later selected-card divergence after the first direct divergence changed the drafted-player state",
   },
@@ -178,7 +182,7 @@ const attributionBytes = Buffer.from(`${JSON.stringify(attribution)}\n`);
 writeFileSync(attributionPath, attributionBytes);
 
 const summary = {
-  schema_version: "choose3-basis-aware-comparison-1.0.0",
+  schema_version: "choose3-basis-aware-comparison-1.1.0",
   measurement_date: after.measurement_date,
   before: {
     source_path: path.basename(beforePath),
@@ -208,6 +212,7 @@ const summary = {
     drafts_with_flips: draftsWithFlips,
     direct_selected_basis_tiering_flips: directBasisFlips,
     cascade_after_basis_change_flips: cascadeFlips,
+    manager_identity_mismatches: 0,
     unexplained_flips: 0,
     attribution_artifact: {
       path: path.basename(attributionPath),

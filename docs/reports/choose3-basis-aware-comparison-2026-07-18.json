@@ -1,24 +1,24 @@
 {
-  "schema_version": "choose3-basis-aware-comparison-1.0.0",
+  "schema_version": "choose3-basis-aware-comparison-1.1.0",
   "measurement_date": "2026-07-18",
   "before": {
-    "source_path": "choose3-clustering-measurement-2026-07-17.json",
-    "sha256": "5d302e42260cddced35a59b1501ecf23815f01387cbcfa807e7f579f9eae111b",
+    "source_path": "choose3-basis-aware-manager-proof-before.json",
+    "sha256": "5e94b39b6acff69694f5d4fc5954a7df65c645f596154d175e9652de699e0936",
     "engine_version": "engine-2026.07.14-squad-depth",
-    "commit": "fc1748f4e4eaaa0994530c83db81582e82e7687c"
+    "commit": "735e0ecc127ac13b90527141b5fb43c019f0b03e"
   },
   "after": {
-    "source_path": "choose3-basis-aware-full.json",
-    "sha256": "dc2c5a580c3e6a975dd6dbb8979b77d5e64bb34ca4a8bfa684fa116f3ff217b3",
+    "source_path": "choose3-basis-aware-manager-proof-after.json",
+    "sha256": "6b2b98414461aa0df92e3f2ca5952510def7a8c9d995ca3df844170f501cf673",
     "engine_version": "engine-2026.07.18-basis-aware-tiering",
-    "commit": "7c17615fb3afd564c13fd6f5dc2075a5f9e55e3f"
+    "commit": "565b87f8d96f5781fb72b8283d754c1c4f2ddf9a"
   },
   "career_proof": {
     "cells": 8,
     "complete_drafts": 8192,
     "byte_identical": true,
-    "before_cells_sha256": "9aab6cb3c49eecc91408c343ae3b10ee7f7f8e1fdf49fa39d64c2aed31c48c67",
-    "after_cells_sha256": "9aab6cb3c49eecc91408c343ae3b10ee7f7f8e1fdf49fa39d64c2aed31c48c67",
+    "before_cells_sha256": "8ee2ccb846893ecaafc973b40207787c56fa055c3d9441ddd17bb9abf8f9d724",
+    "after_cells_sha256": "8ee2ccb846893ecaafc973b40207787c56fa055c3d9441ddd17bb9abf8f9d724",
     "selected_pick_flips": 0
   },
   "current_proof": {
@@ -29,11 +29,12 @@
     "drafts_with_flips": 8170,
     "direct_selected_basis_tiering_flips": 8170,
     "cascade_after_basis_change_flips": 85818,
+    "manager_identity_mismatches": 0,
     "unexplained_flips": 0,
     "attribution_artifact": {
       "path": "choose3-basis-aware-flip-attributions.json",
-      "bytes": 44969903,
-      "sha256": "9095fbd65ec8c2ddd7bfdb4643c20a7025b46d2048a898a869c9fe9b3bb35cc3",
+      "bytes": 48729485,
+      "sha256": "9102a2b973460d977dd139faa35a47a5d9e91b21043fa6ea295de181dc6b4209",
       "records": 93988
     },
     "per_cell": [

@@ -3157,9 +3157,9 @@ broken-pipe MCP transport error.
   neutralization, #136/#142 performance and atomic versioned delivery, #139 a11y
   and candidate render memoization, #140 safe patch dependencies.
 - Runtime data delivery is atomic/versioned at
-  `/data/wcdraft/runtime-data-2.9.0/`; fixed legacy `/data/wcdraft/*` paths remain
-  for old clients/server readers and `runtime-data-2.8.0` is retained for N+1
-  propagation.
+  `/data/wcdraft/runtime-data-2.10.0/`; fixed legacy `/data/wcdraft/*` paths remain
+  for old clients/server readers and `runtime-data-2.9.0` plus `runtime-data-2.8.0`
+  are retained under the current-plus-two retention policy.
 - Trusted OG is DONE-LIVE via #143: `/api/og/sign` validates replay tokens against
   the current manifest, reconstructs the draft, runs the deterministic engine, and
   signs the canonical OG render model plus token hash; `/api/og/run` verifies the
@@ -3168,27 +3168,27 @@ broken-pipe MCP transport error.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
-| Field                                | Value                                                                                                        |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| schema_version                       | runtime-data-2.9.0                                                                                           |
-| dataset_version                      | 2026-07-01                                                                                                   |
-| ruleset_version                      | ruleset-2026.06.04                                                                                           |
-| engine_version                       | engine-2026.06.30-manager-attrition                                                                          |
-| rating_version (historical)          | wc-perf-6.6.0                                                                                                |
-| rating_version (projected)           | proj-career-5.6.0                                                                                            |
-| career_stature                       | career-stature-4.1.0                                                                                         |
-| merit source set                     | merit-source-set-2.2.0                                                                                       |
-| active source set                    | active-career-source-set-2.2.0                                                                               |
-| runtime legend census                | 295                                                                                                          |
-| runtime ratings                      | 12,219                                                                                                       |
-| Career basis counts                  | 11,292 measured · 541 career-stature · 386 baseline                                                          |
-| career-stature table                 | 847 players · 209 material · 114 source-derived legends                                                      |
-| explicit leaderboard season id       | season-2026-manager-attrition                                                                                |
-| compact brotli total (legacy 3-file) | 2,231,500 measured bytes (manifest + draft + scenario)                                                       |
-| all tracked compact `.br` total      | 2,233,894 repository bytes (manifest + draft + scenario + score distribution + daily seed map)               |
-| served draft-pool br artifact        | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; decompressed sha `461601…` |
-| compact sha256                       | manifest `aa70f018…` · draft `461601…` · scenario `7846fa3a…`                                                |
-| generated artifact locks             | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes     |
+| Field                                | Value                                                                                                         |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| schema_version                       | runtime-data-2.10.0                                                                                           |
+| dataset_version                      | 2026-07-01                                                                                                    |
+| ruleset_version                      | ruleset-2026.06.04                                                                                            |
+| engine_version                       | engine-2026.07.18-basis-aware-tiering                                                                         |
+| rating_version (historical)          | wc-perf-6.6.0                                                                                                 |
+| rating_version (projected)           | proj-career-5.6.0                                                                                             |
+| career_stature                       | career-stature-4.1.0                                                                                          |
+| merit source set                     | merit-source-set-2.2.0                                                                                        |
+| active source set                    | active-career-source-set-2.2.0                                                                                |
+| runtime legend census                | 295                                                                                                           |
+| runtime ratings                      | 12,219                                                                                                        |
+| Career basis counts                  | 11,292 measured · 541 career-stature · 386 baseline                                                           |
+| career-stature table                 | 847 players · 209 material · 114 source-derived legends                                                       |
+| explicit leaderboard season id       | season-2026-squad-depth                                                                                       |
+| compact brotli total (legacy 3-file) | 1,318,014 measured bytes (manifest + draft + scenario)                                                        |
+| all tracked compact `.br` total      | 1,320,293 repository bytes (manifest + draft + scenario + score distribution + daily seed map)                |
+| served draft-pool br artifact        | 1,311,661 bytes at `/data/wcdraft/runtime-data-2.10.0/draft-pool.compact.json.br`; decompressed sha `ae5376…` |
+| compact sha256                       | manifest `13dc2384…` · draft `ae5376c9…` · scenario `50c45d0e…`                                               |
+| generated artifact locks             | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `ae5376c9…` / 68,380,413 bytes     |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 
@@ -3358,7 +3358,7 @@ web static assets.
 - `WCDRAFT_CSP_REPORT_ONLY` is an optional build/test cache-keyed override declared in
   `turbo.json`; it is not a required production secret. `WCDRAFT_LEADERBOARD_SEASON_ID`
   is the optional explicit aggregate season-id override and is also declared in
-  `turbo.json`; the code default is `season-2026-manager-attrition`.
+  `turbo.json`; the code default is `season-2026-squad-depth`.
   `LEADERBOARD_REQUIRE_ACCOUNT` is retired as an env lever and removed from
   Turbo env lists; ranked submit requires an account in code without reading
   that flag.

@@ -103,15 +103,18 @@ construction and cross-build replay semantics changed.
 
 ## U3 re-measurement
 
-The PR #312 analyzer ran at implementation head
-`7c17615fb3afd564c13fd6f5dc2075a5f9e55e3f` with the same seed template and method: 16 cells,
+The PR #312 analyzer ran at pinned pre-change head
+`735e0ecc127ac13b90527141b5fb43c019f0b03e` and implementation head
+`565b87f8d96f5781fb72b8283d754c1c4f2ddf9a` with the same v1.2 seed template and method: 16 cells,
 1,024 measurement drafts per cell, 2,048 holdout drafts per cell, 16,384 complete measurement
 drafts, and 270,336 observed player offers. Convergence passed: maximum absolute shift was
 0.007995606 from 512→1,024, 0.004056287 from 1,024→2,048, and maximum 1,024-draft CI half-width
 was 0.007835266.
 
-The full post-change offer JSON is 35,224,042 bytes with SHA-256
-`dc2c5a580c3e6a975dd6dbb8979b77d5e64bb34ca4a8bfa684fa116f3ff217b3`. All eight Career cell
+The manager-identity-complete pre-change JSON is 35,438,388 bytes with SHA-256
+`5e94b39b6acff69694f5d4fc5954a7df65c645f596154d175e9652de699e0936`; the post-change JSON is
+35,437,466 bytes with SHA-256
+`6b2b98414461aa0df92e3f2ca5952510def7a8c9d995ca3df844170f501cf673`. All eight Career cell
 objects are byte-identical before/after across 8,192 measurement drafts; canonical Career tie
 rates therefore remain 11.09% / 41.31% / 74.49% at Δ0 / Δ≤1 / Δ≤2.
 
@@ -130,15 +133,15 @@ Current before/after full-offer rates and selected-pick attribution:
 
 All 93,988 Current selected-player divergences across 131,072 picks are enumerated. Each draft's
 first divergence is classified direct only after verifying all prior selected player identities,
-candidate seed, and manager pick index are identical; later divergences are classified as cascades
-after drafted-player state has changed. Totals: 8,170 direct selected-basis tiering divergences,
-85,818 cascades, and **0 unexplained**. The external attribution JSON is 44,969,903 bytes with
-SHA-256 `9095fbd65ec8c2ddd7bfdb4643c20a7025b46d2048a898a869c9fe9b3bb35cc3`.
+candidate seed, selected manager card identity, and manager pick index are identical; later
+divergences are classified as cascades after drafted-player state has changed. Totals: 8,170 direct
+selected-basis tiering divergences, 85,818 cascades, **0 manager-identity mismatches**, and
+**0 unexplained**. The external attribution JSON is 48,729,485 bytes with SHA-256
+`9102a2b973460d977dd139faa35a47a5d9e91b21043fa6ea295de181dc6b4209`.
 The committed summary and per-cell tables are
 `docs/reports/choose3-basis-aware-comparison-2026-07-18.json`; full offer and attribution files
 remain outside Git and are attached to the PR as
-`basis-aware-offer-tiering-audit-2026-07-18.tar.gz` (10,255,150 bytes, SHA-256
-`9cfffb0bc602dbcce779187d37dc9ba33b03a0a2271c493c4137ebdad1b60353`).
+`basis-aware-offer-tiering-audit-2026-07-18.tar.gz` (size and SHA-256 recorded in the PR body).
 
 ## Validation receipts
 

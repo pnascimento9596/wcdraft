@@ -28,7 +28,7 @@ import {
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIR, "..", "..", "..");
-const SCRIPT_VERSION = "choose3-clustering-1.1.0";
+const SCRIPT_VERSION = "choose3-clustering-1.2.0";
 const MEASUREMENT_DRAFTS = 1024;
 const HOLDOUT_DRAFTS = 2048;
 const PREFIXES = Object.freeze([256, 512, MEASUREMENT_DRAFTS, HOLDOUT_DRAFTS]);
@@ -111,6 +111,7 @@ interface DraftObservation {
   candidateSeedIndex: number;
   managerPickIndex: number;
   managerTargetDeadEnds: number;
+  managerCardId: string;
   offers: OfferObservation[];
 }
 
@@ -489,7 +490,13 @@ function simulateDraft(
   if (managerPickIndex === 0 || state.manager_card_id === null) {
     throw new Error("completed draft has no manager pick");
   }
-  return { candidateSeedIndex, managerPickIndex, managerTargetDeadEnds, offers };
+  return {
+    candidateSeedIndex,
+    managerPickIndex,
+    managerTargetDeadEnds,
+    managerCardId: state.manager_card_id,
+    offers,
+  };
 }
 
 function runCell(
@@ -726,12 +733,14 @@ function cellOutput(cell: CellRun) {
       "candidate_seed_index",
       "manager_pick_index",
       "manager_target_dead_end_attempts",
+      "selected_manager_card_id",
     ],
     draft_records: drafts.map((draft, draftOrdinal) => [
       draftOrdinal,
       draft.candidateSeedIndex,
       draft.managerPickIndex,
       draft.managerTargetDeadEnds,
+      draft.managerCardId,
     ]),
     offer_records_schema: [
       "draft_ordinal",
@@ -850,7 +859,7 @@ function main() {
       prefixes: prefixSummaries,
     },
     inputs: {
-      base_commit: "7c17615fb3afd564c13fd6f5dc2075a5f9e55e3f",
+      base_commit: "565b87f8d96f5781fb72b8283d754c1c4f2ddf9a",
       bundle_path: BUNDLE_REL,
       bundle_compressed_bytes: bundleCompressed.length,
       bundle_compressed_sha256: sha256(bundleCompressed),
