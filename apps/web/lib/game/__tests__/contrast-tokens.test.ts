@@ -260,7 +260,9 @@ describe("Terrace dark palette", () => {
       });
     });
     expect(approvedCounts).toEqual(CEREMONY_LITERAL_COLORS);
-    expect(CEREMONY_LITERAL_COLORS.has("components/game/simulation-ceremony.tsx|#ffffff")).toBe(false);
+    expect(CEREMONY_LITERAL_COLORS.has("components/game/simulation-ceremony.tsx|#ffffff")).toBe(
+      false,
+    );
     expect(violations).toEqual([]);
   });
 });

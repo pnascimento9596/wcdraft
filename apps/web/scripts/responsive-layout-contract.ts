@@ -154,7 +154,15 @@ export const NARROW_COLLISION_ROUTE_RECIPES = [
 
 export const NARROW_COLLISION_SURFACE_GROUPS = [
   ["home", "mode-select-available", "daily-spin", "spin-stage", "position-target", "classic-pick"],
-  ["team-sheet", "simulation-ceremony", "simulation-ceremony-reduced", "squad-review", "results", "share-author", "share-recipient"],
+  [
+    "team-sheet",
+    "simulation-ceremony",
+    "simulation-ceremony-reduced",
+    "squad-review",
+    "results",
+    "share-author",
+    "share-recipient",
+  ],
   ["challenge-setup", "history", "leaderboard", "account", "sign-in", "sign-up"],
   ["settings", "how-to-play", "privacy", "contact", "attribution"],
 ] as const;

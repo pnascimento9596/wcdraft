@@ -99,7 +99,16 @@ export class SimulationWorkerClient {
         this.terminateWorker();
         reject(abortError());
       };
-      this.active = { requestId, resolve, reject, signal, onAbort, onMatch, nextMatchIndex: 0, streamedResults: [] };
+      this.active = {
+        requestId,
+        resolve,
+        reject,
+        signal,
+        onAbort,
+        onMatch,
+        nextMatchIndex: 0,
+        streamedResults: [],
+      };
       signal?.addEventListener("abort", onAbort, { once: true });
       this.requestTimer = this.setTimer(() => {
         this.requestTimer = null;
@@ -178,7 +187,11 @@ export class SimulationWorkerClient {
         active.streamedResults.length !== output.simulation.matches.length ||
         JSON.stringify(active.streamedResults) !== JSON.stringify(output.simulation.matches)
       ) {
-        active.reject(new SimulationWorkerExecutionError("sim worker match stream disagreed with terminal result"));
+        active.reject(
+          new SimulationWorkerExecutionError(
+            "sim worker match stream disagreed with terminal result",
+          ),
+        );
         this.terminateWorker();
         return;
       }
@@ -277,10 +290,16 @@ function parseWorkerOutput(value: unknown): WorkerOutput | null {
       !Number.isSafeInteger(value.matchIndex) ||
       value.matchIndex < 0 ||
       value.matchIndex > 7
-    ) return null;
+    )
+      return null;
     const result = MatchResultSchema.safeParse(value.result);
     if (!result.success || result.data.match_index !== value.matchIndex) return null;
-    return { request_id: requestId, kind: "match", matchIndex: value.matchIndex, result: result.data };
+    return {
+      request_id: requestId,
+      kind: "match",
+      matchIndex: value.matchIndex,
+      result: result.data,
+    };
   }
   if (value.kind !== "done") return null;
   const simulation = parsePersistedSimulation(value.simulation);

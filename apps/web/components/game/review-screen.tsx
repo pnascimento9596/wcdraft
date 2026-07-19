@@ -694,7 +694,10 @@ function SimulatePanel({
             // Main-thread failover replays from index zero, so reconcile by
             // authoritative engine index instead of appending duplicates.
             next[matchIndex] = match;
-            return { ...current, matches: next.filter((item): item is MatchResult => item !== undefined) };
+            return {
+              ...current,
+              matches: next.filter((item): item is MatchResult => item !== undefined),
+            };
           });
         },
       });
@@ -745,7 +748,7 @@ function SimulatePanel({
       warningParts.push(...persist.warnings);
       const warn = warningParts.length > 0 ? warningParts.join(" · ") : persistenceWarning;
       onRecordUpdate(persist.record, warn ?? null);
-      setCeremony((current) => current ? { ...current, simulation: result.simulation } : current);
+      setCeremony((current) => (current ? { ...current, simulation: result.simulation } : current));
       if (!ceremonySkipRef.current) await ceremonyDone;
       ceremonyWaitRef.current = null;
       if (!handoffRef.current.canCommit(attempt)) return;
@@ -804,7 +807,15 @@ function SimulatePanel({
 
   return (
     <section className={`${s.panel} ${s.simPanel} ${s.reviewSimPanel}`}>
-      {ceremony ? <SimulationCeremony matches={ceremony.matches} simulation={ceremony.simulation} onSkip={skipCeremony} onComplete={skipCeremony} showHarness={false} /> : null}
+      {ceremony ? (
+        <SimulationCeremony
+          matches={ceremony.matches}
+          simulation={ceremony.simulation}
+          onSkip={skipCeremony}
+          onComplete={skipCeremony}
+          showHarness={false}
+        />
+      ) : null}
       {sim.kind === "error" ? (
         <div role="alert">
           <p className={s.simNote}>
@@ -812,7 +823,10 @@ function SimulatePanel({
           </p>
         </div>
       ) : (
-        <p className={s.simNote} role={sim.kind === "running" && ceremony === null ? "status" : undefined}>
+        <p
+          className={s.simNote}
+          role={sim.kind === "running" && ceremony === null ? "status" : undefined}
+        >
           {note}
         </p>
       )}

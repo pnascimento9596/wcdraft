@@ -7,7 +7,11 @@ vi.mock("./rng.js", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./rng.js")>();
   return {
     ...actual,
-    deriveSubseed(runSeed: string, substream: Parameters<typeof actual.deriveSubseed>[1], scope?: string) {
+    deriveSubseed(
+      runSeed: string,
+      substream: Parameters<typeof actual.deriveSubseed>[1],
+      scope?: string,
+    ) {
       observed.calls.push([runSeed, substream, scope]);
       return actual.deriveSubseed(runSeed, substream, scope);
     },
@@ -29,6 +33,9 @@ describe("full-tournament RNG decision sequence", () => {
     expect(result.matches.map((match) => match.match_index)).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
     const bytes = JSON.stringify(observed.calls);
     const hash = createHash("sha256").update(bytes).digest("hex");
-    expect({ count: observed.calls.length, hash }).toEqual({ count: 34, hash: LOCKED_TRACE_SHA256 });
+    expect({ count: observed.calls.length, hash }).toEqual({
+      count: 34,
+      hash: LOCKED_TRACE_SHA256,
+    });
   });
 });

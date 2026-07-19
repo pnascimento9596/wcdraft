@@ -32,18 +32,20 @@ type RoleViolation = {
 // Exact approved-source exceptions. They preserve the supplied ceremony's
 // visual values without weakening uppercase-role enforcement elsewhere.
 const CEREMONY_UPPERCASE_EXCEPTIONS = [
-  { selector: ".brand,.label", weight: "500", tracking: ".1em" },
-  { selector: ".skip", weight: null, tracking: ".08em !important" },
-  { selector: ".micro", weight: "500", tracking: ".07em" },
+  { selector: ".skip", weight: null, tracking: "0.08em !important" },
+  { selector: ".micro", weight: "500", tracking: "0.07em" },
 ] as const;
 
 function isApprovedCeremonyUppercase(violation: RoleViolation): boolean {
-  return violation.file === "components/game/simulation-ceremony.module.css" &&
-    CEREMONY_UPPERCASE_EXCEPTIONS.some((exception) =>
-      exception.selector === violation.selector &&
-      exception.weight === violation.weight &&
-      exception.tracking === violation.tracking
-    );
+  return (
+    violation.file === "components/game/simulation-ceremony.module.css" &&
+    CEREMONY_UPPERCASE_EXCEPTIONS.some(
+      (exception) =>
+        exception.selector === violation.selector &&
+        exception.weight === violation.weight &&
+        exception.tracking === violation.tracking,
+    )
+  );
 }
 
 describe("Terrace typography source contract", () => {
@@ -360,17 +362,19 @@ describe("Terrace typography source contract", () => {
     const approved = rawViolations.filter(isApprovedCeremonyUppercase);
     const violations = rawViolations.filter((violation) => !isApprovedCeremonyUppercase(violation));
     expect(approved).toHaveLength(CEREMONY_UPPERCASE_EXCEPTIONS.length * 2);
-    expect(isApprovedCeremonyUppercase({
-      file: "components/game/simulation-ceremony.module.css",
-      line: 1,
-      selector: ".skip",
-      weight: null,
-      tracking: ".09em",
-    })).toBe(false);
+    expect(
+      isApprovedCeremonyUppercase({
+        file: "components/game/simulation-ceremony.module.css",
+        line: 1,
+        selector: ".skip",
+        weight: null,
+        tracking: ".09em",
+      }),
+    ).toBe(false);
     expect(violations).toEqual([]);
 
-    const inventory = uppercaseRoleInventory(sources).filter((entry) =>
-      !entry.startsWith("components/game/simulation-ceremony.module.css|"),
+    const inventory = uppercaseRoleInventory(sources).filter(
+      (entry) => !entry.startsWith("components/game/simulation-ceremony.module.css|"),
     );
     expect(inventory.length).toBeGreaterThan(0);
     expect(roleInventoryHash(inventory)).toBe(LOCKED_UPPERCASE_ROLE_INVENTORY_SHA256);

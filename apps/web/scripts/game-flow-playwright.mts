@@ -256,7 +256,8 @@ async function newBrowserCase(
     );
   }
   if (init?.failWorkerAfterFirstMatch) {
-    await context.addInitScript({ content: `{
+    await context.addInitScript({
+      content: `{
       const NativeWorker = window.Worker;
       window.Worker = class extends NativeWorker {
         constructor(url, options) {
@@ -268,10 +269,12 @@ async function newBrowserCase(
           });
         }
       };
-    }` });
+    }`,
+    });
   }
   if (init?.hangWorkerRun) {
-    await context.addInitScript({ content: `{
+    await context.addInitScript({
+      content: `{
       const NativeWorker = window.Worker;
       window.Worker = class extends NativeWorker {
         postMessage(message, transfer) {
@@ -280,7 +283,8 @@ async function newBrowserCase(
         }
         terminate() { localStorage.setItem("wcdraft:test:worker-terminated", "1"); super.terminate(); }
       };
-    }` });
+    }`,
+    });
   }
   const page = await context.newPage();
   const errors: string[] = [];
@@ -941,14 +945,19 @@ async function verifyCeremonyCancellation(browser: Browser, baseUrl: string): Pr
   await page.waitForFunction(() => localStorage.getItem("wcdraft:test:worker-run-hung") === "1");
   await page.locator("button", { hasText: "Back to draft" }).evaluate((button) => {
     const key = Object.keys(button).find((candidate) => candidate.startsWith("__reactProps"));
-    const props = key ? (button as unknown as Record<string, { onClick?: () => void }>)[key] : undefined;
+    const props = key
+      ? (button as unknown as Record<string, { onClick?: () => void }>)[key]
+      : undefined;
     if (!props?.onClick) throw new Error("Back-to-draft React handler is unavailable");
     props.onClick();
   });
   await page.waitForURL(/\/play\/draft\?run=pw-ceremony-cancel$/u);
   await page.waitForFunction(() => localStorage.getItem("wcdraft:test:worker-terminated") === "1");
   await page.waitForTimeout(500);
-  assert(new URL(page.url()).pathname === "/play/draft", "cancelled ceremony navigated late to Results");
+  assert(
+    new URL(page.url()).pathname === "/play/draft",
+    "cancelled ceremony navigated late to Results",
+  );
   const [record] = await readRunRecords(page);
   assert(record?.simulation === undefined, "cancelled ceremony persisted a late simulation");
   assert(record?.status === "ready", "cancelled ceremony did not recover the ready lifecycle");

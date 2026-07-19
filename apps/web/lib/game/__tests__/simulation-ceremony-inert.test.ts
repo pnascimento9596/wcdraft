@@ -30,9 +30,13 @@ describe("simulation ceremony modal isolation", () => {
     const root = createRoot(mount);
 
     await act(async () => {
-      root.render(createElement(SimulationCeremony, {
-        matches: [], simulation: null, onSkip: () => undefined,
-      }));
+      root.render(
+        createElement(SimulationCeremony, {
+          matches: [],
+          simulation: null,
+          onSkip: () => undefined,
+        }),
+      );
     });
 
     const ceremony = document.querySelector("[data-simulation-ceremony='true']");
@@ -61,24 +65,46 @@ describe("simulation ceremony modal isolation", () => {
     document.body.append(mount);
     const root = createRoot(mount);
     const firstKnockout = {
-      phase: "knockout", round: "R32", advanced: true,
-      user_goals: 2, user_goals_et: null, opp_goals: 1, opp_goals_et: null, shootout: null,
+      phase: "knockout",
+      round: "R32",
+      advanced: true,
+      user_goals: 2,
+      user_goals_et: null,
+      opp_goals: 1,
+      opp_goals_et: null,
+      shootout: null,
     } as unknown as MatchResult;
 
-    await act(async () => root.render(createElement(SimulationCeremony, {
-      matches: [], simulation: null, onSkip: () => undefined,
-    })));
+    await act(async () =>
+      root.render(
+        createElement(SimulationCeremony, {
+          matches: [],
+          simulation: null,
+          onSkip: () => undefined,
+        }),
+      ),
+    );
     now = 650;
-    await act(async () => { frame?.(now); });
+    await act(async () => {
+      frame?.(now);
+    });
     expect(document.body.textContent).not.toContain("2–1");
 
     now = 700;
-    await act(async () => root.render(createElement(SimulationCeremony, {
-      matches: [firstKnockout], simulation: null, onSkip: () => undefined,
-    })));
+    await act(async () =>
+      root.render(
+        createElement(SimulationCeremony, {
+          matches: [firstKnockout],
+          simulation: null,
+          onSkip: () => undefined,
+        }),
+      ),
+    );
     expect(document.body.textContent).not.toContain("2–1");
     now = 701;
-    await act(async () => { frame?.(now); });
+    await act(async () => {
+      frame?.(now);
+    });
     expect(document.body.textContent).toContain("2–1");
     expect(document.body.textContent).not.toContain("Champions");
 
@@ -91,20 +117,34 @@ describe("simulation ceremony modal isolation", () => {
     const mount = document.createElement("div");
     document.body.append(mount);
     const root = createRoot(mount);
-    await act(async () => root.render(createElement(SimulationCeremony, {
-      matches: [], simulation: null, showHarness: true, onSkip: () => undefined,
-    })));
+    await act(async () =>
+      root.render(
+        createElement(SimulationCeremony, {
+          matches: [],
+          simulation: null,
+          showHarness: true,
+          onSkip: () => undefined,
+        }),
+      ),
+    );
 
-    const skip = [...document.querySelectorAll("button")].find((button) => button.textContent?.startsWith("Skip"));
+    const skip = [...document.querySelectorAll("button")].find((button) =>
+      button.textContent?.startsWith("Skip"),
+    );
     const tabs = [...document.querySelectorAll("button[role='tab']")];
     const tab = tabs[0];
     const motionSwitch = document.querySelector("button[role='switch']");
-    const replay = [...document.querySelectorAll("button")].find((button) => button.textContent?.includes("Replay"));
+    const replay = [...document.querySelectorAll("button")].find((button) =>
+      button.textContent?.includes("Replay"),
+    );
     expect(tabs).toHaveLength(3);
     expect(skip && tab && motionSwitch && replay).toBeTruthy();
 
     const globals = readFileSync(path.join(process.cwd(), "app/globals.css"), "utf8");
-    const moduleCss = readFileSync(path.join(process.cwd(), "components/game/simulation-ceremony.module.css"), "utf8");
+    const moduleCss = readFileSync(
+      path.join(process.cwd(), "components/game/simulation-ceremony.module.css"),
+      "utf8",
+    );
     const declaration = (name: string) => {
       const match = moduleCss.match(new RegExp(`\\.${name}\\s*\\{(?<body>[^}]*)\\}`, "u"));
       if (!match?.groups?.body) throw new Error(`missing .${name} ceremony rule`);

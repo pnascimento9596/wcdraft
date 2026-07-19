@@ -107,7 +107,8 @@ export async function scanNarrowCollisions(
         );
       };
       const semanticTargetVisible = (element: Element) =>
-        element.closest('[hidden], [inert], [aria-hidden="true"]') === null && elementPainted(element);
+        element.closest('[hidden], [inert], [aria-hidden="true"]') === null &&
+        elementPainted(element);
       const stableSelector = (element: Element): string => {
         const root = element.getRootNode();
         if (root instanceof ShadowRoot) {

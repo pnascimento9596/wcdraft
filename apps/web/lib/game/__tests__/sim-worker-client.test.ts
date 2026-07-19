@@ -101,7 +101,9 @@ function match(request_id: number, matchIndex: number): Extract<WorkerOutput, { 
 }
 
 function emitComplete(worker: FakeWorker, requestId: number): void {
-  validSimulation.matches.forEach((_result, matchIndex) => worker.emit(match(requestId, matchIndex)));
+  validSimulation.matches.forEach((_result, matchIndex) =>
+    worker.emit(match(requestId, matchIndex)),
+  );
   worker.emit(done(requestId));
 }
 
@@ -161,7 +163,8 @@ describe("reusable simulation worker lifecycle", () => {
     worker.emit(match(requestId, 0));
     worker.emit(match(requestId, 1));
     expect(arrivals).toEqual([0, 1]);
-    for (let index = 2; index < validSimulation.matches.length; index += 1) worker.emit(match(requestId, index));
+    for (let index = 2; index < validSimulation.matches.length; index += 1)
+      worker.emit(match(requestId, index));
     worker.emit(done(requestId));
     await expect(pending).resolves.toEqual(done(requestId));
   });
@@ -190,10 +193,13 @@ describe("reusable simulation worker lifecycle", () => {
   it("does not let a presentation callback exception settle or kill the run", async () => {
     const worker = new FakeWorker();
     const client = new SimulationWorkerClient({ createWorker: () => worker });
-    const pending = client.run(input, undefined, () => { throw new Error("render failed"); });
+    const pending = client.run(input, undefined, () => {
+      throw new Error("render failed");
+    });
     const requestId = worker.posted[0]!.request_id;
     expect(() => worker.emit(match(requestId, 0))).not.toThrow();
-    for (let index = 1; index < validSimulation.matches.length; index += 1) worker.emit(match(requestId, index));
+    for (let index = 1; index < validSimulation.matches.length; index += 1)
+      worker.emit(match(requestId, index));
     worker.emit(done(requestId));
     await expect(pending).resolves.toMatchObject({ kind: "done" });
     expect(worker.terminate).not.toHaveBeenCalled();

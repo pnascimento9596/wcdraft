@@ -220,7 +220,9 @@ describe("simulate.ts — determinism / telemetry separation", () => {
     });
     expect(result.via).toBe("main");
     expect(observedBeforeWorkerSettled).toBe(true);
-    expect([...arrivals.entries()]).toEqual(sync.matches.map((match, index) => [index, match.match_id]));
+    expect([...arrivals.entries()]).toEqual(
+      sync.matches.map((match, index) => [index, match.match_id]),
+    );
   });
 
   it("caller cancellation never falls through to a main-thread simulation", async () => {
