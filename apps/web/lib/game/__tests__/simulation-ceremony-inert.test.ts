@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { SimulationCeremony } from "../../../components/game/simulation-ceremony";
+import type { MatchResult } from "@wcdraft/core";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -43,5 +44,42 @@ describe("simulation ceremony modal isolation", () => {
     expect(review.getAttribute("aria-hidden")).toBe("false");
     expect(document.body.style.getPropertyValue("overflow")).toBe("clip");
     expect(document.body.style.getPropertyPriority("overflow")).toBe("important");
+  });
+
+  it("reveals an arrived real score at max(beat, arrival) before terminal persistence", async () => {
+    let now = 0;
+    let frame: FrameRequestCallback | null = null;
+    vi.spyOn(performance, "now").mockImplementation(() => now);
+    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+      frame = callback;
+      return 1;
+    });
+    vi.stubGlobal("cancelAnimationFrame", () => undefined);
+    const mount = document.createElement("div");
+    document.body.append(mount);
+    const root = createRoot(mount);
+    const firstKnockout = {
+      phase: "knockout", round: "R32", advanced: true,
+      user_goals: 2, user_goals_et: null, opp_goals: 1, opp_goals_et: null, shootout: null,
+    } as unknown as MatchResult;
+
+    await act(async () => root.render(createElement(SimulationCeremony, {
+      matches: [], simulation: null, onSkip: () => undefined,
+    })));
+    now = 650;
+    await act(async () => { frame?.(now); });
+    expect(document.body.textContent).not.toContain("2–1");
+
+    now = 700;
+    await act(async () => root.render(createElement(SimulationCeremony, {
+      matches: [firstKnockout], simulation: null, onSkip: () => undefined,
+    })));
+    expect(document.body.textContent).not.toContain("2–1");
+    now = 701;
+    await act(async () => { frame?.(now); });
+    expect(document.body.textContent).toContain("2–1");
+    expect(document.body.textContent).not.toContain("Champions");
+
+    await act(async () => root.unmount());
   });
 });

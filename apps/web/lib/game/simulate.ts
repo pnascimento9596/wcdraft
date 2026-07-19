@@ -391,14 +391,12 @@ async function runSimulationAsync(
     scenario: inputs.scenario,
   };
   try {
-    // Buffer the worker replay until `done` validates. If the worker dies after
-    // a partial stream, failover publishes one clean main-thread batch rather
-    // than mixing stale partial arrivals with the deterministic fallback.
-    const workerMatches: Array<[number, MatchResult]> = [];
+    // The worker client validates schema, index and order before invoking this
+    // callback. Publish each real result immediately; the terminal payload is
+    // still required to match the complete stream byte-for-byte.
     const output = await runWorker(input, signal, (matchIndex, result) => {
-      workerMatches.push([matchIndex, result]);
+      notifyMatch(onMatch, matchIndex, result);
     });
-    workerMatches.forEach(([matchIndex, result]) => notifyMatch(onMatch, matchIndex, result));
     return {
       via: "worker",
       simulation: output.simulation,

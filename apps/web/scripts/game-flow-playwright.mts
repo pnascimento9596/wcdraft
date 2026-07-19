@@ -225,7 +225,12 @@ async function newBrowserCase(
     const record = init.record;
     await context.addInitScript(
       ({ record, recordPrefix, indexKey, schemaVersion }) => {
-        window.localStorage.setItem(`${recordPrefix}${record.run_id}`, JSON.stringify(record));
+        const recordKey = `${recordPrefix}${record.run_id}`;
+        // addInitScript runs for every full-document navigation. Seed only the
+        // first document so Results cannot overwrite the completed record that
+        // Review just persisted.
+        if (window.localStorage.getItem(recordKey) !== null) return;
+        window.localStorage.setItem(recordKey, JSON.stringify(record));
         window.localStorage.setItem(
           indexKey,
           JSON.stringify({
@@ -259,7 +264,7 @@ async function newBrowserCase(
           super.addEventListener("message", (event) => {
             if (this.failed || event.data?.kind !== "match") return;
             this.failed = true;
-            queueMicrotask(() => { this.terminate(); this.dispatchEvent(new ErrorEvent("error", { message: "forced worker failure after partial match" })); });
+            queueMicrotask(() => { localStorage.setItem("wcdraft:test:worker-forced-failure", "1"); this.terminate(); this.dispatchEvent(new ErrorEvent("error", { message: "forced worker failure after partial match" })); });
           });
         }
       };
@@ -915,7 +920,12 @@ async function verifyCeremonyWorkerFailover(browser: Browser, baseUrl: string): 
   await page.getByRole("button", { name: "Confirm team sheet & simulate" }).click();
   await page.locator("[data-simulation-ceremony='true']").waitFor();
   await page.waitForURL(new RegExp(`/play/results\\?run=${seeded.run_id}$`), { timeout: 90_000 });
-  const [record] = await readRunRecords(page);
+  const records = await readRunRecords(page);
+  const record = records.find((candidate) => candidate.run_id === seeded.run_id);
+  assert(
+    await page.evaluate(() => localStorage.getItem("wcdraft:test:worker-forced-failure") === "1"),
+    "worker failover fixture did not force the worker failure",
+  );
   assert(record?.status === "complete", "worker failover did not persist a complete result");
   assert(record.simulation?.matches.length >= 3, "worker failover did not reach real results");
   await assertNoBrowserErrors(testCase, "ceremony worker failover");

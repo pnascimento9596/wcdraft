@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { runTournamentFull } from "@wcdraft/core";
 
-import { deriveCeremonyModel, isCeremonyResolved } from "../../../components/game/simulation-ceremony";
+import {
+  ceremonyTiming,
+  deriveCeremonyModel,
+  deriveStreamedCeremonyModel,
+  isCeremonyResolved,
+} from "../../../components/game/simulation-ceremony";
 import type { PersistedSimulation } from "../simulation-payload";
 import { buildScenarioInputs, type ScenarioName } from "../../../../../packages/core/test/fixtures/sim-fixtures";
 
@@ -54,6 +59,38 @@ describe("simulation ceremony honest-state renderer", () => {
   it("has no canned production outcome before the terminal simulation exists", () => {
     expect(deriveCeremonyModel(null)).toMatchObject({ champion: false, fillPct: 0, status: "", heroNum: "" });
     expect(deriveCeremonyModel(null).nodes.every((node) => node.state === "none")).toBe(true);
+  });
+
+  it("derives each arrived node from the real stream before the terminal payload", () => {
+    const simulation = realFixture("sf");
+    const knockout = simulation.matches.filter((match) => match.phase === "knockout");
+    const afterFirstArrival = deriveStreamedCeremonyModel(
+      simulation.matches.slice(0, simulation.matches.indexOf(knockout[0]!) + 1),
+      null,
+    );
+    expect(afterFirstArrival.nodes[0]).toMatchObject({
+      state: "win",
+      score: deriveCeremonyModel(simulation).nodes[0]?.score,
+    });
+    expect(afterFirstArrival.nodes.slice(1).every((node) => node.state === "none")).toBe(true);
+    expect(afterFirstArrival.status).toBe("");
+
+    const afterLossArrival = deriveStreamedCeremonyModel(simulation.matches, null);
+    expect(afterLossArrival.nodes.map((node) => node.state)).toEqual(["win", "win", "win", "loss", "none"]);
+    expect(afterLossArrival.status).toBe("");
+    expect(afterLossArrival.heroNum).toBe(afterLossArrival.nodes[3]?.score);
+  });
+
+  it("keeps the approved outcome beats separate from the 3200ms navigation floor", () => {
+    expect(ceremonyTiming(deriveCeremonyModel(realFixture("champion")))).toEqual({
+      beats: [520, 820, 1120, 1420, 1760], resolve: 2100,
+    });
+    expect(ceremonyTiming(deriveCeremonyModel(realFixture("sf")))).toEqual({
+      beats: [520, 820, 1120, 1520, null], resolve: 1860,
+    });
+    expect(ceremonyTiming(deriveCeremonyModel(realFixture("r16")))).toEqual({
+      beats: [520, 900, null, null, null], resolve: 1440,
+    });
   });
 
   it("does not complete at the floor when a real result arrives after 3200ms", () => {

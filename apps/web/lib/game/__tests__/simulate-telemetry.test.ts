@@ -200,18 +200,27 @@ describe("simulate.ts — determinism / telemetry separation", () => {
     expect(JSON.stringify(result.simulation)).toBe(JSON.stringify(sync));
   });
 
-  it("discards partial worker progress before publishing the clean failover batch", async () => {
+  it("publishes worker progress before done and reconciles failover by stable match index", async () => {
     const sync = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, record).simulation;
-    const arrivals: string[] = [];
+    const arrivals = new Map<number, string>();
+    let observedBeforeWorkerSettled = false;
+    let workerSettled = false;
     const result = await runSimulation(gameData, SCENARIO_2026_BUNDLE, record, {
       runWorker: async (_input, _signal, onMatch) => {
         onMatch?.(0, sync.matches[0]!);
+        await Promise.resolve();
+        observedBeforeWorkerSettled = arrivals.get(0) === sync.matches[0]?.match_id;
+        workerSettled = true;
         throw new Error("worker died after one progress message");
       },
-      onMatch: (_matchIndex, match) => arrivals.push(match.match_id),
+      onMatch: (matchIndex, match) => {
+        expect(workerSettled || matchIndex === 0).toBe(true);
+        arrivals.set(matchIndex, match.match_id);
+      },
     });
     expect(result.via).toBe("main");
-    expect(arrivals).toEqual(sync.matches.map((match) => match.match_id));
+    expect(observedBeforeWorkerSettled).toBe(true);
+    expect([...arrivals.entries()]).toEqual(sync.matches.map((match, index) => [index, match.match_id]));
   });
 
   it("caller cancellation never falls through to a main-thread simulation", async () => {

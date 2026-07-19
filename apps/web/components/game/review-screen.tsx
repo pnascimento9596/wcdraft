@@ -685,9 +685,17 @@ function SimulatePanel({
       setSim({ kind: "running", note: "Simulating the run…" });
       const result = await runSimulation(gameData, scenarioBundle, lockedRecord, {
         signal: attempt.controller.signal,
-        onMatch: (_matchIndex, match) => {
+        onMatch: (matchIndex, match) => {
           if (!handoffRef.current.canCommit(attempt)) return;
-          setCeremony((current) => current ? { ...current, matches: [...current.matches, match] } : current);
+          setCeremony((current) => {
+            if (!current) return current;
+            const next = [...current.matches];
+            // A failed worker may already have published an honest prefix.
+            // Main-thread failover replays from index zero, so reconcile by
+            // authoritative engine index instead of appending duplicates.
+            next[matchIndex] = match;
+            return { ...current, matches: next.filter((item): item is MatchResult => item !== undefined) };
+          });
         },
       });
       if (!handoffRef.current.canCommit(attempt)) return;

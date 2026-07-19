@@ -27,6 +27,7 @@
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+.withHarness { padding:34px 16px; }
 .shell {
   position: relative;
   width: min(393px, 100%);
@@ -39,9 +40,20 @@
   border-radius: 44px;
   box-shadow: 0 40px 90px -40px rgba(0,0,0,.85), inset 0 1px 0 rgba(235,230,218,.03);
 }
-.harness { width:min(393px,100%); display:flex; gap:4px; align-items:center; }
-.harness button { flex:1; min-height:44px; border:1px solid var(--sc-line); border-radius:10px; background:var(--sc-panel); color:var(--sc-ink2); font:800 12px "Archivo",sans-serif; }
-.harness button[aria-selected="true"] { background:var(--sc-em); color:#05130c; }
+.harnessTop { width:min(393px,100%); display:flex; align-items:baseline; justify-content:space-between; }
+.preview { color:var(--sc-em); }
+.harnessBottom { width:min(393px,100%); display:flex; flex-direction:column; gap:12px; }
+.tabs { display:flex; gap:4px; padding:4px; background:var(--sc-panel); border:1px solid var(--sc-line); border-radius:14px; }
+.tab { position:relative; flex:1; height:44px; overflow:hidden; border:0; border-radius:10px; background:transparent; color:var(--sc-ink2); cursor:pointer; font:800 12.5px "Archivo",sans-serif; letter-spacing:-.01em; }
+.tabSelected { background:var(--sc-em); color:#05130c; }
+.harnessControls { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.switch { display:flex; align-items:center; gap:11px; height:44px; padding:0 4px; border:0; background:transparent; color:var(--sc-ink2); cursor:pointer; font:800 12.5px "Archivo",sans-serif; letter-spacing:-.01em; }
+.switchTrack { position:relative; display:block; flex:0 0 auto; width:42px; height:24px; border-radius:999px; background:var(--sc-line); transition:background 160ms ease; }
+.switchOn { background:var(--sc-em); }
+.switchKnob { position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:var(--sc-ink); transition:transform 160ms ease; }
+.switchKnobOn { transform:translateX(18px); }
+.replay { display:flex; align-items:center; gap:8px; height:44px; padding:0 18px; border:1px solid var(--sc-line); border-radius:10px; background:transparent; color:var(--sc-ink); cursor:pointer; font:800 12.5px "Archivo",sans-serif; letter-spacing:-.01em; }
+.replay span { font-size:15px; line-height:1; }
 .dots { position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.03; background-image:radial-gradient(circle at 1px 1px,var(--sc-ink) 1px,transparent 0); background-size:4px 4px; }
 .top { position:relative; z-index:3; display:flex; align-items:center; justify-content:space-between; padding:16px 16px 4px 20px; }
 .brand,.label { font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--sc-ink2); }

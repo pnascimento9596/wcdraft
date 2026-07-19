@@ -11,7 +11,7 @@ const FILL_RISE_MS = 480;
 const EASE = "cubic-bezier(.2,.7,.2,1)";
 const ROUNDS = ["R32", "R16", "QF", "SF", "F"] as const;
 const LABELS = ["Round of 32", "Round of 16", "Quarter-final", "Semi-final", "Final"] as const;
-const BEATS = [520, 820, 1120, 1420, 1760] as const;
+const CHAMPION_BEATS = [520, 820, 1120, 1420, 1760] as const;
 const REG_TOP = 22;
 const REG_BOT = 110;
 const REG_H = REG_BOT - REG_TOP;
@@ -22,6 +22,7 @@ function isCeremonyRound(round: MatchResult["round"]): round is CeremonyNode["ro
 type NodeState = "win" | "loss" | "champ" | "none";
 export interface CeremonyNode { round: typeof ROUNDS[number]; state: NodeState; score: string; }
 export interface CeremonyModel { nodes: CeremonyNode[]; champion: boolean; status: string; heroNum: string; fillPct: number; decisive: string; }
+export interface CeremonyTiming { beats: readonly (number | null)[]; resolve: number; }
 export function isCeremonyResolved(elapsedMs:number, hasTerminal:boolean, nodes:readonly CeremonyNode[], visible:readonly boolean[]):boolean {
   return hasTerminal && elapsedMs>=CEREMONY_TOTAL_MS && nodes.every((node,index)=>node.state==="none"||visible[index]===true);
 }
@@ -31,6 +32,7 @@ const DEV_FIXTURES: Record<"A"|"B"|"C", CeremonyModel> = {
   // Architect correction: C is a genuine R16 exit (R32 win, then R16 loss).
   C: { champion:false,status:"Out in the round of 16",heroNum:"0–1",fillPct:50,decisive:"Round of 16",nodes:["R32","R16","QF","SF","F"].map((round,i)=>({round:round as CeremonyNode["round"],state:i===0?"win":i===1?"loss":"none",score:["2–0","0–1","","",""][i]!})) },
 };
+const DEV_LABELS = { A: "Champions", B: "Semi-final exit", C: "Round-of-16 exit" } as const;
 
 function matchScore(match: MatchResult): string {
   const user = match.user_goals + (match.user_goals_et ?? 0);
@@ -38,8 +40,11 @@ function matchScore(match: MatchResult): string {
   return match.shootout ? `${user}–${opp} (${match.shootout.user}–${match.shootout.opp} pens)` : `${user}–${opp}`;
 }
 
-export function deriveCeremonyModel(simulation: PersistedSimulation | null): CeremonyModel {
-  const knockout = new Map(simulation?.matches.filter((m) => m.phase === "knockout").map((m) => [m.round, m]) ?? []);
+export function deriveStreamedCeremonyModel(
+  matches: readonly MatchResult[],
+  simulation: PersistedSimulation | null,
+): CeremonyModel {
+  const knockout = new Map(matches.filter((m) => m.phase === "knockout").map((m) => [m.round, m]));
   let eliminated = false;
   const nodes = ROUNDS.map((round): CeremonyNode => {
     if (eliminated) return { round, state: "none", score: "" };
@@ -51,20 +56,46 @@ export function deriveCeremonyModel(simulation: PersistedSimulation | null): Cer
     }
     return { round, state: round === "F" && simulation?.run.is_champion ? "champ" : "win", score: matchScore(match) };
   });
-  if (!simulation) return { nodes, champion:false, status:"", heroNum:"", fillPct:0, decisive:"Group stage" };
-  const champion = simulation.run.is_champion;
+  const finalWin = knockout.get("F")?.advanced === true;
+  const champion = simulation?.run.is_champion === true;
   const lossIndex = nodes.findIndex((node) => node.state === "loss");
   const wins = nodes.filter((node) => node.state === "win" || node.state === "champ").length;
-  const decisive = champion ? "Final" : lossIndex >= 0 ? LABELS[lossIndex]! : "Group stage";
+  const groupExit = simulation !== null && matches.every((match) => match.phase === "group");
+  const decisive = champion || finalWin ? "Final" : lossIndex >= 0 ? LABELS[lossIndex]! : "Group stage";
   const decisiveScore = lossIndex >= 0 ? nodes[lossIndex]!.score : "";
   return {
     nodes,
     champion,
-    status: champion ? "Champions" : `Out in the ${decisive.toLowerCase()}`,
-    heroNum: champion ? `${simulation.run.wins}–${simulation.run.losses}` : decisiveScore,
-    fillPct: champion ? 100 : lossIndex >= 0 ? (wins === 0 ? 15 : (wins / (lossIndex + 1)) * 100) : 0,
+    status: simulation === null
+      ? ""
+      : champion || finalWin
+        ? "Champions"
+        : lossIndex >= 0 || groupExit
+          ? `Out in the ${decisive.toLowerCase()}`
+          : "",
+    heroNum: champion
+      ? `${simulation!.run.wins}–${simulation!.run.losses}`
+      : decisiveScore || (knockout.get("F") ? matchScore(knockout.get("F")!) : ""),
+    fillPct: champion || finalWin ? 100 : lossIndex >= 0 ? (wins === 0 ? 15 : (wins / (lossIndex + 1)) * 100) : 0,
     decisive,
   };
+}
+
+export function deriveCeremonyModel(simulation: PersistedSimulation | null): CeremonyModel {
+  return deriveStreamedCeremonyModel(simulation?.matches ?? [], simulation);
+}
+
+export function ceremonyTiming(model: CeremonyModel): CeremonyTiming {
+  const lossIndex = model.nodes.findIndex((node) => node.state === "loss");
+  if (model.champion || model.nodes[4]?.state === "champ") {
+    return { beats: CHAMPION_BEATS, resolve: 2100 };
+  }
+  if (lossIndex === 3) return { beats: [520, 820, 1120, 1520, null], resolve: 1860 };
+  if (lossIndex === 1) return { beats: [520, 900, null, null, null], resolve: 1440 };
+  if (lossIndex === 0) return { beats: [900, null, null, null, null], resolve: 1440 };
+  if (lossIndex === 2) return { beats: [520, 820, 1120, null, null], resolve: 1440 };
+  if (lossIndex === 4) return { beats: CHAMPION_BEATS, resolve: 2100 };
+  return { beats: CHAMPION_BEATS, resolve: model.status ? 1440 : 2100 };
 }
 
 export function SimulationCeremony({ matches, simulation, reducedMotion, showHarness = false, onSkip, onComplete }: {
@@ -131,23 +162,33 @@ export function SimulationCeremony({ matches, simulation, reducedMotion, showHar
     raf=requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
   }, [replay, fixture]);
-  const terminal = useMemo(() => showHarness ? DEV_FIXTURES[fixture] : deriveCeremonyModel(simulation), [fixture,showHarness,simulation]);
+  const model = useMemo(
+    () => showHarness ? DEV_FIXTURES[fixture] : deriveStreamedCeremonyModel(matches, simulation),
+    [fixture, matches, showHarness, simulation],
+  );
+  const timing = ceremonyTiming(model);
   for (const match of matches) {
     if (match.phase === "knockout" && isCeremonyRound(match.round) && !arrivalRef.current.has(match.round)) {
       arrivalRef.current.set(match.round, Math.max(0, performance.now() - t0Ref.current));
     }
   }
-  const arrivedRounds = useMemo(() => new Set(showHarness ? terminal.nodes.filter((node)=>node.state!=="none").map((node)=>node.round) : matches.filter((m) => m.phase === "knockout").map((m) => m.round)), [matches,showHarness,terminal]);
-  const revealAt = terminal.nodes.map((node, i) => Math.max(BEATS[i] ?? CEREMONY_TOTAL_MS, showHarness ? 0 : (arrivalRef.current.get(node.round) ?? Number.POSITIVE_INFINITY)));
-  const visible = terminal.nodes.map((node, i) => arrivedRounds.has(node.round) && t >= revealAt[i]!);
-  const resolved = isCeremonyResolved(t, showHarness || simulation !== null, terminal.nodes, visible);
-  useEffect(() => { if(resolved) stopped.current=true; }, [resolved]);
-  useEffect(() => { if(resolved && !fired.current){ fired.current=true; onComplete?.(); } }, [resolved,onComplete]);
+  const arrivedRounds = useMemo(() => new Set(showHarness ? model.nodes.filter((node)=>node.state!=="none").map((node)=>node.round) : matches.filter((m) => m.phase === "knockout").map((m) => m.round)), [matches,showHarness,model]);
+  const revealAt = model.nodes.map((node, i) => {
+    const beat = timing.beats[i];
+    if (beat === null || beat === undefined) return Number.POSITIVE_INFINITY;
+    return Math.max(beat, showHarness ? 0 : (arrivalRef.current.get(node.round) ?? Number.POSITIVE_INFINITY));
+  });
+  const visible = model.nodes.map((node, i) => arrivedRounds.has(node.round) && t >= revealAt[i]!);
+  const navigationResolved = isCeremonyResolved(t, showHarness || simulation !== null, model.nodes, visible);
+  const playedVisible = model.nodes.every((node, index) => node.state === "none" || visible[index] === true);
+  const visualResolved = model.status.length > 0 && playedVisible && t >= timing.resolve;
+  useEffect(() => { if(navigationResolved) stopped.current=true; }, [navigationResolved]);
+  useEffect(() => { if(navigationResolved && !fired.current){ fired.current=true; onComplete?.(); } }, [navigationResolved,onComplete]);
   let last = -1; visible.forEach((on,i)=>{if(on)last=i;});
-  const lossIndex=terminal.nodes.findIndex((node)=>node.state==="loss");
+  const lossIndex=model.nodes.findIndex((node)=>node.state==="loss");
   const fillFor=(through:number) => {
-    const survived=terminal.nodes.slice(0,through+1).filter((node)=>node.state==="win"||node.state==="champ").length;
-    if(terminal.champion) return survived*20;
+    const survived=model.nodes.slice(0,through+1).filter((node)=>node.state==="win"||node.state==="champ").length;
+    if(model.champion) return survived*20;
     if(lossIndex<0) return 0;
     if(survived===0) return through>=lossIndex?15:0;
     return (survived/(lossIndex+1))*100;
@@ -157,21 +198,21 @@ export function SimulationCeremony({ matches, simulation, reducedMotion, showHar
   const p = reduced || last < 0 ? 1 : Math.max(0,Math.min(1,(t-revealAt[last]!)/FILL_RISE_MS));
   const fillPct=prevFill+(targetFill-prevFill)*(1-Math.pow(1-p,3));
   const filled=(REG_H*fillPct)/100, fillTop=REG_BOT-filled;
-  const current = last >= 0 ? terminal.nodes[last]! : null;
-  const eyebrow=resolved?terminal.decisive.toUpperCase():(last>=0?LABELS[last]!.toUpperCase():LABELS[0].toUpperCase());
-  const num=resolved?terminal.heroNum:(current?.score??"");
-  const champOn=terminal.champion&&terminal.nodes[4]?.state==="champ"&&visible[4];
+  const current = last >= 0 ? model.nodes[last]! : null;
+  const eyebrow=visualResolved?model.decisive.toUpperCase():(last>=0?LABELS[last]!.toUpperCase():LABELS[0].toUpperCase());
+  const num=visualResolved?model.heroNum:(current?.score??"");
+  const champOn=model.champion&&model.nodes[4]?.state==="champ"&&visible[4];
   const cssVars={"--dur":reduced?"0ms":"420ms","--ease":EASE} as CSSProperties;
-  return createPortal(<div ref={portalRootRef} className={`${s.root} ${reduced?s.reduced:""}`} style={cssVars} data-simulation-ceremony="true" data-reduced-motion={reduced?"true":"false"}>
-    {showHarness ? <><div className={s.label}>Simulation ceremony · Preview</div><div className={s.harness} role="tablist" aria-label="Scenario">{(["A","B","C"] as const).map(key=><button key={key} role="tab" aria-selected={fixture===key} onClick={()=>setFixture(key)}>{DEV_FIXTURES[key].status}</button>)}</div></> : null}
+  return createPortal(<div ref={portalRootRef} className={`${s.root} ${showHarness?s.withHarness:""} ${reduced?s.reduced:""}`} style={cssVars} data-simulation-ceremony="true" data-reduced-motion={reduced?"true":"false"}>
+    {showHarness ? <div className={s.harnessTop}><div className={s.label}>Simulation ceremony</div><div className={`${s.label} ${s.preview}`}>Preview</div></div> : null}
     <div className={s.shell}>
       <div className={s.dots}/><div className={s.top}><div className={s.brand}>wcdraft</div><button className={s.skip} onClick={()=>{stopped.current=true;setT(Number.MAX_SAFE_INTEGER);onSkip();}}>Skip<span style={{fontSize:14,lineHeight:1}}>»</span></button></div>
       <div className={s.body}>
-        <div className={`${s.trophy} ${champOn?s.champGlow:""}`}><Trophy fillTop={fillTop} fillHeight={filled} surfaceOp={fillPct>1?.55:0} goldOutlineOp={champOn?1:0}/></div>
-        <div className={s.hero}><div className={s.label} style={{minHeight:14}}>{eyebrow}</div><div className={`${s.heroNum} ${resolved&&!reduced?s.heroSettle:""}`} style={{color:resolved&&terminal.champion?"var(--sc-gold)":"var(--sc-ink)"}}>{num}</div><div className={`${s.status} ${resolved&&!reduced?s.statusIn:""}`} style={{color:terminal.champion?"var(--sc-gold)":"var(--sc-ink)",opacity:resolved?1:0}}>{resolved?terminal.status:""}</div></div>
-        <div className={s.path}>{terminal.nodes.map((node,i)=><Fragment key={node.round}>{i>0?<div className={s.conn}><div className={s.connFill} style={{width:visible[i]&&terminal.nodes[i-1]!.state!=="loss"?"100%":"0%"}}/></div>:null}<div className={s.nodeCol}><div className={s.node}><div className={s.nodeBase}/>{(["win","loss","champ"] as const).map(state=><div key={state} className={s.nodeState} style={{background:`var(--sc-${state==="win"?"em":state==="loss"?"loss":"gold"})`,opacity:visible[i]&&node.state===state?1:0}}/>)}{visible[i]&&!reduced&&node.state!=="none"?<div className={`${s.ring} ${node.state==="champ"?s.pulseChamp:node.state==="loss"?s.pulseLoss:s.pulseWin}`} style={{borderColor:`var(--sc-${node.state==="win"?"em":node.state==="loss"?"loss":"gold"})`}}/>:null}</div><div className={s.micro}>{node.round}</div><div className={s.score} style={{opacity:visible[i]?1:0}}>{visible[i]?node.score:""}</div></div></Fragment>)}</div>
-      </div><div aria-live="polite" role="status" className={s.srOnly}>{resolved?`${terminal.status}. ${terminal.heroNum}.`:""}</div>
-    </div>{showHarness?<div className={s.harness}><button role="switch" aria-checked={harnessReduced} onClick={()=>setHarnessReduced(value=>!value)}>Reduced motion</button><button onClick={()=>setReplay(value=>value+1)}>↻ Replay</button></div>:null}
+        <div className={`${s.trophy} ${champOn?s.champGlow:""}`} data-ceremony-trophy="true" data-fill-pct={fillPct.toFixed(2)} data-gold={champOn?"true":"false"}><Trophy fillTop={fillTop} fillHeight={filled} surfaceOp={fillPct>1?.55:0} goldOutlineOp={champOn?1:0}/></div>
+        <div className={s.hero}><div className={s.label} style={{minHeight:14}}>{eyebrow}</div><div className={`${s.heroNum} ${visualResolved&&!reduced?s.heroSettle:""}`} style={{color:visualResolved&&model.champion?"var(--sc-gold)":"var(--sc-ink)"}}>{num}</div><div className={`${s.status} ${visualResolved&&!reduced?s.statusIn:""}`} style={{color:model.champion?"var(--sc-gold)":"var(--sc-ink)",opacity:visualResolved?1:0}}>{visualResolved?model.status:""}</div></div>
+        <div className={s.path}>{model.nodes.map((node,i)=><Fragment key={node.round}>{i>0?<div className={s.conn}><div className={s.connFill} style={{width:visible[i]&&model.nodes[i-1]!.state!=="loss"?"100%":"0%"}}/></div>:null}<div className={s.nodeCol} data-ceremony-node={node.round} data-state={node.state} data-visible={visible[i]?"true":"false"}><div className={s.node}><div className={s.nodeBase}/>{(["win","loss","champ"] as const).map(state=><div key={state} className={s.nodeState} style={{background:`var(--sc-${state==="win"?"em":state==="loss"?"loss":"gold"})`,opacity:visible[i]&&node.state===state?1:0}}/>)}{visible[i]&&!reduced&&node.state!=="none"?<div className={`${s.ring} ${node.state==="champ"?s.pulseChamp:node.state==="loss"?s.pulseLoss:s.pulseWin}`} style={{borderColor:`var(--sc-${node.state==="win"?"em":node.state==="loss"?"loss":"gold"})`}}/>:null}</div><div className={s.micro}>{node.round}</div><div className={s.score} style={{opacity:visible[i]?1:0}}>{visible[i]?node.score:""}</div></div></Fragment>)}</div>
+      </div><div aria-live="polite" role="status" className={s.srOnly}>{visualResolved?`${model.status}. ${model.heroNum}.`:""}</div>
+    </div>{showHarness?<div className={s.harnessBottom}><div className={s.tabs} role="tablist" aria-label="Scenario">{(["A","B","C"] as const).map(key=><button className={`${s.tab} ${fixture===key?s.tabSelected:""}`} key={key} role="tab" aria-selected={fixture===key} onClick={()=>setFixture(key)}>{DEV_LABELS[key]}</button>)}</div><div className={s.harnessControls}><button className={s.switch} role="switch" aria-checked={harnessReduced} onClick={()=>setHarnessReduced(value=>!value)}><span className={`${s.switchTrack} ${harnessReduced?s.switchOn:""}`}><span className={`${s.switchKnob} ${harnessReduced?s.switchKnobOn:""}`}/></span><span>Reduced motion</span></button><button className={s.replay} onClick={()=>setReplay(value=>value+1)}><span>↻</span>Replay</button></div></div>:null}
   </div>, document.body);
 }
 
