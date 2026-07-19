@@ -33,7 +33,7 @@ type RoleViolation = {
 // visual values without weakening uppercase-role enforcement elsewhere.
 const CEREMONY_UPPERCASE_EXCEPTIONS = [
   { selector: ".brand,.label", weight: "500", tracking: ".1em" },
-  { selector: ".skip", weight: null, tracking: ".08em" },
+  { selector: ".skip", weight: null, tracking: ".08em !important" },
   { selector: ".micro", weight: "500", tracking: ".07em" },
 ] as const;
 

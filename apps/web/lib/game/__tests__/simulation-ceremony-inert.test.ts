@@ -2,6 +2,8 @@
 
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { SimulationCeremony } from "../../../components/game/simulation-ceremony";
@@ -80,6 +82,57 @@ describe("simulation ceremony modal isolation", () => {
     expect(document.body.textContent).toContain("2–1");
     expect(document.body.textContent).not.toContain("Champions");
 
+    await act(async () => root.unmount());
+  });
+
+  it("wins the real global button cascade with the approved computed tracking", async () => {
+    vi.stubGlobal("requestAnimationFrame", () => 1);
+    vi.stubGlobal("cancelAnimationFrame", () => undefined);
+    const mount = document.createElement("div");
+    document.body.append(mount);
+    const root = createRoot(mount);
+    await act(async () => root.render(createElement(SimulationCeremony, {
+      matches: [], simulation: null, showHarness: true, onSkip: () => undefined,
+    })));
+
+    const skip = [...document.querySelectorAll("button")].find((button) => button.textContent?.startsWith("Skip"));
+    const tabs = [...document.querySelectorAll("button[role='tab']")];
+    const tab = tabs[0];
+    const motionSwitch = document.querySelector("button[role='switch']");
+    const replay = [...document.querySelectorAll("button")].find((button) => button.textContent?.includes("Replay"));
+    expect(tabs).toHaveLength(3);
+    expect(skip && tab && motionSwitch && replay).toBeTruthy();
+
+    const globals = readFileSync(path.join(process.cwd(), "app/globals.css"), "utf8");
+    const moduleCss = readFileSync(path.join(process.cwd(), "components/game/simulation-ceremony.module.css"), "utf8");
+    const declaration = (name: string) => {
+      const match = moduleCss.match(new RegExp(`\\.${name}\\s*\\{(?<body>[^}]*)\\}`, "u"));
+      if (!match?.groups?.body) throw new Error(`missing .${name} ceremony rule`);
+      return match.groups.body;
+    };
+    const actualRule = (element: Element, name: string) =>
+      `.${element.classList.item(0)} { ${declaration(name)} }`;
+    const tracking = globals.match(/--tracking-button:\s*[^;]+;/u)?.[0];
+    const weight = globals.match(/--font-weight-button:\s*[^;]+;/u)?.[0];
+    const button = globals.match(/button\s*\{(?<body>[^}]*)\}/u)?.groups?.body;
+    if (!tracking || !weight || !button || !skip || !tab || !motionSwitch || !replay) {
+      throw new Error("could not materialize the ceremony/global cascade fixture");
+    }
+    const style = document.createElement("style");
+    style.textContent = `:root { ${tracking} ${weight} } button { ${button} } ${actualRule(skip, "skip")} ${actualRule(tab, "tab")} ${actualRule(motionSwitch, "switch")} ${actualRule(replay, "replay")}`;
+    document.head.append(style);
+
+    // happy-dom resolves authored em tracking against its 16px style context;
+    // these computed values distinguish the approved .08em/-.01em from the
+    // global button role's .02em (0.32px).
+    expect(getComputedStyle(skip).letterSpacing).toBe("1.28px");
+    for (const control of [...tabs, motionSwitch, replay]) {
+      expect(getComputedStyle(control).letterSpacing).toBe("-0.16px");
+      expect(getComputedStyle(control).fontWeight).toBe("800");
+    }
+    expect(getComputedStyle(skip).fontWeight).toBe("800");
+
+    style.remove();
     await act(async () => root.unmount());
   });
 });
