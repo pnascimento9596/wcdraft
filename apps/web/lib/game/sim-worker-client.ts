@@ -1,3 +1,4 @@
+import { MatchResultSchema, type MatchResult } from "@wcdraft/core";
 import type { WorkerInput, WorkerOutput } from "./simulate";
 import { parsePersistedSimulation } from "./simulation-payload";
 
@@ -32,6 +33,9 @@ interface ActiveRequest {
   readonly reject: (error: unknown) => void;
   readonly signal?: AbortSignal;
   readonly onAbort: () => void;
+  readonly onMatch?: (matchIndex: number, result: MatchResult) => void;
+  nextMatchIndex: number;
+  streamedResults: MatchResult[];
 }
 
 export interface SimulationWorkerClientOptions {
@@ -74,6 +78,7 @@ export class SimulationWorkerClient {
   run(
     input: Omit<WorkerInput, "request_id">,
     signal?: AbortSignal,
+    onMatch?: (matchIndex: number, result: MatchResult) => void,
   ): Promise<Extract<WorkerOutput, { kind: "done" }>> {
     if (this.active) return Promise.reject(new SimulationWorkerBusyError());
     if (signal?.aborted) return Promise.reject(abortError());
@@ -94,7 +99,16 @@ export class SimulationWorkerClient {
         this.terminateWorker();
         reject(abortError());
       };
-      this.active = { requestId, resolve, reject, signal, onAbort };
+      this.active = {
+        requestId,
+        resolve,
+        reject,
+        signal,
+        onAbort,
+        onMatch,
+        nextMatchIndex: 0,
+        streamedResults: [],
+      };
       signal?.addEventListener("abort", onAbort, { once: true });
       this.requestTimer = this.setTimer(() => {
         this.requestTimer = null;
@@ -147,10 +161,40 @@ export class SimulationWorkerClient {
     // A result from an aborted/previous worker request can never win the
     // current handoff. Ignore it rather than mutating the active request.
     if (output.request_id !== active.requestId) return;
+    if (output.kind === "match") {
+      if (output.matchIndex !== active.nextMatchIndex) {
+        this.finishWithError(
+          active.requestId,
+          new SimulationWorkerExecutionError("sim worker returned matches out of order"),
+        );
+        return;
+      }
+      active.nextMatchIndex += 1;
+      active.streamedResults.push(output.result);
+      try {
+        active.onMatch?.(output.matchIndex, output.result);
+      } catch {
+        // Progress observers are presentation-only and cannot own or settle
+        // the deterministic worker lifecycle.
+      }
+      return;
+    }
     this.active = null;
     this.clearRequestTimer();
     active.signal?.removeEventListener("abort", active.onAbort);
     if (output.kind === "done") {
+      if (
+        active.streamedResults.length !== output.simulation.matches.length ||
+        JSON.stringify(active.streamedResults) !== JSON.stringify(output.simulation.matches)
+      ) {
+        active.reject(
+          new SimulationWorkerExecutionError(
+            "sim worker match stream disagreed with terminal result",
+          ),
+        );
+        this.terminateWorker();
+        return;
+      }
       active.resolve(output);
       this.scheduleIdleTermination();
       return;
@@ -240,6 +284,23 @@ function parseWorkerOutput(value: unknown): WorkerOutput | null {
     if (value.stack !== undefined && typeof value.stack !== "string") return null;
     return value as Extract<WorkerOutput, { kind: "error" }>;
   }
+  if (value.kind === "match") {
+    if (
+      typeof value.matchIndex !== "number" ||
+      !Number.isSafeInteger(value.matchIndex) ||
+      value.matchIndex < 0 ||
+      value.matchIndex > 7
+    )
+      return null;
+    const result = MatchResultSchema.safeParse(value.result);
+    if (!result.success || result.data.match_index !== value.matchIndex) return null;
+    return {
+      request_id: requestId,
+      kind: "match",
+      matchIndex: value.matchIndex,
+      result: result.data,
+    };
+  }
   if (value.kind !== "done") return null;
   const simulation = parsePersistedSimulation(value.simulation);
   if (!simulation || !isObject(value.telemetry)) return null;
@@ -288,6 +349,7 @@ export function terminateSimulationWorker(): void {
 export function runWithSimulationWorker(
   input: Omit<WorkerInput, "request_id">,
   signal?: AbortSignal,
+  onMatch?: (matchIndex: number, result: MatchResult) => void,
 ): Promise<Extract<WorkerOutput, { kind: "done" }>> {
-  return sharedSimulationWorker.run(input, signal);
+  return sharedSimulationWorker.run(input, signal, onMatch);
 }

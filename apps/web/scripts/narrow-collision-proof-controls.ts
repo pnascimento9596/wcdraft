@@ -12,6 +12,7 @@ const CONTROL_IDS = [
   "class-b-fires",
   "class-b-transparent-clear",
   "class-a-fires",
+  "class-a-inert-clear",
   "class-a-separated-clear",
   "same-interactive-blocker",
   "scrolling-shell-pinned-blocker",
@@ -22,6 +23,7 @@ type FixtureKind =
   | "class-b-positive"
   | "class-b-transparent"
   | "class-a-positive"
+  | "class-a-inert"
   | "class-a-separated"
   | "same-interactive"
   | "scrolling-shell";
@@ -55,6 +57,7 @@ async function installFixture(page: Page, kind: FixtureKind): Promise<void> {
         '<button id="proof-target" aria-label="Proof target">Proof target</button><div id="proof-occluder" aria-hidden="true"></div>';
     }
     document.body.append(fixture);
+    if (fixtureKind === "class-a-inert") fixture.setAttribute("inert", "");
 
     const style = document.createElement("style");
     style.id = "proof-fixture-style";
@@ -167,6 +170,7 @@ async function runForEngine(
     const classBPositive = matching(await rawFor(browser, baseUrl, "class-b-positive"), "B");
     const classBNegative = matching(await rawFor(browser, baseUrl, "class-b-transparent"), "B");
     const classAPositive = matching(await rawFor(browser, baseUrl, "class-a-positive"), "A");
+    const classAInert = matching(await rawFor(browser, baseUrl, "class-a-inert"), "A");
     const classANegative = matching(await rawFor(browser, baseUrl, "class-a-separated"), "A");
     const sameInteractive = matching(await rawFor(browser, baseUrl, "same-interactive"), "A");
     const scrollingShell = matching(await rawFor(browser, baseUrl, "scrolling-shell"), "A");
@@ -196,6 +200,7 @@ async function runForEngine(
       "class-b-fires": classBPositive,
       "class-b-transparent-clear": classBNegative,
       "class-a-fires": classAPositive,
+      "class-a-inert-clear": classAInert,
       "class-a-separated-clear": classANegative,
       "same-interactive-blocker": sameInteractive,
       "scrolling-shell-pinned-blocker": scrollingShell,
@@ -204,6 +209,7 @@ async function runForEngine(
       "class-b-fires": "present",
       "class-b-transparent-clear": "absent",
       "class-a-fires": "present",
+      "class-a-inert-clear": "absent",
       "class-a-separated-clear": "absent",
       "same-interactive-blocker": "present",
       "scrolling-shell-pinned-blocker": "present",

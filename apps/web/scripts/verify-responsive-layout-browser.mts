@@ -846,6 +846,32 @@ function surfaceCases(): readonly SurfaceCase[] {
       },
     },
     {
+      label: "simulation-ceremony",
+      path: `/play/review?run=${teamSheetRecord.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Skip/u },
+      route: async (page) => {
+        await page.emulateMedia({ reducedMotion: "no-preference" });
+      },
+      prepare: async (page) => {
+        await page.getByRole("button", { name: /Confirm team sheet & simulate/u }).click();
+        await page.locator("[data-simulation-ceremony='true']").waitFor();
+      },
+    },
+    {
+      label: "simulation-ceremony-reduced",
+      path: `/play/review?run=${teamSheetRecord.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Skip/u },
+      route: async (page) => {
+        await page.emulateMedia({ reducedMotion: "reduce" });
+      },
+      prepare: async (page) => {
+        await page.getByRole("button", { name: /Confirm team sheet & simulate/u }).click();
+        await page.locator("[data-simulation-ceremony='true']").waitFor();
+      },
+    },
+    {
       label: "squad-review",
       path: `/play/review?run=${completeA.run_id}`,
       shellRule: true,

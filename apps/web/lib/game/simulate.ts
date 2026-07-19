@@ -35,6 +35,7 @@ import {
   runTournamentFull,
   type Bracket2026,
   type ManagerTournament,
+  type MatchResult,
   type Position,
   type Rating,
   type RunScenario,
@@ -342,6 +343,8 @@ export interface RunSimulationResult {
 
 export interface RunSimulationOptions {
   signal?: AbortSignal;
+  /** Receives only real, already-computed match results in engine array order. */
+  onMatch?: (matchIndex: number, result: MatchResult) => void;
   /** Test seam for the reusable worker client. */
   runWorker?: typeof runWithSimulationWorker;
 }
@@ -365,6 +368,7 @@ export function runSimulation(
     record,
     options.signal,
     options.runWorker ?? runWithSimulationWorker,
+    options.onMatch,
   );
 }
 
@@ -374,6 +378,7 @@ async function runSimulationAsync(
   record: RunRecordV1,
   signal?: AbortSignal,
   runWorker: typeof runWithSimulationWorker = runWithSimulationWorker,
+  onMatch?: (matchIndex: number, result: MatchResult) => void,
 ): Promise<RunSimulationResult> {
   if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
   const prepared = prepareTeamSheetRecord(gameData, record);
@@ -386,7 +391,12 @@ async function runSimulationAsync(
     scenario: inputs.scenario,
   };
   try {
-    const output = await runWorker(input, signal);
+    // The worker client validates schema, index and order before invoking this
+    // callback. Publish each real result immediately; the terminal payload is
+    // still required to match the complete stream byte-for-byte.
+    const output = await runWorker(input, signal, (matchIndex, result) => {
+      notifyMatch(onMatch, matchIndex, result);
+    });
     return {
       via: "worker",
       simulation: output.simulation,
@@ -406,6 +416,7 @@ async function runSimulationAsync(
       prepared,
       `simulation worker failed (${error instanceof Error ? error.message : String(error)}); ran on main thread`,
       signal,
+      onMatch,
     );
   }
 }
@@ -426,13 +437,28 @@ async function runMainThread(
   record: RunRecordV1,
   warning: string | null,
   signal?: AbortSignal,
+  onMatch?: (matchIndex: number, result: MatchResult) => void,
 ): Promise<RunSimulationResult> {
   // Yield to the event loop so the UI gets a paint before the work runs.
   await new Promise<void>((r) => setTimeout(r, 0));
   if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
   const { simulation, telemetry } = runSimulationSync(gameData, scenario, record);
   if (signal?.aborted) throw new DOMException("Simulation cancelled", "AbortError");
+  simulation.matches.forEach((match, matchIndex) => notifyMatch(onMatch, matchIndex, match));
   return { via: "main", simulation, telemetry, warning };
+}
+
+function notifyMatch(
+  onMatch: ((matchIndex: number, result: MatchResult) => void) | undefined,
+  matchIndex: number,
+  result: MatchResult,
+): void {
+  try {
+    onMatch?.(matchIndex, result);
+  } catch {
+    // Ceremony progress is observational; it cannot alter simulation success,
+    // failover, persistence, or deterministic result bytes.
+  }
 }
 
 // ─── Worker message protocol ─────────────────────────────────────────────────
@@ -447,6 +473,12 @@ export interface WorkerInput {
 }
 
 export type WorkerOutput =
+  | {
+      request_id: number;
+      kind: "match";
+      matchIndex: number;
+      result: MatchResult;
+    }
   | {
       request_id: number;
       kind: "done";

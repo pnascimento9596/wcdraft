@@ -7,6 +7,12 @@ import { RUN_SURFACE_PALETTE } from "../run-palette";
 
 const AA_BODY = 4.5;
 const RAMP_POSITION_TOLERANCE = 0.006;
+// Approved ceremony artwork literals with no Terrace token. This exception is
+// deliberately file/value/count scoped so another hardcoded color still fails.
+const CEREMONY_LITERAL_COLORS = new Map([
+  ["components/game/simulation-ceremony.module.css|#05130c", 1],
+  ["components/game/simulation-ceremony.tsx|#f5c95f", 2],
+]);
 
 const tokensCss = readFileSync(new URL("../../../app/ds/tokens.css", import.meta.url), "utf8");
 const globalsCss = readFileSync(new URL("../../../app/globals.css", import.meta.url), "utf8");
@@ -240,12 +246,23 @@ describe("Terrace dark palette", () => {
 
   it("contains no hardcoded hex colors in component source", () => {
     const componentFiles = filesBelow(new URL("../../../components/", import.meta.url));
+    const approvedCounts = new Map<string, number>();
     const violations = componentFiles.flatMap((file) => {
       const source = readFileSync(file, "utf8");
-      return [...source.matchAll(/#[0-9A-Fa-f]{3,8}\b/gu)].map(
-        (match) => `${file.pathname}:${lineAt(source, match.index ?? 0)}:${match[0]}`,
-      );
+      return [...source.matchAll(/#[0-9A-Fa-f]{3,8}\b/gu)].flatMap((match) => {
+        const relative = file.pathname.split("/apps/web/").at(-1) ?? file.pathname;
+        const key = `${relative}|${match[0].toLowerCase()}`;
+        if (CEREMONY_LITERAL_COLORS.has(key)) {
+          approvedCounts.set(key, (approvedCounts.get(key) ?? 0) + 1);
+          return [];
+        }
+        return [`${file.pathname}:${lineAt(source, match.index ?? 0)}:${match[0]}`];
+      });
     });
+    expect(approvedCounts).toEqual(CEREMONY_LITERAL_COLORS);
+    expect(CEREMONY_LITERAL_COLORS.has("components/game/simulation-ceremony.tsx|#ffffff")).toBe(
+      false,
+    );
     expect(violations).toEqual([]);
   });
 });

@@ -34,6 +34,19 @@ self.addEventListener("message", (ev: MessageEvent<WorkerInput>) => {
     return;
   }
   const out = handleWorkerInput(data);
+  if (out.kind === "done") {
+    // Real-result replay: computation remains one untouched runTournamentFull
+    // call; only its completed array is delivered incrementally before `done`.
+    out.simulation.matches.forEach((result, matchIndex) => {
+      const match: WorkerOutput = {
+        request_id: out.request_id,
+        kind: "match",
+        matchIndex,
+        result,
+      };
+      self.postMessage(match);
+    });
+  }
   self.postMessage(out);
 });
 

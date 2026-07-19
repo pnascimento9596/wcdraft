@@ -107,7 +107,8 @@ export async function scanNarrowCollisions(
         );
       };
       const semanticTargetVisible = (element: Element) =>
-        element.closest('[hidden], [aria-hidden="true"]') === null && elementPainted(element);
+        element.closest('[hidden], [inert], [aria-hidden="true"]') === null &&
+        elementPainted(element);
       const stableSelector = (element: Element): string => {
         const root = element.getRootNode();
         if (root instanceof ShadowRoot) {
@@ -383,7 +384,7 @@ export async function scanNarrowCollisions(
             }
             if (
               owner.closest(
-                'script, style, noscript, svg, [hidden], [aria-hidden="true"], [data-collision-decorative="true"]',
+                'script, style, noscript, svg, [hidden], [inert], [aria-hidden="true"], [data-collision-decorative="true"]',
               )
             ) {
               return NodeFilter.FILTER_REJECT;

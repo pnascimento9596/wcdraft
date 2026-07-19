@@ -138,7 +138,10 @@ export const NARROW_COLLISION_ROUTE_RECIPES = [
   },
   { route: "/play/history", surfaces: ["history"] },
   { route: "/play/results", surfaces: ["results"] },
-  { route: "/play/review", surfaces: ["team-sheet", "squad-review"] },
+  {
+    route: "/play/review",
+    surfaces: ["team-sheet", "simulation-ceremony", "simulation-ceremony-reduced", "squad-review"],
+  },
   { route: "/play/share", surfaces: ["share-author", "share-recipient"] },
   { route: "/privacy", surfaces: ["privacy"] },
   { route: "/settings", surfaces: ["settings"] },
@@ -151,7 +154,15 @@ export const NARROW_COLLISION_ROUTE_RECIPES = [
 
 export const NARROW_COLLISION_SURFACE_GROUPS = [
   ["home", "mode-select-available", "daily-spin", "spin-stage", "position-target", "classic-pick"],
-  ["team-sheet", "squad-review", "results", "share-author", "share-recipient"],
+  [
+    "team-sheet",
+    "simulation-ceremony",
+    "simulation-ceremony-reduced",
+    "squad-review",
+    "results",
+    "share-author",
+    "share-recipient",
+  ],
   ["challenge-setup", "history", "leaderboard", "account", "sign-in", "sign-up"],
   ["settings", "how-to-play", "privacy", "contact", "attribution"],
 ] as const;

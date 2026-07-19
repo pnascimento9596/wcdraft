@@ -209,6 +209,8 @@ async function newBrowserCase(
     readonly record?: RunRecordV1;
     readonly viewport?: { readonly width: number; readonly height: number };
     readonly allowedHttpErrorPathnames?: readonly string[];
+    readonly failWorkerAfterFirstMatch?: boolean;
+    readonly hangWorkerRun?: boolean;
   },
 ): Promise<BrowserCase> {
   const context = await browser.newContext({
@@ -223,7 +225,12 @@ async function newBrowserCase(
     const record = init.record;
     await context.addInitScript(
       ({ record, recordPrefix, indexKey, schemaVersion }) => {
-        window.localStorage.setItem(`${recordPrefix}${record.run_id}`, JSON.stringify(record));
+        const recordKey = `${recordPrefix}${record.run_id}`;
+        // addInitScript runs for every full-document navigation. Seed only the
+        // first document so Results cannot overwrite the completed record that
+        // Review just persisted.
+        if (window.localStorage.getItem(recordKey) !== null) return;
+        window.localStorage.setItem(recordKey, JSON.stringify(record));
         window.localStorage.setItem(
           indexKey,
           JSON.stringify({
@@ -247,6 +254,37 @@ async function newBrowserCase(
         schemaVersion: RUN_RECORD_SCHEMA_VERSION,
       },
     );
+  }
+  if (init?.failWorkerAfterFirstMatch) {
+    await context.addInitScript({
+      content: `{
+      const NativeWorker = window.Worker;
+      window.Worker = class extends NativeWorker {
+        constructor(url, options) {
+          super(url, options); this.failed = false;
+          super.addEventListener("message", (event) => {
+            if (this.failed || event.data?.kind !== "match") return;
+            this.failed = true;
+            queueMicrotask(() => { localStorage.setItem("wcdraft:test:worker-forced-failure", "1"); this.terminate(); this.dispatchEvent(new ErrorEvent("error", { message: "forced worker failure after partial match" })); });
+          });
+        }
+      };
+    }`,
+    });
+  }
+  if (init?.hangWorkerRun) {
+    await context.addInitScript({
+      content: `{
+      const NativeWorker = window.Worker;
+      window.Worker = class extends NativeWorker {
+        postMessage(message, transfer) {
+          if (message?.kind === "run") { localStorage.setItem("wcdraft:test:worker-run-hung", "1"); return; }
+          super.postMessage(message, transfer ?? []);
+        }
+        terminate() { localStorage.setItem("wcdraft:test:worker-terminated", "1"); super.terminate(); }
+      };
+    }`,
+    });
   }
   const page = await context.newPage();
   const errors: string[] = [];
@@ -318,9 +356,8 @@ function firstPositionFirstTarget(): PositionFirstTarget {
   throw new Error("could not find a legal first position-first target");
 }
 
-function completedRunRecord(): RunRecordV1 {
-  const run_id = "pw-complete-classic";
-  const parent_seed = "wcdraft:playwright:complete-classic";
+function completedRunRecord(run_id = "pw-complete-classic"): RunRecordV1 {
+  const parent_seed = `wcdraft:playwright:${run_id}`;
   return {
     record_version: RUN_RECORD_SCHEMA_VERSION,
     run_id,
@@ -876,6 +913,57 @@ async function verifyReviewResultsShareFlow(browser: Browser, baseUrl: string): 
   await assertNoBrowserErrors(testCase, "review/results/share flow");
 }
 
+async function verifyCeremonyWorkerFailover(browser: Browser, baseUrl: string): Promise<void> {
+  const seeded = completedRunRecord("pw-ceremony-failover");
+  const testCase = await newBrowserCase(browser, {
+    record: seeded,
+    failWorkerAfterFirstMatch: true,
+  });
+  const { page } = testCase;
+  await page.goto(`${baseUrl}/play/review?run=${seeded.run_id}`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "Confirm team sheet & simulate" }).click();
+  await page.locator("[data-simulation-ceremony='true']").waitFor();
+  await page.waitForURL(new RegExp(`/play/results\\?run=${seeded.run_id}$`), { timeout: 90_000 });
+  const records = await readRunRecords(page);
+  const record = records.find((candidate) => candidate.run_id === seeded.run_id);
+  assert(
+    await page.evaluate(() => localStorage.getItem("wcdraft:test:worker-forced-failure") === "1"),
+    "worker failover fixture did not force the worker failure",
+  );
+  assert(record?.status === "complete", "worker failover did not persist a complete result");
+  assert(record.simulation?.matches.length >= 3, "worker failover did not reach real results");
+  await assertNoBrowserErrors(testCase, "ceremony worker failover");
+}
+
+async function verifyCeremonyCancellation(browser: Browser, baseUrl: string): Promise<void> {
+  const seeded = completedRunRecord("pw-ceremony-cancel");
+  const testCase = await newBrowserCase(browser, { record: seeded, hangWorkerRun: true });
+  const { page } = testCase;
+  await page.goto(`${baseUrl}/play/review?run=${seeded.run_id}`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "Confirm team sheet & simulate" }).click();
+  await page.locator("[data-simulation-ceremony='true']").waitFor();
+  await page.waitForFunction(() => localStorage.getItem("wcdraft:test:worker-run-hung") === "1");
+  await page.locator("button", { hasText: "Back to draft" }).evaluate((button) => {
+    const key = Object.keys(button).find((candidate) => candidate.startsWith("__reactProps"));
+    const props = key
+      ? (button as unknown as Record<string, { onClick?: () => void }>)[key]
+      : undefined;
+    if (!props?.onClick) throw new Error("Back-to-draft React handler is unavailable");
+    props.onClick();
+  });
+  await page.waitForURL(/\/play\/draft\?run=pw-ceremony-cancel$/u);
+  await page.waitForFunction(() => localStorage.getItem("wcdraft:test:worker-terminated") === "1");
+  await page.waitForTimeout(500);
+  assert(
+    new URL(page.url()).pathname === "/play/draft",
+    "cancelled ceremony navigated late to Results",
+  );
+  const [record] = await readRunRecords(page);
+  assert(record?.simulation === undefined, "cancelled ceremony persisted a late simulation");
+  assert(record?.status === "ready", "cancelled ceremony did not recover the ready lifecycle");
+  await assertNoBrowserErrors(testCase, "ceremony cancellation");
+}
+
 async function verifyManagerOnlyGuardFlow(browser: Browser, baseUrl: string): Promise<void> {
   const seeded = managerOnlyRunRecord();
   const testCase = await newBrowserCase(browser, { record: seeded });
@@ -916,9 +1004,11 @@ async function main(): Promise<void> {
     await verifyRankedSetupGates(browser, server.baseUrl);
     await verifyPositionFirstDraftFlow(browser, server.baseUrl);
     await verifyManagerOnlyGuardFlow(browser, server.baseUrl);
+    await verifyCeremonyWorkerFailover(browser, server.baseUrl);
+    await verifyCeremonyCancellation(browser, server.baseUrl);
     await verifyReviewResultsShareFlow(browser, server.baseUrl);
     console.log(
-      "game-flow-playwright: ok - mode-select CTA/compact dock/unavailable notice, Casual/Ranked setup gates, position-first target, lock-pick, manager guard, review simulate, results, and share",
+      "game-flow-playwright: ok - mode-select CTA/compact dock/unavailable notice, Casual/Ranked setup gates, position-first target, lock-pick, manager guard, ceremony worker failover/cancellation, review simulate, results, and share",
     );
   } finally {
     if (browser) await browser.close();
