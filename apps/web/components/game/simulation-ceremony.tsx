@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import type { MatchResult } from "@wcdraft/core";
 import type { PersistedSimulation } from "@/lib/game/simulation-payload";
 import s from "./simulation-ceremony.module.css";
@@ -83,6 +84,34 @@ export function SimulationCeremony({ matches, simulation, reducedMotion, showHar
   const stopped = useRef(false);
   const t0Ref = useRef(0);
   const arrivalRef = useRef(new Map<CeremonyNode["round"], number>());
+  const portalRootRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const portalRoot = portalRootRef.current;
+    if (!portalRoot) return;
+    const covered = [...document.body.children].filter((element) => element !== portalRoot);
+    const prior = covered.map((element) => ({
+      element,
+      inert: element.getAttribute("inert"),
+      ariaHidden: element.getAttribute("aria-hidden"),
+    }));
+    const overflow = document.body.style.getPropertyValue("overflow");
+    const overflowPriority = document.body.style.getPropertyPriority("overflow");
+    for (const { element } of prior) {
+      element.setAttribute("inert", "");
+      element.setAttribute("aria-hidden", "true");
+    }
+    document.body.style.setProperty("overflow", "hidden");
+    return () => {
+      for (const { element, inert, ariaHidden } of prior) {
+        if (inert === null) element.removeAttribute("inert");
+        else element.setAttribute("inert", inert);
+        if (ariaHidden === null) element.removeAttribute("aria-hidden");
+        else element.setAttribute("aria-hidden", ariaHidden);
+      }
+      if (overflow.length === 0) document.body.style.removeProperty("overflow");
+      else document.body.style.setProperty("overflow", overflow, overflowPriority);
+    };
+  }, []);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setPrefersReduced(media.matches);
@@ -133,7 +162,7 @@ export function SimulationCeremony({ matches, simulation, reducedMotion, showHar
   const num=resolved?terminal.heroNum:(current?.score??"");
   const champOn=terminal.champion&&terminal.nodes[4]?.state==="champ"&&visible[4];
   const cssVars={"--dur":reduced?"0ms":"420ms","--ease":EASE} as CSSProperties;
-  return <div className={`${s.root} ${reduced?s.reduced:""}`} style={cssVars} data-simulation-ceremony="true" data-reduced-motion={reduced?"true":"false"}>
+  return createPortal(<div ref={portalRootRef} className={`${s.root} ${reduced?s.reduced:""}`} style={cssVars} data-simulation-ceremony="true" data-reduced-motion={reduced?"true":"false"}>
     {showHarness ? <><div className={s.label}>Simulation ceremony · Preview</div><div className={s.harness} role="tablist" aria-label="Scenario">{(["A","B","C"] as const).map(key=><button key={key} role="tab" aria-selected={fixture===key} onClick={()=>setFixture(key)}>{DEV_FIXTURES[key].status}</button>)}</div></> : null}
     <div className={s.shell}>
       <div className={s.dots}/><div className={s.top}><div className={s.brand}>wcdraft</div><button className={s.skip} onClick={()=>{stopped.current=true;setT(Number.MAX_SAFE_INTEGER);onSkip();}}>Skip<span style={{fontSize:14,lineHeight:1}}>»</span></button></div>
@@ -143,7 +172,7 @@ export function SimulationCeremony({ matches, simulation, reducedMotion, showHar
         <div className={s.path}>{terminal.nodes.map((node,i)=><Fragment key={node.round}>{i>0?<div className={s.conn}><div className={s.connFill} style={{width:visible[i]&&terminal.nodes[i-1]!.state!=="loss"?"100%":"0%"}}/></div>:null}<div className={s.nodeCol}><div className={s.node}><div className={s.nodeBase}/>{(["win","loss","champ"] as const).map(state=><div key={state} className={s.nodeState} style={{background:`var(--sc-${state==="win"?"em":state==="loss"?"loss":"gold"})`,opacity:visible[i]&&node.state===state?1:0}}/>)}{visible[i]&&!reduced&&node.state!=="none"?<div className={`${s.ring} ${node.state==="champ"?s.pulseChamp:node.state==="loss"?s.pulseLoss:s.pulseWin}`} style={{borderColor:`var(--sc-${node.state==="win"?"em":node.state==="loss"?"loss":"gold"})`}}/>:null}</div><div className={s.micro}>{node.round}</div><div className={s.score} style={{opacity:visible[i]?1:0}}>{visible[i]?node.score:""}</div></div></Fragment>)}</div>
       </div><div aria-live="polite" role="status" className={s.srOnly}>{resolved?`${terminal.status}. ${terminal.heroNum}.`:""}</div>
     </div>{showHarness?<div className={s.harness}><button role="switch" aria-checked={harnessReduced} onClick={()=>setHarnessReduced(value=>!value)}>Reduced motion</button><button onClick={()=>setReplay(value=>value+1)}>↻ Replay</button></div>:null}
-  </div>;
+  </div>, document.body);
 }
 
 function Trophy({fillTop,fillHeight,surfaceOp,goldOutlineOp}:{fillTop:number;fillHeight:number;surfaceOp:number;goldOutlineOp:number}) {

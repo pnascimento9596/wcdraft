@@ -929,7 +929,7 @@ async function verifyCeremonyCancellation(browser: Browser, baseUrl: string): Pr
   await page.getByRole("button", { name: "Confirm team sheet & simulate" }).click();
   await page.locator("[data-simulation-ceremony='true']").waitFor();
   await page.waitForFunction(() => localStorage.getItem("wcdraft:test:worker-run-hung") === "1");
-  await page.getByRole("button", { name: "Back to draft" }).evaluate((button) => {
+  await page.locator("button", { hasText: "Back to draft" }).evaluate((button) => {
     const key = Object.keys(button).find((candidate) => candidate.startsWith("__reactProps"));
     const props = key ? (button as unknown as Record<string, { onClick?: () => void }>)[key] : undefined;
     if (!props?.onClick) throw new Error("Back-to-draft React handler is unavailable");
