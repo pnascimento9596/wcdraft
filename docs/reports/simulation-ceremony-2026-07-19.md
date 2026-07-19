@@ -8,7 +8,7 @@ Base: `1c17802ba4366a8e9a5a8bfc4dda7bf87071803a`
 
 ## Outcome
 
-Pre-merge candidate complete. This report records the implementation and local review envelope. The production deployment SHA, Vercel READY observation, and live run evidence are intentionally recorded in a documentation-only closeout after the SHA-pinned merge and live verification; until then this is not a shipped verdict.
+Shipped through PR #318. The reviewed head `fefca3749a2df17015b408dec515e0673dddfc1c` was squash-merged with `--match-head-commit` as production main `974d9aef3540446bd39ecd71e5f2d73cb5d9d3ee`. Vercel deployment `dpl_Gu8nAotSRWths2zR6d12WVriPjU7` reached READY, and the production health, real-run, honest-loss, reduced-motion, Skip, collision, and one-screen checks below all passed. No revert was required.
 
 ## U0 — verified contracts
 
@@ -57,11 +57,19 @@ Chosen mechanism: compute once, then stream a typed replay of the already-comput
 
 - Fix-forward review at `c5c76e1` failed because streamed content was buffered until terminal persistence, outcome-specific resolve beats were collapsed, component-render acceptance was absent, and the harness was simplified. All were corrected; that review was not reused.
 - Fix-forward review at `b22d750` failed because the global `button` tracking rule overrode approved ceremony tracking at computed style. Component-scoped cascade pins and mounted computed-style coverage corrected it; that review was not reused.
-- Final fresh-context U2, U3, U4 and GLM 5.2 boundary verdicts are SHA-pinned to the report-bearing head and must all be PASS before merge.
+- Final fresh-context U2, U3, and U4 verdicts were independently re-executed and SHA-pinned PASS at `fefca3749a2df17015b408dec515e0673dddfc1c`. Their principal receipts were respectively: sim/RNG 54/54 plus worker/lifecycle 39/39; focused web 88/88 plus strict collision 84/84 and accessibility/layout 12/12; and lifecycle 48/48 plus one-screen 216/216, collision 84/84, scanner controls 14/14, and sim/RNG 54/54.
+- The requested cross-model ladder was recorded honestly: the GLM 5.2 session produced no usable verdict, and the installed Grok CLI rejected `xai/grok-4.5` as an unknown model. The next specified fallback, Claude Opus 4.8 at high reasoning, independently returned SHA-pinned PASS after 42 focused tests plus the 34-call RNG decision-sequence test and found no blocker.
 
 ## Ship and live closeout
 
-Pending pre-merge. Required closeout evidence: squash merge with `--match-head-commit`; Vercel READY; `/api/health` and `/api/og/health`; real Career Classic ceremony/full floor/results/token replay; known losing live run partial/non-gold/honest status; reduced-motion completion; Skip without data mutation; live collision/one-screen matrix. Any failed live check triggers an automatic revert.
+- CI run `29702794001` passed the required aggregate: static/format/contracts, generated-data determinism, typecheck, lint, all tests, build, WebKit native-app-feel, sim/data/leaderboard goldens, heavy realism, incremental secrets, and GitGuardian. The main test/build/native lane completed in 31m21s on `wcdraft-m4`.
+- PR #318 was squash-merged with `--match-head-commit fefca3749a2df17015b408dec515e0673dddfc1c`; merge SHA `974d9aef3540446bd39ecd71e5f2d73cb5d9d3ee` deployed as Vercel production deployment `dpl_Gu8nAotSRWths2zR6d12WVriPjU7`, status READY.
+- `https://www.wcdraft.com/api/health` served that exact merge SHA with unchanged runtime, engine, historical/projected rating, ruleset, draft-pool, season, and schema anchors. `/api/og/health` returned `{"ok":true}`.
+- Real Career Classic champion proof: run `live-ceremony-champion-249`, parent seed `wcdraft:live:ceremony:champion:249`, took 3,438ms from Confirm to Results. Its real knockout nodes revealed `R32 1–0`, `R16 2–0`, `QF 1–0`, `SF 1–0`, and `F 0–0 (4–1 pens)`; the real final alone produced the champion node, 100% gold trophy, `Champions. 6–1.`, and the persisted Results payload was byte-identical to a local deterministic replay of the same production inputs.
+- Real losing proof: run `live-ceremony-r16-42`, parent seed `wcdraft:live:ceremony:r16:42`, took 3,484ms under `prefers-reduced-motion: reduce`. It revealed the real R32 win and real R16 `1–1 (3–4 pens)` loss, stopped the trophy at 50%, stayed non-gold, left QF/SF/F `none` and invisible, announced `Out in the round of 16`, reached Results, and persisted byte-identical replay results. Computed ceremony motion had zero active nonzero-duration transitions or animations; cadence remained intact.
+- Skip proof: run `live-ceremony-skip` reached Results in 250ms and persisted the same byte-identical deterministic `6–1` record with no data penalty or mutation.
+- Production collision/one-screen proof: 24/24 cells passed with zero failures across Chromium + WebKit, 320/360/390 widths, light + dark themes, and normal + reduced motion. The production ceremony shell fit the viewport, retained body scroll lock, and emitted no unexpected collision finding.
+- All live checks passed. The automatic-revert condition did not fire.
 
 ## Risks and carryovers
 
