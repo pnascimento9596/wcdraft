@@ -1,7 +1,9 @@
 # Simulation ceremony — RED delivery report
 
-Date: 2026-07-19  
-Branch: `ws-ux/simulation-ceremony`  
+Date: 2026-07-19
+
+Branch: `ws-ux/simulation-ceremony`
+
 Base: `1c17802ba4366a8e9a5a8bfc4dda7bf87071803a`
 
 ## Outcome
