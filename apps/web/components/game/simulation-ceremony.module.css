@@ -77,3 +77,4 @@
 @keyframes ceremonyIn { 0%{opacity:0;transform:translateY(4px)} 100%{opacity:1;transform:none} }
 @keyframes statusIn { 0%{opacity:0;transform:translateY(4px)} 100%{opacity:1;transform:none} }
 @media (prefers-reduced-motion: reduce) { .body,.heroSettle,.statusIn,.ring { animation:none!important; } }
+.reduced .body,.reduced .heroSettle,.reduced .statusIn,.reduced .ring { animation:none!important; }

@@ -237,6 +237,19 @@ describe("reusable simulation worker lifecycle", () => {
     expect(createWorker).toHaveBeenCalledTimes(2);
   });
 
+  it("tears down a request when the worker errors after a partial match", async () => {
+    const worker = new FakeWorker();
+    const arrivals: number[] = [];
+    const client = new SimulationWorkerClient({ createWorker: () => worker });
+    const pending = client.run(input, undefined, (matchIndex) => arrivals.push(matchIndex));
+    worker.emit(match(worker.posted[0]!.request_id, 0));
+    worker.fail("died after partial");
+    await expect(pending).rejects.toThrow("died after partial");
+    expect(arrivals).toEqual([0]);
+    expect(worker.terminate).toHaveBeenCalledOnce();
+    expect(worker.listenerCounts()).toEqual({ message: 0, error: 0, messageerror: 0 });
+  });
+
   it("rejects a malformed worker protocol response instead of hanging", async () => {
     const worker = new FakeWorker();
     const client = new SimulationWorkerClient({ createWorker: () => worker });

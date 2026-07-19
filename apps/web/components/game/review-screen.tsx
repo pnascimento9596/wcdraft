@@ -706,6 +706,9 @@ function SimulatePanel({
         attempt.controller.signal,
       );
       if (persist.status !== "updated" || !persist.record) {
+        setCeremony(null);
+        ceremonyWaitRef.current?.();
+        ceremonyWaitRef.current = null;
         try {
           await setRunStatus(record.run_id, gameData.versions, "ready", {
             status: "simulating",
@@ -801,7 +804,7 @@ function SimulatePanel({
           </p>
         </div>
       ) : (
-        <p className={s.simNote} role={sim.kind === "running" ? "status" : undefined}>
+        <p className={s.simNote} role={sim.kind === "running" && ceremony === null ? "status" : undefined}>
           {note}
         </p>
       )}

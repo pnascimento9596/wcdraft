@@ -26,9 +26,9 @@ export function isCeremonyResolved(elapsedMs:number, hasTerminal:boolean, nodes:
 }
 const DEV_FIXTURES: Record<"A"|"B"|"C", CeremonyModel> = {
   A: { champion:true,status:"Champions",heroNum:"8–0",fillPct:100,decisive:"Final",nodes:["R32","R16","QF","SF","F"].map((round,i)=>({round:round as CeremonyNode["round"],state:i===4?"champ":"win",score:["3–0","2–0","2–0","1–0","2–0"][i]!})) },
-  B: { champion:false,status:"Out in the semi-final",heroNum:"1–2",fillPct:60,decisive:"Semi-final",nodes:["R32","R16","QF","SF","F"].map((round,i)=>({round:round as CeremonyNode["round"],state:i<3?"win":i===3?"loss":"none",score:["2–1","3–1","1–0","1–2",""][i]!})) },
+  B: { champion:false,status:"Out in the semi-final",heroNum:"1–2",fillPct:75,decisive:"Semi-final",nodes:["R32","R16","QF","SF","F"].map((round,i)=>({round:round as CeremonyNode["round"],state:i<3?"win":i===3?"loss":"none",score:["2–1","3–1","1–0","1–2",""][i]!})) },
   // Architect correction: C is a genuine R16 exit (R32 win, then R16 loss).
-  C: { champion:false,status:"Out in the round of 16",heroNum:"0–1",fillPct:20,decisive:"Round of 16",nodes:["R32","R16","QF","SF","F"].map((round,i)=>({round:round as CeremonyNode["round"],state:i===0?"win":i===1?"loss":"none",score:["2–0","0–1","","",""][i]!})) },
+  C: { champion:false,status:"Out in the round of 16",heroNum:"0–1",fillPct:50,decisive:"Round of 16",nodes:["R32","R16","QF","SF","F"].map((round,i)=>({round:round as CeremonyNode["round"],state:i===0?"win":i===1?"loss":"none",score:["2–0","0–1","","",""][i]!})) },
 };
 
 function matchScore(match: MatchResult): string {
@@ -112,6 +112,7 @@ export function SimulationCeremony({ matches, simulation, reducedMotion, showHar
   const revealAt = terminal.nodes.map((node, i) => Math.max(BEATS[i] ?? CEREMONY_TOTAL_MS, showHarness ? 0 : (arrivalRef.current.get(node.round) ?? Number.POSITIVE_INFINITY)));
   const visible = terminal.nodes.map((node, i) => arrivedRounds.has(node.round) && t >= revealAt[i]!);
   const resolved = isCeremonyResolved(t, showHarness || simulation !== null, terminal.nodes, visible);
+  useEffect(() => { if(resolved) stopped.current=true; }, [resolved]);
   useEffect(() => { if(resolved && !fired.current){ fired.current=true; onComplete?.(); } }, [resolved,onComplete]);
   let last = -1; visible.forEach((on,i)=>{if(on)last=i;});
   const lossIndex=terminal.nodes.findIndex((node)=>node.state==="loss");
@@ -132,7 +133,7 @@ export function SimulationCeremony({ matches, simulation, reducedMotion, showHar
   const num=resolved?terminal.heroNum:(current?.score??"");
   const champOn=terminal.champion&&terminal.nodes[4]?.state==="champ"&&visible[4];
   const cssVars={"--dur":reduced?"0ms":"420ms","--ease":EASE} as CSSProperties;
-  return <div className={s.root} style={cssVars} data-simulation-ceremony="true">
+  return <div className={`${s.root} ${reduced?s.reduced:""}`} style={cssVars} data-simulation-ceremony="true" data-reduced-motion={reduced?"true":"false"}>
     {showHarness ? <><div className={s.label}>Simulation ceremony · Preview</div><div className={s.harness} role="tablist" aria-label="Scenario">{(["A","B","C"] as const).map(key=><button key={key} role="tab" aria-selected={fixture===key} onClick={()=>setFixture(key)}>{DEV_FIXTURES[key].status}</button>)}</div></> : null}
     <div className={s.shell}>
       <div className={s.dots}/><div className={s.top}><div className={s.brand}>wcdraft</div><button className={s.skip} onClick={()=>{stopped.current=true;setT(Number.MAX_SAFE_INTEGER);onSkip();}}>Skip<span style={{fontSize:14,lineHeight:1}}>»</span></button></div>
