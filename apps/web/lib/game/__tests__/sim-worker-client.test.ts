@@ -96,6 +96,15 @@ function done(request_id: number): Extract<WorkerOutput, { kind: "done" }> {
   };
 }
 
+function match(request_id: number, matchIndex: number): Extract<WorkerOutput, { kind: "match" }> {
+  return { request_id, kind: "match", matchIndex, result: validSimulation.matches[matchIndex]! };
+}
+
+function emitComplete(worker: FakeWorker, requestId: number): void {
+  validSimulation.matches.forEach((_result, matchIndex) => worker.emit(match(requestId, matchIndex)));
+  worker.emit(done(requestId));
+}
+
 afterEach(() => vi.useRealTimers());
 
 describe("reusable simulation worker lifecycle", () => {
@@ -133,13 +142,60 @@ describe("reusable simulation worker lifecycle", () => {
     expect(createWorker).toHaveBeenCalledOnce();
 
     const first = client.run(input);
-    worker.emit(done(worker.posted[0]!.request_id));
+    emitComplete(worker, worker.posted[0]!.request_id);
     await expect(first).resolves.toMatchObject({ kind: "done" });
 
     const second = client.run(input);
-    worker.emit(done(worker.posted[1]!.request_id));
+    emitComplete(worker, worker.posted[1]!.request_id);
     await expect(second).resolves.toMatchObject({ kind: "done" });
     expect(createWorker).toHaveBeenCalledOnce();
+    expect(worker.terminate).not.toHaveBeenCalled();
+  });
+
+  it("delivers validated real matches in array order before the unchanged done payload", async () => {
+    const worker = new FakeWorker();
+    const client = new SimulationWorkerClient({ createWorker: () => worker });
+    const arrivals: number[] = [];
+    const pending = client.run(input, undefined, (matchIndex) => arrivals.push(matchIndex));
+    const requestId = worker.posted[0]!.request_id;
+    worker.emit(match(requestId, 0));
+    worker.emit(match(requestId, 1));
+    expect(arrivals).toEqual([0, 1]);
+    for (let index = 2; index < validSimulation.matches.length; index += 1) worker.emit(match(requestId, index));
+    worker.emit(done(requestId));
+    await expect(pending).resolves.toEqual(done(requestId));
+  });
+
+  it("rejects an out-of-order or malformed match stream", async () => {
+    const worker = new FakeWorker();
+    const client = new SimulationWorkerClient({ createWorker: () => worker });
+    const pending = client.run(input);
+    const requestId = worker.posted[0]!.request_id;
+    worker.emit(match(requestId, 1));
+    await expect(pending).rejects.toThrow("matches out of order");
+    expect(worker.terminate).toHaveBeenCalledOnce();
+  });
+
+  it("rejects an incomplete stream that disagrees with the terminal result", async () => {
+    const worker = new FakeWorker();
+    const client = new SimulationWorkerClient({ createWorker: () => worker });
+    const pending = client.run(input);
+    const requestId = worker.posted[0]!.request_id;
+    worker.emit(match(requestId, 0));
+    worker.emit(done(requestId));
+    await expect(pending).rejects.toThrow("stream disagreed with terminal result");
+    expect(worker.terminate).toHaveBeenCalledOnce();
+  });
+
+  it("does not let a presentation callback exception settle or kill the run", async () => {
+    const worker = new FakeWorker();
+    const client = new SimulationWorkerClient({ createWorker: () => worker });
+    const pending = client.run(input, undefined, () => { throw new Error("render failed"); });
+    const requestId = worker.posted[0]!.request_id;
+    expect(() => worker.emit(match(requestId, 0))).not.toThrow();
+    for (let index = 1; index < validSimulation.matches.length; index += 1) worker.emit(match(requestId, index));
+    worker.emit(done(requestId));
+    await expect(pending).resolves.toMatchObject({ kind: "done" });
     expect(worker.terminate).not.toHaveBeenCalled();
   });
 
@@ -248,7 +304,7 @@ describe("reusable simulation worker lifecycle", () => {
     const second = client.run(input);
     firstWorker.emit(done(staleRequestId));
     expect(secondWorker.posted).toHaveLength(1);
-    secondWorker.emit(done(secondWorker.posted[0]!.request_id));
+    emitComplete(secondWorker, secondWorker.posted[0]!.request_id);
     await expect(second).resolves.toMatchObject({ kind: "done" });
   });
 
@@ -260,7 +316,7 @@ describe("reusable simulation worker lifecycle", () => {
 
     await expect(second).rejects.toBeInstanceOf(SimulationWorkerBusyError);
     expect(worker.posted).toHaveLength(1);
-    worker.emit(done(worker.posted[0]!.request_id));
+    emitComplete(worker, worker.posted[0]!.request_id);
     await expect(first).resolves.toMatchObject({ kind: "done" });
   });
 });

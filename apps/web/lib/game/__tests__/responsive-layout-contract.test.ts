@@ -311,7 +311,7 @@ describe("responsive layout contract", () => {
         viewports: 3,
         themes: 2,
       }),
-    ).toBe(264);
+    ).toBe(288);
     expect(
       expectedNarrowCollisionMetrics({
         groups: [NARROW_COLLISION_SURFACE_GROUPS[0]],

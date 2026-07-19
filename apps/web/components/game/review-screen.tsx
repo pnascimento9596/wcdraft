@@ -10,6 +10,7 @@ import {
   isBlindDraftMode,
   isDraftComplete,
   validateSquad,
+  type MatchResult,
 } from "@wcdraft/core";
 import {
   lineStrengthViews,
@@ -30,6 +31,7 @@ import {
   setRunTeamName,
   type RunRecordV1,
 } from "@/lib/game/run-record";
+import type { PersistedSimulation } from "@/lib/game/simulation-payload";
 import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { mirrorRunToServer } from "@/lib/game/save-mirror";
@@ -46,6 +48,7 @@ import { Pitch } from "./pitch";
 import { ManagerSlot } from "./manager-slot";
 import { MiniNationFlag } from "./mini-nation-flag";
 import { SynergyBar } from "./synergy-bar";
+import { SimulationCeremony } from "./simulation-ceremony";
 import s from "./game.module.css";
 
 type Mode =
@@ -565,6 +568,11 @@ type SimState =
   | { kind: "running"; note: string }
   | { kind: "error"; title: string; message: string };
 
+interface CeremonyState {
+  matches: MatchResult[];
+  simulation: PersistedSimulation | null;
+}
+
 function SimulatePanel({
   gameData,
   record,
@@ -590,6 +598,15 @@ function SimulatePanel({
   const [sim, setSim] = useState<SimState>({ kind: "idle" });
   const simInFlightRef = useRef(false);
   const handoffRef = useRef(new SimulationHandoff());
+  const [ceremony, setCeremony] = useState<CeremonyState | null>(null);
+  const ceremonySkipRef = useRef(false);
+  const ceremonyWaitRef = useRef<(() => void) | null>(null);
+
+  const skipCeremony = useCallback(() => {
+    ceremonySkipRef.current = true;
+    ceremonyWaitRef.current?.();
+    ceremonyWaitRef.current = null;
+  }, []);
 
   useEffect(
     () => () => {
@@ -602,6 +619,8 @@ function SimulatePanel({
         });
       });
       simInFlightRef.current = false;
+      ceremonyWaitRef.current?.();
+      ceremonyWaitRef.current = null;
     },
     [gameData.versions, record.run_id],
   );
@@ -658,9 +677,18 @@ function SimulatePanel({
       );
       const scenarioBundle = await loadScenarioBundle();
       if (!handoffRef.current.canCommit(attempt)) return;
+      ceremonySkipRef.current = false;
+      const ceremonyDone = new Promise<void>((resolve) => {
+        ceremonyWaitRef.current = resolve;
+      });
+      setCeremony({ matches: [], simulation: null });
       setSim({ kind: "running", note: "Simulating the run…" });
       const result = await runSimulation(gameData, scenarioBundle, lockedRecord, {
         signal: attempt.controller.signal,
+        onMatch: (_matchIndex, match) => {
+          if (!handoffRef.current.canCommit(attempt)) return;
+          setCeremony((current) => current ? { ...current, matches: [...current.matches, match] } : current);
+        },
       });
       if (!handoffRef.current.canCommit(attempt)) return;
       const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
@@ -706,6 +734,10 @@ function SimulatePanel({
       warningParts.push(...persist.warnings);
       const warn = warningParts.length > 0 ? warningParts.join(" · ") : persistenceWarning;
       onRecordUpdate(persist.record, warn ?? null);
+      setCeremony((current) => current ? { ...current, simulation: result.simulation } : current);
+      if (!ceremonySkipRef.current) await ceremonyDone;
+      ceremonyWaitRef.current = null;
+      if (!handoffRef.current.canCommit(attempt)) return;
       // F-3.5 — fire-and-forget server mirror. The local save is the
       // source of truth; this just lands the row in saved_runs so signed-
       // in users get cross-device history and the F-3 claim has something
@@ -714,6 +746,7 @@ function SimulatePanel({
       await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
       if (!handoffRef.current.canCommit(attempt)) return;
       void mirrorRunToServer(gameData, persist.record);
+      setCeremony(null);
       router.push(resultsHref(persist.record.run_id));
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
@@ -721,6 +754,7 @@ function SimulatePanel({
         // recovery before this aborted continuation resumes.
         return;
       }
+      setCeremony(null);
       if (!handoffRef.current.canCommit(attempt)) return;
       // Reset record status so the user can retry from a clean state.
       const ownedStatusSequence = handoffRef.current.ownedStatusSequence(attempt);
@@ -759,6 +793,7 @@ function SimulatePanel({
 
   return (
     <section className={`${s.panel} ${s.simPanel} ${s.reviewSimPanel}`}>
+      {ceremony ? <SimulationCeremony matches={ceremony.matches} simulation={ceremony.simulation} onSkip={skipCeremony} onComplete={skipCeremony} showHarness={false} /> : null}
       {sim.kind === "error" ? (
         <div role="alert">
           <p className={s.simNote}>

@@ -12,6 +12,17 @@ application of ENG-08, not an amendment to it. The engine anchor is
 `wc-perf-6.6.0` / `proj-career-5.6.0`, draft-pool/scenario bytes, and ranked season
 `season-2026-squad-depth` are unchanged.
 
+Simulation ceremony: the Review-to-Results handoff now presents a paced 3.2s Terrace trophy and
+knockout-path interstitial backed exclusively by the run's real `MatchResult`s. The five nodes map
+by typed round to R32/R16/QF/SF/F; group exits light none, knockout losses stop the path and trophy
+fill, and gold is reachable only from a real final win. The worker still executes one unchanged
+`runTournamentFull` call, then replays validated results in array order before the unchanged
+terminal payload; main-thread failover discards partial worker progress and publishes its own real
+batch. Skip removes only the ceremony floor and never bypasses result validation or persistence.
+Reduced motion preserves the cadence and real-result gates while collapsing transitions/pulses.
+No sim math, RNG stream, draw order, result bytes, schema, rating, or runtime data changed; engine
+anchor remains `engine-2026.07.18-basis-aware-tiering`.
+
 The PR #312 analyzer was re-run with the same fixed seeds: 1,024 complete drafts in each of 16 era
 × basis × flow cells plus a 2,048-draft-per-cell convergence holdout. All eight Career cells are
 byte-identical before/after across 8,192 measurement drafts, proving zero Career pick flips. In

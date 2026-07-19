@@ -200,6 +200,20 @@ describe("simulate.ts — determinism / telemetry separation", () => {
     expect(JSON.stringify(result.simulation)).toBe(JSON.stringify(sync));
   });
 
+  it("discards partial worker progress before publishing the clean failover batch", async () => {
+    const sync = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, record).simulation;
+    const arrivals: string[] = [];
+    const result = await runSimulation(gameData, SCENARIO_2026_BUNDLE, record, {
+      runWorker: async (_input, _signal, onMatch) => {
+        onMatch?.(0, sync.matches[0]!);
+        throw new Error("worker died after one progress message");
+      },
+      onMatch: (_matchIndex, match) => arrivals.push(match.match_id),
+    });
+    expect(result.via).toBe("main");
+    expect(arrivals).toEqual(sync.matches.map((match) => match.match_id));
+  });
+
   it("caller cancellation never falls through to a main-thread simulation", async () => {
     const runWorker = vi.fn(async () => {
       throw new DOMException("cancelled", "AbortError");
