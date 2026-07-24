@@ -13,9 +13,23 @@ stays visible. OG sign prewarms on share intent with ≤1 successful request per
 session (share-screen reuses prewarm cache; no force-bust on open); Challenge a friend uses
 Share's native-share + clipboard intent set. Home "Play Classic" targets `/play/draft`. Null
 streak renders "No streak yet"; spin settled tile labels synergy correctly. Simulation ceremony
-(A6) already shipped in #318 — no rework. No engine, RNG, token, schema, rating, or leaderboard
-canonicality changes. **Cross-track:** OG-sign prewarm is hard-deduped ≤1 success/token/session;
-Track B's `og-sign-ip-1m` (15) still accommodates share-open retries + intent prewarm.
+(A6) already shipped in #318 — progress is driven by **real streamed match-completion** events
+(worker match messages → `arrivalRef` / `deriveStreamedCeremonyModel`), plus a presentation floor
+(`CEREMONY_TOTAL_MS` 3200) so the UI is legible; not a fabricated progress bar. No engine, RNG,
+token, schema, rating, or leaderboard canonicality changes. **Cross-track:** OG-sign prewarm is
+hard-deduped ≤1 success/token/session; Track B's `og-sign-ip-1m` (15) still accommodates
+share-open retries + intent prewarm.
+
+Self-hosted runner ops (2026-07-24): ProcessInvoker wedge (no `Process started with process id`,
+repeating `Well known directory`, ~100% Worker CPU) is a **recurring upstream failure class**,
+not a 2.336.0 regression and not attributed to `useV2Flow` — version pin rejected. Fix is the
+60s worker watchdog (orphan + CPU-spin kills, every kill logged with job context) + clean PATH
+via `.path` (survives binary auto-update; re-sanitized every watchdog tick). Runbook:
+`docs/runbooks/self-hosted-runner-worker-watchdog.md`. Infra wedge ⇒ re-run once, never product
+FAIL / fix-forward / auto-revert. Nightly `schedule` cron `23 15 * * *` (15:23 UTC); observed
+start ~16:45–17:00 UTC is GitHub schedule delay (event=`schedule`, not dispatch). Nightly
+concurrency already `cancel-in-progress: true` and separate from `ci.yml` — cannot cancel PR CI;
+queued PR behind nightly is accepted.
 
 Request-boundary + ops hardening (Track B): 2026-07-23 · **no schema/rating/sim change**.
 Mutation bodies on leaderboard submit and ranked attempt use the shared streaming
