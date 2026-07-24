@@ -56,12 +56,12 @@ tail -5 "$HOME/Library/Logs/com.wcdraft.runner-worker-watchdog/watchdog.log"
 
 ## PATH survival (evidence)
 
-| Location | Role | Survives runner binary auto-update? |
-|----------|------|-------------------------------------|
-| `$RUNNER_ROOT/.path` | `runsvc.sh` exports `PATH=$(cat .path)` on every Listener start | **Yes** — file lives in runner root, not under versioned `bin.*` |
-| `$RUNNER_ROOT/.env` | optional env snippets | **Yes** — same |
-| LaunchAgent `EnvironmentVariables.PATH` | PATH for `runsvc.sh` process itself | **Yes**, until someone re-runs `svc.sh install` (regenerates plist from template) |
-| Watchdog tick | rewrites `.path` every 60s | Belt-and-suspenders if anything re-pollutes the file |
+| Location                                | Role                                                            | Survives runner binary auto-update?                                               |
+| --------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `$RUNNER_ROOT/.path`                    | `runsvc.sh` exports `PATH=$(cat .path)` on every Listener start | **Yes** — file lives in runner root, not under versioned `bin.*`                  |
+| `$RUNNER_ROOT/.env`                     | optional env snippets                                           | **Yes** — same                                                                    |
+| LaunchAgent `EnvironmentVariables.PATH` | PATH for `runsvc.sh` process itself                             | **Yes**, until someone re-runs `svc.sh install` (regenerates plist from template) |
+| Watchdog tick                           | rewrites `.path` every 60s                                      | Belt-and-suspenders if anything re-pollutes the file                              |
 
 **Does not survive alone:** a LaunchAgent PATH if `svc.sh install` is re-run without re-applying the clean PATH. After any `svc.sh install`, re-apply LaunchAgent PATH and reinstall the watchdog LaunchAgent from this runbook.
 

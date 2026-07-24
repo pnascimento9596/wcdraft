@@ -16,10 +16,10 @@ stuck (often on Setup Node / early steps) with no product progress.
 
 ## Evidence (this host)
 
-| Episode | Job | Notes |
-|---------|-----|--------|
-| Overnight | CI Setup Node (golden lane) | ~6 936 Well-known lines after failed spawn transition |
-| Afternoon | nightly-heavy `rating lock · Python 3.13` | Same signature; event=`schedule` (not manual) |
+| Episode   | Job                                       | Notes                                                 |
+| --------- | ----------------------------------------- | ----------------------------------------------------- |
+| Overnight | CI Setup Node (golden lane)               | ~6 936 Well-known lines after failed spawn transition |
+| Afternoon | nightly-heavy `rating lock · Python 3.13` | Same signature; event=`schedule` (not manual)         |
 
 ## What this is — and is not
 
@@ -42,11 +42,11 @@ Mac is operational: detect and kill the wedge quickly.
 
 ## Fix (host)
 
-| Control | Role |
-|---------|------|
-| Clean PATH in LaunchAgent + `.path` (re-written every watchdog tick) | Removes interactive agent PATH pollution (codex/grok/opencode shims) that survived into `runsvc` via `.path` |
-| `runner-worker-watchdog.sh` every 60s | Kill ppid=1 Workers; kill CPU ≥90% for 3 consecutive samples (~3 min); **log every kill** to `kills.log` with pid/ppid/cpu/job context |
-| Version-controlled runbook | `docs/runbooks/self-hosted-runner-worker-watchdog.md` |
+| Control                                                              | Role                                                                                                                                   |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Clean PATH in LaunchAgent + `.path` (re-written every watchdog tick) | Removes interactive agent PATH pollution (codex/grok/opencode shims) that survived into `runsvc` via `.path`                           |
+| `runner-worker-watchdog.sh` every 60s                                | Kill ppid=1 Workers; kill CPU ≥90% for 3 consecutive samples (~3 min); **log every kill** to `kills.log` with pid/ppid/cpu/job context |
+| Version-controlled runbook                                           | `docs/runbooks/self-hosted-runner-worker-watchdog.md`                                                                                  |
 
 A multi-hour silent wedge becomes a ~3-minute self-healing event. That is the
 fix, not a version pin.
