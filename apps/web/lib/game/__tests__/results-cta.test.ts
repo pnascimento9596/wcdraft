@@ -44,8 +44,8 @@ describe("resultsPrimaryCta", () => {
       new URL("../../../components/game/results-screen.tsx", import.meta.url),
       "utf8",
     );
-    expect(source).toContain('<details className={s.replayTools}>');
+    expect(source).toContain("<details className={s.replayTools}>");
     expect(source).not.toContain("<details open");
-    expect(source).not.toContain('open={true}');
+    expect(source).not.toContain("open={true}");
   });
 });

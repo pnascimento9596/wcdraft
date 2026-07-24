@@ -504,10 +504,11 @@ function ResultsBody({
 
   const isDaily = dailyDate !== null;
   const primaryCta = resultsPrimaryCta({ isDaily });
-  const draftAgainClass =
-    primaryCta === "draft-again" ? "btn btn--primary" : "btn btn--ghost";
+  const draftAgainClass = primaryCta === "draft-again" ? "btn btn--primary" : "btn btn--ghost";
   const shareClass =
-    primaryCta === "share" ? `btn btn--primary ${s.sharePrimary}` : `btn btn--ghost ${s.sharePrimary}`;
+    primaryCta === "share"
+      ? `btn btn--primary ${s.sharePrimary}`
+      : `btn btn--ghost ${s.sharePrimary}`;
 
   function prewarmShareSign() {
     if (!linkRunValue) return;
@@ -589,11 +590,7 @@ function ResultsBody({
         <Link href={draftAgainHref} className={draftAgainClass}>
           Draft Again
         </Link>
-        <Link
-          href={shareHref(linkRunValue)}
-          className={shareClass}
-          onMouseEnter={prewarmShareSign}
-        >
+        <Link href={shareHref(linkRunValue)} className={shareClass} onMouseEnter={prewarmShareSign}>
           Share
         </Link>
         <ChallengeFriendButton record={record} className="btn btn--ghost" />

@@ -27,10 +27,7 @@ describe("run OG prewarm dedupe", () => {
     requestRunOgSign.mockImplementation(
       () =>
         new Promise((resolve) => {
-          setTimeout(
-            () => resolve({ signed: "signed-og", challengeProof: "proof-1" }),
-            20,
-          );
+          setTimeout(() => resolve({ signed: "signed-og", challengeProof: "proof-1" }), 20);
         }),
     );
 

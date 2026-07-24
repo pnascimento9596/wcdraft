@@ -17,8 +17,8 @@ export default function SettingsPage() {
         <h1 className="display">Settings</h1>
         <p className="lede">Choose display and presentation preferences for this browser.</p>
         <p className="page-head__note">
-          Without a saved theme, wcdraft follows your system theme. Animation
-          preferences never change picks, seeds, or ranking.
+          Without a saved theme, wcdraft follows your system theme. Animation preferences never
+          change picks, seeds, or ranking.
         </p>
       </header>
 
