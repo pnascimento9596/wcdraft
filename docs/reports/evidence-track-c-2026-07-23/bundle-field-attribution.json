@@ -1,0 +1,132 @@
+{
+  "schema_version": "bundle-field-attribution-1.0.0",
+  "measurement_date": "2026-07-24",
+  "inputs": {
+    "bundle_path": "packages/data/src/generated/draft-pool.compact.json.br",
+    "shipped_compressed_bytes": 1311661,
+    "shipped_decoded_bytes": 68380413,
+    "shipped_compressed_sha256": "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d",
+    "shipped_decoded_sha256": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07",
+    "ratings": 12219,
+    "player_cards": 12219,
+    "parse_runs": 7,
+    "host": {
+      "platform": "darwin",
+      "arch": "arm64",
+      "node": "v22.22.3"
+    }
+  },
+  "preregistered_decision_rule": {
+    "drop_components_if": "≥15% reduction in decoded pool size OR ≥100 ms reduction in parse time on throttled mobile profile",
+    "schema_churn_cost_note": "runtime-data schema bump, manifest regen, retention rotation (current+2 prior), service-worker data-cache revision, full golden re-lock"
+  },
+  "c2_components": {
+    "decoded_bytes_components_career": 25330094,
+    "decoded_bytes_components_current": 25330094,
+    "decoded_bytes_components_total": 50660188,
+    "share_of_shipped_decoded_pool": 0.7408581752789355,
+    "full_json_roundtrip_decoded_with": 68380413,
+    "full_json_roundtrip_decoded_without": 17744663,
+    "decoded_delta_bytes": 50635750,
+    "decoded_delta_share_of_with": 0.7405007922370986,
+    "brotli_q11_with": 1311661,
+    "brotli_q11_without": 713922,
+    "brotli_delta_bytes": 597739,
+    "brotli_delta_share": 0.45571149862655064,
+    "parse_ms_with": {
+      "median_ms": 249.68916699999681,
+      "samples_ms": [
+        238.15187499999593,
+        249.68916699999681,
+        243.9368340000001,
+        255.71300000000338,
+        252.58866700000362,
+        457.7812909999993,
+        225.01941600000282
+      ]
+    },
+    "parse_ms_without": {
+      "median_ms": 49.6822500000053,
+      "samples_ms": [
+        49.12591699999757,
+        50.68266700000095,
+        49.82895799999824,
+        50.37104199999885,
+        49.6822500000053,
+        49.58491700000013,
+        48.34975000000122
+      ]
+    },
+    "parse_median_delta_ms": 200.00691699999152,
+    "host_bar_decoded_15pct": true,
+    "host_bar_parse_100ms": true
+  },
+  "c3_families": {
+    "note": "Family bytes are sum of JSON.stringify({key:value}) over each object; keys double-count JSON structural overhead per key. Relative comparison is valid; absolute sum exceeds decoded pool.",
+    "player_cards": {
+      "identity": 1975695,
+      "provenance": 808702,
+      "metadata": 3757956,
+      "channels": 0,
+      "overall": 0,
+      "components": 0,
+      "remainder": 118883
+    },
+    "ratings_career_top_level": {
+      "identity": 872913,
+      "provenance": 2315047,
+      "metadata": 1345793,
+      "channels": 733146,
+      "overall": 171066,
+      "components": 25330094,
+      "remainder": 0
+    },
+    "ratings_current_basis": {
+      "identity": 872913,
+      "provenance": 2313432,
+      "metadata": 1357798,
+      "channels": 733140,
+      "overall": 171066,
+      "components": 25330094,
+      "remainder": 0
+    },
+    "other_top_level_keys": {
+      "manager_cards": 161586,
+      "nation_by_card_id": 271891,
+      "nation_by_manager_card_id": 10021,
+      "nations": 4723,
+      "schema_version": 21,
+      "tournaments": 1174
+    },
+    "duplication": {
+      "with_components": {
+        "duplicated_current_copy_decoded_bytes": 29548803,
+        "career_only_decoded_bytes": 0,
+        "current_diverged_or_only_decoded_bytes": 67051,
+        "by_family": {
+          "identity": 872913,
+          "provenance": 2291784,
+          "metadata": 195209,
+          "channels": 698657,
+          "overall": 160146,
+          "components": 25330094,
+          "remainder": 0
+        },
+        "duplication_ratio_of_current_bytes": 0.9600486613309192
+      },
+      "without_components": {
+        "duplicated_current_copy_decoded_bytes": 4218709,
+        "by_family": {
+          "identity": 872913,
+          "provenance": 2291784,
+          "metadata": 195209,
+          "channels": 698657,
+          "overall": 160146,
+          "components": 0,
+          "remainder": 0
+        }
+      }
+    },
+    "sequencing": "If C2 drops components, recompute C3 on the post-drop bundle before opening a delta-encoding Red lane; components are a large duplicated family and inflate Current duplication."
+  }
+}

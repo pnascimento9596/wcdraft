@@ -1,0 +1,2559 @@
+{
+  "schema_version": "choose3-clustering-1.2.0",
+  "measurement_date": "2026-07-23",
+  "actual_base_commit": "a1beaaaaa2fe0377128d0b1434aa47d2bda5adca",
+  "script_hardcoded_base_commit_field": "565b87f8d96f5781fb72b8283d754c1c4f2ddf9a",
+  "method": {
+    "measurement_drafts_per_cell": 1024,
+    "holdout_drafts_per_cell": 2048,
+    "cells": 16,
+    "complete_measurement_drafts": 16384,
+    "fixed_parent_seed_template": "wcdraft:choose3-clustering:v1:<zero-padded candidate index>",
+    "formation_id": "4-3-3",
+    "mode": "classic",
+    "pick_policy": {
+      "squad_first": "packages/core/src/draft.ts::stepDraft (manager-first, else visible index 0)",
+      "position_first": "attempt manager target until its first coach-bearing draw; on honest dead-end target first vacant slot and pick visible index 0"
+    },
+    "tie_definition": "a full numeric three-player offer is tied when at least one candidate pair differs by no more than the threshold",
+    "estimate_exclusion_definition": "remove candidates whose selected visible basis is career_stature_estimate or baseline_anchor_estimate; retain the offer denominator only when at least two non-estimate numeric candidates remain",
+    "confidence_interval": "95% draft-cluster-robust ratio normal interval; each complete 17-spin draft is one independent seed cluster",
+    "pool_baseline": "exact combinatorial probability for three cards drawn uniformly without replacement from the era-filtered display histogram; descriptive denominator, not a reconstruction of squad-weighted offer logic"
+  },
+  "convergence": {
+    "gate": {
+      "max_absolute_rate_shift_each_doubling": 0.01,
+      "max_measurement_ci95_half_width": 0.015
+    },
+    "pass": true,
+    "max_absolute_rate_shift_512_to_1024": {
+      "all": 0.007995606,
+      "signal": 0.007995606
+    },
+    "max_absolute_rate_shift_1024_to_2048_holdout": {
+      "all": 0.003877527,
+      "signal": 0.004056287
+    },
+    "max_ci95_half_width_at_1024": 0.007835266
+  },
+  "inputs": {
+    "base_commit": "565b87f8d96f5781fb72b8283d754c1c4f2ddf9a",
+    "bundle_path": "packages/data/src/generated/draft-pool.compact.json.br",
+    "bundle_compressed_bytes": 1311661,
+    "bundle_compressed_sha256": "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d",
+    "bundle_decoded_bytes": 68380413,
+    "bundle_decoded_sha256": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07",
+    "manifest_path": "packages/data/src/generated/manifest.json",
+    "manifest_sha256": "13dc23844d30d1efaa1616423b7b2781c79ea73a8e18796827752dbe941b65e0",
+    "core_draft_path": "packages/core/src/draft.ts",
+    "core_draft_sha256": "0cc41d0761c1689cbab0091366be30057218b817452a04126cf7da1103e6ff4d",
+    "web_dataset_mapping_path": "apps/web/lib/game/data.ts",
+    "web_dataset_mapping_sha256": "f61ddc3cd3f64a44cb319b3cccb42f37521af5bf994fd87b7de5998ca2df07ee",
+    "web_display_adapter_path": "apps/web/lib/game/adapters.ts",
+    "web_display_adapter_sha256": "18444713296e40213bbadd2c09f552ca81f242dbbbdaef2b774ce8532da8dc44",
+    "schema_version": "runtime-data-2.10.0",
+    "dataset_version": "2026-07-01",
+    "rating_version_historical": "wc-perf-6.6.0",
+    "rating_version_projected": "proj-career-5.6.0",
+    "engine_version": "engine-2026.07.18-basis-aware-tiering"
+  },
+  "verified_population": {
+    "player_cards": 12219,
+    "ratings": 12219,
+    "career_visible_estimate_cards": 927,
+    "current_visible_estimate_cards": 388,
+    "cards_where_engine_and_visible_position_fields_differ": 280
+  },
+  "shipped_mechanics": {
+    "offer_construction": "calls buildDraftCatalog/createDraft/selectDraftTarget/pickPlayer/pickManager/stepDraft from packages/core/src; no tiering logic is reimplemented",
+    "tier_input": "selected-basis display overall through the core DraftPlayerCard.choice_overall resolver",
+    "visible_values": "selected basis: top-level Career alias or basis_ratings.current",
+    "candidate_frame": "era-weighted tournament-nation pair, then globally deduped remaining squad roster; not a flat draw from the era pool",
+    "soft_floor": "rank into eight buckets and retain tiers 0, 1, 2; tier 2 is the softened lower choice",
+    "daily": "same classic/squad_first/all_time/career createDraft path with a deterministic per-UTC-date parent seed and optional published salt"
+  },
+  "cells": [
+    {
+      "cell_id": "all_time.squad_first.career",
+      "era_preset": "all_time",
+      "rating_basis": "career",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1931,
+            "total": 17408,
+            "rate": 0.110926011,
+            "ci95": [
+              0.106233123,
+              0.115618899
+            ],
+            "half_width": 0.004692888,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1828,
+            "total": 16504,
+            "rate": 0.110761028,
+            "ci95": [
+              0.105952711,
+              0.115569345
+            ],
+            "half_width": 0.004808317,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 105,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1828,
+            "same_estimate": 21,
+            "cross_provenance": 104,
+            "mixed": 22
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 7191,
+            "total": 17408,
+            "rate": 0.413085938,
+            "ci95": [
+              0.405589777,
+              0.420582098
+            ],
+            "half_width": 0.007496161,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 6675,
+            "total": 16504,
+            "rate": 0.404447407,
+            "ci95": [
+              0.396878027,
+              0.412016786
+            ],
+            "half_width": 0.007569379,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 601,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 6675,
+            "same_estimate": 174,
+            "cross_provenance": 484,
+            "mixed": 142
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 12967,
+            "total": 17408,
+            "rate": 0.744887408,
+            "ci95": [
+              0.738532436,
+              0.75124238
+            ],
+            "half_width": 0.006354972,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 11841,
+            "total": 16504,
+            "rate": 0.717462433,
+            "ci95": [
+              0.710799502,
+              0.724125365
+            ],
+            "half_width": 0.006662932,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1386,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 11841,
+            "same_estimate": 431,
+            "cross_provenance": 1164,
+            "mixed": 469
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "1": 5,
+        "2": 2285,
+        "3": 15118
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 48,
+        "2": 3001,
+        "3": 14359
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.8998161764705882,
+      "spread_histogram": {
+        "0": 48,
+        "1": 243,
+        "2": 673,
+        "3": 1124,
+        "4": 1968,
+        "5": 1718,
+        "6": 1976,
+        "7": 1712,
+        "8": 1634,
+        "9": 1273,
+        "10": 1234,
+        "11": 974,
+        "12": 520,
+        "13": 480,
+        "14": 393,
+        "15": 561,
+        "16": 243,
+        "17": 343,
+        "18": 119,
+        "19": 35,
+        "20": 83,
+        "21": 45,
+        "23": 9
+      },
+      "mean_spread": 7.730985753676471
+    },
+    {
+      "cell_id": "all_time.squad_first.current",
+      "era_preset": "all_time",
+      "rating_basis": "current",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 2516,
+            "total": 17408,
+            "rate": 0.14453125,
+            "ci95": [
+              0.139342112,
+              0.149720388
+            ],
+            "half_width": 0.005189138,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 2516,
+            "total": 17408,
+            "rate": 0.14453125,
+            "ci95": [
+              0.139342112,
+              0.149720388
+            ],
+            "half_width": 0.005189138,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 2516,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 8266,
+            "total": 17408,
+            "rate": 0.474839154,
+            "ci95": [
+              0.467450259,
+              0.48222805
+            ],
+            "half_width": 0.007388895,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 8266,
+            "total": 17408,
+            "rate": 0.474839154,
+            "ci95": [
+              0.467450259,
+              0.48222805
+            ],
+            "half_width": 0.007388895,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 2,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 8266,
+            "same_estimate": 0,
+            "cross_provenance": 2,
+            "mixed": 2
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 14094,
+            "total": 17408,
+            "rate": 0.809627757,
+            "ci95": [
+              0.803872048,
+              0.815383467
+            ],
+            "half_width": 0.00575571,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 14094,
+            "total": 17408,
+            "rate": 0.809627757,
+            "ci95": [
+              0.803872048,
+              0.815383467
+            ],
+            "half_width": 0.00575571,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 2,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 14094,
+            "same_estimate": 0,
+            "cross_provenance": 2,
+            "mixed": 2
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "1": 5,
+        "2": 2313,
+        "3": 15090
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 67,
+        "2": 2889,
+        "3": 14452
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -2.3322609999999995,
+          "signal_pp": -2.3322609999999995
+        },
+        {
+          "threshold": 1,
+          "all_pp": -3.3662684000000054,
+          "signal_pp": -3.3662684000000054
+        },
+        {
+          "threshold": 2,
+          "all_pp": 1.2235753000000016,
+          "signal_pp": 1.2235753000000016
+        }
+      ],
+      "pair_within_le3_rate": 0.9471507352941176,
+      "spread_histogram": {
+        "0": 47,
+        "1": 305,
+        "2": 920,
+        "3": 1619,
+        "4": 2775,
+        "5": 2552,
+        "6": 2680,
+        "7": 2425,
+        "8": 1366,
+        "9": 1185,
+        "10": 597,
+        "11": 374,
+        "12": 111,
+        "13": 294,
+        "14": 74,
+        "15": 65,
+        "16": 8,
+        "18": 11
+      },
+      "mean_spread": 5.921702665441177
+    },
+    {
+      "cell_id": "all_time.position_first.career",
+      "era_preset": "all_time",
+      "rating_basis": "career",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1801,
+            "total": 16384,
+            "rate": 0.109924316,
+            "ci95": [
+              0.105110918,
+              0.114737715
+            ],
+            "half_width": 0.004813399,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1709,
+            "total": 15540,
+            "rate": 0.10997426,
+            "ci95": [
+              0.105016962,
+              0.114931558
+            ],
+            "half_width": 0.004957298,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 94,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1709,
+            "same_estimate": 17,
+            "cross_provenance": 93,
+            "mixed": 18
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 6748,
+            "total": 16384,
+            "rate": 0.411865234,
+            "ci95": [
+              0.404205632,
+              0.419524836
+            ],
+            "half_width": 0.007659602,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 6275,
+            "total": 15540,
+            "rate": 0.403796654,
+            "ci95": [
+              0.396093497,
+              0.411499811
+            ],
+            "half_width": 0.007703157,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 553,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 6275,
+            "same_estimate": 161,
+            "cross_provenance": 442,
+            "mixed": 130
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 12188,
+            "total": 16384,
+            "rate": 0.743896484,
+            "ci95": [
+              0.737351736,
+              0.750441232
+            ],
+            "half_width": 0.006544748,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 11147,
+            "total": 15540,
+            "rate": 0.717310167,
+            "ci95": [
+              0.710429645,
+              0.724190689
+            ],
+            "half_width": 0.006880522,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1282,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 11147,
+            "same_estimate": 403,
+            "cross_provenance": 1071,
+            "mixed": 433
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "1": 5,
+        "2": 2154,
+        "3": 14225
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 46,
+        "2": 2822,
+        "3": 13516
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.8990478515625,
+      "spread_histogram": {
+        "0": 39,
+        "1": 226,
+        "2": 625,
+        "3": 1046,
+        "4": 1822,
+        "5": 1612,
+        "6": 1863,
+        "7": 1606,
+        "8": 1546,
+        "9": 1210,
+        "10": 1172,
+        "11": 934,
+        "12": 489,
+        "13": 458,
+        "14": 372,
+        "15": 539,
+        "16": 223,
+        "17": 328,
+        "18": 114,
+        "19": 32,
+        "20": 75,
+        "21": 45,
+        "23": 8
+      },
+      "mean_spread": 7.7625732421875
+    },
+    {
+      "cell_id": "all_time.position_first.current",
+      "era_preset": "all_time",
+      "rating_basis": "current",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 2347,
+            "total": 16384,
+            "rate": 0.143249512,
+            "ci95": [
+              0.137886742,
+              0.148612281
+            ],
+            "half_width": 0.005362769,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 2347,
+            "total": 16384,
+            "rate": 0.143249512,
+            "ci95": [
+              0.137886742,
+              0.148612281
+            ],
+            "half_width": 0.005362769,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 2347,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 7754,
+            "total": 16384,
+            "rate": 0.473266602,
+            "ci95": [
+              0.465719171,
+              0.480814032
+            ],
+            "half_width": 0.007547431,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 7754,
+            "total": 16384,
+            "rate": 0.473266602,
+            "ci95": [
+              0.465719171,
+              0.480814032
+            ],
+            "half_width": 0.007547431,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 2,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 7754,
+            "same_estimate": 0,
+            "cross_provenance": 2,
+            "mixed": 2
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 13244,
+            "total": 16384,
+            "rate": 0.808349609,
+            "ci95": [
+              0.802433379,
+              0.81426584
+            ],
+            "half_width": 0.005916231,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 13244,
+            "total": 16384,
+            "rate": 0.808349609,
+            "ci95": [
+              0.802433379,
+              0.81426584
+            ],
+            "half_width": 0.005916231,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 2,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 13244,
+            "same_estimate": 0,
+            "cross_provenance": 2,
+            "mixed": 2
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "1": 5,
+        "2": 2186,
+        "3": 14193
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 65,
+        "2": 2726,
+        "3": 13593
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -2.3376465000000013,
+          "signal_pp": -2.3376465000000013
+        },
+        {
+          "threshold": 1,
+          "all_pp": -3.4057617000000038,
+          "signal_pp": -3.4057617000000038
+        },
+        {
+          "threshold": 2,
+          "all_pp": 1.0681151999999972,
+          "signal_pp": 1.0681151999999972
+        }
+      ],
+      "pair_within_le3_rate": 0.94720458984375,
+      "spread_histogram": {
+        "0": 42,
+        "1": 281,
+        "2": 858,
+        "3": 1513,
+        "4": 2588,
+        "5": 2422,
+        "6": 2518,
+        "7": 2303,
+        "8": 1294,
+        "9": 1126,
+        "10": 566,
+        "11": 346,
+        "12": 105,
+        "13": 276,
+        "14": 67,
+        "15": 62,
+        "16": 8,
+        "18": 9
+      },
+      "mean_spread": 5.93170166015625
+    },
+    {
+      "cell_id": "post_2000.squad_first.career",
+      "era_preset": "post_2000",
+      "rating_basis": "career",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1713,
+            "total": 17408,
+            "rate": 0.098403033,
+            "ci95": [
+              0.093949064,
+              0.102857002
+            ],
+            "half_width": 0.004453969,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1618,
+            "total": 16543,
+            "rate": 0.097805718,
+            "ci95": [
+              0.093214043,
+              0.102397394
+            ],
+            "half_width": 0.004591675,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 98,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1618,
+            "same_estimate": 30,
+            "cross_provenance": 98,
+            "mixed": 33
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 6829,
+            "total": 17408,
+            "rate": 0.392290901,
+            "ci95": [
+              0.385132169,
+              0.399449632
+            ],
+            "half_width": 0.007158731,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 6313,
+            "total": 16543,
+            "rate": 0.381611558,
+            "ci95": [
+              0.374379905,
+              0.388843211
+            ],
+            "half_width": 0.007231653,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 602,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 6313,
+            "same_estimate": 210,
+            "cross_provenance": 453,
+            "mixed": 147
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 12831,
+            "total": 17408,
+            "rate": 0.737074908,
+            "ci95": [
+              0.730550192,
+              0.743599624
+            ],
+            "half_width": 0.006524716,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 11642,
+            "total": 16543,
+            "rate": 0.703741764,
+            "ci95": [
+              0.696899446,
+              0.710584081
+            ],
+            "half_width": 0.006842317,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1469,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 11642,
+            "same_estimate": 510,
+            "cross_provenance": 1214,
+            "mixed": 535
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2144,
+        "3": 15264
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 54,
+        "2": 2870,
+        "3": 14484
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.8971162683823529,
+      "spread_histogram": {
+        "0": 62,
+        "1": 207,
+        "2": 637,
+        "3": 975,
+        "4": 1856,
+        "5": 1558,
+        "6": 2172,
+        "7": 1707,
+        "8": 1805,
+        "9": 1473,
+        "10": 1253,
+        "11": 954,
+        "12": 541,
+        "13": 490,
+        "14": 325,
+        "15": 549,
+        "16": 258,
+        "17": 368,
+        "18": 124,
+        "20": 49,
+        "21": 45
+      },
+      "mean_spread": 7.784352022058823
+    },
+    {
+      "cell_id": "post_2000.squad_first.current",
+      "era_preset": "post_2000",
+      "rating_basis": "current",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 2125,
+            "total": 17408,
+            "rate": 0.122070313,
+            "ci95": [
+              0.117234173,
+              0.126906452
+            ],
+            "half_width": 0.004836139,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 2125,
+            "total": 17408,
+            "rate": 0.122070313,
+            "ci95": [
+              0.117234173,
+              0.126906452
+            ],
+            "half_width": 0.004836139,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 2125,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 7975,
+            "total": 17408,
+            "rate": 0.458122702,
+            "ci95": [
+              0.450816387,
+              0.465429017
+            ],
+            "half_width": 0.007306315,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 7975,
+            "total": 17408,
+            "rate": 0.458122702,
+            "ci95": [
+              0.450816387,
+              0.465429017
+            ],
+            "half_width": 0.007306315,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 7975,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 13930,
+            "total": 17408,
+            "rate": 0.800206801,
+            "ci95": [
+              0.79437638,
+              0.806037223
+            ],
+            "half_width": 0.005830421,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 13930,
+            "total": 17408,
+            "rate": 0.800206801,
+            "ci95": [
+              0.79437638,
+              0.806037223
+            ],
+            "half_width": 0.005830421,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 13930,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2228,
+        "3": 15180
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 80,
+        "2": 2767,
+        "3": 14561
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -2.4931065999999986,
+          "signal_pp": -2.4931065999999986
+        },
+        {
+          "threshold": 1,
+          "all_pp": -3.343290500000001,
+          "signal_pp": -3.343290500000001
+        },
+        {
+          "threshold": 2,
+          "all_pp": 1.3212315999999946,
+          "signal_pp": 1.3212315999999946
+        }
+      ],
+      "pair_within_le3_rate": 0.9407743566176471,
+      "spread_histogram": {
+        "0": 53,
+        "1": 253,
+        "2": 867,
+        "3": 1518,
+        "4": 2586,
+        "5": 2330,
+        "6": 2752,
+        "7": 2547,
+        "8": 1577,
+        "9": 1314,
+        "10": 693,
+        "11": 377,
+        "12": 58,
+        "13": 327,
+        "14": 87,
+        "15": 69
+      },
+      "mean_spread": 6.065889246323529
+    },
+    {
+      "cell_id": "post_2000.position_first.career",
+      "era_preset": "post_2000",
+      "rating_basis": "career",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1625,
+            "total": 16384,
+            "rate": 0.099182129,
+            "ci95": [
+              0.094561809,
+              0.103802448
+            ],
+            "half_width": 0.00462032,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1536,
+            "total": 15582,
+            "rate": 0.098575279,
+            "ci95": [
+              0.093822307,
+              0.103328251
+            ],
+            "half_width": 0.004752972,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 92,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1536,
+            "same_estimate": 26,
+            "cross_provenance": 92,
+            "mixed": 29
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 6450,
+            "total": 16384,
+            "rate": 0.393676758,
+            "ci95": [
+              0.386255739,
+              0.401097777
+            ],
+            "half_width": 0.007421019,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 5969,
+            "total": 15582,
+            "rate": 0.383070209,
+            "ci95": [
+              0.375563648,
+              0.390576771
+            ],
+            "half_width": 0.007506561,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 563,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 5969,
+            "same_estimate": 194,
+            "cross_provenance": 425,
+            "mixed": 138
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 12091,
+            "total": 16384,
+            "rate": 0.737976074,
+            "ci95": [
+              0.731206611,
+              0.744745538
+            ],
+            "half_width": 0.006769464,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 10987,
+            "total": 15582,
+            "rate": 0.705108458,
+            "ci95": [
+              0.698018906,
+              0.712198011
+            ],
+            "half_width": 0.007089552,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1369,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 10987,
+            "same_estimate": 473,
+            "cross_provenance": 1133,
+            "mixed": 502
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 1996,
+        "3": 14388
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 54,
+        "2": 2669,
+        "3": 13661
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.89739990234375,
+      "spread_histogram": {
+        "0": 55,
+        "1": 195,
+        "2": 597,
+        "3": 916,
+        "4": 1745,
+        "5": 1467,
+        "6": 2001,
+        "7": 1604,
+        "8": 1706,
+        "9": 1395,
+        "10": 1189,
+        "11": 909,
+        "12": 503,
+        "13": 460,
+        "14": 310,
+        "15": 524,
+        "16": 242,
+        "17": 354,
+        "18": 120,
+        "20": 47,
+        "21": 45
+      },
+      "mean_spread": 7.80816650390625
+    },
+    {
+      "cell_id": "post_2000.position_first.current",
+      "era_preset": "post_2000",
+      "rating_basis": "current",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1995,
+            "total": 16384,
+            "rate": 0.121765137,
+            "ci95": [
+              0.11678667,
+              0.126743603
+            ],
+            "half_width": 0.004978467,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1995,
+            "total": 16384,
+            "rate": 0.121765137,
+            "ci95": [
+              0.11678667,
+              0.126743603
+            ],
+            "half_width": 0.004978467,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1995,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 7523,
+            "total": 16384,
+            "rate": 0.45916748,
+            "ci95": [
+              0.451660703,
+              0.466674258
+            ],
+            "half_width": 0.007506778,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 7523,
+            "total": 16384,
+            "rate": 0.45916748,
+            "ci95": [
+              0.451660703,
+              0.466674258
+            ],
+            "half_width": 0.007506778,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 7523,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 13114,
+            "total": 16384,
+            "rate": 0.800415039,
+            "ci95": [
+              0.794407232,
+              0.806422847
+            ],
+            "half_width": 0.006007808,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 13114,
+            "total": 16384,
+            "rate": 0.800415039,
+            "ci95": [
+              0.794407232,
+              0.806422847
+            ],
+            "half_width": 0.006007808,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 13114,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2094,
+        "3": 14290
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 80,
+        "2": 2602,
+        "3": 13702
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -2.508544900000001,
+          "signal_pp": -2.508544900000001
+        },
+        {
+          "threshold": 1,
+          "all_pp": -3.3874511999999966,
+          "signal_pp": -3.3874511999999966
+        },
+        {
+          "threshold": 2,
+          "all_pp": 1.2329100999999953,
+          "signal_pp": 1.2329100999999953
+        }
+      ],
+      "pair_within_le3_rate": 0.94061279296875,
+      "spread_histogram": {
+        "0": 50,
+        "1": 240,
+        "2": 813,
+        "3": 1420,
+        "4": 2435,
+        "5": 2199,
+        "6": 2555,
+        "7": 2403,
+        "8": 1491,
+        "9": 1248,
+        "10": 663,
+        "11": 358,
+        "12": 55,
+        "13": 306,
+        "14": 82,
+        "15": 66
+      },
+      "mean_spread": 6.073974609375
+    },
+    {
+      "cell_id": "post_2010.squad_first.career",
+      "era_preset": "post_2010",
+      "rating_basis": "career",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1766,
+            "total": 17408,
+            "rate": 0.10144761,
+            "ci95": [
+              0.097131181,
+              0.10576404
+            ],
+            "half_width": 0.00431643,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1723,
+            "total": 16752,
+            "rate": 0.102853391,
+            "ci95": [
+              0.09841613,
+              0.107290652
+            ],
+            "half_width": 0.004437261,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 43,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1723,
+            "same_estimate": 0,
+            "cross_provenance": 43,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 7132,
+            "total": 17408,
+            "rate": 0.409696691,
+            "ci95": [
+              0.402702965,
+              0.416690417
+            ],
+            "half_width": 0.006993726,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 6752,
+            "total": 16752,
+            "rate": 0.403056351,
+            "ci95": [
+              0.39594427,
+              0.410168433
+            ],
+            "half_width": 0.007112082,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 514,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 6752,
+            "same_estimate": 195,
+            "cross_provenance": 319,
+            "mixed": 134
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 12906,
+            "total": 17408,
+            "rate": 0.741383272,
+            "ci95": [
+              0.735074127,
+              0.747692417
+            ],
+            "half_width": 0.006309145,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 12013,
+            "total": 16752,
+            "rate": 0.717108405,
+            "ci95": [
+              0.710590097,
+              0.723626713
+            ],
+            "half_width": 0.006518308,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1233,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 12013,
+            "same_estimate": 348,
+            "cross_provenance": 885,
+            "mixed": 340
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2343,
+        "3": 15065
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 69,
+        "2": 2993,
+        "3": 14346
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.8951631433823529,
+      "spread_histogram": {
+        "0": 39,
+        "1": 235,
+        "2": 447,
+        "3": 843,
+        "4": 1835,
+        "5": 1477,
+        "6": 1823,
+        "7": 1887,
+        "8": 1572,
+        "9": 1693,
+        "10": 1186,
+        "11": 902,
+        "12": 469,
+        "13": 534,
+        "14": 352,
+        "15": 859,
+        "16": 417,
+        "17": 575,
+        "18": 193,
+        "19": 1,
+        "21": 69
+      },
+      "mean_spread": 8.266142003676471
+    },
+    {
+      "cell_id": "post_2010.squad_first.current",
+      "era_preset": "post_2010",
+      "rating_basis": "current",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 2326,
+            "total": 17408,
+            "rate": 0.133616728,
+            "ci95": [
+              0.128675062,
+              0.138558394
+            ],
+            "half_width": 0.004941666,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 2326,
+            "total": 17408,
+            "rate": 0.133616728,
+            "ci95": [
+              0.128675062,
+              0.138558394
+            ],
+            "half_width": 0.004941666,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 2326,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 8819,
+            "total": 17408,
+            "rate": 0.506606158,
+            "ci95": [
+              0.499053839,
+              0.514158477
+            ],
+            "half_width": 0.007552319,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 8819,
+            "total": 17408,
+            "rate": 0.506606158,
+            "ci95": [
+              0.499053839,
+              0.514158477
+            ],
+            "half_width": 0.007552319,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 8819,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 14189,
+            "total": 17408,
+            "rate": 0.815085018,
+            "ci95": [
+              0.809365701,
+              0.820804336
+            ],
+            "half_width": 0.005719317,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 14189,
+            "total": 17408,
+            "rate": 0.815085018,
+            "ci95": [
+              0.809365701,
+              0.820804336
+            ],
+            "half_width": 0.005719317,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 14189,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2382,
+        "3": 15026
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 109,
+        "2": 2860,
+        "3": 14439
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -2.1829044000000017,
+          "signal_pp": -2.1829044000000017
+        },
+        {
+          "threshold": 1,
+          "all_pp": -2.452895200000005,
+          "signal_pp": -2.452895200000005
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.25850179999999945,
+          "signal_pp": 0.25850179999999945
+        }
+      ],
+      "pair_within_le3_rate": 0.9463465073529411,
+      "spread_histogram": {
+        "0": 47,
+        "1": 277,
+        "2": 976,
+        "3": 1442,
+        "4": 2527,
+        "5": 2072,
+        "6": 2236,
+        "7": 3462,
+        "8": 1421,
+        "9": 1394,
+        "10": 774,
+        "11": 302,
+        "12": 93,
+        "13": 262,
+        "14": 61,
+        "15": 62
+      },
+      "mean_spread": 6.086569393382353
+    },
+    {
+      "cell_id": "post_2010.position_first.career",
+      "era_preset": "post_2010",
+      "rating_basis": "career",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1644,
+            "total": 16384,
+            "rate": 0.100341797,
+            "ci95": [
+              0.095891489,
+              0.104792105
+            ],
+            "half_width": 0.004450308,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1602,
+            "total": 15770,
+            "rate": 0.101585289,
+            "ci95": [
+              0.097008674,
+              0.106161903
+            ],
+            "half_width": 0.004576615,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 42,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1602,
+            "same_estimate": 0,
+            "cross_provenance": 42,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 6735,
+            "total": 16384,
+            "rate": 0.411071777,
+            "ci95": [
+              0.403768133,
+              0.418375422
+            ],
+            "half_width": 0.007303644,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 6369,
+            "total": 15770,
+            "rate": 0.403868104,
+            "ci95": [
+              0.396485814,
+              0.411250394
+            ],
+            "half_width": 0.00738229,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 487,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 6369,
+            "same_estimate": 188,
+            "cross_provenance": 299,
+            "mixed": 121
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 12161,
+            "total": 16384,
+            "rate": 0.742248535,
+            "ci95": [
+              0.735742186,
+              0.748754884
+            ],
+            "half_width": 0.006506349,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 11313,
+            "total": 15770,
+            "rate": 0.717374762,
+            "ci95": [
+              0.710688129,
+              0.724061395
+            ],
+            "half_width": 0.006686633,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1158,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 11313,
+            "same_estimate": 332,
+            "cross_provenance": 826,
+            "mixed": 310
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2189,
+        "3": 14195
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 63,
+        "2": 2798,
+        "3": 13523
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.896240234375,
+      "spread_histogram": {
+        "0": 33,
+        "1": 217,
+        "2": 420,
+        "3": 787,
+        "4": 1728,
+        "5": 1374,
+        "6": 1699,
+        "7": 1777,
+        "8": 1478,
+        "9": 1599,
+        "10": 1122,
+        "11": 860,
+        "12": 435,
+        "13": 503,
+        "14": 334,
+        "15": 833,
+        "16": 396,
+        "17": 542,
+        "18": 177,
+        "19": 1,
+        "21": 69
+      },
+      "mean_spread": 8.2923583984375
+    },
+    {
+      "cell_id": "post_2010.position_first.current",
+      "era_preset": "post_2010",
+      "rating_basis": "current",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 2160,
+            "total": 16384,
+            "rate": 0.131835938,
+            "ci95": [
+              0.126733151,
+              0.136938724
+            ],
+            "half_width": 0.005102786,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 2160,
+            "total": 16384,
+            "rate": 0.131835938,
+            "ci95": [
+              0.126733151,
+              0.136938724
+            ],
+            "half_width": 0.005102786,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 2160,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 8304,
+            "total": 16384,
+            "rate": 0.506835938,
+            "ci95": [
+              0.499000672,
+              0.514671203
+            ],
+            "half_width": 0.007835266,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 8304,
+            "total": 16384,
+            "rate": 0.506835938,
+            "ci95": [
+              0.499000672,
+              0.514671203
+            ],
+            "half_width": 0.007835266,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 8304,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 13346,
+            "total": 16384,
+            "rate": 0.814575195,
+            "ci95": [
+              0.80858511,
+              0.820565281
+            ],
+            "half_width": 0.005990085,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 13346,
+            "total": 16384,
+            "rate": 0.814575195,
+            "ci95": [
+              0.80858511,
+              0.820565281
+            ],
+            "half_width": 0.005990085,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 13346,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2222,
+        "3": 14162
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 103,
+        "2": 2672,
+        "3": 13609
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -2.3071288999999995,
+          "signal_pp": -2.3071288999999995
+        },
+        {
+          "threshold": 1,
+          "all_pp": -2.6123045999999928,
+          "signal_pp": -2.6123045999999928
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.10375969999999457,
+          "signal_pp": 0.10375969999999457
+        }
+      ],
+      "pair_within_le3_rate": 0.946533203125,
+      "spread_histogram": {
+        "0": 40,
+        "1": 257,
+        "2": 909,
+        "3": 1341,
+        "4": 2383,
+        "5": 1966,
+        "6": 2067,
+        "7": 3286,
+        "8": 1320,
+        "9": 1336,
+        "10": 749,
+        "11": 288,
+        "12": 88,
+        "13": 240,
+        "14": 56,
+        "15": 58
+      },
+      "mean_spread": 6.099609375
+    },
+    {
+      "cell_id": "modern.squad_first.career",
+      "era_preset": "modern",
+      "rating_basis": "career",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1549,
+            "total": 17408,
+            "rate": 0.088982077,
+            "ci95": [
+              0.08484963,
+              0.093114524
+            ],
+            "half_width": 0.004132447,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1548,
+            "total": 16797,
+            "rate": 0.092159314,
+            "ci95": [
+              0.08787068,
+              0.096447948
+            ],
+            "half_width": 0.004288634,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1548,
+            "same_estimate": 1,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 7721,
+            "total": 17408,
+            "rate": 0.44353171,
+            "ci95": [
+              0.436672055,
+              0.450391364
+            ],
+            "half_width": 0.006859654,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 7287,
+            "total": 16797,
+            "rate": 0.433827469,
+            "ci95": [
+              0.426806154,
+              0.440848784
+            ],
+            "half_width": 0.007021315,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 607,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 7287,
+            "same_estimate": 261,
+            "cross_provenance": 346,
+            "mixed": 173
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 13416,
+            "total": 17408,
+            "rate": 0.770680147,
+            "ci95": [
+              0.764745743,
+              0.776614551
+            ],
+            "half_width": 0.005934404,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 12699,
+            "total": 16797,
+            "rate": 0.756027862,
+            "ci95": [
+              0.749965798,
+              0.762089926
+            ],
+            "half_width": 0.006062064,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1073,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 12699,
+            "same_estimate": 319,
+            "cross_provenance": 754,
+            "mixed": 356
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2376,
+        "3": 15032
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 74,
+        "2": 2725,
+        "3": 14609
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.90625,
+      "spread_histogram": {
+        "1": 248,
+        "2": 527,
+        "3": 833,
+        "4": 2014,
+        "5": 1354,
+        "6": 1247,
+        "7": 2042,
+        "8": 1526,
+        "9": 1655,
+        "10": 1220,
+        "11": 1239,
+        "12": 520,
+        "13": 433,
+        "14": 386,
+        "15": 1053,
+        "16": 310,
+        "17": 502,
+        "18": 220,
+        "19": 1,
+        "21": 78
+      },
+      "mean_spread": 8.359030330882353
+    },
+    {
+      "cell_id": "modern.squad_first.current",
+      "era_preset": "modern",
+      "rating_basis": "current",
+      "draft_flow": "squad_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 17408,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 2288,
+            "total": 17408,
+            "rate": 0.131433824,
+            "ci95": [
+              0.126565597,
+              0.13630205
+            ],
+            "half_width": 0.004868226,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 2288,
+            "total": 17408,
+            "rate": 0.131433824,
+            "ci95": [
+              0.126565597,
+              0.13630205
+            ],
+            "half_width": 0.004868226,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 2288,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 8498,
+            "total": 17408,
+            "rate": 0.48816636,
+            "ci95": [
+              0.481075495,
+              0.495257225
+            ],
+            "half_width": 0.007090865,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 8498,
+            "total": 17408,
+            "rate": 0.48816636,
+            "ci95": [
+              0.481075495,
+              0.495257225
+            ],
+            "half_width": 0.007090865,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 8498,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 14192,
+            "total": 17408,
+            "rate": 0.815257353,
+            "ci95": [
+              0.809787694,
+              0.820727012
+            ],
+            "half_width": 0.005469659,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 14192,
+            "total": 17408,
+            "rate": 0.815257353,
+            "ci95": [
+              0.809787694,
+              0.820727012
+            ],
+            "half_width": 0.005469659,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 14192,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2514,
+        "3": 14894
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 149,
+        "2": 2874,
+        "3": 14385
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -1.2350642999999994,
+          "signal_pp": -1.2350642999999994
+        },
+        {
+          "threshold": 1,
+          "all_pp": -4.681755499999996,
+          "signal_pp": -4.681755499999996
+        },
+        {
+          "threshold": 2,
+          "all_pp": -1.5165440999999946,
+          "signal_pp": -1.5165440999999946
+        }
+      ],
+      "pair_within_le3_rate": 0.9471507352941176,
+      "spread_histogram": {
+        "0": 29,
+        "1": 142,
+        "2": 1076,
+        "3": 977,
+        "4": 2292,
+        "5": 2237,
+        "6": 2160,
+        "7": 3916,
+        "8": 1470,
+        "9": 1344,
+        "10": 921,
+        "11": 407,
+        "12": 45,
+        "13": 269,
+        "14": 69,
+        "15": 54
+      },
+      "mean_spread": 6.2790670955882355
+    },
+    {
+      "cell_id": "modern.position_first.career",
+      "era_preset": "modern",
+      "rating_basis": "career",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 1451,
+            "total": 16384,
+            "rate": 0.088562012,
+            "ci95": [
+              0.084312018,
+              0.092812005
+            ],
+            "half_width": 0.004249994,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 1450,
+            "total": 15816,
+            "rate": 0.091679312,
+            "ci95": [
+              0.087271821,
+              0.096086803
+            ],
+            "half_width": 0.004407491,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 1,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 1450,
+            "same_estimate": 1,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 7295,
+            "total": 16384,
+            "rate": 0.445251465,
+            "ci95": [
+              0.438131204,
+              0.452371725
+            ],
+            "half_width": 0.00712026,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 6881,
+            "total": 15816,
+            "rate": 0.435065756,
+            "ci95": [
+              0.427767551,
+              0.442363962
+            ],
+            "half_width": 0.007298205,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 567,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 6881,
+            "same_estimate": 247,
+            "cross_provenance": 320,
+            "mixed": 153
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 12612,
+            "total": 16384,
+            "rate": 0.769775391,
+            "ci95": [
+              0.763663843,
+              0.775886938
+            ],
+            "half_width": 0.006111547,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 11936,
+            "total": 15816,
+            "rate": 0.754678806,
+            "ci95": [
+              0.748418148,
+              0.760939465
+            ],
+            "half_width": 0.006260659,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 988,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 11936,
+            "same_estimate": 305,
+            "cross_provenance": 683,
+            "mixed": 312
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2210,
+        "3": 14174
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 67,
+        "2": 2554,
+        "3": 13763
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 1,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        },
+        {
+          "threshold": 2,
+          "all_pp": 0.0,
+          "signal_pp": 0.0
+        }
+      ],
+      "pair_within_le3_rate": 0.90625,
+      "spread_histogram": {
+        "1": 222,
+        "2": 488,
+        "3": 775,
+        "4": 1868,
+        "5": 1267,
+        "6": 1165,
+        "7": 1891,
+        "8": 1453,
+        "9": 1578,
+        "10": 1171,
+        "11": 1178,
+        "12": 487,
+        "13": 413,
+        "14": 368,
+        "15": 1012,
+        "16": 291,
+        "17": 480,
+        "18": 198,
+        "19": 1,
+        "21": 78
+      },
+      "mean_spread": 8.40045166015625
+    },
+    {
+      "cell_id": "modern.position_first.current",
+      "era_preset": "modern",
+      "rating_basis": "current",
+      "draft_flow": "position_first",
+      "complete_drafts": 1024,
+      "full_numeric_three_player_offers": 16384,
+      "tie_rates": [
+        {
+          "threshold": 0,
+          "all": {
+            "successes": 2132,
+            "total": 16384,
+            "rate": 0.130126953,
+            "ci95": [
+              0.125196405,
+              0.135057502
+            ],
+            "half_width": 0.004930548,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 2132,
+            "total": 16384,
+            "rate": 0.130126953,
+            "ci95": [
+              0.125196405,
+              0.135057502
+            ],
+            "half_width": 0.004930548,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 2132,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 1,
+          "all": {
+            "successes": 8039,
+            "total": 16384,
+            "rate": 0.490661621,
+            "ci95": [
+              0.483365596,
+              0.497957646
+            ],
+            "half_width": 0.007296025,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 8039,
+            "total": 16384,
+            "rate": 0.490661621,
+            "ci95": [
+              0.483365596,
+              0.497957646
+            ],
+            "half_width": 0.007296025,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 8039,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        },
+        {
+          "threshold": 2,
+          "all": {
+            "successes": 13356,
+            "total": 16384,
+            "rate": 0.815185547,
+            "ci95": [
+              0.809561478,
+              0.820809615
+            ],
+            "half_width": 0.005624069,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "excluding_visible_estimate_candidates": {
+            "successes": 13356,
+            "total": 16384,
+            "rate": 0.815185547,
+            "ci95": [
+              0.809561478,
+              0.820809615
+            ],
+            "half_width": 0.005624069,
+            "method": "draft-cluster-robust-ratio-normal"
+          },
+          "tied_offers_with_any_estimate_candidate_in_a_tied_pair": 0,
+          "provenance_tie_offer_counts": {
+            "same_non_estimate": 13356,
+            "same_estimate": 0,
+            "cross_provenance": 0,
+            "mixed": 0
+          }
+        }
+      ],
+      "engine_position_unique_count_histogram": {
+        "2": 2349,
+        "3": 14035
+      },
+      "visible_position_unique_count_histogram": {
+        "1": 141,
+        "2": 2702,
+        "3": 13541
+      },
+      "delta_vs_baseline_2026_07_17_pp": [
+        {
+          "threshold": 0,
+          "all_pp": -1.4099121000000019,
+          "signal_pp": -1.4099121000000019
+        },
+        {
+          "threshold": 1,
+          "all_pp": -4.656982399999999,
+          "signal_pp": -4.656982399999999
+        },
+        {
+          "threshold": 2,
+          "all_pp": -1.4465331999999997,
+          "signal_pp": -1.4465331999999997
+        }
+      ],
+      "pair_within_le3_rate": 0.94732666015625,
+      "spread_histogram": {
+        "0": 29,
+        "1": 137,
+        "2": 980,
+        "3": 926,
+        "4": 2144,
+        "5": 2128,
+        "6": 2014,
+        "7": 3677,
+        "8": 1401,
+        "9": 1284,
+        "10": 894,
+        "11": 380,
+        "12": 45,
+        "13": 230,
+        "14": 66,
+        "15": 49
+      },
+      "mean_spread": 6.28582763671875
+    }
+  ]
+}

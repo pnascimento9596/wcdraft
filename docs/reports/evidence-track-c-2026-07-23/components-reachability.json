@@ -1,0 +1,99 @@
+{
+  "schema_version": "components-reachability-1.0.0",
+  "measurement_date": "2026-07-24",
+  "roots": [
+    "apps/web",
+    "packages/core"
+  ],
+  "files_scanned": 474,
+  "total_hits_including_unrelated": 9,
+  "by_classification": {
+    "test-only": 7,
+    "schema-type-only": 2
+  },
+  "relevant_hits": [
+    {
+      "file": "packages/core/src/manager-modifier-decoupling.guard.test.ts",
+      "line": 134,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: []",
+      "classification": "test-only",
+      "notes": "fixture or assertion constructing Rating-like objects"
+    },
+    {
+      "file": "packages/core/src/manager-modifier-decoupling.guard.test.ts",
+      "line": 157,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: []",
+      "classification": "test-only",
+      "notes": "fixture or assertion constructing Rating-like objects"
+    },
+    {
+      "file": "packages/core/src/schemas/manager.ts",
+      "line": 102,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: z.array(ManagerRatingComponentSchema)",
+      "classification": "schema-type-only",
+      "notes": "type/schema declaration for Rating.components field"
+    },
+    {
+      "file": "packages/core/src/schemas/rating.ts",
+      "line": 40,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: z.array(RatingComponentSchema)",
+      "classification": "schema-type-only",
+      "notes": "type/schema declaration for Rating.components field"
+    },
+    {
+      "file": "packages/core/src/schemas/schemas.test.ts",
+      "line": 78,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: [{ signal: \"goals_per_90\", value: 1.5, weight: 0.6 }]",
+      "classification": "test-only",
+      "notes": "type/schema declaration for Rating.components field"
+    },
+    {
+      "file": "packages/core/src/synergy.golden.test.ts",
+      "line": 193,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: []",
+      "classification": "test-only",
+      "notes": "fixture or assertion constructing Rating-like objects"
+    },
+    {
+      "file": "packages/core/src/synergy.golden.test.ts",
+      "line": 217,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: []",
+      "classification": "test-only",
+      "notes": "fixture or assertion constructing Rating-like objects"
+    },
+    {
+      "file": "packages/core/test/fixtures/sim-fixtures.ts",
+      "line": 57,
+      "col": 5,
+      "kind": "object_literal_property",
+      "text": "components: []",
+      "classification": "test-only",
+      "notes": "fixture or assertion constructing Rating-like objects"
+    },
+    {
+      "file": "packages/core/test/fixtures/sim-fixtures.ts",
+      "line": 188,
+      "col": 7,
+      "kind": "object_literal_property",
+      "text": "components: []",
+      "classification": "test-only",
+      "notes": "fixture or assertion constructing Rating-like objects"
+    }
+  ],
+  "runtime_hits": [],
+  "verdict_static": "NO_RUNTIME_READS_OF_RATING_COMPONENTS_IN_WEB_OR_CORE_SOURCE"
+}

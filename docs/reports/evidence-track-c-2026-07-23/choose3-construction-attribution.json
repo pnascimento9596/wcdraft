@@ -1,0 +1,158 @@
+{
+  "schema_version": "choose3-construction-attribution-1.0.0",
+  "measurement_date": "2026-07-24",
+  "n_drafts_per_cell": 1024,
+  "bundle_compressed_sha256": "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d",
+  "bundle_decoded_bytes": 68380413,
+  "career_estimate_cards_excluded": 927,
+  "cells": [
+    {
+      "label": "all_time.squad_first.career",
+      "era": "all_time",
+      "basis": "career",
+      "flow": "squad_first",
+      "drafts": 1024,
+      "offers": 17408,
+      "pair_within_curve": {
+        "0": 0.11092601102941177,
+        "1": 0.4130859375,
+        "2": 0.7448874080882353,
+        "3": 0.8998161764705882
+      },
+      "share_of_tied_offers_with_any_estimate_card": {
+        "0": 0.30813050233039874,
+        "1": 0.3308302044221944,
+        "2": 0.3862882702244158,
+        "3": 0.41598569969356486
+      },
+      "construction": {
+        "mean_observed_spread": 7.730985753676471,
+        "mean_remaining_squad_pool_spread": 21.13723575367647,
+        "mean_observed_over_pool_ratio": 0.36129360070578603,
+        "offers_observed_le_pool_minus_2": 17408,
+        "offers_observed_near_pool": 0,
+        "offers_pool_zero_spread": 0,
+        "observed_spread_histogram": {
+          "0": 48,
+          "1": 243,
+          "2": 673,
+          "3": 1124,
+          "4": 1968,
+          "5": 1718,
+          "6": 1976,
+          "7": 1712,
+          "8": 1634,
+          "9": 1273,
+          "10": 1234,
+          "11": 974,
+          "12": 520,
+          "13": 480,
+          "14": 393,
+          "15": 561,
+          "16": 243,
+          "17": 343,
+          "18": 119,
+          "19": 35,
+          "20": 83,
+          "21": 45,
+          "23": 9
+        }
+      }
+    },
+    {
+      "label": "all_time.squad_first.current",
+      "era": "all_time",
+      "basis": "current",
+      "flow": "squad_first",
+      "drafts": 1024,
+      "offers": 17408,
+      "pair_within_curve": {
+        "0": 0.14453125,
+        "1": 0.4748391544117647,
+        "2": 0.8096277573529411,
+        "3": 0.9471507352941176
+      },
+      "share_of_tied_offers_with_any_estimate_card": {
+        "0": 0,
+        "1": 0.00024195499637067505,
+        "2": 0.00014190435646374344,
+        "3": 0.00012130033964095099
+      },
+      "construction": {
+        "mean_observed_spread": 5.921702665441177,
+        "mean_remaining_squad_pool_spread": 18.682904411764707,
+        "mean_observed_over_pool_ratio": 0.3187760831029894,
+        "offers_observed_le_pool_minus_2": 17408,
+        "offers_observed_near_pool": 0,
+        "offers_pool_zero_spread": 0,
+        "observed_spread_histogram": {
+          "0": 47,
+          "1": 305,
+          "2": 920,
+          "3": 1619,
+          "4": 2775,
+          "5": 2552,
+          "6": 2680,
+          "7": 2425,
+          "8": 1366,
+          "9": 1185,
+          "10": 597,
+          "11": 374,
+          "12": 111,
+          "13": 294,
+          "14": 74,
+          "15": 65,
+          "16": 8,
+          "18": 11
+        }
+      }
+    },
+    {
+      "label": "all_time.squad_first.career.pool_exclude_career_estimates",
+      "era": "all_time",
+      "basis": "career",
+      "flow": "squad_first",
+      "drafts": 1024,
+      "offers": 17408,
+      "pair_within_curve": {
+        "0": 0.14200367647058823,
+        "1": 0.5071231617647058,
+        "2": 0.8367991727941176,
+        "3": 0.9517463235294118
+      },
+      "share_of_tied_offers_with_any_estimate_card": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0
+      },
+      "construction": {
+        "mean_observed_spread": 5.607479319852941,
+        "mean_remaining_squad_pool_spread": 18.02211626838235,
+        "mean_observed_over_pool_ratio": 0.3152206068162544,
+        "offers_observed_le_pool_minus_2": 17402,
+        "offers_observed_near_pool": 6,
+        "offers_pool_zero_spread": 0,
+        "observed_spread_histogram": {
+          "0": 62,
+          "1": 366,
+          "2": 1023,
+          "3": 1779,
+          "4": 2985,
+          "5": 2667,
+          "6": 2985,
+          "7": 1891,
+          "8": 1390,
+          "9": 1297,
+          "10": 470,
+          "11": 220,
+          "12": 91,
+          "13": 127,
+          "14": 41,
+          "15": 10,
+          "16": 4
+        }
+      }
+    }
+  ]
+}

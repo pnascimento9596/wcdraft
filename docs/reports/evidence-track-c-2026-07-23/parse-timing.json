@@ -1,0 +1,57 @@
+{
+  "host": {
+    "with_components_ms": {
+      "median_ms": 452.463792,
+      "samples_ms": [
+        452.463792,
+        581.0729170000002,
+        394.79279199999974,
+        1227.3654999999999,
+        705.4804160000003,
+        356.5335839999998,
+        267.8048749999998
+      ]
+    },
+    "without_components_ms": {
+      "median_ms": 121.4858750000003,
+      "samples_ms": [
+        88.93104099999982,
+        172.34858299999996,
+        137.2044590000005,
+        382.11904200000026,
+        121.4858750000003,
+        73.15929199999937,
+        74.91558299999997
+      ]
+    },
+    "delta_ms": 330.9779169999997
+  },
+  "throttled_proxy": {
+    "with_components_ms": {
+      "median_ms": 995.2167090000003,
+      "samples_ms": [
+        757.2967090000002,
+        495.550874999999,
+        1098.315584,
+        995.2167090000003,
+        1265.8936660000018
+      ],
+      "method": "3 busy ESM worker threads contending for CPU (proxy mid-tier thermal throttle; not a real mobile SoC profile)"
+    },
+    "without_components_ms": {
+      "median_ms": 156.93079200000102,
+      "samples_ms": [
+        75.488209000001,
+        132.9109580000004,
+        338.59112500000083,
+        156.93079200000102,
+        223.23691700000018
+      ],
+      "method": "3 busy ESM worker threads contending for CPU (proxy mid-tier thermal throttle; not a real mobile SoC profile)"
+    },
+    "delta_ms": 838.2859169999992,
+    "note": "3 busy ESM worker threads contending for CPU (proxy mid-tier thermal throttle; not a real mobile SoC profile)"
+  },
+  "decoded_with": 68380413,
+  "decoded_without": 17744663
+}
