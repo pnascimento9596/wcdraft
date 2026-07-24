@@ -32,7 +32,7 @@ permissions:
 
 jobs:
   pack:
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}

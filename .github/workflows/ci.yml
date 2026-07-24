@@ -31,7 +31,7 @@ concurrency:
 jobs:
   changes:
     name: changes · path detector
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     if: ${{ github.actor != 'dependabot[bot]' }}
     outputs:
       ci_config: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.ci_config }}
@@ -151,7 +151,7 @@ jobs:
 
   static:
     name: static · format · contracts
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     if: >-
       github.actor != 'dependabot[bot]' &&
       (github.event_name != 'workflow_dispatch' ||
@@ -226,7 +226,7 @@ jobs:
 
   verify:
     name: typecheck · lint · test · build
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
     env:
@@ -297,7 +297,7 @@ jobs:
 
   golden:
     name: golden RNG determinism
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
     env:
@@ -347,7 +347,7 @@ jobs:
 
   realism:
     name: realism · asymmetric gate (N=2000 × 3 policies)
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.realism_inputs == 'true' }}
     env:
@@ -418,7 +418,7 @@ jobs:
 
   etl:
     name: ingest · identity-QA · determinism
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
     env:
@@ -508,7 +508,7 @@ jobs:
 
   db-rollback-check:
     name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs: changes
     # The destructive ephemeral-branch rollback-check is heavy (forks + tears
     # down a Neon branch) and only meaningful when @wcdraft/db, package
@@ -617,7 +617,7 @@ jobs:
 
   etl-rating:
     name: ETL rating · lint · golden determinism
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
     env:
@@ -663,7 +663,7 @@ jobs:
 
   gitleaks:
     name: secrets · incremental scan
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs: changes
     steps:
       - name: Checkout
@@ -684,7 +684,7 @@ jobs:
 
   aggregate:
     name: ${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, Linux, ARM64, wcdraft-linux-temp]
     needs:
       - changes
       - static
