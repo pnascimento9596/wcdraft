@@ -1,3 +1,8 @@
 self-hosted-runner:
   labels:
     - wcdraft
+    - wcdraft-linux
+    - macOS
+    - ARM64
+    - linux
+    - Linux

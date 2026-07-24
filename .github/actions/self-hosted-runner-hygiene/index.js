@@ -19,6 +19,7 @@ if (!isPost) {
       `PNPM_CONFIG_STORE_DIR=${join(cacheRoot, "pnpm-store")}`,
       `UV_CACHE_DIR=${join(cacheRoot, "uv")}`,
       `UV_PYTHON_INSTALL_DIR=${join(cacheRoot, "python")}`,
+      `TURBO_CACHE_DIR=${join(cacheRoot, "turbo")}`,
       "",
     ].join("\n"),
     { encoding: "utf8" },
