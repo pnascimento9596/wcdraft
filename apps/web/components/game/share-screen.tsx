@@ -402,17 +402,17 @@ function ShareBody({
       new Promise<void>((resolve) => {
         delayTimeout = window.setTimeout(resolve, ms);
       });
-    const signCurrentRun = async (exposeError: boolean): Promise<boolean> => {
+    const signCurrentRun = async (exposeError: boolean, force = false): Promise<boolean> => {
       setOgSign({ kind: "pending" });
       controller = new AbortController();
       try {
-        // Shared session sign path (prewarm-compatible). force on each retry
-        // attempt so soft-fail resilience still issues a new network call, while
-        // concurrent affordances still collapse onto one in-flight request.
+        // Shared session sign path: first attempt reuses prewarm success cache
+        // (≤1 successful sign per token). force only for manual Retry after a
+        // prior success or intentional re-sign; soft-fail null is not sticky.
         const body = await signRunOg(shareLink.token, {
           operation: "signed share preview",
           signal: controller.signal,
-          force: true,
+          force,
         });
         if (!body?.signed) {
           if (!cancelled && exposeError) {
@@ -454,7 +454,10 @@ function ShareBody({
         const delay = retryDelays[i]!;
         if (delay > 0) await wait(delay);
         if (cancelled) return;
-        const signed = await signCurrentRun(i === retryDelays.length - 1);
+        // Never force on the soft-fail loop: null results are not sticky, so a
+        // fresh network call is free after settle. force would bust a successful
+        // prewarm and violate ≤1 successful sign per token per session.
+        const signed = await signCurrentRun(i === retryDelays.length - 1, false);
         if (cancelled || signed) return;
       }
     })();

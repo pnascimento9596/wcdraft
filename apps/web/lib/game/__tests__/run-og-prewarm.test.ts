@@ -75,8 +75,8 @@ describe("run OG prewarm dedupe", () => {
       .mockResolvedValueOnce({ signed: "ok", challengeProof: null })
       .mockResolvedValueOnce({ signed: "again", challengeProof: null });
 
-    expect(await signRunOg("t3.retry", { force: true })).toBeNull();
-    expect(await signRunOg("t3.retry", { force: true })).toEqual({
+    expect(await signRunOg("t3.retry")).toBeNull();
+    expect(await signRunOg("t3.retry")).toEqual({
       signed: "ok",
       challengeProof: null,
     });
@@ -86,5 +86,16 @@ describe("run OG prewarm dedupe", () => {
       challengeProof: null,
     });
     expect(requestRunOgSign).toHaveBeenCalledTimes(2);
+  });
+
+  it("prewarm success then share sign reuses one network call (no force bust)", async () => {
+    requestRunOgSign.mockResolvedValue({ signed: "once", challengeProof: "p" });
+    const token = "t3.prewarm-then-share";
+    expect(await prewarmRunOgSign(token)).toEqual({ signed: "once", challengeProof: "p" });
+    expect(await signRunOg(token, { operation: "signed share preview" })).toEqual({
+      signed: "once",
+      challengeProof: "p",
+    });
+    expect(requestRunOgSign).toHaveBeenCalledTimes(1);
   });
 });

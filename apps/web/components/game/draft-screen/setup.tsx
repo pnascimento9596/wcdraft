@@ -21,11 +21,6 @@ import { useUnsafeMutationLatch } from "@/lib/unsafe-mutation";
 import { createNewRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
-import {
-  readLocalFlag,
-  SKIP_SPIN_ANIMATIONS_STORAGE_KEY,
-  writeLocalFlag,
-} from "@/lib/game/spin-skip-prefs";
 import s from "../game.module.css";
 
 // ─── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
@@ -82,8 +77,6 @@ function DraftSetupDisclosure({
   onDraftFlow,
   ratingBasis,
   onRatingBasis,
-  skipSpinAnimations,
-  onSkipSpinAnimations,
   disabled,
 }: {
   lane: DraftLane;
@@ -95,16 +88,13 @@ function DraftSetupDisclosure({
   onDraftFlow: (f: DraftFlow) => void;
   ratingBasis: RatingBasis;
   onRatingBasis: (b: RatingBasis) => void;
-  /** Local UI preference only — never a token/config axis. */
-  skipSpinAnimations: boolean;
-  onSkipSpinAnimations: (value: boolean) => void;
   disabled: boolean;
 }) {
   // Owner note: the setup axes must be visible on arrival. The control still
   // collapses on demand, but it no longer hides the play type / Era / Draft
   // mode / Rating basis choices by default on mobile.
   const [open, setOpen] = useState(true);
-  // Summary mirrors every visible setup axis (presentation prefs omitted).
+  // Summary mirrors every visible setup axis.
   const summaryParts = [
     ...(rankedCapable ? [lane === "ranked" ? "Ranked" : "Casual"] : []),
     `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]}`,
@@ -214,20 +204,6 @@ function DraftSetupDisclosure({
                 : "Career ratings use each card's whole-career peak."}
             </p>
           </div>
-          <div className={s.setupAxis} data-setup-axis="skip-spin">
-            <span className={s.setupAxisLabel}>Animations</span>
-            <div className={s.setupSeg} role="group" aria-label="Skip spin animations">
-              <button
-                type="button"
-                className={`${s.setupSegBtn} ${skipSpinAnimations ? s.setupSegBtnActive : ""}`}
-                aria-pressed={skipSpinAnimations}
-                disabled={disabled}
-                onClick={() => onSkipSpinAnimations(!skipSpinAnimations)}
-              >
-                Skip spin animations
-              </button>
-            </div>
-          </div>
         </div>
       ) : null}
     </div>
@@ -262,17 +238,7 @@ export function FormationSelect({
   const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
   const [draftFlow, setDraftFlow] = useState<DraftFlow>("squad_first");
   const [ratingBasis, setRatingBasis] = useState<RatingBasis>("career");
-  const [skipSpinAnimations, setSkipSpinAnimations] = useState(false);
   const mountedRef = useRef(true);
-
-  useEffect(() => {
-    setSkipSpinAnimations(readLocalFlag(SKIP_SPIN_ANIMATIONS_STORAGE_KEY));
-  }, []);
-
-  const onSkipSpinAnimations = useCallback((value: boolean) => {
-    setSkipSpinAnimations(value);
-    writeLocalFlag(SKIP_SPIN_ANIMATIONS_STORAGE_KEY, value);
-  }, []);
   const requestSequenceRef = useRef(0);
   const activeRequestRef = useRef<AbortController | null>(null);
 
@@ -433,8 +399,6 @@ export function FormationSelect({
           onDraftFlow={setDraftFlow}
           ratingBasis={ratingBasis}
           onRatingBasis={setRatingBasis}
-          skipSpinAnimations={skipSpinAnimations}
-          onSkipSpinAnimations={onSkipSpinAnimations}
           disabled={locked}
         />
         <div className={s.formationGrid}>
