@@ -174,9 +174,11 @@ describe("split kinds: no cross-starvation + aggregate exposure", () => {
       expect(["og-sign-ip-1m", "expensive-verify-ip-1m"]).toContain(denied.deniedKind);
     }
     expect(
-      (await createDbRunOgSignRateLimiter({ db, now: () => BASE, random: neverSweep }).checkSign({
-        ip: "198.51.100.99",
-      })).allowed,
+      (
+        await createDbRunOgSignRateLimiter({ db, now: () => BASE, random: neverSweep }).checkSign({
+          ip: "198.51.100.99",
+        })
+      ).allowed,
     ).toBe(true);
   });
 });

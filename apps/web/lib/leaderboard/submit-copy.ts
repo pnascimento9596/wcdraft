@@ -90,7 +90,6 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
     message: "Rate limiting is temporarily unavailable. Wait a moment and try again.",
   },
   BAD_ATTEMPT: {
-
     title: "Not open",
     message: "That lane isn't open for submissions.",
   },

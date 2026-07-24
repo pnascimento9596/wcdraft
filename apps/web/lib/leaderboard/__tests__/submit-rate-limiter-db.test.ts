@@ -77,7 +77,11 @@ describe("caps and window math", () => {
     const denied = await limiter.checkSubmit(ctx());
     // Hourly bucket is fresh (count 1); the DAILY bucket denies → Retry-After
     // is the remainder of the day window: 20 hours.
-    expect(denied).toEqual({ allowed: false, reason: "capped", retryAfterSeconds: (DAY - 4 * HOUR) / 1000 });
+    expect(denied).toEqual({
+      allowed: false,
+      reason: "capped",
+      retryAfterSeconds: (DAY - 4 * HOUR) / 1000,
+    });
   });
 
   it("per-IP hourly: 30 allowed across many sessions, 31st session denied", async () => {

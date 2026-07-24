@@ -1552,7 +1552,8 @@ describe("rate-limit seam (step 6: after cheap preflight, before replay)", () =>
       makeReq({ body: validBody({ claimed_score: 999_999 }) }),
       makeDeps({
         rateLimiter: {
-          checkSubmit: () => Promise.resolve({ allowed: false, reason: "capped", retryAfterSeconds: 42 }),
+          checkSubmit: () =>
+            Promise.resolve({ allowed: false, reason: "capped", retryAfterSeconds: 42 }),
         },
       }),
     );
