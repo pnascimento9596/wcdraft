@@ -627,9 +627,9 @@ function metricFailures(metric: FitMetric): readonly string[] {
         `${prefix}: expected ${expectedColumns.toString()} formation columns, saw ${String(metric.formationColumns)}`,
       );
     }
-    if (metric.requiredTargetCount !== 20) {
+    if (metric.requiredTargetCount !== 21) {
       failures.push(
-        `${prefix}: expected setup toggle, 10 setup choices, 8 formations, and dock action; saw ${metric.requiredTargetCount.toString()} targets`,
+        `${prefix}: expected setup toggle, 11 setup choices, 8 formations, and dock action; saw ${metric.requiredTargetCount.toString()} targets`,
       );
     }
     if (metric.formationDotCount !== 80 || metric.formationGoalBoxCount !== 8) {

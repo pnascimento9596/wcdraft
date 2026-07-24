@@ -161,6 +161,7 @@
   color: var(--ink-200);
   font: inherit;
   font-size: var(--t-micro);
+  font-weight: var(--font-weight-medium);
   letter-spacing: var(--tracking-micro);
   text-transform: uppercase;
   cursor: pointer;

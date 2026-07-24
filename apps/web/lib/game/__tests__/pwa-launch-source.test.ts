@@ -43,7 +43,7 @@ describe("PWA launch hardening source guards", () => {
     expect(shareScreen).toContain(
       "buildShareView(resolved.gameData, resolved.record, resolved.scenario)",
     );
-    expect(shareScreen).toContain("requestRunOgSign(shareLink.token");
+    expect(shareScreen).toContain("signRunOg(shareLink.token");
     expect(runOgClient).toContain('fetch("/api/og/sign"');
     expect(shareScreen).not.toContain("initialSignedOg");
     expect(shareScreen).not.toContain("signedRunOgPayloadTokenHash");
@@ -54,7 +54,7 @@ describe("PWA launch hardening source guards", () => {
     expect(shareScreen).toContain("shareHref(shareLink.token, signedOg)");
     expect(runOgClient).toContain("boundedRequest(");
     expect(runOgClient).toContain("RUN_OG_SIGN_RESPONSE_MAX_BYTES");
-    expect(shareScreen).toContain("timeoutMs: OG_SIGN_BUDGET_MS");
+    expect(shareScreen).toContain('operation: "signed share preview"');
     expect(shareScreen).not.toContain("disabled={shareLinkPending}");
     expect(shareScreen).toContain('tabIndex={0} aria-label="Share caption"');
     expect(shareScreen).toContain("preview unavailable, link works");

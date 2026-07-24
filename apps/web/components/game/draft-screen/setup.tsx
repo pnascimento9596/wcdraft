@@ -219,26 +219,14 @@ function DraftSetupDisclosure({
             <div className={s.setupSeg} role="group" aria-label="Skip spin animations">
               <button
                 type="button"
-                className={`${s.setupSegBtn} ${!skipSpinAnimations ? s.setupSegBtnActive : ""}`}
-                aria-pressed={!skipSpinAnimations}
-                disabled={disabled}
-                onClick={() => onSkipSpinAnimations(false)}
-              >
-                Show spins
-              </button>
-              <button
-                type="button"
                 className={`${s.setupSegBtn} ${skipSpinAnimations ? s.setupSegBtnActive : ""}`}
                 aria-pressed={skipSpinAnimations}
                 disabled={disabled}
-                onClick={() => onSkipSpinAnimations(true)}
+                onClick={() => onSkipSpinAnimations(!skipSpinAnimations)}
               >
                 Skip spin animations
               </button>
             </div>
-            <p className={s.setupAxisNote}>
-              Presentation only. Does not change picks, seeds, or ranking.
-            </p>
           </div>
         </div>
       ) : null}
