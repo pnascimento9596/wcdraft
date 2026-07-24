@@ -1,0 +1,44 @@
+{
+  "runs": [
+    {
+      "name": "canary",
+      "exit": 0,
+      "log_tail": "\n RUN  v4.1.10 /private/tmp/wcdraft-evidence-track-c/packages/data\n\n \u2713 test/realism/strategic-pick-canary.golden.test.ts (1 test) 416ms\n     \u2713 first 5 strategicAutoDraft seeds in all 8 Career cells match byte-for-byte  415ms\n\n Test Files  1 passed (1)\n      Tests  1 passed (1)\n   Start at  22:47:56\n   Duration  877ms (transform 223ms, setup 0ms, import 375ms, tests 416ms, environment 0ms)\n\n"
+    },
+    {
+      "name": "core-golden",
+      "exit": 0,
+      "log_tail": "\n RUN  v4.1.10 /private/tmp/wcdraft-evidence-track-c/packages/core\n\n \u2713 src/rng.golden.test.ts (3 tests) 2ms\n \u2713 src/narrative.golden.test.ts (66 tests) 24ms\n\n Test Files  2 passed (2)\n      Tests  69 passed (69)\n   Start at  22:47:58\n   Duration  418ms (transform 461ms, setup 0ms, import 630ms, tests 27ms, environment 0ms)\n\n"
+    },
+    {
+      "name": "draft-golden",
+      "exit": 0,
+      "log_tail": "\n RUN  v4.1.10 /private/tmp/wcdraft-evidence-track-c/packages/core\n\n \u2713 src/position-compatibility.golden.test.ts (13 tests) 6ms\n \u2713 src/entity-resolution.golden.test.ts (1 test) 3ms\n \u2713 src/manager-identity.golden.test.ts (2 tests) 3ms\n \u2713 src/lock-on-pick.golden.test.ts (3 tests) 53ms\n \u2713 src/draft.golden.test.ts (23 tests) 231ms\n\n Test Files  5 passed (5)\n      Tests  42 passed (42)\n   Start at  22:47:58\n   Duration  617ms (transform 666ms, setup 0ms, import 1.09s, tests 296ms, environment 0ms)\n\n"
+    },
+    {
+      "name": "daily-golden",
+      "exit": 0,
+      "log_tail": "\n RUN  v4.1.10 /private/tmp/wcdraft-evidence-track-c/packages/data\n\n \u2713 test/daily-seed-salt-map.golden.test.ts (8 tests) 48108ms\n\n Test Files  1 passed (1)\n      Tests  8 passed (8)\n   Start at  22:48:00\n   Duration  48.56s (transform 235ms, setup 0ms, import 380ms, tests 48.11s, environment 0ms)\n\n"
+    },
+    {
+      "name": "data-golden",
+      "exit": 1,
+      "log_tail": "al minified JSON with parsed equality to readable JSON\n     \u2193 emits score-distribution.compact.json as canonical minified JSON with parsed equality to readable JSON\n     \u2193 emits daily-seed-salt-map.compact.json as canonical minified JSON with parsed equality to readable JSON\n     \u2193 manifest fingerprints match the on-disk bundle bytes (no manifest-vs-bundle skew)\n     \u2193 each bundle is within the committed brotli size budget\n     \u2193 tracked reports/compact-size.json matches the live measurement\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  test/compact-data.golden.test.ts > compact-data golden\nError: build-compact-data exited 1. stderr:\nbuild-compact-data: FATAL \u2014 ENOENT: no such file or directory, open '/private/tmp/wcdraft-evidence-track-c/etl/output/ratings.json'\nError: ENOENT: no such file or directory, open '/private/tmp/wcdraft-evidence-track-c/etl/output/ratings.json'\n    at async open (node:internal/fs/promises:639:25)\n    at async readFile (node:internal/fs/promises:1249:14)\n    at async readJson (file:///private/tmp/wcdraft-evidence-track-c/packages/data/scripts/build-compact-data.mjs:161:16)\n    at async Promise.all (index 5)\n    at async build (file:///private/tmp/wcdraft-evidence-track-c/packages/data/scripts/build-compact-data.mjs:678:7)\n\nstdout:\n\n \u276f readJson scripts/build-compact-data.mjs:161:16\n \u276f build scripts/build-compact-data.mjs:678:7\n \u276f test/compact-data.golden.test.ts:93:13\n     91|     });\n     92|     if (result.status !== 0) {\n     93|       throw new Error(\n       |             ^\n     94|         `build-compact-data exited ${result.status}. stderr:\\n${result\u2026\n     95|       );\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  16 skipped (16)\n   Start at  22:48:49\n   Duration  154ms (transform 15ms, setup 0ms, import 24ms, tests 54ms, environment 0ms)\n\nundefined\n/private/tmp/wcdraft-evidence-track-c/packages/data:\n[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run test/compact-data.golden.test.ts\n"
+    },
+    {
+      "name": "integrity",
+      "exit": 1,
+      "log_tail": "id rating_version values matching the manifest anchors 44ms\n     \u2713 carries complete career and current basis ratings for every card  774ms\n     \u2713 legacy ratings array is the career basis alias 45ms\n     \u2713 basis census locks match measured basis rows 3ms\n     \u2713 nation_by_card_id covers every player card 48ms\n     \u2713 every Team2026.squad_card_ids entry resolves to a card in the pool 11ms\n     \u2713 groups reference only teams that exist in the bundle 0ms\n     \u2713 attribution carries Fjelstul + Wikipedia 2026 sources, CC-BY-SA, and not-affiliated text 0ms\n     \u2713 rejects mock fallback signals \u2014 no card has a `0` masquerading as null appearances/caps 1ms\n       \u2713 every rating carries a boolean legend flag (required as of runtime-data-2.5.0) 45ms\n       \u2713 legend count matches the manifest census: 295 = 283 historical + 12 2026 1ms\n       \u2713 legend is source-derived, not an OVR threshold re-derivation 1ms\n       \u2713 an explicit legend boolean satisfies the required-field contract 0ms\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  test/compact-data.integrity.test.ts > compact-data integrity > every non-manual baseline_anchor_estimate row sits inside the overall estimate band [66, 73]\nTypeError: Cannot read properties of undefined (reading 'some')\n \u276f hasManualOverride test/compact-data.integrity.test.ts:81:25\n     79|   // realism-modern-norms.golden.test.ts.\n     80|   function hasManualOverride(r: RuntimeRating): boolean {\n     81|     return r.components.some((c) => c.signal === \"manual_rating_overri\u2026\n       |                         ^\n     82|   }\n     83|\n \u276f test/compact-data.integrity.test.ts:90:11\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 26 passed (27)\n   Start at  22:48:49\n   Duration  2.34s (transform 181ms, setup 0ms, import 307ms, tests 1.97s, environment 0ms)\n\nundefined\n/private/tmp/wcdraft-evidence-track-c/packages/data:\n[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run test/compact-data.integrity.test.ts\n"
+    },
+    {
+      "name": "integration",
+      "exit": 0,
+      "log_tail": "\n RUN  v4.1.10 /private/tmp/wcdraft-evidence-track-c/packages/data\n\n \u2713 test/era-presets.golden.test.ts (12 tests) 108ms\n \u2713 test/e2e-real-run.golden.test.ts (10 tests) 263ms\n\n Test Files  2 passed (2)\n      Tests  22 passed (22)\n   Start at  22:48:52\n   Duration  649ms (transform 350ms, setup 0ms, import 614ms, tests 371ms, environment 0ms)\n\n"
+    },
+    {
+      "name": "leaderboard",
+      "exit": 1,
+      "log_tail": "\n RUN  v4.1.10 /private/tmp/wcdraft-evidence-track-c/apps/web\n\n \u276f lib/leaderboard/__tests__/validate.golden.test.ts (0 test)\n\n\u23af\u23af\u23af\u23af\u23af\u23af Failed Suites 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  lib/leaderboard/__tests__/validate.golden.test.ts [ lib/leaderboard/__tests__/validate.golden.test.ts ]\nError: Cannot find package '@wcdraft/data/client' imported from /private/tmp/wcdraft-evidence-track-c/apps/web/lib/game/data.ts\n \u276f lib/game/data.ts:23:1\n     21|   type EraPresetId,\n     22| } from \"@wcdraft/core\";\n     23| import {\n       | ^\n     24|   boundedRequest,\n     25|   isRequestTimeoutError,\n \u276f lib/game/run-token.ts:68:1\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  no tests\n   Start at  22:48:53\n   Duration  272ms (transform 158ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)\n\nundefined\n/private/tmp/wcdraft-evidence-track-c/apps/web:\n[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command failed with exit code 1: vitest run lib/leaderboard/__tests__/validate.golden.test.ts\n"
+    }
+  ]
+}

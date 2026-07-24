@@ -4,6 +4,32 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Evidence Track C (measurement only): 2026-07-23 · base `a1beaaaaa2fe0377128d0b1434aa47d2bda5adca`.
+No product, rating, engine, schema, sim, or token change. Four units closed with committed
+instruments under `packages/data/scripts/measure-*.mts` and reports under
+`docs/reports/evidence-track-c-2026-07-23/`.
+
+- **C1 clustering:** re-ran `analyze-choose3-clustering.mts` (1.2.0). Career All-time Squad First
+  still **11.09% / 41.31% / 74.49%** at Δ0/≤1/≤2 (byte-match to 2026-07-17 artifact; pair-within ≤3
+  **89.98%**). Current rates match the 2026-07-18 basis-aware baseline
+  (**14.45% / 47.48% / 80.96%**). Estimate cards co-occur in ~31–39% of Career ties but
+  **pool-excluding all 927 Career estimates worsens** Δ≤2 to **83.68%**. Constructor extracts
+  mean observed spread **7.73** vs remaining-squad pool **21.14** (ratio **0.36**); every offer
+  left ≥2 OVR of pool separation on the table. Lever: offer construction first; do not invent
+  estimate separation via ratings.
+- **C2 components:** static AST — **0** runtime reads in `apps/web` + `packages/core`. Dynamic
+  strip: canary **zero pick flips**, Daily golden **PASS**. Decoded pool **−74.1%**, host parse
+  **−≥200 ms**, contended proxy **−~838 ms**. Preregistered bar (≥15% decoded or ≥100 ms throttled)
+  **PASS → PROCEED** (schema drop not executed in this lane). Offline integrity still probes
+  `components` for manual-override; rehome before drop.
+- **C3 duplication:** equal Career/Current field copies **~29.5 MB** decoded with components,
+  **~4.2 MB** without. **~86%** of duplication is `components`. Sequence **C2 before** any
+  Current delta-encoding Red lane.
+- **C4 q-003 residual:** ephemeral Neon branch off production; **1** ranked row fails structural
+  binding predicate (`4dc1df8e-…`, 2026-06-21, `attempt_id` NULL). **VALIDATE CONSTRAINT not safe**
+  without remediation. q-003 “ranked attempts deferred” corrected — issuance shipped Season 1 B1+B2.
+- **G1/V1:** not re-opened (already RETIRED 2026-07-17).
+
 Basis-aware offer tiering baseline: 2026-07-18 · **MEASURED, no rating movement**. Offer tiering
 operates on the display value of the **selected rating basis**. ENG-08 is unchanged: display values
 are permitted for offer tiering ONLY — never scoring, sim, or best-XI. Basis-aware tiering is an

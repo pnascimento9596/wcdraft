@@ -1,0 +1,26 @@
+{
+  "measurement_date": "2026-07-23",
+  "method": "read-only SELECT on Neon ephemeral branch forked from production primary",
+  "ephemeral_branch_name": "ws-f-rollback-97069-428",
+  "residual_definition": "mode='ranked' AND NOT (attempt_id AND user_id AND attempt_formation_id AND draft_order AND era AND rating_basis AND attempt_consumed_at all non-null)",
+  "residual_count": 1,
+  "ranked_total": 1,
+  "casual_total": 5,
+  "not_validated_constraints": [
+    "leaderboard_entries_ranked_attempt_chk",
+    "leaderboard_entries_ranked_attempt_binding_chk",
+    "leaderboard_entries_ranked_attempt_binding_fk"
+  ],
+  "residual_sample": {
+    "id": "4dc1df8e-530d-47c3-9364-5e6beea571a2",
+    "attempt_id": null,
+    "user_id": "e912451e-4fb6-4fa3-ba86-ddf7199ad826",
+    "attempt_formation_id": null,
+    "draft_order": "squad_first",
+    "era": "all_time",
+    "rating_basis": "career",
+    "attempt_consumed_at": null,
+    "created_at": "2026-06-21T21:17:55.346Z"
+  },
+  "verdict": "NON_ZERO — VALIDATE CONSTRAINT not safe without first remediating the 1 residual ranked row (pre-binding, attempt_id NULL)"
+}
