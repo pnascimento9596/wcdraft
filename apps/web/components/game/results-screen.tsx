@@ -74,6 +74,8 @@ import {
   type VerifiedFriendChallengeSetup,
 } from "@/lib/game/friend-challenge";
 import { ChallengeFriendButton } from "./challenge-friend-button";
+import { resultsPrimaryCta } from "@/lib/game/results-cta";
+import { prewarmRunOgSign } from "@/lib/game/run-og-prewarm";
 import s from "./game.module.css";
 
 // MemoryReveal renders only for blind-mode runs (see below). Lazy-load it so
@@ -500,6 +502,23 @@ function ResultsBody({
     setPendingEventFocus({ matchId, targetId: factualEventTargetId(matchId, eventId) });
   }
 
+  const isDaily = dailyDate !== null;
+  const primaryCta = resultsPrimaryCta({ isDaily });
+  const draftAgainClass =
+    primaryCta === "draft-again" ? "btn btn--primary" : "btn btn--ghost";
+  const shareClass =
+    primaryCta === "share" ? `btn btn--primary ${s.sharePrimary}` : `btn btn--ghost ${s.sharePrimary}`;
+
+  function prewarmShareSign() {
+    if (!linkRunValue) return;
+    try {
+      const token = encodeRunToken(record);
+      void prewarmRunOgSign(token);
+    } catch {
+      // Tokenization failure is handled on the share screen; never block results.
+    }
+  }
+
   return (
     <div className={s.results}>
       <ResultsAppBar />
@@ -552,6 +571,36 @@ function ResultsBody({
           )}
         </div>
       </header>
+
+      {/*
+        Action hierarchy (structural, never outcome-sentiment):
+          - Non-daily: Draft Again primary, Share secondary.
+          - Daily: Share primary (fresh run is unavailable/degraded), Draft Again secondary.
+        Share sits above the match list so the affordance is visible without
+        scrolling past recap + eight match cards. Static placement only —
+        sticky is rejected while the collision guard remains the arbiter.
+      */}
+      <div
+        className={s.resultsActions}
+        data-results-actions="early"
+        onPointerDownCapture={prewarmShareSign}
+        onFocusCapture={prewarmShareSign}
+      >
+        <Link href={draftAgainHref} className={draftAgainClass}>
+          Draft Again
+        </Link>
+        <Link
+          href={shareHref(linkRunValue)}
+          className={shareClass}
+          onMouseEnter={prewarmShareSign}
+        >
+          Share
+        </Link>
+        <ChallengeFriendButton record={record} className="btn btn--ghost" />
+        <Link href={historyHref()} className="btn btn--ghost">
+          View History
+        </Link>
+      </div>
 
       <div className={s.resultsProgressWrap}>
         <LocalProgressBand summary={progressSummary} compact />
@@ -627,62 +676,61 @@ function ResultsBody({
         </div>
       ) : null}
 
-      {/* ── Seed + actions ────────────────────────────────────────────── */}
+      {/* ── Seed + replay tools ─────────────────────────────────────────
+          Daily transparency: seed stays visible. Pin tooling and non-daily
+          seed collapse into a closed-by-default Replay tools disclosure. */}
       <section className={`${s.panel} ${s.seedPanel}`}>
-        <div className={s.seedRow}>
-          <span className={s.seedLabel}>Seed</span>
-          <code className={s.seedCode} title={summary.seed}>
-            {shortSeed(summary.seed)}
-          </code>
-          <button type="button" className={s.seedCopyButton} onClick={copyFullSeed}>
-            {seedCopied ? "Seed copied" : "Copy full seed"}
-          </button>
-          <span className={s.seedNote}>Replays are seed-locked, identical every time.</span>
-        </div>
-        <div className={s.pinRow}>
-          <button
-            type="button"
-            className={`btn btn--ghost ${s.pinButton}`}
-            onClick={togglePinned}
-            disabled={isReplayedFromToken}
-            aria-pressed={pinned}
-          >
-            {pinned ? "PINNED" : "PIN RUN"}
-          </button>
-          <span className={s.pinNote}>
-            {isReplayedFromToken
-              ? "Shared replays are not stored in local history."
-              : pinned
-                ? "This run stays past the recent-run cap."
-                : "Keep this run past the recent-run cap."}
-          </span>
-        </div>
-        {pinWarning ? (
-          <p className={s.pinWarning} role="status">
-            {pinWarning}
-          </p>
+        {isDaily ? (
+          <div className={s.seedRow} data-daily-seed="visible">
+            <span className={s.seedLabel}>Seed</span>
+            <code className={s.seedCode} title={summary.seed}>
+              {shortSeed(summary.seed)}
+            </code>
+            <button type="button" className={s.seedCopyButton} onClick={copyFullSeed}>
+              {seedCopied ? "Seed copied" : "Copy full seed"}
+            </button>
+            <span className={s.seedNote}>Replays are seed-locked, identical every time.</span>
+          </div>
         ) : null}
-        {sharePreview ? <SharePreview view={sharePreview} /> : null}
-        {/*
-          Action hierarchy (ws-results/history-share):
-            - PRIMARY: Draft Again — the only forward action. Always starts a
-              NEW run (new seed → spins → squad). The sim is deterministic,
-              so re-simulating this squad would be a no-op; we never offer it.
-            - SECONDARY: Share — preserves token across in-app navigation.
-            - SECONDARY: View History — recent local runs (cap 5).
-        */}
-        <div className={s.resultsActions}>
-          <Link href={draftAgainHref} className="btn btn--primary">
-            Draft Again
-          </Link>
-          <Link href={shareHref(linkRunValue)} className={`btn btn--primary ${s.sharePrimary}`}>
-            Share
-          </Link>
-          <ChallengeFriendButton record={record} />
-          <Link href={historyHref()} className="btn btn--ghost">
-            View History
-          </Link>
-        </div>
+        <details className={s.replayTools}>
+          <summary className={s.replayToolsSummary}>Replay tools</summary>
+          {!isDaily ? (
+            <div className={s.seedRow}>
+              <span className={s.seedLabel}>Seed</span>
+              <code className={s.seedCode} title={summary.seed}>
+                {shortSeed(summary.seed)}
+              </code>
+              <button type="button" className={s.seedCopyButton} onClick={copyFullSeed}>
+                {seedCopied ? "Seed copied" : "Copy full seed"}
+              </button>
+              <span className={s.seedNote}>Replays are seed-locked, identical every time.</span>
+            </div>
+          ) : null}
+          <div className={s.pinRow}>
+            <button
+              type="button"
+              className={`btn btn--ghost ${s.pinButton}`}
+              onClick={togglePinned}
+              disabled={isReplayedFromToken}
+              aria-pressed={pinned}
+            >
+              {pinned ? "PINNED" : "PIN RUN"}
+            </button>
+            <span className={s.pinNote}>
+              {isReplayedFromToken
+                ? "Shared replays are not stored in local history."
+                : pinned
+                  ? "This run stays past the recent-run cap."
+                  : "Keep this run past the recent-run cap."}
+            </span>
+          </div>
+          {pinWarning ? (
+            <p className={s.pinWarning} role="status">
+              {pinWarning}
+            </p>
+          ) : null}
+          {sharePreview ? <SharePreview view={sharePreview} /> : null}
+        </details>
       </section>
     </div>
   );

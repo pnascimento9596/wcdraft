@@ -41,7 +41,7 @@ import {
 import { fetchBoardPage } from "@/lib/leaderboard/client";
 import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
 import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
-import { requestRunOgSign } from "@/lib/game/run-og-client";
+import { signRunOg } from "@/lib/game/run-og-prewarm";
 import {
   loadScoreDistributionOnce,
   referenceStandingForRecord,
@@ -70,7 +70,6 @@ type OgSignState =
   | { kind: "ready"; signed: string; challengeProof: string | null }
   | { kind: "error"; message: string };
 
-const OG_SIGN_BUDGET_MS = 4_000;
 type ShareAction = "copy-caption" | "copy-link" | "native";
 
 export function ShareScreen() {
@@ -407,11 +406,13 @@ function ShareBody({
       setOgSign({ kind: "pending" });
       controller = new AbortController();
       try {
-        const body = await requestRunOgSign(shareLink.token, {
+        // Shared session sign path (prewarm-compatible). force on each retry
+        // attempt so soft-fail resilience still issues a new network call, while
+        // concurrent affordances still collapse onto one in-flight request.
+        const body = await signRunOg(shareLink.token, {
           operation: "signed share preview",
-          timeoutMs: OG_SIGN_BUDGET_MS,
-          safety: "safe-read",
           signal: controller.signal,
+          force: true,
         });
         if (!body?.signed) {
           if (!cancelled && exposeError) {

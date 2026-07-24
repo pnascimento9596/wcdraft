@@ -921,6 +921,12 @@
 .sharePrimary {
   composes: sharePrimary from "./game-styles/results.module.css";
 }
+.replayTools {
+  composes: replayTools from "./game-styles/results.module.css";
+}
+.replayToolsSummary {
+  composes: replayToolsSummary from "./game-styles/results.module.css";
+}
 .sharePreview {
   composes: sharePreview from "./game-styles/results.module.css";
 }

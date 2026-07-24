@@ -4,6 +4,19 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Product loop (Track A, 2026-07-23): spin skip unlocks after ~300ms of spinning (localStorage
+taught state + first-time dismissible hint + presentation-only "Skip spin animations" preference
+on Settings — never a token/config axis; kept off formation setup to preserve short-landscape
+one-screen fit). Results CTAs are structural (Daily → Share primary; else Draft Again primary)
+with share above the match list and pin/non-daily seed under closed Replay tools; Daily seed
+stays visible. OG sign prewarms on share intent with ≤1 successful request per run token per
+session (share-screen reuses prewarm cache; no force-bust on open); Challenge a friend uses
+Share's native-share + clipboard intent set. Home "Play Classic" targets `/play/draft`. Null
+streak renders "No streak yet"; spin settled tile labels synergy correctly. Simulation ceremony
+(A6) already shipped in #318 — no rework. No engine, RNG, token, schema, rating, or leaderboard
+canonicality changes. **Cross-track:** OG-sign prewarm is hard-deduped ≤1 success/token/session;
+Track B's `og-sign-ip-1m` (15) still accommodates share-open retries + intent prewarm.
+
 Request-boundary + ops hardening (Track B): 2026-07-23 · **no schema/rating/sim change**.
 Mutation bodies on leaderboard submit and ranked attempt use the shared streaming
 bounded-body helpers; CPU-expensive token re-derive paths use distinct rate-limit

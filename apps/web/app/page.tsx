@@ -82,7 +82,7 @@ export default async function HomePage() {
             <Link href="/play/daily" className="btn btn--primary btn--gold">
               Play today&apos;s draft
             </Link>
-            <Link href="/play" className="btn btn--ghost">
+            <Link href="/play/draft" className="btn btn--ghost">
               Play Classic
             </Link>
             <Link href="/how-to-play" className="btn btn--ghost">

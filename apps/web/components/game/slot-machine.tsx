@@ -265,7 +265,7 @@ export function SpinStage({
           <span className={s.spinTileValue}>{settled ? playerPoolCount : "—"}</span>
         </div>
         <div className={s.spinTile}>
-          <span className={s.spinTileLabel}>Strength</span>
+          <span className={s.spinTileLabel}>Synergy</span>
           <span className={s.spinTileValue}>
             {settled && synergyMultiplier !== null ? `${synergyMultiplier.toFixed(2)}×` : "—"}
           </span>

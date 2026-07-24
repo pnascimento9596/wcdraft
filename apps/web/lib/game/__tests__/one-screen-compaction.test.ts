@@ -79,7 +79,8 @@ describe("one-screen information contract", () => {
   it("keeps the demo, stat strip, and three actions after cutting redundant hero copy", () => {
     expect(homePage).toContain("<HeroSpinDemo />");
     expect(homePage).toContain('href="/play/daily"');
-    expect(homePage).toContain('href="/play"');
+    expect(homePage).toContain('href="/play/draft"');
+    expect(homePage).toContain("Play Classic");
     expect(homePage).toContain('href="/how-to-play"');
     expect(homePage).toContain('17 <span className="accent">picks</span>');
     expect(homePage).toContain("match run");
