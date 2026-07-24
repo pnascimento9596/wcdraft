@@ -180,7 +180,7 @@ describe("same-seed friend challenge contract", () => {
       {
         now: () => 0,
         getRateLimiter: () => ({
-          async checkSign() {
+          async check() {
             throw new Error("oversized body must fail before limiter");
           },
         }),
@@ -203,7 +203,7 @@ describe("same-seed friend challenge contract", () => {
       {
         now: () => 0,
         getRateLimiter: () => ({
-          async checkSign() {
+          async check() {
             rateChecks += 1;
             return { allowed: true as const };
           },

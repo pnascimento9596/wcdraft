@@ -363,6 +363,37 @@ describe("transport gates (before any pipeline work)", () => {
       makeDeps(),
     );
     expect(res.status).toBe(413);
+    expect((await errorOf(res)).error).toBe("BODY_TOO_LARGE");
+  });
+
+  it("missing content-length still rejects oversize via streaming bound (before full parse)", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        rawBody: JSON.stringify({ token: "x".repeat(MAX_SUBMIT_BODY_BYTES + 64) }),
+      }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(413);
+    expect((await errorOf(res)).error).toBe("BODY_TOO_LARGE");
+  });
+
+  it("admits a legal maximal envelope under the derived bound (not 413)", async () => {
+    // RUN_TOKEN_MAX_LEN ASCII token + max alias/name + enums — body gate only.
+    const { RUN_TOKEN_MAX_LEN } = await import("../../game/run-token");
+    const envelope = {
+      token: `t4.${"A".repeat(RUN_TOKEN_MAX_LEN - 3)}`,
+      claimed_score: 9_007_199_254_740_991,
+      draft_mode: "position_first",
+      display_alias: "x".repeat(20),
+      display_name: "y".repeat(20),
+      challenge: "season",
+      mode: "casual",
+    };
+    const rawBody = JSON.stringify(envelope);
+    expect(new TextEncoder().encode(rawBody).byteLength).toBeLessThanOrEqual(MAX_SUBMIT_BODY_BYTES);
+    const res = await handleLeaderboardSubmit(makeReq({ rawBody }), makeDeps());
+    expect(res.status).not.toBe(413);
+    expect((await errorOf(res)).error).not.toBe("BODY_TOO_LARGE");
   });
 
   it("malformed JSON → 400 INVALID_BODY", async () => {
@@ -1521,7 +1552,7 @@ describe("rate-limit seam (step 6: after cheap preflight, before replay)", () =>
       makeReq({ body: validBody({ claimed_score: 999_999 }) }),
       makeDeps({
         rateLimiter: {
-          checkSubmit: () => Promise.resolve({ allowed: false, retryAfterSeconds: 42 }),
+          checkSubmit: () => Promise.resolve({ allowed: false, reason: "capped", retryAfterSeconds: 42 }),
         },
       }),
     );
@@ -1612,7 +1643,7 @@ describe("U5 — auth_rate_limits-backed limiter end-to-end", () => {
     expect(await allRows()).toHaveLength(1);
   });
 
-  it("limiter-store failure → fail-closed 429 through the route, no row", async () => {
+  it("limiter-store failure → fail-closed 503 RATE_LIMIT_UNAVAILABLE through the route, no row", async () => {
     const opts = await pinnedSessionOpts();
     const broken = {
       execute: () => Promise.reject(new Error("neon down")),
@@ -1622,8 +1653,10 @@ describe("U5 — auth_rate_limits-backed limiter end-to-end", () => {
       rateLimiter: createDbSubmitRateLimiter({ db: broken, now: () => NOW, random: () => 1 }),
     });
     const res = await handleLeaderboardSubmit(makeReq(opts), deps);
-    expect(res.status).toBe(429);
-    expect((await errorOf(res)).error).toBe("RATE_LIMITED");
+    expect(res.status).toBe(503);
+    const body = await errorOf(res);
+    expect(body.error).toBe("RATE_LIMIT_UNAVAILABLE");
+    expect(body.correlation_id).toMatch(/^[0-9a-f-]{36}$/u);
     expect(res.headers.get("Retry-After")).toBe(String(STORE_ERROR_RETRY_AFTER_SECONDS));
     expect(await allRows()).toHaveLength(0);
   });

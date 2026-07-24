@@ -52,7 +52,7 @@ import { POST as runsClaimPost } from "@/app/api/runs/claim/route";
 import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "@/lib/auth/csrf";
 import { LogEmailSender } from "@/lib/auth/email";
 import { createSession, SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
-import { allowAllRunOgSignRateLimiter } from "../../game/run-og-sign-rate-limiter-db";
+import { allowAllExpensiveVerifyRateLimiter } from "../../game/expensive-verify-rate-limiter-db";
 import { testCookieSecret, setupTestDb } from "../../auth/__tests__/_test-db";
 import { hashPassword } from "../../auth/passwords";
 import { handleHealthGet } from "../../health/readiness";
@@ -781,7 +781,7 @@ describe("public route payload email sweep", () => {
         scenario: serverScenarioBundle(),
         seasonKey: GOLDEN.season_key,
       }),
-      getRateLimiter: () => allowAllRunOgSignRateLimiter,
+      getRateLimiter: () => allowAllExpensiveVerifyRateLimiter,
     };
     captures.push(
       routeCapture(

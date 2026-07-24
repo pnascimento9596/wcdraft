@@ -7,6 +7,9 @@ import { leaderboardGateResponse } from "@/lib/leaderboard/enabled";
 import { handleRankedAttemptPost } from "@/lib/leaderboard/ranked-attempt-route";
 import { currentSeasonKey } from "@/lib/leaderboard/server-data";
 
+/** DB statement_timeout (8s) fires before this platform kill. */
+export const maxDuration = 10;
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const gate = leaderboardGateResponse();
   if (gate) return gate;

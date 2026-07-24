@@ -37,6 +37,7 @@ import {
   type BoardEra,
   type BoardRatingBasis,
 } from "./config";
+import { internalErrorResponse } from "../http/request-error-log";
 import { LeaderboardGateError, requireReadIdentity } from "./identity-gate";
 import { isReadableLeaderboardSeasonId } from "./season";
 import {
@@ -271,8 +272,7 @@ export async function handleLeaderboardBoardGet(
     res.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=120");
     return res;
   } catch (err) {
-    console.error("[leaderboard] unexpected board error", err);
-    return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+    return internalErrorResponse("GET /api/leaderboard", err);
   }
 }
 
@@ -356,8 +356,7 @@ export async function handleLeaderboardMeGet(
     if (err instanceof LeaderboardGateError) {
       return NextResponse.json({ error: err.code, message: err.message }, { status: err.status });
     }
-    console.error("[leaderboard] unexpected me error", err);
-    return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+    return internalErrorResponse("GET /api/leaderboard/me", err);
   }
 }
 

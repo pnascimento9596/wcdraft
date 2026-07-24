@@ -20,7 +20,9 @@ import { sql } from "drizzle-orm";
  * Bucket families sharing the `auth_rate_limits` table. `email`/`ip` are the
  * F-2 magic-link buckets; the `lb-*` kinds are the F-4 U5 leaderboard-submit
  * buckets (plan §5.2 reuses this mechanism); `ranked-attempt-user-1h` caps new
- * competitive seeds; `og-sign-ip-1m` protects the dynamic OG signing route.
+ * competitive seeds; the `*-ip-1m` expensive-verify kinds protect CPU-heavy
+ * token re-derive routes (og-sign / challenge-verify / lineup) plus their
+ * cross-path aggregate `expensive-verify-ip-1m`.
  * Each window length gets its OWN kind: window floors of different lengths can
  * coincide (hour 0 of a day), so sharing a key across windows would
  * double-increment one row.
@@ -33,6 +35,9 @@ export type RateLimitBucketKind =
   | "lb-ip-1h"
   | "ranked-attempt-user-1h"
   | "og-sign-ip-1m"
+  | "challenge-verify-ip-1m"
+  | "lineup-ip-1m"
+  | "expensive-verify-ip-1m"
   | "password-email-15m"
   | "password-ip-15m"
   | "verification-session-15m";

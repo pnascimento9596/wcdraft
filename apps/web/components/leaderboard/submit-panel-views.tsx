@@ -319,11 +319,12 @@ function SubmitOutcome({
       <p className={`${s.outcomeTitle} ${s.outcomeTitleBad}`}>{phase.copy.title}</p>
       <p className={s.outcomeMsg}>{phase.copy.message}</p>
       {phase.nameHint !== null && <p className={s.outcomeMsg}>{phase.nameHint}</p>}
-      {phase.code === "RATE_LIMITED" && retryRemaining !== null && (
-        <p className={s.outcomeMsg} data-testid="retry-after">
-          Try again in {retryRemaining}s.
-        </p>
-      )}
+      {(phase.code === "RATE_LIMITED" || phase.code === "RATE_LIMIT_UNAVAILABLE") &&
+        retryRemaining !== null && (
+          <p className={s.outcomeMsg} data-testid="retry-after">
+            Try again in {retryRemaining}s.
+          </p>
+        )}
       {phase.code === "AUTH_REQUIRED" && (
         <Link href="/sign-in" className="btn btn--ghost">
           Sign in

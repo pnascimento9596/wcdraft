@@ -5,10 +5,11 @@ import { getValidationData } from "@/lib/leaderboard/server-data";
 import { verifyFriendChallengeForPlay } from "@/lib/game/friend-challenge-server";
 import { RUN_TOKEN_MAX_LEN } from "@/lib/game/run-token";
 import {
-  createDbRunOgSignRateLimiter,
-  RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS,
-  type RunOgSignRateLimiter,
-} from "@/lib/game/run-og-sign-rate-limiter-db";
+  EXPENSIVE_VERIFY_STORE_ERROR_RETRY_AFTER_SECONDS,
+  type ExpensiveVerifyRateLimitDecision,
+  type ExpensiveVerifyRateLimiter,
+} from "@/lib/game/expensive-verify-rate-limiter-db";
+import { createDbChallengeVerifyRateLimiter } from "@/lib/game/run-og-sign-rate-limiter-db";
 import {
   isLikelySignedFriendChallenge,
   readOgSigningSecret,
@@ -16,16 +17,23 @@ import {
 } from "@/lib/game/run-og-signing";
 import { readClientIp } from "@/lib/http/client-ip";
 import { readBoundedText } from "@/lib/http/read-bounded-text";
+import {
+  createRequestCorrelationId,
+  logRequestError,
+  rateLimitUnavailableResponse,
+} from "@/lib/http/request-error-log";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+/** DB statement_timeout (8s) fires before this platform kill. */
+export const maxDuration = 10;
 
 const MAX_BODY_BYTES = RUN_TOKEN_MAX_LEN + SIGNED_FRIEND_CHALLENGE_MAX_LEN + 256;
 const NO_STORE = { "Cache-Control": "no-store" } as const;
 
 export interface ChallengeVerifyRouteDeps {
   readonly now: () => number;
-  readonly getRateLimiter: () => RunOgSignRateLimiter;
+  readonly getRateLimiter: () => ExpensiveVerifyRateLimiter;
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -69,6 +77,13 @@ export async function handleChallengeVerifyPost(
 
   const decision = await checkRateLimit(deps, readClientIp(request));
   if (!decision.allowed) {
+    if (decision.reason === "store_unavailable") {
+      return rateLimitUnavailableResponse({
+        correlationId: decision.correlationId,
+        retryAfterSeconds: decision.retryAfterSeconds,
+        okFalse: true,
+      });
+    }
     return NextResponse.json(
       { ok: false, error: "RATE_LIMITED" },
       { status: 429, headers: { ...NO_STORE, "Retry-After": String(decision.retryAfterSeconds) } },
@@ -92,17 +107,30 @@ function defaultDeps(): ChallengeVerifyRouteDeps {
   const now = () => Date.now();
   return {
     now,
-    getRateLimiter: () => createDbRunOgSignRateLimiter({ db: getDb(), now, random: Math.random }),
+    getRateLimiter: () =>
+      createDbChallengeVerifyRateLimiter({ db: getDb(), now, random: Math.random }),
   };
 }
 
 async function checkRateLimit(
   deps: ChallengeVerifyRouteDeps,
   ip: string,
-): Promise<Awaited<ReturnType<RunOgSignRateLimiter["checkSign"]>>> {
+): Promise<ExpensiveVerifyRateLimitDecision> {
   try {
-    return await deps.getRateLimiter().checkSign({ ip });
-  } catch {
-    return { allowed: false, retryAfterSeconds: RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS };
+    return await deps.getRateLimiter().check({ ip });
+  } catch (err) {
+    const correlationId = createRequestCorrelationId();
+    logRequestError({
+      code: "RATE_LIMIT_UNAVAILABLE",
+      correlationId,
+      route: "POST /api/challenge/verify",
+      error: err,
+    });
+    return {
+      allowed: false,
+      reason: "store_unavailable",
+      retryAfterSeconds: EXPENSIVE_VERIFY_STORE_ERROR_RETRY_AFTER_SECONDS,
+      correlationId,
+    };
   }
 }

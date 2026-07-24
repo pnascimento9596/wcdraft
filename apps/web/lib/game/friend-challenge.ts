@@ -48,7 +48,14 @@ export type FriendChallengeVerifyResult =
   | { readonly ok: true; readonly challenge: VerifiedFriendChallengeSetup }
   | {
       readonly ok: false;
-      readonly error: "INVALID_CHALLENGE" | "DAILY_UNAVAILABLE" | "RATE_LIMITED" | "UNAVAILABLE";
+      readonly error:
+        | "INVALID_CHALLENGE"
+        | "DAILY_UNAVAILABLE"
+        | "RATE_LIMITED"
+        | "RATE_LIMIT_UNAVAILABLE"
+        | "UNAVAILABLE";
+      /** Present when the server sent Retry-After (cap or store fault). */
+      readonly retryAfterSeconds?: number;
     };
 
 export function parseFriendChallengeSearchParams(
@@ -130,19 +137,42 @@ export async function verifyFriendChallenge(
   } catch {
     return { ok: false, error: "UNAVAILABLE" };
   }
-  if (!result.response.ok) return { ok: false, error: readChallengeError(result.body) };
+  if (!result.response.ok) {
+    const error = readChallengeError(result.body);
+    const retryAfterSeconds = parseRetryAfterSeconds(result.response.headers.get("Retry-After"));
+    return {
+      ok: false,
+      error,
+      ...(retryAfterSeconds !== null ? { retryAfterSeconds } : {}),
+    };
+  }
   const challenge = parseVerifiedSetup(result.body);
   return challenge ? { ok: true, challenge } : { ok: false, error: "UNAVAILABLE" };
 }
 
 function readChallengeError(
   value: unknown,
-): "INVALID_CHALLENGE" | "DAILY_UNAVAILABLE" | "RATE_LIMITED" | "UNAVAILABLE" {
+):
+  | "INVALID_CHALLENGE"
+  | "DAILY_UNAVAILABLE"
+  | "RATE_LIMITED"
+  | "RATE_LIMIT_UNAVAILABLE"
+  | "UNAVAILABLE" {
   const error =
     value && typeof value === "object" ? (value as { error?: unknown }).error : undefined;
-  return error === "DAILY_UNAVAILABLE" || error === "RATE_LIMITED" || error === "INVALID_CHALLENGE"
+  return error === "DAILY_UNAVAILABLE" ||
+    error === "RATE_LIMITED" ||
+    error === "RATE_LIMIT_UNAVAILABLE" ||
+    error === "INVALID_CHALLENGE"
     ? error
     : "UNAVAILABLE";
+}
+
+function parseRetryAfterSeconds(header: string | null): number | null {
+  if (header === null) return null;
+  const n = Number(header);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return Math.ceil(n);
 }
 
 function parseVerifiedSetup(value: unknown): VerifiedFriendChallengeSetup | null {

@@ -26,6 +26,7 @@ import { buildShareView } from "../share-adapters";
 import {
   allowAllRunOgSignRateLimiter,
   createDbRunOgSignRateLimiter,
+  RUN_OG_SIGN_RATE_LIMIT,
   type RunOgSignRateLimiter,
 } from "../run-og-sign-rate-limiter-db";
 import {
@@ -903,9 +904,11 @@ describe("trusted run OG signing", () => {
       now: () => Date.now(),
       random: () => 1,
     });
+    // Path cap is 15/min (split from the historical shared 30); one over that is 429.
+    const attempts = RUN_OG_SIGN_RATE_LIMIT.maxCount + 1;
     let last: Response | null = null;
     try {
-      for (let i = 0; i < 31; i += 1) {
+      for (let i = 0; i < attempts; i += 1) {
         last = await handleRunOgSignPost(
           new Request("http://localhost/api/og/sign", {
             method: "POST",
@@ -938,7 +941,12 @@ describe("trusted run OG signing", () => {
     const denyIfCalled: RunOgSignRateLimiter = {
       async checkSign() {
         quotaCalls += 1;
-        return { allowed: false, retryAfterSeconds: 60 };
+        return {
+          allowed: false,
+          reason: "capped",
+          retryAfterSeconds: 60,
+          deniedKind: "og-sign-ip-1m",
+        };
       },
     };
     const request = () =>

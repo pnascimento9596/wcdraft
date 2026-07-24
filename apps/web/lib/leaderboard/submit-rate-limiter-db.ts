@@ -21,9 +21,10 @@
 //     hammered identity stops costing Neon after one query). Retry-After is
 //     the honest window remainder of THAT bucket.
 //   - Store errors FAIL CLOSED (plan is silent; a submit lost to a transient
-//     error is recoverable — an unbounded write path is not). The seam only
-//     speaks 429, so a store error denies with a short fixed Retry-After
-//     rather than surfacing as a 500.
+//     error is recoverable — an unbounded write path is not). The caller is
+//     told 503 RATE_LIMIT_UNAVAILABLE (honest server fault), never 429
+//     (which is reserved for a genuine cap). Retry-After is a short fixed
+//     value; a correlation id joins the structured log to the response.
 //   - Lazy sweep (plan §5.2: piggyback, no cron): after an ALLOWED decision,
 //     with probability 1/50, delete bucket rows older than 2× the longest
 //     window. Sweep failure never affects the decision.
@@ -31,6 +32,7 @@
 import type { Db } from "@wcdraft/db";
 
 import { consumeRateLimit, sweepOldRateLimits } from "../auth/rate-limit";
+import { createRequestCorrelationId, logRequestError } from "../http/request-error-log";
 import type {
   SubmitRateLimitContext,
   SubmitRateLimitDecision,
@@ -91,12 +93,27 @@ export function createDbSubmitRateLimiter(deps: DbSubmitRateLimiterDeps): Submit
           limitDeps,
         );
         if (!result.allowed) {
-          return { allowed: false, retryAfterSeconds: result.retryAfterSeconds ?? 1 };
+          return {
+            allowed: false,
+            reason: "capped",
+            retryAfterSeconds: result.retryAfterSeconds ?? 1,
+          };
         }
       }
     } catch (err) {
-      console.error("[leaderboard] rate-limit store error — failing CLOSED", err);
-      return { allowed: false, retryAfterSeconds: STORE_ERROR_RETRY_AFTER_SECONDS };
+      const correlationId = createRequestCorrelationId();
+      logRequestError({
+        code: "RATE_LIMIT_UNAVAILABLE",
+        correlationId,
+        route: "rate-limit:leaderboard-submit",
+        error: err,
+      });
+      return {
+        allowed: false,
+        reason: "store_unavailable",
+        retryAfterSeconds: STORE_ERROR_RETRY_AFTER_SECONDS,
+        correlationId,
+      };
     }
     // Decision is final (allowed) — the sweep can no longer affect it.
     if (random() < SWEEP_PROBABILITY) {

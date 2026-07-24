@@ -37,12 +37,16 @@ import { AuthError } from "../auth/errors";
 import { readRequestCookie } from "../auth/handler-helpers";
 import { SESSION_COOKIE_NAME, validateSessionCookie, type SessionDeps } from "../auth/sessions";
 import { BOOTSTRAP_CSRF_COOKIE_NAME, materializeBootstrapSession } from "../auth/bootstrap-csrf";
+import { createRequestCorrelationId, logRequestError } from "../http/request-error-log";
 import { SUBMIT_ERROR_HTTP_STATUS, type SubmitGateCode } from "./validate";
 
 export const RANKED_AUTH_REQUIRED_MESSAGE =
   "Sign in to post ranked runs. Casual posts anonymously and can be claimed later.";
 export const RANKED_VERIFICATION_REQUIRED_MESSAGE =
   "Verify your email to post ranked runs. Casual posts still work while verification is pending.";
+/** Public-stable; internal AuthError codes go to logs only (low-severity consistency). */
+export const SESSION_INVALID_PUBLIC_MESSAGE = "The session is not valid.";
+export const CSRF_FAILED_PUBLIC_MESSAGE = "The protected request could not be verified.";
 
 /** Resolved submitting identity. Both null = anonymous casual submission. */
 export interface SubmitIdentity {
@@ -123,9 +127,16 @@ export async function requireSubmitIdentity(
         freshSessionCookieValue = materialized.cookieValue;
       } catch (bootstrapError) {
         if (!(bootstrapError instanceof AuthError)) throw bootstrapError;
+        logRequestError({
+          code: "AUTH_REQUIRED",
+          correlationId: createRequestCorrelationId(),
+          route: "identity-gate:submit",
+          internalCode: err.code,
+          error: bootstrapError,
+        });
         const message = deps.requireAccount()
           ? RANKED_AUTH_REQUIRED_MESSAGE
-          : `session invalid (${err.code})`;
+          : SESSION_INVALID_PUBLIC_MESSAGE;
         throw new LeaderboardGateError("AUTH_REQUIRED", message);
       }
     } else {
@@ -146,7 +157,14 @@ export async function requireSubmitIdentity(
     });
   } catch (err) {
     if (err instanceof AuthError) {
-      throw new LeaderboardGateError("CSRF_FAILED", `csrf check failed (${err.code})`);
+      logRequestError({
+        code: "CSRF_FAILED",
+        correlationId: createRequestCorrelationId(),
+        route: "identity-gate:submit",
+        internalCode: err.code,
+        error: err,
+      });
+      throw new LeaderboardGateError("CSRF_FAILED", CSRF_FAILED_PUBLIC_MESSAGE);
     }
     throw err;
   }
@@ -203,7 +221,14 @@ export async function requireReadIdentity(
     };
   } catch (err) {
     if (err instanceof AuthError) {
-      throw new LeaderboardGateError("AUTH_REQUIRED", `session invalid (${err.code})`);
+      logRequestError({
+        code: "AUTH_REQUIRED",
+        correlationId: createRequestCorrelationId(),
+        route: "identity-gate:read",
+        internalCode: err.code,
+        error: err,
+      });
+      throw new LeaderboardGateError("AUTH_REQUIRED", SESSION_INVALID_PUBLIC_MESSAGE);
     }
     throw err;
   }

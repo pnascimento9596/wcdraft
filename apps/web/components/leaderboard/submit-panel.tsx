@@ -87,12 +87,13 @@ export function LeaderboardSubmitPanel({
     setRetryRemaining(null);
   }, [token, effectiveSubmitMode]);
 
-  // RATE_LIMITED: respect Retry-After with a live countdown; the submit
-  // button stays disabled until it elapses.
+  // RATE_LIMITED / RATE_LIMIT_UNAVAILABLE: respect Retry-After with a live
+  // countdown; the submit button stays disabled until it elapses. Store
+  // outages (503) must not allow immediate re-click storms.
   useEffect(() => {
     if (
       phase.kind === "rejected" &&
-      phase.code === "RATE_LIMITED" &&
+      (phase.code === "RATE_LIMITED" || phase.code === "RATE_LIMIT_UNAVAILABLE") &&
       phase.retryAfterSeconds !== null
     ) {
       setRetryRemaining(phase.retryAfterSeconds);
