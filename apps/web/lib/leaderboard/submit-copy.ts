@@ -10,7 +10,11 @@ import type { SubmitErrorCode } from "./validate";
 import type { DisplayNameRejection } from "./display-name";
 
 /** Transport-layer codes owned by the route file (not the pipeline). */
-export type SubmitTransportCode = "UNSUPPORTED_MEDIA_TYPE" | "BODY_TOO_LARGE" | "INTERNAL_ERROR";
+export type SubmitTransportCode =
+  | "UNSUPPORTED_MEDIA_TYPE"
+  | "BODY_TOO_LARGE"
+  | "RATE_LIMIT_UNAVAILABLE"
+  | "INTERNAL_ERROR";
 
 export type SubmitWireCode = SubmitErrorCode | SubmitTransportCode;
 
@@ -80,6 +84,10 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
   RATE_LIMITED: {
     title: "Too many submissions",
     message: "You've hit the submission limit for now.",
+  },
+  RATE_LIMIT_UNAVAILABLE: {
+    title: "Temporarily unavailable",
+    message: "Rate limiting is temporarily unavailable. Wait a moment and try again.",
   },
   BAD_ATTEMPT: {
     title: "Not open",

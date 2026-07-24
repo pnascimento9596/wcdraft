@@ -2,12 +2,11 @@ import { NextResponse, type NextRequest } from "next/server";
 import { leaderboardEntries, users, type Db } from "@wcdraft/db";
 import { sql } from "drizzle-orm";
 
-import {
-  RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS,
-  type RunOgSignRateLimiter,
-} from "../game/run-og-sign-rate-limiter-db";
+import type { ExpensiveVerifyRateLimiter } from "../game/expensive-verify-rate-limiter-db";
 import { RUN_TOKEN_MAX_LEN } from "../game/run-token";
 import { readClientIp } from "../http/client-ip";
+import { readBoundedText } from "../http/read-bounded-text";
+import { internalErrorResponse, rateLimitUnavailableResponse } from "../http/request-error-log";
 import {
   deriveAndCacheLineupInspector,
   readCachedLineupInspector,
@@ -24,13 +23,13 @@ export interface LineupRouteDeps {
   readonly db: Db;
   readonly now: () => number;
   readonly getValidationData: () => ValidationData;
-  readonly getRateLimiter: () => RunOgSignRateLimiter;
+  readonly getRateLimiter: () => ExpensiveVerifyRateLimiter;
 }
 
 export async function handleLeaderboardLineupGet(
   req: NextRequest,
   deps: LineupRouteDeps,
-): Promise<NextResponse<LeaderboardLineupWire>> {
+): Promise<NextResponse<LeaderboardLineupWire | Record<string, unknown>>> {
   try {
     const q = req.nextUrl.searchParams;
     const entryId = q.get("entry_id");
@@ -46,15 +45,14 @@ export async function handleLeaderboardLineupGet(
     }
     return resolveToken(req, entryToken, deps);
   } catch (err) {
-    console.error("[leaderboard] unexpected lineup inspector GET error", err);
-    return errorResponse("INTERNAL_ERROR", "The lineup could not be inspected.", 500);
+    return internalErrorResponse("GET /api/leaderboard/lineup", err);
   }
 }
 
 export async function handleLeaderboardLineupPost(
   request: Request,
   deps: LineupRouteDeps,
-): Promise<NextResponse<LeaderboardLineupWire>> {
+): Promise<NextResponse<LeaderboardLineupWire | Record<string, unknown>>> {
   try {
     const contentLength = Number(request.headers.get("content-length") ?? "0");
     if (Number.isFinite(contentLength) && contentLength > MAX_LINEUP_BODY_BYTES) {
@@ -82,8 +80,7 @@ export async function handleLeaderboardLineupPost(
     }
     return resolveToken(request, token, deps);
   } catch (err) {
-    console.error("[leaderboard] unexpected lineup inspector POST error", err);
-    return errorResponse("INTERNAL_ERROR", "The lineup could not be inspected.", 500);
+    return internalErrorResponse("POST /api/leaderboard/lineup", err);
   }
 }
 
@@ -91,15 +88,22 @@ async function resolveToken(
   request: Pick<Request, "headers">,
   token: string,
   deps: LineupRouteDeps,
-): Promise<NextResponse<LeaderboardLineupWire>> {
+): Promise<NextResponse<LeaderboardLineupWire | Record<string, unknown>>> {
   const data = deps.getValidationData();
   const cached = readCachedLineupInspector(token, data);
   if (cached) {
     return successResponse(cached.view, true);
   }
 
-  const decision = await checkRateLimit(deps, readClientIp(request));
+  const decision = await deps.getRateLimiter().check({ ip: readClientIp(request) });
   if (!decision.allowed) {
+    if (decision.reason === "store_unavailable") {
+      return rateLimitUnavailableResponse({
+        correlationId: decision.correlationId,
+        retryAfterSeconds: decision.retryAfterSeconds,
+        okFalse: true,
+      });
+    }
     return NextResponse.json(
       {
         ok: false,
@@ -131,21 +135,6 @@ async function visibleEntryTokenById(db: Db, entryId: string): Promise<string | 
      LIMIT 1
   `);
   return result.rows[0]?.token ?? null;
-}
-
-async function checkRateLimit(
-  deps: LineupRouteDeps,
-  ip: string,
-): Promise<Awaited<ReturnType<RunOgSignRateLimiter["checkSign"]>>> {
-  try {
-    return await deps.getRateLimiter().checkSign({ ip });
-  } catch (err) {
-    console.error("[leaderboard] lineup rate-limit unavailable - failing CLOSED", err);
-    return {
-      allowed: false,
-      retryAfterSeconds: RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS,
-    };
-  }
 }
 
 function successResponse(
@@ -196,37 +185,4 @@ function errorResponse(
   status: number,
 ): NextResponse<LeaderboardLineupWire> {
   return NextResponse.json({ ok: false, error, message }, { status, headers: NO_STORE });
-}
-
-async function readBoundedText(
-  request: Request,
-  maxBytes: number,
-): Promise<{ status: "ok"; value: string } | { status: "too_large" } | { status: "invalid" }> {
-  const body = request.body;
-  if (!body) return { status: "ok", value: "" };
-  const reader = body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  try {
-    for (;;) {
-      const next = await reader.read();
-      if (next.done) break;
-      total += next.value.byteLength;
-      if (total > maxBytes) return { status: "too_large" };
-      chunks.push(next.value);
-    }
-  } catch {
-    return { status: "invalid" };
-  }
-  return { status: "ok", value: new TextDecoder().decode(concat(chunks, total)) };
-}
-
-function concat(chunks: readonly Uint8Array[], total: number): Uint8Array {
-  const out = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    out.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return out;
 }

@@ -142,11 +142,20 @@ export function useDraftScreenLoader(
                   ? "This Daily challenge is outside the currently published coverage window."
                   : verified.error === "RATE_LIMITED"
                     ? "Friend challenge verification is busy. Try again shortly."
-                    : verified.error === "INVALID_CHALLENGE"
-                      ? "This friend challenge could not be verified. Ask for a fresh link."
-                      : "Friend challenge verification is unavailable right now.",
+                    : verified.error === "RATE_LIMIT_UNAVAILABLE"
+                      ? "Friend challenge verification is temporarily unavailable. Wait a moment and try again."
+                      : verified.error === "INVALID_CHALLENGE"
+                        ? "This friend challenge could not be verified. Ask for a fresh link."
+                        : "Friend challenge verification is unavailable right now.",
               runId: null,
-              retryable: verified.error === "RATE_LIMITED" || verified.error === "UNAVAILABLE",
+              // Manual Retry button only (no auto-retry loop here). Include
+              // UNAVAILABLE (timeouts) and RATE_LIMIT_UNAVAILABLE (store faults)
+              // so the user can try again after backing off; submit/OG clients
+              // still honor Retry-After and must not auto-storm on 503.
+              retryable:
+                verified.error === "RATE_LIMITED" ||
+                verified.error === "RATE_LIMIT_UNAVAILABLE" ||
+                verified.error === "UNAVAILABLE",
             });
             return;
           }

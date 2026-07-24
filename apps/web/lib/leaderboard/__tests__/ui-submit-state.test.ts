@@ -115,6 +115,21 @@ describe("outcomeFromResponse — every state maps 1:1 to a server response", ()
     expect(garbageHeader).toMatchObject({ kind: "rejected", retryAfterSeconds: null });
   });
 
+  it("RATE_LIMIT_UNAVAILABLE (503) also respects Retry-After so clients do not retry-storm", () => {
+    const withHeader = outcomeFromResponse(
+      503,
+      { error: "RATE_LIMIT_UNAVAILABLE", correlation_id: "00000000-0000-4000-8000-000000000099" },
+      "60",
+    );
+    expect(withHeader).toMatchObject({
+      kind: "rejected",
+      code: "RATE_LIMIT_UNAVAILABLE",
+      retryAfterSeconds: 60,
+    });
+    // Must not look like a free "try again immediately" success path.
+    expect(withHeader.kind).toBe("rejected");
+  });
+
   it("every route-producible code maps to rejected with its table copy", () => {
     for (const code of Object.keys(SUBMIT_ERROR_HTTP_STATUS) as SubmitErrorCode[]) {
       const p = outcomeFromResponse(SUBMIT_ERROR_HTTP_STATUS[code], { error: code }, null);

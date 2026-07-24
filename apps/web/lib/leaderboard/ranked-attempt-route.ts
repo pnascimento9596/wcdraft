@@ -9,14 +9,30 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Db } from "@wcdraft/db";
 import { z } from "zod";
 
+import {
+  BoundedBodyError,
+  boundedBodyErrorResponse,
+  requireJsonObject,
+} from "../http/bounded-body";
+import { internalErrorResponse, rateLimitUnavailableResponse } from "../http/request-error-log";
 import { isBoardDraftMode, isBoardDraftOrder, isBoardEra, isBoardRatingBasis } from "./config";
 import { LeaderboardGateError, requireSubmitIdentity } from "./identity-gate";
 import {
   createRankedAttempt,
   RankedAttemptRateLimitError,
+  RankedAttemptRateLimitUnavailableError,
   type CreateRankedAttemptDeps,
   type IssuedRankedAttempt,
 } from "./ranked-attempts";
+
+/**
+ * Ranked attempt body is a small config object (formation + 4 axes). Derivation:
+ *   formation_id ≤ 64 chars + draft_mode/order/era/rating_basis enums (~80)
+ *   + JSON envelope (~80) + UTF-8 headroom → well under 1 KiB legal max.
+ * Bound set to 4 KiB (dispatch 2–4 KiB band) so legitimate clients never 413
+ * while still rejecting multi-megabyte buffers before identity/DB work.
+ */
+export const MAX_RANKED_ATTEMPT_BODY_BYTES = 4 * 1024;
 
 export interface RankedAttemptRouteDeps {
   readonly db: Db;
@@ -56,21 +72,18 @@ export async function handleRankedAttemptPost(
   deps: RankedAttemptRouteDeps,
 ): Promise<NextResponse> {
   try {
-    const contentType = (req.headers.get("content-type") ?? "").toLowerCase();
-    if (!contentType.includes("application/json")) {
-      return NextResponse.json(
-        { error: "UNSUPPORTED_MEDIA_TYPE", message: "content-type must be application/json" },
-        { status: 415 },
-      );
+    let parsedObject: Record<string, unknown>;
+    try {
+      parsedObject = await requireJsonObject(req, { maxBytes: MAX_RANKED_ATTEMPT_BODY_BYTES });
+    } catch (err) {
+      if (err instanceof BoundedBodyError) {
+        const response = boundedBodyErrorResponse(err);
+        if (response) return response;
+      }
+      throw err;
     }
 
-    let parsed: unknown;
-    try {
-      parsed = await req.json();
-    } catch {
-      return invalidBody("body is not valid JSON");
-    }
-    const bodyResult = RankedAttemptBodySchema.safeParse(parsed);
+    const bodyResult = RankedAttemptBodySchema.safeParse(parsedObject);
     if (!bodyResult.success) return invalidBody("body must include ranked draft config");
     const body = bodyResult.data;
     if (!isBoardDraftMode(body.draft_mode)) {
@@ -118,6 +131,13 @@ export async function handleRankedAttemptPost(
     res.headers.set("Cache-Control", "no-store");
     return res;
   } catch (err) {
+    if (err instanceof RankedAttemptRateLimitUnavailableError) {
+      return rateLimitUnavailableResponse({
+        correlationId: err.correlationId,
+        retryAfterSeconds: err.retryAfterSeconds,
+        message: "Rate limiting is temporarily unavailable. Try again shortly.",
+      });
+    }
     if (err instanceof RankedAttemptRateLimitError) {
       const res = NextResponse.json(
         { error: "RATE_LIMITED", message: err.message },
@@ -139,8 +159,7 @@ export async function handleRankedAttemptPost(
         { status: err.status },
       );
     }
-    console.error("[leaderboard] unexpected ranked attempt error", err);
-    return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
+    return internalErrorResponse("POST /api/ranked/attempt", err);
   }
 }
 

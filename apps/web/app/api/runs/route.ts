@@ -58,6 +58,9 @@ const MAX_SUMMARY_TEXT_CHARS = 256;
 const MAX_SUMMARY_RECORD_CHARS = 32;
 const MAX_KEY_PICKS = 8;
 
+/** DB statement_timeout (8s) fires before this platform kill. */
+export const maxDuration = 10;
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const auth = await resolveAuth(req);

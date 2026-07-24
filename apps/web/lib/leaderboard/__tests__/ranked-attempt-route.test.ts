@@ -4,7 +4,11 @@ import { rankedAttempts, users } from "@wcdraft/db";
 
 import { createSession } from "../../auth/sessions";
 import { setupTestDb, testCookieSecret } from "../../auth/__tests__/_test-db";
-import { handleRankedAttemptPost, type RankedAttemptRouteDeps } from "../ranked-attempt-route";
+import {
+  handleRankedAttemptPost,
+  MAX_RANKED_ATTEMPT_BODY_BYTES,
+  type RankedAttemptRouteDeps,
+} from "../ranked-attempt-route";
 import {
   RANKED_ATTEMPT_RATE_LIMIT_STORE_RETRY_AFTER_SECONDS,
   RANKED_ATTEMPT_SWEEP_LIMIT,
@@ -53,26 +57,67 @@ async function accountReqOpts(): Promise<Record<string, string>> {
   };
 }
 
-function makeReq(opts: { headers?: Record<string, string>; body?: unknown } = {}): NextRequest {
+function makeReq(
+  opts: {
+    headers?: Record<string, string>;
+    body?: unknown;
+    rawBody?: string;
+    contentLength?: string;
+  } = {},
+): NextRequest {
+  const headers: Record<string, string> = {
+    "content-type": "application/json",
+    ...(opts.headers ?? {}),
+  };
+  if (opts.contentLength !== undefined) headers["content-length"] = opts.contentLength;
   return new NextRequest("http://localhost/api/ranked/attempt", {
     method: "POST",
-    headers: {
-      "content-type": "application/json",
-      ...(opts.headers ?? {}),
-    },
-    body: JSON.stringify(
-      opts.body ?? {
-        formation_id: "4-3-3",
-        draft_mode: "classic",
-        draft_order: "squad_first",
-        era: "all_time",
-        rating_basis: "career",
-      },
-    ),
+    headers,
+    body:
+      opts.rawBody ??
+      JSON.stringify(
+        opts.body ?? {
+          formation_id: "4-3-3",
+          draft_mode: "classic",
+          draft_order: "squad_first",
+          era: "all_time",
+          rating_basis: "career",
+        },
+      ),
   });
 }
 
 describe("POST /api/ranked/attempt", () => {
+  it("rejects oversize bodies before identity work (missing Content-Length)", async () => {
+    const res = await handleRankedAttemptPost(
+      makeReq({ rawBody: "x".repeat(MAX_RANKED_ATTEMPT_BODY_BYTES + 64) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(413);
+    expect(await res.json()).toMatchObject({ error: "BODY_TOO_LARGE" });
+  });
+
+  it("rejects oversize declared Content-Length before read", async () => {
+    const res = await handleRankedAttemptPost(
+      makeReq({ contentLength: String(MAX_RANKED_ATTEMPT_BODY_BYTES + 1) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(413);
+    expect(await res.json()).toMatchObject({ error: "BODY_TOO_LARGE" });
+  });
+
+  it("rejects lying understated Content-Length when the stream exceeds the bound", async () => {
+    const res = await handleRankedAttemptPost(
+      makeReq({
+        contentLength: "16",
+        rawBody: "x".repeat(MAX_RANKED_ATTEMPT_BODY_BYTES + 32),
+      }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(413);
+    expect(await res.json()).toMatchObject({ error: "BODY_TOO_LARGE" });
+  });
+
   it("requires an account-bound session and CSRF", async () => {
     const res = await handleRankedAttemptPost(makeReq(), makeDeps());
     expect(res.status).toBe(401);
@@ -343,7 +388,7 @@ describe("POST /api/ranked/attempt", () => {
     expect(await db.select().from(rankedAttempts)).toHaveLength(1);
   });
 
-  it("fails closed with typed 429 when the issuance limiter store errors", async () => {
+  it("fails closed with typed 503 RATE_LIMIT_UNAVAILABLE when the issuance limiter store errors", async () => {
     const headers = await accountReqOpts();
     const response = await handleRankedAttemptPost(
       makeReq({ headers }),
@@ -352,8 +397,10 @@ describe("POST /api/ranked/attempt", () => {
       }),
     );
 
-    expect(response.status).toBe(429);
-    expect(await response.json()).toMatchObject({ error: "RATE_LIMITED" });
+    expect(response.status).toBe(503);
+    const body = await response.json();
+    expect(body).toMatchObject({ error: "RATE_LIMIT_UNAVAILABLE" });
+    expect(body.correlation_id).toMatch(/^[0-9a-f-]{36}$/u);
     expect(response.headers.get("Retry-After")).toBe(
       String(RANKED_ATTEMPT_RATE_LIMIT_STORE_RETRY_AFTER_SECONDS),
     );

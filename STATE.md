@@ -4,6 +4,19 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Request-boundary + ops hardening (Track B): 2026-07-23 · **no schema/rating/sim change**.
+Mutation bodies on leaderboard submit and ranked attempt use the shared streaming
+bounded-body helpers; CPU-expensive token re-derive paths use distinct rate-limit
+kinds (`og-sign-ip-1m` 15, `challenge-verify-ip-1m` 8, `lineup-ip-1m` 7) plus aggregate
+`expensive-verify-ip-1m` 30 so total per-IP expensive work does not increase. Limiter
+store faults return **503 `RATE_LIMIT_UNAVAILABLE`** (not 429) with Retry-After +
+correlation id; clients respect Retry-After and do not auto-retry-storm on 503.
+Identity gate public messages scrub internal AuthError codes (low severity). Neon
+serverless pool sets connect/idle/`statement_timeout` (5s/10s/8s) with heavy-route
+`maxDuration = 10` so the DB timeout fires first. Evidence: package tests for db
+timeouts + web leaderboard/og/challenge/ranked/rate-limit suites (185 targeted
+tests green); runbook `docs/runbooks/db-timeouts.md`.
+
 Evidence Track C (measurement only): 2026-07-23 · base `a1beaaaaa2fe0377128d0b1434aa47d2bda5adca`.
 No product, rating, engine, schema, sim, or token change. Four units closed with committed
 instruments under `packages/data/scripts/measure-*.mts` and reports under

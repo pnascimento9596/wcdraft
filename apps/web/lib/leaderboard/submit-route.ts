@@ -25,14 +25,21 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { readClientIp } from "../http/client-ip";
+import {
+  BoundedBodyError,
+  boundedBodyErrorResponse,
+  requireJsonObject,
+} from "../http/bounded-body";
+import { rateLimitUnavailableResponse } from "../http/request-error-log";
 import { DAILY_CHALLENGE_KIND, utcDateString } from "../game/daily";
-import { decodeRunToken, tokenDraftConfig } from "../game/run-token";
+import { decodeRunToken, RUN_TOKEN_MAX_LEN, tokenDraftConfig } from "../game/run-token";
 import {
   clearBootstrapCsrfCookie,
   jsonError,
   setCsrfCookie,
   setSessionCookie,
 } from "../auth/handler-helpers";
+import { DISPLAY_NAME_MAX } from "./display-name";
 import {
   LeaderboardGateError,
   RANKED_AUTH_REQUIRED_MESSAGE,
@@ -62,9 +69,31 @@ import {
   type ValidationData,
 } from "./validate";
 
-/** Generous bound over the worst legitimate body: token ≤ 8192 chars + name
- *  + integer score + JSON envelope. Checked on declared AND actual size. */
-export const MAX_SUBMIT_BODY_BYTES = 16 * 1024;
+/**
+ * Streaming body ceiling for POST /api/leaderboard/submit.
+ *
+ * Derivation (bytes, not characters):
+ *   - RUN_TOKEN_MAX_LEN (8192) — hard cap on the token string. A maximal legal
+ *     `t4` body already packs 17 card IDs + manager ID + 6-anchor conjunction +
+ *     config axes + optional `mp`/`a` under URL-safe base64url inflation
+ *     *inside* this cap; the bound must never reject a legal maximal token.
+ *   - claimed_score digits (≤20) + mode/challenge enums (~48)
+ *   - display_alias + display_name: DISPLAY_NAME_MAX (20) × 4 UTF-8 bytes × 2
+ *     fields = 160
+ *   - JSON keys/punctuation/quotes for the submit envelope (~140)
+ *   - ~25% headroom for future optional fields without silent 413
+ *   = 8192 + 20 + 48 + 160 + 140 + ~2140 ≈ 10_700 → 11 KiB.
+ *
+ * Checked on declared Content-Length (header-only reject) AND on the streaming
+ * read (missing / understated Content-Length cannot buffer past this ceiling).
+ */
+export const MAX_SUBMIT_BODY_BYTES =
+  RUN_TOKEN_MAX_LEN +
+  20 + // claimed_score
+  48 + // enums
+  DISPLAY_NAME_MAX * 4 * 2 + // alias + name UTF-8 worst case
+  140 + // JSON envelope
+  2140; // headroom → 11264 (11 KiB)
 
 export interface SubmitRouteDeps {
   readonly db: Db;
@@ -163,31 +192,23 @@ export async function handleLeaderboardSubmit(
 ): Promise<NextResponse> {
   let resolvedIdentity: SubmitIdentity | null = null;
   try {
-    // 2 — content-type, then declared + actual size, before any JSON work.
-    const contentType = (req.headers.get("content-type") ?? "").toLowerCase();
-    if (!contentType.includes("application/json")) {
-      return transportError("UNSUPPORTED_MEDIA_TYPE", "content-type must be application/json");
-    }
-    const declared = Number(req.headers.get("content-length") ?? "0");
-    if (Number.isFinite(declared) && declared > MAX_SUBMIT_BODY_BYTES) {
-      return transportError("BODY_TOO_LARGE", `body exceeds ${MAX_SUBMIT_BODY_BYTES} bytes`);
-    }
-    const raw = await req.text();
-    // Byte length, not char count — multi-byte chars made `raw.length`
-    // under-count the actual wire size.
-    if (new TextEncoder().encode(raw).length > MAX_SUBMIT_BODY_BYTES) {
-      return transportError("BODY_TOO_LARGE", `body exceeds ${MAX_SUBMIT_BODY_BYTES} bytes`);
+    // 2 — content-type + streaming byte ceiling via shared bounded-body helper
+    // (header-only reject when Content-Length is over, then stream-capped read
+    // so a missing/understated Content-Length cannot buffer past the ceiling).
+    let parsedObject: Record<string, unknown>;
+    try {
+      parsedObject = await requireJsonObject(req, { maxBytes: MAX_SUBMIT_BODY_BYTES });
+    } catch (err) {
+      if (err instanceof BoundedBodyError) {
+        const response = boundedBodyErrorResponse(err);
+        if (response) return response;
+      }
+      throw err;
     }
 
     // 3 — JSON object shape + mode. Ranked is open only to account-bound
     // sessions; casual remains anonymous-capable.
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      return transportError("INVALID_BODY", "body is not valid JSON");
-    }
-    const bodyResult = SubmitBodySchema.safeParse(parsed);
+    const bodyResult = SubmitBodySchema.safeParse(parsedObject);
     if (!bodyResult.success) {
       const modeIssue = bodyResult.error.issues.some((issue) => issue.path[0] === "mode");
       return transportError(
@@ -225,6 +246,16 @@ export async function handleLeaderboardSubmit(
       ip: readClientIp(req),
     });
     if (!decision.allowed) {
+      if (decision.reason === "store_unavailable") {
+        return withIdentitySession(
+          rateLimitUnavailableResponse({
+            correlationId: decision.correlationId,
+            retryAfterSeconds: decision.retryAfterSeconds,
+            message: "Rate limiting is temporarily unavailable. Try again shortly.",
+          }),
+          identity,
+        );
+      }
       const res = NextResponse.json(
         { error: "RATE_LIMITED", message: "too many submissions" },
         { status: SUBMIT_ERROR_HTTP_STATUS.RATE_LIMITED },

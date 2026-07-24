@@ -122,8 +122,14 @@ export function outcomeFromResponse(
     code === "INVALID_NAME" && obj && typeof obj.name_reason === "string"
       ? (NAME_HINT[obj.name_reason as DisplayNameRejection] ?? null)
       : null;
+  // Both genuine caps (429 RATE_LIMITED) and store faults (503
+  // RATE_LIMIT_UNAVAILABLE) carry Retry-After. The UI countdown/backoff uses
+  // the same path so a store outage does not trigger an immediate retry storm.
   let retryAfterSeconds: number | null = null;
-  if (code === "RATE_LIMITED" && retryAfterHeader !== null) {
+  if (
+    (code === "RATE_LIMITED" || code === "RATE_LIMIT_UNAVAILABLE" || status === 503) &&
+    retryAfterHeader !== null
+  ) {
     const n = Number(retryAfterHeader);
     if (Number.isFinite(n) && n >= 0) retryAfterSeconds = Math.ceil(n);
   }

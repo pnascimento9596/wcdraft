@@ -52,7 +52,7 @@ describe("caps and window math", () => {
       expect((await limiter.checkSubmit(ctx())).allowed).toBe(true);
     }
     const denied = await limiter.checkSubmit(ctx());
-    expect(denied).toEqual({ allowed: false, retryAfterSeconds: 50 * 60 });
+    expect(denied).toEqual({ allowed: false, reason: "capped", retryAfterSeconds: 50 * 60 });
   });
 
   it("a new hour window resets the hourly cap", async () => {
@@ -77,7 +77,11 @@ describe("caps and window math", () => {
     const denied = await limiter.checkSubmit(ctx());
     // Hourly bucket is fresh (count 1); the DAILY bucket denies → Retry-After
     // is the remainder of the day window: 20 hours.
-    expect(denied).toEqual({ allowed: false, retryAfterSeconds: (DAY - 4 * HOUR) / 1000 });
+    expect(denied).toEqual({
+      allowed: false,
+      reason: "capped",
+      retryAfterSeconds: (DAY - 4 * HOUR) / 1000,
+    });
   });
 
   it("per-IP hourly: 30 allowed across many sessions, 31st session denied", async () => {
@@ -90,7 +94,7 @@ describe("caps and window math", () => {
       }
     }
     const denied = await limiter.checkSubmit(ctx({ sessionId: "sess-fresh" }));
-    expect(denied).toEqual({ allowed: false, retryAfterSeconds: HOUR / 1000 });
+    expect(denied).toEqual({ allowed: false, reason: "capped", retryAfterSeconds: HOUR / 1000 });
     // A different IP is NOT affected.
     const other = await limiter.checkSubmit(ctx({ sessionId: "sess-other", ip: "198.51.100.9" }));
     expect(other.allowed).toBe(true);
@@ -143,10 +147,15 @@ describe("fail-closed on store errors", () => {
     const broken = { execute: () => Promise.reject(new Error("neon down")) } as unknown as Db;
     const limiter = createDbSubmitRateLimiter({ db: broken, now: () => BASE, random: neverSweep });
     const decision = await limiter.checkSubmit(ctx());
-    expect(decision).toEqual({
+    expect(decision).toMatchObject({
       allowed: false,
+      reason: "store_unavailable",
       retryAfterSeconds: STORE_ERROR_RETRY_AFTER_SECONDS,
     });
+    if (decision.allowed || decision.reason !== "store_unavailable") {
+      throw new Error("expected store_unavailable decision");
+    }
+    expect(decision.correlationId).toMatch(/^[0-9a-f-]{36}$/u);
   });
 });
 

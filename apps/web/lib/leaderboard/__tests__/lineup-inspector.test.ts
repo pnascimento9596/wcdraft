@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { leaderboardEntries, users } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 
-import { allowAllRunOgSignRateLimiter } from "../../game/run-og-sign-rate-limiter-db";
+import { allowAllExpensiveVerifyRateLimiter } from "../../game/expensive-verify-rate-limiter-db";
 import { decodeRunToken, encodeRunToken, type RunTokenV3Body } from "../../game/run-token";
 import { verifyRunTokenForOg } from "../../game/run-og-server";
 import { setupTestDb } from "../../auth/__tests__/_test-db";
@@ -50,7 +50,7 @@ function deps() {
     db,
     now: () => Date.parse("2026-06-30T12:00:00.000Z"),
     getValidationData: () => validationData,
-    getRateLimiter: () => allowAllRunOgSignRateLimiter,
+    getRateLimiter: () => allowAllExpensiveVerifyRateLimiter,
   };
 }
 

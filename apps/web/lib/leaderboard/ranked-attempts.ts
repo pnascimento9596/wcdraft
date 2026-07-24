@@ -15,6 +15,7 @@ import {
 import { and, desc, eq, gt, isNotNull, isNull, sql } from "drizzle-orm";
 
 import { consumeRateLimit } from "../auth/rate-limit";
+import { createRequestCorrelationId, logRequestError } from "../http/request-error-log";
 import type { BoardDraftMode, BoardDraftOrder, BoardEra, BoardRatingBasis } from "./config";
 
 export const RANKED_ATTEMPT_TTL_MS = 60 * 60 * 1000;
@@ -63,6 +64,19 @@ export class RankedAttemptRateLimitError extends Error {
   }
 }
 
+/** Store fault — fail closed, but report as 503 not 429. */
+export class RankedAttemptRateLimitUnavailableError extends Error {
+  readonly retryAfterSeconds: number;
+  readonly correlationId: string;
+
+  constructor(retryAfterSeconds: number, correlationId: string) {
+    super("ranked attempt rate limiting is temporarily unavailable");
+    this.name = "RankedAttemptRateLimitUnavailableError";
+    this.retryAfterSeconds = retryAfterSeconds;
+    this.correlationId = correlationId;
+  }
+}
+
 export async function createRankedAttempt(
   db: Db,
   args: CreateRankedAttemptArgs,
@@ -95,8 +109,17 @@ export async function createRankedAttempt(
         { db: tx as Db, now: () => now.getTime() },
       );
     } catch (err) {
-      console.error("[leaderboard] ranked attempt rate-limit store error — failing CLOSED", err);
-      throw new RankedAttemptRateLimitError(RANKED_ATTEMPT_RATE_LIMIT_STORE_RETRY_AFTER_SECONDS);
+      const correlationId = createRequestCorrelationId();
+      logRequestError({
+        code: "RATE_LIMIT_UNAVAILABLE",
+        correlationId,
+        route: "rate-limit:ranked-attempt",
+        error: err,
+      });
+      throw new RankedAttemptRateLimitUnavailableError(
+        RANKED_ATTEMPT_RATE_LIMIT_STORE_RETRY_AFTER_SECONDS,
+        correlationId,
+      );
     }
     if (!limit.allowed) {
       throw new RankedAttemptRateLimitError(limit.retryAfterSeconds ?? 1);

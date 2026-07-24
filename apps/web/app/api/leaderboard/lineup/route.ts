@@ -4,7 +4,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getDb } from "@wcdraft/db";
 
-import { createDbRunOgSignRateLimiter } from "@/lib/game/run-og-sign-rate-limiter-db";
+import { createDbLineupRateLimiter } from "@/lib/game/run-og-sign-rate-limiter-db";
 import {
   handleLeaderboardLineupGet,
   handleLeaderboardLineupPost,
@@ -14,6 +14,8 @@ import { leaderboardGateResponse } from "@/lib/leaderboard/enabled";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+/** DB statement_timeout (8s) fires before this platform kill. */
+export const maxDuration = 10;
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gate = leaderboardGateResponse();
@@ -24,7 +26,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     now,
     getValidationData,
     getRateLimiter: () =>
-      createDbRunOgSignRateLimiter({
+      createDbLineupRateLimiter({
         db: getDb(),
         now,
         random: Math.random,
@@ -41,7 +43,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     now,
     getValidationData,
     getRateLimiter: () =>
-      createDbRunOgSignRateLimiter({
+      createDbLineupRateLimiter({
         db: getDb(),
         now,
         random: Math.random,

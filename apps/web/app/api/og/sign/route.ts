@@ -3,7 +3,6 @@ import { getDb } from "@wcdraft/db";
 
 import {
   createDbRunOgSignRateLimiter,
-  RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS,
   type RunOgSignRateLimiter,
 } from "@/lib/game/run-og-sign-rate-limiter-db";
 import { getValidationData } from "@/lib/leaderboard/server-data";
@@ -20,9 +19,20 @@ import {
 import { RUN_TOKEN_MAX_LEN } from "@/lib/game/run-token";
 import { readClientIp } from "@/lib/http/client-ip";
 import { readBoundedText } from "@/lib/http/read-bounded-text";
+import {
+  createRequestCorrelationId,
+  logRequestError,
+  rateLimitUnavailableResponse,
+} from "@/lib/http/request-error-log";
+import {
+  EXPENSIVE_VERIFY_STORE_ERROR_RETRY_AFTER_SECONDS,
+  type ExpensiveVerifyRateLimitDecision,
+} from "@/lib/game/expensive-verify-rate-limiter-db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+/** DB statement_timeout (8s) fires before this platform kill. */
+export const maxDuration = 10;
 
 const MAX_SIGN_BODY_BYTES = RUN_TOKEN_MAX_LEN + 512;
 const NO_STORE = { "Cache-Control": "no-store" } as const;
@@ -129,6 +139,13 @@ export async function handleRunOgSignPost(
 
   const decision = await checkRateLimit(deps, readClientIp(request));
   if (!decision.allowed) {
+    if (decision.reason === "store_unavailable") {
+      return rateLimitUnavailableResponse({
+        correlationId: decision.correlationId,
+        retryAfterSeconds: decision.retryAfterSeconds,
+        okFalse: true,
+      });
+    }
     return NextResponse.json(
       { ok: false, error: "RATE_LIMITED" },
       {
@@ -198,14 +215,22 @@ function defaultRunOgSignRouteDeps(): RunOgSignRouteDeps {
 async function checkRateLimit(
   deps: RunOgSignRouteDeps,
   ip: string,
-): Promise<Awaited<ReturnType<RunOgSignRateLimiter["checkSign"]>>> {
+): Promise<ExpensiveVerifyRateLimitDecision> {
   try {
     return await deps.getRateLimiter().checkSign({ ip });
   } catch (err) {
-    console.error("[run-og] sign rate-limit unavailable - failing CLOSED", err);
+    const correlationId = createRequestCorrelationId();
+    logRequestError({
+      code: "RATE_LIMIT_UNAVAILABLE",
+      correlationId,
+      route: "POST /api/og/sign",
+      error: err,
+    });
     return {
       allowed: false,
-      retryAfterSeconds: RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS,
+      reason: "store_unavailable",
+      retryAfterSeconds: EXPENSIVE_VERIFY_STORE_ERROR_RETRY_AFTER_SECONDS,
+      correlationId,
     };
   }
 }
