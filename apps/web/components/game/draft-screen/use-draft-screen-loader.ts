@@ -148,10 +148,14 @@ export function useDraftScreenLoader(
                         ? "This friend challenge could not be verified. Ask for a fresh link."
                         : "Friend challenge verification is unavailable right now.",
               runId: null,
-              // RATE_LIMITED may retry after Retry-After. Store faults (503) and
-              // generic UNAVAILABLE are NOT auto-retryable — immediate retry would
-              // amplify load against an already-failing limiter/DB.
-              retryable: verified.error === "RATE_LIMITED",
+              // Manual Retry button only (no auto-retry loop here). Include
+              // UNAVAILABLE (timeouts) and RATE_LIMIT_UNAVAILABLE (store faults)
+              // so the user can try again after backing off; submit/OG clients
+              // still honor Retry-After and must not auto-storm on 503.
+              retryable:
+                verified.error === "RATE_LIMITED" ||
+                verified.error === "RATE_LIMIT_UNAVAILABLE" ||
+                verified.error === "UNAVAILABLE",
             });
             return;
           }
