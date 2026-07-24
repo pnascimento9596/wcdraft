@@ -4,7 +4,7 @@
  * with/without Rating.components, Career vs Current duplication.
  */
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { brotliCompressSync, brotliDecompressSync, constants } from "node:zlib";
@@ -77,16 +77,6 @@ function utf8Bytes(value: unknown): number {
   return Buffer.byteLength(JSON.stringify(value), "utf8");
 }
 
-function brotliBytes(value: unknown): number {
-  const buf = Buffer.from(JSON.stringify(value), "utf8");
-  return brotliCompressSync(buf, {
-    params: {
-      [constants.BROTLI_PARAM_QUALITY]: 11,
-      [constants.BROTLI_PARAM_SIZE_HINT]: buf.length,
-    },
-  }).length;
-}
-
 function emptyFamilies(): Record<Family, number> {
   return {
     identity: 0,
@@ -113,8 +103,20 @@ function attributeObject(
   }
 }
 
-function stripComponents(bundle: any): any {
-  const clone = structuredClone(bundle);
+interface BundleRating {
+  components?: unknown;
+  basis_ratings?: { current?: { components?: unknown } & Record<string, unknown> };
+  [key: string]: unknown;
+}
+
+interface Bundle {
+  player_cards: Record<string, unknown>[];
+  ratings: BundleRating[];
+  [key: string]: unknown;
+}
+
+function stripComponents(bundle: Bundle): Bundle {
+  const clone = structuredClone(bundle) as Bundle;
   for (const r of clone.ratings) {
     delete r.components;
     if (r.basis_ratings?.current) delete r.basis_ratings.current.components;
@@ -133,25 +135,24 @@ function measureParse(raw: Buffer, runs: number): { median_ms: number; samples_m
   }
   const sorted = [...samples].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
-  const median =
-    sorted.length % 2 === 0 ? (sorted[mid - 1]! + sorted[mid]!) / 2 : sorted[mid]!;
+  const median = sorted.length % 2 === 0 ? (sorted[mid - 1]! + sorted[mid]!) / 2 : sorted[mid]!;
   return { median_ms: median, samples_ms: samples };
 }
 
 function main(): void {
   const compressed = readFileSync(BUNDLE);
   const raw = brotliDecompressSync(compressed);
-  const bundle = JSON.parse(raw.toString("utf8"));
+  const bundle = JSON.parse(raw.toString("utf8")) as Bundle;
 
   const career = emptyFamilies();
   const current = emptyFamilies();
   const playerFamilies = emptyFamilies();
   const otherTop: Record<string, number> = {};
 
-  for (const p of bundle.player_cards as Record<string, unknown>[]) {
+  for (const p of bundle.player_cards) {
     attributeObject(p, "player", playerFamilies);
   }
-  for (const r of bundle.ratings as any[]) {
+  for (const r of bundle.ratings) {
     attributeObject(r, "rating", career);
     if (r.basis_ratings?.current) {
       attributeObject(r.basis_ratings.current as Record<string, unknown>, "rating", current);
@@ -168,7 +169,10 @@ function main(): void {
   const withoutJson = Buffer.from(JSON.stringify(without), "utf8");
   // Re-encode wire: recompress full JSON (fair apples-to-apples)
   const withBr = brotliCompressSync(withJson, {
-    params: { [constants.BROTLI_PARAM_QUALITY]: 11, [constants.BROTLI_PARAM_SIZE_HINT]: withJson.length },
+    params: {
+      [constants.BROTLI_PARAM_QUALITY]: 11,
+      [constants.BROTLI_PARAM_SIZE_HINT]: withJson.length,
+    },
   });
   const withoutBr = brotliCompressSync(withoutJson, {
     params: {
@@ -185,8 +189,8 @@ function main(): void {
   let careerOnlyDecoded = 0;
   let currentOnlyDecoded = 0;
   const dupByFamily = emptyFamilies();
-  for (const r of bundle.ratings as any[]) {
-    const cur = r.basis_ratings?.current ?? {};
+  for (const r of bundle.ratings) {
+    const cur = (r.basis_ratings?.current ?? {}) as Record<string, unknown>;
     const keys = new Set([...Object.keys(r), ...Object.keys(cur)]);
     for (const k of keys) {
       if (k === "basis_ratings" || k === "basis_metadata") continue;
@@ -212,8 +216,8 @@ function main(): void {
   // Without components: recompute duplication excluding components keys
   let dupNoComp = 0;
   const dupByFamilyNoComp = emptyFamilies();
-  for (const r of without.ratings as any[]) {
-    const cur = r.basis_ratings?.current ?? {};
+  for (const r of without.ratings) {
+    const cur = (r.basis_ratings?.current ?? {}) as Record<string, unknown>;
     const keys = new Set([...Object.keys(r), ...Object.keys(cur)]);
     for (const k of keys) {
       if (k === "basis_ratings" || k === "basis_metadata" || k === "components") continue;
@@ -288,7 +292,11 @@ function main(): void {
           current_diverged_or_only_decoded_bytes: currentOnlyDecoded,
           by_family: dupByFamily,
           duplication_ratio_of_current_bytes:
-            dupDecoded / Math.max(1, Object.values(current).reduce((a, b) => a + b, 0)),
+            dupDecoded /
+            Math.max(
+              1,
+              Object.values(current).reduce((a, b) => a + b, 0),
+            ),
         },
         without_components: {
           duplicated_current_copy_decoded_bytes: dupNoComp,

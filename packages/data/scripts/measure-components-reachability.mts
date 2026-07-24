@@ -11,16 +11,14 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 const ROOTS = ["apps/web", "packages/core"].map((p) => path.join(ROOT, p));
 const EXT = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".mjs", ".cjs"]);
-const IGNORE_DIR = new Set([
-  "node_modules",
-  "dist",
-  ".next",
-  "coverage",
-  "generated",
-  "public",
-]);
+const IGNORE_DIR = new Set(["node_modules", "dist", ".next", "coverage", "generated", "public"]);
 
-type HitClass = "runtime" | "offline-etl-build" | "test-only" | "schema-type-only" | "unrelated-name";
+type HitClass =
+  | "runtime"
+  | "offline-etl-build"
+  | "test-only"
+  | "schema-type-only"
+  | "unrelated-name";
 
 interface Hit {
   file: string;
@@ -46,7 +44,7 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-function classify(file: string, text: string, kind: string): { classification: HitClass; notes: string } {
+function classify(file: string, text: string): { classification: HitClass; notes: string } {
   const rel = path.relative(ROOT, file);
   const isTest =
     /\.(test|spec)\./.test(rel) ||
@@ -71,8 +69,14 @@ function classify(file: string, text: string, kind: string): { classification: H
   ) {
     return { classification: "unrelated-name", notes: "path/import to UI components directory" };
   }
-  if (/ScoreComponent|score breakdown|Synergy components|three components/.test(text) && !/\.components\b/.test(text)) {
-    return { classification: "unrelated-name", notes: "local ScoreComponent or synergy narrative, not Rating.components" };
+  if (
+    /ScoreComponent|score breakdown|Synergy components|three components/.test(text) &&
+    !/\.components\b/.test(text)
+  ) {
+    return {
+      classification: "unrelated-name",
+      notes: "local ScoreComponent or synergy narrative, not Rating.components",
+    };
   }
   if (rel.includes("schemas/") || rel.includes("types/")) {
     return {
@@ -81,7 +85,10 @@ function classify(file: string, text: string, kind: string): { classification: H
     };
   }
   if (isTest) {
-    return { classification: "test-only", notes: "fixture or assertion constructing Rating-like objects" };
+    return {
+      classification: "test-only",
+      notes: "fixture or assertion constructing Rating-like objects",
+    };
   }
   if (rel.includes("scripts/") || rel.includes("build-compact") || rel.includes("etl")) {
     return { classification: "offline-etl-build", notes: "build/offline path" };
@@ -94,15 +101,9 @@ function lineOf(sf: ts.SourceFile, pos: number): { line: number; col: number } {
   return { line: lc.line + 1, col: lc.character + 1 };
 }
 
-function record(
-  hits: Hit[],
-  sf: ts.SourceFile,
-  node: ts.Node,
-  kind: string,
-  text: string,
-): void {
+function record(hits: Hit[], sf: ts.SourceFile, node: ts.Node, kind: string, text: string): void {
   const { line, col } = lineOf(sf, node.getStart(sf));
-  const { classification, notes } = classify(sf.fileName, text, kind);
+  const { classification, notes } = classify(sf.fileName, text);
   hits.push({
     file: path.relative(ROOT, sf.fileName),
     line,
@@ -118,7 +119,13 @@ function analyzeFile(file: string, hits: Hit[]): void {
   const source = fs.readFileSync(file, "utf8");
   // Fast path skip pure UI import noise files without "components" property patterns
   if (!source.includes("components")) return;
-  const sf = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, file.endsWith("tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+  const sf = ts.createSourceFile(
+    file,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    file.endsWith("tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
 
   function visit(node: ts.Node): void {
     // property access: x.components
@@ -134,7 +141,11 @@ function analyzeFile(file: string, hits: Hit[]): void {
       record(hits, sf, node, "element_access", node.getText(sf));
     }
     // destructuring: const { components } = x  or  { components: c }
-    if (ts.isBindingElement(node) && ts.isIdentifier(node.name) && node.name.text === "components") {
+    if (
+      ts.isBindingElement(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === "components"
+    ) {
       record(hits, sf, node, "destructure_binding", node.getText(sf));
     }
     if (

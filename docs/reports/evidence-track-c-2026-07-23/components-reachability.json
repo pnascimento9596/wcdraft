@@ -1,10 +1,7 @@
 {
   "schema_version": "components-reachability-1.0.0",
   "measurement_date": "2026-07-24",
-  "roots": [
-    "apps/web",
-    "packages/core"
-  ],
+  "roots": ["apps/web", "packages/core"],
   "files_scanned": 474,
   "total_hits_including_unrelated": 9,
   "by_classification": {

@@ -7,12 +7,12 @@
 
 ## One-line verdicts
 
-| Unit | Verdict |
-| ---- | ------- |
-| **C1** Offer clustering | **SEVERE residual; not fixable by estimate-card ratings alone.** Career Δ≤2 remains **74.49%** (unchanged). Current moved modestly after basis-tiering fix. Estimates appear in ~31–42% of Career ties but **pool-excluding the 927 estimate cards worsens** Δ≤2 to **83.68%**. Constructor extracts only **~36%** of remaining-squad OVR spread — **offer construction is the primary lever**; ratings cannot invent signal for estimates and do not address the measured mid-band density the constructor is selecting into. |
-| **C2** `Rating.components[]` | **PROCEED on size/parse bar; runtime sim/offer path does not read components.** Static: zero runtime reads in `apps/web` + `packages/core`. Dynamic: canary zero flips + Daily golden PASS with components stripped. Decoded pool −**74.1%**, host parse −**~200–331 ms**, contended proxy −**~838 ms** (bar was ≥15% decoded or ≥100 ms throttled). Offline integrity tests *do* read `components` (manual-override flag) — schema drop must rehome that check. |
-| **C3** Current-basis duplication | **Duplication is real and dominated by `components`.** Equal Career/Current field copies ≈ **29.5 MB** decoded with components, collapsing to ≈ **4.2 MB** without. **Sequence C2 before any delta-encoding Red lane** — otherwise C3 arithmetic is mostly components noise. Residual non-component duplication (identity + provenance) may still justify a later encoding lane after C2. |
-| **C4** q-003 residual rows | **NON-ZERO (1 ranked row).** `VALIDATE CONSTRAINT` is **not** safe without remediating `leaderboard_entries.id=4dc1df8e-…` (2026-06-21, `attempt_id` NULL, pre-binding). q-003 “server-issued ranked attempts deferred” is **stale** — issuance shipped in Season 1 (B1/B2); entry corrected. |
+| Unit                             | Verdict                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **C1** Offer clustering          | **SEVERE residual; not fixable by estimate-card ratings alone.** Career Δ≤2 remains **74.49%** (unchanged). Current moved modestly after basis-tiering fix. Estimates appear in ~31–42% of Career ties but **pool-excluding the 927 estimate cards worsens** Δ≤2 to **83.68%**. Constructor extracts only **~36%** of remaining-squad OVR spread — **offer construction is the primary lever**; ratings cannot invent signal for estimates and do not address the measured mid-band density the constructor is selecting into. |
+| **C2** `Rating.components[]`     | **PROCEED on size/parse bar; runtime sim/offer path does not read components.** Static: zero runtime reads in `apps/web` + `packages/core`. Dynamic: canary zero flips + Daily golden PASS with components stripped. Decoded pool −**74.1%**, host parse −**~200–331 ms**, contended proxy −**~838 ms** (bar was ≥15% decoded or ≥100 ms throttled). Offline integrity tests _do_ read `components` (manual-override flag) — schema drop must rehome that check.                                                               |
+| **C3** Current-basis duplication | **Duplication is real and dominated by `components`.** Equal Career/Current field copies ≈ **29.5 MB** decoded with components, collapsing to ≈ **4.2 MB** without. **Sequence C2 before any delta-encoding Red lane** — otherwise C3 arithmetic is mostly components noise. Residual non-component duplication (identity + provenance) may still justify a later encoding lane after C2.                                                                                                                                      |
+| **C4** q-003 residual rows       | **NON-ZERO (1 ranked row).** `VALIDATE CONSTRAINT` is **not** safe without remediating `leaderboard_entries.id=4dc1df8e-…` (2026-06-21, `attempt_id` NULL, pre-binding). q-003 “server-issued ranked attempts deferred” is **stale** — issuance shipped in Season 1 (B1/B2); entry corrected.                                                                                                                                                                                                                                  |
 
 ## Owner two-minute read (C1 decision)
 
@@ -24,13 +24,13 @@
 
 ## Artifacts
 
-| Path | Role |
-| ---- | ---- |
-| `C1-offer-clustering.md` + `choose3-clustering-remeasure.summary.json` + `choose3-construction-attribution.json` | Clustering remeasure + attribution |
-| `C2-components-reachability.md` + `components-reachability.json` + `bundle-field-attribution.json` + `c2b-dynamic.json` + `parse-timing.json` | Reachability, strip falsification, size/parse |
-| `C3-current-duplication.md` (+ shared attribution JSON) | Field-family duplication with/without components |
-| `C4-q003-residual.md` + `c4-residual-raw.json` | Production residual count (via ephemeral Neon branch) |
-| `packages/data/scripts/measure-*.mts` | Committed reproduction instruments |
+| Path                                                                                                                                          | Role                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `C1-offer-clustering.md` + `choose3-clustering-remeasure.summary.json` + `choose3-construction-attribution.json`                              | Clustering remeasure + attribution                    |
+| `C2-components-reachability.md` + `components-reachability.json` + `bundle-field-attribution.json` + `c2b-dynamic.json` + `parse-timing.json` | Reachability, strip falsification, size/parse         |
+| `C3-current-duplication.md` (+ shared attribution JSON)                                                                                       | Field-family duplication with/without components      |
+| `C4-q003-residual.md` + `c4-residual-raw.json`                                                                                                | Production residual count (via ephemeral Neon branch) |
+| `packages/data/scripts/measure-*.mts`                                                                                                         | Committed reproduction instruments                    |
 
 ## Reproduction (high level)
 

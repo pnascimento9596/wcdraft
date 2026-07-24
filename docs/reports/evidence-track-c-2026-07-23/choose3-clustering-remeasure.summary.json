@@ -87,10 +87,7 @@
             "successes": 1931,
             "total": 17408,
             "rate": 0.110926011,
-            "ci95": [
-              0.106233123,
-              0.115618899
-            ],
+            "ci95": [0.106233123, 0.115618899],
             "half_width": 0.004692888,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -98,10 +95,7 @@
             "successes": 1828,
             "total": 16504,
             "rate": 0.110761028,
-            "ci95": [
-              0.105952711,
-              0.115569345
-            ],
+            "ci95": [0.105952711, 0.115569345],
             "half_width": 0.004808317,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -119,10 +113,7 @@
             "successes": 7191,
             "total": 17408,
             "rate": 0.413085938,
-            "ci95": [
-              0.405589777,
-              0.420582098
-            ],
+            "ci95": [0.405589777, 0.420582098],
             "half_width": 0.007496161,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -130,10 +121,7 @@
             "successes": 6675,
             "total": 16504,
             "rate": 0.404447407,
-            "ci95": [
-              0.396878027,
-              0.412016786
-            ],
+            "ci95": [0.396878027, 0.412016786],
             "half_width": 0.007569379,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -151,10 +139,7 @@
             "successes": 12967,
             "total": 17408,
             "rate": 0.744887408,
-            "ci95": [
-              0.738532436,
-              0.75124238
-            ],
+            "ci95": [0.738532436, 0.75124238],
             "half_width": 0.006354972,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -162,10 +147,7 @@
             "successes": 11841,
             "total": 16504,
             "rate": 0.717462433,
-            "ci95": [
-              0.710799502,
-              0.724125365
-            ],
+            "ci95": [0.710799502, 0.724125365],
             "half_width": 0.006662932,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -247,10 +229,7 @@
             "successes": 2516,
             "total": 17408,
             "rate": 0.14453125,
-            "ci95": [
-              0.139342112,
-              0.149720388
-            ],
+            "ci95": [0.139342112, 0.149720388],
             "half_width": 0.005189138,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -258,10 +237,7 @@
             "successes": 2516,
             "total": 17408,
             "rate": 0.14453125,
-            "ci95": [
-              0.139342112,
-              0.149720388
-            ],
+            "ci95": [0.139342112, 0.149720388],
             "half_width": 0.005189138,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -279,10 +255,7 @@
             "successes": 8266,
             "total": 17408,
             "rate": 0.474839154,
-            "ci95": [
-              0.467450259,
-              0.48222805
-            ],
+            "ci95": [0.467450259, 0.48222805],
             "half_width": 0.007388895,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -290,10 +263,7 @@
             "successes": 8266,
             "total": 17408,
             "rate": 0.474839154,
-            "ci95": [
-              0.467450259,
-              0.48222805
-            ],
+            "ci95": [0.467450259, 0.48222805],
             "half_width": 0.007388895,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -311,10 +281,7 @@
             "successes": 14094,
             "total": 17408,
             "rate": 0.809627757,
-            "ci95": [
-              0.803872048,
-              0.815383467
-            ],
+            "ci95": [0.803872048, 0.815383467],
             "half_width": 0.00575571,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -322,10 +289,7 @@
             "successes": 14094,
             "total": 17408,
             "rate": 0.809627757,
-            "ci95": [
-              0.803872048,
-              0.815383467
-            ],
+            "ci95": [0.803872048, 0.815383467],
             "half_width": 0.00575571,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -402,10 +366,7 @@
             "successes": 1801,
             "total": 16384,
             "rate": 0.109924316,
-            "ci95": [
-              0.105110918,
-              0.114737715
-            ],
+            "ci95": [0.105110918, 0.114737715],
             "half_width": 0.004813399,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -413,10 +374,7 @@
             "successes": 1709,
             "total": 15540,
             "rate": 0.10997426,
-            "ci95": [
-              0.105016962,
-              0.114931558
-            ],
+            "ci95": [0.105016962, 0.114931558],
             "half_width": 0.004957298,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -434,10 +392,7 @@
             "successes": 6748,
             "total": 16384,
             "rate": 0.411865234,
-            "ci95": [
-              0.404205632,
-              0.419524836
-            ],
+            "ci95": [0.404205632, 0.419524836],
             "half_width": 0.007659602,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -445,10 +400,7 @@
             "successes": 6275,
             "total": 15540,
             "rate": 0.403796654,
-            "ci95": [
-              0.396093497,
-              0.411499811
-            ],
+            "ci95": [0.396093497, 0.411499811],
             "half_width": 0.007703157,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -466,10 +418,7 @@
             "successes": 12188,
             "total": 16384,
             "rate": 0.743896484,
-            "ci95": [
-              0.737351736,
-              0.750441232
-            ],
+            "ci95": [0.737351736, 0.750441232],
             "half_width": 0.006544748,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -477,10 +426,7 @@
             "successes": 11147,
             "total": 15540,
             "rate": 0.717310167,
-            "ci95": [
-              0.710429645,
-              0.724190689
-            ],
+            "ci95": [0.710429645, 0.724190689],
             "half_width": 0.006880522,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -562,10 +508,7 @@
             "successes": 2347,
             "total": 16384,
             "rate": 0.143249512,
-            "ci95": [
-              0.137886742,
-              0.148612281
-            ],
+            "ci95": [0.137886742, 0.148612281],
             "half_width": 0.005362769,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -573,10 +516,7 @@
             "successes": 2347,
             "total": 16384,
             "rate": 0.143249512,
-            "ci95": [
-              0.137886742,
-              0.148612281
-            ],
+            "ci95": [0.137886742, 0.148612281],
             "half_width": 0.005362769,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -594,10 +534,7 @@
             "successes": 7754,
             "total": 16384,
             "rate": 0.473266602,
-            "ci95": [
-              0.465719171,
-              0.480814032
-            ],
+            "ci95": [0.465719171, 0.480814032],
             "half_width": 0.007547431,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -605,10 +542,7 @@
             "successes": 7754,
             "total": 16384,
             "rate": 0.473266602,
-            "ci95": [
-              0.465719171,
-              0.480814032
-            ],
+            "ci95": [0.465719171, 0.480814032],
             "half_width": 0.007547431,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -626,10 +560,7 @@
             "successes": 13244,
             "total": 16384,
             "rate": 0.808349609,
-            "ci95": [
-              0.802433379,
-              0.81426584
-            ],
+            "ci95": [0.802433379, 0.81426584],
             "half_width": 0.005916231,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -637,10 +568,7 @@
             "successes": 13244,
             "total": 16384,
             "rate": 0.808349609,
-            "ci95": [
-              0.802433379,
-              0.81426584
-            ],
+            "ci95": [0.802433379, 0.81426584],
             "half_width": 0.005916231,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -717,10 +645,7 @@
             "successes": 1713,
             "total": 17408,
             "rate": 0.098403033,
-            "ci95": [
-              0.093949064,
-              0.102857002
-            ],
+            "ci95": [0.093949064, 0.102857002],
             "half_width": 0.004453969,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -728,10 +653,7 @@
             "successes": 1618,
             "total": 16543,
             "rate": 0.097805718,
-            "ci95": [
-              0.093214043,
-              0.102397394
-            ],
+            "ci95": [0.093214043, 0.102397394],
             "half_width": 0.004591675,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -749,10 +671,7 @@
             "successes": 6829,
             "total": 17408,
             "rate": 0.392290901,
-            "ci95": [
-              0.385132169,
-              0.399449632
-            ],
+            "ci95": [0.385132169, 0.399449632],
             "half_width": 0.007158731,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -760,10 +679,7 @@
             "successes": 6313,
             "total": 16543,
             "rate": 0.381611558,
-            "ci95": [
-              0.374379905,
-              0.388843211
-            ],
+            "ci95": [0.374379905, 0.388843211],
             "half_width": 0.007231653,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -781,10 +697,7 @@
             "successes": 12831,
             "total": 17408,
             "rate": 0.737074908,
-            "ci95": [
-              0.730550192,
-              0.743599624
-            ],
+            "ci95": [0.730550192, 0.743599624],
             "half_width": 0.006524716,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -792,10 +705,7 @@
             "successes": 11642,
             "total": 16543,
             "rate": 0.703741764,
-            "ci95": [
-              0.696899446,
-              0.710584081
-            ],
+            "ci95": [0.696899446, 0.710584081],
             "half_width": 0.006842317,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -874,10 +784,7 @@
             "successes": 2125,
             "total": 17408,
             "rate": 0.122070313,
-            "ci95": [
-              0.117234173,
-              0.126906452
-            ],
+            "ci95": [0.117234173, 0.126906452],
             "half_width": 0.004836139,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -885,10 +792,7 @@
             "successes": 2125,
             "total": 17408,
             "rate": 0.122070313,
-            "ci95": [
-              0.117234173,
-              0.126906452
-            ],
+            "ci95": [0.117234173, 0.126906452],
             "half_width": 0.004836139,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -906,10 +810,7 @@
             "successes": 7975,
             "total": 17408,
             "rate": 0.458122702,
-            "ci95": [
-              0.450816387,
-              0.465429017
-            ],
+            "ci95": [0.450816387, 0.465429017],
             "half_width": 0.007306315,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -917,10 +818,7 @@
             "successes": 7975,
             "total": 17408,
             "rate": 0.458122702,
-            "ci95": [
-              0.450816387,
-              0.465429017
-            ],
+            "ci95": [0.450816387, 0.465429017],
             "half_width": 0.007306315,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -938,10 +836,7 @@
             "successes": 13930,
             "total": 17408,
             "rate": 0.800206801,
-            "ci95": [
-              0.79437638,
-              0.806037223
-            ],
+            "ci95": [0.79437638, 0.806037223],
             "half_width": 0.005830421,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -949,10 +844,7 @@
             "successes": 13930,
             "total": 17408,
             "rate": 0.800206801,
-            "ci95": [
-              0.79437638,
-              0.806037223
-            ],
+            "ci95": [0.79437638, 0.806037223],
             "half_width": 0.005830421,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1026,10 +918,7 @@
             "successes": 1625,
             "total": 16384,
             "rate": 0.099182129,
-            "ci95": [
-              0.094561809,
-              0.103802448
-            ],
+            "ci95": [0.094561809, 0.103802448],
             "half_width": 0.00462032,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1037,10 +926,7 @@
             "successes": 1536,
             "total": 15582,
             "rate": 0.098575279,
-            "ci95": [
-              0.093822307,
-              0.103328251
-            ],
+            "ci95": [0.093822307, 0.103328251],
             "half_width": 0.004752972,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1058,10 +944,7 @@
             "successes": 6450,
             "total": 16384,
             "rate": 0.393676758,
-            "ci95": [
-              0.386255739,
-              0.401097777
-            ],
+            "ci95": [0.386255739, 0.401097777],
             "half_width": 0.007421019,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1069,10 +952,7 @@
             "successes": 5969,
             "total": 15582,
             "rate": 0.383070209,
-            "ci95": [
-              0.375563648,
-              0.390576771
-            ],
+            "ci95": [0.375563648, 0.390576771],
             "half_width": 0.007506561,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1090,10 +970,7 @@
             "successes": 12091,
             "total": 16384,
             "rate": 0.737976074,
-            "ci95": [
-              0.731206611,
-              0.744745538
-            ],
+            "ci95": [0.731206611, 0.744745538],
             "half_width": 0.006769464,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1101,10 +978,7 @@
             "successes": 10987,
             "total": 15582,
             "rate": 0.705108458,
-            "ci95": [
-              0.698018906,
-              0.712198011
-            ],
+            "ci95": [0.698018906, 0.712198011],
             "half_width": 0.007089552,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1183,10 +1057,7 @@
             "successes": 1995,
             "total": 16384,
             "rate": 0.121765137,
-            "ci95": [
-              0.11678667,
-              0.126743603
-            ],
+            "ci95": [0.11678667, 0.126743603],
             "half_width": 0.004978467,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1194,10 +1065,7 @@
             "successes": 1995,
             "total": 16384,
             "rate": 0.121765137,
-            "ci95": [
-              0.11678667,
-              0.126743603
-            ],
+            "ci95": [0.11678667, 0.126743603],
             "half_width": 0.004978467,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1215,10 +1083,7 @@
             "successes": 7523,
             "total": 16384,
             "rate": 0.45916748,
-            "ci95": [
-              0.451660703,
-              0.466674258
-            ],
+            "ci95": [0.451660703, 0.466674258],
             "half_width": 0.007506778,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1226,10 +1091,7 @@
             "successes": 7523,
             "total": 16384,
             "rate": 0.45916748,
-            "ci95": [
-              0.451660703,
-              0.466674258
-            ],
+            "ci95": [0.451660703, 0.466674258],
             "half_width": 0.007506778,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1247,10 +1109,7 @@
             "successes": 13114,
             "total": 16384,
             "rate": 0.800415039,
-            "ci95": [
-              0.794407232,
-              0.806422847
-            ],
+            "ci95": [0.794407232, 0.806422847],
             "half_width": 0.006007808,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1258,10 +1117,7 @@
             "successes": 13114,
             "total": 16384,
             "rate": 0.800415039,
-            "ci95": [
-              0.794407232,
-              0.806422847
-            ],
+            "ci95": [0.794407232, 0.806422847],
             "half_width": 0.006007808,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1335,10 +1191,7 @@
             "successes": 1766,
             "total": 17408,
             "rate": 0.10144761,
-            "ci95": [
-              0.097131181,
-              0.10576404
-            ],
+            "ci95": [0.097131181, 0.10576404],
             "half_width": 0.00431643,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1346,10 +1199,7 @@
             "successes": 1723,
             "total": 16752,
             "rate": 0.102853391,
-            "ci95": [
-              0.09841613,
-              0.107290652
-            ],
+            "ci95": [0.09841613, 0.107290652],
             "half_width": 0.004437261,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1367,10 +1217,7 @@
             "successes": 7132,
             "total": 17408,
             "rate": 0.409696691,
-            "ci95": [
-              0.402702965,
-              0.416690417
-            ],
+            "ci95": [0.402702965, 0.416690417],
             "half_width": 0.006993726,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1378,10 +1225,7 @@
             "successes": 6752,
             "total": 16752,
             "rate": 0.403056351,
-            "ci95": [
-              0.39594427,
-              0.410168433
-            ],
+            "ci95": [0.39594427, 0.410168433],
             "half_width": 0.007112082,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1399,10 +1243,7 @@
             "successes": 12906,
             "total": 17408,
             "rate": 0.741383272,
-            "ci95": [
-              0.735074127,
-              0.747692417
-            ],
+            "ci95": [0.735074127, 0.747692417],
             "half_width": 0.006309145,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1410,10 +1251,7 @@
             "successes": 12013,
             "total": 16752,
             "rate": 0.717108405,
-            "ci95": [
-              0.710590097,
-              0.723626713
-            ],
+            "ci95": [0.710590097, 0.723626713],
             "half_width": 0.006518308,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1492,10 +1330,7 @@
             "successes": 2326,
             "total": 17408,
             "rate": 0.133616728,
-            "ci95": [
-              0.128675062,
-              0.138558394
-            ],
+            "ci95": [0.128675062, 0.138558394],
             "half_width": 0.004941666,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1503,10 +1338,7 @@
             "successes": 2326,
             "total": 17408,
             "rate": 0.133616728,
-            "ci95": [
-              0.128675062,
-              0.138558394
-            ],
+            "ci95": [0.128675062, 0.138558394],
             "half_width": 0.004941666,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1524,10 +1356,7 @@
             "successes": 8819,
             "total": 17408,
             "rate": 0.506606158,
-            "ci95": [
-              0.499053839,
-              0.514158477
-            ],
+            "ci95": [0.499053839, 0.514158477],
             "half_width": 0.007552319,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1535,10 +1364,7 @@
             "successes": 8819,
             "total": 17408,
             "rate": 0.506606158,
-            "ci95": [
-              0.499053839,
-              0.514158477
-            ],
+            "ci95": [0.499053839, 0.514158477],
             "half_width": 0.007552319,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1556,10 +1382,7 @@
             "successes": 14189,
             "total": 17408,
             "rate": 0.815085018,
-            "ci95": [
-              0.809365701,
-              0.820804336
-            ],
+            "ci95": [0.809365701, 0.820804336],
             "half_width": 0.005719317,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1567,10 +1390,7 @@
             "successes": 14189,
             "total": 17408,
             "rate": 0.815085018,
-            "ci95": [
-              0.809365701,
-              0.820804336
-            ],
+            "ci95": [0.809365701, 0.820804336],
             "half_width": 0.005719317,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1644,10 +1464,7 @@
             "successes": 1644,
             "total": 16384,
             "rate": 0.100341797,
-            "ci95": [
-              0.095891489,
-              0.104792105
-            ],
+            "ci95": [0.095891489, 0.104792105],
             "half_width": 0.004450308,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1655,10 +1472,7 @@
             "successes": 1602,
             "total": 15770,
             "rate": 0.101585289,
-            "ci95": [
-              0.097008674,
-              0.106161903
-            ],
+            "ci95": [0.097008674, 0.106161903],
             "half_width": 0.004576615,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1676,10 +1490,7 @@
             "successes": 6735,
             "total": 16384,
             "rate": 0.411071777,
-            "ci95": [
-              0.403768133,
-              0.418375422
-            ],
+            "ci95": [0.403768133, 0.418375422],
             "half_width": 0.007303644,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1687,10 +1498,7 @@
             "successes": 6369,
             "total": 15770,
             "rate": 0.403868104,
-            "ci95": [
-              0.396485814,
-              0.411250394
-            ],
+            "ci95": [0.396485814, 0.411250394],
             "half_width": 0.00738229,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1708,10 +1516,7 @@
             "successes": 12161,
             "total": 16384,
             "rate": 0.742248535,
-            "ci95": [
-              0.735742186,
-              0.748754884
-            ],
+            "ci95": [0.735742186, 0.748754884],
             "half_width": 0.006506349,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1719,10 +1524,7 @@
             "successes": 11313,
             "total": 15770,
             "rate": 0.717374762,
-            "ci95": [
-              0.710688129,
-              0.724061395
-            ],
+            "ci95": [0.710688129, 0.724061395],
             "half_width": 0.006686633,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1801,10 +1603,7 @@
             "successes": 2160,
             "total": 16384,
             "rate": 0.131835938,
-            "ci95": [
-              0.126733151,
-              0.136938724
-            ],
+            "ci95": [0.126733151, 0.136938724],
             "half_width": 0.005102786,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1812,10 +1611,7 @@
             "successes": 2160,
             "total": 16384,
             "rate": 0.131835938,
-            "ci95": [
-              0.126733151,
-              0.136938724
-            ],
+            "ci95": [0.126733151, 0.136938724],
             "half_width": 0.005102786,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1833,10 +1629,7 @@
             "successes": 8304,
             "total": 16384,
             "rate": 0.506835938,
-            "ci95": [
-              0.499000672,
-              0.514671203
-            ],
+            "ci95": [0.499000672, 0.514671203],
             "half_width": 0.007835266,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1844,10 +1637,7 @@
             "successes": 8304,
             "total": 16384,
             "rate": 0.506835938,
-            "ci95": [
-              0.499000672,
-              0.514671203
-            ],
+            "ci95": [0.499000672, 0.514671203],
             "half_width": 0.007835266,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1865,10 +1655,7 @@
             "successes": 13346,
             "total": 16384,
             "rate": 0.814575195,
-            "ci95": [
-              0.80858511,
-              0.820565281
-            ],
+            "ci95": [0.80858511, 0.820565281],
             "half_width": 0.005990085,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1876,10 +1663,7 @@
             "successes": 13346,
             "total": 16384,
             "rate": 0.814575195,
-            "ci95": [
-              0.80858511,
-              0.820565281
-            ],
+            "ci95": [0.80858511, 0.820565281],
             "half_width": 0.005990085,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1953,10 +1737,7 @@
             "successes": 1549,
             "total": 17408,
             "rate": 0.088982077,
-            "ci95": [
-              0.08484963,
-              0.093114524
-            ],
+            "ci95": [0.08484963, 0.093114524],
             "half_width": 0.004132447,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1964,10 +1745,7 @@
             "successes": 1548,
             "total": 16797,
             "rate": 0.092159314,
-            "ci95": [
-              0.08787068,
-              0.096447948
-            ],
+            "ci95": [0.08787068, 0.096447948],
             "half_width": 0.004288634,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1985,10 +1763,7 @@
             "successes": 7721,
             "total": 17408,
             "rate": 0.44353171,
-            "ci95": [
-              0.436672055,
-              0.450391364
-            ],
+            "ci95": [0.436672055, 0.450391364],
             "half_width": 0.006859654,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -1996,10 +1771,7 @@
             "successes": 7287,
             "total": 16797,
             "rate": 0.433827469,
-            "ci95": [
-              0.426806154,
-              0.440848784
-            ],
+            "ci95": [0.426806154, 0.440848784],
             "half_width": 0.007021315,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2017,10 +1789,7 @@
             "successes": 13416,
             "total": 17408,
             "rate": 0.770680147,
-            "ci95": [
-              0.764745743,
-              0.776614551
-            ],
+            "ci95": [0.764745743, 0.776614551],
             "half_width": 0.005934404,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2028,10 +1797,7 @@
             "successes": 12699,
             "total": 16797,
             "rate": 0.756027862,
-            "ci95": [
-              0.749965798,
-              0.762089926
-            ],
+            "ci95": [0.749965798, 0.762089926],
             "half_width": 0.006062064,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2109,10 +1875,7 @@
             "successes": 2288,
             "total": 17408,
             "rate": 0.131433824,
-            "ci95": [
-              0.126565597,
-              0.13630205
-            ],
+            "ci95": [0.126565597, 0.13630205],
             "half_width": 0.004868226,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2120,10 +1883,7 @@
             "successes": 2288,
             "total": 17408,
             "rate": 0.131433824,
-            "ci95": [
-              0.126565597,
-              0.13630205
-            ],
+            "ci95": [0.126565597, 0.13630205],
             "half_width": 0.004868226,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2141,10 +1901,7 @@
             "successes": 8498,
             "total": 17408,
             "rate": 0.48816636,
-            "ci95": [
-              0.481075495,
-              0.495257225
-            ],
+            "ci95": [0.481075495, 0.495257225],
             "half_width": 0.007090865,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2152,10 +1909,7 @@
             "successes": 8498,
             "total": 17408,
             "rate": 0.48816636,
-            "ci95": [
-              0.481075495,
-              0.495257225
-            ],
+            "ci95": [0.481075495, 0.495257225],
             "half_width": 0.007090865,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2173,10 +1927,7 @@
             "successes": 14192,
             "total": 17408,
             "rate": 0.815257353,
-            "ci95": [
-              0.809787694,
-              0.820727012
-            ],
+            "ci95": [0.809787694, 0.820727012],
             "half_width": 0.005469659,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2184,10 +1935,7 @@
             "successes": 14192,
             "total": 17408,
             "rate": 0.815257353,
-            "ci95": [
-              0.809787694,
-              0.820727012
-            ],
+            "ci95": [0.809787694, 0.820727012],
             "half_width": 0.005469659,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2261,10 +2009,7 @@
             "successes": 1451,
             "total": 16384,
             "rate": 0.088562012,
-            "ci95": [
-              0.084312018,
-              0.092812005
-            ],
+            "ci95": [0.084312018, 0.092812005],
             "half_width": 0.004249994,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2272,10 +2017,7 @@
             "successes": 1450,
             "total": 15816,
             "rate": 0.091679312,
-            "ci95": [
-              0.087271821,
-              0.096086803
-            ],
+            "ci95": [0.087271821, 0.096086803],
             "half_width": 0.004407491,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2293,10 +2035,7 @@
             "successes": 7295,
             "total": 16384,
             "rate": 0.445251465,
-            "ci95": [
-              0.438131204,
-              0.452371725
-            ],
+            "ci95": [0.438131204, 0.452371725],
             "half_width": 0.00712026,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2304,10 +2043,7 @@
             "successes": 6881,
             "total": 15816,
             "rate": 0.435065756,
-            "ci95": [
-              0.427767551,
-              0.442363962
-            ],
+            "ci95": [0.427767551, 0.442363962],
             "half_width": 0.007298205,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2325,10 +2061,7 @@
             "successes": 12612,
             "total": 16384,
             "rate": 0.769775391,
-            "ci95": [
-              0.763663843,
-              0.775886938
-            ],
+            "ci95": [0.763663843, 0.775886938],
             "half_width": 0.006111547,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2336,10 +2069,7 @@
             "successes": 11936,
             "total": 15816,
             "rate": 0.754678806,
-            "ci95": [
-              0.748418148,
-              0.760939465
-            ],
+            "ci95": [0.748418148, 0.760939465],
             "half_width": 0.006260659,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2417,10 +2147,7 @@
             "successes": 2132,
             "total": 16384,
             "rate": 0.130126953,
-            "ci95": [
-              0.125196405,
-              0.135057502
-            ],
+            "ci95": [0.125196405, 0.135057502],
             "half_width": 0.004930548,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2428,10 +2155,7 @@
             "successes": 2132,
             "total": 16384,
             "rate": 0.130126953,
-            "ci95": [
-              0.125196405,
-              0.135057502
-            ],
+            "ci95": [0.125196405, 0.135057502],
             "half_width": 0.004930548,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2449,10 +2173,7 @@
             "successes": 8039,
             "total": 16384,
             "rate": 0.490661621,
-            "ci95": [
-              0.483365596,
-              0.497957646
-            ],
+            "ci95": [0.483365596, 0.497957646],
             "half_width": 0.007296025,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2460,10 +2181,7 @@
             "successes": 8039,
             "total": 16384,
             "rate": 0.490661621,
-            "ci95": [
-              0.483365596,
-              0.497957646
-            ],
+            "ci95": [0.483365596, 0.497957646],
             "half_width": 0.007296025,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2481,10 +2199,7 @@
             "successes": 13356,
             "total": 16384,
             "rate": 0.815185547,
-            "ci95": [
-              0.809561478,
-              0.820809615
-            ],
+            "ci95": [0.809561478, 0.820809615],
             "half_width": 0.005624069,
             "method": "draft-cluster-robust-ratio-normal"
           },
@@ -2492,10 +2207,7 @@
             "successes": 13356,
             "total": 16384,
             "rate": 0.815185547,
-            "ci95": [
-              0.809561478,
-              0.820809615
-            ],
+            "ci95": [0.809561478, 0.820809615],
             "half_width": 0.005624069,
             "method": "draft-cluster-robust-ratio-normal"
           },

@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-23  
 **Base:** `a1beaaaaa2fe0377128d0b1434aa47d2bda5adca`  
-**Risk:** Green — measurement only; no encoding change  
+**Risk:** Green — measurement only; no encoding change
 
 ## Method
 
@@ -14,15 +14,15 @@ Families: identity · provenance · metadata · channels · overall · component
 
 ## Family decoded-byte attribution (per-key sum)
 
-| Family | Career top-level | Current basis |
-| ------ | ---------------: | ------------: |
-| identity | 872,913 | 872,913 |
-| provenance | 2,315,047 | 2,313,432 |
-| metadata | 1,345,793 | 1,357,798 |
-| channels | 733,146 | 733,140 |
-| overall | 171,066 | 171,066 |
-| **components** | **25,330,094** | **25,330,094** |
-| remainder | 0 | 0 |
+| Family         | Career top-level |  Current basis |
+| -------------- | ---------------: | -------------: |
+| identity       |          872,913 |        872,913 |
+| provenance     |        2,315,047 |      2,313,432 |
+| metadata       |        1,345,793 |      1,357,798 |
+| channels       |          733,146 |        733,140 |
+| overall        |          171,066 |        171,066 |
+| **components** |   **25,330,094** | **25,330,094** |
+| remainder      |                0 |              0 |
 
 Player-card families (shared once, not dual-basis) and top-level nations/managers/tournaments are outside the Career/Current duplication question; see JSON for those.
 
@@ -30,30 +30,30 @@ Player-card families (shared once, not dual-basis) and top-level nations/manager
 
 ### With `components` present (shipped)
 
-| Quantity | Bytes |
-| -------- | ----: |
-| Duplicated Current-copy decoded bytes | **29,548,803** |
-| Career-only field bytes | (see JSON) |
-| Current diverged / only | (see JSON) |
-| Dup ratio vs Current family sum | ~**high** — components dominate |
+| Quantity                              |                           Bytes |
+| ------------------------------------- | ------------------------------: |
+| Duplicated Current-copy decoded bytes |                  **29,548,803** |
+| Career-only field bytes               |                      (see JSON) |
+| Current diverged / only               |                      (see JSON) |
+| Dup ratio vs Current family sum       | ~**high** — components dominate |
 
 Duplication **by family** (Current copy of equal fields):
 
-| Family | Dup bytes |
-| ------ | --------: |
+| Family     |      Dup bytes |
+| ---------- | -------------: |
 | components | **25,330,094** |
-| provenance | 2,291,784 |
-| identity | 872,913 |
-| channels | 698,657 |
-| metadata | 195,209 |
-| overall | 160,146 |
+| provenance |      2,291,784 |
+| identity   |        872,913 |
+| channels   |        698,657 |
+| metadata   |        195,209 |
+| overall    |        160,146 |
 
 **~85.7% of measured Career↔Current equal-field duplication is `components`.**
 
 ### Without `components` (hypothetical post-C2)
 
-| Quantity | Bytes |
-| -------- | ----: |
+| Quantity                              |         Bytes |
+| ------------------------------------- | ------------: |
 | Duplicated Current-copy decoded bytes | **4,218,709** |
 
 Non-component residual duplication (~4.2 MB decoded of equal identity/provenance/channel/overall/metadata copies) is the true addressable surface for a delta-encoding / expand-at-load proposal.

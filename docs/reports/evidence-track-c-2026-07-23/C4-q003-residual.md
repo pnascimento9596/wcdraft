@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-23  
 **Base:** `a1beaaaaa2fe0377128d0b1434aa47d2bda5adca`  
-**Risk:** Green — read-only production-derived count; no DDL, no VALIDATE, no writes  
+**Risk:** Green — read-only production-derived count; no DDL, no VALIDATE, no writes
 
 ## Method
 
@@ -28,29 +28,29 @@ AND NOT (
 
 ## Count
 
-| Metric | Value |
-| ------ | ----: |
-| **residual_count** | **1** |
-| ranked_total | 1 |
-| casual_total | 5 |
-| ranked_null_attempt | 1 |
-| ranked_null_formation | 1 |
-| ranked_null_consumed | 1 |
-| ranked_null_user | 0 |
+| Metric                | Value |
+| --------------------- | ----: |
+| **residual_count**    | **1** |
+| ranked_total          |     1 |
+| casual_total          |     5 |
+| ranked_null_attempt   |     1 |
+| ranked_null_formation |     1 |
+| ranked_null_consumed  |     1 |
+| ranked_null_user      |     0 |
 
 ### The residual row
 
-| Column | Value |
-| ------ | ----- |
-| id | `4dc1df8e-530d-47c3-9364-5e6beea571a2` |
-| user_id | `e912451e-4fb6-4fa3-ba86-ddf7199ad826` |
-| attempt_id | **NULL** |
-| attempt_formation_id | **NULL** |
-| attempt_consumed_at | **NULL** |
-| draft_order | `squad_first` |
-| era | `all_time` |
-| rating_basis | `career` |
-| created_at | `2026-06-21T21:17:55.346Z` |
+| Column               | Value                                  |
+| -------------------- | -------------------------------------- |
+| id                   | `4dc1df8e-530d-47c3-9364-5e6beea571a2` |
+| user_id              | `e912451e-4fb6-4fa3-ba86-ddf7199ad826` |
+| attempt_id           | **NULL**                               |
+| attempt_formation_id | **NULL**                               |
+| attempt_consumed_at  | **NULL**                               |
+| draft_order          | `squad_first`                          |
+| era                  | `all_time`                             |
+| rating_basis         | `career`                               |
+| created_at           | `2026-06-21T21:17:55.346Z`             |
 
 Pre-binding ranked submission: has a user, no server-issued attempt binding witnesses.
 
