@@ -3,14 +3,36 @@
 set -euo pipefail
 
 phase="${1:-}"
-floor_kb="${WCDRAFT_RUNNER_MIN_FREE_KB:-31457280}"
-target_kb="${WCDRAFT_RUNNER_TARGET_FREE_KB:-37748736}"
+# Persistent macOS host kept a 30 GiB hard floor. Ephemeral Linux containers
+# share a capped Colima disk (~100 GiB) with sibling fleets — use 8/12 GiB
+# defaults unless explicitly overridden.
+if [ -n "${WCDRAFT_RUNNER_MIN_FREE_KB:-}" ]; then
+  floor_kb="$WCDRAFT_RUNNER_MIN_FREE_KB"
+elif [ "$(uname -s)" = "Linux" ]; then
+  floor_kb=8388608
+else
+  floor_kb=31457280
+fi
+if [ -n "${WCDRAFT_RUNNER_TARGET_FREE_KB:-}" ]; then
+  target_kb="$WCDRAFT_RUNNER_TARGET_FREE_KB"
+elif [ "$(uname -s)" = "Linux" ]; then
+  target_kb=12582912
+else
+  target_kb=37748736
+fi
 stale_minutes="${WCDRAFT_RUNNER_STALE_MINUTES:-60}"
 residue_minutes="${WCDRAFT_AGENT_TEMP_RESIDUE_MINUTES:-60}"
 force_cleanup="${WCDRAFT_RUNNER_FORCE_CLEANUP:-0}"
 maintenance_mode="${WCDRAFT_RUNNER_MAINTENANCE_MODE:-0}"
 trigger="${WCDRAFT_RUNNER_TRIGGER:-ci-job}"
-configured_agent_temp_root="${WCDRAFT_AGENT_TEMP_ROOT:-/private/tmp}"
+# macOS host uses /private/tmp; Linux containers use /tmp
+if [ -n "${WCDRAFT_AGENT_TEMP_ROOT:-}" ]; then
+  configured_agent_temp_root="$WCDRAFT_AGENT_TEMP_ROOT"
+elif [ -d /private/tmp ] && [ -w /private/tmp ]; then
+  configured_agent_temp_root=/private/tmp
+else
+  configured_agent_temp_root="${TMPDIR:-/tmp}"
+fi
 agent_temp_roots=("$configured_agent_temp_root")
 if [ -z "${WCDRAFT_AGENT_TEMP_ROOT:-}" ] && [ -n "${TMPDIR:-}" ]; then
   agent_temp_roots+=("$TMPDIR")
@@ -396,10 +418,15 @@ emit_largest_consumers() {
 }
 
 if [ "$phase" = "start" ]; then
-  if [ "${RUNNER_NAME:-}" != "wcdraft-m4" ]; then
-    echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
-    exit 1
-  fi
+  # Accept native macOS leftover (until Phase 5 retirement) and ephemeral
+  # Linux fleet names: wcdraft-linux-<slot>-<timestamp>-<rand>
+  case "${RUNNER_NAME:-}" in
+    wcdraft-m4|wcdraft-linux-*) ;;
+    *)
+      echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
+      exit 1
+      ;;
+  esac
 
   audit_unmarked_agent_temp_residue
 

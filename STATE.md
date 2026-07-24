@@ -1,5 +1,25 @@
 # STATE.md — measured ground truth
 
+## CI runner fleet (2026-07-24)
+
+Ephemeral **arm64 Linux** container fleet on Colima (not native macOS).
+Labels: `self-hosted` + `wcdraft-linux`. Host supervisors under
+`/Users/paulo/runners/wcdraft/` (outside repo). Registration PAT never enters
+job containers. Caching: `actions/cache` for pnpm store + Turbo (no shared
+writable volume between jobs).
+
+**Arch limitation:** CI = linux/arm64; production Vercel = linux/x86_64.
+`@node-rs/argon2` uses platform-specific prebuilds; hash string format is
+portable across arches.
+
+**ci-fast** (PR / non-main push): changes · static · verify · gitleaks · aggregate.
+**ci-full** (push to `main` + `workflow_dispatch`): + golden · realism · etl · db · etl-rating.
+
+Native macOS runner `wcdraft-m4` remains registered until three consecutive
+green full passes, then deregisters (Phase 5).
+
+---
+
 > Update rule: every lane updates this file in the SAME change that merges.
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.

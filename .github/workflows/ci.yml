@@ -28,10 +28,19 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Ephemeral Linux fleet labels: [self-hosted, wcdraft-linux]
+# (never macOS — native runner is retired after three consecutive greens).
+# ci-fast (PR + non-main push): changes, static, verify, gitleaks, aggregate.
+# ci-full (push to main + workflow_dispatch): also golden, realism, etl, db, etl-rating.
+# Known limitation: CI is arm64 Linux; production Vercel is x86 Linux. @node-rs/argon2
+# ships prebuilt binaries per platform so the hash format is portable, but native
+# module load is only exercised for linux-arm64 in this fleet.
+
+
 jobs:
   changes:
     name: changes · path detector
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     if: ${{ github.actor != 'dependabot[bot]' }}
     outputs:
       ci_config: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.ci_config }}
@@ -61,6 +70,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Bind trusted automation dispatch after checkout
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -151,7 +169,7 @@ jobs:
 
   static:
     name: static · format · contracts
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     if: >-
       github.actor != 'dependabot[bot]' &&
       (github.event_name != 'workflow_dispatch' ||
@@ -160,6 +178,7 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_CACHE_DIR: ${{ runner.tool_cache }}/wcdraft-cache/turbo
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -169,6 +188,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Runner hygiene contract probe
         run: scripts/ci/self-hosted-runner-hygiene.test.sh
@@ -203,6 +231,19 @@ jobs:
       - name: Production migration workflow contract probe (Node 22)
         run: scripts/ci/production-migration-workflow.test.sh
 
+
+      - name: Restore Turbo local cache (ephemeral fleet)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            node_modules/.cache/turbo
+            ${{ runner.tool_cache }}/wcdraft-cache/turbo
+          key: turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-${{ runner.os }}-${{ runner.arch }}-
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -226,12 +267,13 @@ jobs:
 
   verify:
     name: typecheck · lint · test · build
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_CACHE_DIR: ${{ runner.tool_cache }}/wcdraft-cache/turbo
       WCDRAFT_PLAYWRIGHT_CHANNEL: chromium
     steps:
       - name: Checkout
@@ -242,6 +284,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Setup pnpm
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -260,6 +311,19 @@ jobs:
         with:
           key: playwright-chromium-webkit-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
           path: ${{ runner.tool_cache }}/wcdraft-cache/ms-playwright
+
+
+      - name: Restore Turbo local cache (ephemeral fleet)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            node_modules/.cache/turbo
+            ${{ runner.tool_cache }}/wcdraft-cache/turbo
+          key: turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -297,12 +361,13 @@ jobs:
 
   golden:
     name: golden RNG determinism
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
-    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
+    if: ${{ ((github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && (needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true') }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_CACHE_DIR: ${{ runner.tool_cache }}/wcdraft-cache/turbo
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -312,6 +377,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Setup pnpm
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -324,6 +398,19 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+
+
+      - name: Restore Turbo local cache (ephemeral fleet)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            node_modules/.cache/turbo
+            ${{ runner.tool_cache }}/wcdraft-cache/turbo
+          key: turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -347,12 +434,13 @@ jobs:
 
   realism:
     name: realism · asymmetric gate (N=2000 × 3 policies)
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
-    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.realism_inputs == 'true' }}
+    if: ${{ ((github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && (needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.realism_inputs == 'true') }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_CACHE_DIR: ${{ runner.tool_cache }}/wcdraft-cache/turbo
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -362,6 +450,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Setup pnpm
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -374,6 +471,19 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+
+
+      - name: Restore Turbo local cache (ephemeral fleet)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            node_modules/.cache/turbo
+            ${{ runner.tool_cache }}/wcdraft-cache/turbo
+          key: turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -418,9 +528,9 @@ jobs:
 
   etl:
     name: ingest · identity-QA · determinism
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
-    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
+    if: ${{ ((github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && (needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true') }}
     env:
       UV_PYTHON: "3.12"
       WORLDCUP_COMMIT: f41e9437a007498bdbf3751305818101f96cb6fb
@@ -437,6 +547,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Setup uv
         uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
@@ -508,13 +627,13 @@ jobs:
 
   db-rollback-check:
     name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
     # The destructive ephemeral-branch rollback-check is heavy (forks + tears
     # down a Neon branch) and only meaningful when @wcdraft/db, package
     # resolution, or CI config changes. Other PRs skip it and rely on the
     # aggregate check to report success.
-    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.db == 'true' }}
+    if: ${{ ((github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && (needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.db == 'true') }}
     # SAFETY POSTURE (revised per independent review on PR #26):
     # This job NO LONGER takes a static DATABASE_URL_UNPOOLED secret. Instead
     # it creates its OWN ephemeral Neon branch off the primary, runs the
@@ -533,6 +652,15 @@ jobs:
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
 
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
+
       - name: Setup pnpm
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
@@ -544,6 +672,19 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+
+
+      - name: Restore Turbo local cache (ephemeral fleet)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .turbo
+            node_modules/.cache/turbo
+            ${{ runner.tool_cache }}/wcdraft-cache/turbo
+          key: turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -617,9 +758,9 @@ jobs:
 
   etl-rating:
     name: ETL rating · lint · golden determinism
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
-    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
+    if: ${{ ((github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && (needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true') }}
     env:
       UV_PYTHON: "3.12"
     # Self-contained: the rating stage reads the COMMITTED canonical JSON in
@@ -635,6 +776,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Setup uv
         uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
@@ -663,7 +813,7 @@ jobs:
 
   gitleaks:
     name: secrets · incremental scan
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
     steps:
       - name: Checkout
@@ -676,6 +826,15 @@ jobs:
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
 
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
+
       - name: Gitleaks incremental scan
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
         env:
@@ -684,7 +843,7 @@ jobs:
 
   aggregate:
     name: ${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs:
       - changes
       - static
@@ -705,6 +864,15 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Fleet identity (Linux · UTC)
+        run: |
+          set -euo pipefail
+          uname -a
+          date -u
+          test "$(uname -s)" = "Linux"
+          echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
+
 
       - name: Fail if any needed gate failed or cancelled
         env:

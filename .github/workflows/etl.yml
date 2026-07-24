@@ -29,7 +29,7 @@ env:
 jobs:
   changes:
     name: changes · ETL path detector
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     if: ${{ github.actor != 'dependabot[bot]' }}
     outputs:
       ci_config: ${{ steps.filter.outputs.ci_config }}
@@ -58,7 +58,7 @@ jobs:
 
   etl:
     name: ingest · identity-QA · determinism
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
     env:
@@ -154,7 +154,7 @@ jobs:
 
   rating-lock-matrix:
     name: rating lock · Python ${{ matrix.python-version }}
-    runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    runs-on: [self-hosted, wcdraft-linux]
     needs: changes
     if: ${{ (github.event_name == 'pull_request' && needs.changes.outputs.ci_config == 'true') || (github.event_name == 'push' && github.ref == 'refs/heads/main' && (needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true')) }}
     env:

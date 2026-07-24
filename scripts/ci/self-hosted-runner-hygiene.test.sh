@@ -13,6 +13,12 @@ responsive_shell_producer="$repo_root/apps/web/scripts/test-responsive-shell-fit
 one_screen_producer="$repo_root/apps/web/scripts/verify-home-fold-browser.mts"
 disposable_clone_helper="$repo_root/apps/web/scripts/create-disposable-clone.mts"
 probe_root="$(mktemp -d "${TMPDIR:-/tmp}/wcdraft-runner-hygiene.XXXXXX")"
+# Portable "private tmp" root: macOS uses /private/tmp; Linux CI uses TMPDIR/tmp
+if [ -d /private/tmp ] && [ -w /private/tmp ]; then
+  PRIVATE_TMP_ROOT=/private/tmp
+else
+  PRIVATE_TMP_ROOT="${TMPDIR:-/tmp}"
+fi
 work_root="$probe_root/_work"
 runner_temp="$work_root/_temp"
 tool_cache="$work_root/_tool"
@@ -364,7 +370,7 @@ run_hygiene_expect_target_warning() {
 create_real_root_candidate() {
   local label="$1"
   local candidate=""
-  candidate="$(mktemp -d /private/tmp/wcdraft-runner-hygiene-realpath.XXXXXX)"
+  candidate="$(mktemp -d "$PRIVATE_TMP_ROOT"/wcdraft-runner-hygiene-realpath.XXXXXX)"
   printf '%s\n' "$label" >"$candidate/sentinel"
   printf '%s\n' "cleanup-ready-v1" >"$candidate/.wcdraft-agent-cleanup-ready"
   touch -t 200001010000 "$candidate"
@@ -401,10 +407,14 @@ static_dispatch_ref_guard="github.ref == 'refs/heads/automation/daily-seed-salt-
 aggregate_guard="if: \${{ always() && github.actor != 'dependabot[bot]' }}"
 aggregate_name_expression="name: \${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}"
 
-grep -Fq 'WCDRAFT_RUNNER_MIN_FREE_KB:-31457280' "$hygiene_script" ||
-  fail "runner hygiene default floor must remain 30 GiB"
-grep -Fq 'WCDRAFT_RUNNER_TARGET_FREE_KB:-37748736' "$hygiene_script" ||
-  fail "runner hygiene must retain one measured lane of headroom above its floor"
+grep -Fq 'floor_kb=31457280' "$hygiene_script" ||
+  fail "runner hygiene default floor must remain 30 GiB on Darwin"
+grep -Fq 'target_kb=37748736' "$hygiene_script" ||
+  fail "runner hygiene must retain one measured lane of headroom above its floor on Darwin"
+grep -Fq 'floor_kb=8388608' "$hygiene_script" ||
+  fail "runner hygiene must use an 8 GiB floor on Linux ephemeral containers"
+grep -Fq 'target_kb=12582912' "$hygiene_script" ||
+  fail "runner hygiene must use a 12 GiB pre-lane target on Linux ephemeral containers"
 grep -Fq '::error::runner-owned cleanup completed, but host free space remains below the configured floor' "$hygiene_script" ||
   fail "runner hygiene must fail when cleanup cannot restore the configured floor"
 grep -Fq '::warning::runner-owned cleanup completed, but host free space remains below the best-effort pre-lane target' "$hygiene_script" ||
@@ -544,7 +554,7 @@ if (
 fi
 [ ! -e "$agent_temp_corrupt_pending/.wcdraft-agent-cleanup-ready" ] ||
   fail "corrupt pending registration became cleanup eligible"
-default_root_probe="$(mktemp -d /private/tmp/wcdraft-marker-default.XXXXXX)"
+default_root_probe="$(mktemp -d "$PRIVATE_TMP_ROOT"/wcdraft-marker-default.XXXXXX)"
 (
   cd "$repo_root"
   env -u WCDRAFT_AGENT_TEMP_ROOT \
@@ -606,7 +616,7 @@ assert_file_content "linked-agent-temp" "$agent_temp_git_linked/sentinel"
 real_root_candidate="$(create_real_root_candidate real-root-prune)"
 real_root_output="$probe_root/real-root-prune.log"
 run_real_root_prune_contract "$hygiene_script" "$real_root_candidate" "$real_root_output" ||
-  fail "runner hygiene did not prune its marked, stale candidate through the real /private/tmp default root"
+  fail "runner hygiene did not prune its marked, stale candidate through the real private-tmp default root"
 real_root_candidate=""
 
 sed 's/safe_remove_agent_temp_path "$candidate"/echo "runner-hygiene: mutation disabled agent temp prune $candidate"/' \
@@ -667,4 +677,4 @@ assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (30 GiB hard floor, 36 GiB best-effort pre-lane target, target-miss warning, compact RUNNER_DISK failure inventory, pre-deletion recovery JSON, exact producer-to-pruner lifecycle marker, create-time pending registration, paired completion command, git-local marker excludes, corrupt-marker rejection, private/tmp and TMPDIR finalizer roots, 1 helper-created marked clone pruned, 1 helper-created unmarked clone preserved and reported, 1 audit-size-failure report-only preserve, 1 audit-disabled mutation red, 1 real /private/tmp prune, 1 prune-disabled real-root mutation red, 1 prune-disabled below-floor pre-job mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, maintenance-mode runner-root preservation, 18 self-hosted job bindings across 5 workflows, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 4 marker-authorized agent temp removals, 13 sentinel checks)"
+echo "runner hygiene contract: PASS (30 GiB Darwin hard floor (8 GiB Linux), 36 GiB Darwin / 12 GiB Linux pre-lane target, target-miss warning, compact RUNNER_DISK failure inventory, pre-deletion recovery JSON, exact producer-to-pruner lifecycle marker, create-time pending registration, paired completion command, git-local marker excludes, corrupt-marker rejection, private-tmp and TMPDIR finalizer roots, 1 helper-created marked clone pruned, 1 helper-created unmarked clone preserved and reported, 1 audit-size-failure report-only preserve, 1 audit-disabled mutation red, 1 real private-tmp prune, 1 prune-disabled real-root mutation red, 1 prune-disabled below-floor pre-job mutation red, bounded stale-agent-temp pruning, idle-unmarked preservation, cwd and bidirectional linked-worktree guards, 4 diagnostic-failure preserves, fail-closed floor, maintenance-mode runner-root preservation, 18 self-hosted job bindings across 5 workflows, 2 real browser-output producers, 1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 4 marker-authorized agent temp removals, 13 sentinel checks)"
