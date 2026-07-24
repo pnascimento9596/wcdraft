@@ -42,15 +42,15 @@ selects **zero** of them for kill.
 
 ## Assertions
 
-| Check | Result |
-| --- | --- |
-| `AUDIT foreign` biotraxiq lines | 5 |
-| lines containing `selected=0` | 5 |
-| `DRY-RUN SELECT` lines | 0 |
-| DRY-RUN SELECT targeting biotraxiq | **0** |
+| Check                                       | Result                |
+| ------------------------------------------- | --------------------- |
+| `AUDIT foreign` biotraxiq lines             | 5                     |
+| lines containing `selected=0`               | 5                     |
+| `DRY-RUN SELECT` lines                      | 0                     |
+| DRY-RUN SELECT targeting biotraxiq          | **0**                 |
 | false-positive shell scans (`exe=/bin/zsh`) | **0** after argv0 fix |
-| Writes under actions-runner-biotraxiq | **none** |
-| Overall | **PASS** |
+| Writes under actions-runner-biotraxiq       | **none**              |
+| Overall                                     | **PASS**              |
 
 ## Script contract verified
 

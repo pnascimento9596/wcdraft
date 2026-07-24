@@ -55,10 +55,10 @@ high CPU.
 
 ## Evidence (this host)
 
-| Episode   | Job                                       | Notes                                                 |
-| --------- | ----------------------------------------- | ----------------------------------------------------- |
-| Overnight | CI Setup Node (golden lane)               | ~6 936 Well-known lines after failed spawn transition |
-| Afternoon | nightly-heavy `rating lock · Python 3.13` | Same signature; event=`schedule` (not manual)         |
+| Episode   | Job                                       | Notes                                                                  |
+| --------- | ----------------------------------------- | ---------------------------------------------------------------------- |
+| Overnight | CI Setup Node (golden lane)               | ~6 936 Well-known lines after failed spawn transition                  |
+| Afternoon | nightly-heavy `rating lock · Python 3.13` | Same signature; event=`schedule` (not manual)                          |
 | Track A   | ETL path detector / aggregate gates       | Unscoped CPU watchdog killed workers mid-job; biotraxiq co-tenant live |
 
 ## What this is — and is not
@@ -80,11 +80,11 @@ reports of similar ProcessInvoker spawn wedges span runner versions from the
 
 ## Containment (host) — not a fix
 
-| Control                                                              | Role                                                                                                                                                         |
-| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Clean PATH in LaunchAgent + `.path` (wcdraft root only)              | Removes interactive agent PATH pollution (codex/grok/opencode shims) that survived into `runsvc` via `.path`                                                 |
-| `runner-worker-watchdog.sh` every 60s (path-scoped)                  | Reap **wcdraft** orphans (ppid=1); kill only on **log wedge signature** (incomplete spawn + Well-known heartbeats past threshold); never CPU-only; never biotraxiq |
-| Version-controlled runbook                                           | `docs/runbooks/self-hosted-runner-worker-watchdog.md`                                                                                                        |
+| Control                                                 | Role                                                                                                                                                               |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Clean PATH in LaunchAgent + `.path` (wcdraft root only) | Removes interactive agent PATH pollution (codex/grok/opencode shims) that survived into `runsvc` via `.path`                                                       |
+| `runner-worker-watchdog.sh` every 60s (path-scoped)     | Reap **wcdraft** orphans (ppid=1); kill only on **log wedge signature** (incomplete spawn + Well-known heartbeats past threshold); never CPU-only; never biotraxiq |
+| Version-controlled runbook                              | `docs/runbooks/self-hosted-runner-worker-watchdog.md`                                                                                                              |
 
 **The watchdog is containment, not a fix.** It bounds each wedge so a multi-hour
 silent hang becomes a several-minute self-healing event, but it **cannot make CI

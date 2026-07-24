@@ -10,12 +10,12 @@
 
 ## 0. Decision gates
 
-| Gate | Criteria |
-| --- | --- |
-| Approve host | Owner picks **always-on Linux box/VPS** (recommended) vs Linux VM on Mac (interim only) |
-| Arch | **x86_64** (cheapest VPS, broadest binary support) **or** **aarch64** (Apple Silicon VM / Ampere). Both work; pick one and stick to it for tool caches |
-| Labels | New: `self-hosted, Linux, wcdraft` (+ `X64` or `ARM64` to match host). Drop `macOS` from required set |
-| Success | One full PR CI green + one nightly-heavy green on Linux; then decommission `wcdraft-m4` |
+| Gate         | Criteria                                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Approve host | Owner picks **always-on Linux box/VPS** (recommended) vs Linux VM on Mac (interim only)                                                                |
+| Arch         | **x86_64** (cheapest VPS, broadest binary support) **or** **aarch64** (Apple Silicon VM / Ampere). Both work; pick one and stick to it for tool caches |
+| Labels       | New: `self-hosted, Linux, wcdraft` (+ `X64` or `ARM64` to match host). Drop `macOS` from required set                                                  |
+| Success      | One full PR CI green + one nightly-heavy green on Linux; then decommission `wcdraft-m4`                                                                |
 
 ---
 
@@ -35,13 +35,13 @@ runs-on: [self-hosted, Linux, wcdraft]
 # runs-on: [self-hosted, Linux, X64, wcdraft]   # or ARM64
 ```
 
-| File | Job count (approx) | Notes |
-| --- | --- | --- |
-| `.github/workflows/ci.yml` | 10 jobs | path detector, static, verify, golden, realism, etl, db ephemeral, rating lock, gitleaks, aggregate |
-| `.github/workflows/etl.yml` | 3 | changes, ingest, rating-lock matrix |
-| `.github/workflows/nightly-heavy.yml` | 3 | daily runway, realism heavy, rating-lock matrix |
-| `.github/workflows/marketing-x.yml` | 1 | |
-| `.github/workflows/production-db-migrate.yml` | 1 | manual prod migration |
+| File                                          | Job count (approx) | Notes                                                                                               |
+| --------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
+| `.github/workflows/ci.yml`                    | 10 jobs            | path detector, static, verify, golden, realism, etl, db ephemeral, rating lock, gitleaks, aggregate |
+| `.github/workflows/etl.yml`                   | 3                  | changes, ingest, rating-lock matrix                                                                 |
+| `.github/workflows/nightly-heavy.yml`         | 3                  | daily runway, realism heavy, rating-lock matrix                                                     |
+| `.github/workflows/marketing-x.yml`           | 1                  |                                                                                                     |
+| `.github/workflows/production-db-migrate.yml` | 1                  | manual prod migration                                                                               |
 
 **Cutover strategy (recommended):** dual-label transitional PR:
 
@@ -56,15 +56,15 @@ Do **not** leave both macOS and Linux matching the same label set (split-brain).
 
 ## 2. ARM64 vs x86_64 — native dependencies
 
-| Surface | Decision |
-| --- | --- |
-| Node 22 + pnpm | Official builds both arch; use `actions/setup-node` or runner tool cache |
-| Python 3.11–3.13 via `uv` | Official wheels both arch |
-| Playwright chromium/webkit | Official browser builds both; **install Linux system deps** (below) |
-| PGlite | WASM; arch-neutral |
-| Neon CLI / API | Arch-neutral (Node/HTTP) |
-| `pnpm-lock.yaml` | Multi-platform; cold install on new arch is fine |
-| Optional native addons | None required by CI today for shipped paths |
+| Surface                    | Decision                                                                 |
+| -------------------------- | ------------------------------------------------------------------------ |
+| Node 22 + pnpm             | Official builds both arch; use `actions/setup-node` or runner tool cache |
+| Python 3.11–3.13 via `uv`  | Official wheels both arch                                                |
+| Playwright chromium/webkit | Official browser builds both; **install Linux system deps** (below)      |
+| PGlite                     | WASM; arch-neutral                                                       |
+| Neon CLI / API             | Arch-neutral (Node/HTTP)                                                 |
+| `pnpm-lock.yaml`           | Multi-platform; cold install on new arch is fine                         |
+| Optional native addons     | None required by CI today for shipped paths                              |
 
 **Recommendation:** **x86_64 VPS** unless reusing an existing ARM box — fewer surprises for random npm optional deps.
 
@@ -94,13 +94,13 @@ Cache key already includes `${{ runner.os }}-${{ runner.arch }}` — will rekey 
 
 ## 4. Runner hygiene + disk maintenance move
 
-| Host component | Action |
-| --- | --- |
-| `.github/actions/self-hosted-runner-hygiene` | Keep; verify paths (`RUNNER_TEMP`, `RUNNER_TOOL_CACHE`, workspace under `_work`) on Linux — scripts are POSIX |
-| `scripts/ci/self-hosted-runner-hygiene.sh` | Smoke-test on Linux once; fix only if macOS-only utilities appear |
-| `com.wcdraft.runner-disk-maintenance` LaunchAgent | **Replace** with systemd timer or cron on Linux (same free-space floor ≥30 GiB on `_work`) |
-| `com.wcdraft.runner-worker-watchdog` | **Do not port CPU/log macOS watchdog as a “fix”.** Optional Linux orphan reap only; fork wedge is the macOS Network.framework class |
-| Absolute `/Users/paulo/actions-runner-wcdraft` | Retire; document `WCDRAFT_RUNNER_ROOT` for Linux path |
+| Host component                                    | Action                                                                                                                              |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `.github/actions/self-hosted-runner-hygiene`      | Keep; verify paths (`RUNNER_TEMP`, `RUNNER_TOOL_CACHE`, workspace under `_work`) on Linux — scripts are POSIX                       |
+| `scripts/ci/self-hosted-runner-hygiene.sh`        | Smoke-test on Linux once; fix only if macOS-only utilities appear                                                                   |
+| `com.wcdraft.runner-disk-maintenance` LaunchAgent | **Replace** with systemd timer or cron on Linux (same free-space floor ≥30 GiB on `_work`)                                          |
+| `com.wcdraft.runner-worker-watchdog`              | **Do not port CPU/log macOS watchdog as a “fix”.** Optional Linux orphan reap only; fork wedge is the macOS Network.framework class |
+| Absolute `/Users/paulo/actions-runner-wcdraft`    | Retire; document `WCDRAFT_RUNNER_ROOT` for Linux path                                                                               |
 
 ---
 
@@ -117,12 +117,12 @@ Cache key already includes `${{ runner.os }}-${{ runner.arch }}` — will rekey 
 
 ### 6.1 Hardware / VPS sketch
 
-| Spec | Minimum | Comfortable |
-| --- | --- | --- |
-| CPU | 4 vCPU | 8 vCPU (realism N=2000) |
-| RAM | 8 GiB | 16 GiB |
-| Disk | 80 GiB SSD | 120 GiB+ (tool cache + Playwright) |
-| OS | Ubuntu 22.04/24.04 LTS | same |
+| Spec | Minimum                | Comfortable                        |
+| ---- | ---------------------- | ---------------------------------- |
+| CPU  | 4 vCPU                 | 8 vCPU (realism N=2000)            |
+| RAM  | 8 GiB                  | 16 GiB                             |
+| Disk | 80 GiB SSD             | 120 GiB+ (tool cache + Playwright) |
+| OS   | Ubuntu 22.04/24.04 LTS | same                               |
 
 ### 6.2 Bootstrap (outline)
 
@@ -167,12 +167,12 @@ Cache key already includes `${{ runner.os }}-${{ runner.arch }}` — will rekey 
 
 ## 8. Wall-clock risk (~31 min verify on M4 Pro)
 
-| Lane | M4 Pro (known) | Modest Linux (4–8 vCPU) |
-| --- | --- | --- |
-| Full verify + goldens | ~31 min | **Unknown** — expect same order of magnitude if SSD + warm caches; cold Playwright install adds minutes once |
-| Realism N=2000×3 | Dominates nightly | May be **slower** on 4 vCPU; not a correctness blocker |
-| Rating-lock ×3 Python | Moderate | Fine |
-| Neon ephemeral | Network-bound | Neutral |
+| Lane                  | M4 Pro (known)    | Modest Linux (4–8 vCPU)                                                                                      |
+| --------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------ |
+| Full verify + goldens | ~31 min           | **Unknown** — expect same order of magnitude if SSD + warm caches; cold Playwright install adds minutes once |
+| Realism N=2000×3      | Dominates nightly | May be **slower** on 4 vCPU; not a correctness blocker                                                       |
+| Rating-lock ×3 Python | Moderate          | Fine                                                                                                         |
+| Neon ephemeral        | Network-bound     | Neutral                                                                                                      |
 
 Record first green Linux wall-clock in the migration PR report. Do not promise “faster than M4.”
 
@@ -180,20 +180,20 @@ Record first green Linux wall-clock in the migration PR report. Do not promise �
 
 ## 9. Acceptance checklist (dispatch definition of done)
 
-- [ ] Linux runner online with intended labels  
-- [ ] All five workflows use Linux label set; no job still requires `macOS`  
-- [ ] Playwright chromium+webkit green on Linux  
-- [ ] Golden RNG + draft + data + leaderboard goldens green  
-- [ ] Ephemeral Neon job green (when path-selected)  
-- [ ] One nightly-heavy green (or forced dispatch)  
-- [ ] `wcdraft-m4` offline; biotraxiq untouched  
-- [ ] Runbooks updated; Daily runway automation path verified  
+- [ ] Linux runner online with intended labels
+- [ ] All five workflows use Linux label set; no job still requires `macOS`
+- [ ] Playwright chromium+webkit green on Linux
+- [ ] Golden RNG + draft + data + leaderboard goldens green
+- [ ] Ephemeral Neon job green (when path-selected)
+- [ ] One nightly-heavy green (or forced dispatch)
+- [ ] `wcdraft-m4` offline; biotraxiq untouched
+- [ ] Runbooks updated; Daily runway automation path verified
 
 ---
 
 ## 10. Out of scope for the migration dispatch
 
-- Product code changes for Track A (#325)  
-- GitHub-hosted Actions minutes  
-- Moving `apps/mobile` into CI  
-- “Fixing” macOS fork via more watchdog heuristics  
+- Product code changes for Track A (#325)
+- GitHub-hosted Actions minutes
+- Moving `apps/mobile` into CI
+- “Fixing” macOS fork via more watchdog heuristics

@@ -18,13 +18,13 @@ Every workflow job uses `runs-on: [self-hosted, macOS, ARM64, wcdraft]`. That
 label set is an **operational choice** (free self-hosted host), not a product
 requirement derived from the job body.
 
-| Workflow | Jobs | Real OS requirement |
-| --- | --- | --- |
-| `ci.yml` | `changes · path detector`, `static · format · contracts`, `typecheck · lint · test · build`, `golden RNG determinism`, `realism · asymmetric gate`, `ingest · identity-QA · determinism`, `db · ephemeral branch · …`, `rating · lock-file determinism`, `secrets · gitleaks`, `required · aggregate gates` | Linux or macOS. Node 22, pnpm, uv/Python, git, shell. |
-| `etl.yml` | path detector, ingest/QA, rating-lock matrix (3.11/3.12/3.13) | Linux or macOS. Python + uv. |
-| `nightly-heavy.yml` | Daily runway, realism N=2000×3, rating-lock matrix | Linux or macOS. |
-| `marketing-x.yml` | marketing automation | Linux or macOS. |
-| `production-db-migrate.yml` | prod migration (manual dispatch) | Linux or macOS. Neon CLI/API + Node. |
+| Workflow                    | Jobs                                                                                                                                                                                                                                                                                                        | Real OS requirement                                   |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `ci.yml`                    | `changes · path detector`, `static · format · contracts`, `typecheck · lint · test · build`, `golden RNG determinism`, `realism · asymmetric gate`, `ingest · identity-QA · determinism`, `db · ephemeral branch · …`, `rating · lock-file determinism`, `secrets · gitleaks`, `required · aggregate gates` | Linux or macOS. Node 22, pnpm, uv/Python, git, shell. |
+| `etl.yml`                   | path detector, ingest/QA, rating-lock matrix (3.11/3.12/3.13)                                                                                                                                                                                                                                               | Linux or macOS. Python + uv.                          |
+| `nightly-heavy.yml`         | Daily runway, realism N=2000×3, rating-lock matrix                                                                                                                                                                                                                                                          | Linux or macOS.                                       |
+| `marketing-x.yml`           | marketing automation                                                                                                                                                                                                                                                                                        | Linux or macOS.                                       |
+| `production-db-migrate.yml` | prod migration (manual dispatch)                                                                                                                                                                                                                                                                            | Linux or macOS. Neon CLI/API + Node.                  |
 
 ### Playwright WebKit
 
@@ -65,17 +65,17 @@ invoked by any CI job today.**
 
 ## 2. What is hard-coded to this host?
 
-| Item | Location | Notes |
-| --- | --- | --- |
-| Label set `self-hosted, macOS, ARM64, wcdraft` | All five workflows | Every job |
-| Runner name `wcdraft-m4` | GitHub registration / LaunchAgent label `actions.runner.pnascimento9596-wcdraft.wcdraft-m4` | Host registration |
-| `WCDRAFT_RUNNER_ROOT=/Users/paulo/actions-runner-wcdraft` | Watchdog plist + scripts | Absolute Mac path |
-| `self-hosted-runner-hygiene` action | `.github/actions/` + every job | Assumes persistent runner `_work` / tool cache layout |
-| Disk maintenance LaunchAgent | `com.wcdraft.runner-disk-maintenance` | Host-local; wcdraft `_work` free-space floor (~30 GiB) |
-| Worker watchdog LaunchAgent | `com.wcdraft.runner-worker-watchdog` | Host-local; now path-scoped |
-| Playwright cache key | `playwright-chromium-webkit-${{ runner.os }}-${{ runner.arch }}-…` | Portable; will rekey on Linux |
-| Nightly runway job | `nightly-heavy.yml` | Same label set; stay-awake host required while on laptop |
-| ARM64 | Labels + tool cache paths | Prefer Linux aarch64 or x86_64; lockfile is multi-platform pnpm |
+| Item                                                      | Location                                                                                    | Notes                                                           |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Label set `self-hosted, macOS, ARM64, wcdraft`            | All five workflows                                                                          | Every job                                                       |
+| Runner name `wcdraft-m4`                                  | GitHub registration / LaunchAgent label `actions.runner.pnascimento9596-wcdraft.wcdraft-m4` | Host registration                                               |
+| `WCDRAFT_RUNNER_ROOT=/Users/paulo/actions-runner-wcdraft` | Watchdog plist + scripts                                                                    | Absolute Mac path                                               |
+| `self-hosted-runner-hygiene` action                       | `.github/actions/` + every job                                                              | Assumes persistent runner `_work` / tool cache layout           |
+| Disk maintenance LaunchAgent                              | `com.wcdraft.runner-disk-maintenance`                                                       | Host-local; wcdraft `_work` free-space floor (~30 GiB)          |
+| Worker watchdog LaunchAgent                               | `com.wcdraft.runner-worker-watchdog`                                                        | Host-local; now path-scoped                                     |
+| Playwright cache key                                      | `playwright-chromium-webkit-${{ runner.os }}-${{ runner.arch }}-…`                          | Portable; will rekey on Linux                                   |
+| Nightly runway job                                        | `nightly-heavy.yml`                                                                         | Same label set; stay-awake host required while on laptop        |
+| ARM64                                                     | Labels + tool cache paths                                                                   | Prefer Linux aarch64 or x86_64; lockfile is multi-platform pnpm |
 
 No workflow references the string `wcdraft-m4` as a hostname; selection is by
 **labels**. Scripts under `scripts/ci/` are generally POSIX; hygiene is the main
@@ -83,12 +83,12 @@ host-coupled surface.
 
 ## 3. Wall-clock risk
 
-| Lane | M4 Pro (observed / stated) | Modest Linux host (estimate) |
-| --- | --- | --- |
-| Full verify (~typecheck/lint/test/build + goldens + related) | ~31 minutes | **Unknown precisely**; likely same order of magnitude on a 4–8 vCPU / 16 GiB box if disk is SSD and pnpm store is warm. Cold Playwright browser install adds minutes once. |
-| Realism heavy N=2000×3 | Dominates nightly; CPU-bound | Scales with cores; a modest 4-vCPU box may be **slower** than M4 Pro. Flag as capacity risk, not correctness risk. |
-| Rating-lock ×3 Python | Moderate | Fine on Linux |
-| Neon ephemeral round-trip | Network-bound | Neutral |
+| Lane                                                         | M4 Pro (observed / stated)   | Modest Linux host (estimate)                                                                                                                                               |
+| ------------------------------------------------------------ | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Full verify (~typecheck/lint/test/build + goldens + related) | ~31 minutes                  | **Unknown precisely**; likely same order of magnitude on a 4–8 vCPU / 16 GiB box if disk is SSD and pnpm store is warm. Cold Playwright browser install adds minutes once. |
+| Realism heavy N=2000×3                                       | Dominates nightly; CPU-bound | Scales with cores; a modest 4-vCPU box may be **slower** than M4 Pro. Flag as capacity risk, not correctness risk.                                                         |
+| Rating-lock ×3 Python                                        | Moderate                     | Fine on Linux                                                                                                                                                              |
+| Neon ephemeral round-trip                                    | Network-bound                | Neutral                                                                                                                                                                    |
 
 Honest gap: **no measured Linux baseline in this repo**. Do not treat “faster on
 Linux” as proven. The migration win is **reliability and isolation**, not
@@ -100,11 +100,11 @@ dedicated small always-on host with ≥4 cores and ≥16 GiB RAM.
 
 ## 4. Options (costed) + recommendation
 
-| Option | Cost | Escapes fork hazard | Escapes daily-driver contention | Escapes stay-awake requirement | Notes |
-| --- | --- | --- | --- | --- | --- |
-| **(a) Linux VM on this Mac** (Virtualization.framework / UTM / Lima) | ~$0 | Yes | **No** (same laptop CPU/RAM/disk) | **No** | Still competes with biotraxiq and interactive work; laptop sleep still kills CI |
-| **(b) Small always-on Linux box or VPS** (self-hosted runner) | Small recurring (hardware electricity or ~$5–20/mo VPS) | Yes | Yes | Yes | Matches project playbook: runner should not be the daily driver |
-| **(c) Stay on macOS + corrected watchdog** | $0 | **No** | **No** | **No** | Containment only; already failed to converge once under load + co-tenant |
+| Option                                                               | Cost                                                    | Escapes fork hazard | Escapes daily-driver contention   | Escapes stay-awake requirement | Notes                                                                           |
+| -------------------------------------------------------------------- | ------------------------------------------------------- | ------------------- | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------------- |
+| **(a) Linux VM on this Mac** (Virtualization.framework / UTM / Lima) | ~$0                                                     | Yes                 | **No** (same laptop CPU/RAM/disk) | **No**                         | Still competes with biotraxiq and interactive work; laptop sleep still kills CI |
+| **(b) Small always-on Linux box or VPS** (self-hosted runner)        | Small recurring (hardware electricity or ~$5–20/mo VPS) | Yes                 | Yes                               | Yes                            | Matches project playbook: runner should not be the daily driver                 |
+| **(c) Stay on macOS + corrected watchdog**                           | $0                                                      | **No**              | **No**                            | **No**                         | Containment only; already failed to converge once under load + co-tenant        |
 
 ### Recommendation
 

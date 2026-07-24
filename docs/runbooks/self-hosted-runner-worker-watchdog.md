@@ -7,10 +7,10 @@ self-hosted Mac runner only.
 
 This Mac runs **two** self-hosted GitHub Actions runners:
 
-| Runner | Root | Ownership |
-| --- | --- | --- |
-| `wcdraft-m4` | `/Users/paulo/actions-runner-wcdraft/` | wcdraft |
-| biotraxiq | `/Users/paulo/actions-runner-biotraxiq/` | **unrelated project — production for its owner** |
+| Runner       | Root                                     | Ownership                                        |
+| ------------ | ---------------------------------------- | ------------------------------------------------ |
+| `wcdraft-m4` | `/Users/paulo/actions-runner-wcdraft/`   | wcdraft                                          |
+| biotraxiq    | `/Users/paulo/actions-runner-biotraxiq/` | **unrelated project — production for its owner** |
 
 **Never** treat name-matched `Runner.Worker` / `Runner.Listener` as safe to kill.
 A biotraxiq worker at high CPU with a live parent is a healthy job, not a wedge.
