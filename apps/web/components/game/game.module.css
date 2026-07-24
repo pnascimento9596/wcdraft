@@ -1688,6 +1688,9 @@
 .spinSkipHint {
   composes: spinSkipHint from "./game-styles/draft-spin.module.css";
 }
+.spinSkipHintDismiss {
+  composes: spinSkipHintDismiss from "./game-styles/draft-spin.module.css";
+}
 .spinDrum {
   composes: spinDrum from "./game-styles/draft-spin.module.css";
   composes: spinDrum from "./game-styles/draft-polish.module.css";
