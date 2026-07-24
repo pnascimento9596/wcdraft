@@ -396,10 +396,13 @@ emit_largest_consumers() {
 }
 
 if [ "$phase" = "start" ]; then
-  if [ "${RUNNER_NAME:-}" != "wcdraft-m4" ]; then
-    echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
-    exit 1
-  fi
+  case "${RUNNER_NAME:-}" in
+    wcdraft-m4|wcdraft-linux-arm64) ;;
+    *)
+      echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
+      exit 1
+      ;;
+  esac
 
   audit_unmarked_agent_temp_residue
 
