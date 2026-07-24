@@ -41,7 +41,7 @@ import {
 import { fetchBoardPage } from "@/lib/leaderboard/client";
 import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
 import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
-import { requestRunOgSign } from "@/lib/game/run-og-client";
+import { signRunOg } from "@/lib/game/run-og-prewarm";
 import {
   loadScoreDistributionOnce,
   referenceStandingForRecord,
@@ -70,7 +70,6 @@ type OgSignState =
   | { kind: "ready"; signed: string; challengeProof: string | null }
   | { kind: "error"; message: string };
 
-const OG_SIGN_BUDGET_MS = 4_000;
 type ShareAction = "copy-caption" | "copy-link" | "native";
 
 export function ShareScreen() {
@@ -403,15 +402,17 @@ function ShareBody({
       new Promise<void>((resolve) => {
         delayTimeout = window.setTimeout(resolve, ms);
       });
-    const signCurrentRun = async (exposeError: boolean): Promise<boolean> => {
+    const signCurrentRun = async (exposeError: boolean, force = false): Promise<boolean> => {
       setOgSign({ kind: "pending" });
       controller = new AbortController();
       try {
-        const body = await requestRunOgSign(shareLink.token, {
+        // Shared session sign path: first attempt reuses prewarm success cache
+        // (≤1 successful sign per token). force only for manual Retry after a
+        // prior success or intentional re-sign; soft-fail null is not sticky.
+        const body = await signRunOg(shareLink.token, {
           operation: "signed share preview",
-          timeoutMs: OG_SIGN_BUDGET_MS,
-          safety: "safe-read",
           signal: controller.signal,
+          force,
         });
         if (!body?.signed) {
           if (!cancelled && exposeError) {
@@ -453,7 +454,10 @@ function ShareBody({
         const delay = retryDelays[i]!;
         if (delay > 0) await wait(delay);
         if (cancelled) return;
-        const signed = await signCurrentRun(i === retryDelays.length - 1);
+        // Never force on the soft-fail loop: null results are not sticky, so a
+        // fresh network call is free after settle. force would bust a successful
+        // prewarm and violate ≤1 successful sign per token per session.
+        const signed = await signCurrentRun(i === retryDelays.length - 1, false);
         if (cancelled || signed) return;
       }
     })();

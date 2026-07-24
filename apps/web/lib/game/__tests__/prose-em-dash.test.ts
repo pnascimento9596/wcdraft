@@ -47,7 +47,7 @@ const CLEANED_PROSE_SURFACES = [
 const PROTECTED_EM_DASH_VALUES: Readonly<Record<string, readonly string[]>> = {
   "../../../components/game/candidate-card.tsx": ["—", "—", "—", "—", "—", "—"],
   "../../../components/game/draft-screen/index.tsx": ["—"],
-  "../../../components/game/local-progress-band.tsx": ["—", "—"],
+  "../../../components/game/local-progress-band.tsx": ["—"],
   "../../../components/game/pitch.tsx": ["— empty slot"],
   "../../../components/game/results-screen.tsx": ["Daily field: —", "—"],
   "../../../components/game/share-screen.tsx": ["—", "—", "—", "—", "—", "—", "—"],

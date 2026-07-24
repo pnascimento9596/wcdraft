@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ShareScreen } from "@/components/game/share-screen";
 import type { RunRecordV1 } from "@/lib/game/run-record";
 import type { ShareView } from "@/lib/game/share-adapters";
+import { resetRunOgPrewarmForTests } from "@/lib/game/run-og-prewarm";
 import { advanceTime, buttonByText, click, mountReact } from "@/lib/test/dom-harness";
 
 const TOKEN = "t3.share-resilience-token";
@@ -145,6 +146,7 @@ async function mountShare(fetcher: ReturnType<typeof vi.fn<typeof fetch>>) {
 
 beforeEach(() => {
   vi.useFakeTimers();
+  resetRunOgPrewarmForTests();
   navigation.params = new URLSearchParams("run=run-v1-share-resilience");
   window.history.replaceState(null, "", "/play/share?run=run-v1-share-resilience");
 });
@@ -153,6 +155,7 @@ afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.clearAllMocks();
+  resetRunOgPrewarmForTests();
   document.body.replaceChildren();
 });
 

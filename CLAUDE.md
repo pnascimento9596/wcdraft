@@ -52,6 +52,24 @@ live-verify-with-auto-revert.
   no LLMs and no fabrication in the intake path; absent signals stay null
   (honest-state null ≠ 0).
 
+## Infrastructure vs product (self-hosted runner)
+
+A CI job exhibiting the **runner wedge signature** is an **infrastructure failure,
+not a product failure**:
+
+- Worker log: `Starting process:` with no following
+  `Process started with process id … waiting for process exit`, then repeating
+  `Well known directory`; and/or
+- A kill recorded in `~/Library/Logs/com.wcdraft.runner-worker-watchdog/kills.log`
+  (or the host copy under the runner maintenance logs).
+
+On infrastructure failure: **re-run the job once**, and record the re-run in the
+final report. **Never** treat it as a gate FAIL, **never** fix-forward product code
+against it, and **never** auto-revert production on it. Auto-revert is reserved for
+a genuine failed **live** check against production. If a job fails **twice** with
+the same infrastructure signature, stop and report — do not reinterpret it as a
+product defect. Runbook: `docs/runbooks/self-hosted-runner-worker-watchdog.md`.
+
 ## Honesty
 
 - Never fabricate test results, benchmark numbers, review verdicts, or merge/deploy status.

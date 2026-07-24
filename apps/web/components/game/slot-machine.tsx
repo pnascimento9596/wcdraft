@@ -88,7 +88,10 @@ export interface SpinStageProps {
   readonly onSkip: () => void;
   readonly onReveal: () => void;
   readonly canSkip: boolean;
+  /** Compact first-time teaching hint while spinning; presentation only. */
   readonly showSkipHint: boolean;
+  /** Dismisses the first-time skip hint (local preference). */
+  readonly onDismissSkipHint?: () => void;
 }
 
 export function SpinStage({
@@ -109,6 +112,7 @@ export function SpinStage({
   onReveal,
   canSkip,
   showSkipHint,
+  onDismissSkipHint,
 }: SpinStageProps) {
   const [left, center, right] = model.reels;
   const settled = anim === "settled";
@@ -190,7 +194,24 @@ export function SpinStage({
         className={`${s.spinDrumLabel} ${showSkipHint && spinning ? s.spinDrumLabelWithHint : ""}`}
       >
         Spinning nation + era
-        {showSkipHint && spinning ? <span className={s.spinSkipHint}>tap to skip</span> : null}
+        {showSkipHint && spinning ? (
+          <span className={s.spinSkipHint} role="status">
+            <span>Tap to skip</span>
+            {onDismissSkipHint ? (
+              <button
+                type="button"
+                className={s.spinSkipHintDismiss}
+                aria-label="Dismiss skip hint"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onDismissSkipHint();
+                }}
+              >
+                Got it
+              </button>
+            ) : null}
+          </span>
+        ) : null}
       </span>
 
       <div className={s.spinDrum} style={drumVars} aria-hidden="true">
@@ -244,7 +265,7 @@ export function SpinStage({
           <span className={s.spinTileValue}>{settled ? playerPoolCount : "—"}</span>
         </div>
         <div className={s.spinTile}>
-          <span className={s.spinTileLabel}>Strength</span>
+          <span className={s.spinTileLabel}>Synergy</span>
           <span className={s.spinTileValue}>
             {settled && synergyMultiplier !== null ? `${synergyMultiplier.toFixed(2)}×` : "—"}
           </span>

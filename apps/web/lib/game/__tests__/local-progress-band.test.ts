@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { LocalProgressBand } from "../../../components/game/local-progress-band";
 
 describe("LocalProgressBand", () => {
-  it("renders unknown server streaks as an honest dash", () => {
+  it("renders a null streak as an explicit empty state, not a broken dash chrome", () => {
     const html = renderToStaticMarkup(
       createElement(LocalProgressBand, {
         summary: {
@@ -19,9 +19,26 @@ describe("LocalProgressBand", () => {
       }),
     );
 
-    expect(html).toContain("Streak —");
+    expect(html).toContain("No streak yet");
+    expect(html).not.toContain("Streak —");
     expect(html).toContain("Today —");
     expect(html).toContain("All-time 84");
+  });
+
+  it("still renders a real zero streak as 0", () => {
+    const html = renderToStaticMarkup(
+      createElement(LocalProgressBand, {
+        summary: {
+          targetDate: "2026-06-29",
+          streakDays: 0,
+          todayBest: null,
+          allTimeBest: null,
+        },
+        compact: true,
+      }),
+    );
+    expect(html).toContain("Streak 0");
+    expect(html).not.toContain("No streak yet");
   });
 
   it("pins session-scoped friend-run context into the daily band", () => {

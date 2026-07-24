@@ -3,12 +3,18 @@ name: Nightly heavy gates
 on:
   schedule:
     # 15:23 UTC = 11:23 EDT / 10:23 EST, inside the runner Mac's awake window.
+    # GitHub may start the run 0–2h after the cron (observed ~16:45–17:00 UTC).
+    # That is schedule drift, not a manual re-trigger — event remains `schedule`.
     - cron: "23 15 * * *"
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# Separate group from ci.yml so nightly cannot cancel PR CI (and vice versa).
+# cancel-in-progress: a second nightly (late schedule or dispatch) replaces the first.
+# On a single free self-hosted runner, PR CI may still queue behind a long nightly job;
+# ~1h queue is accepted cost of the free CI model, not a defect.
 concurrency:
   group: nightly-heavy-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

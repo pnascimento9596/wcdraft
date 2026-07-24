@@ -8,6 +8,7 @@ import {
   ChallengeFriendButton,
 } from "@/components/game/challenge-friend-button";
 import type { RunRecordV1 } from "@/lib/game/run-record";
+import { resetRunOgPrewarmForTests } from "@/lib/game/run-og-prewarm";
 import { advanceTime, buttonByText, click, mountReact } from "@/lib/test/dom-harness";
 
 const TOKEN = "t3.challenge-proof-mounted-timeout";
@@ -27,12 +28,14 @@ function proofResponse(): Response {
 
 beforeEach(() => {
   vi.useFakeTimers();
+  resetRunOgPrewarmForTests();
 });
 
 afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.clearAllMocks();
+  resetRunOgPrewarmForTests();
   document.body.replaceChildren();
 });
 

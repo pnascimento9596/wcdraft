@@ -63,6 +63,15 @@ import { ManagerSlot } from "../manager-slot";
 import { MiniNationFlag } from "../mini-nation-flag";
 import { SpinStage, skipSpinAnimState, type SpinAnimState } from "../slot-machine";
 import { SynergyBar } from "../synergy-bar";
+import {
+  readLocalFlag,
+  shouldShowSpinSkipHint,
+  SKIP_SPIN_ANIMATIONS_STORAGE_KEY,
+  SPIN_SKIP_HINT_SEEN_STORAGE_KEY,
+  SPIN_SKIP_READY_STORAGE_KEY,
+  SPIN_SKIP_UNLOCK_MS,
+  writeLocalFlag,
+} from "@/lib/game/spin-skip-prefs";
 import { GameFallback } from "../game-fallback";
 import { DailyUnavailableNotice } from "../daily-unavailable-notice";
 import { LocalProgressBandWithVersions, type FriendRunContext } from "../local-progress-band";
@@ -117,7 +126,6 @@ type Selection =
 
 type OpenRosterFilter = "ALL" | Position;
 const OPEN_ROSTER_FILTERS: readonly OpenRosterFilter[] = ["ALL", "GK", "DF", "MF", "FW"];
-const SPIN_SKIP_READY_STORAGE_KEY = "wcdraft.spin-skip-ready.v1";
 
 export function DailyUnavailableDraftState() {
   return (
@@ -474,12 +482,16 @@ function DraftBoard({
   const [phase, setPhase] = useState<SpinPhase>("spin");
   const [anim, setAnim] = useState<SpinAnimState>("idle");
   const [spinSkipReady, setSpinSkipReady] = useState(false);
+  const [spinSkipHintSeen, setSpinSkipHintSeen] = useState(true);
+  const [skipSpinAnimations, setSkipSpinAnimations] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const compactDraftLayout = useCompactDraftLayout();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    setSpinSkipReady(window.sessionStorage.getItem(SPIN_SKIP_READY_STORAGE_KEY) === "1");
+    setSpinSkipReady(readLocalFlag(SPIN_SKIP_READY_STORAGE_KEY));
+    setSpinSkipHintSeen(readLocalFlag(SPIN_SKIP_HINT_SEEN_STORAGE_KEY));
+    setSkipSpinAnimations(readLocalFlag(SKIP_SPIN_ANIMATIONS_STORAGE_KEY));
   }, []);
 
   // Refs used to drive deterministic scroll alignment on two key
@@ -600,28 +612,41 @@ function DraftBoard({
     };
   }, [sheetOpen, sel?.kind]);
 
-  // SPIN clicked: reduced-motion skips the 2–3s reveal straight to settled;
-  // otherwise the drum animates and `onSettle` (animationend) flips to settled.
+  // SPIN clicked: reduced-motion and the local "Skip spin animations" toggle
+  // both skip the 2–3s reveal straight to settled. The toggle is presentation
+  // only — never a config axis or token field.
   const handleSpin = useCallback(() => {
-    setAnim(reducedMotion ? "settled" : "spinning");
-  }, [reducedMotion]);
+    setAnim(reducedMotion || skipSpinAnimations ? "settled" : "spinning");
+  }, [reducedMotion, skipSpinAnimations]);
   const markSpinSkipReady = useCallback(() => {
     setSpinSkipReady(true);
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(SPIN_SKIP_READY_STORAGE_KEY, "1");
-    }
+    writeLocalFlag(SPIN_SKIP_READY_STORAGE_KEY, true);
   }, []);
+  // Unlock skip once the first spin has been *spinning* past a short threshold,
+  // not after settle — so the escape hatch is discoverable without waiting ~2.5s.
+  useEffect(() => {
+    if (anim !== "spinning") return;
+    if (spinSkipReady) return;
+    const timer = window.setTimeout(() => {
+      markSpinSkipReady();
+    }, SPIN_SKIP_UNLOCK_MS);
+    return () => window.clearTimeout(timer);
+  }, [anim, spinSkipReady, markSpinSkipReady]);
   const handleSettle = useCallback(() => {
     setAnim("settled");
-    markSpinSkipReady();
-  }, [markSpinSkipReady]);
+  }, []);
   const handleSkip = useCallback(() => {
     setAnim((current) => skipSpinAnimState(current, spinSkipReady));
   }, [spinSkipReady]);
+  const handleDismissSkipHint = useCallback(() => {
+    setSpinSkipHintSeen(true);
+    writeLocalFlag(SPIN_SKIP_HINT_SEEN_STORAGE_KEY, true);
+  }, []);
   const handleReveal = useCallback(() => {
     revealFocusTargetRef.current = compactDraftLayout ? "candidates" : "formation";
     setPhase("lineup");
   }, [compactDraftLayout]);
+  const showSkipHint = shouldShowSpinSkipHint(spinSkipReady, spinSkipHintSeen, anim === "spinning");
 
   // DC-3 — commit a position-first target, roll the squad, persist. A
   // DraftTargetDeadEndError leaves the spin UNCONSUMED: we surface the
@@ -1032,7 +1057,8 @@ function DraftBoard({
           onSkip={handleSkip}
           onReveal={handleReveal}
           canSkip={spinSkipReady}
-          showSkipHint={spinSkipReady}
+          showSkipHint={showSkipHint}
+          onDismissSkipHint={handleDismissSkipHint}
         />
       </div>
     );

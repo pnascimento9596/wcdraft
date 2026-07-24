@@ -62,7 +62,10 @@ export function LocalProgressBand({
   const className = compact
     ? `${s.localProgressBand} ${s.localProgressBandCompact}`
     : s.localProgressBand;
-  const streakLabel = summary.streakDays === null ? "—" : summary.streakDays.toString();
+  // Null streak is absence, not zero: avoid chrome around "—" that reads as a
+  // broken number. Real 0 still renders as 0.
+  const hasStreak = summary.streakDays !== null;
+  const streakLabel = hasStreak ? summary.streakDays!.toString() : null;
   const showSignInNudge =
     trigger !== null &&
     checkedStorageKey === trigger.storageKey &&
@@ -90,7 +93,11 @@ export function LocalProgressBand({
   return (
     <section className={className} aria-label="Daily progress">
       <div className={s.localProgressRow}>
-        <span aria-label={`${streakLabel} day streak`}>Streak {streakLabel}</span>
+        {hasStreak ? (
+          <span aria-label={`${streakLabel} day streak`}>Streak {streakLabel}</span>
+        ) : (
+          <span aria-label="No streak yet">No streak yet</span>
+        )}
         <span aria-label={`Today's best ${formatBestScore(summary.todayBest)}`}>
           Today {formatBestScore(summary.todayBest)}
         </span>
