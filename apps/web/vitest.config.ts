@@ -37,8 +37,9 @@ export default defineConfig({
     // Linux ephemeral containers: default 1 worker to avoid fork-pool OOM
     // false reds; override via VITEST_MAX_WORKERS.
     maxWorkers: Number(process.env.VITEST_MAX_WORKERS ?? (process.platform === "linux" ? 1 : 4)),
-    minWorkers: 1,
     // Prefer threads on Linux when forced forks thrash under cgroup memory caps.
-    pool: process.env.VITEST_POOL ?? (process.platform === "linux" ? "threads" : "forks"),
+    pool: (process.env.VITEST_POOL ?? (process.platform === "linux" ? "threads" : "forks")) as
+      | "threads"
+      | "forks",
   },
 });
