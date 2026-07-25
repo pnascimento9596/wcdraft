@@ -73,11 +73,64 @@ require_directory "${RUNNER_TEMP:-}"
 workspace="$(cd "$GITHUB_WORKSPACE" && pwd -P)"
 tool_cache="$(cd "$RUNNER_TOOL_CACHE" && pwd -P)"
 runner_temp="$(cd "$RUNNER_TEMP" && pwd -P)"
-work_root="$(cd "$(dirname "$tool_cache")" && pwd -P)"
+# Derive work_root as a directory that contains workspace + runner_temp.
+# Persistent macOS layout: tool_cache parent == work root.
+# Ephemeral Linux containers (myoung34): workspace is
+#   /_work/<runner-name>/<repo>/<repo>
+# while tool_cache may live under /actions-runner/_work/_tool — different
+# physical parents after pwd -P. Prefer RUNNER_WORKSPACE parent, then the
+# Actions two-level layout under GITHUB_WORKSPACE, then tool_cache parent.
+if [ -n "${RUNNER_WORKSPACE:-}" ] && [ -d "${RUNNER_WORKSPACE}" ]; then
+  work_root="$(cd "$(dirname "$RUNNER_WORKSPACE")" && pwd -P)"
+elif [ -d "$workspace/../.." ]; then
+  work_root="$(cd "$workspace/../.." && pwd -P)"
+else
+  work_root="$(cd "$(dirname "$tool_cache")" && pwd -P)"
+fi
+# If tool_cache is outside work_root (ephemeral Linux), widen work_root to the
+# common ancestor of workspace and tool_cache so containment checks stay honest.
+case "$tool_cache/" in
+  "$work_root"/*) ;;
+  *)
+    # Walk up from workspace until tool_cache is a descendant or we hit /
+    candidate="$workspace"
+    while [ "$candidate" != "/" ] && [ "$candidate" != "." ]; do
+      case "$tool_cache/" in
+        "$candidate"/*)
+          work_root="$candidate"
+          break
+          ;;
+      esac
+      case "$workspace/" in
+        "$candidate"/*) ;;
+        *) break ;;
+      esac
+      parent="$(dirname "$candidate")"
+      [ "$parent" = "$candidate" ] && break
+      candidate="$parent"
+    done
+    # Fallback: accept the shared top-level mount if both live under /_work or /actions-runner
+    if [[ "$tool_cache/" != "$work_root"/* ]]; then
+      for root_candidate in /_work /actions-runner/_work /actions-runner; do
+        case "$workspace/" in
+          "$root_candidate"/*)
+            case "$tool_cache/" in
+              "$root_candidate"/*)
+                work_root="$(cd "$root_candidate" && pwd -P)"
+                break
+                ;;
+            esac
+            ;;
+        esac
+      done
+    fi
+    ;;
+esac
 active_container="$(dirname "$workspace")"
 cache_root="$tool_cache/wcdraft-cache"
 recovery_root="$work_root/_diag/wcdraft-runner-hygiene"
 recovery_counter=0
+echo "runner-hygiene: work_root=$work_root workspace=$workspace tool_cache=$tool_cache runner_temp=$runner_temp"
 
 json_escape() {
   local value="$1"
