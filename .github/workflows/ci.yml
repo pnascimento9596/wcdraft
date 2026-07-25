@@ -272,6 +272,8 @@ jobs:
       WCDRAFT_PLAYWRIGHT_BROWSER: chromium
       # WebKit OOM (exit 137) under Colima cgroup caps; macOS/native still runs both.
       WCDRAFT_COLLISION_ENGINES: chromium
+      WCDRAFT_ONE_SCREEN_ENGINES: chromium
+      WCDRAFT_NATIVE_APP_FEEL_ENGINE: chromium
       VITEST_MAX_WORKERS: "1"
       VITEST_POOL: threads
       NODE_OPTIONS: "--max-old-space-size=3072"
@@ -361,12 +363,17 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: WebKit native app-feel interaction contract
+      - name: Chromium native app-feel interaction contract
         env:
-          WCDRAFT_NATIVE_APP_FEEL_OUT_DIR: ${{ runner.temp }}/native-app-feel-webkit
+          WCDRAFT_NATIVE_APP_FEEL_OUT_DIR: ${{ runner.temp }}/native-app-feel-chromium
           WCDRAFT_NATIVE_APP_FEEL_PHASE: ci
           WCDRAFT_NATIVE_APP_FEEL_STRICT: "1"
-        run: pnpm --filter @wcdraft/web verify:native-app-feel:webkit
+          WCDRAFT_NATIVE_APP_FEEL_ENGINE: chromium
+          WCDRAFT_NATIVE_APP_FEEL_SERVER: production
+          WCDRAFT_PLAYWRIGHT_CHANNEL: chromium
+        # Build already ran above; invoke the engine-agnostic verifier directly
+        # (webkit wrapper forced WebKit and OOMs under Colima cgroup caps).
+        run: pnpm --filter @wcdraft/web exec tsx scripts/verify-native-app-feel-browser.mts
 
   golden:
     name: golden RNG determinism
