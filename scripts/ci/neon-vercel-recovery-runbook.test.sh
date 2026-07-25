@@ -2,6 +2,41 @@
 # shellcheck disable=SC1003,SC2016
 set -euo pipefail
 
+# Portable fixed-string search (rg_fixed preferred; grep fallback for lean images).
+rg_fixed() {
+  if command -v rg >/dev/null 2>&1; then
+    rg "$@"
+  else
+    # Map common rg flags used in this script onto grep.
+    # Supported here: -Fq, -nF, -F --count-matches
+    args=()
+    count=0
+    fixed=0
+    quiet=0
+    line_num=0
+    while [ "$#" -gt 0 ]; do
+      case "$1" in
+        -Fq) quiet=1; fixed=1; shift ;;
+        -nF) line_num=1; fixed=1; shift ;;
+        -F) fixed=1; shift ;;
+        --count-matches) count=1; shift ;;
+        --) shift; break ;;
+        -*) shift ;;
+        *) break ;;
+      esac
+    done
+    pattern="$1"; shift || true
+    file="$1"; shift || true
+    gargs=()
+    [ "$fixed" -eq 1 ] && gargs+=(-F)
+    [ "$quiet" -eq 1 ] && gargs+=(-q)
+    [ "$line_num" -eq 1 ] && gargs+=(-n)
+    [ "$count" -eq 1 ] && gargs+=(-c)
+    grep "${gargs[@]}" -- "$pattern" "$file"
+  fi
+}
+
+
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 runbook="$repo_root/docs/runbooks/neon-restore-vercel-rollback.md"
 workflow="$repo_root/.github/workflows/ci.yml"
@@ -21,7 +56,7 @@ bash -n "$combined_bash"
 require_literal() {
   literal="$1"
   if command -v rg >/dev/null 2>&1; then
-    rg -Fq -- "$literal" "$runbook" || {
+    rg_fixed -Fq -- "$literal" "$runbook" || {
       printf 'missing runbook contract: %s\n' "$literal" >&2
       exit 1
     }
@@ -37,7 +72,7 @@ require_count() {
   expected="$1"
   literal="$2"
   if command -v rg >/dev/null 2>&1; then
-    actual="$(rg -F --count-matches -- "$literal" "$runbook" || true)"
+    actual="$(rg_fixed -F --count-matches -- "$literal" "$runbook" || true)"
   else
     actual="$(grep -F --count -- "$literal" "$runbook" || true)"
   fi
@@ -58,7 +93,7 @@ assert_route_order() {
   }
   previous=0
   for literal in "$@"; do
-    line="$(rg -nF -- "$literal" "$route_block_file" | head -1 | cut -d: -f1)"
+    line="$(rg_fixed -nF -- "$literal" "$route_block_file" | head -1 | cut -d: -f1)"
     [ -n "$line" ] && [ "$line" -gt "$previous" ] || {
       printf 'route %s is missing or misorders: %s\n' "$route" "$literal" >&2
       exit 1
@@ -77,7 +112,7 @@ assert_inverse_route_order() {
   }
   previous=0
   for literal in "$@"; do
-    line="$(rg -nF -- "$literal" "$route_block_file" | head -1 | cut -d: -f1)"
+    line="$(rg_fixed -nF -- "$literal" "$route_block_file" | head -1 | cut -d: -f1)"
     [ -n "$line" ] && [ "$line" -gt "$previous" ] || {
       printf 'inverse route %s is missing or misorders: %s\n' "$route" "$literal" >&2
       exit 1
@@ -96,7 +131,7 @@ assert_function_order() {
   }
   previous=0
   for literal in "$@"; do
-    line="$(rg -nF -- "$literal" "$route_block_file" | head -1 | cut -d: -f1)"
+    line="$(rg_fixed -nF -- "$literal" "$route_block_file" | head -1 | cut -d: -f1)"
     [ -n "$line" ] && [ "$line" -gt "$previous" ] || {
       printf 'function %s is missing or misorders: %s\n' \
         "$function_name" "$literal" >&2
@@ -377,12 +412,12 @@ assert_suspension_failure_blocks_mutation \
   restore_neon_primary_from_preserved inverse-traffic-stopped-before-neon
 BASH
 
-if rg -Fq 'TRAFFIC_SUSPENSION_PROBE_URL' "$runbook"; then
+if rg_fixed -Fq 'TRAFFIC_SUSPENSION_PROBE_URL' "$runbook"; then
   echo 'traffic suspension must use fixed canonical endpoints, not a caller-supplied URL.' >&2
   exit 1
 fi
 
-rg -Fq 'run: scripts/ci/neon-vercel-recovery-runbook.test.sh' "$workflow" || {
+rg_fixed -Fq 'run: scripts/ci/neon-vercel-recovery-runbook.test.sh' "$workflow" || {
   echo 'recovery runbook contract must be registered in the static CI job.' >&2
   exit 1
 }
