@@ -32,7 +32,12 @@ bash -n \
   "$repo_root/scripts/ci/self-hosted-runner-hygiene.sh" \
   "$maintenance_script" \
   "$installer"
-plutil -lint "$plist_template" >/dev/null
+if command -v plutil >/dev/null 2>&1; then
+  plutil -lint "$plist_template" >/dev/null
+else
+  # Linux CI containers: validate plist as XML text without macOS plutil.
+  grep -Fq '<?xml' "$plist_template" || fail "plist template must remain XML"
+fi
 grep -Fq '<integer>900</integer>' "$plist_template" || fail "launchd interval must remain 15 minutes"
 grep -Fq 'RunAtLoad' "$plist_template" || fail "launchd trigger must run at load"
 grep -Fq 'WCDRAFT_RUNNER_MAINTENANCE_MODE=1' "$maintenance_script" ||
@@ -67,7 +72,9 @@ installed_plist="$fake_user/Library/LaunchAgents/com.wcdraft.runner-disk-mainten
   fail "installer omitted the proven hygiene script"
 [ -x "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh" ] ||
   fail "installer omitted the maintenance wrapper"
-plutil -lint "$installed_plist" >/dev/null
+if command -v plutil >/dev/null 2>&1; then
+  plutil -lint "$installed_plist" >/dev/null
+fi
 grep -Fq "$fake_runner/wcdraft-maintenance/runner-disk-maintenance.sh" "$installed_plist" ||
   fail "installed plist did not bind the fake runner root"
 grep -Fq 'bootstrap' "$launchctl_log" || fail "installer did not bootstrap launchd"

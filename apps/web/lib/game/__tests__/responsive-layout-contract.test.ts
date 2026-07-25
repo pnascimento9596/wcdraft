@@ -340,7 +340,11 @@ describe("responsive layout contract", () => {
   });
 
   it("detects aria-hidden Class B paint and records native label names", async () => {
-    const browser = await chromium.launch({ channel: "chrome", headless: true });
+    const playwrightChannel = process.env.WCDRAFT_PLAYWRIGHT_CHANNEL;
+    const browser = await chromium.launch({
+      ...(playwrightChannel ? { channel: playwrightChannel } : {}),
+      headless: true,
+    });
     try {
       const page = await browser.newPage({ viewport: { width: 320, height: 568 } });
       await page.setContent(`
