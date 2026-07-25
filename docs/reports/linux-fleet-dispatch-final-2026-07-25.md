@@ -10,15 +10,15 @@ Phase 6: always-on gaps documented (report-only).
 
 ## Gates (real)
 
-| Gate | Evidence |
-|------|----------|
-| PR CI (HEAD `db05ab1`) | run `30165903504` **success** |
-| PR ETL | run `30165903503` **success** |
-| Independent Red review | PASS on `db05ab1` (re-executed CI/ETL + runner inventory) |
-| Main full CI #1 | run `30166057521` attempt 1 **success** (all jobs incl. golden, realism N=2000, db) |
-| Main full CI #2 | same run attempt 2 **success** |
-| Main full CI #3 | same run attempt 3 **success** |
-| Live | home + play 200 after production deploy `3b63fe5` |
+| Gate                   | Evidence                                                                            |
+| ---------------------- | ----------------------------------------------------------------------------------- |
+| PR CI (HEAD `db05ab1`) | run `30165903504` **success**                                                       |
+| PR ETL                 | run `30165903503` **success**                                                       |
+| Independent Red review | PASS on `db05ab1` (re-executed CI/ETL + runner inventory)                           |
+| Main full CI #1        | run `30166057521` attempt 1 **success** (all jobs incl. golden, realism N=2000, db) |
+| Main full CI #2        | same run attempt 2 **success**                                                      |
+| Main full CI #3        | same run attempt 3 **success**                                                      |
+| Live                   | home + play 200 after production deploy `3b63fe5`                                   |
 
 ## What changed
 
@@ -33,15 +33,15 @@ Phase 6: always-on gaps documented (report-only).
 
 ## Phase checklist
 
-| Phase | Status |
-|-------|--------|
-| 0 Access enumeration | done |
-| 1 Colima + ephemeral fleet | done |
-| 2 Non-negotiables + wedge | done (proof green) |
-| 3 Workflow adaptation | done |
-| 4 PR #325/#326 | already merged earlier; #328 shipped |
-| 5 Retire macOS + watchdog | done (3 full greens → m4 deleted, watchdog unloaded) |
-| 6 Always-on gaps report | done (no implement) |
+| Phase                      | Status                                               |
+| -------------------------- | ---------------------------------------------------- |
+| 0 Access enumeration       | done                                                 |
+| 1 Colima + ephemeral fleet | done                                                 |
+| 2 Non-negotiables + wedge  | done (proof green)                                   |
+| 3 Workflow adaptation      | done                                                 |
+| 4 PR #325/#326             | already merged earlier; #328 shipped                 |
+| 5 Retire macOS + watchdog  | done (3 full greens → m4 deleted, watchdog unloaded) |
+| 6 Always-on gaps report    | done (no implement)                                  |
 
 ## Risks / carryovers
 
