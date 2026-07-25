@@ -538,7 +538,13 @@ let launchedBrowserVersion: string;
 try {
   browser = await browserType.launch({
     ...(browserEngine === "chromium"
-      ? { channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome" }
+      ? {
+          channel:
+            process.env.WCDRAFT_PLAYWRIGHT_CHANNEL === "chromium" ||
+            !process.env.WCDRAFT_PLAYWRIGHT_CHANNEL
+              ? undefined
+              : process.env.WCDRAFT_PLAYWRIGHT_CHANNEL,
+        }
       : {}),
     headless: true,
   });

@@ -294,7 +294,10 @@ async function verifyCase(
 
 await mkdir(outDir, { recursive: true });
 const browser = await chromium.launch({
-  channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
+  channel:
+    process.env.WCDRAFT_PLAYWRIGHT_CHANNEL === "chromium" || !process.env.WCDRAFT_PLAYWRIGHT_CHANNEL
+      ? undefined
+      : process.env.WCDRAFT_PLAYWRIGHT_CHANNEL,
   headless: true,
 });
 

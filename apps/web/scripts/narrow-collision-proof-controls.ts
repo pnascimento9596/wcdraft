@@ -163,7 +163,14 @@ async function runForEngine(
 ): Promise<readonly ControlResult[]> {
   const browser = await (engine === "chromium" ? chromium : webkit).launch(
     engine === "chromium"
-      ? { channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome", headless: true }
+      ? {
+          channel:
+            process.env.WCDRAFT_PLAYWRIGHT_CHANNEL === "chromium" ||
+            !process.env.WCDRAFT_PLAYWRIGHT_CHANNEL
+              ? undefined
+              : process.env.WCDRAFT_PLAYWRIGHT_CHANNEL,
+          headless: true,
+        }
       : { headless: true },
   );
   try {

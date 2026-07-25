@@ -1402,7 +1402,14 @@ async function main(): Promise<void> {
   const browserType = ENGINE === "webkit" ? webkit : chromium;
   const browser = await browserType.launch(
     ENGINE === "chromium"
-      ? { channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome", headless: true }
+      ? {
+          channel:
+            process.env.WCDRAFT_PLAYWRIGHT_CHANNEL === "chromium" ||
+            !process.env.WCDRAFT_PLAYWRIGHT_CHANNEL
+              ? undefined
+              : process.env.WCDRAFT_PLAYWRIGHT_CHANNEL,
+          headless: true,
+        }
       : { headless: true },
   );
   const metrics: SurfaceMetric[] = [];
