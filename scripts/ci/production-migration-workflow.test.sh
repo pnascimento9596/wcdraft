@@ -149,8 +149,15 @@ NEON_API_KEY=test-neon-key \
 [ -f "$resolver_output" ] || fail "inline Neon resolver did not write its direct URL"
 [ "$(cat "$resolver_output")" = 'postgresql://user:test-password@ep-contract.neon.tech/neondb?sslmode=require' ] ||
   fail "inline Neon resolver wrote the wrong URL"
-resolver_mode="$(stat -f '%Lp' "$resolver_output" 2>/dev/null || stat -c '%a' "$resolver_output")"
-[ "$resolver_mode" = 600 ] || fail "inline Neon resolver output mode must be 600"
+if resolver_mode="$(stat -c '%a' "$resolver_output" 2>/dev/null)"; then
+  :
+elif resolver_mode="$(stat -f '%Lp' "$resolver_output" 2>/dev/null)"; then
+  :
+else
+  fail "unable to read inline Neon resolver output mode"
+fi
+resolver_mode="$((10#$resolver_mode))"
+[ "$resolver_mode" -eq 600 ] || fail "inline Neon resolver output mode must be 600 (got $resolver_mode)"
 
 for refusal in missing ambiguous; do
   refusal_probe="$probe_root/neon-resolver-$refusal.mjs"
