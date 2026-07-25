@@ -21,9 +21,11 @@ engines + one-screen + native-app-feel; `TURBO_CONCURRENCY=1`, `VITEST_MAX_WORKE
 `VITEST_POOL=threads`, `NODE_OPTIONS=--max-old-space-size=3072`. Peak container RSS
 during unit tests ~3.7 GiB / 4 GiB on green run `30164905954` (SHA `b95f7c1`).
 
-Native macOS runner `wcdraft-m4` remains registered until **three consecutive
-green full** (`main` push) passes on the Linux fleet, then deregisters with its
-worker watchdog (Phase 5). Always-on gap report:
+**Phase 5 complete (2026-07-25):** three consecutive full greens on merge SHA
+`3b63fe5` (CI run `30166057521` attempts 1–3, all jobs success including golden /
+realism / db). Native macOS runner `wcdraft-m4` **deregistered** (GitHub runner
+id 21 removed); `com.wcdraft.runner-worker-watchdog` unloaded. **biotraxiq-m4
+untouched.** Always-on gap report:
 `docs/reports/linux-fleet-always-on-gaps-2026-07-25.md` (Phase 6, report-only).
 
 ---
