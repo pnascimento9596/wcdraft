@@ -1,0 +1,155 @@
+name: Linux fleet proof
+
+# Proves the four non-negotiables + wedge-class absence for the ephemeral
+# Linux container fleet. Manual + on push to the fleet branch only so it
+# never becomes a required gate.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["ws-ops/linux-ephemeral-fleet"]
+    paths:
+      - ".github/workflows/linux-fleet-proof.yml"
+      - ".github/workflows/ci.yml"
+      - "scripts/ci/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-fleet-proof-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  non-negotiables:
+    name: non-negotiables · linux · utc · secrets · canary-write
+    runs-on: [self-hosted, wcdraft-linux]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: 1 · Linux containers, never native
+        run: |
+          set -euo pipefail
+          uname -a | tee /tmp/wcdraft-uname.txt
+          grep -qi linux /tmp/wcdraft-uname.txt
+          ! grep -qi darwin /tmp/wcdraft-uname.txt
+          test "$(uname -s)" = "Linux"
+          echo "OS_OK linux=$(uname -s) arch=$(uname -m)"
+
+      - name: 3 · TZ=UTC
+        run: |
+          set -euo pipefail
+          echo "TZ=${TZ:-unset}"
+          date -u
+          date
+          # date output must contain UTC (GNU date) or +0000
+          date | tee /tmp/wcdraft-date.txt
+          if ! grep -Eiq 'UTC|GMT|\+0000|Z$' /tmp/wcdraft-date.txt; then
+            # fallback: check date +%z
+            offset="$(date +%z)"
+            test "$offset" = "+0000"
+          fi
+          echo "UTC_OK"
+
+      - name: 4 · Secret isolation (PAT must be absent)
+        run: |
+          set -euo pipefail
+          # Long-lived registration credential must not be in the job env.
+          # Check variable NAMES only (values may coincidentally contain substrings).
+          leaked=0
+          while IFS= read -r name; do
+            case "$name" in
+              GITHUB_HOST_TOKEN|ACCESS_TOKEN|REGISTRATION_PAT|GH_PAT|GITHUB_PAT|RUNNER_TOKEN|INPUT_TOKEN)
+                echo "::error::forbidden credential name present in job env: $name"
+                leaked=1
+                ;;
+            esac
+          done < <(env | cut -d= -f1 | sort)
+          if [ "$leaked" -ne 0 ]; then
+            env | cut -d= -f1 | sort
+            exit 1
+          fi
+          # Host path outside the container is not readable
+          if [ -r /Users/paulo/runners/wcdraft/.registration.env ]; then
+            echo "::error::host registration env is readable from the job"
+            exit 1
+          fi
+          if [ -r /Users/paulo/runners/wcdraft/.env ]; then
+            echo "::error::host fleet .env is readable from the job"
+            exit 1
+          fi
+          if [ -n "${RUNNER_TOKEN:-}" ]; then
+            echo "::error::RUNNER_TOKEN still set in job env"
+            exit 1
+          fi
+          echo "SECRET_ISOLATION_OK"
+
+      - name: 2a · Write ephemerality canary
+        run: |
+          set -euo pipefail
+          # Write outside GITHUB_WORKSPACE into a path that would survive if
+          # containers were reused with a shared volume (they must not).
+          CANARY="/actions-runner/_work/_fleet-canary"
+          mkdir -p "$(dirname "$CANARY")"
+          echo "canary-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-$(date -u +%s)" >"$CANARY"
+          echo "CANARY_WRITTEN path=$CANARY value=$(cat "$CANARY")"
+          echo "canary_path=$CANARY" >>"$GITHUB_OUTPUT"
+          echo "canary_value=$(cat "$CANARY")" >>"$GITHUB_ENV"
+          # Also place in a well-known absolute path
+          echo "canary-${GITHUB_RUN_ID}" >/tmp/wcdraft-fleet-canary
+          ls -la /tmp/wcdraft-fleet-canary "$CANARY"
+
+  canary-read:
+    name: non-negotiables · ephemerality canary-read
+    runs-on: [self-hosted, wcdraft-linux]
+    needs: non-negotiables
+    steps:
+      - name: 2b · Prove canary is gone on next job/container
+        run: |
+          set -euo pipefail
+          set +e
+          test -e /actions-runner/_work/_fleet-canary
+          c1=$?
+          test -e /tmp/wcdraft-fleet-canary
+          c2=$?
+          set -e
+          if [ "$c1" -eq 0 ] || [ "$c2" -eq 0 ]; then
+            echo "::error::ephemerality canary survived into a subsequent job"
+            ls -la /actions-runner/_work/_fleet-canary /tmp/wcdraft-fleet-canary 2>/dev/null || true
+            exit 1
+          fi
+          echo "EPHEMERALITY_OK canary absent on fresh container"
+          uname -a
+          date -u
+
+  wedge-probe:
+    name: wedge probe · worker spawn matrix
+    runs-on: [self-hosted, wcdraft-linux]
+    strategy:
+      fail-fast: false
+      matrix:
+        slot: [1, 2, 3]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Spawn workers (fork/exec under glibc)
+        run: |
+          set -euo pipefail
+          echo "wedge-probe slot=${{ matrix.slot }} host=$(uname -a)"
+          # Exercise parallel process spawn similar to GHA worker fan-out
+          for i in $(seq 1 32); do
+            (echo "worker $i pid=$$ ppid=$PPID"; sleep 0.05) &
+          done
+          wait
+          # Nested node + pnpm invocations
+          node -e 'const {spawnSync}=require("child_process"); for (let i=0;i<8;i++){const r=spawnSync("node",["-e","process.stdout.write(String(process.pid))"],{encoding:"utf8"}); if(r.status!==0) process.exit(1); console.log("child", r.stdout);}'
+          pnpm --version
+          echo "WEDGE_PROBE_OK slot=${{ matrix.slot }}"

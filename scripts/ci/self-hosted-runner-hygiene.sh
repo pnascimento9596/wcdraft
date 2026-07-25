@@ -3,14 +3,36 @@
 set -euo pipefail
 
 phase="${1:-}"
-floor_kb="${WCDRAFT_RUNNER_MIN_FREE_KB:-31457280}"
-target_kb="${WCDRAFT_RUNNER_TARGET_FREE_KB:-37748736}"
+# Persistent macOS host kept a 30 GiB hard floor. Ephemeral Linux containers
+# share a capped Colima disk (~100 GiB) with sibling fleets — use 8/12 GiB
+# defaults unless explicitly overridden.
+if [ -n "${WCDRAFT_RUNNER_MIN_FREE_KB:-}" ]; then
+  floor_kb="$WCDRAFT_RUNNER_MIN_FREE_KB"
+elif [ "$(uname -s)" = "Linux" ]; then
+  floor_kb=8388608
+else
+  floor_kb=31457280
+fi
+if [ -n "${WCDRAFT_RUNNER_TARGET_FREE_KB:-}" ]; then
+  target_kb="$WCDRAFT_RUNNER_TARGET_FREE_KB"
+elif [ "$(uname -s)" = "Linux" ]; then
+  target_kb=12582912
+else
+  target_kb=37748736
+fi
 stale_minutes="${WCDRAFT_RUNNER_STALE_MINUTES:-60}"
 residue_minutes="${WCDRAFT_AGENT_TEMP_RESIDUE_MINUTES:-60}"
 force_cleanup="${WCDRAFT_RUNNER_FORCE_CLEANUP:-0}"
 maintenance_mode="${WCDRAFT_RUNNER_MAINTENANCE_MODE:-0}"
 trigger="${WCDRAFT_RUNNER_TRIGGER:-ci-job}"
-configured_agent_temp_root="${WCDRAFT_AGENT_TEMP_ROOT:-/private/tmp}"
+# macOS host uses /private/tmp; Linux containers use /tmp
+if [ -n "${WCDRAFT_AGENT_TEMP_ROOT:-}" ]; then
+  configured_agent_temp_root="$WCDRAFT_AGENT_TEMP_ROOT"
+elif [ -d /private/tmp ] && [ -w /private/tmp ]; then
+  configured_agent_temp_root=/private/tmp
+else
+  configured_agent_temp_root="${TMPDIR:-/tmp}"
+fi
 agent_temp_roots=("$configured_agent_temp_root")
 if [ -z "${WCDRAFT_AGENT_TEMP_ROOT:-}" ] && [ -n "${TMPDIR:-}" ]; then
   agent_temp_roots+=("$TMPDIR")
@@ -51,11 +73,64 @@ require_directory "${RUNNER_TEMP:-}"
 workspace="$(cd "$GITHUB_WORKSPACE" && pwd -P)"
 tool_cache="$(cd "$RUNNER_TOOL_CACHE" && pwd -P)"
 runner_temp="$(cd "$RUNNER_TEMP" && pwd -P)"
-work_root="$(cd "$(dirname "$tool_cache")" && pwd -P)"
+# Derive work_root as a directory that contains workspace + runner_temp.
+# Persistent macOS layout: tool_cache parent == work root.
+# Ephemeral Linux containers (myoung34): workspace is
+#   /_work/<runner-name>/<repo>/<repo>
+# while tool_cache may live under /actions-runner/_work/_tool — different
+# physical parents after pwd -P. Prefer RUNNER_WORKSPACE parent, then the
+# Actions two-level layout under GITHUB_WORKSPACE, then tool_cache parent.
+if [ -n "${RUNNER_WORKSPACE:-}" ] && [ -d "${RUNNER_WORKSPACE}" ]; then
+  work_root="$(cd "$(dirname "$RUNNER_WORKSPACE")" && pwd -P)"
+elif [ -d "$workspace/../.." ]; then
+  work_root="$(cd "$workspace/../.." && pwd -P)"
+else
+  work_root="$(cd "$(dirname "$tool_cache")" && pwd -P)"
+fi
+# If tool_cache is outside work_root (ephemeral Linux), widen work_root to the
+# common ancestor of workspace and tool_cache so containment checks stay honest.
+case "$tool_cache/" in
+  "$work_root"/*) ;;
+  *)
+    # Walk up from workspace until tool_cache is a descendant or we hit /
+    candidate="$workspace"
+    while [ "$candidate" != "/" ] && [ "$candidate" != "." ]; do
+      case "$tool_cache/" in
+        "$candidate"/*)
+          work_root="$candidate"
+          break
+          ;;
+      esac
+      case "$workspace/" in
+        "$candidate"/*) ;;
+        *) break ;;
+      esac
+      parent="$(dirname "$candidate")"
+      [ "$parent" = "$candidate" ] && break
+      candidate="$parent"
+    done
+    # Fallback: accept the shared top-level mount if both live under /_work or /actions-runner
+    if [[ "$tool_cache/" != "$work_root"/* ]]; then
+      for root_candidate in /_work /actions-runner/_work /actions-runner; do
+        case "$workspace/" in
+          "$root_candidate"/*)
+            case "$tool_cache/" in
+              "$root_candidate"/*)
+                work_root="$(cd "$root_candidate" && pwd -P)"
+                break
+                ;;
+            esac
+            ;;
+        esac
+      done
+    fi
+    ;;
+esac
 active_container="$(dirname "$workspace")"
 cache_root="$tool_cache/wcdraft-cache"
 recovery_root="$work_root/_diag/wcdraft-runner-hygiene"
 recovery_counter=0
+echo "runner-hygiene: work_root=$work_root workspace=$workspace tool_cache=$tool_cache runner_temp=$runner_temp"
 
 json_escape() {
   local value="$1"
@@ -396,10 +471,15 @@ emit_largest_consumers() {
 }
 
 if [ "$phase" = "start" ]; then
-  if [ "${RUNNER_NAME:-}" != "wcdraft-m4" ]; then
-    echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
-    exit 1
-  fi
+  # Accept native macOS leftover (until Phase 5 retirement) and ephemeral
+  # Linux fleet names: wcdraft-linux-<slot>-<timestamp>-<rand>
+  case "${RUNNER_NAME:-}" in
+    wcdraft-m4|wcdraft-linux-*) ;;
+    *)
+      echo "::error::unexpected self-hosted runner: ${RUNNER_NAME:-unset}" >&2
+      exit 1
+      ;;
+  esac
 
   audit_unmarked_agent_temp_residue
 

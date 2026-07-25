@@ -1,5 +1,33 @@
 # STATE.md — measured ground truth
 
+## CI runner fleet (2026-07-25)
+
+Ephemeral **arm64 Linux** container fleet on Colima (not native macOS).
+Labels: `self-hosted` + `wcdraft-linux`. Host supervisors under
+`/Users/paulo/runners/wcdraft/` (outside repo). Registration PAT never enters
+job containers. Caching: `actions/cache` for pnpm store + Turbo (no shared
+writable volume between jobs). Default stack: **REPLICAS=4**, **MEM_LIMIT=4096m**,
+**CPU_LIMIT=2**, image `wcdraft-gha-runner:1.0.3`.
+
+**Arch limitation:** CI = linux/arm64; production Vercel = linux/x86_64.
+`@node-rs/argon2` uses platform-specific prebuilds; hash string format is
+portable across arches.
+
+**ci-fast** (PR / non-main push): changes · static · verify · gitleaks · aggregate.
+**ci-full** (push to `main` + `workflow_dispatch`): + golden · realism · etl · db · etl-rating.
+
+**Linux verify job memory posture (measured 2026-07-25):** Chromium-only collision
+engines + one-screen + native-app-feel; `TURBO_CONCURRENCY=1`, `VITEST_MAX_WORKERS=1`,
+`VITEST_POOL=threads`, `NODE_OPTIONS=--max-old-space-size=3072`. Peak container RSS
+during unit tests ~3.7 GiB / 4 GiB on green run `30164905954` (SHA `b95f7c1`).
+
+Native macOS runner `wcdraft-m4` remains registered until **three consecutive
+green full** (`main` push) passes on the Linux fleet, then deregisters with its
+worker watchdog (Phase 5). Always-on gap report:
+`docs/reports/linux-fleet-always-on-gaps-2026-07-25.md` (Phase 6, report-only).
+
+---
+
 > Update rule: every lane updates this file in the SAME change that merges.
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.

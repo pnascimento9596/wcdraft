@@ -995,7 +995,11 @@ async function main(): Promise<void> {
   let browser: Browser | null = null;
   try {
     browser = await chromium.launch({
-      channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
+      channel:
+        process.env.WCDRAFT_PLAYWRIGHT_CHANNEL === "chromium" ||
+        !process.env.WCDRAFT_PLAYWRIGHT_CHANNEL
+          ? undefined
+          : process.env.WCDRAFT_PLAYWRIGHT_CHANNEL,
       headless: true,
     });
     await verifyModeSelectCtaDoesNotTapThrough(browser, server.baseUrl);

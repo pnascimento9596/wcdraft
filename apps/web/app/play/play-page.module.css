@@ -59,6 +59,41 @@
   }
 }
 
+/* Playwright mobile descriptors (e.g. iPhone 13 = 390×664) are shorter than
+   physical CSS viewports the mode-select contract was tuned against (844).
+   Chromium headless fonts run a few px taller than WebKit — compress the
+   short-viewport band so disclosure stays in the initial fold. */
+@media (max-width: 430px) and (max-height: 700px) {
+  .page:global(.game-page) {
+    min-block-size: calc(100dvh - 3.35rem - 1px - env(safe-area-inset-top, 0px));
+    padding-block: 0.15rem 0 0;
+  }
+
+  .pageHead:global(.page-head) {
+    gap: 0.1rem;
+    margin-bottom: 0.1rem;
+    padding-bottom: 0.1rem;
+  }
+
+  .pageHead :global(.eyebrow) {
+    font-size: 0.58rem;
+  }
+
+  .title:global(.display) {
+    font-size: clamp(1.3rem, 5.5vw, 1.55rem);
+  }
+
+  .lede:global(.lede) {
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
+  .disclosure {
+    padding-block: 0.2rem max(0.15rem, env(safe-area-inset-bottom, 0px));
+    line-height: 1.25;
+  }
+}
+
 @media (max-height: 500px) and (min-width: 431px) and (max-width: 51.99rem) {
   .page:global(.game-page) {
     padding-block: 0.25rem 0;

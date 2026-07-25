@@ -348,10 +348,10 @@ describe("actual workflow mutation contract", () => {
   it("fails when the A0 self-hosted runner or trust boundary drifts", () => {
     expect(() =>
       validateDailyRefreshWorkflowContract(
-        nightly.replace("runs-on: [self-hosted, macOS, ARM64, wcdraft]", "runs-on: ubuntu-latest"),
+        nightly.replace("runs-on: [self-hosted, wcdraft-linux]", "runs-on: ubuntu-latest"),
         ci,
       ),
-    ).toThrow(/self-hosted macOS ARM64/u);
+    ).toThrow(/self-hosted wcdraft-linux/u);
     expect(() =>
       validateDailyRefreshWorkflowContract(
         nightly,
