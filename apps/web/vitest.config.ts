@@ -34,6 +34,6 @@ export default defineConfig({
     hookTimeout: 120_000,
     // The web suite starts several PGlite-backed DB tests and Next route/OG
     // tests. Unbounded fork pools can starve worker startup on loaded runners.
-    maxWorkers: 4,
+    maxWorkers: Number(process.env.VITEST_MAX_WORKERS ?? 4),
   },
 });

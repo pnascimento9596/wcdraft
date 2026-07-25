@@ -328,10 +328,12 @@ function requireWorkflowPathCount(source, path, expected, label) {
 }
 
 function validateSelfHostedWorkflowContract(source, { jobs, label }) {
-  const exactRunsOn = "    runs-on: [self-hosted, macOS, ARM64, wcdraft]";
+  // Ephemeral Linux fleet (Colima). Do not use macOS labels — those route to
+  // the retired native runner and reintroduce the fork wedge class.
+  const exactRunsOn = "    runs-on: [self-hosted, wcdraft-linux]";
   const runsOnLines = source.match(/^ {4}runs-on:.*$/gmu) ?? [];
   if (runsOnLines.length !== jobs || runsOnLines.some((line) => line !== exactRunsOn)) {
-    fail(`${label} must bind all ${jobs} jobs to the exact self-hosted macOS ARM64 label set`);
+    fail(`${label} must bind all ${jobs} jobs to the exact self-hosted wcdraft-linux label set`);
   }
   for (const [fragment, fragmentLabel] of [
     ["uses: actions/checkout@", "pinned checkout"],
