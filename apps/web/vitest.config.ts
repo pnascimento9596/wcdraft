@@ -34,6 +34,14 @@ export default defineConfig({
     hookTimeout: 120_000,
     // The web suite starts several PGlite-backed DB tests and Next route/OG
     // tests. Unbounded fork pools can starve worker startup on loaded runners.
-    maxWorkers: Number(process.env.VITEST_MAX_WORKERS ?? 4),
+    // Linux ephemeral containers: default 1 worker to avoid fork-pool OOM
+    // false reds; override via VITEST_MAX_WORKERS.
+    maxWorkers: Number(
+      process.env.VITEST_MAX_WORKERS ??
+        (process.platform === "linux" ? 1 : 4),
+    ),
+    minWorkers: 1,
+    // Prefer threads on Linux when forced forks thrash under cgroup memory caps.
+    pool: process.env.VITEST_POOL ?? (process.platform === "linux" ? "threads" : "forks"),
   },
 });

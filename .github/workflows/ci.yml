@@ -270,7 +270,9 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       WCDRAFT_PLAYWRIGHT_CHANNEL: chromium
       WCDRAFT_PLAYWRIGHT_BROWSER: chromium
-      VITEST_MAX_WORKERS: "2"
+      VITEST_MAX_WORKERS: "1"
+      VITEST_POOL: threads
+      NODE_OPTIONS: "--max-old-space-size=3072"
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
