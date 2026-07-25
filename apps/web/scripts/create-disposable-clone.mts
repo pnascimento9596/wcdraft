@@ -1,4 +1,6 @@
+import { existsSync } from "node:fs";
 import { appendFile, mkdtemp, realpath } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import {
@@ -69,7 +71,8 @@ function shellQuote(value: string): string {
 
 const options = parseArgs(process.argv.slice(2));
 const repoRoot = await runGit(["rev-parse", "--show-toplevel"]);
-const configuredRoot = process.env.WCDRAFT_AGENT_TEMP_ROOT ?? "/private/tmp";
+const configuredRoot =
+  process.env.WCDRAFT_AGENT_TEMP_ROOT ?? (existsSync("/private/tmp") ? "/private/tmp" : tmpdir());
 const root = await realpath(configuredRoot);
 const candidate = await mkdtemp(path.join(root, `wcdraft-${options.label}-`));
 await registerAgentTempCleanupPending(candidate, root);

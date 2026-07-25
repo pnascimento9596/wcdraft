@@ -16,12 +16,33 @@ function isNotFoundError(error: unknown): error is NodeJS.ErrnoException {
 }
 
 async function resolveAgentTempRoots(configuredRoot?: string): Promise<string[]> {
-  const configuredRoots = configuredRoot
-    ? [configuredRoot]
-    : process.env.WCDRAFT_AGENT_TEMP_ROOT
-      ? [process.env.WCDRAFT_AGENT_TEMP_ROOT]
-      : ["/private/tmp", tmpdir()];
-  return [...new Set(await Promise.all(configuredRoots.map(async (root) => realpath(root))))];
+  const configuredRoots: string[] = [];
+  if (configuredRoot) {
+    configuredRoots.push(configuredRoot);
+  } else if (process.env.WCDRAFT_AGENT_TEMP_ROOT) {
+    configuredRoots.push(process.env.WCDRAFT_AGENT_TEMP_ROOT);
+  } else {
+    // macOS host uses /private/tmp; Linux CI/containers use os.tmpdir().
+    try {
+      await realpath("/private/tmp");
+      configuredRoots.push("/private/tmp");
+    } catch {
+      // absent on Linux
+    }
+    configuredRoots.push(tmpdir());
+  }
+  const resolved: string[] = [];
+  for (const root of configuredRoots) {
+    try {
+      resolved.push(await realpath(root));
+    } catch {
+      // skip missing roots rather than failing the whole resolver
+    }
+  }
+  if (resolved.length === 0) {
+    resolved.push(await realpath(tmpdir()));
+  }
+  return [...new Set(resolved)];
 }
 
 async function validateAgentTempCandidate(
