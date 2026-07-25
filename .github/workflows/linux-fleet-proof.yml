@@ -59,8 +59,17 @@ jobs:
         run: |
           set -euo pipefail
           # Long-lived registration credential must not be in the job env.
-          if env | grep -Eiq 'GITHUB_HOST_TOKEN|ACCESS_TOKEN|REGISTRATION_PAT|GH_PAT|GITHUB_PAT'; then
-            echo "::error::long-lived host token leaked into job environment"
+          # Check variable NAMES only (values may coincidentally contain substrings).
+          leaked=0
+          while IFS= read -r name; do
+            case "$name" in
+              GITHUB_HOST_TOKEN|ACCESS_TOKEN|REGISTRATION_PAT|GH_PAT|GITHUB_PAT|RUNNER_TOKEN|INPUT_TOKEN)
+                echo "::error::forbidden credential name present in job env: $name"
+                leaked=1
+                ;;
+            esac
+          done < <(env | cut -d= -f1 | sort)
+          if [ "$leaked" -ne 0 ]; then
             env | cut -d= -f1 | sort
             exit 1
           fi
@@ -73,7 +82,6 @@ jobs:
             echo "::error::host fleet .env is readable from the job"
             exit 1
           fi
-          # RUNNER_TOKEN must not remain after configure (UNSET_CONFIG_VARS)
           if [ -n "${RUNNER_TOKEN:-}" ]; then
             echo "::error::RUNNER_TOKEN still set in job env"
             exit 1
