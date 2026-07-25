@@ -276,6 +276,8 @@ jobs:
       WCDRAFT_NATIVE_APP_FEEL_ENGINE: chromium
       VITEST_MAX_WORKERS: "1"
       VITEST_POOL: threads
+      # One package at a time under 4GiB container caps (parallel turbo + Chromium OOMs).
+      TURBO_CONCURRENCY: "1"
       NODE_OPTIONS: "--max-old-space-size=3072"
     steps:
       - name: Checkout
