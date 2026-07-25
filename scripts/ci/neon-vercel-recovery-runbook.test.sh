@@ -20,16 +20,27 @@ bash -n "$combined_bash"
 
 require_literal() {
   literal="$1"
-  rg -Fq -- "$literal" "$runbook" || {
-    printf 'missing runbook contract: %s\n' "$literal" >&2
-    exit 1
-  }
+  if command -v rg >/dev/null 2>&1; then
+    rg -Fq -- "$literal" "$runbook" || {
+      printf 'missing runbook contract: %s\n' "$literal" >&2
+      exit 1
+    }
+  else
+    grep -Fq -- "$literal" "$runbook" || {
+      printf 'missing runbook contract: %s\n' "$literal" >&2
+      exit 1
+    }
+  fi
 }
 
 require_count() {
   expected="$1"
   literal="$2"
-  actual="$(rg -F --count-matches -- "$literal" "$runbook" || true)"
+  if command -v rg >/dev/null 2>&1; then
+    actual="$(rg -F --count-matches -- "$literal" "$runbook" || true)"
+  else
+    actual="$(grep -F --count -- "$literal" "$runbook" || true)"
+  fi
   [ "$actual" -eq "$expected" ] || {
     printf 'expected %s occurrence(s) of %s, found %s\n' \
       "$expected" "$literal" "$actual" >&2
