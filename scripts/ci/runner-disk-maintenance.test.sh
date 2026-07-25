@@ -28,6 +28,12 @@ mkdir -p "$probe_root/agent-temp"
 printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "$*" >>"$WCDRAFT_TEST_LAUNCHCTL_LOG"' >"$mock_launchctl"
 chmod +x "$mock_launchctl"
 
+# macOS plutil is absent on Linux containers; provide a no-op lint for the installer.
+mock_plutil="$probe_root/plutil"
+printf '%s\n' '#!/bin/sh' 'exit 0' >"$mock_plutil"
+chmod +x "$mock_plutil"
+export PATH="$probe_root:$PATH"
+
 bash -n \
   "$repo_root/scripts/ci/self-hosted-runner-hygiene.sh" \
   "$maintenance_script" \

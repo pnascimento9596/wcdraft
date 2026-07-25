@@ -98,7 +98,9 @@ case "$operation" in
       -e "s|__RUNNER_ROOT__|$runner_root|g" \
       -e "s|__USER_ROOT__|$user_root|g" \
       "$script_dir/runner-disk-maintenance.plist.template" >"$plist"
+    if command -v plutil >/dev/null 2>&1; then
     plutil -lint "$plist" >/dev/null
+    fi
 
     "$launchctl_bin" bootout "$gui_domain" "$plist" >/dev/null 2>&1 || true
     "$launchctl_bin" bootstrap "$gui_domain" "$plist"
