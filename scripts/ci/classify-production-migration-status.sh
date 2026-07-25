@@ -28,8 +28,17 @@ esac
 [[ "$expected_tag" =~ ^[0-9]{4}_[a-z0-9_]+$ ]] || fail "expected migration tag is malformed"
 
 [ -f "$receipt" ] && [ ! -L "$receipt" ] || fail "protected receipt is missing or not a regular file"
-receipt_mode="$(stat -f '%Lp' "$receipt" 2>/dev/null || stat -c '%a' "$receipt")"
-[ "$receipt_mode" = 600 ] || fail "protected receipt mode must be 600"
+# Prefer GNU stat (-c) on Linux; fall back to BSD stat (-f) on macOS.
+if receipt_mode="$(stat -c '%a' "$receipt" 2>/dev/null)"; then
+  :
+elif receipt_mode="$(stat -f '%Lp' "$receipt" 2>/dev/null)"; then
+  :
+else
+  fail "unable to read protected receipt mode"
+fi
+# Normalize optional leading zero (0600 → 600).
+receipt_mode="$((10#$receipt_mode))"
+[ "$receipt_mode" -eq 600 ] || fail "protected receipt mode must be 600 (got $receipt_mode)"
 
 # The raw receipt is deliberately never printed: a driver error may include a
 # database endpoint or credential. Classification emits only an allowlisted
