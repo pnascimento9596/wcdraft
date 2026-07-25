@@ -270,6 +270,8 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       WCDRAFT_PLAYWRIGHT_CHANNEL: chromium
       WCDRAFT_PLAYWRIGHT_BROWSER: chromium
+      # WebKit OOM (exit 137) under Colima cgroup caps; macOS/native still runs both.
+      WCDRAFT_COLLISION_ENGINES: chromium
       VITEST_MAX_WORKERS: "1"
       VITEST_POOL: threads
       NODE_OPTIONS: "--max-old-space-size=3072"
