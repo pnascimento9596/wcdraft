@@ -61,7 +61,7 @@ jobs:
           fi
 
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           fetch-depth: 0
@@ -178,7 +178,7 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
@@ -281,7 +281,7 @@ jobs:
       NODE_OPTIONS: "--max-old-space-size=3072"
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
@@ -387,7 +387,7 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
@@ -457,7 +457,7 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
@@ -552,7 +552,7 @@ jobs:
         working-directory: etl
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
@@ -569,7 +569,7 @@ jobs:
           echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
 
       - name: Setup Python
         run: uv python install "$UV_PYTHON"
@@ -655,7 +655,7 @@ jobs:
     # changes and other non-DB paths, the integration lane remains skip-is-green.
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
@@ -778,7 +778,7 @@ jobs:
     # regenerating ratings.json and failing if the tracked lockfile drifts.
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
@@ -795,7 +795,7 @@ jobs:
           echo "runner=${RUNNER_NAME:-} os=$(uname -s) arch=$(uname -m) tz=$(date +%z)"
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
 
       - name: Setup Python
         run: uv python install "$UV_PYTHON"
@@ -825,7 +825,7 @@ jobs:
     needs: changes
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           fetch-depth: 0
@@ -867,7 +867,7 @@ jobs:
     if: ${{ always() && github.actor != 'dependabot[bot]' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
           persist-credentials: false
