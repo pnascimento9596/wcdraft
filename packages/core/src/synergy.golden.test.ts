@@ -213,6 +213,7 @@ function managerRating(overall: number): ManagerRating {
     tournament_id: TID,
     overall,
     dimensions: { pedigree: overall, experience: overall },
+    components: [],
     coverage: 1,
     coverage_basis: "wc_signals",
     provenance: "wc_performance",
