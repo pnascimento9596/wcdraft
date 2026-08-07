@@ -287,7 +287,8 @@ describe("step 3 — DIFFERENT_BUILD (each of the six anchors alone)", () => {
     // explicit leaderboard season (season-2026-squad-depth) is unchanged.
     const t = tampered((b) => {
       b.sv = "runtime-data-2.10.0";
-      b.hv = "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07+50c45d0e9b9b56892e6bd3462988417e072ea1b08aff206fe344c3ebaccd66fd";
+      b.hv =
+        "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07+50c45d0e9b9b56892e6bd3462988417e072ea1b08aff206fe344c3ebaccd66fd";
     });
     const v = submit({
       token: t,
