@@ -1,5 +1,28 @@
 # STATE.md — measured ground truth
 
+## Production live-verify — non-writing (standing constraint)
+
+**Production live-verify must never create leaderboard rows, ranked attempts,
+or accounts.** Accepting-path coverage ("a valid run inserts a row") is proven
+**pre-merge** on disposable substrate (PGlite-backed
+`apps/web/lib/leaderboard/__tests__/submit-route.test.ts`; ephemeral Neon for
+schema/migration integrity). Production post-deploy checks are **read +
+deliberate rejection only**.
+
+- Runbook: `docs/runbooks/production-live-verify.md`
+- Executable probe: `scripts/live-verify-production.sh` — cookie-less anonymous
+  `POST /api/leaderboard/submit` with committed
+  `run-token-skew.json` → `shipped_pre_basis_t3` expects HTTP **409**
+  `DIFFERENT_BUILD`, then asserts featured + archive board entry id sets are
+  unchanged.
+- Measured smoke (2026-08-07, pre-U1-merge against production `98e0368`): health
+  ready, probe `409 DIFFERENT_BUILD` with
+  `mismatched_anchors=[schema_version,engine_version,data_bundle_hash]`, board
+  ids unchanged (classic casual still solely PR #340 residue
+  `live_verify_xi` / `1cac61ff-…` until U2 cleanup).
+- **OWNER RATIFICATION required** for adopting this constraint into the
+  canonical owner doc set; in-repo authority is this section + the runbook.
+
 ## CI runner fleet (2026-07-25)
 
 Ephemeral **arm64 Linux** container fleet on Colima (not native macOS).
@@ -3586,4 +3609,7 @@ web static assets.
 `ws-<area>/<topic>` task branches; long-lived integration branches `engine-*`/`merit-*`
 (CI-watched); PRs squash-merge to `main` (one commit per PR); Red merges pin the
 reviewed head with `--match-head-commit`, then require deploy observation and
-live verification on `www.wcdraft.com` with auto-revert on any failed live check.
+**non-writing** live verification on `www.wcdraft.com` (see standing constraint
+above + `docs/runbooks/production-live-verify.md`) with auto-revert on any failed
+live check. Production live-verify must not insert leaderboard rows, ranked
+attempts, or accounts.
