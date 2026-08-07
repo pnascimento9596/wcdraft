@@ -7,6 +7,7 @@ import {
   requireJsonObject,
 } from "../../http/bounded-body";
 import { readClientIp } from "../../http/client-ip";
+import { readBoundedText } from "../../http/read-bounded-text";
 
 function req(body: string, headers: Record<string, string> = {}): Request {
   return new Request("https://www.wcdraft.com/api/test", {
@@ -73,6 +74,29 @@ describe("bounded body field helpers", () => {
     expect(() =>
       boundedPlainObject({ a: 1, b: 2 }, { field: "versionAnchors", maxKeys: 1 }),
     ).toThrow(BoundedBodyError);
+  });
+});
+
+describe("unified readBoundedText call sites", () => {
+  it("rejects over-limit streams pre-decode for both former readers (lineup direct + requireJsonObject)", async () => {
+    const maxBytes = 8;
+    const overLimit = "x".repeat(maxBytes + 1);
+
+    // Direct consumer (lineup-route path): too_large, no decoded value.
+    const direct = await readBoundedText(req(overLimit), maxBytes);
+    expect(direct).toEqual({ status: "too_large" });
+    expect(direct).not.toMatchObject({ value: expect.anything() });
+
+    // requireJsonObject path: same byte-boundary rejection vocabulary.
+    await expect(requireJsonObject(req(overLimit), { maxBytes })).rejects.toMatchObject({
+      code: "BODY_TOO_LARGE",
+      status: 413,
+    });
+
+    // At the exact cap both paths accept the body (pre-decode accounting only).
+    const atCap = "y".repeat(maxBytes);
+    const ok = await readBoundedText(req(atCap), maxBytes);
+    expect(ok).toEqual({ status: "ok", value: atCap, bytes: maxBytes });
   });
 });
 

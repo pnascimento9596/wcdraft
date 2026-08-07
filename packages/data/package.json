@@ -28,7 +28,7 @@
     "build": "node scripts/ensure-generated-artifacts.mjs && NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.build.json",
     "typecheck": "node scripts/ensure-generated-artifacts.mjs && tsc -p tsconfig.json --noEmit",
     "lint": "eslint . --max-warnings=0",
-    "test": "node scripts/ensure-generated-artifacts.mjs && vitest run",
+    "test": "node scripts/ensure-generated-artifacts.mjs && vitest run --exclude 'test/compact-data.golden.test.ts' --exclude 'test/daily-seed-salt-map.golden.test.ts'",
     "test:golden": "node scripts/ensure-generated-artifacts.mjs && vitest run test/compact-data.golden.test.ts",
     "test:golden:data": "node scripts/ensure-generated-artifacts.mjs && vitest run test/compact-data.golden.test.ts test/compact-data.integrity.test.ts test/score-distribution.golden.test.ts test/daily-seed-salt-map.golden.test.ts",
     "test:golden:integration": "node scripts/ensure-generated-artifacts.mjs && vitest run test/e2e-real-run.golden.test.ts test/era-presets.golden.test.ts",

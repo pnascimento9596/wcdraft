@@ -1,15 +1,19 @@
 export type BoundedTextResult =
-  | { readonly status: "ok"; readonly value: string }
+  | { readonly status: "ok"; readonly value: string; readonly bytes: number }
   | { readonly status: "too_large" }
   | { readonly status: "invalid" };
 
-/** Read a request body with an actual streaming byte ceiling. */
+/**
+ * Read a request body with an actual streaming byte ceiling.
+ * Rejects over-limit streams pre-decode (cancel + too_large) without buffering
+ * the excess into a decoded string.
+ */
 export async function readBoundedText(
-  request: Request,
+  request: Pick<Request, "body">,
   maxBytes: number,
 ): Promise<BoundedTextResult> {
   const body = request.body;
-  if (!body) return { status: "ok", value: "" };
+  if (!body) return { status: "ok", value: "", bytes: 0 };
   const reader = body.getReader();
   const chunks: Uint8Array[] = [];
   let total = 0;
@@ -33,5 +37,5 @@ export async function readBoundedText(
     bytes.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return { status: "ok", value: new TextDecoder().decode(bytes) };
+  return { status: "ok", value: new TextDecoder().decode(bytes), bytes: total };
 }
