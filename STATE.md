@@ -1,5 +1,31 @@
 # STATE.md — measured ground truth
 
+## CSRF forensics · health auth · residue closeout (2026-08-07)
+
+- **Unit A (read-only):** CSRF bootstrap outage forensics —
+  `docs/reports/csrf-outage-forensics-2026-08-07.md`. Sweep always-awaited
+  from `890db10`/#244 (2026-07-11); observed Vercel CSRF 500s **at least**
+  2026-08-07T01:23:45.609Z → 19:29:10.576Z (retention floor; 36 events);
+  fixed `98e0368`/#341 ~20:01Z. Ranked attempts lifetime **0**; H3 not
+  explained by this outage alone.
+- **Unit B:** `GET /api/health` publishes `auth.status`
+  (`ready|degraded|error|unconfigured`) via read-only bootstrap dependency
+  probe (cookie secret + sessions select + execute shape, 2s bound). Probe
+  failure/degrade → overall non-green 503. No session mint / no row writes.
+  Live-verify asserts `auth.status == ready` and CSRF 300s bootstrap.
+- **Unit C (executed):** deleted shipmqyo\* LB rows + three automation
+  accounts under dual attribution PASS + Neon snapshot
+  `br-dark-math-aqyfztzk` (`pre-unit-c-residue-20260807T225034Z`, parent LSN
+  `0/74CDBC0`). Post: entries 4, users 6. Ranked binding constraints remain
+  `NOT VALID` (chezwizz NULL `attempt_id` historical exception — no
+  fabricated attempt). Report:
+  `docs/reports/unit-c-residue-binding-closeout-2026-08-07.md`.
+- **Unit D:** host `stop.sh`/`start.sh` safe env load + zero-online-runner
+  check (outside repo: `/Users/paulo/runners/wcdraft/`); `.gitleaks.toml`
+  U2 path allowlist confirmed path-scoped; snapshots retained
+  (`br-autumn-hill-aqswkxii` U2 + `br-dark-math-aqyfztzk` Unit C — owner
+  delete after restore window).
+
 ## Leaderboard live-verify residue cleanup (U2, 2026-08-07)
 
 Deleted production `leaderboard_entries` id `1cac61ff-6b2e-46b9-b71f-419fb426f0e5`

@@ -83,6 +83,7 @@ fi
 jq -e '
   .ok == true
   and .db.status == "ready"
+  and .auth.status == "ready"
   and (.data.schema_version | type == "string")
   and (.data.engine_version | type == "string")
   and (.data.dataset_version | type == "string")
@@ -100,8 +101,40 @@ jq -c '{
   schema: .data.schema_version,
   engine: .data.engine_version,
   dataset: .data.dataset_version,
-  db: .db.status
+  db: .db.status,
+  auth: .auth.status
 }' "$RECEIPT_DIR/health.json"
+
+# ── 1b. CSRF bootstrap (cookie-less; no durable session mint) ───────────────
+csrf_http="$(curl -sS -D "$RECEIPT_DIR/csrf.hdr" -o "$RECEIPT_DIR/csrf.json" -w '%{http_code}' \
+  "${BASE_URL}/api/auth/csrf")"
+if [[ "$csrf_http" != "200" ]]; then
+  echo "live-verify: GET /api/auth/csrf HTTP ${csrf_http}" >&2
+  cat "$RECEIPT_DIR/csrf.json" >&2 || true
+  exit 1
+fi
+jq -e '
+  (.csrfToken | type == "string" and length > 0)
+  and .csrfCookieName == "wcdraft_csrf"
+  and .isAuthenticated == false
+' "$RECEIPT_DIR/csrf.json" >/dev/null || {
+  echo "live-verify: CSRF body missing bootstrap fields" >&2
+  cat "$RECEIPT_DIR/csrf.json" >&2 || true
+  exit 1
+}
+# Bootstrap cookies: Max-Age=300 (five-minute). Durable sessions use 30d.
+if ! grep -qiE 'set-cookie:.*wcdraft_csrf=.*max-age=300' "$RECEIPT_DIR/csrf.hdr"; then
+  echo "live-verify: CSRF missing 300s wcdraft_csrf bootstrap cookie" >&2
+  cat "$RECEIPT_DIR/csrf.hdr" >&2 || true
+  exit 1
+fi
+# Cookie-less bootstrap must not mint a durable 30-day sid (Max-Age >> 300).
+if grep -qiE 'set-cookie:.*wcdraft_sid=.*max-age=(1[0-9]{6,}|[2-9][0-9]{5,})' "$RECEIPT_DIR/csrf.hdr"; then
+  echo "live-verify: CSRF issued durable-looking wcdraft_sid (expected ≤300s bootstrap)" >&2
+  cat "$RECEIPT_DIR/csrf.hdr" >&2 || true
+  exit 1
+fi
+echo "live-verify: CSRF bootstrap 200 / 300s cookie / no durable session ok"
 
 # ── 2. Board snapshots (before) ─────────────────────────────────────────────
 before_classic="$(board_snapshot classic-casual \

@@ -503,6 +503,7 @@ describe("public route payload email sweep", () => {
         "GET /api/health",
         await handleHealthGet({
           databaseUrl: undefined,
+          authCookieSecret: undefined,
           buildSha: "public-payload-sweep",
           readLatestMigration: async () => {
             throw new Error("unconfigured health must not query the database");
