@@ -124,7 +124,7 @@ WHERE id = '1cac61ff-6b2e-46b9-b71f-419fb426f0e5'
   AND user_id IS NULL
   AND session_id IS NULL
   AND attempt_id IS NULL
-  AND season_key = 'season-2026-squad-depth'  -- current write season
+  AND season_key = current_write_season  -- season-2026-squad-depth
 RETURNING id, display_alias, verified_score;
 ```
 

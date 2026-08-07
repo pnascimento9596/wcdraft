@@ -51,3 +51,9 @@ paths = [
   '''^etl/output/merit/link_review\.json$''',
   '''^etl/output/merit/source_facts\.json$''',
 ]
+
+[[rules.allowlists]]
+description = "Ops residue cleanup report; season ids and UUIDs are production metadata, not credentials."
+paths = [
+  '''^docs/reports/leaderboard-live-verify-residue-u2-2026-08-07\.md$''',
+]
