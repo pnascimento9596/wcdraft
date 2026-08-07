@@ -13,13 +13,18 @@
   probe (cookie secret + sessions select + execute shape, 2s bound). Probe
   failure/degrade → overall non-green 503. No session mint / no row writes.
   Live-verify asserts `auth.status == ready` and CSRF 300s bootstrap.
-- **Unit C:** widened residue delete (shipmqyo\* leaderboard rows +
-  prodreview/codex-live automation accounts) under dual attribution review +
-  Neon snapshot; ranked binding constraints remain `NOT VALID` (chezwizz
-  NULL `attempt_id` historical exception — no fabricated attempt).
+- **Unit C (executed):** deleted shipmqyo\* LB rows + three automation
+  accounts under dual attribution PASS + Neon snapshot
+  `br-dark-math-aqyfztzk` (`pre-unit-c-residue-20260807T225034Z`, parent LSN
+  `0/74CDBC0`). Post: entries 4, users 6. Ranked binding constraints remain
+  `NOT VALID` (chezwizz NULL `attempt_id` historical exception — no
+  fabricated attempt). Report:
+  `docs/reports/unit-c-residue-binding-closeout-2026-08-07.md`.
 - **Unit D:** host `stop.sh`/`start.sh` safe env load + zero-online-runner
   check (outside repo: `/Users/paulo/runners/wcdraft/`); `.gitleaks.toml`
-  U2 path allowlist confirmed narrow; Neon snapshots retained (owner delete).
+  U2 path allowlist confirmed path-scoped; snapshots retained
+  (`br-autumn-hill-aqswkxii` U2 + `br-dark-math-aqyfztzk` Unit C — owner
+  delete after restore window).
 
 ## Leaderboard live-verify residue cleanup (U2, 2026-08-07)
 
