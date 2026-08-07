@@ -31,7 +31,7 @@ import {
   BOOTSTRAP_CSRF_TTL_MS,
   materializeBootstrapSession,
 } from "./bootstrap-csrf";
-import { createCorrelationId, logSecurityEvent } from "./security-log";
+import { classifyError, createCorrelationId, logSecurityEvent } from "./security-log";
 
 export interface RuntimeDeps extends SessionDeps {
   readonly sender: EmailSender;
@@ -315,7 +315,22 @@ export function jsonError(err: unknown): NextResponse {
     );
   }
   const correlationId = createCorrelationId();
+  const errorClass = classifyError(err);
   logSecurityEvent({ code: "AUTH_UNEXPECTED_ERROR", correlationId, error: err });
+  // Substrate / driver blips are honest temporary unavailability (503), never
+  // an untyped 500. Cookie-less CSRF bootstrap should not reach here for a
+  // sweep failure (that path is best-effort), but session validation and other
+  // auth routes still need a typed fail-closed response.
+  if (errorClass === "database" || errorClass === "timeout") {
+    return NextResponse.json(
+      {
+        error: "SUBSTRATE_UNAVAILABLE",
+        message: "Authentication is temporarily unavailable.",
+        correlation_id: correlationId,
+      },
+      { status: 503 },
+    );
+  }
   return NextResponse.json(
     {
       error: "INTERNAL_ERROR",
