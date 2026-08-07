@@ -502,7 +502,12 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     expect(res.status).toBe(409);
     const body = await errorOf(res);
     expect(body.error).toBe("WRONG_SEASON");
-    expect(body.mismatched_anchors).toEqual(["engine_version"]);
+    // Pre-S2 token also carries pre-2.11 schema + draft-pool hash after the RF-01 diet bump.
+    expect(body.mismatched_anchors).toEqual([
+      "schema_version",
+      "engine_version",
+      "data_bundle_hash",
+    ]);
     expect(await allRows()).toHaveLength(0);
   });
 

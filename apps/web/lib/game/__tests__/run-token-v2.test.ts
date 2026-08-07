@@ -410,13 +410,14 @@ describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
       era_preset: "all_time",
     });
     expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
-    expect(decoded!.sv).toBe(gameData.versions.schema_version);
+    // After runtime-data-2.11.0, schema + data_bundle_hash also diverge (payload diet).
+    expect(decoded!.sv).not.toBe(gameData.versions.schema_version);
     expect(decoded!.rv).toBe(gameData.versions.rating_version);
-    expect(decoded!.hv).toBe(gameData.versions.data_bundle_hash);
+    expect(decoded!.hv).not.toBe(gameData.versions.data_bundle_hash);
     expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
   });
 
-  it("immediate pre-basis shipped t3 token: only the engine fence trips skew", () => {
+  it("immediate pre-basis shipped t3 token: schema+engine fences trip skew after 2.11 diet", () => {
     const decoded = decodeRunToken(skewFixtures.shipped_pre_basis_t3.token);
     expect(decoded).not.toBeNull();
     expect(decoded!.v).toBe(3);
@@ -427,11 +428,12 @@ describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
       "408f7ca241ef208b792cef3b804e37fe3d388d3551c3fe5a7221c05515aa60b3",
     );
     expect(decoded!.ev).toBe("engine-2026.07.14-squad-depth");
-    expect(decoded!.sv).toBe(gameData.versions.schema_version);
+    // Pre-basis token was minted on 2.10; RF-01 schema diet also moves sv/hv.
+    expect(decoded!.sv).not.toBe(gameData.versions.schema_version);
     expect(decoded!.dv).toBe(gameData.versions.dataset_version);
     expect(decoded!.rv).toBe(gameData.versions.rating_version);
     expect(decoded!.uv).toBe(gameData.versions.ruleset_version);
-    expect(decoded!.hv).toBe(gameData.versions.data_bundle_hash);
+    expect(decoded!.hv).not.toBe(gameData.versions.data_bundle_hash);
     expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
     expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
   });

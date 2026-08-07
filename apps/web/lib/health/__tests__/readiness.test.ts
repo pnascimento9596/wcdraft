@@ -99,7 +99,7 @@ describe("GET /api/health readiness contract", () => {
       rating_version_historical: "wc-perf-6.6.0",
       rating_version_projected: "proj-career-5.6.0",
       ruleset_version: "ruleset-2026.06.04",
-      draft_pool_sha256: "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07",
+      draft_pool_sha256: "67d9e89f067b551c7be1e8c754fee5944d89450f94c0b9712bf27c3c5ac15552",
     });
   });
 });
