@@ -80,7 +80,7 @@ Same love of a good draft, a few twists: it's free in your browser, you draft ac
 If you enjoy those, you'll probably like this: pick Squad First or Position First, draft a manager too, and try Memory mode where ratings stay hidden until the reveal. Free, in-browser.
 ```
 
-**Variant 3 · 196/280 chars**
+**Variant 3 · 194/280 chars**
 
 ```
 Different flavour of the same fun — nation Synergy rewards a connected XI, per-config leaderboards keep runs in the right lane, and every run gets a reproducible share link. No download to play.
@@ -101,3 +101,4 @@ Thanks for flagging — sorry it glitched. A screenshot plus your browser/device
 ```
 Appreciate the report. If you can share the steps + your run's share link, we can replay the exact state and chase it down. More on the project: https://www.wcdraft.com
 ```
+
