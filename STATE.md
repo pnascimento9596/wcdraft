@@ -28,6 +28,16 @@ id 21 removed); `com.wcdraft.runner-worker-watchdog` unloaded. **biotraxiq-m4
 untouched.** Always-on gap report:
 `docs/reports/linux-fleet-always-on-gaps-2026-07-25.md` (Phase 6, report-only).
 
+**Colima lifecycle (reconciled 2026-08-07, post-ship verify):** wcdraft GHA containers
+are on-demand only (`/Users/paulo/runners/wcdraft/{start,stop}.sh`). **Do not**
+`colima stop` while non-wcdraft workloads are present. As of 2026-08-07 Colima was
+**UP** (8 CPU / 16 GiB) with **12× `biotraxiq-*`** Postgres/MinIO containers plus
+`ap-audit-*` runners/pg; **wcdraft fleet containers were DOWN**. biotraxiq’s GitHub
+Actions runner (`biotraxiq-m4`) is **host-native** at `/Users/paulo/actions-runner-biotraxiq`
+— not inside Colima — but biotraxiq still depends on Colima for those DB/object-store
+containers. Never stop/restart/reconfigure biotraxiq- or ap-audit-owned resources from
+a wcdraft lane. Evidence: `docs/reports/post-ship-verify-anchor-skew-parse-fleet-2026-08-07.md`.
+
 ---
 
 > Update rule: every lane updates this file in the SAME change that merges.
@@ -3384,6 +3394,14 @@ schema **runtime-data-2.11.0**; `Rating.components[]` stripped from runtime draf
 (17.7 MiB vs ~65.2 MiB), brotli **−45.57%** (713,942 vs 1,311,661 bytes). Strategic-pick
 canary **0 flips**. Salt map refreshed to 2026-08-07 + 45d (through 2026-09-20). Retention
 current+2: 2.11 + 2.10 + 2.9 (2.8 removed).
+
+Post-ship parse gate (2026-08-07, retained 2.10 vs shipped 2.11 draft-pool, same
+Track-C 3-busy-worker proxy family): host median **145.24 → 29.20 ms (−116.04 ms)**;
+throttled/proxy median **143.33 → 29.24 ms (−114.09 ms)**. Preregistered ≥100 ms bar
+**PASS / closed**. Pre-2.11 tokens skew only on `sv` + `hv` (`data_bundle_hash`);
+`ev`/`rv`/`dv`/`uv` unchanged. Evidence:
+`docs/reports/post-ship-verify-anchor-skew-parse-fleet-2026-08-07.md` +
+`docs/reports/parse-timing-2.11-vs-2.10-2026-08-07.json`.
 
 Refactor Implementation Season Lane A (RF-06/10/03, 2026-08-07) measured on `ws-fix/test-hygiene` @ origin/main `2632b4c`:
 
