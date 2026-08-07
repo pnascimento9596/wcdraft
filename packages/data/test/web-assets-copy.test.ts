@@ -12,8 +12,8 @@ const SCRIPT_PATH = new URL("../scripts/copy-web-assets.mjs", import.meta.url);
 const POLICY_SCRIPT_PATH = new URL("../scripts/runtime-artifact-closure.mjs", import.meta.url);
 const WEB_PACKAGE_PATH = new URL("../../../apps/web/package.json", import.meta.url);
 const RETAINED_DATA_PATH = new URL("../src/retained-runtime-data/", import.meta.url);
-const CURRENT_VERSION = "runtime-data-2.10.0";
-const RETAINED_VERSIONS = ["runtime-data-2.8.0", "runtime-data-2.9.0"] as const;
+const CURRENT_VERSION = "runtime-data-2.11.0";
+const RETAINED_VERSIONS = ["runtime-data-2.9.0", "runtime-data-2.10.0"] as const;
 
 type FixtureBundleKey =
   | "draft_pool"
@@ -181,7 +181,7 @@ async function listFiles(root: string, prefix = ""): Promise<string[]> {
 describe("copy-web-assets", () => {
   it("pins retained draft transport bytes to the historical deployed artifacts", async () => {
     const expected = {
-      "runtime-data-2.8.0": {
+      "runtime-data-2.10.0": {
         bytes: 2_225_295,
         sha256: "51ae8115f97e0f83287f4692065762ba808f31e8052f26066eeae18bd0ac4d48",
       },
@@ -239,17 +239,17 @@ describe("copy-web-assets", () => {
       "export const RETAINED_PRIOR_SCHEMA_COUNT = 2",
     );
     expect(await listFiles(targetDir)).toEqual([
-      "runtime-data-2.10.0/daily-seed-salt-map.compact.json",
-      "runtime-data-2.10.0/daily-seed-salt-map.compact.json.br",
+      "runtime-data-2.11.0/daily-seed-salt-map.compact.json",
+      "runtime-data-2.11.0/daily-seed-salt-map.compact.json.br",
+      "runtime-data-2.11.0/draft-pool.compact.json.br",
+      "runtime-data-2.11.0/manifest.json",
+      "runtime-data-2.11.0/scenario-2026.compact.json",
+      "runtime-data-2.11.0/scenario-2026.compact.json.br",
+      "runtime-data-2.11.0/score-distribution.compact.json",
+      "runtime-data-2.11.0/score-distribution.compact.json.br",
       "runtime-data-2.10.0/draft-pool.compact.json.br",
       "runtime-data-2.10.0/manifest.json",
       "runtime-data-2.10.0/scenario-2026.compact.json",
-      "runtime-data-2.10.0/scenario-2026.compact.json.br",
-      "runtime-data-2.10.0/score-distribution.compact.json",
-      "runtime-data-2.10.0/score-distribution.compact.json.br",
-      "runtime-data-2.8.0/draft-pool.compact.json.br",
-      "runtime-data-2.8.0/manifest.json",
-      "runtime-data-2.8.0/scenario-2026.compact.json",
       "runtime-data-2.9.0/daily-seed-salt-map.compact.json",
       "runtime-data-2.9.0/daily-seed-salt-map.compact.json.br",
       "runtime-data-2.9.0/draft-pool.compact.json.br",
@@ -363,7 +363,7 @@ describe("copy-web-assets", () => {
     });
 
     expect(runCopyFailure(sourceDir, targetDir, retainedDir)).toContain(
-      "requires exactly runtime-data-2.8.0, runtime-data-2.9.0",
+      "requires exactly runtime-data-2.9.0, runtime-data-2.10.0",
     );
     await expect(stat(targetDir)).rejects.toMatchObject({ code: "ENOENT" });
   });

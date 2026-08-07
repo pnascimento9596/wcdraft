@@ -75,8 +75,6 @@ export interface Rating {
   goalkeeping: number;
   // ───────────────────────────────────────────────────────────────────────────
 
-  /** Which factual signals contributed + their weights (transparency aid). */
-  components: RatingComponent[];
   /** Honest-state coverage fraction in [0,1] for this rating. */
   coverage: number;
   /**
@@ -99,6 +97,17 @@ export interface Rating {
  * the same engine that produces per-card Ratings. Coverage is averaged or
  * minimumed (engine choice; locked once by WS-B golden fixtures).
  */
+/**
+ * Offline/ETL provenance rating — carries the transparency `components[]`
+ * signal list. Runtime draft-pool delivery deliberately omits this field
+ * (schema runtime-data-2.11.0 payload diet); do not reintroduce it into
+ * the compact runtime `Rating` surface.
+ */
+export interface ProvenanceRating extends Rating {
+  /** Which factual signals contributed + their weights (transparency aid). */
+  components: RatingComponent[];
+}
+
 export interface TeamStrength {
   attack: number;
   midfield: number;

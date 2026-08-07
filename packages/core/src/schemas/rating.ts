@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 
-import type { Rating, RatingComponent, TeamStrength } from "../types/rating.js";
+import type { ProvenanceRating, Rating, RatingComponent, TeamStrength } from "../types/rating.js";
 import { CardIdSchema, refineCardIdConsistency } from "./identity.js";
 import {
   NonEmptyIdSchema,
@@ -37,10 +37,13 @@ export const RatingSchema = z
     midfield: RatingChannelSchema,
     defense: RatingChannelSchema,
     goalkeeping: RatingChannelSchema,
-    components: z.array(RatingComponentSchema),
     coverage: PercentSchema,
     coverage_basis: z.enum(["wc_signals", "career_signals"]),
     provenance: z.enum(["wc_performance", "projected_career"]),
     rating_version: NonEmptyIdSchema,
   })
   .superRefine(refineCardIdConsistency) satisfies z.ZodType<Rating>;
+
+export const ProvenanceRatingSchema = RatingSchema.extend({
+  components: z.array(RatingComponentSchema),
+}) satisfies z.ZodType<ProvenanceRating>;

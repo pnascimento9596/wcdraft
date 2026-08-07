@@ -93,7 +93,7 @@ describe("GET /api/health readiness contract", () => {
 
   it("publishes the six data anchors without loading a secret-bearing value", () => {
     expect(DATA_MANIFEST_ANCHOR).toEqual({
-      schema_version: "runtime-data-2.10.0",
+      schema_version: "runtime-data-2.11.0",
       dataset_version: "2026-07-01",
       engine_version: "engine-2026.07.18-basis-aware-tiering",
       rating_version_historical: "wc-perf-6.6.0",
