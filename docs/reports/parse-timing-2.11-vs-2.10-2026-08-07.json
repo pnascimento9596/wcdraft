@@ -1,0 +1,89 @@
+{
+  "schema_version": "parse-timing-shipped-2.11-vs-retained-2.10-1.0.0",
+  "measurement_date": "2026-08-07T15:43:41.254Z",
+  "host_platform": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "node": "v24.11.0"
+  },
+  "method_note": "Same instrument profile as Track C parse-timing.json: host sequential parse + 3 busy ESM worker contention proxy. Inputs are the retained 2.10 and shipped 2.11 draft-pool.compact.json.br bytes (not a synthetic strip).",
+  "retained_2_10": {
+    "path": "packages/data/src/retained-runtime-data/runtime-data-2.10.0/draft-pool.compact.json.br",
+    "compressed_bytes": 1311661,
+    "decoded_bytes": 68380413,
+    "compressed_sha256": "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d",
+    "decoded_sha256": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07"
+  },
+  "shipped_2_11": {
+    "path": "packages/data/src/generated/draft-pool.compact.json.br",
+    "compressed_bytes": 713942,
+    "decoded_bytes": 17744663,
+    "compressed_sha256": "debcd57f75b758de5302e21035bd8dc175e02987c525393387f5aa06cc123fbf",
+    "decoded_sha256": "67d9e89f067b551c7be1e8c754fee5944d89450f94c0b9712bf27c3c5ac15552"
+  },
+  "host": {
+    "with_2_10_ms": {
+      "median_ms": 145.24133299999994,
+      "samples_ms": [
+        143.46116700000005,
+        154.11574999999993,
+        151.53579200000001,
+        134.70608299999992,
+        144.18441600000006,
+        145.24133299999994,
+        177.60575000000017
+      ]
+    },
+    "with_2_11_ms": {
+      "median_ms": 29.200291000000107,
+      "samples_ms": [
+        28.416082999999844,
+        31.7696669999998,
+        29.200291000000107,
+        31.06925000000001,
+        28.369083000000046,
+        30.878165999999965,
+        28.072416000000203
+      ]
+    },
+    "delta_ms": 116.04104199999983,
+    "improvement_ms": 116.04104199999983
+  },
+  "throttled_proxy": {
+    "with_2_10_ms": {
+      "median_ms": 143.32970899999964,
+      "samples_ms": [
+        142.44325000000026,
+        143.32970899999964,
+        147.02029100000027,
+        140.50145799999973,
+        150.7410420000001
+      ],
+      "method": "3 busy ESM worker threads contending for CPU (proxy mid-tier thermal throttle; not a real mobile SoC profile)"
+    },
+    "with_2_11_ms": {
+      "median_ms": 29.238166999999976,
+      "samples_ms": [
+        28.83499999999958,
+        31.49225000000024,
+        29.109082999999828,
+        32.48083399999996,
+        29.238166999999976
+      ],
+      "method": "3 busy ESM worker threads contending for CPU (proxy mid-tier thermal throttle; not a real mobile SoC profile)"
+    },
+    "delta_ms": 114.09154199999966,
+    "improvement_ms": 114.09154199999966,
+    "note": "3 busy ESM worker threads contending for CPU (proxy mid-tier thermal throttle; not a real mobile SoC profile)"
+  },
+  "preregistered_bar": {
+    "rule": "≥100 ms reduction in parse time on throttled/proxy profile",
+    "measured_throttled_improvement_ms": 114.09154199999966,
+    "bar_met": true
+  },
+  "track_c_reference": {
+    "path": "docs/reports/evidence-track-c-2026-07-23/parse-timing.json",
+    "throttled_delta_ms": 838.2859169999992,
+    "note": "Track C compared synthetic strip of then-current pool; this run compares retained 2.10 vs shipped 2.11 pool bytes."
+  }
+}
