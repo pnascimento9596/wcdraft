@@ -121,9 +121,11 @@ Direct:
 DELETE FROM leaderboard_entries
 WHERE id = '1cac61ff-6b2e-46b9-b71f-419fb426f0e5'
   AND display_alias = 'live_verify_xi'
-  AND user_id IS NULL AND session_id IS NULL AND attempt_id IS NULL
-  AND season_key = 'season-2026-squad-depth'
-RETURNING …;
+  AND user_id IS NULL
+  AND session_id IS NULL
+  AND attempt_id IS NULL
+  AND season_key = 'season-2026-squad-depth'  -- current write season
+RETURNING id, display_alias, verified_score;
 ```
 
 Result: **DELETE 1**. Legal under existing schema: no `ranked_attempt_binding_fk`
