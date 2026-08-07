@@ -6,16 +6,16 @@ Production HEAD at investigation: `d9f4073` (`runtime-data-2.11.0` /
 
 ## Outcome (short)
 
-| Question | Answer |
-| --- | --- |
-| When was always-awaited sweep introduced? | **`890db10` / PR #244**, merged **2026-07-11T17:16:01-04:00** |
-| When was the 500 fixed? | **`98e0368` / PR #341**, merged **2026-08-07T20:01:45Z**; deploy READY ~`2026-08-07T20:01:48Z` |
-| Earliest **observed** CSRF 500 in Vercel logs | **`2026-08-07T01:23:45.609Z`** |
-| Outage window (observed) | **At least ~18.1 hours** (01:23Z → last 500 19:29Z; fix deploy 20:01Z) |
-| Log retention limit | Vercel CLI historical query returns **no CSRF 500s before 2026-08-07T01:23Z** even with `--since 90d` / limit 100 — treat onset as **≥ that timestamp**, not earlier |
-| Did real-user auth go to zero for the whole post-#244 period? | **No.** Sign-ups + email verification succeeded **2026-07-17** and **2026-08-07 wait: Jul 20** under the same CTE sweep code |
+| Question                                                                         | Answer                                                                                                                                                                              |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| When was always-awaited sweep introduced?                                        | **`890db10` / PR #244**, merged **2026-07-11T17:16:01-04:00**                                                                                                                       |
+| When was the 500 fixed?                                                          | **`98e0368` / PR #341**, merged **2026-08-07T20:01:45Z**; deploy READY ~`2026-08-07T20:01:48Z`                                                                                      |
+| Earliest **observed** CSRF 500 in Vercel logs                                    | **`2026-08-07T01:23:45.609Z`**                                                                                                                                                      |
+| Outage window (observed)                                                         | **At least ~18.1 hours** (01:23Z → last 500 19:29Z; fix deploy 20:01Z)                                                                                                              |
+| Log retention limit                                                              | Vercel CLI historical query returns **no CSRF 500s before 2026-08-07T01:23Z** even with `--since 90d` / limit 100 — treat onset as **≥ that timestamp**, not earlier                |
+| Did real-user auth go to zero for the whole post-#244 period?                    | **No.** Sign-ups + email verification succeeded **2026-07-17** and **2026-08-07 wait: Jul 20** under the same CTE sweep code                                                        |
 | Did real-user auth go to zero in the **observed** outage window (Aug 7 pre-fix)? | **Yes for durable sessions / accounts / magic-links / ranked.** Zero of those minted between 01:23Z and the fix. Four anon durable sessions appear only **after** the fix (20:08Z+) |
-| Ranked board empty because of this outage? | **No evidence that outage emptied ranked.** Ranked attempts table is **0 rows for all time**; sole ranked leaderboard row is **2026-06-21** (pre-sweep, `NULL attempt_id`) |
+| Ranked board empty because of this outage?                                       | **No evidence that outage emptied ranked.** Ranked attempts table is **0 rows for all time**; sole ranked leaderboard row is **2026-06-21** (pre-sweep, `NULL attempt_id`)          |
 
 ---
 
@@ -23,12 +23,12 @@ Production HEAD at investigation: `d9f4073` (`runtime-data-2.11.0` /
 
 ### Sweep added (always-awaited on bootstrap)
 
-| Field | Value |
-| --- | --- |
-| Commit | `890db10e32462473778778d2b1d4dedc9feb4d29` |
-| PR | [#244](https://github.com/pnascimento9596/wcdraft/pull/244) — `fix(auth): harden session and abuse boundaries` |
-| Merge / author date | **2026-07-11** (AuthorDate `Sat Jul 11 13:16:01 2026 -0400` → **17:16:01Z**) |
-| Change | `GET /api/auth/csrf` switched from `ensureSession` to **stateless bootstrap** and inserted **`await sweepExpiredSessions(deps)` before any success path**. Sweep implemented as raw CTE via `db.execute` returning `result.rows[0].count`. |
+| Field               | Value                                                                                                                                                                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Commit              | `890db10e32462473778778d2b1d4dedc9feb4d29`                                                                                                                                                                                                 |
+| PR                  | [#244](https://github.com/pnascimento9596/wcdraft/pull/244) — `fix(auth): harden session and abuse boundaries`                                                                                                                             |
+| Merge / author date | **2026-07-11** (AuthorDate `Sat Jul 11 13:16:01 2026 -0400` → **17:16:01Z**)                                                                                                                                                               |
+| Change              | `GET /api/auth/csrf` switched from `ensureSession` to **stateless bootstrap** and inserted **`await sweepExpiredSessions(deps)` before any success path**. Sweep implemented as raw CTE via `db.execute` returning `result.rows[0].count`. |
 
 ### Sweep began failing (observed ≠ introduced)
 
@@ -42,13 +42,13 @@ So **“sweep added” ≠ “sweep always throws.”** The failure mode is a la
 
 ### Fix
 
-| Field | Value |
-| --- | --- |
-| Commit | `98e03689e8e8521e78c6d8f65ec071101c3d2871` |
-| PR | [#341](https://github.com/pnascimento9596/wcdraft/pull/341) |
-| Merged | **2026-08-07T20:01:45Z** |
-| Production deploy | `dpl_5pRLrRzwsBuJhQdsJeoWKJJNZGDw` READY **2026-08-07T20:01:48.128Z** (sha `98e0368`) |
-| Change | Sweep best-effort (log + continue); rewrite to query-builder select+delete; map substrate errors to typed 503 on DB-required paths |
+| Field             | Value                                                                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Commit            | `98e03689e8e8521e78c6d8f65ec071101c3d2871`                                                                                         |
+| PR                | [#341](https://github.com/pnascimento9596/wcdraft/pull/341)                                                                        |
+| Merged            | **2026-08-07T20:01:45Z**                                                                                                           |
+| Production deploy | `dpl_5pRLrRzwsBuJhQdsJeoWKJJNZGDw` READY **2026-08-07T20:01:48.128Z** (sha `98e0368`)                                              |
+| Change            | Sweep best-effort (log + continue); rewrite to query-builder select+delete; map substrate errors to typed 503 on DB-required paths |
 
 **Distinction (required):**
 
@@ -61,12 +61,12 @@ So **“sweep added” ≠ “sweep always throws.”** The failure mode is a la
 
 **Method:** `vercel logs --project wcdraft-web --environment production --no-branch --no-follow --status-code 500 --query '/api/auth/csrf' --since <window> --limit 100 --json` (authenticated CLI against project `prj_MXJxM5wTyp4rqnHPqA1Z9Ncvc17K`).
 
-| Window (`--since`) | CSRF 500 count | Earliest | Latest |
-| --- | ---: | --- | --- |
-| 1h (queried ~22:30Z) | 0 | — | — |
-| 6h | 20 | 18:36:13Z | 19:29:10Z |
-| 12h | 21 | 12:15:37Z | 19:29:10Z |
-| 24h … 90d | **36** (plateau) | **01:23:45.609Z** | **19:29:10.576Z** |
+| Window (`--since`)   |   CSRF 500 count | Earliest          | Latest            |
+| -------------------- | ---------------: | ----------------- | ----------------- |
+| 1h (queried ~22:30Z) |                0 | —                 | —                 |
+| 6h                   |               20 | 18:36:13Z         | 19:29:10Z         |
+| 12h                  |               21 | 12:15:37Z         | 19:29:10Z         |
+| 24h … 90d            | **36** (plateau) | **01:23:45.609Z** | **19:29:10.576Z** |
 
 **Retention conclusion:** Expanding `--since` past ~24h does not surface any older CSRF 500. The retained set is **36 events**, all on **2026-08-07**, all `AUTH_UNEXPECTED_ERROR` / `error_class: unexpected` on `GET /api/auth/csrf`.
 
@@ -76,11 +76,11 @@ So **“sweep added” ≠ “sweep always throws.”** The failure mode is a la
 
 **Deployments that served the retained 500s:**
 
-| Deployment | SHA | READY | # of retained CSRF 500s |
-| --- | --- | --- | ---: |
-| `dpl_FTPqdbf5SuuemfBpm9P1VQB7T2oj` | `21b451f` (fleet docs, **2026-07-25**) | 2026-07-25T17:20:38Z | 15 (early Aug 7 morning) |
-| `dpl_54njayHfgefuceYeNfkmWbvQNt94` | `2632b4c` (#335 marketing) | 2026-08-07T11:36:37Z | 1 |
-| `dpl_4GbPNvF7RbeCSZQBhBVNME4qbgio` | `2a3253e` (#340 honest skew) | 2026-08-07T18:33:27Z | 20 (includes investigation probes) |
+| Deployment                         | SHA                                    | READY                |            # of retained CSRF 500s |
+| ---------------------------------- | -------------------------------------- | -------------------- | ---------------------------------: |
+| `dpl_FTPqdbf5SuuemfBpm9P1VQB7T2oj` | `21b451f` (fleet docs, **2026-07-25**) | 2026-07-25T17:20:38Z |           15 (early Aug 7 morning) |
+| `dpl_54njayHfgefuceYeNfkmWbvQNt94` | `2632b4c` (#335 marketing)             | 2026-08-07T11:36:37Z |                                  1 |
+| `dpl_4GbPNvF7RbeCSZQBhBVNME4qbgio` | `2a3253e` (#340 honest skew)           | 2026-08-07T18:33:27Z | 20 (includes investigation probes) |
 
 Hourly histogram (UTC, retained set): 01:00×1, 04:00×10, 05:00×4, 12:00×1, 18:00×2, 19:00×18.
 
@@ -94,60 +94,60 @@ Queried production Neon project `rapid-wind-87431051`, primary branch `br-blue-h
 
 ### Totals at investigation time
 
-| Table | Count |
-| --- | ---: |
-| users | 9 |
-| sessions | 132 |
-| magic_link_tokens | 21 |
-| ranked_attempts | **0** |
-| leaderboard_entries | 6 |
-| saved_runs | 317 |
+| Table               | Count |
+| ------------------- | ----: |
+| users               |     9 |
+| sessions            |   132 |
+| magic_link_tokens   |    21 |
+| ranked_attempts     | **0** |
+| leaderboard_entries |     6 |
+| saved_runs          |   317 |
 
 ### Window comparison
 
 Bounds:
 
 - **pre_window:** 2026-06-13 → 2026-07-11T17:16:01Z (sweep merge)
-- **candidate_code_window:** 2026-07-11T17:16:01Z → 2026-08-07T20:01:45Z (fix merge) — *code capable of always-awaiting broken sweep*
+- **candidate_code_window:** 2026-07-11T17:16:01Z → 2026-08-07T20:01:45Z (fix merge) — _code capable of always-awaiting broken sweep_
 - **post_fix:** ≥ 2026-08-07T20:01:45Z
 
-| Metric | pre_window | candidate_code_window | post_fix |
-| --- | ---: | ---: | ---: |
-| users created | 6 | **2** | 0 |
-| email verifications | 1 | **2** | 0 |
-| sessions total | 91 | 37 | 4 |
-| sessions authed | 2 | **2** | 0 |
-| magic_link tokens | 12 | 3 | 0 |
-| magic_link consumed | 9 | **3** | 0 |
-| ranked_attempts issued | **0** | **0** | **0** |
-| ranked_attempts consumed | **0** | **0** | **0** |
-| leaderboard ranked rows | 1 | **0** | 0 |
-| leaderboard casual rows | 5 | **0** | 0 |
-| saved_runs | 222 | 84 | 0 |
+| Metric                   | pre_window | candidate_code_window | post_fix |
+| ------------------------ | ---------: | --------------------: | -------: |
+| users created            |          6 |                 **2** |        0 |
+| email verifications      |          1 |                 **2** |        0 |
+| sessions total           |         91 |                    37 |        4 |
+| sessions authed          |          2 |                 **2** |        0 |
+| magic_link tokens        |         12 |                     3 |        0 |
+| magic_link consumed      |          9 |                 **3** |        0 |
+| ranked_attempts issued   |      **0** |                 **0** |    **0** |
+| ranked_attempts consumed |      **0** |                 **0** |    **0** |
+| leaderboard ranked rows  |          1 |                 **0** |        0 |
+| leaderboard casual rows  |          5 |                 **0** |        0 |
+| saved_runs               |        222 |                    84 |        0 |
 
 ### Users (all)
 
-| created_utc | email (class) | verified |
-| --- | --- | --- |
-| 2026-06-12 | owner gmail | no |
-| 2026-06-15 ×3 | automation / redacted invalid | no |
-| 2026-06-17 | codex-live automation | no |
-| 2026-06-21 | real user (chezwizz ranked owner) | no |
-| 2026-07-05 | real user | **yes** |
-| **2026-07-17** | real user | **yes** (during post-#244 code window) |
-| **2026-07-20** | real user | **yes** (during post-#244 code window) |
+| created_utc    | email (class)                     | verified                               |
+| -------------- | --------------------------------- | -------------------------------------- |
+| 2026-06-12     | owner gmail                       | no                                     |
+| 2026-06-15 ×3  | automation / redacted invalid     | no                                     |
+| 2026-06-17     | codex-live automation             | no                                     |
+| 2026-06-21     | real user (chezwizz ranked owner) | no                                     |
+| 2026-07-05     | real user                         | **yes**                                |
+| **2026-07-17** | real user                         | **yes** (during post-#244 code window) |
+| **2026-07-20** | real user                         | **yes** (during post-#244 code window) |
 
 ### Observed outage day (2026-08-07) only
 
-| Signal | Count / notes |
-| --- | --- |
-| users created | **0** |
-| email verifications | **0** |
-| magic_link activity | **0** |
-| ranked_attempts | **0** (also lifetime 0) |
-| leaderboard writes | **0** remaining (PR #340’s `live_verify_xi` was later deleted by U2) |
-| sessions created | **4**, all **after** fix deploy (20:08:12Z, 20:08:33Z, 20:30:21Z, 20:30:36Z), all **anonymous** durable rows |
-| saved_runs | **0** on Aug 7; 11 between Jul 22–Aug 6 |
+| Signal              | Count / notes                                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------------ |
+| users created       | **0**                                                                                                        |
+| email verifications | **0**                                                                                                        |
+| magic_link activity | **0**                                                                                                        |
+| ranked_attempts     | **0** (also lifetime 0)                                                                                      |
+| leaderboard writes  | **0** remaining (PR #340’s `live_verify_xi` was later deleted by U2)                                         |
+| sessions created    | **4**, all **after** fix deploy (20:08:12Z, 20:08:33Z, 20:30:21Z, 20:30:36Z), all **anonymous** durable rows |
+| saved_runs          | **0** on Aug 7; 11 between Jul 22–Aug 6                                                                      |
 
 **Plain statement:** In the **observed** Vercel-log outage window on 2026-08-07, **real-user auth activity that depends on CSRF bootstrap went to zero** (no new accounts, verifications, magic-links, or authed sessions). That is **not** true of the entire post-#244 interval (Jul 17 / Jul 20 sign-in success).
 
@@ -199,12 +199,12 @@ PR #341 body: bare CSRF 500’d while `GET /api/auth/session` returned 200 `{ses
 
 ## Unknowable / missing telemetry
 
-| Gap | Impact |
-| --- | --- |
-| Vercel log retention floor ~2026-08-07T01:23Z for this query path | True first-failure time may be earlier; window stated as **at least** |
-| No continuous CSRF success/failure metrics or synthetic monitor before #341 | Cannot plot 500 rate Jul 11–Aug 6 |
-| No application-level security log warehouse beyond Vercel runtime logs | Correlation IDs from #341 matrix not queryable historically beyond retained logs |
-| `vercel env pull` returns empty encrypted secrets | Did not block Neon access (neonctl connection string) |
+| Gap                                                                         | Impact                                                                           |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Vercel log retention floor ~2026-08-07T01:23Z for this query path           | True first-failure time may be earlier; window stated as **at least**            |
+| No continuous CSRF success/failure metrics or synthetic monitor before #341 | Cannot plot 500 rate Jul 11–Aug 6                                                |
+| No application-level security log warehouse beyond Vercel runtime logs      | Correlation IDs from #341 matrix not queryable historically beyond retained logs |
+| `vercel env pull` returns empty encrypted secrets                           | Did not block Neon access (neonctl connection string)                            |
 
 ---
 

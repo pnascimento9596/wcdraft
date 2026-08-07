@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import {
-  cookieSecretIsConfigured,
-  probeAuthBootstrapDependencies,
-} from "../auth-probe";
+import { cookieSecretIsConfigured, probeAuthBootstrapDependencies } from "../auth-probe";
 
 const STRONG_SECRET = Buffer.alloc(32, 9).toString("base64url");
 
