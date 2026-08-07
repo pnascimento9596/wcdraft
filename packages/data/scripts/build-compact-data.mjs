@@ -811,10 +811,7 @@ async function build() {
       appearancesSource: rating.appearances_source,
     });
     const runtimeRating = withCurrentBasis(basisRatings);
-    if (
-      rating.overall_basis === "baseline_anchor_estimate" &&
-      !hasManualRatingOverride(rating)
-    ) {
+    if (rating.overall_basis === "baseline_anchor_estimate" && !hasManualRatingOverride(rating)) {
       estimateCount += 1;
       // Phase 1.1 decoupled: only OVERALL is on the display band. Sim channels
       // stay on the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays

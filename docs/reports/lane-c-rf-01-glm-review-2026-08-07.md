@@ -21,34 +21,44 @@ STATUS: FAIL
 ## BLOCKERS
 
 ### B1 — `@wcdraft/core` typecheck is RED (CI gate: ci.yml:357)
+
 `packages/core/src/synergy.golden.test.ts:210` removed `components: []` from the `managerRating()` fixture, but `ManagerRating.components` remains a **required** field (`packages/core/src/types/manager.ts:237`). The intent scoped the drop to **player `Rating`** only (`ManagerRating` was out of scope), yet the fixture edit reached `managerRating()`.
+
 ```
 src/synergy.golden.test.ts(210,3): error TS2741: Property 'components' is missing in type '...' but required in type 'ManagerRating'.
 ```
+
 Fix: restore `components: []` in `synergy.golden.test.ts` `managerRating()`. The parallel edit in `manager-modifier-decoupling.guard.test.ts:121` is safe (uses `as unknown as Rating` cast on a player `Rating`, not `ManagerRating`).
 
 ### B2 — `test:golden:leaderboard` is RED (CI gate: ci.yml:448)
+
 3 of 6 committed tokens in `apps/web/lib/leaderboard/__tests__/fixtures/leaderboard-validate-golden.json` are now **rejected** instead of accepted. Root cause: tokens carry `sv = "runtime-data-2.10.0"`; after the bump `current.schema_version = "runtime-data-2.11.0"`, so `versionsAgree` (run-token.ts:612, `token.sv === current.schema_version`) returns false → `versionSkew`. This is the intended honest-state skew on a schema-anchor bump — but the fixture was **not regenerated**. The test file header explicitly mandates the regen on any version-anchor bump:
+
 > `pnpm build && pnpm --filter @wcdraft/web gen:leaderboard-golden` — regen in the same PR as the bump, inspect the diff (e2e-golden discipline).
-Fix: run the regen, then diff the fixture — only `sv` (and the `data_bundle_hash`/`hv` anchor, since draft-pool bytes changed) should move; `verified_score`/`score_breakdown` must stay byte-equal (ratings/engine unchanged, canary 0-flips).
+> Fix: run the regen, then diff the fixture — only `sv` (and the `data_bundle_hash`/`hv` anchor, since draft-pool bytes changed) should move; `verified_score`/`score_breakdown` must stay byte-equal (ratings/engine unchanged, canary 0-flips).
 
 ## WARNINGS
 
 ### W1 — Old-token replay skew not explicitly documented for this bump
+
 STATE.md and the commit message record the schema bump + retention (2.11+2.10+2.9, 2.8 removed) but do NOT call out that the 2.10→2.11 schema-anchor bump causes in-flight 2.10 tokens to skew (`versionSkew`/`DIFFERENT_BUILD`/`WRONG_SEASON`). The behavior is correct, intended, and generically tested (`run-token.test.ts:356` pins that any anchor diff trips `versionsAgree`), but the lane should note the skew consequence. This is also the operational cause of B2.
 
 ### W2 — Strategic-pick canary is not in a registered `test:golden:*` script
+
 `strategic-pick-canary.golden.test.ts` is a standalone golden file (not wired into any `test:golden:*` script in `packages/data/package.json` or `turbo.json`). It passed when run explicitly (0 flips, verified independently), and the golden fixture embeds `rating_version`/`engine_version`/`dataset_version` — all unchanged, so no regen was needed. But CI does not auto-run it on this lane. Pre-existing characteristic (not introduced by RF-01), but worth flagging since the canary is the primary 0-flips gate and AGENTS.md requires new golden scripts to be registered.
 
 ## NITS
 
 ### N1 — Orphaned JSDoc block
+
 `packages/core/src/types/rating.ts:95-99` has two adjacent JSDoc blocks: the `TeamStrength` doc (lines 95-99) is now immediately followed by the `ProvenanceRating` doc (100-105), then `ProvenanceRating` (106). The `TeamStrength` JSDoc is detached from `TeamStrength` (now at line 111) by the inserted `ProvenanceRating` block. Cosmetic; reorder so each JSDoc sits above its interface.
 
 ### N2 — `RatingSchema` does not reject a stray `components` field
+
 `RatingSchema` (rating.ts:30) uses `z.object(...)` without `.strict()`/`.catchall()`, so Zod **strips** unknown keys rather than rejecting them. Not a production concern — runtime data is parsed via plain `JSON.parse`, and the actual guard is the builder's `assertRuntimeRating` (`build-compact-data.mjs:315`, `if ("components" in rating) failBundle(...)`), which correctly **fails** on presence. The type surface is honest (`components` fully absent from `Rating`, not optional). Optional hardening: add a rejection test in `schemas.test.ts` that `RatingSchema.safeParse({...makeRating(), components:[...]})` does not carry `components` through, to match the builder's strictness.
 
 ### N3 — Integrity-probe skip path is behaviorally dead (pre-existing)
+
 The rehomed `etlHasManualOverride` correctly returns >0 on the full ETL set (1868 historical + 397 projected rows), and all 386 `baseline_anchor_estimate` rows join 1:1 to ETL by normalized `card_id` (`:WC-YYYY`→`:YYYY`) with **0 unmatched** and all 386 in band [66,73]. However, **zero** `baseline_anchor_estimate` rows carry `manual_rating_override` (overrides live only on `measured_performance`/`career_stature_estimate` rows). So the `if (etl && etlHasManualOverride(etl)) continue;` skip in `compact-data.integrity.test.ts:160` and the builder's `!hasManualRatingOverride(rating)` gate (`build-compact-data.mjs:816`) are **never exercised** for baseline_anchor_estimate. This is pre-existing (the old `r.components.some(...)` path was equally dead for these rows), so it's behavior-preserving — but the probe's protective branch is untested on the very rows it guards. Consider a fixture that injects a manual override onto a baseline_anchor_estimate row to prove the skip path fires.
 
 ## VERIFIED PASS (adversarial re-check, independent of implementer)
@@ -63,6 +73,7 @@ The rehomed `etlHasManualOverride` correctly returns >0 on the full ETL set (186
 - **Gates run**: data unit 162 pass/9 skip; golden:data 60 pass; core 429 pass; core golden+draft 69+42 pass; data integration golden 22 pass; merit-v42 7 pass; canary 1 pass; run-token 30 pass; web typecheck clean; runtime materializer "24 files across 2.11.0 + 2 retained". Ratings count unchanged 12219→12219.
 
 ## WHAT CHANGED
+
 - `Rating` type: `components` removed; new `ProvenanceRating extends Rating` carries it (rating.ts). `RatingSchema` loses `components`; new `ProvenanceRatingSchema` keeps it (schemas/rating.ts). Both exported from core index.
 - `build-compact-data.mjs`: `SCHEMA_VERSION` → `runtime-data-2.11.0`; `assertRuntimeRating` now **fails** if `components` present (`if ("components" in rating) failBundle`); `materializeBasisRating` stops emitting `components`; `hasManualRatingOverride` rehomed to read source ETL row + dual-basis rows instead of the stripped runtime rating.
 - `data/src/types.ts`: `RUNTIME_DATA_SCHEMA_VERSION` → `2.11.0`; `RuntimeBasisRating extends Rating` no longer inherits `components`.
@@ -71,8 +82,8 @@ The rehomed `etlHasManualOverride` correctly returns >0 on the full ETL set (186
 - STATE.md updated in the same change.
 
 ## RISKS / CARRYOVER
+
 - B1 and B2 must be fixed forward before merge; both are mechanical (restore one `components: []`; regen one fixture + diff-inspect). On PASS, autonomous squash via `gh pr merge --squash --match-head-commit <sha>`.
 - After regen of the leaderboard golden (B2), **re-run `test:golden:leaderboard`** and confirm only version/hash anchors moved, not `verified_score`.
 - The schema bump 2.10→2.11 invalidates in-flight 2.10 run tokens in the wild (Daily/share/challenge/leaderboard) — by design (honest skew). No DB migration; retained 2.10 bundle keeps old replay readable for the retention window. This is the intended tradeoff and matches the standing version-anchor contract.
 - No realism retune needed (canary 0-flips, λ unchanged).
-
