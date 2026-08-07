@@ -197,7 +197,12 @@ describe("one-screen descriptor matrix", () => {
   });
 
   it("runs the descriptor gate in the normal web test envelope", () => {
-    expect(packageManifest.scripts.test).toContain("tsx scripts/verify-home-fold-browser.mts");
+    // Aggregate `test` chains unit (no browsers) + browser lane; home-fold lives in browser.
+    expect(packageManifest.scripts.test).toContain("test:unit");
+    expect(packageManifest.scripts.test).toContain("test:browser");
+    expect(packageManifest.scripts["test:browser"]).toContain(
+      "tsx scripts/verify-home-fold-browser.mts",
+    );
     expect(packageManifest.scripts["verify:one-screen"]).toBe(
       "tsx scripts/verify-home-fold-browser.mts",
     );
