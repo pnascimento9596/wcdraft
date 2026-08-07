@@ -43,10 +43,15 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
     title: "Submission rejected",
     message: "The run token failed to decode on the server.",
   },
+  DIFFERENT_BUILD: {
+    title: "Different build",
+    message:
+      "This run is from a different build. The board only takes runs simulated on the current one. Refresh and draft a new squad to compete.",
+  },
   WRONG_SEASON: {
     title: "Different season",
     message:
-      "This run is from a different build/season. The board only takes runs simulated on the current one. Refresh and draft a new squad to compete.",
+      "This run targets a different leaderboard season. The board only takes runs for the current season. Refresh and draft a new squad to compete.",
   },
   DAILY_UNAVAILABLE: {
     title: "Daily unavailable",

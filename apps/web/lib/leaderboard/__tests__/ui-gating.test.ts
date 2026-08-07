@@ -295,7 +295,20 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
     expect(html).not.toContain("lb-display-name");
   });
 
-  it("WRONG_SEASON: different-build/season copy", () => {
+  it("DIFFERENT_BUILD: different-build copy", () => {
+    const html = render({
+      kind: "rejected",
+      code: "DIFFERENT_BUILD",
+      copy: submitStatusCopy("DIFFERENT_BUILD"),
+      nameHint: null,
+      retryAfterSeconds: null,
+    });
+    expect(html).toContain("Different build");
+    expect(html).toContain("different build");
+    expect(html).not.toContain("Different season");
+  });
+
+  it("WRONG_SEASON: different-season copy", () => {
     const html = render({
       kind: "rejected",
       code: "WRONG_SEASON",
@@ -304,7 +317,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       retryAfterSeconds: null,
     });
     expect(html).toContain("Different season");
-    expect(html).toContain("different build/season");
+    expect(html).toContain("leaderboard season");
   });
 
   it("RATE_LIMITED: Retry-After surfaced and submit disabled", () => {

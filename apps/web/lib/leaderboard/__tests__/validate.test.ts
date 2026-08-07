@@ -7,7 +7,8 @@
 //   T2 tampered score   → SCORE_MISMATCH, claimed never persisted
 //   T4 duplicate pick / manager twice → ILLEGAL_PICK at replay
 //   T5 name abuse       → INVALID_NAME matrix
-//   wrong season        → six anchor-flip cases, each rejected alone
+//   different build     → six anchor-flip cases, each rejected alone (DIFFERENT_BUILD)
+//   wrong season        → claimed season_key ≠ write season (WRONG_SEASON)
 //   oversize/malformed  → TOKEN_TOO_LARGE / INVALID_BODY / MALFORMED_TOKEN
 //
 // All tokens here are crafted from a real autoDraft origin over the committed
@@ -250,7 +251,7 @@ describe("step 2 — malformed tokens (MALFORMED_TOKEN)", () => {
 
 // ─── Step 3 — stale runtime: the strict 6-anchor conjunction ────────────────
 
-describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
+describe("step 3 — DIFFERENT_BUILD (each of the six anchors alone)", () => {
   const anchorCases = [
     ["sv", "schema_version"],
     ["dv", "dataset_version"],
@@ -261,12 +262,12 @@ describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
   ] as const;
 
   for (const [field, anchor] of anchorCases) {
-    it(`flipping ${anchor} (${field}) alone → WRONG_SEASON naming it`, () => {
+    it(`flipping ${anchor} (${field}) alone → DIFFERENT_BUILD naming it`, () => {
       const t = tampered((b) => {
         (b as unknown as Record<string, string>)[field] = `${String(b[field])}-skewed`;
       });
       const v = submit({ token: t });
-      expect(rejectionCode(v)).toBe("WRONG_SEASON");
+      expect(rejectionCode(v)).toBe("DIFFERENT_BUILD");
       if (v.status === "rejected") {
         expect(v.mismatched_anchors).toEqual([anchor]);
       }
@@ -278,7 +279,76 @@ describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
       b.ev = `${b.ev}-skewed`;
     });
     const v = submit({ token: t, display_name: "x" });
+    expect(rejectionCode(v)).toBe("DIFFERENT_BUILD");
+  });
+
+  it("pre-2.11 schema+hash skew (season key matches) → DIFFERENT_BUILD, not WRONG_SEASON", () => {
+    // Mirrors the production 2.10→2.11 diet bump: only sv + hv diverge while the
+    // explicit leaderboard season (season-2026-squad-depth) is unchanged.
+    const t = tampered((b) => {
+      b.sv = "runtime-data-2.10.0";
+      b.hv = "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07+50c45d0e9b9b56892e6bd3462988417e072ea1b08aff206fe344c3ebaccd66fd";
+    });
+    const v = submit({
+      token: t,
+      season_key: DEFAULT_LEADERBOARD_SEASON_ID,
+    });
+    expect(rejectionCode(v)).toBe("DIFFERENT_BUILD");
+    if (v.status === "rejected") {
+      expect(v.mismatched_anchors).toEqual(["schema_version", "data_bundle_hash"]);
+    }
+  });
+});
+
+// ─── Step 3a — explicit season key mismatch ─────────────────────────────────
+
+describe("step 3a — WRONG_SEASON (claimed season_key vs write season)", () => {
+  it("prior-season key with agreeing anchors → WRONG_SEASON", () => {
+    const v = submit({
+      season_key: "season-2026-manager-attrition",
+    });
     expect(rejectionCode(v)).toBe("WRONG_SEASON");
+    if (v.status === "rejected") {
+      expect(v.mismatched_anchors).toBeUndefined();
+    }
+  });
+
+  it("matching season_key with agreeing anchors does not reject", () => {
+    const v = submit({
+      season_key: DEFAULT_LEADERBOARD_SEASON_ID,
+    });
+    // May accept or fail later gates, but not WRONG_SEASON / DIFFERENT_BUILD.
+    if (v.status === "rejected") {
+      expect(v.code).not.toBe("WRONG_SEASON");
+      expect(v.code).not.toBe("DIFFERENT_BUILD");
+    }
+  });
+
+  it("both divergent: anchor check runs first → DIFFERENT_BUILD (precedence)", () => {
+    const t = tampered((b) => {
+      b.sv = `${b.sv}-skewed`;
+    });
+    const v = submit({
+      token: t,
+      season_key: "season-2026-manager-attrition",
+    });
+    expect(rejectionCode(v)).toBe("DIFFERENT_BUILD");
+    if (v.status === "rejected") {
+      expect(v.mismatched_anchors).toEqual(["schema_version"]);
+    }
+  });
+
+  it("ORDER LOCK: season_key check fires before name validation", () => {
+    const v = submit({
+      season_key: "season-2026-manager-attrition",
+      display_name: "x",
+    });
+    expect(rejectionCode(v)).toBe("WRONG_SEASON");
+  });
+
+  it("non-string season_key → INVALID_BODY", () => {
+    const v = submit({ season_key: 42 });
+    expect(rejectionCode(v)).toBe("INVALID_BODY");
   });
 });
 
@@ -857,6 +927,7 @@ describe("U3 seam — SUBMIT_ERROR_HTTP_STATUS", () => {
       NON_CANONICAL_CONFIG: 422,
       TOKEN_TOO_LARGE: 400,
       MALFORMED_TOKEN: 400,
+      DIFFERENT_BUILD: 409,
       WRONG_SEASON: 409,
       DAILY_UNAVAILABLE: 409,
       AUTH_REQUIRED: 401,

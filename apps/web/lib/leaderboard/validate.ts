@@ -4,7 +4,8 @@
 //
 //   1. body shape + token size guard + target lane       → INVALID_BODY / TOKEN_TOO_LARGE
 //   2. decodeRunToken === null                           → MALFORMED_TOKEN
-//   3. strict 6-anchor versionsAgree (= runtime check)   → WRONG_SEASON
+//   3. strict 6-anchor versionsAgree (= runtime check)   → DIFFERENT_BUILD
+//   3a. optional body season_key vs write season         → WRONG_SEASON
 //   4. token mode + requested mode match                 → INVALID_BODY
 //   5. optional alias validity (§5.1)                     → INVALID_NAME
 //   7. DRAFT LEGALITY = full token replay (the keystone) → ILLEGAL_PICK
@@ -59,6 +60,7 @@ export type SubmitRejectionCode =
   | "NON_CANONICAL_CONFIG"
   | "TOKEN_TOO_LARGE"
   | "MALFORMED_TOKEN"
+  | "DIFFERENT_BUILD"
   | "WRONG_SEASON"
   | "DAILY_UNAVAILABLE"
   | "INVALID_NAME"
@@ -87,6 +89,9 @@ export const SUBMIT_ERROR_HTTP_STATUS: Readonly<Record<SubmitErrorCode, number>>
   NON_CANONICAL_CONFIG: 422,
   TOKEN_TOO_LARGE: 400,
   MALFORMED_TOKEN: 400,
+  // 409 preserves the historical conflict status for version-skew rejections;
+  // only the wire identifier and copy changed (WRONG_SEASON → DIFFERENT_BUILD).
+  DIFFERENT_BUILD: 409,
   WRONG_SEASON: 409,
   DAILY_UNAVAILABLE: 409,
   AUTH_REQUIRED: 401,
@@ -147,7 +152,7 @@ export interface RejectedSubmission {
   reason: string;
   /** Set iff code === "INVALID_NAME". */
   name_reason?: DisplayNameRejection;
-  /** Set iff code === "WRONG_SEASON" — which of the six anchors diverged. */
+  /** Set iff code === "DIFFERENT_BUILD" — which of the six anchors diverged. */
   mismatched_anchors?: VersionAnchor[];
 }
 
@@ -171,6 +176,12 @@ export interface SubmissionBody {
   challenge?: unknown;
   /** UTC YYYY-MM-DD, required when challenge === daily. */
   challenge_date?: unknown;
+  /**
+   * Optional claimed leaderboard season id. Omitted by current clients (write
+   * season is server-owned). When present it must equal the active write
+   * season; a mismatch is WRONG_SEASON (distinct from version-anchor skew).
+   */
+  season_key?: unknown;
 }
 
 /** Injected server-owned data — built once per process by the route (U3). */
@@ -230,7 +241,7 @@ function tokenDailyChallenge(token: RunTokenBody) {
  */
 function submissionPreflight(
   body: SubmissionBody,
-  data: Pick<ValidationData, "gameData">,
+  data: Pick<ValidationData, "gameData" | "seasonKey">,
 ): AcceptedPreflight | RejectedSubmission {
   // 1 — shape + size. Size BEFORE decode so an oversize token never reaches
   // base64/JSON work (decodeRunToken would null it, but with the wrong code).
@@ -259,13 +270,33 @@ function submissionPreflight(
   }
 
   // 3 — runtime compatibility check = strict 6-anchor conjunction.
+  // Version-anchor divergence is DIFFERENT_BUILD, not WRONG_SEASON: the
+  // leaderboard season id is an explicit server policy decoupled from
+  // schema/engine/hash bumps (season-2026-squad-depth survived 2.10→2.11).
   if (!versionsAgree(token, data.gameData.versions)) {
     return {
       status: "rejected",
-      code: "WRONG_SEASON",
-      reason: "token version anchors do not match the current season tuple",
+      code: "DIFFERENT_BUILD",
+      reason: "token version anchors do not match the current build",
       mismatched_anchors: mismatchedAnchors(token, data.gameData.versions),
     };
+  }
+
+  // 3a — optional claimed season id. Runs after the anchor check so a token
+  // that is both skew and wrong-season keeps the pre-existing first-failure
+  // ordering (anchors before season). Omitted season_key is a no-op for
+  // current clients; write season remains server-owned on accept.
+  const writeSeason = data.seasonKey ?? DEFAULT_LEADERBOARD_SEASON_ID;
+  if (body.season_key !== undefined && body.season_key !== null && body.season_key !== "") {
+    if (typeof body.season_key !== "string") {
+      return rejected("INVALID_BODY", "season_key must be a string when provided");
+    }
+    if (body.season_key !== writeSeason) {
+      return rejected(
+        "WRONG_SEASON",
+        "submission season_key does not match the active leaderboard season",
+      );
+    }
   }
 
   // 3b — board mode target: every legal config can post, but the explicit
@@ -337,7 +368,7 @@ function submissionPreflight(
 
 export function validateSubmissionCheap(
   body: SubmissionBody,
-  data: Pick<ValidationData, "gameData">,
+  data: Pick<ValidationData, "gameData" | "seasonKey">,
 ): RejectedSubmission | null {
   const preflight = submissionPreflight(body, data);
   return preflight.status === "rejected" ? preflight : null;

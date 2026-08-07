@@ -156,7 +156,7 @@ function rejectionReason(
       return "MALFORMED_TOKEN";
     case "UNSUPPORTED_VERSION":
       return "UNSUPPORTED_TOKEN";
-    case "WRONG_SEASON":
+    case "DIFFERENT_BUILD":
       return "DIFFERENT_BUILD";
     case "ILLEGAL_PICK":
       return "ILLEGAL_PICK";

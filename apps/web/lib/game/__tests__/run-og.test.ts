@@ -583,13 +583,13 @@ describe("dynamic run OG model and image", () => {
     expect(tabularOnes).toBe(tabularEights);
   });
 
-  it("reports the real pre-Season-2 production token as wrong-season skew", () => {
+  it("reports the real pre-Season-2 production token as DIFFERENT_BUILD skew", () => {
     expect(
       verifyRunTokenForOg(skewFixtures.shipped_pre_s2_t3.token, {
         gameData,
         scenario: SCENARIO_2026_BUNDLE,
       }),
-    ).toEqual({ status: "rejected", reason: "WRONG_SEASON" });
+    ).toEqual({ status: "rejected", reason: "DIFFERENT_BUILD" });
   });
 
   it("builds the image model only from a trusted server-derived summary", () => {

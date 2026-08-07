@@ -9,7 +9,7 @@
 //      !== "manager", player ts !== s), wrong pick counts: all land on an
 //      honest null (MALFORMED at the API), never a guessed default.
 //   3. ANCHOR FUZZ — flipping each of sv/dv/rv/ev/uv/hv on a `t2.` token
-//      yields versionsAgree === false (WRONG_SEASON path), never replay.
+//      yields versionsAgree === false (DIFFERENT_BUILD path), never replay.
 //   4. HONEST REPLAY GATES — a decodable token whose config this build does
 //      not implement is REFUSED by reconstructDraftFromToken with a loud
 //      error (no fallback config, no silent substitution).

@@ -24,7 +24,12 @@ export type RunOgVerificationResult =
     }
   | {
       status: "rejected";
-      reason: "MALFORMED" | "UNSUPPORTED_VERSION" | "WRONG_SEASON" | "ILLEGAL_PICK" | "SIM_FAILURE";
+      reason:
+        | "MALFORMED"
+        | "UNSUPPORTED_VERSION"
+        | "DIFFERENT_BUILD"
+        | "ILLEGAL_PICK"
+        | "SIM_FAILURE";
     };
 
 export function verifyRunTokenForOg(
@@ -36,8 +41,10 @@ export function verifyRunTokenForOg(
   if (token.v !== 3 && token.v !== 4) {
     return { status: "rejected", reason: "UNSUPPORTED_VERSION" };
   }
+  // Version-anchor skew is a different build, not a different season. Season
+  // identity is an explicit leaderboard policy; OG has no season write path.
   if (!versionsAgree(token, data.gameData.versions)) {
-    return { status: "rejected", reason: "WRONG_SEASON" };
+    return { status: "rejected", reason: "DIFFERENT_BUILD" };
   }
 
   const resim = verifyAndResimRunToken(token, data.gameData, data.scenario);

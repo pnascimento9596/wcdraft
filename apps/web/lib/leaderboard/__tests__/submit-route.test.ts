@@ -481,7 +481,7 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     expect((await errorOf(res)).error).toBe("MALFORMED_TOKEN");
   });
 
-  it("WRONG_SEASON → 409 with the diverging anchor named", async () => {
+  it("DIFFERENT_BUILD → 409 with the diverging anchor named", async () => {
     const res = await handleLeaderboardSubmit(
       makeReq({
         body: validBody({ token: tamperedToken((b) => (b.ev = "engine-9999.01.01")) }),
@@ -490,18 +490,18 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     );
     expect(res.status).toBe(409);
     const body = await errorOf(res);
-    expect(body.error).toBe("WRONG_SEASON");
+    expect(body.error).toBe("DIFFERENT_BUILD");
     expect(body.mismatched_anchors).toEqual(["engine_version"]);
   });
 
-  it("the real pre-Season-2 production token cannot submit into the new season", async () => {
+  it("the real pre-Season-2 production token cannot submit (DIFFERENT_BUILD, no row)", async () => {
     const res = await handleLeaderboardSubmit(
       makeReq({ body: validBody({ token: skewFixtures.shipped_pre_s2_t3.token }) }),
       makeDeps(),
     );
     expect(res.status).toBe(409);
     const body = await errorOf(res);
-    expect(body.error).toBe("WRONG_SEASON");
+    expect(body.error).toBe("DIFFERENT_BUILD");
     // Pre-S2 token also carries pre-2.11 schema + draft-pool hash after the RF-01 diet bump.
     expect(body.mismatched_anchors).toEqual([
       "schema_version",
@@ -511,7 +511,7 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     expect(await allRows()).toHaveLength(0);
   });
 
-  it("pre-V6 leaderboard token anchors → 409 WRONG_SEASON, never persisted", async () => {
+  it("pre-V6 leaderboard token anchors → 409 DIFFERENT_BUILD, never persisted", async () => {
     const preV6Token = tamperedToken((b) => {
       b.sv = "runtime-data-1.1.0";
       b.rv = "wc-perf-4.2.1+proj-career-3.0.0";
@@ -524,13 +524,43 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     );
     expect(res.status).toBe(409);
     const body = await errorOf(res);
-    expect(body.error).toBe("WRONG_SEASON");
+    expect(body.error).toBe("DIFFERENT_BUILD");
     expect(body.mismatched_anchors).toEqual([
       "schema_version",
       "rating_version",
       "data_bundle_hash",
     ]);
     expect(await allRows()).toHaveLength(0);
+  });
+
+  it("WRONG_SEASON → 409 when claimed season_key is a prior season", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        body: validBody({ season_key: "season-2026-manager-attrition" }),
+      }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(409);
+    const body = await errorOf(res);
+    expect(body.error).toBe("WRONG_SEASON");
+    expect(body.mismatched_anchors).toBeUndefined();
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("both skew and prior season_key → DIFFERENT_BUILD (anchor check first)", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        body: validBody({
+          token: tamperedToken((b) => (b.sv = "runtime-data-2.10.0")),
+          season_key: "season-2026-manager-attrition",
+        }),
+      }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(409);
+    const body = await errorOf(res);
+    expect(body.error).toBe("DIFFERENT_BUILD");
+    expect(body.mismatched_anchors).toEqual(["schema_version"]);
   });
 
   it("INVALID_NAME → 422 with category, raw value never echoed", async () => {

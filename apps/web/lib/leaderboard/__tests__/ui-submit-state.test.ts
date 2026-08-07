@@ -80,17 +80,33 @@ describe("outcomeFromResponse — every state maps 1:1 to a server response", ()
     });
   });
 
-  it("WRONG_SEASON → rejected with the different-build/season copy", () => {
+  it("DIFFERENT_BUILD → rejected with the different-build copy", () => {
+    const p = outcomeFromResponse(
+      SUBMIT_ERROR_HTTP_STATUS.DIFFERENT_BUILD,
+      { error: "DIFFERENT_BUILD", mismatched_anchors: ["dataset_version"] },
+      null,
+    );
+    expect(p.kind).toBe("rejected");
+    if (p.kind !== "rejected") return;
+    expect(p.code).toBe("DIFFERENT_BUILD");
+    expect(p.copy).toBe(SUBMIT_STATUS_COPY.DIFFERENT_BUILD);
+    expect(p.copy.title).toBe("Different build");
+    expect(p.copy.message).toMatch(/different build/i);
+    expect(p.copy.message).not.toMatch(/season/i);
+  });
+
+  it("WRONG_SEASON → rejected with the different-season copy", () => {
     const p = outcomeFromResponse(
       SUBMIT_ERROR_HTTP_STATUS.WRONG_SEASON,
-      { error: "WRONG_SEASON", mismatched_anchors: ["dataset_version"] },
+      { error: "WRONG_SEASON" },
       null,
     );
     expect(p.kind).toBe("rejected");
     if (p.kind !== "rejected") return;
     expect(p.code).toBe("WRONG_SEASON");
     expect(p.copy).toBe(SUBMIT_STATUS_COPY.WRONG_SEASON);
-    expect(p.copy.message).toMatch(/different build\/season/);
+    expect(p.copy.title).toBe("Different season");
+    expect(p.copy.message).toMatch(/season/i);
   });
 
   it("INVALID_NAME carries the mirrored category hint", () => {
