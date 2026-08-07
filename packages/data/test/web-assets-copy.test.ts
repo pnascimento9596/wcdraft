@@ -181,13 +181,13 @@ async function listFiles(root: string, prefix = ""): Promise<string[]> {
 describe("copy-web-assets", () => {
   it("pins retained draft transport bytes to the historical deployed artifacts", async () => {
     const expected = {
-      "runtime-data-2.10.0": {
-        bytes: 2_225_295,
-        sha256: "51ae8115f97e0f83287f4692065762ba808f31e8052f26066eeae18bd0ac4d48",
-      },
       "runtime-data-2.9.0": {
         bytes: 2_224_859,
         sha256: "053161069c28d441d87857bb199600c15dc2f7299336a4aa140054b45d03f853",
+      },
+      "runtime-data-2.10.0": {
+        bytes: 1_311_661,
+        sha256: "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d",
       },
     } as const;
 
@@ -239,6 +239,14 @@ describe("copy-web-assets", () => {
       "export const RETAINED_PRIOR_SCHEMA_COUNT = 2",
     );
     expect(await listFiles(targetDir)).toEqual([
+      "runtime-data-2.10.0/daily-seed-salt-map.compact.json",
+      "runtime-data-2.10.0/daily-seed-salt-map.compact.json.br",
+      "runtime-data-2.10.0/draft-pool.compact.json.br",
+      "runtime-data-2.10.0/manifest.json",
+      "runtime-data-2.10.0/scenario-2026.compact.json",
+      "runtime-data-2.10.0/scenario-2026.compact.json.br",
+      "runtime-data-2.10.0/score-distribution.compact.json",
+      "runtime-data-2.10.0/score-distribution.compact.json.br",
       "runtime-data-2.11.0/daily-seed-salt-map.compact.json",
       "runtime-data-2.11.0/daily-seed-salt-map.compact.json.br",
       "runtime-data-2.11.0/draft-pool.compact.json.br",
@@ -247,17 +255,9 @@ describe("copy-web-assets", () => {
       "runtime-data-2.11.0/scenario-2026.compact.json.br",
       "runtime-data-2.11.0/score-distribution.compact.json",
       "runtime-data-2.11.0/score-distribution.compact.json.br",
-      "runtime-data-2.10.0/draft-pool.compact.json.br",
-      "runtime-data-2.10.0/manifest.json",
-      "runtime-data-2.10.0/scenario-2026.compact.json",
-      "runtime-data-2.9.0/daily-seed-salt-map.compact.json",
-      "runtime-data-2.9.0/daily-seed-salt-map.compact.json.br",
       "runtime-data-2.9.0/draft-pool.compact.json.br",
       "runtime-data-2.9.0/manifest.json",
       "runtime-data-2.9.0/scenario-2026.compact.json",
-      "runtime-data-2.9.0/scenario-2026.compact.json.br",
-      "runtime-data-2.9.0/score-distribution.compact.json",
-      "runtime-data-2.9.0/score-distribution.compact.json.br",
     ]);
 
     const copiedDraft = await readFile(

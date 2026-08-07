@@ -21,6 +21,7 @@ import {
   PlayerRunStatsSchema,
   PlayerSchema,
   PlayerTournamentSchema,
+  ProvenanceRatingSchema,
   RatingSchema,
   RunResultSchema,
   SpinSchema,
@@ -75,7 +76,6 @@ function makeRating(): Rating {
     midfield: 80,
     defense: 40,
     goalkeeping: 10,
-    components: [{ signal: "goals_per_90", value: 1.5, weight: 0.6 }],
     coverage: 0.9,
     coverage_basis: "wc_signals",
     provenance: "wc_performance",
@@ -396,6 +396,14 @@ describe("zod boundary schemas — hand-written fixture round-trips", () => {
   it("Rating round-trips via RatingSchema.parse", () => {
     const fixture = makeRating();
     expect(RatingSchema.parse(fixture)).toEqual(fixture);
+  });
+
+  it("ProvenanceRating round-trips via ProvenanceRatingSchema.parse", () => {
+    const fixture = {
+      ...makeRating(),
+      components: [{ signal: "goals_per_90", value: 1.5, weight: 0.6 }],
+    };
+    expect(ProvenanceRatingSchema.parse(fixture)).toEqual(fixture);
   });
 
   it("Team2026 round-trips via Team2026Schema.parse", () => {

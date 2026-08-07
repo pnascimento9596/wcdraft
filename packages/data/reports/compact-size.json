@@ -2,88 +2,88 @@
   "bundles": {
     "daily_seed_salt_map": {
       "brotli_impl_version": "1.1.0",
-      "bytes": 18984,
-      "bytes_brotli": 1685,
-      "bytes_gzip": 2133,
-      "compressed_bytes": 1685,
-      "compressed_sha256": "cd2c7897044544f71dd26ae871e87d67d44ad56445fe1d8c1363327d726f03df",
+      "bytes": 19033,
+      "bytes_brotli": 1744,
+      "bytes_gzip": 2172,
+      "compressed_bytes": 1744,
+      "compressed_sha256": "840945b5508eb3a2e008b06f2de18af7c0e01ca84eea767287445c6b42bca628",
       "options": {
         "mode": "text",
         "quality": 11,
-        "size_hint": 18984
+        "size_hint": 19033
       },
       "path": "daily-seed-salt-map.compact.json",
-      "raw_sha256": "c3504c417953ba9c32be21f003f478839d55c4472c1a0857db2da10007c0323f",
-      "sha256": "c3504c417953ba9c32be21f003f478839d55c4472c1a0857db2da10007c0323f"
+      "raw_sha256": "70cf360f12fbb08a49d781d9e5abf47616434196e3fd02e09fb180be4758d99e",
+      "sha256": "70cf360f12fbb08a49d781d9e5abf47616434196e3fd02e09fb180be4758d99e"
     },
     "draft_pool": {
       "brotli_impl_version": "1.1.0",
-      "bytes": 68380413,
-      "bytes_brotli": 1311661,
-      "bytes_gzip": 2788737,
-      "compressed_bytes": 1311661,
-      "compressed_sha256": "76a5833748f34968b2666ae8c8f346d8d7e440a7f5f73f83de19c488c307b36d",
+      "bytes": 17744663,
+      "bytes_brotli": 713942,
+      "bytes_gzip": 1160507,
+      "compressed_bytes": 713942,
+      "compressed_sha256": "debcd57f75b758de5302e21035bd8dc175e02987c525393387f5aa06cc123fbf",
       "options": {
         "mode": "text",
         "quality": 11,
-        "size_hint": 68380413
+        "size_hint": 17744663
       },
       "path": "draft-pool.compact.json",
-      "raw_sha256": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07",
-      "sha256": "ae5376c917377b00ac9dee7a166dcaceb28dd1416fc9fbe8b00b1116ca8e8d07"
+      "raw_sha256": "67d9e89f067b551c7be1e8c754fee5944d89450f94c0b9712bf27c3c5ac15552",
+      "sha256": "67d9e89f067b551c7be1e8c754fee5944d89450f94c0b9712bf27c3c5ac15552"
     },
     "manifest": {
       "brotli_impl_version": "1.1.0",
-      "bytes": 7149,
-      "bytes_brotli": 2158,
-      "bytes_gzip": 2629,
-      "compressed_bytes": 2158,
-      "compressed_sha256": "c695bbe7364dfd710d7c45c7f4920c50a37f0820a7485889cc6f7def714d7c36",
+      "bytes": 7147,
+      "bytes_brotli": 2155,
+      "bytes_gzip": 2627,
+      "compressed_bytes": 2155,
+      "compressed_sha256": "d9c243e86ac735e2725691bf5d78c2404b24194cd31163eddbbf91e7b5fd99dc",
       "options": {
         "mode": "text",
         "quality": 11,
-        "size_hint": 7149
+        "size_hint": 7147
       },
       "path": "manifest.json",
-      "raw_sha256": "13dc23844d30d1efaa1616423b7b2781c79ea73a8e18796827752dbe941b65e0",
-      "sha256": "13dc23844d30d1efaa1616423b7b2781c79ea73a8e18796827752dbe941b65e0"
+      "raw_sha256": "9dbd21d2b7e131fc407a4da78ee23309bf3e1375008f4d71b75cb9c03ee89b9a",
+      "sha256": "9dbd21d2b7e131fc407a4da78ee23309bf3e1375008f4d71b75cb9c03ee89b9a"
     },
     "scenario_2026": {
       "brotli_impl_version": "1.1.0",
       "bytes": 75325,
-      "bytes_brotli": 4195,
+      "bytes_brotli": 4188,
       "bytes_gzip": 7180,
-      "compressed_bytes": 4195,
-      "compressed_sha256": "1db11a75a180d77da42a324fb6cf7ce3a64baa081b4d77e0903e0d5257693a72",
+      "compressed_bytes": 4188,
+      "compressed_sha256": "4a4b011c4d5c4a09ef07a417b5412bf9d6b14f3f861cf3e981b7e72d1a6c69be",
       "options": {
         "mode": "text",
         "quality": 11,
         "size_hint": 75325
       },
       "path": "scenario-2026.compact.json",
-      "raw_sha256": "50c45d0e9b9b56892e6bd3462988417e072ea1b08aff206fe344c3ebaccd66fd",
-      "sha256": "50c45d0e9b9b56892e6bd3462988417e072ea1b08aff206fe344c3ebaccd66fd"
+      "raw_sha256": "4d47812bd6bb1db51a832349561d786f2247cafce64ac63dd9b23598fb1d7969",
+      "sha256": "4d47812bd6bb1db51a832349561d786f2247cafce64ac63dd9b23598fb1d7969"
     },
     "score_distribution": {
       "brotli_impl_version": "1.1.0",
       "bytes": 1226,
-      "bytes_brotli": 594,
-      "bytes_gzip": 731,
-      "compressed_bytes": 594,
-      "compressed_sha256": "7b4fef7b86e6b1d0b648e45054f7b1789369d8b3b3ef15c4fe7cdb61d0089336",
+      "bytes_brotli": 584,
+      "bytes_gzip": 732,
+      "compressed_bytes": 584,
+      "compressed_sha256": "752d67859fa7728478e0b82ee5973c4435bac931b5c7cd77b4b694dcbbc8163c",
       "options": {
         "mode": "text",
         "quality": 11,
         "size_hint": 1226
       },
       "path": "score-distribution.compact.json",
-      "raw_sha256": "c6b1770c5f08923c0a1a9c89ec93c3d24f3c2e69dc9daf06d6af7412a4b81430",
-      "sha256": "c6b1770c5f08923c0a1a9c89ec93c3d24f3c2e69dc9daf06d6af7412a4b81430"
+      "raw_sha256": "6a8df53929aa1ba606095b7eb6a0bed581dd07d2dbd62cbde0064bd398e5b582",
+      "sha256": "6a8df53929aa1ba606095b7eb6a0bed581dd07d2dbd62cbde0064bd398e5b582"
     }
   },
   "dataset_version": "2026-07-01",
-  "schema_version": "runtime-data-2.10.0",
-  "total_brotli_bytes": 1318014,
-  "total_gzip_bytes": 2798546,
-  "total_raw_bytes": 68462887
+  "schema_version": "runtime-data-2.11.0",
+  "total_brotli_bytes": 720285,
+  "total_gzip_bytes": 1170314,
+  "total_raw_bytes": 17827135
 }

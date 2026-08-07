@@ -24,6 +24,10 @@ import type { RuntimeManagerCard, RuntimePlayerCard, RuntimeRating } from "../sr
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 
 /** Offline provenance ratings still carry components[]; runtime pool must not. */
+function normalizeRuntimeCardId(cardId: string): string {
+  return cardId.replace(/:WC-(\d{4})$/u, ":$1");
+}
+
 function loadEtlProvenanceRatings(): ReadonlyArray<{
   readonly card_id: string;
   readonly overall_basis?: string;
@@ -39,7 +43,19 @@ function loadEtlProvenanceRatings(): ReadonlyArray<{
       `etl/output/ratings.json missing — run packages/data ensure-generated before integrity tests`,
     );
   }
-  return JSON.parse(readFileSync(ratingsPath, "utf8")) as ReturnType<typeof loadEtlProvenanceRatings>;
+  const historical = JSON.parse(readFileSync(ratingsPath, "utf8")) as ReturnType<
+    typeof loadEtlProvenanceRatings
+  >;
+  const rows2026Path = path.join(REPO_ROOT, "etl", "output", "ratings_2026.json");
+  const projected = existsSync(rows2026Path)
+    ? (JSON.parse(readFileSync(rows2026Path, "utf8")) as ReturnType<
+        typeof loadEtlProvenanceRatings
+      >)
+    : [];
+  return [...historical, ...projected].map((row) => ({
+    ...row,
+    card_id: normalizeRuntimeCardId(row.card_id),
+  }));
 }
 
 function etlHasManualOverride(row: {
@@ -49,11 +65,15 @@ function etlHasManualOverride(row: {
     readonly current?: { readonly components?: ReadonlyArray<{ readonly signal: string }> };
   };
 }): boolean {
-  const rows = [row, row.basis_ratings?.career, row.basis_ratings?.current].filter(Boolean) as Array<{
+  const rows = [row, row.basis_ratings?.career, row.basis_ratings?.current].filter(
+    Boolean,
+  ) as Array<{
     readonly components?: ReadonlyArray<{ readonly signal: string }>;
   }>;
   return rows.some(
-    (r) => Array.isArray(r.components) && r.components.some((c) => c.signal === "manual_rating_override"),
+    (r) =>
+      Array.isArray(r.components) &&
+      r.components.some((c) => c.signal === "manual_rating_override"),
   );
 }
 

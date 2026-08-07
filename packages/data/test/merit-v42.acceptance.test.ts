@@ -1,3 +1,7 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -8,6 +12,47 @@ import {
 } from "../src/index.js";
 import type { RuntimePlayerCard, RuntimeRating } from "../src/types.js";
 
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+
+type EtlComponent = {
+  readonly signal: string;
+  readonly value: number | null;
+  readonly weight: number;
+};
+type EtlRatingRow = {
+  readonly card_id: string;
+  readonly components?: readonly EtlComponent[];
+  readonly basis_ratings?: {
+    readonly career?: { readonly components?: readonly EtlComponent[] };
+    readonly current?: { readonly components?: readonly EtlComponent[] };
+  };
+};
+
+function normalizeRuntimeCardId(cardId: string): string {
+  // ETL: P-123:WC-1998 → runtime: P-123:1998
+  return cardId.replace(/:WC-(\d{4})$/u, ":$1");
+}
+
+function loadEtlProvenanceByCardId(): Map<string, EtlRatingRow> {
+  const ratingsPath = path.join(REPO_ROOT, "etl", "output", "ratings.json");
+  if (!existsSync(ratingsPath)) {
+    throw new Error("etl/output/ratings.json missing — run ensure-generated before merit probes");
+  }
+  const rows = JSON.parse(readFileSync(ratingsPath, "utf8")) as EtlRatingRow[];
+  // Also load 2026 projected ratings which stay on runtime card-id form.
+  const rows2026Path = path.join(REPO_ROOT, "etl", "output", "ratings_2026.json");
+  const rows2026 = existsSync(rows2026Path)
+    ? (JSON.parse(readFileSync(rows2026Path, "utf8")) as EtlRatingRow[])
+    : [];
+  const map = new Map<string, EtlRatingRow>();
+  for (const row of [...rows, ...rows2026]) {
+    map.set(normalizeRuntimeCardId(row.card_id), row);
+    map.set(row.card_id, row);
+  }
+  return map;
+}
+
+const etlByCardId = loadEtlProvenanceByCardId();
 const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r]));
 const cardByCardId = new Map(DRAFT_POOL_BUNDLE.player_cards.map((c) => [c.card_id, c]));
 const teamByName = new Map(
@@ -33,8 +78,20 @@ function card(cardId: string): RuntimePlayerCard {
   return value;
 }
 
+/** Offline provenance components (runtime pool no longer carries them). */
 function component(row: RuntimeRating, signal: string): unknown {
-  return row.components?.find((c) => c.signal === signal)?.value;
+  const etl = etlByCardId.get(row.card_id);
+  if (!etl) return undefined;
+  const pools = [
+    etl.components,
+    etl.basis_ratings?.career?.components,
+    etl.basis_ratings?.current?.components,
+  ];
+  for (const pool of pools) {
+    const hit = pool?.find((c) => c.signal === signal);
+    if (hit !== undefined) return hit.value;
+  }
+  return undefined;
 }
 
 function hasManualOverride(row: RuntimeRating): boolean {

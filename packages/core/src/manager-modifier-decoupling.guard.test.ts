@@ -131,7 +131,6 @@ function rating(channelValue: number): Rating {
     coverage: 1,
     coverage_basis: "wc_signals",
     provenance: "wc_performance",
-    components: [],
     rating_version: "guard-v1",
   } as unknown as Rating;
 }

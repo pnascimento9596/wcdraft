@@ -44,6 +44,20 @@ export const RatingSchema = z
   })
   .superRefine(refineCardIdConsistency) satisfies z.ZodType<Rating>;
 
-export const ProvenanceRatingSchema = RatingSchema.extend({
-  components: z.array(RatingComponentSchema),
-}) satisfies z.ZodType<ProvenanceRating>;
+export const ProvenanceRatingSchema = z
+  .object({
+    card_id: CardIdSchema,
+    player_id: NonEmptyIdSchema,
+    tournament_id: PositiveIntegerSchema,
+    overall: RatingChannelSchema.nullable(),
+    attack: RatingChannelSchema,
+    midfield: RatingChannelSchema,
+    defense: RatingChannelSchema,
+    goalkeeping: RatingChannelSchema,
+    components: z.array(RatingComponentSchema),
+    coverage: PercentSchema,
+    coverage_basis: z.enum(["wc_signals", "career_signals"]),
+    provenance: z.enum(["wc_performance", "projected_career"]),
+    rating_version: NonEmptyIdSchema,
+  })
+  .superRefine(refineCardIdConsistency) satisfies z.ZodType<ProvenanceRating>;

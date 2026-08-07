@@ -24,9 +24,9 @@ const PACKAGE_DIR = join(HERE, "..");
 const ARTIFACT_PATH = join(PACKAGE_DIR, "src", "generated", "daily-seed-salt-map.compact.json");
 const OUT_FILE = "daily-seed-salt-map.compact.json";
 const REGEN_TIMEOUT_MS = 600_000;
-const EXPECTED_WINDOW_START = "2026-07-10";
+const EXPECTED_WINDOW_START = "2026-08-07";
 const EXPECTED_WINDOW_DAYS = 45;
-const EXPECTED_WINDOW_END = "2026-08-23";
+const EXPECTED_WINDOW_END = "2026-09-20";
 
 function requireArtifact(): DailySeedSaltMap {
   expect(
