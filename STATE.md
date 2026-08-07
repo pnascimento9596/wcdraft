@@ -1,5 +1,20 @@
 # STATE.md — measured ground truth
 
+## Leaderboard live-verify residue cleanup (U2, 2026-08-07)
+
+Deleted production `leaderboard_entries` id `1cac61ff-6b2e-46b9-b71f-419fb426f0e5`
+(`live_verify_xi`, casual classic, `season-2026-squad-depth`, score -1,
+created 2026-08-07T18:36:28Z) — PR #340 accepting live-verify residue.
+Attribution 4/5 U2b criteria (automation alias, #340 window, verification
+provenance, golden fixture token `f4-u2-classic`). Mechanism: direct row
+DELETE (null user/session/attempt). Neon snapshot branch
+`br-autumn-hill-aqswkxii` (`pre-u2-lb-residue-20260807T204810Z`, parent
+production `br-blue-heart-aqcejtyf`, LSN `0/746A408`) retained for restore.
+Post: entries 6, current featured boards empty, archive `team3` retained,
+non-writing live-verify PASS. Skipped ambiguous older aliases (`testt`,
+`shipmqyo*`, `wow`) and genuine `chezwizz` for owner adjudication.
+Durable report: `docs/reports/leaderboard-live-verify-residue-u2-2026-08-07.md`.
+
 ## Production live-verify — non-writing (standing constraint)
 
 **Production live-verify must never create leaderboard rows, ranked attempts,
