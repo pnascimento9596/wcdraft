@@ -149,6 +149,8 @@ const SubmitBodySchema = z.object({
     .nullish()
     .transform((challenge) => challenge ?? "season"),
   challenge_date: z.unknown().optional(),
+  /** Optional; when present must match the active write season (WRONG_SEASON else). */
+  season_key: z.unknown().optional(),
   mode: z
     .enum(["casual", "ranked"])
     .nullish()
@@ -164,6 +166,7 @@ type ExpectedSubmitBoundaryBody = {
   display_name?: unknown;
   challenge: "season" | "daily";
   challenge_date?: unknown;
+  season_key?: unknown;
   mode: BoardMode;
 };
 type Exact<A, B> =
@@ -234,6 +237,7 @@ export async function handleLeaderboardSubmit(
       display_name: body.display_name,
       challenge: body.challenge,
       challenge_date: body.challenge_date,
+      season_key: body.season_key,
     };
     const validationData = deps.getValidation();
     const cheapVerdict = validateSubmissionCheap(submission, validationData);

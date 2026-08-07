@@ -44,6 +44,17 @@ a wcdraft lane. Evidence: `docs/reports/post-ship-verify-anchor-skew-parse-fleet
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Honest-state version-skew identifiers (2026-08-07): leaderboard submit and OG sign
+no longer label a pure 6-anchor `versionsAgree` failure as `WRONG_SEASON`. That path
+is `DIFFERENT_BUILD` (submit HTTP 409 unchanged; OG still 422) with copy that names a
+different build, matching replay / friend challenge / lineup inspector. `WRONG_SEASON`
+(409) remains only for an explicit claimed `season_key` that does not match the active
+write season. Accept/reject outcomes and cheap-gate ordering are unchanged: anchor
+check still runs before season_key and before any replay/sim. No engine, RNG, rating,
+codec, schema, or artifact change. Negative coverage: pre-2.11 sv+hv skew →
+`DIFFERENT_BUILD`; prior-season key with agreeing anchors → `WRONG_SEASON`; both
+divergent → `DIFFERENT_BUILD` (anchors first).
+
 Product loop (Track A, 2026-07-23): spin skip unlocks after ~300ms of spinning (localStorage
 taught state + first-time dismissible hint + presentation-only "Skip spin animations" preference
 on Settings — never a token/config axis; kept off formation setup to preserve short-landscape
