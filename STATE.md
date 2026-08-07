@@ -44,6 +44,18 @@ a wcdraft lane. Evidence: `docs/reports/post-ship-verify-anchor-skew-parse-fleet
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+CSRF bootstrap 500 fix (2026-08-07): `GET /api/auth/csrf` no longer aborts cookie-less
+bootstrap when the lazy expired-session sweep throws. Production at `2a3253e` returned
+consistent `500 INTERNAL_ERROR` (`AUTH_UNEXPECTED_ERROR` / `error_class: unexpected`,
+~230 ms, no Set-Cookie) for every request shape including browser-like Origin/UA;
+buildRuntimeDeps was fine (sibling auth routes reached typed CSRF_MISSING after it).
+Sweep is best-effort (correctness never depended on it); cookie-less path remains a
+signed five-minute stateless bootstrap with **no** durable 30-day session mint.
+Sweep SQL moved from raw CTE `db.execute` to query-builder select+delete. Substrate
+driver/timeout errors from other auth paths map to typed `503 SUBSTRATE_UNAVAILABLE`
+(PII-free, correlation id) instead of untyped 500. No engine, RNG, rating, codec,
+schema, or artifact change. No leaderboard writes.
+
 Honest-state version-skew identifiers (2026-08-07): leaderboard submit and OG sign
 no longer label a pure 6-anchor `versionsAgree` failure as `WRONG_SEASON`. That path
 is `DIFFERENT_BUILD` (submit HTTP 409 unchanged; OG still 422) with copy that names a

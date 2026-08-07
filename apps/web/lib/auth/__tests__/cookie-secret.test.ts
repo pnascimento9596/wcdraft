@@ -105,10 +105,11 @@ describe("jsonError — SECRET_MISCONFIGURED body scrub (q-008)", () => {
     try {
       const res = jsonError(new Error("database failed for victim@example.com"));
       const body = (await res.json()) as Record<string, string>;
-      expect(res.status).toBe(500);
+      // Driver/substrate failures are honest 503 (not untyped 500).
+      expect(res.status).toBe(503);
       expect(body).toMatchObject({
-        error: "INTERNAL_ERROR",
-        message: "The request could not be completed.",
+        error: "SUBSTRATE_UNAVAILABLE",
+        message: "Authentication is temporarily unavailable.",
       });
       expect(body.correlation_id).toMatch(/^[0-9a-f-]{36}$/u);
       expect(JSON.stringify(body)).not.toContain("victim@example.com");
@@ -117,6 +118,19 @@ describe("jsonError — SECRET_MISCONFIGURED body scrub (q-008)", () => {
         "[security]",
         expect.stringContaining("AUTH_UNEXPECTED_ERROR"),
       );
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it("keeps non-substrate unexpected errors as INTERNAL_ERROR 500", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    try {
+      const res = jsonError(new Error("unexpected invariant for victim@example.com"));
+      const body = (await res.json()) as Record<string, string>;
+      expect(res.status).toBe(500);
+      expect(body.error).toBe("INTERNAL_ERROR");
+      expect(JSON.stringify(body)).not.toContain("victim@example.com");
     } finally {
       spy.mockRestore();
     }

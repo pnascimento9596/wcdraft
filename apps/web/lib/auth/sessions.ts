@@ -19,7 +19,7 @@
 // deleted session row revokes everywhere immediately. F-2 deals only with
 // the engagement/retention layer; the cost is acceptable.
 import { createHmac, randomBytes } from "node:crypto";
-import { eq, sql } from "drizzle-orm";
+import { asc, eq, inArray, lte } from "drizzle-orm";
 import { sessions } from "@wcdraft/db";
 import type { Db, Session } from "@wcdraft/db";
 import { AuthError } from "./errors";
@@ -97,27 +97,36 @@ export async function deleteSession(sessionId: string, deps: SessionDeps): Promi
   await deps.db.delete(sessions).where(eq(sessions.id, sessionId));
 }
 
-/** Indexed, bounded lazy sweep; correctness never depends on it running. */
+/**
+ * Indexed, bounded lazy sweep; correctness never depends on it running.
+ *
+ * Implemented with the query builder (select + delete) rather than a raw CTE
+ * through `db.execute`. The CTE path was observed in production to throw an
+ * untyped driver error on every `/api/auth/csrf` call (Vercel
+ * `AUTH_UNEXPECTED_ERROR` / `error_class: unexpected`), which previously
+ * aborted cookie-less bootstrap even though the bootstrap itself is pure
+ * crypto and does not need a durable row. The two-step form keeps the same
+ * order/limit contract while avoiding the execute/result-shape edge.
+ */
 export async function sweepExpiredSessions(
   deps: Pick<SessionDeps, "db" | "now">,
   limit = 250,
 ): Promise<number> {
   const boundedLimit = Math.max(1, Math.min(1_000, Math.trunc(limit)));
-  const result = await deps.db.execute<{ count: string }>(sql`
-    WITH expired AS (
-      SELECT id
-      FROM ${sessions}
-      WHERE expires_at <= ${new Date(deps.now())}
-      ORDER BY expires_at ASC, id ASC
-      LIMIT ${boundedLimit}
-    ), deleted AS (
-      DELETE FROM ${sessions}
-      WHERE id IN (SELECT id FROM expired)
-      RETURNING 1
-    )
-    SELECT COUNT(*)::text AS count FROM deleted
-  `);
-  return Number(result.rows[0]?.count ?? "0");
+  const cutoff = new Date(deps.now());
+  const expired = await deps.db
+    .select({ id: sessions.id })
+    .from(sessions)
+    .where(lte(sessions.expiresAt, cutoff))
+    .orderBy(asc(sessions.expiresAt), asc(sessions.id))
+    .limit(boundedLimit);
+  if (expired.length === 0) return 0;
+  const ids = expired.map((row) => row.id);
+  const deleted = await deps.db
+    .delete(sessions)
+    .where(inArray(sessions.id, ids))
+    .returning({ id: sessions.id });
+  return deleted.length;
 }
 
 // ── Cookie signing helpers ─────────────────────────────────────────────────
