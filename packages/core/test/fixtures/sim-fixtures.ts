@@ -54,7 +54,6 @@ function rating(card_id: CardId, player_id: string, tournament_id: number, ch: n
     midfield: v,
     defense: v,
     goalkeeping: v,
-    components: [],
     coverage: 1,
     coverage_basis: "wc_signals",
     provenance: "projected_career",

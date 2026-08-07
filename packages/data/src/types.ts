@@ -69,7 +69,9 @@ import type {
 // the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
 // array remains the Career alias until the product toggle ships.
 // runtime-data-2.10.0: canonical minified runtime JSON; parsed semantics are unchanged.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.10.0" as const;
+// runtime-data-2.11.0: Rating.components[] dropped from runtime draft pool (payload diet);
+// offline/ETL provenance artifacts still carry components.
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.11.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────

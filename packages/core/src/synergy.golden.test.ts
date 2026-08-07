@@ -190,7 +190,6 @@ function rating(player_id: string, channel: number): Rating {
     midfield: channel,
     defense: channel,
     goalkeeping: channel,
-    components: [],
     coverage: 1,
     coverage_basis: "wc_signals",
     provenance: "projected_career",

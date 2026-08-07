@@ -81,8 +81,10 @@ const BROTLI_MODE = "text";
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
 // runtime-data-2.10.0: runtime JSON is emitted in one canonical minified form.
+// runtime-data-2.11.0: drop Rating.components[] from runtime draft pool (payload diet);
+// offline/ETL provenance artifacts still carry components.
 // Parsed data and all rating/simulation semantics are unchanged.
-const SCHEMA_VERSION = "runtime-data-2.10.0";
+const SCHEMA_VERSION = "runtime-data-2.11.0";
 // manager-attrition: manager_link now drives the reserved manager band and
 // persistent user-path injury attrition is reduced to keep tournament attrition
 // fair while opponents are regenerated fixture-by-fixture.
@@ -309,7 +311,10 @@ function assertRuntimeRating(value, pathName, expectedBasis) {
   for (const channel of ["overall", "attack", "midfield", "defense", "goalkeeping"]) {
     assertNumber(rating[channel], `${pathName}.${channel}`);
   }
-  assertArray(rating.components, `${pathName}.components`);
+  // runtime-data-2.11.0: components[] is offline-only; must be absent from runtime delivery.
+  if ("components" in rating) {
+    failBundle(pathName, "runtime rating must not include components[] (payload diet 2.11.0)");
+  }
   assertNumber(rating.coverage, `${pathName}.coverage`);
   assertString(rating.coverage_basis, `${pathName}.coverage_basis`);
   assertString(rating.provenance, `${pathName}.provenance`);
@@ -806,10 +811,7 @@ async function build() {
       appearancesSource: rating.appearances_source,
     });
     const runtimeRating = withCurrentBasis(basisRatings);
-    if (
-      rating.overall_basis === "baseline_anchor_estimate" &&
-      !hasManualRatingOverride(runtimeRating)
-    ) {
+    if (rating.overall_basis === "baseline_anchor_estimate" && !hasManualRatingOverride(rating)) {
       estimateCount += 1;
       // Phase 1.1 decoupled: only OVERALL is on the display band. Sim channels
       // stay on the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays
@@ -1438,7 +1440,7 @@ function materializeBasisRating(
     midfield: basisRating.midfield,
     defense: basisRating.defense,
     goalkeeping: basisRating.goalkeeping,
-    components: basisRating.components,
+    // runtime-data-2.11.0: components[] stripped from runtime delivery (ETL keeps them).
     coverage: basisRating.coverage ?? parentRating.coverage,
     coverage_basis: basisRating.coverage_basis ?? parentRating.coverage_basis,
     provenance: basisRating.provenance ?? parentRating.provenance,
@@ -1475,10 +1477,20 @@ function validateRuntimeRating(runtimeRating, sourceCardId, basis) {
   }
 }
 
-function hasManualRatingOverride(runtimeRating) {
-  return Array.isArray(runtimeRating.components)
-    ? runtimeRating.components.some((c) => c?.signal === "manual_rating_override")
-    : false;
+function hasManualRatingOverride(sourceRating) {
+  // Offline/ETL provenance still carries components[]; runtime emission does not.
+  // Prefer the source row (and dual-basis rows) so the estimate-band lock remains honest.
+  const rows = [sourceRating];
+  if (sourceRating?.basis_ratings && typeof sourceRating.basis_ratings === "object") {
+    for (const basis of Object.values(sourceRating.basis_ratings)) {
+      if (basis && typeof basis === "object") rows.push(basis);
+    }
+  }
+  return rows.some(
+    (row) =>
+      Array.isArray(row.components) &&
+      row.components.some((c) => c?.signal === "manual_rating_override"),
+  );
 }
 
 function brotliOptions(rawBytes) {

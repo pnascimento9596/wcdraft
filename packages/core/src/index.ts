@@ -46,6 +46,7 @@ export type {
   CardId,
   // rating
   Rating,
+  ProvenanceRating,
   RatingComponent,
   TeamStrength,
   // tournament
@@ -348,6 +349,7 @@ export {
   RatingComponentSchema,
   TeamStrengthSchema,
   RatingSchema,
+  ProvenanceRatingSchema,
   // tournament
   Team2026Schema,
   // draft

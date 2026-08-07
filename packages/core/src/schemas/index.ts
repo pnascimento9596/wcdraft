@@ -36,6 +36,7 @@ export {
   RatingComponentSchema,
   TeamStrengthSchema,
   RatingSchema,
+  ProvenanceRatingSchema,
 } from "./rating.js";
 
 export {

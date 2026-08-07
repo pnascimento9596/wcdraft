@@ -7,6 +7,10 @@
 // without re-running the builder. Determinism + size-budget assertions
 // live in `compact-data.golden.test.ts` (which re-runs the builder).
 
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 import { parseCardId, parseManagerCardId } from "@wcdraft/core";
 import {
@@ -16,6 +20,62 @@ import {
   SCENARIO_2026_BUNDLE,
 } from "../src/index.js";
 import type { RuntimeManagerCard, RuntimePlayerCard, RuntimeRating } from "../src/types.js";
+
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
+
+/** Offline provenance ratings still carry components[]; runtime pool must not. */
+function normalizeRuntimeCardId(cardId: string): string {
+  return cardId.replace(/:WC-(\d{4})$/u, ":$1");
+}
+
+function loadEtlProvenanceRatings(): ReadonlyArray<{
+  readonly card_id: string;
+  readonly overall_basis?: string;
+  readonly components?: ReadonlyArray<{ readonly signal: string }>;
+  readonly basis_ratings?: {
+    readonly career?: { readonly components?: ReadonlyArray<{ readonly signal: string }> };
+    readonly current?: { readonly components?: ReadonlyArray<{ readonly signal: string }> };
+  };
+}> {
+  const ratingsPath = path.join(REPO_ROOT, "etl", "output", "ratings.json");
+  if (!existsSync(ratingsPath)) {
+    throw new Error(
+      `etl/output/ratings.json missing — run packages/data ensure-generated before integrity tests`,
+    );
+  }
+  const historical = JSON.parse(readFileSync(ratingsPath, "utf8")) as ReturnType<
+    typeof loadEtlProvenanceRatings
+  >;
+  const rows2026Path = path.join(REPO_ROOT, "etl", "output", "ratings_2026.json");
+  const projected = existsSync(rows2026Path)
+    ? (JSON.parse(readFileSync(rows2026Path, "utf8")) as ReturnType<
+        typeof loadEtlProvenanceRatings
+      >)
+    : [];
+  return [...historical, ...projected].map((row) => ({
+    ...row,
+    card_id: normalizeRuntimeCardId(row.card_id),
+  }));
+}
+
+function etlHasManualOverride(row: {
+  readonly components?: ReadonlyArray<{ readonly signal: string }>;
+  readonly basis_ratings?: {
+    readonly career?: { readonly components?: ReadonlyArray<{ readonly signal: string }> };
+    readonly current?: { readonly components?: ReadonlyArray<{ readonly signal: string }> };
+  };
+}): boolean {
+  const rows = [row, row.basis_ratings?.career, row.basis_ratings?.current].filter(
+    Boolean,
+  ) as Array<{
+    readonly components?: ReadonlyArray<{ readonly signal: string }>;
+  }>;
+  return rows.some(
+    (r) =>
+      Array.isArray(r.components) &&
+      r.components.some((c) => c.signal === "manual_rating_override"),
+  );
+}
 
 function asCardId(cardId: string): RuntimePlayerCard["card_id"] {
   return cardId as RuntimePlayerCard["card_id"];
@@ -77,17 +137,27 @@ describe("compact-data integrity", () => {
   // estimates. Sim channels stay on the pre-recalibration [FLOOR_CHANNEL, 100]
   // band so the engine's λ stays calibrated to the modern-era WC norms — see
   // realism-modern-norms.golden.test.ts.
-  function hasManualOverride(r: RuntimeRating): boolean {
-    return r.components.some((c) => c.signal === "manual_rating_override");
-  }
+  it("runtime ratings omit components[] while offline ETL provenance still carries manual overrides", () => {
+    for (const r of DRAFT_POOL_BUNDLE.ratings) {
+      expect(r).not.toHaveProperty("components");
+      if (r.basis_ratings?.current) {
+        expect(r.basis_ratings.current).not.toHaveProperty("components");
+      }
+    }
+    const etl = loadEtlProvenanceRatings();
+    const withOverride = etl.filter(etlHasManualOverride);
+    expect(withOverride.length).toBeGreaterThan(0);
+  });
 
   it("every non-manual baseline_anchor_estimate row sits inside the overall estimate band [66, 73]", () => {
+    const etlByCardId = new Map(loadEtlProvenanceRatings().map((r) => [r.card_id, r]));
     const estimates = DRAFT_POOL_BUNDLE.ratings.filter(
       (r) => r.overall_basis === "baseline_anchor_estimate",
     );
     expect(estimates.length).toBe(EXPECTED_BASELINE_ANCHOR_ESTIMATE);
     for (const r of estimates) {
-      if (hasManualOverride(r)) continue;
+      const etl = etlByCardId.get(r.card_id);
+      if (etl && etlHasManualOverride(etl)) continue;
       expect(r.overall).not.toBeNull();
       expect(r.overall as number).toBeGreaterThanOrEqual(ESTIMATE_DISPLAY_MIN);
       expect(r.overall as number).toBeLessThanOrEqual(ESTIMATE_DISPLAY_MAX);

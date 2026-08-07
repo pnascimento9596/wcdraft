@@ -30,6 +30,7 @@ export { buildCardId, parseCardId } from "./identity.js";
 export type {
   // rating.ts
   Rating,
+  ProvenanceRating,
   RatingComponent,
   TeamStrength,
 } from "./rating.js";

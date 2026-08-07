@@ -61,7 +61,7 @@ describe("runtime manifest materialization compatibility", () => {
 
   it("rejects the retained 2.9 manifest as honest version skew", () => {
     expect(() => parseRuntimeDataManifest(legacyManifest())).toThrow(
-      /schema_version mismatch: got "runtime-data-2\.9\.0", expected "runtime-data-2\.10\.0"/u,
+      /schema_version mismatch: got "runtime-data-2\.9\.0", expected "runtime-data-2\.11\.0"/u,
     );
   });
 
@@ -96,11 +96,11 @@ describe("runtime manifest materialization compatibility", () => {
     }) as typeof fetch;
 
     const parsed = await loadDataManifest({
-      basePath: "/data/wcdraft/runtime-data-2.10.0",
+      basePath: "/data/wcdraft/runtime-data-2.11.0",
       fetch: fetchLegacy,
     });
 
-    expect(calls).toEqual(["/data/wcdraft/runtime-data-2.10.0/manifest.json"]);
+    expect(calls).toEqual(["/data/wcdraft/runtime-data-2.11.0/manifest.json"]);
     expect(parsed.bundles.scenario_2026.sha256).toBe(
       "7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398",
     );

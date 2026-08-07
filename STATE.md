@@ -3378,6 +3378,13 @@ broken-pipe MCP transport error.
 
 ## Test counts (latest relevant measurements; branch noted where not main)
 
+Refactor Implementation Season Lane C (RF-01, 2026-08-07) runtime payload diet:
+schema **runtime-data-2.11.0**; `Rating.components[]` stripped from runtime draft pool
+(ETL/offline provenance retains components). Measured draft-pool decoded **−74.05%**
+(17.7 MiB vs ~65.2 MiB), brotli **−45.57%** (713,942 vs 1,311,661 bytes). Strategic-pick
+canary **0 flips**. Salt map refreshed to 2026-08-07 + 45d (through 2026-09-20). Retention
+current+2: 2.11 + 2.10 + 2.9 (2.8 removed).
+
 Refactor Implementation Season Lane A (RF-06/10/03, 2026-08-07) measured on `ws-fix/test-hygiene` @ origin/main `2632b4c`:
 
 - `@wcdraft/web test:unit`: **1424 passed**, 1 skipped (137 files) — no Playwright browser launch; responsive browser probes live in `test:browser`.
