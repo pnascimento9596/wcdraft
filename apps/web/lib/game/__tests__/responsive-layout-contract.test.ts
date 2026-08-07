@@ -337,7 +337,6 @@ describe("responsive layout contract", () => {
     ]);
   });
 
-
   it("filters only exact WebKit report-only CSP diagnostics", () => {
     const reportOnlyStyle =
       "[Report Only] Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.";

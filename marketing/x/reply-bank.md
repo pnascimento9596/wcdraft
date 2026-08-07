@@ -101,4 +101,3 @@ Thanks for flagging — sorry it glitched. A screenshot plus your browser/device
 ```
 Appreciate the report. If you can share the steps + your run's share link, we can replay the exact state and chase it down. More on the project: https://www.wcdraft.com
 ```
-
