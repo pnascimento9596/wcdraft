@@ -27,25 +27,18 @@
 // log claims an index outside the materialized `rolled_card_ids` is not
 // forgeable — it fails replay before score authority.
 
-import {
-  buildRunScenario,
-  runTournamentFull,
-  type DraftState,
-  type ScoreComponent,
-} from "@wcdraft/core";
+import { type ScoreComponent } from "@wcdraft/core";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData, RunRecordVersions } from "../game/data";
-import type { RunRecordV1 } from "../game/run-record";
 import {
   decodeRunToken,
   RUN_TOKEN_MAX_LEN,
   tokenDraftConfig,
   versionsAgree,
-  reconcileRunToken,
   type RunTokenBody,
 } from "../game/run-token";
-import { buildSimWorldInputs } from "../game/simulate";
+import { verifyAndResimRunToken } from "../game/verify-and-resim-run-token";
 import {
   DAILY_CHALLENGE_KIND,
   SEASON_CHALLENGE_KIND,
@@ -359,46 +352,13 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
   if (preflight.status === "rejected") return preflight;
   const { token, targetDraftMode, config, challenge, displayAlias } = preflight;
 
-  // 7 — THE KEYSTONE: full replay re-derives every spin's choices from the
-  // token's parent_seed; any choice index outside rolled_card_ids throws.
-  let draft: DraftState;
-  try {
-    draft = reconcileRunToken(token, data.gameData);
-  } catch (err) {
-    return rejected("ILLEGAL_PICK", err instanceof Error ? err.message : String(err));
+  // 7–8 — shared pure kernel: full replay + deterministic re-sim + post-match
+  // reconcile. Preflight (cheap gates / BAD_ATTEMPT ordering) already ran above.
+  const resim = verifyAndResimRunToken(token, data.gameData, data.scenario);
+  if (resim.status === "rejected") {
+    return rejected(resim.reason, resim.message);
   }
-
-  // 8 — deterministic re-sim on server-owned scenario/world. A throw here
-  // after a successful replay is a contract bug (route maps to 500 + alert).
-  let run: { score: number; score_breakdown: ScoreComponent[] };
-  try {
-    const record: RunRecordV1 = {
-      record_version: 1,
-      run_id: token.rid,
-      parent_seed: token.ps,
-      created_seq: 0,
-      updated_seq: 0,
-      versions: data.gameData.versions,
-      draft,
-      status: "ready",
-    };
-    const { world, teams, bracket } = buildSimWorldInputs(data.gameData, data.scenario, record);
-    const { scenario } = buildRunScenario({
-      parent_seed: token.ps,
-      teams,
-      bracket,
-      ruleset_version: data.gameData.versions.ruleset_version,
-    });
-    const result = runTournamentFull(draft, scenario, token.ps, world);
-    try {
-      reconcileRunToken(token, data.gameData, result.matches);
-    } catch (error) {
-      return rejected("ILLEGAL_PICK", error instanceof Error ? error.message : String(error));
-    }
-    run = result.run;
-  } catch (err) {
-    return rejected("SIM_FAILURE", err instanceof Error ? err.message : String(err));
-  }
+  const run = resim.run;
 
   // 9 — honest-state: never persist a number the player didn't see.
   if (run.score !== body.claimed_score) {
