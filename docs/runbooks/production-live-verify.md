@@ -8,10 +8,10 @@ Standing constraint for every post-deploy check on `www.wcdraft.com`.
 accounts.** Accepting-path coverage ("a valid run inserts a row") belongs
 **pre-merge**, on disposable substrate:
 
-| Path | Where | What it proves |
-| --- | --- | --- |
-| Accepting write | Pre-merge CI / local — PGlite-backed `apps/web/lib/leaderboard/__tests__/submit-route.test.ts` (and any ephemeral Neon exercise of the same insert path) | A valid submission inserts a row, returns 201, rank is honest |
-| Production live-verify | Post-deploy against `www.wcdraft.com` | Health + anchors, public board **reads**, and a **deliberately rejected** submit that proves the route is live and gate ordering fires **without** creating a row |
+| Path                   | Where                                                                                                                                                    | What it proves                                                                                                                                                    |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accepting write        | Pre-merge CI / local — PGlite-backed `apps/web/lib/leaderboard/__tests__/submit-route.test.ts` (and any ephemeral Neon exercise of the same insert path) | A valid submission inserts a row, returns 201, rank is honest                                                                                                     |
+| Production live-verify | Post-deploy against `www.wcdraft.com`                                                                                                                    | Health + anchors, public board **reads**, and a **deliberately rejected** submit that proves the route is live and gate ordering fires **without** creating a row |
 
 This is load-bearing for the merge → deploy → live-verify → auto-revert safety
 contract. Writing production board residue during verification (as PR #340 did
