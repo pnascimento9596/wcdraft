@@ -32,7 +32,7 @@ and applied for the snapshot-before-mutation step.
 - alias: `None`
 - season/mode: `engine-2026.06.16-merit-v4.4_...` / `ranked` / `classic`
 - created_at: `2026-06-21T21:17:55.346Z`
-- reason: Genuine ranked user entry (emmettheal@gmail.com / chezwizz); outside arc window; no automation alias
+- reason: Genuine ranked user entry ([redacted-real-user-email] / chezwizz); outside arc window; no automation alias
 
 ### `05003ad4-23d7-44c5-b9db-95e156774fad` — decision **SKIP**
 
@@ -96,14 +96,14 @@ and applied for the snapshot-before-mutation step.
 | session_id                       | `NULL`                                                                 |
 | attempt_id                       | `NULL`                                                                 |
 | created_at                       | `2026-08-07 18:36:28.415+00`                                           |
-| token_prefix                     | `t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1jbGFzc2ljIiwiZmlkI…`                    |
+| token_prefix                     | `t3.[redacted-jwt-body-prefix]…`                    |
 | token decode                     | rid=`f4-u2-classic` ps=`wcdraft:f4-u2-golden:classic:1` tn=`Golden XI` |
 
 ## Skipped rows (owner adjudication)
 
 | id          | alias          | reason                                                                                                    |
 | ----------- | -------------- | --------------------------------------------------------------------------------------------------------- |
-| `4dc1df8e…` | `—`            | Genuine ranked user entry (emmettheal@gmail.com / chezwizz); outside arc window; no automation alias      |
+| `4dc1df8e…` | `—`            | Genuine ranked user entry ([redacted-real-user-email] / chezwizz); outside arc window; no automation alias      |
 | `05003ad4…` | `wow`          | Outside #336-#340 window; alias not automation-shaped; leave-if-unsure                                    |
 | `593619a9…` | `testt`        | Alias weakly test-like but outside #336-#340 window and not linked to this arc; leave-if-unsure for owner |
 | `1b799d80…` | `shipmqyoeu0c` | Older ship/live-daily alias; outside #336-#340 arc window                                                 |
