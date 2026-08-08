@@ -183,17 +183,19 @@ describe("expired-session sweep", () => {
     `);
 
     // Prove the cascade is still poison: deleting the blocked session alone fails.
-    let poisonMessage = "";
+    let poisonDeleteFailed = false;
     try {
       await env.db.delete(sessions).where(eq(sessions.id, "poison-expired"));
-      throw new Error("expected poison session delete to fail");
     } catch (error) {
-      poisonMessage = error instanceof Error ? error.message : String(error);
+      poisonDeleteFailed = true;
+      const message = error instanceof Error ? error.message : String(error);
       const cause =
         error instanceof Error && error.cause instanceof Error ? error.cause.message : "";
-      const combined = `${poisonMessage}\n${cause}`;
-      expect(combined).toMatch(/ranked_attempt_binding_chk|check constraint|Failed query/i);
+      expect(`${message}\n${cause}`).toMatch(
+        /ranked_attempt_binding_chk|check constraint|Failed query/i,
+      );
     }
+    expect(poisonDeleteFailed).toBe(true);
 
     const deleted = await sweepExpiredSessions({ db: env.db, now: () => now }, 250);
     expect(deleted).toBe(1);
@@ -201,7 +203,5 @@ describe("expired-session sweep", () => {
       .map((row) => row.id)
       .sort();
     expect(remaining).toEqual(["live-ok", "poison-expired"]);
-    // Poison message must not leak into the returned count path (best-effort).
-    expect(poisonMessage.length).toBeGreaterThan(0);
   });
 });
