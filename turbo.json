@@ -175,7 +175,13 @@
     },
     "db:migrate": {
       "cache": false,
-      "env": ["DATABASE_URL_UNPOOLED", "NEON_MUTATION_TARGET"]
+      "env": [
+        "DATABASE_URL_UNPOOLED",
+        "NEON_API_KEY",
+        "NEON_PROJECT_ID",
+        "NEON_EPHEMERAL_BRANCH_ID",
+        "NEON_MUTATION_TARGET"
+      ]
     },
     "db:branch:verify": {
       "cache": false,
