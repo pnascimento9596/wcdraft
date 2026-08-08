@@ -92,28 +92,48 @@ non-writing live-verify PASS. Skipped ambiguous older aliases (`testt`,
 `shipmqyo*`, `wow`) and genuine `chezwizz` for owner adjudication.
 Durable report: `docs/reports/leaderboard-live-verify-residue-u2-2026-08-07.md`.
 
-## Production live-verify — non-writing (standing constraint)
+## Production live-verify — corrected non-writing definition (standing constraint)
 
-**Production live-verify must never create leaderboard rows, ranked attempts,
-or accounts.** Accepting-path coverage ("a valid run inserts a row") is proven
-**pre-merge** on disposable substrate (PGlite-backed
-`apps/web/lib/leaderboard/__tests__/submit-route.test.ts`; ephemeral Neon for
-schema/migration integrity). Production post-deploy checks are **read +
-deliberate rejection only**.
+“Non-writing” means **no durable user-attributable or product-visible artifact**;
+it does not forbid routine maintenance that an ordinary anonymous request also
+triggers.
+
+**Forbidden:** leaderboard entries (ranked or casual), ranked attempts,
+accounts, magic-link tokens, email sends, durable active sessions, saved runs,
+and any other durable user-attributable or product-visible row. **Explicitly
+permitted:** expired-session reaping, rate-limit row creation/increment, and the
+300-second stateless CSRF bootstrap cookies that mint no durable session.
+The bootstrap's 300-second stateless `wcdraft_sid` value is permitted by TTL and
+the unchanged active-session DB count; a durable sid or active row is forbidden.
+
+Distinguishing test: **would a single anonymous visitor loading the site cause
+this same write?** If yes, incidental maintenance is permitted. A durable,
+user-attributable, or product-visible artifact remains forbidden regardless of
+trigger; that rule wins if the clauses appear to conflict.
 
 - Runbook: `docs/runbooks/production-live-verify.md`
-- Executable probe: `scripts/live-verify-production.sh` — cookie-less anonymous
-  `POST /api/leaderboard/submit` with committed
-  `run-token-skew.json` → `shipped_pre_basis_t3` expects HTTP **409**
-  `DIFFERENT_BUILD`, then asserts featured + archive board entry id sets are
-  unchanged.
-- Measured smoke (2026-08-07, pre-U1-merge against production `98e0368`): health
-  ready, probe `409 DIFFERENT_BUILD` with
-  `mismatched_anchors=[schema_version,engine_version,data_bundle_hash]`, board
-  ids unchanged (classic casual still solely PR #340 residue
-  `live_verify_xi` / `1cac61ff-…` until U2 cleanup).
-- **OWNER RATIFICATION required** for adopting this constraint into the
-  canonical owner doc set; in-repo authority is this section + the runbook.
+- Executable probe: `scripts/live-verify-production.sh` — derives the expected
+  SHA, data anchors, and season from the passed or live-discovered Git commit;
+  checks cookie-less CSRF bootstrap; sends the committed
+  `run-token-skew.json` -> `shipped_pre_basis_t3` rejection probe; asserts
+  featured + archive board IDs; and compares direct read-only before/after DB
+  counts for leaderboard entries, ranked attempts, accounts, saved runs,
+  magic-link tokens, and **sessions with
+  `expires_at > clock_timestamp()` only**.
+- Expired-session and rate-limit totals are receipt-only permitted observations,
+  never part of forbidden-set equality. The stale-anchor probe is rejected by
+  `validateSubmissionCheap` before `rateLimiter.checkSubmit`, bounding its own
+  rate-limit exposure at zero under the locked route order.
+- Retroactive pre-merge execution against live `340a608` **PASS**: health/auth
+  and SHA-derived anchors matched; selected current/archive boards remained
+  unchanged; rejection was typed `409 DIFFERENT_BUILD`; forbidden counts stayed
+  entries 4 / attempts 0 / accounts 6 / runs 317 / magic links 18 / active
+  sessions 44; rate-limit rows/events stayed 66/72.
+- Accepting-path coverage remains pre-merge on disposable substrate. Production
+  verification uses public reads plus a deliberately rejected submit.
+- **OWNER RATIFICATION:** the **corrected definition above, not the original
+  physical-no-write wording, is what has awaited adoption into the canonical
+  owner doc set since PR #342.** This lane does not edit that canonical set.
 
 ## CI runner fleet (2026-07-25)
 
@@ -3701,7 +3721,9 @@ web static assets.
 `ws-<area>/<topic>` task branches; long-lived integration branches `engine-*`/`merit-*`
 (CI-watched); PRs squash-merge to `main` (one commit per PR); Red merges pin the
 reviewed head with `--match-head-commit`, then require deploy observation and
-**non-writing** live verification on `www.wcdraft.com` (see standing constraint
-above + `docs/runbooks/production-live-verify.md`) with auto-revert on any failed
-live check. Production live-verify must not insert leaderboard rows, ranked
-attempts, or accounts.
+live verification under the **corrected non-writing definition** on
+`www.wcdraft.com` (see the standing constraint above +
+`docs/runbooks/production-live-verify.md`) with auto-revert on any genuine failed
+live check. The gate forbids durable user-attributable/product-visible artifacts
+while permitting ordinary anonymous-request maintenance such as expired-session
+reaping, rate-limit accounting, and stateless 300-second CSRF bootstrap cookies.
