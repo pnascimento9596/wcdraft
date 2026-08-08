@@ -1,5 +1,25 @@
 # STATE.md — measured ground truth
 
+## Substrate silent-fail audit · sweep unblock · health cancel (2026-08-07)
+
+- **Unit A (onset):** Option **(2)** — sweep did not throw from #244 day-one.
+  Sign-up **does** require `GET /api/auth/csrf`. Trigger: expired session
+  `tEau21nA…` (expires **2026-07-21T20:24:09.686Z**) referenced by pre-binding
+  ranked row `4dc1df8e-…` (chezwizz, NULL `attempt_id`); `ON DELETE SET NULL`
+  re-validates `leaderboard_entries_ranked_attempt_binding_chk` and aborts
+  multi-id sweep. Driver deps stable through #341. Report:
+  `docs/reports/substrate-silent-fail-audit-2026-08-07.md`.
+- **Unit B:** Inventory of raw `db.execute` + best-effort paths; only proven
+  remaining defect was batch-sweep freeze on poison id. Fix: batch delete with
+  **per-id fallback**. Expired backlog after fix expected **1** (poison;
+  leave until owner binding decision). Investigation artifact: 86 non-poison
+  expired sessions deleted on prod when neonctl branch DSN resolved to primary
+  — boards/users intact; poison retained.
+- **Unit C1:** `/api/health` auth probe uses `SET LOCAL statement_timeout` (2s)
+  + process single-flight (no AbortSignal on neon-serverless Pool).
+- **Unit C2:** conforming cross-model PASS/FAIL recorded on the PR for #344
+  Unit B + this diff.
+
 ## CSRF forensics · health auth · residue closeout (2026-08-07)
 
 - **Unit A (read-only):** CSRF bootstrap outage forensics —

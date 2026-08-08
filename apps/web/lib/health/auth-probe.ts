@@ -9,7 +9,15 @@
 //      cannot silently reappear on auth-adjacent SQL
 //
 // Never mints sessions, never creates/updates/deletes application rows.
-// Bounded by the caller via Promise.race timeout.
+//
+// Cancellation / stacking:
+//   - Postgres `statement_timeout` is set LOCAL to the probe transaction so
+//     an in-flight query is actually cancelled server-side (Promise.race only
+//     bounds the HTTP response; without LOCAL timeout the pool-level 8s
+//     statement_timeout still holds a Neon connection).
+//   - Process-local single-flight reuses one in-flight probe so frequent
+//     /api/health polls cannot stack concurrent probe transactions during a
+//     slow-DB episode.
 import { asc, lte, sql } from "drizzle-orm";
 import { sessions, type Db } from "@wcdraft/db";
 
@@ -35,12 +43,60 @@ export function cookieSecretIsConfigured(raw: string | undefined): boolean {
   return decoded.length >= 32;
 }
 
+/** Test-only: clear the single-flight slot between cases. */
+export function __resetAuthProbeSingleFlightForTests(): void {
+  inFlightProbe = null;
+}
+
+let inFlightProbe: Promise<void> | null = null;
+
 /**
  * Read-only sessions + execute probes. Throws on substrate failure.
  * Callers must race this against a timeout and must never treat throws as
- * green.
+ * green. Concurrent callers share one in-flight probe (single-flight).
  */
-export async function probeAuthBootstrapDependencies(db: Db, nowMs: number): Promise<void> {
+export async function probeAuthBootstrapDependencies(
+  db: Db,
+  nowMs: number,
+  options?: { readonly statementTimeoutMs?: number },
+): Promise<void> {
+  if (inFlightProbe) return inFlightProbe;
+  const run = runAuthBootstrapProbe(db, nowMs, options).finally(() => {
+    if (inFlightProbe === run) inFlightProbe = null;
+  });
+  inFlightProbe = run;
+  return run;
+}
+
+async function runAuthBootstrapProbe(
+  db: Db,
+  nowMs: number,
+  options?: { readonly statementTimeoutMs?: number },
+): Promise<void> {
+  const statementTimeoutMs = Math.max(
+    1,
+    Math.min(AUTH_PROBE_TIMEOUT_MS, Math.trunc(options?.statementTimeoutMs ?? AUTH_PROBE_TIMEOUT_MS)),
+  );
+
+  // Prefer a real transaction so SET LOCAL statement_timeout applies, then
+  // falls off when the transaction ends. Fall back to bare statements when
+  // the handle has no transaction (unit-test mocks).
+  if (typeof db.transaction === "function") {
+    await db.transaction(async (tx) => {
+      await tx.execute(
+        sql`SELECT set_config('statement_timeout', ${String(statementTimeoutMs)}, true)`,
+      );
+      await runReadOnlyAuthProbes(tx, nowMs);
+    });
+    return;
+  }
+  await runReadOnlyAuthProbes(db, nowMs);
+}
+
+async function runReadOnlyAuthProbes(
+  db: Pick<Db, "select" | "execute">,
+  nowMs: number,
+): Promise<void> {
   // Same order/limit contract as sweepExpiredSessions' select step — no delete.
   await db
     .select({ id: sessions.id })

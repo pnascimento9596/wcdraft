@@ -1,5 +1,6 @@
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
-import { sessions } from "@wcdraft/db";
+import { leaderboardEntries, sessions, users } from "@wcdraft/db";
+import { eq, sql } from "drizzle-orm";
 
 import { setupTestDb, testCookieSecret } from "./_test-db";
 import {
@@ -97,5 +98,109 @@ describe("expired-session sweep", () => {
       "expired-b",
       "live",
     ]);
+  });
+
+  it("still reaps safe expired sessions when one id is blocked by pre-binding ranked SET NULL", async () => {
+    // Production shape: a pre-0012 ranked row with NULL attempt_id still
+    // references an expired session. ON DELETE SET NULL re-validates
+    // leaderboard_entries_ranked_attempt_binding_chk and aborts the batch.
+    const now = Date.UTC(2026, 6, 21);
+    const userRows = await env.db
+      .insert(users)
+      .values({
+        email: "ranked-legacy@example.invalid",
+        username: "chezwizz_test",
+      })
+      .returning({ id: users.id });
+    const userId = userRows[0]?.id;
+    if (!userId) throw new Error("user insert failed");
+
+    await env.db.insert(sessions).values([
+      {
+        id: "poison-expired",
+        userId,
+        csrfSecret: "csrf-poison",
+        expiresAt: new Date(now - 10),
+      },
+      {
+        id: "safe-expired",
+        csrfSecret: "csrf-safe",
+        expiresAt: new Date(now - 5),
+      },
+      {
+        id: "live-ok",
+        csrfSecret: "csrf-live",
+        expiresAt: new Date(now + 60_000),
+      },
+    ]);
+
+    // Seed a NOT VALID-shaped legacy ranked row (cannot INSERT under the live
+    // CHECK). Drop/re-add the binding check the same way production migration
+    // 0012 did so the row can exist while remaining non-updatable via SET NULL.
+    await env.db.execute(sql`
+      ALTER TABLE leaderboard_entries
+        DROP CONSTRAINT IF EXISTS leaderboard_entries_ranked_attempt_binding_chk
+    `);
+    await env.db.execute(sql`
+      ALTER TABLE leaderboard_entries
+        DROP CONSTRAINT IF EXISTS leaderboard_entries_ranked_attempt_chk
+    `);
+    await env.db.insert(leaderboardEntries).values({
+      seasonKey: "engine-legacy-pre-binding",
+      mode: "ranked",
+      draftMode: "classic",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
+      userId,
+      sessionId: "poison-expired",
+      attemptId: null,
+      displayAlias: null,
+      token: "legacy-ranked-token",
+      verifiedScore: 23,
+      scoreBreakdown: [],
+    });
+    await env.db.execute(sql`
+      ALTER TABLE leaderboard_entries
+        ADD CONSTRAINT leaderboard_entries_ranked_attempt_chk
+        CHECK (mode <> 'ranked' OR attempt_id IS NOT NULL) NOT VALID
+    `);
+    await env.db.execute(sql`
+      ALTER TABLE leaderboard_entries
+        ADD CONSTRAINT leaderboard_entries_ranked_attempt_binding_chk
+        CHECK (
+          mode <> 'ranked'
+          OR (
+            attempt_id IS NOT NULL
+            AND user_id IS NOT NULL
+            AND attempt_formation_id IS NOT NULL
+            AND draft_order IS NOT NULL
+            AND era IS NOT NULL
+            AND rating_basis IS NOT NULL
+            AND attempt_consumed_at IS NOT NULL
+          )
+        ) NOT VALID
+    `);
+
+    // Prove the cascade is still poison: deleting the blocked session alone fails.
+    let poisonMessage = "";
+    try {
+      await env.db.delete(sessions).where(eq(sessions.id, "poison-expired"));
+      throw new Error("expected poison session delete to fail");
+    } catch (error) {
+      poisonMessage = error instanceof Error ? error.message : String(error);
+      const cause = error instanceof Error && error.cause instanceof Error ? error.cause.message : "";
+      const combined = `${poisonMessage}\n${cause}`;
+      expect(combined).toMatch(/ranked_attempt_binding_chk|check constraint|Failed query/i);
+    }
+
+    const deleted = await sweepExpiredSessions({ db: env.db, now: () => now }, 250);
+    expect(deleted).toBe(1);
+    const remaining = (await env.db.select({ id: sessions.id }).from(sessions))
+      .map((row) => row.id)
+      .sort();
+    expect(remaining).toEqual(["live-ok", "poison-expired"]);
+    // Poison message must not leak into the returned count path (best-effort).
+    expect(poisonMessage.length).toBeGreaterThan(0);
   });
 });
