@@ -28,14 +28,14 @@ Greenfield additive scaffold:
   one transaction, plus a hand-authored down-migration
   (`migrations/0000_init.down.sql`) that drops in FK-safe reverse order.
 - An ephemeral-branch-safe migration runner (`scripts/migrate.ts`) and a
-  destructive rollback-check (`scripts/rollback-check.ts`) that **requires**
-  an explicit `NEON_EPHEMERAL_BRANCH_ID`, `NEON_API_KEY`, and
-  `NEON_PROJECT_ID`. Before any destructive operation, it queries
-  `current_database()` through the migration DB handle and binds the direct
-  connection endpoint to exactly one Neon API endpoint and branch. The
-  connected database, endpoint, project, branch, and sentinel must agree; the
-  branch must be read-write, non-primary/default, unprotected, and outside the
-  protected-name denylist.
+  destructive rollback-check (`scripts/rollback-check.ts`) that requires an
+  explicit `NEON_EPHEMERAL_BRANCH_ID`, `NEON_API_KEY`, and
+  `NEON_PROJECT_ID` whenever the path declares an ephemeral target. The shared
+  `scripts/neon-branch-guard.ts` queries Neon server identity settings through
+  the exact open migration handle, then cross-checks the endpoint and branch
+  against Neon API truth. Missing or ambiguous identity fails closed; the
+  branch must be read-write, ready, non-primary/default, unprotected, and
+  outside the protected-name denylist.
 - Committed `scripts/neon-branch-create.ts` + `scripts/neon-branch-delete.ts`
   that drive the Neon API to fork ephemeral branches off the primary and
   destroy them after each round-trip.
@@ -77,7 +77,8 @@ secrets for CI:
 | -------------------------- | ---------------------------------------- | --------------------------------------------------------------------- |
 | `DATABASE_URL`             | Neon **pooled** (`...-pooler.neon.tech`) | Runtime route handlers (later sub-units) via `getDb()`                |
 | `DATABASE_URL_UNPOOLED`    | Neon **direct** (`...neon.tech`)         | `scripts/migrate.ts` and `scripts/rollback-check.ts` (CLI migrations) |
-| `NEON_EPHEMERAL_BRANCH_ID` | Branch ID sentinel                       | Exact branch equality check in `scripts/rollback-check.ts`            |
+| `NEON_EPHEMERAL_BRANCH_ID` | Branch ID sentinel                       | Exact branch equality check in `scripts/neon-branch-guard.ts`         |
+| `NEON_MUTATION_TARGET`     | `ephemeral` or `production`              | Explicit migration target mode                                        |
 | `NEON_PROJECT_ID`          | Echoed back for `db:branch:delete`       | `scripts/neon-branch-delete.ts`                                       |
 
 The working env file is gitignored (covered by `.gitignore`'s `.env.*`
@@ -97,6 +98,7 @@ pnpm --filter @wcdraft/db db:branch:create .env.local
 
 # 3. Run the round-trip.
 set -a; . .env.local; set +a
+pnpm --filter @wcdraft/db db:branch:verify
 pnpm --filter @wcdraft/db db:migrate
 pnpm --filter @wcdraft/db db:rollback-check
 

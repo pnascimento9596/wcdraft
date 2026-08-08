@@ -138,6 +138,29 @@ coherence counts, restore/reset only that child, prove the later probe is gone,
 and delete every rehearsal/preservation branch. Never substitute the primary
 branch ID into a rehearsal command.
 
+For every rehearsal write against that child, load its direct URL and exact
+branch sentinel, then run the shared read-only identity assertion immediately
+before the first write:
+
+```bash
+set -a
+. "$REHEARSAL_ENV_FILE"
+set +a
+test -n "${NEON_EPHEMERAL_BRANCH_ID:-}"
+export NEON_MUTATION_TARGET=ephemeral
+pnpm --filter @wcdraft/db db:branch:verify
+```
+
+The assertion resolves `neon.branch_id`, `neon.endpoint_id`, and
+`neon.project_id` from the open connection, then cross-checks Neon API branch
+metadata. It refuses a primary/default/protected branch, including the case
+where a branch-targeted DSN actually reaches production. Keep the assertion's
+API credentials and URLs in the protected environment only; never paste them
+into receipts. Migration writes must use `db:migrate`, which repeats the
+assertion on its own mutation handle. Production restore POSTs below are an
+intentional production operation and must continue to use the primary identity
+and incident receipt gates, not the ephemeral-child assertion.
+
 ```bash
 set -euo pipefail
 umask 077

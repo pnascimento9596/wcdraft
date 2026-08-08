@@ -74,12 +74,7 @@ async function main(): Promise<void> {
   const projectId = readEnv("NEON_PROJECT_ID");
   const branchId = readEnv("NEON_EPHEMERAL_BRANCH_ID");
 
-  console.log(
-    `[neon-branch-delete] env diagnostic — ` +
-      `NEON_API_KEY length=${apiKey.length.toString()} ` +
-      `NEON_PROJECT_ID length=${projectId.length.toString()} ` +
-      `NEON_EPHEMERAL_BRANCH_ID length=${branchId.length.toString()}`,
-  );
+  console.log("[neon-branch-delete] required API credentials and branch identity present");
   console.log(`[neon-branch-delete] project=${shortId(projectId)} branch=${shortId(branchId)}`);
 
   // Belt-and-suspenders: refuse to delete primary/default branches even if
@@ -100,7 +95,7 @@ async function main(): Promise<void> {
   console.log(`[neon-branch-delete] OK — ephemeral branch deleted`);
 }
 
-main().catch((err: unknown) => {
-  console.error(`[neon-branch-delete] FAILED: ${String(err)}`);
+main().catch(() => {
+  console.error("[neon-branch-delete] FAILED; protected diagnostics are not printed");
   process.exit(1);
 });

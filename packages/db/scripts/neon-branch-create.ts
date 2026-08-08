@@ -12,11 +12,8 @@
 //   2) GITHUB_OUTPUT (if set) as `branch_id=...` so the workflow's
 //      always() cleanup step can delete the branch.
 //
-// Never echoes secret values to stdout/stderr. Only prints redacted
-// identifiers (branch id, name, endpoint prefix) plus a CI-visible LENGTH
-// diagnostic for NEON_API_KEY + NEON_PROJECT_ID so future drift between
-// the stored secret and the value the script sees is obvious in the run
-// log without ever revealing the value itself.
+// Never echoes secret values or secret-derived metadata to stdout/stderr. Only
+// prints non-secret identifiers (branch id, name, endpoint prefix).
 import { writeFileSync, chmodSync, appendFileSync } from "node:fs";
 
 const NEON_API = "https://console.neon.tech/api/v2";
@@ -97,15 +94,7 @@ async function main(): Promise<void> {
     throw new Error("usage: neon-branch-create.ts <env-file-out-path>");
   }
 
-  // DIAGNOSTIC: print only SAFE metadata. If the secret reaches the script
-  // truncated/empty/with-trailing-newline, the length and prefix below
-  // surface it BEFORE Neon's 401 hides the cause. The `napi_` prefix is
-  // documented Neon-API convention, not a sensitive value.
-  console.log(
-    `[neon-branch-create] env diagnostic — ` +
-      `NEON_API_KEY length=${apiKey.length.toString()} prefix=${apiKey.slice(0, 5)} ` +
-      `NEON_PROJECT_ID length=${projectId.length.toString()} prefix=${projectId.slice(0, 8)}`,
-  );
+  console.log("[neon-branch-create] required API credentials present");
   console.log(`[neon-branch-create] project=${shortId(projectId)}`);
 
   // PRE-AUTH PROBE: hit a cheap authenticated endpoint first. If this 401s,
@@ -191,6 +180,7 @@ async function main(): Promise<void> {
     `DATABASE_URL="${pooled}"\n` +
     `DATABASE_URL_UNPOOLED="${unpooled}"\n` +
     `NEON_EPHEMERAL_BRANCH_ID="${newBranchId}"\n` +
+    `NEON_MUTATION_TARGET="ephemeral"\n` +
     `NEON_PROJECT_ID="${projectId}"\n`;
   writeFileSync(outPath, envContents, { encoding: "utf8" });
   chmodSync(outPath, 0o600);
@@ -206,7 +196,7 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((err: unknown) => {
-  console.error(`[neon-branch-create] FAILED: ${String(err)}`);
+main().catch(() => {
+  console.error("[neon-branch-create] FAILED; protected diagnostics are not printed");
   process.exit(1);
 });

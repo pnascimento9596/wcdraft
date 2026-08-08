@@ -1,5 +1,36 @@
 # STATE.md — measured ground truth
 
+## Neon branch-targeting guardrail (2026-08-08)
+
+- **Unit A (read-only):** Neon CLI version `2.22.0` documents the branch as a
+  positional argument (`neonctl connection-string <branch>`), not
+  `--branch-id`. Against project `rapid-wind-87431051`, the exact reported
+  invocation `neonctl connection-string --branch-id br-autumn-hill-aqswkxii
+--project-id rapid-wind-87431051 --output json` returned the production
+  endpoint, while the positional child invocation returned the child endpoint.
+  Omitting the branch also returned production. Existing child branches were
+  ready with idle read-write endpoints; no branch was created or altered to
+  manufacture an init/no-endpoint case.
+- **Unit A identity mechanism:** read-only connections to production and both
+  retained Neon branches returned server-side `neon.branch_id`,
+  `neon.endpoint_id`, and `neon.project_id` settings matching the requested
+  branch. The shared guard queries those settings plus `current_database()` and
+  `pg_is_in_recovery()` on the exact open handle, then cross-checks the endpoint
+  and branch through Neon API GETs. The DSN is not used as branch identity.
+- **Unit B:** `packages/db/scripts/neon-branch-guard.ts` is the single
+  fail-closed seam. `db:migrate` asserts before ephemeral apply,
+  `db:rollback-check` encloses its complete mutation callback, and CI runs the
+  read-only `db:branch:verify` probe before apply. `db:migrate` also requires an
+  explicit `NEON_MUTATION_TARGET` mode, preventing an unlabelled direct URL
+  from silently selecting the production bypass. Production application
+  runtime paths remain unguarded by design; the deliberate production
+  migration workflow retains its separate exact-primary resolver.
+- **Tooling inventory:** `db:migrate:status` and live/read APIs are catalogued
+  read-only; branch create/delete are Neon API lifecycle mutations and do not
+  open a database connection. The DR rehearsal runbook now requires the shared
+  child-branch assertion before rehearsal writes; production restore POSTs keep
+  their intentional primary-operation gates.
+
 ## Substrate silent-fail audit · sweep unblock · health cancel (2026-08-07)
 
 - **Unit A (onset):** Option **(2)** — sweep did not throw from #244 day-one.

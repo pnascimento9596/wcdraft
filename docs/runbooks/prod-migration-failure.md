@@ -55,6 +55,25 @@ count summaries, and deletes the connection URL and receipts in an `always()`
 step. After a successful run, wait for production deployment/live verification
 before restoring traffic to the migrated build.
 
+The ephemeral CI path has a separate mandatory identity assertion. After the
+branch env file is loaded, run the read-only assertion before any branch write:
+
+```bash
+set -a
+. "$RUNNER_TEMP/neon-ephemeral.env"
+set +a
+export NEON_MUTATION_TARGET=ephemeral
+pnpm --filter @wcdraft/db db:branch:verify
+pnpm --filter @wcdraft/db db:migrate
+```
+
+`db:branch:verify` queries Neon server identity through the open direct handle
+and cross-checks the endpoint and branch through the Neon API. `db:migrate`
+repeats the same assertion on the handle it will mutate, so a DSN that resolves
+to production or an identity that cannot be determined fails closed. Never set
+`NEON_EPHEMERAL_BRANCH_ID` for the deliberate production migration workflow;
+that workflow has its own exact-primary resolver and is not an ephemeral target.
+
 The shell procedure below is break-glass guidance only. It requires an
 independently resolved direct URL and must preserve the same exact-SHA and
 known-pending evidence as the workflow.
@@ -65,6 +84,7 @@ Start from the exact approved commit. Load the direct URL from the approved secr
 set -euo pipefail
 umask 077
 test -n "${DATABASE_URL_UNPOOLED:-}"
+export NEON_MUTATION_TARGET=production
 pnpm install --frozen-lockfile
 status_receipt="$incident_dir/migration-status.txt"
 
