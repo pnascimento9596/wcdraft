@@ -89,6 +89,7 @@ assert_workflow_contains "needs.changes.outputs.db == 'true'"
 assert_workflow_contains "scripts/ci/require-neon-for-db-paths.sh"
 assert_workflow_contains 'DB_RESULT: ${{ needs.db-rollback-check.result }}'
 assert_workflow_contains 'check_result "db · ephemeral branch · apply → anon-dedupe → rollback round-trip" "$DB_RESULT"'
+assert_workflow_contains 'pnpm --filter @wcdraft/db db:branch:verify'
 
 run_case non-db-missing 0 false "" "" "skip=true"
 run_case db-missing 1 true "" "" "skip=true"

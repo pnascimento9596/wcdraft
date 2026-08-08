@@ -727,6 +727,7 @@ jobs:
           set -a
           . "$RUNNER_TEMP/neon-ephemeral.env"
           set +a
+          pnpm --filter @wcdraft/db db:branch:verify
           pnpm --filter @wcdraft/db db:migrate
 
       - name: Migration status (read-only)

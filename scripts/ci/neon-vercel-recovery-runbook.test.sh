@@ -158,6 +158,9 @@ require_literal 'require_traffic_suspension_receipt traffic-stopped-before-verce
 require_literal 'TRAFFIC_RESUMED_ACK=yes'
 require_literal 'Set INVERSE_COUPLED_ORDER=database-first, application-first, or traffic-stopped.'
 require_literal 'INVERSE_TRAFFIC_RESUMED_ACK=yes'
+require_literal 'pnpm --filter @wcdraft/db db:branch:verify'
+require_literal 'neon.branch_id'
+require_literal 'NEON_EPHEMERAL_BRANCH_ID'
 
 sed -n \
   '/^require_traffic_suspension_configuration() {/,/^}/p' \

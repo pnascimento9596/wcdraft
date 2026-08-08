@@ -90,7 +90,7 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((err: unknown) => {
-  console.error("[db:migrate:status] FAILED", err);
+main().catch(() => {
+  console.error("[db:migrate:status] FAILED; protected diagnostics are not printed");
   process.exit(1);
 });

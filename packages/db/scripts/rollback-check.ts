@@ -12,11 +12,10 @@
 //   2. NEON_API_KEY and NEON_PROJECT_ID are mandatory. Sentinel-only mode is
 //      forbidden even for local reruns.
 //
-//   3. Before any destructive statement, the guard parses the direct endpoint
-//      and database from DATABASE_URL_UNPOOLED, queries current_database()
-//      through the same DB handle, and resolves the exact endpoint-to-branch
-//      mapping through the Neon API. Endpoint, project, branch, sentinel, and
-//      database identities must all agree without ambiguity.
+//   3. Before any destructive statement, the shared guard queries Neon server
+//      identity through the same DB handle and cross-checks the endpoint,
+//      project, branch, and sentinel through the Neon API. Identity must agree
+//      without ambiguity; the DSN is never treated as branch identity.
 //
 //   4. Primary, default, API-protected, and protected-name branches are denied.
 //
@@ -40,7 +39,7 @@ import { readFileSync } from "node:fs";
 import { migrate } from "drizzle-orm/neon-serverless/migrator";
 import { sql } from "drizzle-orm";
 import { openMigratorDb } from "../src/client.ts";
-import { runWithVerifiedRollbackTarget } from "./rollback-target-guard.ts";
+import { NeonBranchIdentityError, runWithVerifiedNeonBranchMutation } from "./neon-branch-guard.ts";
 
 interface JournalEntry {
   idx: number;
@@ -214,26 +213,13 @@ async function main(): Promise<void> {
   const { db, pool } = openMigratorDb();
   const migrationsFolder = new URL("../migrations", import.meta.url).pathname;
   try {
-    await runWithVerifiedRollbackTarget(
+    await runWithVerifiedNeonBranchMutation(
       {
-        connectionString: process.env.DATABASE_URL_UNPOOLED,
-        ephemeralBranchId: process.env.NEON_EPHEMERAL_BRANCH_ID,
+        intendedBranchId: process.env.NEON_EPHEMERAL_BRANCH_ID,
         apiKey: process.env.NEON_API_KEY,
         projectId: process.env.NEON_PROJECT_ID,
       },
-      {
-        verifiedHandle: db,
-        queryCurrentDatabase: async (verifiedDb) => {
-          const result = await verifiedDb.execute<{ database_name: string }>(sql`
-            SELECT current_database() AS database_name
-          `);
-          const row = result.rows[0];
-          if (result.rows.length !== 1 || !row || typeof row.database_name !== "string") {
-            throw new Error("current_database() returned an unexpected shape");
-          }
-          return row.database_name;
-        },
-      },
+      { verifiedHandle: db },
       async (_target, verifiedDb) => {
         // VERIFIED_ROLLBACK_MUTATION_SCOPE_START — every apply, probe mutation,
         // purge, down migration, and clean-state assertion stays inside this
@@ -705,6 +691,11 @@ async function main(): Promise<void> {
 }
 
 main().catch((err: unknown) => {
-  console.error("[rollback-check] FAILED", err);
+  console.error(
+    "[rollback-check] FAILED",
+    err instanceof NeonBranchIdentityError
+      ? err.message
+      : "rollback check failed; protected diagnostics are not printed",
+  );
   process.exit(1);
 });

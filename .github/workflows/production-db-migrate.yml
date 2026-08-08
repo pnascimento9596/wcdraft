@@ -246,6 +246,7 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
+          export NEON_MUTATION_TARGET=production
           export DATABASE_URL_UNPOOLED="$(cat "$RECEIPT_DIR/direct-url")"
           migrate_receipt="$RECEIPT_DIR/migrate.txt"
           set +e
