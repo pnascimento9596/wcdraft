@@ -28,9 +28,11 @@ describe("auth bootstrap health probe", () => {
     const from = vi.fn(() => ({ where }));
     const select = vi.fn(() => ({ from }));
     const execute = vi.fn(async () => ({ rows: [{ ok: "1" }] }));
-    const transaction = vi.fn(async (fn: (tx: { select: typeof select; execute: typeof execute }) => Promise<void>) => {
-      await fn({ select, execute });
-    });
+    const transaction = vi.fn(
+      async (fn: (tx: { select: typeof select; execute: typeof execute }) => Promise<void>) => {
+        await fn({ select, execute });
+      },
+    );
 
     const db = { select, execute, transaction } as never;
     await probeAuthBootstrapDependencies(db, 1_700_000_000_000);
@@ -63,7 +65,9 @@ describe("auth bootstrap health probe", () => {
     const db = {
       select,
       execute,
-      transaction: async (fn: (tx: { select: typeof select; execute: typeof execute }) => Promise<void>) => {
+      transaction: async (
+        fn: (tx: { select: typeof select; execute: typeof execute }) => Promise<void>,
+      ) => {
         await fn({ select, execute });
       },
     } as never;
@@ -90,9 +94,11 @@ describe("auth bootstrap health probe", () => {
       }),
     });
     const execute = vi.fn(async () => ({ rows: [{ ok: "1" }] }));
-    const transaction = vi.fn(async (fn: (tx: { select: typeof select; execute: typeof execute }) => Promise<void>) => {
-      await fn({ select, execute });
-    });
+    const transaction = vi.fn(
+      async (fn: (tx: { select: typeof select; execute: typeof execute }) => Promise<void>) => {
+        await fn({ select, execute });
+      },
+    );
     const db = { select, execute, transaction } as never;
 
     const a = probeAuthBootstrapDependencies(db, 1);

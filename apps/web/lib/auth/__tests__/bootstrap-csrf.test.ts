@@ -189,7 +189,8 @@ describe("expired-session sweep", () => {
       throw new Error("expected poison session delete to fail");
     } catch (error) {
       poisonMessage = error instanceof Error ? error.message : String(error);
-      const cause = error instanceof Error && error.cause instanceof Error ? error.cause.message : "";
+      const cause =
+        error instanceof Error && error.cause instanceof Error ? error.cause.message : "";
       const combined = `${poisonMessage}\n${cause}`;
       expect(combined).toMatch(/ranked_attempt_binding_chk|check constraint|Failed query/i);
     }

@@ -18,11 +18,11 @@ specific expired session enters the sweep selection.
 
 ### (1) is false — sign-up requires CSRF bootstrap
 
-| Step | Evidence |
-| --- | --- |
-| Client mount | `apps/web/app/sign-up/sign-up-form.tsx` calls `ensureCsrfToken()` |
+| Step          | Evidence                                                                                               |
+| ------------- | ------------------------------------------------------------------------------------------------------ |
+| Client mount  | `apps/web/app/sign-up/sign-up-form.tsx` calls `ensureCsrfToken()`                                      |
 | Client submit | `postJson("/api/auth/sign-up", …)` → `readOrFetchCsrfToken` → `GET /api/auth/csrf` when cookie missing |
-| Server | `POST /api/auth/sign-up` → `ensureMutationSession` + `verifyCsrfDoubleSubmit` |
+| Server        | `POST /api/auth/sign-up` → `ensureMutationSession` + `verifyCsrfDoubleSubmit`                          |
 
 Mutations that require double-submit CSRF (non-exhaustive): sign-up, magic-link
 request, password login/reset, sign-out, runs save/claim/pin, leaderboard submit
@@ -32,15 +32,15 @@ was already reconciled in the prior forensics for PR #340.
 
 ### (2) holds — trigger identified (not a dependency bump)
 
-| Fact | Evidence |
-| --- | --- |
-| Always-awaited sweep introduced | `890db10` / PR #244 (2026-07-11) — raw CTE `db.execute` |
-| Sign-ups after #244 | Jul 17 + Jul 20 (forensics + live users table) |
-| Driver versions stable | `@neondatabase/serverless@1.1.0`, `drizzle-orm@0.45.2` from #244 through #341; #289 only bumped test-only `@electric-sql/pglite` |
-| Binding CHECK added | `0012` / `86bba8d` / PR #236 (2026-07-10) — `leaderboard_entries_ranked_attempt_binding_chk` **NOT VALID** |
-| Poison session | `tEau21nADcucAH7BGmxgkIZHirnjAxSmxbbNs8H8f0o` · `expires_at = 2026-07-21T20:24:09.686Z` · referenced by ranked entry `4dc1df8e-…` (chezwizz, `attempt_id` NULL) |
-| Failure mechanism | `DELETE sessions` → `ON DELETE SET NULL` on `leaderboard_entries.session_id` → Postgres re-validates the NOT VALID CHECK on UPDATE → check fails → **entire multi-id DELETE aborts** |
-| Ordered sweep always hits poison first | `ORDER BY expires_at ASC, id ASC` — poison is the oldest expired row |
+| Fact                                   | Evidence                                                                                                                                                                             |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Always-awaited sweep introduced        | `890db10` / PR #244 (2026-07-11) — raw CTE `db.execute`                                                                                                                              |
+| Sign-ups after #244                    | Jul 17 + Jul 20 (forensics + live users table)                                                                                                                                       |
+| Driver versions stable                 | `@neondatabase/serverless@1.1.0`, `drizzle-orm@0.45.2` from #244 through #341; #289 only bumped test-only `@electric-sql/pglite`                                                     |
+| Binding CHECK added                    | `0012` / `86bba8d` / PR #236 (2026-07-10) — `leaderboard_entries_ranked_attempt_binding_chk` **NOT VALID**                                                                           |
+| Poison session                         | `tEau21nADcucAH7BGmxgkIZHirnjAxSmxbbNs8H8f0o` · `expires_at = 2026-07-21T20:24:09.686Z` · referenced by ranked entry `4dc1df8e-…` (chezwizz, `attempt_id` NULL)                      |
+| Failure mechanism                      | `DELETE sessions` → `ON DELETE SET NULL` on `leaderboard_entries.session_id` → Postgres re-validates the NOT VALID CHECK on UPDATE → check fails → **entire multi-id DELETE aborts** |
+| Ordered sweep always hits poison first | `ORDER BY expires_at ASC, id ASC` — poison is the oldest expired row                                                                                                                 |
 
 **Earliest code-capable onset after data condition is live:**
 **2026-07-21T20:24:09.686Z** (poison session expiry). From that moment, any
@@ -78,17 +78,17 @@ deleted. No accounts created. No VALIDATE of ranked binding.
 
 ### B1 — Raw `db.execute` / non-query-builder SQL (runtime paths)
 
-| Site | SQL shape | Route / job | Critical? | Throw containment |
-| --- | --- | --- | --- | --- |
-| `lib/health/auth-probe.ts` | `SELECT '1'` + `set_config` | `/api/health` | Probe (status) | Caught in `resolveAuthHealthStatus` → degraded/error |
-| `lib/health/readiness.ts` | migrations latest | `/api/health` | Yes (schema) | Caught → `db.status=error` 503 |
-| `lib/auth/rate-limit.ts` | UPSERT / CTE sweep | auth + LB rate limits | Decision path | Callers map to `RATE_LIMIT_UNAVAILABLE` / fail-closed allow=false; **sweep CTE** contained in LB/expensive-verify |
-| `lib/leaderboard/store.ts` | board page + presence | GET leaderboard | Yes | Route-level |
-| `lib/leaderboard/claim.ts` | USING deletes | claim | Yes (claim) | Contained in post-session hook (`AUTH_POST_SESSION_HOOK_FAILED`) |
-| `lib/leaderboard/ranked-attempts.ts` | CTE sweep / consume | ranked issue/submit | Yes | Route/tx |
-| `lib/leaderboard/lineup-route.ts` | token select | lineup | Yes | Route |
-| `lib/game/saved-runs-store.ts` | eviction delete | runs quota | Yes | Route |
-| `packages/db` scripts | various | CLI only | N/A | CLI |
+| Site                                 | SQL shape                   | Route / job           | Critical?      | Throw containment                                                                                                 |
+| ------------------------------------ | --------------------------- | --------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `lib/health/auth-probe.ts`           | `SELECT '1'` + `set_config` | `/api/health`         | Probe (status) | Caught in `resolveAuthHealthStatus` → degraded/error                                                              |
+| `lib/health/readiness.ts`            | migrations latest           | `/api/health`         | Yes (schema)   | Caught → `db.status=error` 503                                                                                    |
+| `lib/auth/rate-limit.ts`             | UPSERT / CTE sweep          | auth + LB rate limits | Decision path  | Callers map to `RATE_LIMIT_UNAVAILABLE` / fail-closed allow=false; **sweep CTE** contained in LB/expensive-verify |
+| `lib/leaderboard/store.ts`           | board page + presence       | GET leaderboard       | Yes            | Route-level                                                                                                       |
+| `lib/leaderboard/claim.ts`           | USING deletes               | claim                 | Yes (claim)    | Contained in post-session hook (`AUTH_POST_SESSION_HOOK_FAILED`)                                                  |
+| `lib/leaderboard/ranked-attempts.ts` | CTE sweep / consume         | ranked issue/submit   | Yes            | Route/tx                                                                                                          |
+| `lib/leaderboard/lineup-route.ts`    | token select                | lineup                | Yes            | Route                                                                                                             |
+| `lib/game/saved-runs-store.ts`       | eviction delete             | runs quota            | Yes            | Route                                                                                                             |
+| `packages/db` scripts                | various                     | CLI only              | N/A            | CLI                                                                                                               |
 
 **Structurally similar to the historical CTE sweep:**
 `sweepOldRateLimits` (CTE DELETE + `rows[0]`). Contained at both call sites
@@ -100,13 +100,13 @@ live failure is **check constraint on cascade UPDATE**).
 
 ### B2 — Best-effort paths that can abort a request
 
-| Path | Awaited in request? | Contained? |
-| --- | --- | --- |
-| `sweepExpiredSessions` on CSRF | yes | **yes** after #341 (try/catch + log) |
-| Rate-limit lazy sweeps | yes (after allow) | **yes** (try/catch non-fatal) |
-| `onAuthenticatedSessionReady` / claim | yes | **yes** (`session-issue.ts` try/catch) |
-| Client `save-mirror` fire-and-forget | browser only | client-side |
-| Health auth probe | yes | yes (status mapping) |
+| Path                                  | Awaited in request? | Contained?                             |
+| ------------------------------------- | ------------------- | -------------------------------------- |
+| `sweepExpiredSessions` on CSRF        | yes                 | **yes** after #341 (try/catch + log)   |
+| Rate-limit lazy sweeps                | yes (after allow)   | **yes** (try/catch non-fatal)          |
+| `onAuthenticatedSessionReady` / claim | yes                 | **yes** (`session-issue.ts` try/catch) |
+| Client `save-mirror` fire-and-forget  | browser only        | client-side                            |
+| Health auth probe                     | yes                 | yes (status mapping)                   |
 
 No additional uncontained best-effort server path proven beyond the already-fixed
 CSRF outer catch. The **remaining** defect was “contained but non-functional”:
@@ -120,11 +120,11 @@ aborting the caller (caller already best-effort).
 
 ### B4 — Sweep functionality + backlog
 
-| Metric | At investigation (pre-artifact) | After accidental non-poison cleanup | After this fix (expected) |
-| --- | --- | --- | --- |
-| Expired sessions | **87** | **1** (poison only) | **1** (poison remains until binding data repair — out of scope) |
-| Live sessions | 45 | 45 | 45 |
-| Proof | Ephemeral intent + SQL: delete poison alone fails with `ranked_attempt_binding_chk`; delete others succeeds; unit test reaps safe + leaves poison | — | PGlite test `still reaps safe expired sessions when one id is blocked…` |
+| Metric           | At investigation (pre-artifact)                                                                                                                   | After accidental non-poison cleanup | After this fix (expected)                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------- |
+| Expired sessions | **87**                                                                                                                                            | **1** (poison only)                 | **1** (poison remains until binding data repair — out of scope)         |
+| Live sessions    | 45                                                                                                                                                | 45                                  | 45                                                                      |
+| Proof            | Ephemeral intent + SQL: delete poison alone fails with `ranked_attempt_binding_chk`; delete others succeeds; unit test reaps safe + leaves poison | —                                   | PGlite test `still reaps safe expired sessions when one id is blocked…` |
 
 The rewritten query-builder sweep was **structurally sound** but **still
 non-functional in production** after #341 because the batch always included

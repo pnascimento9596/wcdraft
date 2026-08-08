@@ -75,7 +75,10 @@ async function runAuthBootstrapProbe(
 ): Promise<void> {
   const statementTimeoutMs = Math.max(
     1,
-    Math.min(AUTH_PROBE_TIMEOUT_MS, Math.trunc(options?.statementTimeoutMs ?? AUTH_PROBE_TIMEOUT_MS)),
+    Math.min(
+      AUTH_PROBE_TIMEOUT_MS,
+      Math.trunc(options?.statementTimeoutMs ?? AUTH_PROBE_TIMEOUT_MS),
+    ),
   );
 
   // Prefer a real transaction so SET LOCAL statement_timeout applies, then

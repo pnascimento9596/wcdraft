@@ -16,7 +16,7 @@
   expired sessions deleted on prod when neonctl branch DSN resolved to primary
   — boards/users intact; poison retained.
 - **Unit C1:** `/api/health` auth probe uses `SET LOCAL statement_timeout` (2s)
-  + process single-flight (no AbortSignal on neon-serverless Pool).
+  - process single-flight (no AbortSignal on neon-serverless Pool).
 - **Unit C2:** conforming cross-model PASS/FAIL recorded on the PR for #344
   Unit B + this diff.
 
