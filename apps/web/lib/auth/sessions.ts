@@ -107,6 +107,15 @@ export async function deleteSession(sessionId: string, deps: SessionDeps): Promi
  * aborted cookie-less bootstrap even though the bootstrap itself is pure
  * crypto and does not need a durable row. The two-step form keeps the same
  * order/limit contract while avoiding the execute/result-shape edge.
+ *
+ * Batch delete can still fail when a selected session is referenced by a
+ * pre-binding ranked `leaderboard_entries` row: `ON DELETE SET NULL` on
+ * `session_id` re-validates `leaderboard_entries_ranked_attempt_binding_chk`
+ * (NOT VALID only exempts pre-existing rows at constraint-add time; any later
+ * UPDATE must satisfy the check). One poisoned id in a multi-id DELETE aborts
+ * the whole batch, which historically froze the sweep after the oldest
+ * expired session became that historical ranked exception. On batch failure
+ * we fall back to per-id deletes so safe expired sessions still reaped.
  */
 export async function sweepExpiredSessions(
   deps: Pick<SessionDeps, "db" | "now">,
@@ -122,11 +131,29 @@ export async function sweepExpiredSessions(
     .limit(boundedLimit);
   if (expired.length === 0) return 0;
   const ids = expired.map((row) => row.id);
-  const deleted = await deps.db
-    .delete(sessions)
-    .where(inArray(sessions.id, ids))
-    .returning({ id: sessions.id });
-  return deleted.length;
+  try {
+    const deleted = await deps.db
+      .delete(sessions)
+      .where(inArray(sessions.id, ids))
+      .returning({ id: sessions.id });
+    return deleted.length;
+  } catch {
+    // Progress over freeze: one cascade/CHECK failure must not block the rest.
+    let deleted = 0;
+    for (const id of ids) {
+      try {
+        const rows = await deps.db
+          .delete(sessions)
+          .where(eq(sessions.id, id))
+          .returning({ id: sessions.id });
+        deleted += rows.length;
+      } catch {
+        // Leave the poisoned session; next sweep will skip it again after
+        // selecting it, or succeed if the blocking row is later repaired.
+      }
+    }
+    return deleted;
+  }
 }
 
 // ── Cookie signing helpers ─────────────────────────────────────────────────
