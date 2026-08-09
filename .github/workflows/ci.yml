@@ -248,6 +248,9 @@ jobs:
       - name: Neon/Vercel recovery runbook contract
         run: scripts/ci/neon-vercel-recovery-runbook.test.sh
 
+      - name: Production live-verify contract
+        run: scripts/ci/live-verify-production.test.sh
+
       - name: Agent contract drift check
         run: pnpm run check:agent-contracts
 

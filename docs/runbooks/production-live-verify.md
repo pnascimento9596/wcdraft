@@ -1,87 +1,177 @@
-# Production live-verify (non-writing)
+# Production live-verify (corrected non-writing definition)
 
 Standing constraint for every post-deploy check on `www.wcdraft.com`.
 
 ## Standing constraint (in-repo)
 
-**Production live-verify must never create leaderboard rows, ranked attempts, or
-accounts.** Accepting-path coverage ("a valid run inserts a row") belongs
+“Non-writing” means **no durable user-attributable or product-visible artifact**.
+It does not mean that an ordinary anonymous request must be physically incapable
+of triggering routine maintenance.
+
+### Forbidden
+
+Production live-verify must never create, delete, consume, or otherwise cause a
+change to any of these forbidden-set artifacts:
+
+- leaderboard entries, ranked or casual;
+- ranked attempts;
+- accounts, magic-link tokens, or email sends;
+- durable active sessions (`sessions.expires_at > clock_timestamp()`);
+- saved runs; or
+- any other durable row attributable to a user or visible on a product surface.
+
+### Explicitly permitted incidental maintenance
+
+The following side effects are permitted because the same work can be triggered
+by a single ordinary anonymous visitor request and does not create a durable
+user-attributable or product-visible artifact:
+
+- expired-session reaping through the existing session sweep;
+- rate-limit counter row creation or increment; and
+- stateless CSRF bootstrap cookies with `Max-Age=300`, which expire on their own
+  and mint no durable session.
+
+The bootstrap currently emits a 300-second stateless value under the
+`wcdraft_sid` cookie name as well as the CSRF/bootstrap cookies. The name alone
+does not make it a durable session: `Max-Age=300` plus an unchanged active-session
+DB count is permitted; a longer-lived sid or a new active `sessions` row is
+forbidden.
+
+### Distinguishing test
+
+For any side effect not listed above, ask: **would a single anonymous visitor
+loading the site cause this same write?** If yes, the incidental maintenance is
+permitted. If the effect creates or changes a durable, user-attributable, or
+product-visible artifact, it is forbidden regardless of what triggered it.
+The durable-artifact rule wins when the two clauses appear to conflict. Record
+the adjudication and its evidence in the lane report.
+
+Accepting-path coverage (“a valid run inserts a row”) therefore remains
 **pre-merge**, on disposable substrate:
 
-| Path                   | Where                                                                                                                                                    | What it proves                                                                                                                                                    |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Accepting write        | Pre-merge CI / local — PGlite-backed `apps/web/lib/leaderboard/__tests__/submit-route.test.ts` (and any ephemeral Neon exercise of the same insert path) | A valid submission inserts a row, returns 201, rank is honest                                                                                                     |
-| Production live-verify | Post-deploy against `www.wcdraft.com`                                                                                                                    | Health + anchors, public board **reads**, and a **deliberately rejected** submit that proves the route is live and gate ordering fires **without** creating a row |
+| Path                   | Where                                                                                                                                                     | What it proves                                                                                                                                                   |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accepting write        | Pre-merge CI / local — PGlite-backed `apps/web/lib/leaderboard/__tests__/submit-route.test.ts` (and any guarded ephemeral-Neon exercise of the same path) | A valid submission inserts a row, returns 201, and reports an honest rank                                                                                        |
+| Production live-verify | Against `www.wcdraft.com`                                                                                                                                 | SHA-derived health anchors, public reads, stateless CSRF bootstrap, a typed rejected submit, and unchanged forbidden-set counts without creating product residue |
 
-This is load-bearing for the merge → deploy → live-verify → auto-revert safety
-contract. Writing production board residue during verification (as PR #340 did
-with alias `live_verify_xi`) pollutes the public board and forces irreversible
-data cleanup.
+This definition is load-bearing for the merge -> deploy -> live-verify ->
+auto-revert safety contract. The `live_verify_xi` row created during PR #340
+was forbidden because it was a durable public-board artifact. An expired-session
+row reaped by `GET /api/auth/csrf` is permitted maintenance and must not disable
+the gate.
 
-> **OWNER RATIFICATION:** this constraint is committed in-repo (`STATE.md` + this
-> runbook). Ratifying it into the canonical owner doc set is an owner decision
-> and is not performed by build agents.
+## OWNER RATIFICATION
 
-## Rejection probe (chosen)
+**The corrected definition in this runbook and `STATE.md` — not the original
+physical-no-write wording — is what has awaited adoption into the canonical
+owner doc set since PR #342.** That ratification is an owner action. Build
+agents must not edit the canonical doc set while carrying this lane.
+
+## Rejection probe and bounded rate-limit exposure
 
 **Probe:** cookie-less anonymous `POST /api/leaderboard/submit` with the
 committed pre-basis skew fixture
-`apps/web/lib/game/__tests__/fixtures/run-token-skew.json` →
+`apps/web/lib/game/__tests__/fixtures/run-token-skew.json` ->
 `shipped_pre_basis_t3.token`.
 
-**Expected:** HTTP **409** with wire code **`DIFFERENT_BUILD`** (cheap preflight
-step 3 — `versionsAgree` fails on schema/engine/hash anchors before replay,
-sim, or insert).
+**Expected:** HTTP **409** with wire code **`DIFFERENT_BUILD`**.
 
-**Rationale (stable + cheapest):**
+This probe shape bounds rate-limit exposure rather than relying on a run-count
+cadence. `validateSubmissionCheap` rejects the stale six-anchor conjunction
+before `rateLimiter.checkSubmit`, so the probe does not increment the submit
+limiter while that locked gate order holds. Before sending the probe, the script
+reads the submit route from the target deployment SHA and fails closed if this
+order has moved. The script records rate-limit row and event totals as permitted
+observations but deliberately does **not** assert that they are unchanged. This
+makes concurrent ordinary traffic non-fatal and keeps any future exposure
+visible in the receipt.
 
-1. Fixture is committed and regenerated via `pnpm --filter @wcdraft/web gen:token-skew`.
-2. Rejection is cheap-gate only — no re-sim, no rate-limit identity burn beyond
-   anonymous.
-3. Cookie-less anonymous path does **not** mint a durable session (identity gate
-   returns `{sessionId:null,userId:null}` when no `wcdraft_sid` is present), so
-   the probe creates neither accounts nor sessions.
-4. `DIFFERENT_BUILD` is the same typed rejection PR #340 aligned across submit /
-   OG / friend-challenge / lineup for version-anchor skew.
+Do not substitute an accepting current-build token on production. Do not pass
+`display_alias` or `display_name`, either of which could become a public artifact
+if a future route regression accepted the request.
 
-Do **not** substitute an accepting current-build token on production. Do **not**
-pass `display_alias` / `display_name` that would be persisted on accept.
+## Forbidden-set assertion
+
+The script takes direct read-only production-DB snapshots before the first HTTP
+request and in an `EXIT` finalizer after the last attempted assertion. It requires
+these counts to remain identical:
+
+- `leaderboard_entries`;
+- `ranked_attempts`;
+- `users` (reported as `accounts`);
+- `saved_runs`;
+- `magic_link_tokens`; and
+- **active, non-expired sessions only:**
+  `SELECT count(*) FROM sessions WHERE expires_at > clock_timestamp()`.
+
+It intentionally does not compare total session rows. An expired row may be
+deleted by the permitted sweep between snapshots without moving the active
+session count. `auth_rate_limits` is outside the forbidden set and is never part
+of the equality assertion.
+
+The DB connection is forced read-only with `default_transaction_read_only=on`,
+and each snapshot verifies server-reported Neon project and branch identities
+against explicit expected values. The connection string is provided only via an
+environment variable and must never be printed or committed.
 
 ## How to run
 
-From a clean checkout of the deployed SHA (or any SHA that still carries this
-runbook + script):
+Run from a checkout whose Git object database contains the target deployment
+commit. Resolve the production primary branch explicitly; the branch argument to
+`neonctl connection-string` is positional.
 
 ```bash
 set -euo pipefail
-./scripts/live-verify-production.sh
-# optional: BASE_URL=https://www.wcdraft.com ./scripts/live-verify-production.sh
+
+NEON_PROJECT_ID=rapid-wind-87431051
+PRODUCTION_BRANCH_ID="$(
+  neonctl branches list --project-id "$NEON_PROJECT_ID" --output json |
+    jq -er '[.[] | select(.default == true and .primary == true)] |
+      if length == 1 then .[0].id else error("expected one production primary") end'
+)"
+
+LIVE_VERIFY_DATABASE_URL="$(
+  neonctl connection-string "$PRODUCTION_BRANCH_ID" \
+    --project-id "$NEON_PROJECT_ID" --output json
+)" \
+LIVE_VERIFY_EXPECTED_NEON_PROJECT_ID="$NEON_PROJECT_ID" \
+LIVE_VERIFY_EXPECTED_NEON_BRANCH_ID="$PRODUCTION_BRANCH_ID" \
+./scripts/live-verify-production.sh "${EXPECTED_DEPLOY_SHA:-}"
 ```
 
-The script:
+Pass the expected deployment SHA as the optional positional argument (or as
+`EXPECTED_SHA`). If omitted, the script discovers `.build.sha` from live health.
+In both cases it resolves that Git commit and derives the expected data anchors
+and active leaderboard season from files at that SHA; no production SHA, schema,
+engine, season, or data hash is hardcoded in the script.
 
-1. `GET /api/health` — requires `ok == true`, `db.status == "ready"`, and records
-   the 6 data anchors + active `leaderboard.season_key`.
-2. Snapshots public board row counts / entry ids for featured Classic casual,
-   Memory casual, Classic ranked on the current season, plus the archived
-   `season-2026-manager-attrition` Classic casual board.
-3. Posts the rejection probe (cookie-less, no alias).
-4. Asserts HTTP 409 + `error == "DIFFERENT_BUILD"`.
-5. Re-reads the same boards and asserts **identical** entry id sets (no new row,
-   no missing row).
-6. Fetches `/leaderboard` HTML and asserts archive "Season closed" copy remains
-   present (read-only archive surface).
+The script then:
 
-Exit non-zero on any failure. On failure after a code deploy, follow the Red
-auto-revert path (git/Vercel). This script never mutates the database; if a
-future change accidentally starts writing, stop and clean up under a separate
-U2-style data lane with a Neon snapshot first
-(`docs/runbooks/neon-restore-vercel-rollback.md`).
+1. captures the forbidden-set DB snapshot before any production HTTP request;
+2. requires `GET /api/health` to be green, including `auth.status == "ready"`,
+   and requires the build SHA, six published anchors, and season to match the
+   target Git commit;
+3. requires cookie-less `GET /api/auth/csrf` to return 200 with a 300-second
+   bootstrap cookie and no durable session cookie;
+4. snapshots current Classic casual, Memory casual, Classic ranked, and the
+   archived `season-2026-manager-attrition` board;
+5. posts the stale-token rejection probe and requires typed
+   `409 DIFFERENT_BUILD`;
+6. re-reads the same boards and requires identical entry-ID sets;
+7. checks the leaderboard archive surface and read-only OG health; and
+8. always captures an after snapshot, requiring the forbidden counts to be
+   identical while treating expired-session and rate-limit deltas as permitted
+   observations.
+
+Exit is non-zero on any failed assertion. After a new code deploy, follow the
+Red auto-revert path for a genuine live failure. For the pre-merge retroactive
+check of an already-shipped build, follow the dispatch-specific stop rule rather
+than reflexively reverting unrelated safety work.
 
 ## What this does **not** cover
 
 - Accepting insert, rank computation, claim, or ranked-attempt consumption —
-  those stay in pre-merge tests.
+  those remain pre-merge tests.
 - Neon restore / Vercel rollback mechanics — see
   `neon-restore-vercel-rollback.md`.
 - Schema or migration failures — see `prod-migration-failure.md`.
