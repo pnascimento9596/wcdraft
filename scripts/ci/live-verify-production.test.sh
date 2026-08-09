@@ -69,6 +69,60 @@ source "$SCRIPT"
 TEST_TMP="$(mktemp -d /tmp/wcdraft-live-verify-contract.XXXXXX)"
 trap 'rm -rf "$TEST_TMP"' EXIT
 
+# The database URI is consumed over stdin by a constant-error parser, then
+# removed before psql runs. libpq receives only discrete non-secret settings
+# plus a mode-0600 password file; psql stdout/stderr are both withheld on error.
+TEST_DB_PASSWORD="npg_${RANDOM}_credential_shape_only"
+TEST_DB_HOST="ep-test-credential-shape.us-east-2.aws.neon.tech"
+LIVE_VERIFY_DATABASE_URL="postgresql://unit_user:${TEST_DB_PASSWORD}@${TEST_DB_HOST}/unit_db?sslmode=require&channel_binding=require"
+prepare_psql_credentials
+test -z "${LIVE_VERIFY_DATABASE_URL+x}" || fail "database URI remained available after parsing"
+test "$(python3 -c 'import os,sys; print(oct(os.stat(sys.argv[1]).st_mode & 0o777)[2:])' \
+  "$LIVE_VERIFY_PGPASSFILE")" = 600 || fail "PGPASSFILE is not mode 0600"
+grep -Fq -- "$TEST_DB_PASSWORD" "$LIVE_VERIFY_PGPASSFILE" \
+  || fail "PGPASSFILE did not receive the parsed password"
+
+PSQL_ARGV_LOG="$TEST_TMP/psql-argv.txt"
+PSQL_ENV_LOG="$TEST_TMP/psql-env.txt"
+PSQL_SIMULATE_FAILURE=no
+psql() {
+  printf '%s\n' "$@" >"$PSQL_ARGV_LOG"
+  printf 'uri=%s\npassfile=%s\n' \
+    "${LIVE_VERIFY_DATABASE_URL+present}" "${PGPASSFILE:+present}" >"$PSQL_ENV_LOG"
+  test -r "$PGPASSFILE"
+  if [[ "$PSQL_SIMULATE_FAILURE" == yes ]]; then
+    printf 'partial output containing postgresql://unit_user:%s@%s/unit_db\n' \
+      "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
+    printf 'psql: failed for postgresql://unit_user:%s@%s/unit_db\n' \
+      "$TEST_DB_PASSWORD" "$TEST_DB_HOST" >&2
+    return 41
+  fi
+  printf '{"probe":"ok"}\n'
+}
+
+test "$(run_readonly_sql 'SELECT 1')" = '{"probe":"ok"}'
+grep -Fxq 'uri=' "$PSQL_ENV_LOG"
+grep -Fq 'passfile=present' "$PSQL_ENV_LOG"
+if grep -Eq 'postgres(ql)?://|npg_' "$PSQL_ARGV_LOG"; then
+  fail "psql argv retained a credential-bearing connection value"
+fi
+
+PSQL_SIMULATE_FAILURE=yes
+if run_readonly_sql 'SELECT simulated_failure' \
+  >"$TEST_TMP/psql-failure.stdout" 2>"$TEST_TMP/psql-failure.stderr"; then
+  fail "simulated psql failure unexpectedly passed"
+fi
+grep -Fq 'provider stderr withheld' "$TEST_TMP/psql-failure.stderr"
+if rg -q 'postgres(ql)?://|npg_|credential_shape|ep-test-credential-shape' \
+  "$TEST_TMP/psql-failure.stdout" "$TEST_TMP/psql-failure.stderr"; then
+  fail "simulated psql failure emitted a credential or credential fragment"
+fi
+PSQL_SIMULATE_FAILURE=no
+
+private_dir_before_cleanup="$LIVE_VERIFY_PSQL_PRIVATE_DIR"
+cleanup_psql_credentials
+test ! -e "$private_dir_before_cleanup" || fail "private psql credential directory was retained"
+
 # The live bootstrap uses a 300s stateless value under the wcdraft_sid name.
 # That is permitted; a durable 30-day sid is not. Redaction must preserve the
 # TTL evidence without retaining either cookie value or the CSRF token.
@@ -180,4 +234,4 @@ if assert_forbidden_counts_unchanged \
 fi
 grep -Fq 'forbidden-set counts changed' "$TEST_TMP/expected-failure.log"
 
-echo "live-verify-production contract: PASS (expired reap allowed; forbidden movement rejected)"
+echo "live-verify-production contract: PASS (credential-safe psql failure; expired reap allowed; forbidden movement rejected)"

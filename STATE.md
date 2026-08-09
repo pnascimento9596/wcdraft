@@ -1,5 +1,22 @@
 # STATE.md — measured ground truth
 
+## Neon credential transport hardening (2026-08-08)
+
+- Unit B removes the two proven same-host argv exposures without changing DB or
+  branch semantics: production live verification now parses its transient URI
+  over stdin, uses discrete libpq settings plus a private mode-0600
+  `PGPASSFILE`, and withholds raw `psql` diagnostics; the Neon restore runbook
+  carries its API authorization header in a private mode-0600 curl config and
+  withholds raw curl stderr.
+- Regression contracts inject credential-bearing simulated failures and prove
+  no credential shape reaches argv or surfaced output. The candidate verifier
+  also passed against live production at `799535f`: health/auth ready, 4/4 board
+  ID sets unchanged, typed `409 DIFFERENT_BUILD`, and all 6 forbidden DB counts
+  unchanged. Unit A credential rotation remains blocked on Unit B review,
+  merge, deploy, and the mandatory post-merge live gate.
+- Durable Unit B report:
+  `docs/reports/neon-credential-transport-hardening-2026-08-08.md`.
+
 ## Neon branch-targeting guardrail (2026-08-08)
 
 - **Unit A (read-only):** Neon CLI version `2.22.0` documents the branch as a

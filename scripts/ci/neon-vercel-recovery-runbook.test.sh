@@ -191,6 +191,9 @@ require_traffic_suspension_configuration
 BASH
 
 {
+  sed -n '/^cleanup_neon_api_curl() {/,/^}/p' "$runbook"
+  sed -n '/^prepare_neon_api_curl() {/,/^}/p' "$runbook"
+  sed -n '/^neon_api_curl() {/,/^}/p' "$runbook"
   sed -n '/^require_production_alias_receipt() {/,/^}/p' "$runbook"
   sed -n '/^require_application_pairing_receipts() {/,/^}/p' "$runbook"
   sed -n '/^require_traffic_suspension_configuration() {/,/^}/p' "$runbook"
@@ -205,7 +208,6 @@ set -euo pipefail
 source "$1"
 incident_dir="$(mktemp -d)"
 mutation_log="$incident_dir/vendor-mutations.txt"
-trap 'rm -rf "$incident_dir"' EXIT
 
 PRE_RESTORE_DEPLOYMENT=pre-restore-deployment
 RESTORE_COMPATIBLE_DEPLOYMENT=rollback-compatible-deployment
@@ -215,6 +217,7 @@ INVERSE_COUPLED_ORDER=database-first
 NEON_PROJECT_ID=test-project
 NEON_PRIMARY_BRANCH_ID=test-primary
 NEON_API_KEY=test-key
+SIMULATED_NEON_SECRET="$NEON_API_KEY"
 RESTORE_TIMESTAMP=2026-07-14T00:00:00Z
 
 wait_for_production_alias() { return 0; }
@@ -224,8 +227,47 @@ vercel() {
 }
 curl() {
   printf '%s\n' "$*" >>"$mutation_log"
+  if [ "${SIMULATE_NEON_CURL_FAILURE:-}" = yes ]; then
+    printf 'response reflected credential fragment %s\n' \
+      "$SIMULATED_NEON_SECRET"
+    printf 'curl: request failed with Authorization: Bearer %s\n' \
+      "$SIMULATED_NEON_SECRET" >&2
+    return 22
+  fi
   return 0
 }
+
+prepare_neon_api_curl
+trap 'cleanup_neon_api_curl; rm -rf "$incident_dir"' EXIT
+[ "$(python3 -c 'import os,sys; print(oct(os.stat(sys.argv[1]).st_mode & 0o777)[2:])' \
+  "$NEON_CURL_CONFIG")" = 600 ] || {
+  echo 'Neon curl config is not mode 0600.' >&2
+  exit 1
+}
+[ -z "${NEON_API_KEY+x}" ] || {
+  echo 'Neon API key remained available after curl config preparation.' >&2
+  exit 1
+}
+
+SIMULATE_NEON_CURL_FAILURE=yes
+set +e
+neon_api_curl --fail-with-body -sS \
+  https://console.neon.tech/api/v2/projects/test-project/branches \
+  >"$incident_dir/neon-failure.stdout" 2>"$incident_dir/neon-failure.stderr"
+neon_failure_status="$?"
+set -e
+[ "$neon_failure_status" -ne 0 ] || {
+  echo 'Simulated Neon API failure unexpectedly passed.' >&2
+  exit 1
+}
+grep -Fq 'provider output withheld' "$incident_dir/neon-failure.stderr"
+if grep -Fq -- "$SIMULATED_NEON_SECRET" "$mutation_log" || \
+   grep -Fq -- "$SIMULATED_NEON_SECRET" "$incident_dir/neon-failure.stdout" || \
+   grep -Fq -- "$SIMULATED_NEON_SECRET" "$incident_dir/neon-failure.stderr"; then
+  echo 'Neon API credential escaped into argv or surfaced failure output.' >&2
+  exit 1
+fi
+SIMULATE_NEON_CURL_FAILURE=no
 
 assert_alias_failure_blocks_mutation() {
   function_name="$1"
@@ -425,7 +467,12 @@ rg_fixed -Fq 'run: scripts/ci/neon-vercel-recovery-runbook.test.sh' "$workflow" 
   exit 1
 }
 
-require_count 2 'curl --fail-with-body -sS --request POST \'
+require_count 2 'neon_api_curl --fail-with-body -sS --request POST \'
+require_count 5 'neon_api_curl --fail-with-body -sS'
+if rg_fixed -Fq 'Authorization: Bearer $NEON_API_KEY' "$runbook"; then
+  echo 'Neon API credential must not be expanded into curl argv.' >&2
+  exit 1
+fi
 require_count 3 'require_traffic_suspension_configuration'
 require_count 1 'restore_neon_primary() {'
 require_count 1 'restore_neon_primary_from_preserved() {'
@@ -489,4 +536,4 @@ assert_function_order promote_pre_restore_application \
   'vercel promote "$PRE_RESTORE_DEPLOYMENT" \'
 
 printf '%s\n' \
-  'neon-vercel recovery runbook contract: PASS (bash syntax, fixed suspension proof, 68 receipt-negative mutation cases under suppressed errexit across all 4 vendor sinks, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'
+  'neon-vercel recovery runbook contract: PASS (credential-safe curl failure, fixed suspension proof, 68 receipt-negative mutation cases under suppressed errexit across all 4 vendor sinks, forward/inverse fail-closed guards, 6 route orderings, single mutation definitions, CI registration)'
