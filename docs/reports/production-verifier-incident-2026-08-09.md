@@ -63,7 +63,8 @@ The focused contracts pass locally:
   to `unknown`; all eight categories render fixed diagnostics from
   credential-bearing streams; hostile caller metadata is withheld; the
   successful output is unchanged; warm-up stops at three attempts; assertion
-  SQL executes once.
+  SQL executes once; cookie-less CSRF requires exactly the three named
+  bootstrap cookies, each with `Max-Age=300`.
 - `scripts/ci/neon-vercel-recovery-runbook.test.sh`: classified and unknown
   credential-bearing curl failures surface no credential, URI, host, or
   authorization shape; success is unchanged; all 68 negative mutation cases,

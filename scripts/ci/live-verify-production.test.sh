@@ -257,17 +257,20 @@ test ! -e "$private_dir_before_cleanup" || fail "private psql credential directo
 # That is permitted; a durable 30-day sid is not. Redaction must preserve the
 # TTL evidence without retaining either cookie value or the CSRF token.
 printf '%s\n' \
+  'set-cookie: wcdraft_bootstrap=bootstrap-secret; Path=/; Max-Age=300; HttpOnly' \
   'set-cookie: wcdraft_sid=short-secret; Path=/; Max-Age=300; HttpOnly' \
   'set-cookie: wcdraft_csrf=csrf-secret; Path=/; Max-Age=300' \
   >"$TEST_TMP/bootstrap.hdr"
 assert_bootstrap_cookie_ttls "$TEST_TMP/bootstrap.hdr"
 redact_cookie_headers "$TEST_TMP/bootstrap.hdr"
+grep -Fq 'wcdraft_bootstrap=[redacted]; Path=/; Max-Age=300' "$TEST_TMP/bootstrap.hdr"
 grep -Fq 'wcdraft_sid=[redacted]; Path=/; Max-Age=300' "$TEST_TMP/bootstrap.hdr"
 grep -Fq 'wcdraft_csrf=[redacted]; Path=/; Max-Age=300' "$TEST_TMP/bootstrap.hdr"
-if rg -q 'short-secret|csrf-secret' "$TEST_TMP/bootstrap.hdr"; then
+if rg -q 'bootstrap-secret|short-secret|csrf-secret' "$TEST_TMP/bootstrap.hdr"; then
   fail "cookie receipt retained a short-lived secret"
 fi
 printf '%s\n' \
+  'set-cookie: wcdraft_bootstrap=bootstrap-secret; Path=/; Max-Age=300; HttpOnly' \
   'set-cookie: wcdraft_sid=durable-secret; Path=/; Max-Age=2592000; HttpOnly' \
   'set-cookie: wcdraft_csrf=csrf-secret; Path=/; Max-Age=300' \
   >"$TEST_TMP/durable.hdr"
@@ -277,6 +280,7 @@ fi
 grep -Fq 'durable-looking wcdraft_sid' "$TEST_TMP/durable-failure.log"
 
 printf '%s\n' \
+  'set-cookie: wcdraft_bootstrap=bootstrap-secret; Path=/; Max-Age=300; HttpOnly' \
   'set-cookie: wcdraft_sid=short-secret; Path=/; Max-Age=300; HttpOnly' \
   'set-cookie: wcdraft_csrf=csrf-secret; Path=/; Max-Age=3000' \
   >"$TEST_TMP/wrong-csrf-ttl.hdr"
@@ -285,6 +289,28 @@ if assert_bootstrap_cookie_ttls \
   fail "CSRF Max-Age=3000 was accepted as an exact 300-second bootstrap"
 fi
 grep -Fq 'missing 300s wcdraft_csrf bootstrap cookie' "$TEST_TMP/wrong-csrf-ttl.log"
+
+printf '%s\n' \
+  'set-cookie: wcdraft_sid=short-secret; Path=/; Max-Age=300; HttpOnly' \
+  'set-cookie: wcdraft_csrf=csrf-secret; Path=/; Max-Age=300' \
+  >"$TEST_TMP/missing-bootstrap.hdr"
+if assert_bootstrap_cookie_ttls \
+  "$TEST_TMP/missing-bootstrap.hdr" 2>"$TEST_TMP/missing-bootstrap.log"; then
+  fail "two-cookie CSRF bootstrap was accepted"
+fi
+grep -Fq 'missing 300s wcdraft_bootstrap cookie' "$TEST_TMP/missing-bootstrap.log"
+
+printf '%s\n' \
+  'set-cookie: wcdraft_bootstrap=bootstrap-secret; Path=/; Max-Age=300; HttpOnly' \
+  'set-cookie: wcdraft_sid=short-secret; Path=/; Max-Age=300; HttpOnly' \
+  'set-cookie: wcdraft_csrf=csrf-secret; Path=/; Max-Age=300' \
+  'set-cookie: unrelated=opaque; Path=/; Max-Age=300' \
+  >"$TEST_TMP/extra-cookie.hdr"
+if assert_bootstrap_cookie_ttls \
+  "$TEST_TMP/extra-cookie.hdr" 2>"$TEST_TMP/extra-cookie.log"; then
+  fail "four-cookie CSRF bootstrap was accepted"
+fi
+grep -Fq 'expected exactly three bootstrap cookies, got 4' "$TEST_TMP/extra-cookie.log"
 
 printf '%s\n' '{"csrfToken":"body-secret","csrfCookieName":"wcdraft_csrf"}' \
   >"$TEST_TMP/csrf.json"

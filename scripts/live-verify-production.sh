@@ -354,16 +354,30 @@ redact_csrf_body() {
 
 assert_bootstrap_cookie_ttls() {
   local headers="$1"
-  if ! grep -qiE 'set-cookie:.*wcdraft_csrf=.*max-age=300([;[:space:]]|$)' "$headers"; then
+  local set_cookie_count
+  if ! grep -qiE '^set-cookie:[[:space:]]*wcdraft_bootstrap=.*max-age=300([;[:space:]]|$)' "$headers"; then
+    echo "live-verify: CSRF missing 300s wcdraft_bootstrap cookie" >&2
+    return 1
+  fi
+  if ! grep -qiE '^set-cookie:[[:space:]]*wcdraft_csrf=.*max-age=300([;[:space:]]|$)' "$headers"; then
     echo "live-verify: CSRF missing 300s wcdraft_csrf bootstrap cookie" >&2
     return 1
   fi
   # The stateless bootstrap currently reuses the wcdraft_sid cookie name with
   # the same 300s TTL. It is permitted because it has no sessions-table row.
   # A durable sid cookie (anything other than Max-Age 0/300) is forbidden.
-  if grep -iE 'set-cookie:.*wcdraft_sid=' "$headers" \
+  if grep -iE '^set-cookie:[[:space:]]*wcdraft_sid=' "$headers" \
     | grep -qviE 'max-age=(0|300)([;[:space:]]|$)'; then
     echo "live-verify: CSRF issued a durable-looking wcdraft_sid cookie" >&2
+    return 1
+  fi
+  if ! grep -qiE '^set-cookie:[[:space:]]*wcdraft_sid=.*max-age=300([;[:space:]]|$)' "$headers"; then
+    echo "live-verify: CSRF missing 300s wcdraft_sid bootstrap cookie" >&2
+    return 1
+  fi
+  set_cookie_count="$(grep -ciE '^set-cookie:' "$headers" || true)"
+  if [[ "$set_cookie_count" -ne 3 ]]; then
+    echo "live-verify: CSRF expected exactly three bootstrap cookies, got ${set_cookie_count}" >&2
     return 1
   fi
 }
