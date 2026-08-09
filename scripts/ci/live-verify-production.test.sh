@@ -6,6 +6,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 SCRIPT="$ROOT/scripts/live-verify-production.sh"
 DIAGNOSTICS="$ROOT/scripts/ci/external-tool-diagnostics.sh"
 RUNBOOK="$ROOT/docs/runbooks/production-live-verify.md"
+SECRET_SCAN_RUNBOOK="$ROOT/docs/runbooks/secret-scan-output-safety.md"
 SUBMIT_ROUTE="$ROOT/apps/web/lib/leaderboard/submit-route.ts"
 
 fail() {
@@ -16,6 +17,7 @@ fail() {
 test -x "$SCRIPT" || fail "script not executable"
 test -r "$DIAGNOSTICS" || fail "external-tool diagnostics helper missing"
 test -f "$RUNBOOK" || fail "runbook missing"
+test -f "$SECRET_SCAN_RUNBOOK" || fail "secret-scan runbook missing"
 bash -n "$SCRIPT"
 bash -n "$DIAGNOSTICS"
 
@@ -58,6 +60,11 @@ grep -Fq 'would a single anonymous visitor' "$RUNBOOK"
 grep -Fq 'active, non-expired sessions only' "$RUNBOOK"
 grep -Fq 'OWNER RATIFICATION' "$RUNBOOK"
 grep -Fq 'not the original' "$RUNBOOK"
+grep -Fq 'Private retained-diagnostic carve-out' "$SECRET_SCAN_RUNBOOK"
+grep -Fq 'mode-`0700` host directory outside the repository' "$SECRET_SCAN_RUNBOOK"
+grep -Fq 'Each retained file must be mode `0600`' "$SECRET_SCAN_RUNBOOK"
+grep -Fq 'Reviewers must not open it' "$SECRET_SCAN_RUNBOOK"
+grep -Fq 'successful verifier run removes its retained file' "$SECRET_SCAN_RUNBOOK"
 grep -Fq 'corrected non-writing definition' "$ROOT/STATE.md"
 grep -Fq 'expires_at > clock_timestamp()' "$ROOT/STATE.md"
 
@@ -70,21 +77,50 @@ grep -Fq 'expires_at > clock_timestamp()' "$ROOT/STATE.md"
 source "$SCRIPT"
 
 TEST_TMP="$(mktemp -d /tmp/wcdraft-live-verify-contract.XXXXXX)"
-trap 'rm -rf "$TEST_TMP"' EXIT
+cleanup_test() {
+  cleanup_psql_credentials
+  cleanup_retained_diagnostics
+  rm -rf "$TEST_TMP"
+}
+trap cleanup_test EXIT
 
 # The database URI is consumed over stdin by a constant-error parser, then
 # removed before psql runs. libpq receives only discrete non-secret settings
-# plus a mode-0600 password file. Failed streams are classified in place and
-# rendered through a fixed allowlist; no raw provider byte is surfaced.
+# plus a mode-0600 password file. A Neon pooled hostname is normalized to its
+# direct endpoint before psql runs. Failed streams are classified in place and
+# rendered through a fixed allowlist; a separate private file retains the raw
+# bytes without surfacing them.
 TEST_DB_PASSWORD="npg_${RANDOM}_credential_shape_only"
-TEST_DB_HOST="ep-test-credential-shape.us-east-2.aws.neon.tech"
-LIVE_VERIFY_DATABASE_URL="postgresql://unit_user:${TEST_DB_PASSWORD}@${TEST_DB_HOST}/unit_db?sslmode=require&channel_binding=require"
+TEST_DB_POOLED_HOST="ep-test-credential-shape-pooler.us-east-2.aws.neon.tech"
+TEST_DB_DIRECT_HOST="ep-test-credential-shape.us-east-2.aws.neon.tech"
+LIVE_VERIFY_DATABASE_URL="postgresql://unit_user:${TEST_DB_PASSWORD}@${TEST_DB_POOLED_HOST}/unit_db?sslmode=require&channel_binding=require"
+DATABASE_URL="$LIVE_VERIFY_DATABASE_URL"
+DATABASE_URL_UNPOOLED="$LIVE_VERIFY_DATABASE_URL"
+NEON_API_KEY="napi_${RANDOM}_credential_shape_only"
+export DATABASE_URL DATABASE_URL_UNPOOLED NEON_API_KEY
+prepare_retained_diagnostics
 prepare_psql_credentials
 test -z "${LIVE_VERIFY_DATABASE_URL+x}" || fail "database URI remained available after parsing"
+test -z "${DATABASE_URL+x}" || fail "ambient pooled database URI remained after parsing"
+test -z "${DATABASE_URL_UNPOOLED+x}" || fail "ambient direct database URI remained after parsing"
+test -z "${NEON_API_KEY+x}" || fail "unneeded Neon API key remained after parsing"
+test "$LIVE_VERIFY_PGHOST" = "$TEST_DB_DIRECT_HOST" \
+  || fail "pooled Neon hostname was not normalized to the direct endpoint"
+test "$(python3 -c 'import os,sys; print(oct(os.stat(sys.argv[1]).st_mode & 0o777)[2:])' \
+  "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR")" = 700 \
+  || fail "retained-diagnostics directory is not mode 0700"
+test "$(python3 -c 'import os,sys; print(oct(os.stat(sys.argv[1]).st_mode & 0o777)[2:])' \
+  "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE")" = 600 \
+  || fail "retained-diagnostics file is not mode 0600"
 test "$(python3 -c 'import os,sys; print(oct(os.stat(sys.argv[1]).st_mode & 0o777)[2:])' \
   "$LIVE_VERIFY_PGPASSFILE")" = 600 || fail "PGPASSFILE is not mode 0600"
 grep -Fq -- "$TEST_DB_PASSWORD" "$LIVE_VERIFY_PGPASSFILE" \
   || fail "PGPASSFILE did not receive the parsed password"
+grep -Fq -- "$TEST_DB_DIRECT_HOST" "$LIVE_VERIFY_PGPASSFILE" \
+  || fail "PGPASSFILE did not receive the direct hostname"
+if grep -Fq -- "$TEST_DB_POOLED_HOST" "$LIVE_VERIFY_PGPASSFILE"; then
+  fail "PGPASSFILE retained the pooled hostname"
+fi
 
 PSQL_ARGV_LOG="$TEST_TMP/psql-argv.txt"
 PSQL_ENV_LOG="$TEST_TMP/psql-env.txt"
@@ -94,30 +130,31 @@ PSQL_CALLS=0
 psql() {
   PSQL_CALLS=$((PSQL_CALLS + 1))
   printf '%s\n' "$@" >"$PSQL_ARGV_LOG"
-  printf 'uri=%s\npassfile=%s\nconnect_timeout=%s\n' \
+  printf 'uri=%s\npassfile=%s\nconnect_timeout=%s\npgoptions=%s\n' \
     "${LIVE_VERIFY_DATABASE_URL+present}" \
     "${PGPASSFILE:+present}" \
-    "${PGCONNECT_TIMEOUT:-}" >"$PSQL_ENV_LOG"
+    "${PGCONNECT_TIMEOUT:-}" \
+    "${PGOPTIONS:-}" >"$PSQL_ENV_LOG"
   test -r "$PGPASSFILE"
   if [[ "$PSQL_CALLS" -le "$PSQL_FAIL_UNTIL" ]]; then
     case "$PSQL_FAILURE_MODE" in
       connection_refused)
         printf 'partial output containing postgresql://unit_user:%s@%s/unit_db\n' \
-          "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
+          "$TEST_DB_PASSWORD" "$PGHOST"
         printf 'psql: connection to server at "%s" failed: Connection refused; password=%s\n' \
-          "$TEST_DB_HOST" "$TEST_DB_PASSWORD" >&2
+          "$PGHOST" "$TEST_DB_PASSWORD" >&2
         return 41
         ;;
       unknown)
         printf 'opaque stream postgresql://unit_user:%s@%s/unit_db\n' \
-          "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
+          "$TEST_DB_PASSWORD" "$PGHOST"
         printf 'unmapped-provider-gibberish credential=%s endpoint=%s\n' \
-          "$TEST_DB_PASSWORD" "$TEST_DB_HOST" >&2
+          "$TEST_DB_PASSWORD" "$PGHOST" >&2
         return 42
         ;;
       query_error)
         printf 'query fragment postgresql://unit_user:%s@%s/unit_db\n' \
-          "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
+          "$TEST_DB_PASSWORD" "$PGHOST"
         printf 'ERROR: syntax error in protected query; credential=%s\n' \
           "$TEST_DB_PASSWORD" >&2
         return 43
@@ -132,9 +169,22 @@ test "$(<"$TEST_TMP/psql-success.stdout")" = '{"probe":"ok"}'
 grep -Fxq 'uri=' "$PSQL_ENV_LOG"
 grep -Fq 'passfile=present' "$PSQL_ENV_LOG"
 grep -Fxq 'connect_timeout=10' "$PSQL_ENV_LOG"
+grep -Fxq 'pgoptions=' "$PSQL_ENV_LOG"
+grep -Fxq 'BEGIN READ ONLY;' "$PSQL_ARGV_LOG"
+grep -Fxq "SET LOCAL statement_timeout = '8s';" "$PSQL_ARGV_LOG"
+grep -Fxq 'COMMIT;' "$PSQL_ARGV_LOG"
 if grep -Eq 'postgres(ql)?://|npg_' "$PSQL_ARGV_LOG"; then
   fail "psql argv retained a credential-bearing connection value"
 fi
+
+# Overall success removes the empty retained-diagnostics path. A later failure
+# gets a fresh path so the test can prove persistence independently.
+successful_retained_dir="$LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR"
+successful_retained_file="$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE"
+finalize_retained_diagnostics 0
+test ! -e "$successful_retained_file" || fail "successful run retained diagnostics file"
+test ! -e "$successful_retained_dir" || fail "successful run retained diagnostics directory"
+prepare_retained_diagnostics
 
 PSQL_CALLS=0
 PSQL_FAIL_UNTIL=1
@@ -155,6 +205,25 @@ grep -Fq 'diagnostic=remote_connection_refused_or_reset' \
 if rg -q 'postgres(ql)?://|npg_|credential_shape|ep-test-credential-shape' \
   "$TEST_TMP/psql-failure.stdout" "$TEST_TMP/psql-failure.stderr"; then
   fail "simulated psql failure emitted a credential or credential fragment"
+fi
+test -f "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" \
+  || fail "simulated failure did not retain its private diagnostics"
+grep -Fq -- "$TEST_DB_PASSWORD" "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" \
+  || fail "retained diagnostics lost the credential-bearing stdout stream"
+grep -Fq -- "$TEST_DB_DIRECT_HOST" "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" \
+  || fail "retained diagnostics lost the credential-bearing stderr stream"
+grep -Fq -- 'partial output containing postgresql://' \
+  "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" \
+  || fail "retained diagnostics lost raw stdout"
+grep -Fq -- 'failed: Connection refused' "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" \
+  || fail "retained diagnostics lost raw stderr"
+finalize_retained_diagnostics 41 2>"$TEST_TMP/retained-path.stderr"
+test "$(tail -n 1 "$TEST_TMP/retained-path.stderr")" = \
+  "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" \
+  || fail "failure did not surface the retained path as a path-only line"
+if rg -q 'postgres(ql)?://|npg_|credential_shape|ep-test-credential-shape|Connection refused' \
+  "$TEST_TMP/retained-path.stderr"; then
+  fail "retained path announcement echoed retained content"
 fi
 
 PSQL_CALLS=0
@@ -183,7 +252,7 @@ assert_safe_classified_diagnostic() {
   local actual
 
   printf '%s credential=%s endpoint=%s\n' \
-    "$safe_pattern" "$TEST_DB_PASSWORD" "$TEST_DB_HOST" \
+    "$safe_pattern" "$TEST_DB_PASSWORD" "$TEST_DB_DIRECT_HOST" \
     >"$TEST_TMP/classifier.stdout"
   printf '%s\n' opaque >"$TEST_TMP/classifier.stderr"
   actual="$(classify_external_tool_failure \
@@ -195,7 +264,7 @@ assert_safe_classified_diagnostic() {
   grep -Fq "status=44 category=${expected}" \
     "$TEST_TMP/classifier-diagnostic.stdout"
   if grep -Fq -- "$TEST_DB_PASSWORD" "$TEST_TMP/classifier-diagnostic.stdout" || \
-    grep -Fq -- "$TEST_DB_HOST" "$TEST_TMP/classifier-diagnostic.stdout"; then
+    grep -Fq -- "$TEST_DB_DIRECT_HOST" "$TEST_TMP/classifier-diagnostic.stdout"; then
     fail "classified $expected diagnostic reflected captured bytes"
   fi
 }

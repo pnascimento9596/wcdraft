@@ -109,27 +109,44 @@ deleted by the permitted sweep between snapshots without moving the active
 session count. `auth_rate_limits` is outside the forbidden set and is never part
 of the equality assertion.
 
-The DB connection is forced read-only with `default_transaction_read_only=on`,
-and each snapshot verifies server-reported Neon project and branch identities
-against explicit expected values. The script accepts the connection string only
-through `LIVE_VERIFY_DATABASE_URL`, parses it over stdin into discrete libpq
-settings plus a private mode-0600 `PGPASSFILE`, unsets the URI before spawning
-`psql`, and never places the URI or password in child-process argv. A first
-read-only `SELECT 1` warms the connection with a fixed 10-second libpq connect
-timeout and at most three attempts (1-second then 2-second backoff). Only
+The verifier uses the direct Neon endpoint. If its protected runtime-role input
+has Neon's `-pooler` hostname form, the private parser removes only that exact
+Neon routing suffix before `psql` starts; the application URL is not changed.
+Every SQL call clears startup `PGOPTIONS`, opens `BEGIN READ ONLY`, and applies
+the 8-second timeout with transaction-local `SET LOCAL`. Each snapshot also
+verifies server-reported Neon project and branch identities against explicit
+expected values.
+
+The script accepts the connection string only through
+`LIVE_VERIFY_DATABASE_URL`, parses it over stdin into discrete libpq settings
+plus a private mode-0600 `PGPASSFILE`, unsets the URI before spawning `psql`, and
+also removes inherited `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, and
+`NEON_API_KEY` values that `psql` does not need. It never places the URI or
+password in child-process argv. A first read-only
+`SELECT 1` warms the connection with a fixed 10-second libpq connect timeout and
+at most three attempts (1-second then 2-second backoff). Only
 connection-refused/reset, timeout, and DNS classifications retry; snapshots and
-assertions never retry. Failed streams remain private. Known-safe patterns map
-them to one of `connection_refused`, `timeout`, `authentication_failure`, `tls`,
-`dns`, `permission_denied`, or `query_error`, and the script surfaces only a
-fixed diagnostic with tool, phase, status, category, and retryability. Unknown
-output is classified `unknown` and otherwise withheld. The private files are
-outside the receipt directory and are removed on every exit.
+assertions never retry.
+
+Failed streams are copied verbatim into one mode-0600 file under a mode-0700
+host directory outside the checkout and receipt directory. Surfaced diagnostics
+remain strictly fixed: one of `connection_refused`, `timeout`,
+`authentication_failure`, `tls`, `dns`, `permission_denied`, `query_error`, or
+`unknown`, plus allowlisted tool/phase/status/retryability fields. On overall
+success the retained file and directory are removed. On failure they persist for
+operator inspection and the final stderr line is the path only. No agent or
+reviewer may print or reproduce the contents; reviewers use simulations and
+permission/lifecycle checks. After private inspection, remove exactly the file
+and its empty parent as specified in
+`docs/runbooks/secret-scan-output-safety.md`.
 
 ## How to run
 
 Run from a checkout whose Git object database contains the target deployment
-commit. Resolve the production primary branch explicitly; the branch argument to
-`neonctl connection-string` is positional.
+commit. Resolve the production primary branch explicitly. Acquire the existing
+least-privilege runtime-role URL from protected operator configuration; a pooled
+Neon input is accepted because the verifier privately normalizes it to the
+corresponding direct endpoint.
 
 ```bash
 set -euo pipefail
@@ -141,10 +158,8 @@ PRODUCTION_BRANCH_ID="$(
       if length == 1 then .[0].id else error("expected one production primary") end'
 )"
 
-LIVE_VERIFY_DATABASE_URL="$(
-  neonctl connection-string "$PRODUCTION_BRANCH_ID" \
-    --project-id "$NEON_PROJECT_ID" --output json
-)" \
+: "${DATABASE_URL:?load the protected runtime-role DATABASE_URL first}"
+LIVE_VERIFY_DATABASE_URL="$DATABASE_URL" \
 LIVE_VERIFY_EXPECTED_NEON_PROJECT_ID="$NEON_PROJECT_ID" \
 LIVE_VERIFY_EXPECTED_NEON_BRANCH_ID="$PRODUCTION_BRANCH_ID" \
 ./scripts/live-verify-production.sh "${EXPECTED_DEPLOY_SHA:-}"
@@ -162,7 +177,8 @@ copied into a terminal transcript or receipt.
 
 The script then:
 
-1. warms only the direct database connection through a bounded read-only probe;
+1. normalizes the verifier transport to the direct endpoint and warms only that
+   connection through a bounded transaction-read-only probe;
 2. captures the forbidden-set DB snapshot before any production HTTP request;
 3. requires `GET /api/health` to be green, including `auth.status == "ready"`,
    and requires the build SHA, six published anchors, and season to match the

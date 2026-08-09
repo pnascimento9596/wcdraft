@@ -28,6 +28,8 @@ LIVE_VERIFY_PGDATABASE=""
 LIVE_VERIFY_PGSSLMODE=""
 LIVE_VERIFY_PGCHANNELBINDING=""
 LIVE_VERIFY_PGPASSFILE=""
+LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR=""
+LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE=""
 LIVE_VERIFY_LAST_EXTERNAL_CATEGORY=""
 LIVE_VERIFY_CONNECT_TIMEOUT_SECONDS=10
 LIVE_VERIFY_CONNECT_MAX_ATTEMPTS=3
@@ -55,6 +57,68 @@ cleanup_psql_credentials() {
   fi
   LIVE_VERIFY_PSQL_PRIVATE_DIR=""
   LIVE_VERIFY_PGPASSFILE=""
+}
+
+prepare_retained_diagnostics() {
+  LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR="$(
+    mktemp -d /tmp/wcdraft-live-verify-diagnostics.XXXXXX
+  )"
+  chmod 0700 "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR"
+  LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE="$LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR/psql-failures.log"
+  : >"$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE"
+  chmod 0600 "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE"
+}
+
+retain_external_tool_streams() {
+  local phase="$1"
+  local status="$2"
+  local stdout_file="$3"
+  local stderr_file="$4"
+
+  [[ -n "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" ]]
+  {
+    printf '%s\n' \
+      '--- wcdraft retained external-tool diagnostic v1 ---' \
+      "tool=psql phase=${phase} status=${status}" \
+      '--- stdout (verbatim) ---'
+    command cat -- "$stdout_file"
+    printf '%s\n' '' '--- stderr (verbatim) ---'
+    command cat -- "$stderr_file"
+    printf '%s\n' '' '--- end retained diagnostic ---'
+  } >>"$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE"
+}
+
+cleanup_retained_diagnostics() {
+  if [[ -n "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR" ]]; then
+    rm -f -- "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE"
+    rmdir -- "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR" 2>/dev/null || true
+  fi
+  LIVE_VERIFY_RETAINED_DIAGNOSTICS_DIR=""
+  LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE=""
+}
+
+finalize_retained_diagnostics() {
+  local status="$1"
+
+  if [[ -z "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" ]]; then
+    return 0
+  fi
+  if [[ "$status" -eq 0 ]]; then
+    cleanup_retained_diagnostics
+    return 0
+  fi
+
+  echo "live-verify: private retained diagnostics preserved; never print their contents" >&2
+  printf '%s\n' "$LIVE_VERIFY_RETAINED_DIAGNOSTICS_FILE" >&2
+}
+
+finalize_without_database_assertion() {
+  local original_status=$?
+  trap - EXIT
+  set +e
+  cleanup_psql_credentials
+  finalize_retained_diagnostics "$original_status"
+  exit "$original_status"
 }
 
 prepare_psql_credentials() {
@@ -104,6 +168,12 @@ try:
         raise ValueError
 
     host = parsed.hostname
+    labels = host.split(".")
+    if host.endswith(".neon.tech") and labels[0].endswith("-pooler"):
+        labels[0] = labels[0][:-len("-pooler")]
+        if not labels[0]:
+            raise ValueError
+        host = ".".join(labels)
     port = str(parsed.port or 5432)
     user = urllib.parse.unquote(parsed.username)
     password = urllib.parse.unquote(parsed.password)
@@ -132,13 +202,20 @@ try:
 except Exception:
     raise SystemExit(1)
 ' "$LIVE_VERIFY_PSQL_PRIVATE_DIR" 2>/dev/null; then
-    unset LIVE_VERIFY_DATABASE_URL
+    unset LIVE_VERIFY_DATABASE_URL DATABASE_URL DATABASE_URL_UNPOOLED NEON_API_KEY
     cleanup_psql_credentials
     echo "live-verify: database connection configuration is invalid" >&2
     return 1
   fi
 
-  unset LIVE_VERIFY_DATABASE_URL PGPASSWORD PGSERVICE PGSERVICEFILE
+  unset \
+    LIVE_VERIFY_DATABASE_URL \
+    DATABASE_URL \
+    DATABASE_URL_UNPOOLED \
+    NEON_API_KEY \
+    PGPASSWORD \
+    PGSERVICE \
+    PGSERVICEFILE
   LIVE_VERIFY_PGHOST="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/host")"
   LIVE_VERIFY_PGPORT="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/port")"
   LIVE_VERIFY_PGUSER="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/user")"
@@ -168,8 +245,12 @@ run_readonly_sql() {
     PGCHANNELBINDING="$LIVE_VERIFY_PGCHANNELBINDING" \
     PGPASSFILE="$LIVE_VERIFY_PGPASSFILE" \
     PGCONNECT_TIMEOUT="$LIVE_VERIFY_CONNECT_TIMEOUT_SECONDS" \
-    PGOPTIONS="${PGOPTIONS:+${PGOPTIONS} }-c default_transaction_read_only=on -c statement_timeout=8000" \
-      psql -X -q -A -t -w -v ON_ERROR_STOP=1 -c "$sql" \
+    PGOPTIONS='' \
+      psql -X -q -A -t -w -v ON_ERROR_STOP=1 \
+      -c 'BEGIN READ ONLY;' \
+      -c "SET LOCAL statement_timeout = '8s';" \
+      -c "$sql" \
+      -c 'COMMIT;' \
       >"$stdout_file" 2>"$stderr_file"
   then
     command cat -- "$stdout_file"
@@ -180,6 +261,7 @@ run_readonly_sql() {
     status=$?
   fi
 
+  retain_external_tool_streams "$phase" "$status" "$stdout_file" "$stderr_file"
   category="$(classify_external_tool_failure "$stdout_file" "$stderr_file")"
   LIVE_VERIFY_LAST_EXTERNAL_CATEGORY="$category"
   emit_sanitized_external_tool_failure \
@@ -477,6 +559,7 @@ finalize_database_assertion() {
     echo "live-verify: FAIL; receipts in ${RECEIPT_DIR}" >&2
   fi
   cleanup_psql_credentials
+  finalize_retained_diagnostics "$final_status"
   exit "$final_status"
 }
 
@@ -515,7 +598,8 @@ main() {
   fi
   mkdir -p "$RECEIPT_DIR"
 
-  trap cleanup_psql_credentials EXIT
+  trap finalize_without_database_assertion EXIT
+  prepare_retained_diagnostics
   prepare_psql_credentials
 
   echo "live-verify: base=${BASE_URL}"
