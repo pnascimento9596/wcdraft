@@ -43,15 +43,34 @@ reset.
 
 Two secrets were assessed separately.
 
-| Secret                   | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Disposition                                                                                                                                                                                                                       |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Database role credential | **Proven exposed.** The same production `neondb_owner` password appeared in two private Codex task outputs. The first occurrence was in session `019fe367-eddd-7551-ac6f-10a544880d04` at `2026-08-08T23:00:18.152Z`; the second was in session `019fe426-f117-7bf3-b84d-006bd910cad9` at `2026-08-09T01:49:20.875Z`. Each was a failed JSON-parsing path after `neonctl connection-string --output json` returned a plaintext URI; neither reached `psql` or established a database connection. Exact in-process comparison proved both outputs contained the then-current production password. | Rotated unconditionally in production and both production-derived snapshots. Existing authenticated owner sessions were checked; one idle PgBouncer backend was terminated exactly, leaving zero idle owner-role pooler backends. |
-| Neon API key             | **Ruled out for the two incidents and every retained surface checked.** Exact-key scans returned zero occurrences in the six relevant implementer/reviewer sessions, reachable Git objects, PR #347/#348 bodies and discussions, retained receipts, and available CI logs.                                                                                                                                                                                                                                                                                                                       | Not rotated. Rotating the broader control-plane credential without evidence would have expanded availability risk and was outside the least-change response.                                                                      |
+| Secret                   | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Disposition                                                                                                                                                                                                                                                                                           |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Database role credential | **Proven exposed.** The same production `neondb_owner` password appeared in two private Codex task outputs. The first occurrence was in session `019fe367-eddd-7551-ac6f-10a544880d04` at `2026-08-08T23:00:18.152Z`; the second was in session `019fe426-f117-7bf3-b84d-006bd910cad9` at `2026-08-09T01:49:20.875Z`. Each was a failed JSON-parsing path after `neonctl connection-string --output json` returned a plaintext URI; neither reached `psql` or established a database connection. A later discarded reviewer reserialized the same already-revoked value six times into one private transient run log while broadly searching the original session. | Rotated unconditionally in production and both production-derived snapshots. Existing authenticated owner sessions were checked; one idle PgBouncer backend was terminated exactly, leaving zero idle owner-role pooler backends. The secret-bearing reviewer log was detected, stopped, and deleted. |
+| Neon API key             | **Ruled out for the two incidents and every retained surface checked.** Exact-key scans returned zero occurrences in the checked implementer/reviewer sessions, reachable Git objects, PR #347/#348 bodies and discussions, retained receipts, and available CI logs.                                                                                                                                                                                                                                                                                                                                                                                              | Not rotated. Rotating the broader control-plane credential without evidence would have expanded availability risk and was outside the least-change response.                                                                                                                                          |
 
 The database-role value is not reproduced here, in a PR body, in a receipt, or
-in any committed file. The second exposure was caused during this lane by an
-operator command that assumed JSON output from the installed Neon CLI; it is
-included in scope rather than omitted as an implementation embarrassment.
+in any committed file. The second task-output exposure was caused during this
+lane by an operator command that assumed JSON output from the installed Neon
+CLI; it is included in scope rather than omitted as an implementation
+embarrassment.
+
+### Additional lane incident — discarded reviewer log
+
+During a discarded exact-head review, the reviewer used a broad text search
+over the original JSONL task session. Because a matching JSONL record is one
+long line, that search copied the already-revoked owner password into the
+reviewer's private mode-0600 run log six times. An exact-value scan detected
+the copies before the log was surfaced or persisted as a review receipt. The
+review was stopped; the log and three reviewer-private credential directories
+were removed by exact path at `2026-08-09T06:06:21Z` and are not recoverable
+through this lane. The discarded review produced no verdict used by this PR.
+
+This was not a new live-credential compromise: fresh probes had already proved
+the value rejected by production and both snapshots, and the temporary proof
+branch had been deleted. It was still a failure to contain revoked secret
+material and is recorded as such. Final reviewer instructions prohibit raw
+session-line output and permit only in-process Boolean/count results for secret
+scope checks.
 
 ### Additional lane incident — runner registration tokens
 
@@ -97,6 +116,10 @@ assessment.
   **0 password and 0 API-key hits**. The two implementer task sessions above
   each retained four duplicate serialized occurrences of the password across
   two event records.
+- One later discarded review log had **6 old-password hits** caused by a raw
+  session-line search. It was mode 0600, never became a review receipt, and was
+  deleted at `06:06:21Z`. All accepted reviewer receipts remain exact-secret
+  clean.
 
 These checks establish the named surfaces, not universal absence from every
 host-level buffer, provider-internal log, or unenumerated external system.
@@ -367,6 +390,14 @@ runners, stop the recreating supervisors, hold CI until the documented
 one-hour expiry, monitor for unexpected registrations, and ensure future runner
 inspection never prints process arguments.
 
+### Ban raw session-line output from secret-scope review
+
+JSONL session records can contain a credential anywhere on a matching line.
+Searching them with a line-printing tool reserialized the already-revoked owner
+password into a discarded reviewer log. The final review therefore performs
+exact comparisons in process and emits only counts/classifications; raw
+matching records and fragments are never printed.
+
 ### Persist SHA-pinned review verdicts in the PR body
 
 The fresh and cross-model reviews must assess the exact report commit. Adding
@@ -393,6 +424,9 @@ head.
   `05:13:03Z`. Their runners were removed and no unexpected runner was observed;
   CI remains held until the later token's one-hour expiry at approximately
   `05:37:11Z`.
+- A discarded reviewer reserialized the revoked owner password six times into a
+  private run log. The log and reviewer credential directories were deleted;
+  accepted reviewer receipts must remain exact-secret clean.
 - The wcdraft fleet remained idle after Unit B CI longer than the on-demand
   policy permits. The direct supervisors were stopped, containers reached zero,
   and GitHub reported zero online wcdraft runners at `05:18:17Z`. Colima stayed
