@@ -24,8 +24,9 @@ and used. The mechanism made a no-outage cutover possible, but the first
 cutover attempt omitted the runtime health check's read privilege on
 `drizzle.__drizzle_migrations`. Production returned 503 from
 `2026-08-09T04:43:09.314Z` until recovery at
-`2026-08-09T04:45:04.926Z`, approximately 1 minute 55 seconds. This was an
-actual availability defect and is not described as zero downtime. The exposed
+`2026-08-09T04:45:04.926Z`, between 1 minute 55 seconds and 1 minute 56 seconds
+at the monitor's sampling precision. This was an actual availability defect and
+is not described as zero downtime. The exposed
 password was still valid throughout that incident, every consumer was rolled
 back, the missing privilege was fixed and re-proved on a new non-production
 branch, and only the second fully verified cutover proceeded to revocation.
@@ -146,10 +147,11 @@ Before cutover, the runtime role received:
 The role owns no database, schema, table, sequence, or migration object. Schema
 ownership and DDL remain with `neondb_owner`.
 
-The initial non-production proof at `2026-08-09T04:33:00Z` established the
-new role's exact project/branch identity and real application-table
-read/insert/update/delete behavior under rollback. It did not exercise the
-`drizzle` readiness read, which caused the first-cutover incident.
+The initial non-production proof completed during `04:32–04:33Z` and
+established the new role's exact project/branch identity and real
+application-table read/insert/update/delete behavior under rollback. It did
+not exercise the `drizzle` readiness read, which caused the first-cutover
+incident.
 
 After correction, a new production-derived branch
 `br-quiet-violet-aq9aqgr3` was created and independently passed the unchanged
@@ -182,7 +184,7 @@ All timestamps are UTC.
 | `04:43:09.314`      | Health monitor's first `503/db=error/auth=ready` sample after alias cutover.                                                                                                                                               |
 | `04:43:45–04:43:46` | Mandatory pre-revoke verifier failed at `/api/health` with 503. Its independent database snapshot still reached the declared production branch and proved all forbidden counts unchanged. **Revocation did not occur.**    |
 | `04:44:13`          | Vercel, GitHub, and local consumer rollback to the old credential completed; rollback redeployment `dpl_Hu8QSZGEASKA8nS8PXn4F9vkiAmh` was started.                                                                         |
-| `04:45:04.926`      | First recovered 200/ready/ready monitor sample after adding only the missing `drizzle` read privileges. The measured failed interval was approximately 1m55s.                                                              |
+| `04:45:04.926`      | First recovered 200/ready/ready monitor sample after adding only the missing `drizzle` read privileges. The measured failed interval was 1m55s–1m56s at sampling precision.                                                |
 | `04:46:38–04:48:53` | Fresh corrected A2 branch guard and real read/write/rollback proof passed; proof-branch deletion finished.                                                                                                                 |
 | `04:49:26–04:49:27` | Second new-first consumer update completed.                                                                                                                                                                                |
 | `04:49:34–04:51:41` | Corrected deployment `dpl_38r3h88TmNAHFyGBN9dwiwYjtVDd` built, became Ready, and acquired the production aliases.                                                                                                          |
@@ -291,7 +293,7 @@ Relevant current vendor documentation:
 
 The receipt paths are local operational evidence, not committed artifacts, and
 contain no credential. Directory digests hash sorted relative paths and file
-bytes.
+bytes; the monitor binding is the raw file-byte SHA-256.
 
 | Evidence                                | SHA-256                                                            |
 | --------------------------------------- | ------------------------------------------------------------------ |
@@ -301,7 +303,7 @@ bytes.
 | Corrected health-before-revoke verifier | `125389d15936a3291b5e4b704139bc1c9f97ab58ff1c7f2c742d35c3aca5efd5` |
 | First post-revocation verifier          | `d273f9f7c952af60642be319990a10d11d69e6d82b5deacd7357f34b7f21e0d7` |
 | Final post-session-termination verifier | `ce0f1ceb974686821344395f1f56e41aecaa86acfae77d2e5c1bdbc2ed974533` |
-| 1,776-sample health monitor             | `0451feb52702fed42a4f108bd6c6d53401aba696b7a30e9ba6811e31d90f6406` |
+| 1,776-sample health monitor             | `e53cc4fe4cb965f4abcfc3bd0cc141b4643c3f17c260ddfc9fea65ff96a8481d` |
 
 ## Architect-delegated decisions
 
@@ -376,9 +378,10 @@ head.
 
 ## Risks, limits, and unresolved owner actions
 
-- The first cutover caused approximately 1 minute 55 seconds of observed 503
-  responses. The specific missing grant is fixed and covered by the corrected
-  real-query proof, but the incident remains part of the production record.
+- The first cutover caused 1 minute 55 seconds to 1 minute 56 seconds of
+  observed 503 responses at the monitor's sampling precision. The specific
+  missing grant is fixed and covered by the corrected real-query proof, but the
+  incident remains part of the production record.
 - Launch-plan evidence cannot rule out historical use by an unexpected source.
   No such use was observed in the available data.
 - Vercel sensitive values cannot be decrypted for direct equality read-back.
