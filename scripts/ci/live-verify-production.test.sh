@@ -4,6 +4,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 SCRIPT="$ROOT/scripts/live-verify-production.sh"
+DIAGNOSTICS="$ROOT/scripts/ci/external-tool-diagnostics.sh"
 RUNBOOK="$ROOT/docs/runbooks/production-live-verify.md"
 SUBMIT_ROUTE="$ROOT/apps/web/lib/leaderboard/submit-route.ts"
 
@@ -13,8 +14,10 @@ fail() {
 }
 
 test -x "$SCRIPT" || fail "script not executable"
+test -r "$DIAGNOSTICS" || fail "external-tool diagnostics helper missing"
 test -f "$RUNBOOK" || fail "runbook missing"
 bash -n "$SCRIPT"
+bash -n "$DIAGNOSTICS"
 
 # Probe remains a cookie-less stale-anchor rejection, never an accepting token.
 grep -q 'DIFFERENT_BUILD' "$SCRIPT"
@@ -71,7 +74,8 @@ trap 'rm -rf "$TEST_TMP"' EXIT
 
 # The database URI is consumed over stdin by a constant-error parser, then
 # removed before psql runs. libpq receives only discrete non-secret settings
-# plus a mode-0600 password file; psql stdout/stderr are both withheld on error.
+# plus a mode-0600 password file. Failed streams are classified in place and
+# rendered through a fixed allowlist; no raw provider byte is surfaced.
 TEST_DB_PASSWORD="npg_${RANDOM}_credential_shape_only"
 TEST_DB_HOST="ep-test-credential-shape.us-east-2.aws.neon.tech"
 LIVE_VERIFY_DATABASE_URL="postgresql://unit_user:${TEST_DB_PASSWORD}@${TEST_DB_HOST}/unit_db?sslmode=require&channel_binding=require"
@@ -84,40 +88,166 @@ grep -Fq -- "$TEST_DB_PASSWORD" "$LIVE_VERIFY_PGPASSFILE" \
 
 PSQL_ARGV_LOG="$TEST_TMP/psql-argv.txt"
 PSQL_ENV_LOG="$TEST_TMP/psql-env.txt"
-PSQL_SIMULATE_FAILURE=no
+PSQL_FAILURE_MODE=no
+PSQL_FAIL_UNTIL=0
+PSQL_CALLS=0
 psql() {
+  PSQL_CALLS=$((PSQL_CALLS + 1))
   printf '%s\n' "$@" >"$PSQL_ARGV_LOG"
-  printf 'uri=%s\npassfile=%s\n' \
-    "${LIVE_VERIFY_DATABASE_URL+present}" "${PGPASSFILE:+present}" >"$PSQL_ENV_LOG"
+  printf 'uri=%s\npassfile=%s\nconnect_timeout=%s\n' \
+    "${LIVE_VERIFY_DATABASE_URL+present}" \
+    "${PGPASSFILE:+present}" \
+    "${PGCONNECT_TIMEOUT:-}" >"$PSQL_ENV_LOG"
   test -r "$PGPASSFILE"
-  if [[ "$PSQL_SIMULATE_FAILURE" == yes ]]; then
-    printf 'partial output containing postgresql://unit_user:%s@%s/unit_db\n' \
-      "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
-    printf 'psql: failed for postgresql://unit_user:%s@%s/unit_db\n' \
-      "$TEST_DB_PASSWORD" "$TEST_DB_HOST" >&2
-    return 41
+  if [[ "$PSQL_CALLS" -le "$PSQL_FAIL_UNTIL" ]]; then
+    case "$PSQL_FAILURE_MODE" in
+      connection_refused)
+        printf 'partial output containing postgresql://unit_user:%s@%s/unit_db\n' \
+          "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
+        printf 'psql: connection to server at "%s" failed: Connection refused; password=%s\n' \
+          "$TEST_DB_HOST" "$TEST_DB_PASSWORD" >&2
+        return 41
+        ;;
+      unknown)
+        printf 'opaque stream postgresql://unit_user:%s@%s/unit_db\n' \
+          "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
+        printf 'unmapped-provider-gibberish credential=%s endpoint=%s\n' \
+          "$TEST_DB_PASSWORD" "$TEST_DB_HOST" >&2
+        return 42
+        ;;
+      query_error)
+        printf 'query fragment postgresql://unit_user:%s@%s/unit_db\n' \
+          "$TEST_DB_PASSWORD" "$TEST_DB_HOST"
+        printf 'ERROR: syntax error in protected query; credential=%s\n' \
+          "$TEST_DB_PASSWORD" >&2
+        return 43
+        ;;
+    esac
   fi
   printf '{"probe":"ok"}\n'
 }
 
-test "$(run_readonly_sql 'SELECT 1')" = '{"probe":"ok"}'
+run_readonly_sql 'SELECT 1' >"$TEST_TMP/psql-success.stdout"
+test "$(<"$TEST_TMP/psql-success.stdout")" = '{"probe":"ok"}'
 grep -Fxq 'uri=' "$PSQL_ENV_LOG"
 grep -Fq 'passfile=present' "$PSQL_ENV_LOG"
+grep -Fxq 'connect_timeout=10' "$PSQL_ENV_LOG"
 if grep -Eq 'postgres(ql)?://|npg_' "$PSQL_ARGV_LOG"; then
   fail "psql argv retained a credential-bearing connection value"
 fi
 
-PSQL_SIMULATE_FAILURE=yes
-if run_readonly_sql 'SELECT simulated_failure' \
-  >"$TEST_TMP/psql-failure.stdout" 2>"$TEST_TMP/psql-failure.stderr"; then
+PSQL_CALLS=0
+PSQL_FAIL_UNTIL=1
+PSQL_FAILURE_MODE=connection_refused
+set +e
+run_readonly_sql 'SELECT simulated_failure' snapshot \
+  >"$TEST_TMP/psql-failure.stdout" 2>"$TEST_TMP/psql-failure.stderr"
+psql_failure_status=$?
+set -e
+if [[ "$psql_failure_status" -eq 0 ]]; then
   fail "simulated psql failure unexpectedly passed"
 fi
-grep -Fq 'provider stderr withheld' "$TEST_TMP/psql-failure.stderr"
+test "$psql_failure_status" -eq 41 || fail "simulated psql status was not preserved"
+grep -Fq 'tool=psql phase=snapshot status=41 category=connection_refused retryable=true' \
+  "$TEST_TMP/psql-failure.stderr"
+grep -Fq 'diagnostic=remote_connection_refused_or_reset' \
+  "$TEST_TMP/psql-failure.stderr"
 if rg -q 'postgres(ql)?://|npg_|credential_shape|ep-test-credential-shape' \
   "$TEST_TMP/psql-failure.stdout" "$TEST_TMP/psql-failure.stderr"; then
   fail "simulated psql failure emitted a credential or credential fragment"
 fi
-PSQL_SIMULATE_FAILURE=no
+
+PSQL_CALLS=0
+PSQL_FAIL_UNTIL=1
+PSQL_FAILURE_MODE=unknown
+set +e
+run_readonly_sql 'SELECT simulated_unknown' snapshot \
+  >"$TEST_TMP/psql-unknown.stdout" 2>"$TEST_TMP/psql-unknown.stderr"
+psql_unknown_status=$?
+set -e
+test "$psql_unknown_status" -eq 42 || fail "unknown psql status was not preserved"
+grep -Fq 'tool=psql phase=snapshot status=42 category=unknown retryable=false' \
+  "$TEST_TMP/psql-unknown.stderr"
+grep -Fq 'diagnostic=provider_output_withheld_unclassified' \
+  "$TEST_TMP/psql-unknown.stderr"
+if rg -q 'postgres(ql)?://|npg_|credential_shape|ep-test-credential-shape' \
+  "$TEST_TMP/psql-unknown.stdout" "$TEST_TMP/psql-unknown.stderr"; then
+  fail "unclassifiable psql failure emitted a credential or credential fragment"
+fi
+
+# Every required category is selected only by quiet, known-safe pattern matches,
+# and rendering every classified stream is independent of its captured bytes.
+assert_safe_classified_diagnostic() {
+  local expected="$1"
+  local safe_pattern="$2"
+  local actual
+
+  printf '%s credential=%s endpoint=%s\n' \
+    "$safe_pattern" "$TEST_DB_PASSWORD" "$TEST_DB_HOST" \
+    >"$TEST_TMP/classifier.stdout"
+  printf '%s\n' opaque >"$TEST_TMP/classifier.stderr"
+  actual="$(classify_external_tool_failure \
+    "$TEST_TMP/classifier.stdout" "$TEST_TMP/classifier.stderr")"
+  test "$actual" = "$expected" || fail "classifier did not select $expected"
+  emit_sanitized_external_tool_failure \
+    live-verify psql snapshot 44 "$actual" \
+    >"$TEST_TMP/classifier-diagnostic.stdout"
+  grep -Fq "status=44 category=${expected}" \
+    "$TEST_TMP/classifier-diagnostic.stdout"
+  if grep -Fq -- "$TEST_DB_PASSWORD" "$TEST_TMP/classifier-diagnostic.stdout" || \
+    grep -Fq -- "$TEST_DB_HOST" "$TEST_TMP/classifier-diagnostic.stdout"; then
+    fail "classified $expected diagnostic reflected captured bytes"
+  fi
+}
+
+assert_safe_classified_diagnostic connection_refused 'connection refused'
+assert_safe_classified_diagnostic timeout 'timeout expired'
+assert_safe_classified_diagnostic authentication_failure 'password authentication failed'
+assert_safe_classified_diagnostic tls 'SSL error: certificate verify failed'
+assert_safe_classified_diagnostic dns 'could not translate host name'
+assert_safe_classified_diagnostic permission_denied 'permission denied'
+assert_safe_classified_diagnostic query_error 'ERROR: syntax error'
+assert_safe_classified_diagnostic unknown 'opaque provider failure token=opaque'
+
+# Even caller-supplied metadata is allowlisted rather than reflected.
+TEST_METADATA_SECRET="metadata_${RANDOM}_credential_shape_only"
+emit_sanitized_external_tool_failure \
+  "$TEST_METADATA_SECRET" "$TEST_METADATA_SECRET" "$TEST_METADATA_SECRET" 47 timeout \
+  >"$TEST_TMP/metadata-diagnostic.stdout"
+grep -Fq \
+  'external-tool: external-tool failure tool=unknown phase=unknown status=47 category=timeout retryable=true' \
+  "$TEST_TMP/metadata-diagnostic.stdout"
+if grep -Fq -- "$TEST_METADATA_SECRET" "$TEST_TMP/metadata-diagnostic.stdout"; then
+  fail "external-tool diagnostic reflected caller metadata"
+fi
+
+# Bounded retry belongs only to the connection warm-up. Snapshot/assertion SQL
+# calls run once even when their failure category would otherwise be transient.
+sleep() { :; }
+PSQL_CALLS=0
+PSQL_FAIL_UNTIL=2
+PSQL_FAILURE_MODE=connection_refused
+warm_database_connection \
+  >"$TEST_TMP/warmup.stdout" 2>"$TEST_TMP/warmup.stderr"
+test "$PSQL_CALLS" -eq 3 || fail "connection warm-up was not bounded at three attempts"
+grep -Fq 'database connection warm-up ok (attempt 3/3)' "$TEST_TMP/warmup.stdout"
+test "$(grep -Fc 'retrying connection warm-up' "$TEST_TMP/warmup.stderr")" -eq 2 \
+  || fail "connection warm-up backoff count changed"
+
+PSQL_CALLS=0
+PSQL_FAIL_UNTIL=99
+PSQL_FAILURE_MODE=query_error
+set +e
+run_readonly_sql 'SELECT broken_assertion' assertion \
+  >"$TEST_TMP/assertion.stdout" 2>"$TEST_TMP/assertion.stderr"
+assertion_status=$?
+set -e
+test "$assertion_status" -eq 43 || fail "query assertion status was not preserved"
+test "$PSQL_CALLS" -eq 1 || fail "assertion SQL was retried"
+grep -Fq 'phase=assertion status=43 category=query_error retryable=false' \
+  "$TEST_TMP/assertion.stderr"
+PSQL_FAILURE_MODE=no
+PSQL_FAIL_UNTIL=0
 
 private_dir_before_cleanup="$LIVE_VERIFY_PSQL_PRIVATE_DIR"
 cleanup_psql_credentials

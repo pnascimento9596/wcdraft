@@ -130,10 +130,12 @@ refuses to mutate until both return the control-specific 503 marker.
 The Neon operation below preserves the pre-restore branch under a unique name.
 Receipts remain mode 0600 under the incident directory. A private mode-0600 curl
 config outside that directory carries the API authorization header; the key is
-unset before curl starts, never expanded into argv, and removed on exit. The
-wrapper withholds both the failed response body and curl stderr so provider
-diagnostics cannot reflect a credential fragment into the operator transcript
-or incident receipt. Do not enable shell
+unset before curl starts, never expanded into argv, and removed on exit. Run
+this section from the repository checkout: its shared external-tool classifier
+matches captured output only against known-safe patterns and emits the exit
+status, category, retryability, phase, and a fixed sanitized diagnostic. It
+never copies provider bytes into the operator transcript or incident receipt.
+Unclassifiable output emits `unknown` and remains withheld. Do not enable shell
 tracing around credential setup. Do not blindly retry a timed-out restore POST;
 first inspect Neon operations and live branch state.
 
@@ -171,6 +173,10 @@ and incident receipt gates, not the ephemeral-child assertion.
 set -euo pipefail
 umask 077
 
+recovery_repo_root="$(git rev-parse --show-toplevel)"
+# shellcheck source=../../../scripts/ci/external-tool-diagnostics.sh
+. "$recovery_repo_root/scripts/ci/external-tool-diagnostics.sh"
+
 NEON_CURL_PRIVATE_DIR=""
 NEON_CURL_CONFIG=""
 
@@ -207,7 +213,7 @@ prepare_neon_api_curl() {
 neon_api_curl() {
   local stdout_file="$NEON_CURL_PRIVATE_DIR/curl.stdout"
   local stderr_file="$NEON_CURL_PRIVATE_DIR/curl.stderr"
-  local status
+  local status category
   : >"$stdout_file"
   : >"$stderr_file"
   if curl --config "$NEON_CURL_CONFIG" "$@" \
@@ -219,9 +225,11 @@ neon_api_curl() {
   else
     status=$?
   fi
+  category="$(classify_external_tool_failure "$stdout_file" "$stderr_file")"
+  emit_sanitized_external_tool_failure \
+    neon-recovery curl api-request "$status" "$category" >&2
   : >"$stdout_file"
   : >"$stderr_file"
-  echo "Neon API request failed (status ${status}); provider output withheld." >&2
   return "$status"
 }
 
