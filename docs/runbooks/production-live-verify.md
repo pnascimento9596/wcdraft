@@ -114,10 +114,16 @@ and each snapshot verifies server-reported Neon project and branch identities
 against explicit expected values. The script accepts the connection string only
 through `LIVE_VERIFY_DATABASE_URL`, parses it over stdin into discrete libpq
 settings plus a private mode-0600 `PGPASSFILE`, unsets the URI before spawning
-`psql`, and never places the URI or password in child-process argv. Failed
-`psql` stdout and stderr are withheld rather than risking reflection of a
-credential or endpoint fragment. The private password file is outside the
-receipt directory and is removed on every exit.
+`psql`, and never places the URI or password in child-process argv. A first
+read-only `SELECT 1` warms the connection with a fixed 10-second libpq connect
+timeout and at most three attempts (1-second then 2-second backoff). Only
+connection-refused/reset, timeout, and DNS classifications retry; snapshots and
+assertions never retry. Failed streams remain private. Known-safe patterns map
+them to one of `connection_refused`, `timeout`, `authentication_failure`, `tls`,
+`dns`, `permission_denied`, or `query_error`, and the script surfaces only a
+fixed diagnostic with tool, phase, status, category, and retryability. Unknown
+output is classified `unknown` and otherwise withheld. The private files are
+outside the receipt directory and are removed on every exit.
 
 ## How to run
 
@@ -156,19 +162,20 @@ copied into a terminal transcript or receipt.
 
 The script then:
 
-1. captures the forbidden-set DB snapshot before any production HTTP request;
-2. requires `GET /api/health` to be green, including `auth.status == "ready"`,
+1. warms only the direct database connection through a bounded read-only probe;
+2. captures the forbidden-set DB snapshot before any production HTTP request;
+3. requires `GET /api/health` to be green, including `auth.status == "ready"`,
    and requires the build SHA, six published anchors, and season to match the
    target Git commit;
-3. requires cookie-less `GET /api/auth/csrf` to return 200 with a 300-second
-   bootstrap cookie and no durable session cookie;
-4. snapshots current Classic casual, Memory casual, Classic ranked, and the
+4. requires cookie-less `GET /api/auth/csrf` to return 200 with all three
+   300-second bootstrap cookies and no durable session;
+5. snapshots current Classic casual, Memory casual, Classic ranked, and the
    archived `season-2026-manager-attrition` board;
-5. posts the stale-token rejection probe and requires typed
+6. posts the stale-token rejection probe and requires typed
    `409 DIFFERENT_BUILD`;
-6. re-reads the same boards and requires identical entry-ID sets;
-7. checks the leaderboard archive surface and read-only OG health; and
-8. always captures an after snapshot, requiring the forbidden counts to be
+7. re-reads the same boards and requires identical entry-ID sets;
+8. checks the leaderboard archive surface and read-only OG health; and
+9. always captures an after snapshot, requiring the forbidden counts to be
    identical while treating expired-session and rate-limit deltas as permitted
    observations.
 

@@ -14,6 +14,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/ci/external-tool-diagnostics.sh
+source "$ROOT/scripts/ci/external-tool-diagnostics.sh"
 BASE_URL="${BASE_URL:-https://www.wcdraft.com}"
 FIXTURE="${ROOT}/apps/web/lib/game/__tests__/fixtures/run-token-skew.json"
 RECEIPT_DIR="${RECEIPT_DIR:-}"
@@ -26,6 +28,9 @@ LIVE_VERIFY_PGDATABASE=""
 LIVE_VERIFY_PGSSLMODE=""
 LIVE_VERIFY_PGCHANNELBINDING=""
 LIVE_VERIFY_PGPASSFILE=""
+LIVE_VERIFY_LAST_EXTERNAL_CATEGORY=""
+LIVE_VERIFY_CONNECT_TIMEOUT_SECONDS=10
+LIVE_VERIFY_CONNECT_MAX_ATTEMPTS=3
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -44,6 +49,7 @@ cleanup_psql_credentials() {
       "$LIVE_VERIFY_PSQL_PRIVATE_DIR/sslmode" \
       "$LIVE_VERIFY_PSQL_PRIVATE_DIR/channel-binding" \
       "$LIVE_VERIFY_PSQL_PRIVATE_DIR/pgpass" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/psql.stdout" \
       "$LIVE_VERIFY_PSQL_PRIVATE_DIR/psql.stderr"
     rmdir -- "$LIVE_VERIFY_PSQL_PRIVATE_DIR" 2>/dev/null || true
   fi
@@ -145,11 +151,15 @@ except Exception:
 
 run_readonly_sql() {
   local sql="$1"
-  local output status
+  local phase="${2:-query}"
+  local status category
+  local stdout_file="$LIVE_VERIFY_PSQL_PRIVATE_DIR/psql.stdout"
   local stderr_file="$LIVE_VERIFY_PSQL_PRIVATE_DIR/psql.stderr"
+  : >"$stdout_file"
   : >"$stderr_file"
+  LIVE_VERIFY_LAST_EXTERNAL_CATEGORY=""
 
-  if output="$(
+  if
     PGHOST="$LIVE_VERIFY_PGHOST" \
     PGPORT="$LIVE_VERIFY_PGPORT" \
     PGUSER="$LIVE_VERIFY_PGUSER" \
@@ -157,18 +167,51 @@ run_readonly_sql() {
     PGSSLMODE="$LIVE_VERIFY_PGSSLMODE" \
     PGCHANNELBINDING="$LIVE_VERIFY_PGCHANNELBINDING" \
     PGPASSFILE="$LIVE_VERIFY_PGPASSFILE" \
+    PGCONNECT_TIMEOUT="$LIVE_VERIFY_CONNECT_TIMEOUT_SECONDS" \
     PGOPTIONS="${PGOPTIONS:+${PGOPTIONS} }-c default_transaction_read_only=on -c statement_timeout=8000" \
-      psql -X -q -A -t -v ON_ERROR_STOP=1 -c "$sql" 2>"$stderr_file"
-  )"; then
-    printf '%s\n' "$output"
+      psql -X -q -A -t -w -v ON_ERROR_STOP=1 -c "$sql" \
+      >"$stdout_file" 2>"$stderr_file"
+  then
+    command cat -- "$stdout_file"
+    : >"$stdout_file"
+    : >"$stderr_file"
     return 0
   else
     status=$?
   fi
 
+  category="$(classify_external_tool_failure "$stdout_file" "$stderr_file")"
+  LIVE_VERIFY_LAST_EXTERNAL_CATEGORY="$category"
+  emit_sanitized_external_tool_failure \
+    live-verify psql "$phase" "$status" "$category" >&2
+  : >"$stdout_file"
   : >"$stderr_file"
-  echo "live-verify: psql failed (status ${status}); provider stderr withheld" >&2
   return "$status"
+}
+
+warm_database_connection() {
+  local attempt status category delay_seconds
+
+  attempt=1
+  while [[ "$attempt" -le "$LIVE_VERIFY_CONNECT_MAX_ATTEMPTS" ]]; do
+    if run_readonly_sql 'SELECT 1;' connection-warmup >/dev/null; then
+      echo "live-verify: database connection warm-up ok (attempt ${attempt}/${LIVE_VERIFY_CONNECT_MAX_ATTEMPTS})"
+      return 0
+    else
+      status=$?
+      category="$LIVE_VERIFY_LAST_EXTERNAL_CATEGORY"
+    fi
+
+    if [[ "$attempt" -ge "$LIVE_VERIFY_CONNECT_MAX_ATTEMPTS" ]] || \
+      ! external_tool_failure_is_transient "$category"; then
+      return "$status"
+    fi
+
+    delay_seconds="$attempt"
+    echo "live-verify: retrying connection warm-up after ${delay_seconds}s (attempt $((attempt + 1))/${LIVE_VERIFY_CONNECT_MAX_ATTEMPTS}; category=${category})" >&2
+    sleep "$delay_seconds"
+    attempt=$((attempt + 1))
+  done
 }
 
 capture_database_snapshot() {
@@ -311,16 +354,30 @@ redact_csrf_body() {
 
 assert_bootstrap_cookie_ttls() {
   local headers="$1"
-  if ! grep -qiE 'set-cookie:.*wcdraft_csrf=.*max-age=300([;[:space:]]|$)' "$headers"; then
+  local set_cookie_count
+  if ! grep -qiE '^set-cookie:[[:space:]]*wcdraft_bootstrap=.*max-age=300([;[:space:]]|$)' "$headers"; then
+    echo "live-verify: CSRF missing 300s wcdraft_bootstrap cookie" >&2
+    return 1
+  fi
+  if ! grep -qiE '^set-cookie:[[:space:]]*wcdraft_csrf=.*max-age=300([;[:space:]]|$)' "$headers"; then
     echo "live-verify: CSRF missing 300s wcdraft_csrf bootstrap cookie" >&2
     return 1
   fi
   # The stateless bootstrap currently reuses the wcdraft_sid cookie name with
   # the same 300s TTL. It is permitted because it has no sessions-table row.
   # A durable sid cookie (anything other than Max-Age 0/300) is forbidden.
-  if grep -iE 'set-cookie:.*wcdraft_sid=' "$headers" \
+  if grep -iE '^set-cookie:[[:space:]]*wcdraft_sid=' "$headers" \
     | grep -qviE 'max-age=(0|300)([;[:space:]]|$)'; then
     echo "live-verify: CSRF issued a durable-looking wcdraft_sid cookie" >&2
+    return 1
+  fi
+  if ! grep -qiE '^set-cookie:[[:space:]]*wcdraft_sid=.*max-age=300([;[:space:]]|$)' "$headers"; then
+    echo "live-verify: CSRF missing 300s wcdraft_sid bootstrap cookie" >&2
+    return 1
+  fi
+  set_cookie_count="$(grep -ciE '^set-cookie:' "$headers" || true)"
+  if [[ "$set_cookie_count" -ne 3 ]]; then
+    echo "live-verify: CSRF expected exactly three bootstrap cookies, got ${set_cookie_count}" >&2
     return 1
   fi
 }
@@ -463,6 +520,10 @@ main() {
 
   echo "live-verify: base=${BASE_URL}"
   echo "live-verify: receipt=${RECEIPT_DIR}"
+
+  # Warm only the connection seam. Transient connection failures may retry in
+  # this bounded read-only probe; snapshots and all assertions remain single-shot.
+  warm_database_connection
 
   # Capture the forbidden set before any production HTTP request. The SQL
   # session is read-only and also proves the counter URL reaches the declared

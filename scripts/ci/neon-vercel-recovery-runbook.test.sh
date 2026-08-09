@@ -39,6 +39,7 @@ rg_fixed() {
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 runbook="$repo_root/docs/runbooks/neon-restore-vercel-rollback.md"
+diagnostics="$repo_root/scripts/ci/external-tool-diagnostics.sh"
 workflow="$repo_root/.github/workflows/ci.yml"
 combined_bash="$(mktemp)"
 route_block_file="$(mktemp)"
@@ -52,6 +53,8 @@ awk '
   inside { print }
 ' "$runbook" >"$combined_bash"
 bash -n "$combined_bash"
+test -r "$diagnostics"
+bash -n "$diagnostics"
 
 require_literal() {
   literal="$1"
@@ -203,9 +206,10 @@ BASH
   sed -n '/^restore_neon_primary_from_preserved() {/,/^}/p' "$runbook"
   sed -n '/^promote_pre_restore_application() {/,/^}/p' "$runbook"
 } >"$mutation_guard_block"
-bash -s -- "$mutation_guard_block" <<'BASH'
+bash -s -- "$mutation_guard_block" "$diagnostics" <<'BASH'
 set -euo pipefail
 source "$1"
+source "$2"
 incident_dir="$(mktemp -d)"
 mutation_log="$incident_dir/vendor-mutations.txt"
 
@@ -227,14 +231,23 @@ vercel() {
 }
 curl() {
   printf '%s\n' "$*" >>"$mutation_log"
-  if [ "${SIMULATE_NEON_CURL_FAILURE:-}" = yes ]; then
-    printf 'response reflected credential fragment %s\n' \
-      "$SIMULATED_NEON_SECRET"
-    printf 'curl: request failed with Authorization: Bearer %s\n' \
-      "$SIMULATED_NEON_SECRET" >&2
-    return 22
-  fi
-  return 0
+  case "${SIMULATE_NEON_CURL_FAILURE:-no}" in
+    authentication)
+      printf 'response reflected credential fragment %s at https://sensitive.invalid/path\n' \
+        "$SIMULATED_NEON_SECRET"
+      printf 'curl: (22) 401 Unauthorized; Authorization: Bearer %s\n' \
+        "$SIMULATED_NEON_SECRET" >&2
+      return 22
+      ;;
+    unknown)
+      printf 'opaque response credential=%s at https://private.example.test/path\n' \
+        "$SIMULATED_NEON_SECRET"
+      printf 'unmapped-provider-gibberish endpoint=private.example.test opaque=%s\n' \
+        "$SIMULATED_NEON_SECRET" >&2
+      return 23
+      ;;
+    *) return 0 ;;
+  esac
 }
 
 prepare_neon_api_curl
@@ -249,7 +262,7 @@ trap 'cleanup_neon_api_curl; rm -rf "$incident_dir"' EXIT
   exit 1
 }
 
-SIMULATE_NEON_CURL_FAILURE=yes
+SIMULATE_NEON_CURL_FAILURE=authentication
 set +e
 neon_api_curl --fail-with-body -sS \
   https://console.neon.tech/api/v2/projects/test-project/branches \
@@ -260,14 +273,51 @@ set -e
   echo 'Simulated Neon API failure unexpectedly passed.' >&2
   exit 1
 }
-grep -Fq 'provider output withheld' "$incident_dir/neon-failure.stderr"
+grep -Fq 'tool=curl phase=api-request status=22 category=authentication_failure retryable=false' \
+  "$incident_dir/neon-failure.stderr"
+grep -Fq 'diagnostic=remote_authentication_rejected' \
+  "$incident_dir/neon-failure.stderr"
 if grep -Fq -- "$SIMULATED_NEON_SECRET" "$mutation_log" || \
    grep -Fq -- "$SIMULATED_NEON_SECRET" "$incident_dir/neon-failure.stdout" || \
    grep -Fq -- "$SIMULATED_NEON_SECRET" "$incident_dir/neon-failure.stderr"; then
   echo 'Neon API credential escaped into argv or surfaced failure output.' >&2
   exit 1
 fi
+if grep -Eq 'https?://|sensitive[.]invalid|Authorization:|Bearer' \
+  "$incident_dir/neon-failure.stdout" "$incident_dir/neon-failure.stderr"; then
+  echo 'Neon API URI, host, or authorization shape escaped into surfaced failure output.' >&2
+  exit 1
+fi
+
+SIMULATE_NEON_CURL_FAILURE=unknown
+set +e
+neon_api_curl --fail-with-body -sS \
+  https://console.neon.tech/api/v2/projects/test-project/branches \
+  >"$incident_dir/neon-unknown.stdout" 2>"$incident_dir/neon-unknown.stderr"
+neon_unknown_status="$?"
+set -e
+[ "$neon_unknown_status" -eq 23 ] || {
+  echo 'Unclassifiable Neon API status was not preserved.' >&2
+  exit 1
+}
+grep -Fq 'tool=curl phase=api-request status=23 category=unknown retryable=false' \
+  "$incident_dir/neon-unknown.stderr"
+grep -Fq 'diagnostic=provider_output_withheld_unclassified' \
+  "$incident_dir/neon-unknown.stderr"
+if grep -Fq -- "$SIMULATED_NEON_SECRET" "$incident_dir/neon-unknown.stdout" || \
+   grep -Fq -- "$SIMULATED_NEON_SECRET" "$incident_dir/neon-unknown.stderr" || \
+   grep -Eq 'https?://|private[.]example[.]test' \
+     "$incident_dir/neon-unknown.stdout" "$incident_dir/neon-unknown.stderr"; then
+  echo 'Unclassifiable Neon API output escaped instead of degrading safely.' >&2
+  exit 1
+fi
+
 SIMULATE_NEON_CURL_FAILURE=no
+[ -z "$(neon_api_curl --fail-with-body -sS \
+  https://console.neon.tech/api/v2/projects/test-project/branches)" ] || {
+  echo 'Successful Neon API wrapper output changed.' >&2
+  exit 1
+}
 
 assert_alias_failure_blocks_mutation() {
   function_name="$1"
