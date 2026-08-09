@@ -18,6 +18,14 @@ BASE_URL="${BASE_URL:-https://www.wcdraft.com}"
 FIXTURE="${ROOT}/apps/web/lib/game/__tests__/fixtures/run-token-skew.json"
 RECEIPT_DIR="${RECEIPT_DIR:-}"
 ARCHIVE_SEASON="${ARCHIVE_SEASON:-season-2026-manager-attrition}"
+LIVE_VERIFY_PSQL_PRIVATE_DIR=""
+LIVE_VERIFY_PGHOST=""
+LIVE_VERIFY_PGPORT=""
+LIVE_VERIFY_PGUSER=""
+LIVE_VERIFY_PGDATABASE=""
+LIVE_VERIFY_PGSSLMODE=""
+LIVE_VERIFY_PGCHANNELBINDING=""
+LIVE_VERIFY_PGPASSFILE=""
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -26,10 +34,141 @@ require_cmd() {
   }
 }
 
+cleanup_psql_credentials() {
+  if [[ -n "$LIVE_VERIFY_PSQL_PRIVATE_DIR" ]]; then
+    rm -f -- \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/host" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/port" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/user" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/database" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/sslmode" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/channel-binding" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/pgpass" \
+      "$LIVE_VERIFY_PSQL_PRIVATE_DIR/psql.stderr"
+    rmdir -- "$LIVE_VERIFY_PSQL_PRIVATE_DIR" 2>/dev/null || true
+  fi
+  LIVE_VERIFY_PSQL_PRIVATE_DIR=""
+  LIVE_VERIFY_PGPASSFILE=""
+}
+
+prepare_psql_credentials() {
+  LIVE_VERIFY_PSQL_PRIVATE_DIR="$(mktemp -d /tmp/wcdraft-live-verify-db.XXXXXX)"
+
+  # Feed the URI over stdin, never argv. The parser emits only private,
+  # single-purpose libpq inputs and replaces every parse failure with one
+  # constant message so malformed values cannot be reflected into output.
+  if ! printf '%s' "$LIVE_VERIFY_DATABASE_URL" | python3 -c '
+import pathlib
+import sys
+import urllib.parse
+
+target = pathlib.Path(sys.argv[1])
+
+try:
+    raw = sys.stdin.read()
+    parsed = urllib.parse.urlsplit(raw)
+    if parsed.scheme not in {"postgres", "postgresql"}:
+        raise ValueError
+    if parsed.hostname is None or parsed.username is None or parsed.password is None:
+        raise ValueError
+    if not parsed.path.startswith("/") or len(parsed.path) == 1:
+        raise ValueError
+    if parsed.fragment:
+        raise ValueError
+    if any(value is not None and any(char in value for char in "\r\n\0") for value in (
+        parsed.hostname,
+        parsed.username,
+        parsed.password,
+        parsed.path,
+    )):
+        raise ValueError
+
+    query_pairs = urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
+    allowed_query_keys = {"sslmode", "channel_binding"}
+    if any(key not in allowed_query_keys for key, _ in query_pairs):
+        raise ValueError
+    if len({key for key, _ in query_pairs}) != len(query_pairs):
+        raise ValueError
+    query = dict(query_pairs)
+    sslmode = query.get("sslmode", "require")
+    channel_binding = query.get("channel_binding", "require")
+    if sslmode not in {"require", "verify-ca", "verify-full"}:
+        raise ValueError
+    if channel_binding not in {"require", "prefer"}:
+        raise ValueError
+
+    host = parsed.hostname
+    port = str(parsed.port or 5432)
+    user = urllib.parse.unquote(parsed.username)
+    password = urllib.parse.unquote(parsed.password)
+    database = urllib.parse.unquote(parsed.path[1:])
+    if any(any(char in value for char in "\r\n\0") for value in (user, password, database)):
+        raise ValueError
+
+    values = {
+        "host": host,
+        "port": port,
+        "user": user,
+        "database": database,
+        "sslmode": sslmode,
+        "channel-binding": channel_binding,
+    }
+    for name, value in values.items():
+        (target / name).write_text(value, encoding="utf-8")
+
+    def pgpass_escape(value: str) -> str:
+        return value.replace("\\", "\\\\").replace(":", "\\:")
+
+    pgpass = ":".join(
+        pgpass_escape(value) for value in (host, port, database, user, password)
+    )
+    (target / "pgpass").write_text(f"{pgpass}\n", encoding="utf-8")
+except Exception:
+    raise SystemExit(1)
+' "$LIVE_VERIFY_PSQL_PRIVATE_DIR" 2>/dev/null; then
+    unset LIVE_VERIFY_DATABASE_URL
+    cleanup_psql_credentials
+    echo "live-verify: database connection configuration is invalid" >&2
+    return 1
+  fi
+
+  unset LIVE_VERIFY_DATABASE_URL PGPASSWORD PGSERVICE PGSERVICEFILE
+  LIVE_VERIFY_PGHOST="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/host")"
+  LIVE_VERIFY_PGPORT="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/port")"
+  LIVE_VERIFY_PGUSER="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/user")"
+  LIVE_VERIFY_PGDATABASE="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/database")"
+  LIVE_VERIFY_PGSSLMODE="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/sslmode")"
+  LIVE_VERIFY_PGCHANNELBINDING="$(<"$LIVE_VERIFY_PSQL_PRIVATE_DIR/channel-binding")"
+  LIVE_VERIFY_PGPASSFILE="$LIVE_VERIFY_PSQL_PRIVATE_DIR/pgpass"
+  chmod 0600 "$LIVE_VERIFY_PGPASSFILE"
+}
+
 run_readonly_sql() {
   local sql="$1"
-  PGOPTIONS="${PGOPTIONS:+${PGOPTIONS} }-c default_transaction_read_only=on -c statement_timeout=8000" \
-    psql "$LIVE_VERIFY_DATABASE_URL" -X -q -A -t -v ON_ERROR_STOP=1 -c "$sql"
+  local output status
+  local stderr_file="$LIVE_VERIFY_PSQL_PRIVATE_DIR/psql.stderr"
+  : >"$stderr_file"
+
+  if output="$(
+    PGHOST="$LIVE_VERIFY_PGHOST" \
+    PGPORT="$LIVE_VERIFY_PGPORT" \
+    PGUSER="$LIVE_VERIFY_PGUSER" \
+    PGDATABASE="$LIVE_VERIFY_PGDATABASE" \
+    PGSSLMODE="$LIVE_VERIFY_PGSSLMODE" \
+    PGCHANNELBINDING="$LIVE_VERIFY_PGCHANNELBINDING" \
+    PGPASSFILE="$LIVE_VERIFY_PGPASSFILE" \
+    PGOPTIONS="${PGOPTIONS:+${PGOPTIONS} }-c default_transaction_read_only=on -c statement_timeout=8000" \
+      psql -X -q -A -t -v ON_ERROR_STOP=1 -c "$sql" 2>"$stderr_file"
+  )"; then
+    printf '%s\n' "$output"
+    return 0
+  else
+    status=$?
+  fi
+
+  : >"$stderr_file"
+  echo "live-verify: psql failed (status ${status}); provider stderr withheld" >&2
+  return "$status"
 }
 
 capture_database_snapshot() {
@@ -280,6 +419,7 @@ finalize_database_assertion() {
   else
     echo "live-verify: FAIL; receipts in ${RECEIPT_DIR}" >&2
   fi
+  cleanup_psql_credentials
   exit "$final_status"
 }
 
@@ -317,6 +457,9 @@ main() {
     RECEIPT_DIR="$(mktemp -d /tmp/wcdraft-live-verify.XXXXXX)"
   fi
   mkdir -p "$RECEIPT_DIR"
+
+  trap cleanup_psql_credentials EXIT
+  prepare_psql_credentials
 
   echo "live-verify: base=${BASE_URL}"
   echo "live-verify: receipt=${RECEIPT_DIR}"

@@ -128,8 +128,14 @@ refuses to mutate until both return the control-specific 503 marker.
 ## Define guarded recovery operations
 
 The Neon operation below preserves the pre-restore branch under a unique name.
-Receipts remain mode 0600 under the incident directory. Do not blindly retry a
-timed-out restore POST; first inspect Neon operations and live branch state.
+Receipts remain mode 0600 under the incident directory. A private mode-0600 curl
+config outside that directory carries the API authorization header; the key is
+unset before curl starts, never expanded into argv, and removed on exit. The
+wrapper withholds both the failed response body and curl stderr so provider
+diagnostics cannot reflect a credential fragment into the operator transcript
+or incident receipt. Do not enable shell
+tracing around credential setup. Do not blindly retry a timed-out restore POST;
+first inspect Neon operations and live branch state.
 
 Before using this section in an incident, rehearse the same restore/reset
 mechanism on a production-derived child branch. Write only an unmistakable
@@ -164,6 +170,63 @@ and incident receipt gates, not the ephemeral-child assertion.
 ```bash
 set -euo pipefail
 umask 077
+
+NEON_CURL_PRIVATE_DIR=""
+NEON_CURL_CONFIG=""
+
+cleanup_neon_api_curl() {
+  if [ -n "$NEON_CURL_PRIVATE_DIR" ]; then
+    rm -f -- \
+      "$NEON_CURL_PRIVATE_DIR/neon-api.curlrc" \
+      "$NEON_CURL_PRIVATE_DIR/curl.stdout" \
+      "$NEON_CURL_PRIVATE_DIR/curl.stderr"
+    rmdir -- "$NEON_CURL_PRIVATE_DIR" 2>/dev/null || true
+  fi
+  NEON_CURL_PRIVATE_DIR=""
+  NEON_CURL_CONFIG=""
+}
+
+prepare_neon_api_curl() {
+  case "${NEON_API_KEY:-}" in
+    '' | *[!A-Za-z0-9_-]*)
+      echo 'Neon API credential is missing or malformed.' >&2
+      return 1
+      ;;
+  esac
+
+  NEON_CURL_PRIVATE_DIR="$(mktemp -d /tmp/wcdraft-neon-api.XXXXXX)"
+  NEON_CURL_CONFIG="$NEON_CURL_PRIVATE_DIR/neon-api.curlrc"
+  # printf is a shell builtin: the credential is written only to this private
+  # curl config, never placed in a spawned process argv or incident receipt.
+  printf 'header = "Authorization: Bearer %s"\n' "$NEON_API_KEY" \
+    >"$NEON_CURL_CONFIG"
+  chmod 0600 "$NEON_CURL_CONFIG"
+  unset NEON_API_KEY
+}
+
+neon_api_curl() {
+  local stdout_file="$NEON_CURL_PRIVATE_DIR/curl.stdout"
+  local stderr_file="$NEON_CURL_PRIVATE_DIR/curl.stderr"
+  local status
+  : >"$stdout_file"
+  : >"$stderr_file"
+  if curl --config "$NEON_CURL_CONFIG" "$@" \
+    >"$stdout_file" 2>"$stderr_file"; then
+    command cat -- "$stdout_file"
+    : >"$stdout_file"
+    : >"$stderr_file"
+    return 0
+  else
+    status=$?
+  fi
+  : >"$stdout_file"
+  : >"$stderr_file"
+  echo "Neon API request failed (status ${status}); provider output withheld." >&2
+  return "$status"
+}
+
+prepare_neon_api_curl
+trap cleanup_neon_api_curl EXIT
 
 require_production_alias_receipt() {
   local expected_deployment="$1"
@@ -340,9 +403,9 @@ wait_for_neon_operations() {
     attempt=1
     while [ "$attempt" -le 60 ]; do
       operation_receipt="$incident_dir/$receipt_prefix-operation-$operation_id.json"
-      curl --fail-with-body -sS \
+      neon_api_curl --fail-with-body -sS \
         "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/operations/$operation_id" \
-        --header "Authorization: Bearer $NEON_API_KEY" >"$operation_receipt"
+        >"$operation_receipt"
       operation_status="$(jq -er '.operation.status' "$operation_receipt")"
       printf 'Neon operation %s status=%s\n' "$operation_id" "$operation_status"
       case "$operation_status" in
@@ -376,9 +439,8 @@ capture_preserved_branch_id() {
   local branch_receipt="$incident_dir/$receipt_prefix-branch.json"
   local preserved_id
 
-  curl --fail-with-body -sS --get \
+  neon_api_curl --fail-with-body -sS --get \
     "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches" \
-    --header "Authorization: Bearer $NEON_API_KEY" \
     --data-urlencode "search=$expected_name" \
     --data-urlencode 'limit=100' >"$branches_receipt"
   preserved_id="$(jq -er --arg name "$expected_name" '
@@ -387,9 +449,9 @@ capture_preserved_branch_id() {
       else error("expected exactly one preserved branch") end
   ' "$branches_receipt")"
 
-  curl --fail-with-body -sS \
+  neon_api_curl --fail-with-body -sS \
     "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$preserved_id" \
-    --header "Authorization: Bearer $NEON_API_KEY" >"$branch_receipt"
+    >"$branch_receipt"
   jq -e --arg id "$preserved_id" --arg name "$expected_name" '
     .branch.id == $id and .branch.name == $name and
     .branch.current_state == "ready"
@@ -422,9 +484,8 @@ restore_neon_primary() {
     --arg timestamp "$RESTORE_TIMESTAMP" \
     --arg preserve "$preserve_name" \
     '{source_branch_id:$source,source_timestamp:$timestamp,preserve_under_name:$preserve}')"
-  curl --fail-with-body -sS --request POST \
+  neon_api_curl --fail-with-body -sS --request POST \
     "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$NEON_PRIMARY_BRANCH_ID/restore" \
-    --header "Authorization: Bearer $NEON_API_KEY" \
     --header 'Content-Type: application/json' \
     --data "$payload" >"$response_file"
   jq -e --arg primary "$NEON_PRIMARY_BRANCH_ID" \
@@ -618,9 +679,8 @@ restore_neon_primary_from_preserved() {
     --arg preserve "$failed_restore_name" \
     '{source_branch_id:$source,preserve_under_name:$preserve}')"
 
-  curl --fail-with-body -sS --request POST \
+  neon_api_curl --fail-with-body -sS --request POST \
     "https://console.neon.tech/api/v2/projects/$NEON_PROJECT_ID/branches/$NEON_PRIMARY_BRANCH_ID/restore" \
-    --header "Authorization: Bearer $NEON_API_KEY" \
     --header 'Content-Type: application/json' \
     --data "$inverse_payload" >"$inverse_response"
   jq -e --arg primary "$NEON_PRIMARY_BRANCH_ID" \

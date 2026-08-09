@@ -111,8 +111,13 @@ of the equality assertion.
 
 The DB connection is forced read-only with `default_transaction_read_only=on`,
 and each snapshot verifies server-reported Neon project and branch identities
-against explicit expected values. The connection string is provided only via an
-environment variable and must never be printed or committed.
+against explicit expected values. The script accepts the connection string only
+through `LIVE_VERIFY_DATABASE_URL`, parses it over stdin into discrete libpq
+settings plus a private mode-0600 `PGPASSFILE`, unsets the URI before spawning
+`psql`, and never places the URI or password in child-process argv. Failed
+`psql` stdout and stderr are withheld rather than risking reflection of a
+credential or endpoint fragment. The private password file is outside the
+receipt directory and is removed on every exit.
 
 ## How to run
 
@@ -144,6 +149,10 @@ Pass the expected deployment SHA as the optional positional argument (or as
 In both cases it resolves that Git commit and derives the expected data anchors
 and active leaderboard season from files at that SHA; no production SHA, schema,
 engine, season, or data hash is hardcoded in the script.
+
+Do not enable shell tracing (`set -x`) around credential acquisition or this
+invocation. The URI assignment is intentionally transient and must never be
+copied into a terminal transcript or receipt.
 
 The script then:
 
