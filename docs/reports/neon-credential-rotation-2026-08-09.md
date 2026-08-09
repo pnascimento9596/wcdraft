@@ -52,6 +52,32 @@ in any committed file. The second exposure was caused during this lane by an
 operator command that assumed JSON output from the installed Neon CLI; it is
 included in scope rather than omitted as an implementation embarrassment.
 
+### Additional lane incident — runner registration tokens
+
+At `2026-08-09T05:13:03Z`, after the database rotation, a runner-state
+diagnostic printed full process command lines for two idle wcdraft runner
+containers into the same private task output. Those command lines contained
+two distinct repository-scoped GitHub Actions **registration tokens**. No
+GitHub OAuth/PAT, repository secret, Neon API key, or database credential was
+part of that output.
+
+The affected runners were created at `04:35:43Z` and `04:37:11Z`. GitHub
+documents that registration tokens expire after one hour; the later token's
+maximum validity therefore ended at approximately `05:37:11Z`. GitHub exposes
+no per-token revocation operation. The response was to stop the idle fleet,
+terminate the two untracked direct supervisors that initially recreated the
+containers, remove every `wcdraft-linux-*` container, and verify zero online
+wcdraft runners at `05:18:17Z`. Colima remained up. No new CI may start before
+the later token's expiry and a fresh zero-online-runner check.
+
+The two token values occur only in the private task session's duplicated tool
+records. An exact-value scan across 151 report, PR/CI-download, live-verifier,
+reviewer, and monitor files found zero other hits. This incident also exposed
+an on-demand-discipline defect: the two Unit B runner supervisors had remained
+idle after main CI instead of being stopped immediately. Both facts are
+recorded here; neither is conflated with the database-role or Neon API-key
+assessment.
+
 ### Checked containment surfaces
 
 - All objects reachable from all local Git refs were streamed through an
@@ -135,7 +161,8 @@ After correction, a new production-derived branch
 - one insert, one update, and one delete against `auth_rate_limits`; and
 - a rollback followed by a zero-row persistence check.
 
-The proof branch was deleted at `2026-08-09T04:48:51Z`. Production was then
+Proof-branch deletion was requested at `2026-08-09T04:48:51Z` and finished at
+`04:48:53Z`. Production was then
 checked read-only as the same role: exact project `rapid-wind-87431051`, branch
 `br-blue-heart-aqcejtyf`, endpoint `ep-sparkling-credit-aqff218p`, database
 `neondb`, writable primary, 14 migration rows, and 6 representative user rows.
@@ -156,7 +183,7 @@ All timestamps are UTC.
 | `04:43:45–04:43:46` | Mandatory pre-revoke verifier failed at `/api/health` with 503. Its independent database snapshot still reached the declared production branch and proved all forbidden counts unchanged. **Revocation did not occur.**    |
 | `04:44:13`          | Vercel, GitHub, and local consumer rollback to the old credential completed; rollback redeployment `dpl_Hu8QSZGEASKA8nS8PXn4F9vkiAmh` was started.                                                                         |
 | `04:45:04.926`      | First recovered 200/ready/ready monitor sample after adding only the missing `drizzle` read privileges. The measured failed interval was approximately 1m55s.                                                              |
-| `04:46:38–04:48:51` | Fresh corrected A2 branch guard and real read/write/rollback proof passed; proof branch deleted.                                                                                                                           |
+| `04:46:38–04:48:53` | Fresh corrected A2 branch guard and real read/write/rollback proof passed; proof-branch deletion finished.                                                                                                                 |
 | `04:49:26–04:49:27` | Second new-first consumer update completed.                                                                                                                                                                                |
 | `04:49:34–04:51:41` | Corrected deployment `dpl_38r3h88TmNAHFyGBN9dwiwYjtVDd` built, became Ready, and acquired the production aliases.                                                                                                          |
 | `04:51:50–04:51:54` | **Required health-before-revoke verifier PASS.** Database/auth ready, 4/4 boards stable, typed 409 and OG healthy, all six forbidden counts unchanged.                                                                     |
@@ -258,6 +285,7 @@ Relevant current vendor documentation:
 - [Neon operations API scope and retention](https://api-docs.neon.tech/reference/listprojectoperations)
 - [Neon role password reset API](https://api-docs.neon.tech/reference/resetprojectbranchrolepassword)
 - [Neon branch password inheritance and protected branches](https://neon.com/docs/guides/protected-branches)
+- [GitHub self-hosted runner registration-token lifetime](https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-registration-token-for-a-repository)
 
 ## Evidence bindings
 
@@ -328,6 +356,15 @@ authenticated pooler backend is gone. After observing one idle owner-role
 backend, terminating that exact PID closed the residual session without
 touching runtime-role connections.
 
+### Treat the printed runner registrations as separate exposed credentials
+
+The printed values were short-lived GitHub runner registration tokens, not the
+repository's durable GitHub credential. Rotating Neon or repository secrets
+would not invalidate them. The bounded response was to remove their registered
+runners, stop the recreating supervisors, hold CI until the documented
+one-hour expiry, monitor for unexpected registrations, and ensure future runner
+inspection never prints process arguments.
+
 ### Persist SHA-pinned review verdicts in the PR body
 
 The fresh and cross-model reviews must assess the exact report commit. Adding
@@ -349,6 +386,14 @@ head.
   old-owner rejection provide the cutover proof.
 - The two production-derived snapshots remain full production-data copies.
   Their exposed passwords are neutralized; retention remains unresolved.
+- Two repository runner registration tokens appeared in private task output at
+  `05:13:03Z`. Their runners were removed and no unexpected runner was observed;
+  CI remains held until the later token's one-hour expiry at approximately
+  `05:37:11Z`.
+- The wcdraft fleet remained idle after Unit B CI longer than the on-demand
+  policy permits. The direct supervisors were stopped, containers reached zero,
+  and GitHub reported zero online wcdraft runners at `05:18:17Z`. Colima stayed
+  up.
 - The following owner actions remain open and none was resolved in this lane:
   `wow`, `testt`, `team3`, `redacted@example.invalid`, chezwizz binding, Neon
   snapshot retention, and canonical ratification.
