@@ -90,13 +90,24 @@ containers, remove every `wcdraft-linux-*` container, and verify zero online
 wcdraft runners at `05:18:17Z`. Colima remained up. No new CI may start before
 the later token's expiry and a fresh zero-online-runner check.
 
-The two token values occur only in the private task session's duplicated tool
-records. An exact-value scan across 151 report, PR/CI-download, live-verifier,
-reviewer, and monitor files found zero other hits. This incident also exposed
-an on-demand-discipline defect: the two Unit B runner supervisors had remained
-idle after main CI instead of being stopped immediately. Both facts are
-recorded here; neither is conflated with the database-role or Neon API-key
-assessment.
+The private task session contains two distinct 29-character registration
+tokens serialized eight times across duplicated incident records. An initial
+151-file scan incorrectly reported zero copies elsewhere because its retained
+reviewer-log enumeration was incomplete. The SHA-pinned fresh reviewer caught
+the error: `/tmp/wcdraft-unit-c-codex-review-733fe34.run.log`, a mode-0600
+discarded-review log, still contained one exact copy of each expired token. The
+review therefore returned `FAIL`. The 1,669,939-byte log was deleted by exact
+path at `2026-08-09T06:57:16Z` and is not recoverable through this lane. The
+failed-review receipt and its execution log contained zero exact token values.
+An expanded post-deletion scan of 4,702 files under the bounded private-temp
+`wcdraft*` surfaces found zero remaining exact token hits.
+
+This incident also exposed an on-demand-discipline defect: the two Unit B
+runner supervisors had remained idle after main CI instead of being stopped
+immediately. The original task-session copies remain part of the known exposure
+record; the missed reviewer-log copy and its deletion are recorded rather than
+silently correcting the count. Neither credential class is conflated with the
+database-role or Neon API-key assessment.
 
 ### Checked containment surfaces
 
@@ -106,7 +117,7 @@ assessment.
   **0 hits** for the old password, old URI, API key, runtime password, or new
   owner password.
 - **131 files** across the retained #347, Unit B, Unit A, reviewer, and health
-  receipts: **0 exact-secret hits**.
+  receipts: **0 database-password or Neon-API-key hits**.
 - Available Actions logs for #347, #348, and the Unit B `main` push: **0
   exact-secret hits**. GitHub returned an empty ZIP for PR #348 CI attempt 1,
   the documented checkout-time runner wedge, so that attempt's job log is
@@ -120,6 +131,11 @@ assessment.
   session-line search. It was mode 0600, never became a review receipt, and was
   deleted at `06:06:21Z`. All accepted reviewer receipts remain exact-secret
   clean.
+- A different discarded review log had **2 runner-registration-token hits**
+  missed by the initial surface enumeration. The SHA-pinned fresh reviewer
+  found them, returned `FAIL`, and the exact log was deleted at `06:57:16Z`.
+  An expanded 4,702-file post-deletion scan found **0 remaining exact runner
+  token hits**.
 
 These checks establish the named surfaces, not universal absence from every
 host-level buffer, provider-internal log, or unenumerated external system.
@@ -395,9 +411,11 @@ inspection never prints process arguments.
 
 JSONL session records can contain a credential anywhere on a matching line.
 Searching them with a line-printing tool reserialized the already-revoked owner
-password into a discarded reviewer log. The final review therefore performs
-exact comparisons in process and emits only counts/classifications; raw
-matching records and fragments are never printed.
+password into a discarded reviewer log. A separate incomplete retained-file
+enumeration also missed a reviewer log containing the two expired runner
+tokens. Final review therefore performs exact comparisons in process, scans an
+expanded bounded surface, and emits only counts/classifications; raw matching
+records and fragments are never printed.
 
 ### Persist SHA-pinned review verdicts in the PR body
 
@@ -422,9 +440,11 @@ head.
 - The two production-derived snapshots remain full production-data copies.
   Their exposed passwords are neutralized; retention remains unresolved.
 - Two repository runner registration tokens appeared in private task output at
-  `05:13:03Z`. Their runners were removed and no unexpected runner was observed;
-  CI remains held until the later token's one-hour expiry at approximately
-  `05:37:11Z`.
+  `05:13:03Z`. A discarded reviewer log later retained one copy of each until
+  the SHA-pinned review found the residue; that log was deleted at `06:57:16Z`
+  and the expanded rescan returned zero. Their runners were removed, no
+  unexpected runner was observed, and no CI started before the later token's
+  one-hour expiry at approximately `05:37:11Z`.
 - A discarded reviewer reserialized the revoked owner password six times into a
   private run log. The log and reviewer credential directories were deleted;
   accepted reviewer receipts must remain exact-secret clean.
