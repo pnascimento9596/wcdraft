@@ -1,21 +1,45 @@
 # STATE.md — measured ground truth
 
-## Neon credential transport hardening (2026-08-08)
+## Production verifier incident closeout (2026-08-09)
 
-- Unit B removes the two proven same-host argv exposures without changing DB or
-  branch semantics: production live verification now parses its transient URI
-  over stdin, uses discrete libpq settings plus a private mode-0600
-  `PGPASSFILE`, and withholds raw `psql` diagnostics; the Neon restore runbook
-  carries its API authorization header in a private mode-0600 curl config and
-  withholds raw curl stderr.
-- Regression contracts inject credential-bearing simulated failures and prove
-  no credential shape reaches argv or surfaced output. The candidate verifier
-  also passed against live production at `799535f`: health/auth ready, 4/4 board
-  ID sets unchanged, typed `409 DIFFERENT_BUILD`, and all 6 forbidden DB counts
-  unchanged. Unit A credential rotation remains blocked on Unit B review,
-  merge, deploy, and the mandatory post-merge live gate.
-- Durable Unit B report:
+- **CLOSED:** the incident opened at `2026-08-09T07:53:04Z` was the Neon
+  transaction pooler rejecting libpq startup `options` used to request
+  `default_transaction_read_only=on`. A valid cold pooled replay exited 2 with
+  that meaning in retained private diagnostics; the same credential and options
+  passed cold against the direct endpoint with read-only and timeout active.
+- The verifier now normalizes only an exact Neon `-pooler` hostname to direct
+  connectivity, clears startup `PGOPTIONS`, and executes each database read in
+  `BEGIN READ ONLY` with a transaction-local 8-second timeout. Raw failure
+  streams persist only in a mode-0600 file under a mode-0700 host directory;
+  surfaced output remains fixed and credential-free. Success cleans its private
+  path; failure retains it for authorized operator inspection.
+- Two full runs from independently confirmed-suspended production computes
+  passed on connection attempt 1 at exact build `1f89c6f`: health/db/auth ready,
+  Git-derived anchors and season matched, three 300-second bootstrap cookies and
+  no durable session, 4/4 board payloads unchanged, archive readable, typed
+  `409 DIFFERENT_BUILD`, OG healthy, and forbidden counts unchanged in both
+  snapshots (`6/42/4/18/0/317` before and after).
+- Durable report:
+  `docs/reports/production-verifier-incident-2026-08-09.md`.
+
+## Neon credential rotation and transport (2026-08-09)
+
+- Rotation is complete. Production uses least-privilege runtime role
+  `wcdraft_runtime_20260809`; the production owner credential was reset and is
+  reserved for migration/owner work. The runtime-role pooled application path
+  remains in use and was not changed by the verifier fix.
+- Retained snapshots `br-autumn-hill-aqswkxii` and
+  `br-dark-math-aqyfztzk` were independently owner-reset and remain retained.
+  Live control-plane comparison confirms their current owner credentials and
+  endpoints are pairwise distinct from production without surfacing values.
+- Transport hardening continues to parse the transient verifier URI over stdin,
+  use discrete libpq fields and a private `PGPASSFILE`, and keep raw external-
+  tool streams out of surfaced output. Detailed records:
+  `docs/reports/neon-credential-rotation-2026-08-09.md` and
   `docs/reports/neon-credential-transport-hardening-2026-08-08.md`.
+- The `15:30Z` cold reproduction remains reconciled in the incident record.
+  Canonical owner-document ratification and all named human cleanup decisions
+  remain open.
 
 ## Neon branch-targeting guardrail (2026-08-08)
 

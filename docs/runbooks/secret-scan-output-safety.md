@@ -53,5 +53,32 @@ as an evidentiary shortcut, and its transcript is itself part of the scan
 surface. A verdict or receipt that contains a raw secret match is invalid even
 if the underlying credential was already revoked.
 
+## Private retained-diagnostic carve-out
+
+Raw external-tool stdout and stderr may be retained for an explicitly authorized
+incident diagnosis even though they must never be surfaced. Retention is allowed
+only in a mode-`0700` host directory outside the repository, receipts, CI
+artifacts, and every committable path. Each retained file must be mode `0600`.
+The only retained-diagnostic datum permitted in stdout, stderr, chat, a PR body,
+or a report is the path itself. Never print, upload, quote, summarize by copying,
+or otherwise read the file contents back into a transcript.
+
+An explicitly authorized incident operator may inspect the file locally without
+echoing it. Reviewers must not open it, reproduce it, or ask another tool to
+serialize it; they verify the retention boundary through source inspection,
+permissions, lifecycle checks, and credential-bearing simulations instead. A
+successful verifier run removes its retained file and directory automatically.
+After a failed run, the file persists only until operator inspection is complete.
+The operator then removes exactly that file and its now-empty parent directory:
+
+```bash
+rm -f -- "$retained_diagnostics_path"
+rmdir -- "$(dirname "$retained_diagnostics_path")"
+```
+
+This carve-out deliberately separates **retention** from **surfacing**. Do not
+delete private failed-run evidence merely because raw bytes are forbidden in
+output, and do not print it merely because it has been retained securely.
+
 This repository policy is effective for wcdraft work. Adoption into the
 canonical owner document set remains an explicit owner decision.
