@@ -183,8 +183,9 @@ After correction, a new production-derived branch
 - an exact project/branch/role identity query;
 - a real read of all **14** `drizzle.__drizzle_migrations` rows;
 - a representative application read returning **6** users;
-- one insert, one update, and one delete against `auth_rate_limits`; and
-- a rollback followed by a zero-row persistence check.
+- one insert, one update, and one delete against `auth_rate_limits`;
+- an in-transaction zero-row check after the delete; and
+- a rollback followed by a second zero-row persistence check.
 
 Proof-branch deletion was requested at `2026-08-09T04:48:51Z` and finished at
 `04:48:53Z`. Production was then
