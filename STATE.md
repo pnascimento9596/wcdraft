@@ -1,5 +1,58 @@
 # STATE.md — measured ground truth
 
+## Final ranked-binding, residue, snapshot, and fleet closeout (2026-08-10)
+
+- **CLOSED:** migration `0014_ranked_binding_legacy_exemption` shipped in PR
+  #352 at merge `60b7078e65669a235eb325dac95a79f3149c649a`. Both overlapping
+  ranked-attempt CHECKs exempt only occupied primary key
+  `4dc1df8e-530d-47c3-9364-5e6beea571a2`; neither predicate uses
+  `session_id`, `created_at`, or another cascade-mutated/forgeable boundary.
+  Both CHECKs are `VALID` in production. The related composite FK remains
+  intentionally unchanged as `NOT VALID` with zero violators; this is not a
+  remaining item for this lane.
+- Fresh pre-mutation rollback branch `br-bold-grass-aqb9vex2`
+  (`pre-final-closeout-b0-20260810T034000Z`, parent LSN `0/7963B18`) was
+  created before migration or DML. Retain it through **2026-08-17 inclusive**;
+  delete it on or after **2026-08-18** without further owner adjudication unless
+  the owner objects. It is the only retained non-production Neon branch.
+- The production runtime role ran the real bounded expired-session sweep with
+  `limit=1`: backlog `2 -> 1`, active sessions `41 -> 41`, one batch DELETE,
+  no per-id fallback, and zero referential orphans. The poison session was
+  deleted and `chezwizz.session_id` became `NULL` by design. Its row, score,
+  token, ownership, and every other column were preserved; the stable
+  fingerprint excluding `session_id` remained exact. The first production
+  verifier then performed permitted maintenance on the remaining routine
+  expired anonymous session (`1 -> 0`) while preserving its saved run and the
+  complete forbidden set.
+- `redacted@example.invalid` is **retained** under the controlling
+  leave-if-unsure rule: the closest durable five-signal attribution test is
+  only 2/5 and its consumed sign-in link is counterevidence. `wow`, `testt`,
+  and `team3` are **retained by explicit owner decision**. These dispositions
+  are settled and no longer open items.
+- Old rollback branches `br-autumn-hill-aqswkxii` and
+  `br-dark-math-aqyfztzk` were deleted only after production Units B and C
+  passed. Each had zero children and zero in-flight project operations before
+  deletion; each returned an independent absent/HTTP-404 read-back. Final
+  inventory is exactly production `br-blue-heart-aqcejtyf` plus B0.
+- Production live verification passed after Unit B/C and again after Unit D.
+  The final run began from control-plane-confirmed `idle` compute and connected
+  on attempt 1. Exact build `60b7078e...` served healthy DB/auth and anchors;
+  forbidden counts remained accounts 6, active sessions 41, entries 4, magic
+  links 18, attempts 0, and saved runs 317; expired sessions stayed `0 -> 0`.
+- Fleet hygiene is installed outside the repository in
+  `/Users/paulo/runners/wcdraft/stop.sh`: teardown waits for offline state,
+  proves zero WCDraft containers, deregisters only exact offline
+  `wcdraft-linux-*` registrations after re-resolution, and reads back zero.
+  The first reconciled cycle reduced 25 offline registrations to 0 without
+  touching AP Audit or BiotraxIQ resources; Colima remains the shared host and
+  must stay up.
+- Durable report:
+  `docs/reports/final-closeout-ranked-binding-residue-2026-08-10.md`.
+- **Remaining human/owner actions only:** inspect and remove the owner-retained
+  diagnostic at `/tmp/wcdraft-live-verify-diagnostics.fhqQWk/`; ratify the
+  corrected non-writing definition in the canonical owner documents. Every
+  other item from this closeout is settled.
+
 ## Production verifier incident closeout (2026-08-09)
 
 - **CLOSED:** the incident opened at `2026-08-09T07:53:04Z` was the Neon
@@ -28,18 +81,19 @@
   `wcdraft_runtime_20260809`; the production owner credential was reset and is
   reserved for migration/owner work. The runtime-role pooled application path
   remains in use and was not changed by the verifier fix.
-- Retained snapshots `br-autumn-hill-aqswkxii` and
-  `br-dark-math-aqyfztzk` were independently owner-reset and remain retained.
-  Live control-plane comparison confirms their current owner credentials and
-  endpoints are pairwise distinct from production without surfacing values.
+- Snapshots `br-autumn-hill-aqswkxii` and `br-dark-math-aqyfztzk` were
+  independently owner-reset during the credential lane. The 2026-08-10 final
+  closeout subsequently deleted both after their rollback purpose ended; B0
+  `br-bold-grass-aqb9vex2` now carries the bounded rollback window above.
 - Transport hardening continues to parse the transient verifier URI over stdin,
   use discrete libpq fields and a private `PGPASSFILE`, and keep raw external-
   tool streams out of surfaced output. Detailed records:
   `docs/reports/neon-credential-rotation-2026-08-09.md` and
   `docs/reports/neon-credential-transport-hardening-2026-08-08.md`.
 - The `15:30Z` cold reproduction remains reconciled in the incident record.
-  Canonical owner-document ratification and all named human cleanup decisions
-  remain open.
+  Canonical owner-document ratification remains open. Named residue and
+  snapshot decisions are settled; only the explicitly retained diagnostic
+  inspection/removal remains a human cleanup action.
 
 ## Neon branch-targeting guardrail (2026-08-08)
 
@@ -81,12 +135,13 @@
   re-validates `leaderboard_entries_ranked_attempt_binding_chk` and aborts
   multi-id sweep. Driver deps stable through #341. Report:
   `docs/reports/substrate-silent-fail-audit-2026-08-07.md`.
-- **Unit B:** Inventory of raw `db.execute` + best-effort paths; only proven
-  remaining defect was batch-sweep freeze on poison id. Fix: batch delete with
-  **per-id fallback**. Expired backlog after fix expected **1** (poison;
-  leave until owner binding decision). Investigation artifact: 86 non-poison
-  expired sessions deleted on prod when neonctl branch DSN resolved to primary
-  — boards/users intact; poison retained.
+- **Unit B (historical, now closed):** inventory of raw `db.execute` +
+  best-effort paths found the batch-sweep freeze on the poison id. Per-id
+  fallback restored progress at the time. Migration 0014 later scoped and
+  validated the two ranked CHECKs; the 2026-08-10 production sweep deleted the
+  poison in one batch with no fallback, and the verifier reduced the final
+  routine expired backlog to zero. The earlier 86-row investigation remains a
+  historical incident fact; boards/users stayed intact.
 - **Unit C1:** `/api/health` auth probe uses `SET LOCAL statement_timeout` (2s)
   - process single-flight (no AbortSignal on neon-serverless Pool).
 - **Unit C2:** conforming cross-model PASS/FAIL recorded on the PR for #344
@@ -108,15 +163,17 @@
 - **Unit C (executed):** deleted shipmqyo\* LB rows + three automation
   accounts under dual attribution PASS + Neon snapshot
   `br-dark-math-aqyfztzk` (`pre-unit-c-residue-20260807T225034Z`, parent LSN
-  `0/74CDBC0`). Post: entries 4, users 6. Ranked binding constraints remain
-  `NOT VALID` (chezwizz NULL `attempt_id` historical exception — no
-  fabricated attempt). Report:
+  `0/74CDBC0`). Post: entries 4, users 6. At that point the ranked binding
+  constraints remained `NOT VALID` because genuine historical `chezwizz` had
+  a NULL `attempt_id`; migration 0014 has since scoped and validated both
+  CHECKs without fabricating an attempt. Report:
   `docs/reports/unit-c-residue-binding-closeout-2026-08-07.md`.
 - **Unit D:** host `stop.sh`/`start.sh` safe env load + zero-online-runner
   check (outside repo: `/Users/paulo/runners/wcdraft/`); `.gitleaks.toml`
-  U2 path allowlist confirmed path-scoped; snapshots retained
-  (`br-autumn-hill-aqswkxii` U2 + `br-dark-math-aqyfztzk` Unit C — owner
-  delete after restore window).
+  U2 path allowlist confirmed path-scoped. The two then-retained snapshots
+  (`br-autumn-hill-aqswkxii` U2 and `br-dark-math-aqyfztzk` Unit C) were
+  deleted in the 2026-08-10 final closeout after the restore window and fresh
+  B0 replacement were verified.
 
 ## Leaderboard live-verify residue cleanup (U2, 2026-08-07)
 
@@ -127,10 +184,11 @@ Attribution 4/5 U2b criteria (automation alias, #340 window, verification
 provenance, golden fixture token `f4-u2-classic`). Mechanism: direct row
 DELETE (null user/session/attempt). Neon snapshot branch
 `br-autumn-hill-aqswkxii` (`pre-u2-lb-residue-20260807T204810Z`, parent
-production `br-blue-heart-aqcejtyf`, LSN `0/746A408`) retained for restore.
-Post: entries 6, current featured boards empty, archive `team3` retained,
-non-writing live-verify PASS. Skipped ambiguous older aliases (`testt`,
-`shipmqyo*`, `wow`) and genuine `chezwizz` for owner adjudication.
+production `br-blue-heart-aqcejtyf`, LSN `0/746A408`) was retained for restore
+and deleted in the 2026-08-10 final closeout. At that point entries were 6,
+current featured boards were empty, archive `team3` was retained, and the
+non-writing live verifier passed. Later attribution work deleted `shipmqyo*`;
+owner decisions retain `testt`, `wow`, `team3`, and genuine `chezwizz`.
 Durable report: `docs/reports/leaderboard-live-verify-residue-u2-2026-08-07.md`.
 
 ## Production live-verify — corrected non-writing definition (standing constraint)
