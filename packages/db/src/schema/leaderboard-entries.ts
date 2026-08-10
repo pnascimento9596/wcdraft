@@ -228,11 +228,15 @@ export const leaderboardEntries = pgTable(
     ),
     check(
       "leaderboard_entries_ranked_attempt_chk",
-      sql`${t.mode} <> 'ranked' OR ${t.attemptId} IS NOT NULL`,
+      sql`${t.id} = '4dc1df8e-530d-47c3-9364-5e6beea571a2'::uuid OR ${t.mode} <> 'ranked' OR ${t.attemptId} IS NOT NULL`,
     ),
     check(
       "leaderboard_entries_ranked_attempt_binding_chk",
-      sql`${t.mode} <> 'ranked' OR (
+      // One genuine ranked row predates server-issued attempt binding. Exempt
+      // its exact primary key rather than a forgeable date range or session
+      // provenance: session_id is intentionally absent because its ON DELETE
+      // SET NULL cascade must not make the preserved row fail this CHECK.
+      sql`${t.id} = '4dc1df8e-530d-47c3-9364-5e6beea571a2'::uuid OR ${t.mode} <> 'ranked' OR (
         ${t.attemptId} IS NOT NULL
         AND ${t.userId} IS NOT NULL
         AND ${t.attemptFormationId} IS NOT NULL

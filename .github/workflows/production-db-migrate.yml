@@ -10,7 +10,7 @@ on:
       expected_pending_migration:
         description: Exact single journal-tail migration expected to be pending
         required: true
-        default: 0013_audit_s1_auth_abuse
+        default: 0014_ranked_binding_legacy_exemption
         type: string
 
 permissions:

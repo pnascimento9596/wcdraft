@@ -99,6 +99,13 @@
       "when": 1783773033302,
       "tag": "0013_audit_s1_auth_abuse",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1786333373398,
+      "tag": "0014_ranked_binding_legacy_exemption",
+      "breakpoints": true
     }
   ]
 }

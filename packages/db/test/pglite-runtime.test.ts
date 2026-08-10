@@ -989,6 +989,165 @@ describe("@wcdraft/db pglite runtime", () => {
   });
 });
 
+describe("@wcdraft/db 0014 ranked legacy exemption runtime", () => {
+  it("validates the exact legacy row, rejects a new attempt-less row, cascades, and rolls back", async () => {
+    const client = new PGlite();
+    const legacyId = "4dc1df8e-530d-47c3-9364-5e6beea571a2";
+    const legacySessionId = "legacy-ranked-expired-session";
+    try {
+      await applyMigrationsThrough(client, "0008");
+      await client.exec(`
+        INSERT INTO users (id, email, username)
+        VALUES ('${USER_ID}', 'legacy-exemption@example.invalid', 'legacy_exemption');
+
+        INSERT INTO sessions (id, user_id, csrf_secret, expires_at)
+        VALUES (
+          '${legacySessionId}',
+          '${USER_ID}',
+          'legacy-csrf',
+          '2026-07-21T20:24:09.686Z'
+        );
+
+        INSERT INTO leaderboard_entries (
+          id,
+          season_key,
+          mode,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          user_id,
+          session_id,
+          display_alias,
+          token,
+          verified_score,
+          score_breakdown,
+          created_at
+        ) VALUES (
+          '${legacyId}',
+          'season-pre-binding',
+          'ranked',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          '${USER_ID}',
+          '${legacySessionId}',
+          NULL,
+          'legacy-exemption-token',
+          23,
+          '[]'::jsonb,
+          '2026-06-21T21:17:55.346Z'
+        );
+      `);
+      for (const file of [
+        "0009_ranked_attempt_binding.sql",
+        "0010_account_password.sql",
+        "0011_email_verification.sql",
+        "0012_ranked_attempt_structural_binding.sql",
+        "0013_audit_s1_auth_abuse.sql",
+      ]) {
+        await applyMigrationFile(client, file);
+      }
+
+      const before = await client.query<{ session_id: string | null; stable_md5: string }>(`
+        SELECT session_id, md5((to_jsonb(entry) - 'session_id')::text) AS stable_md5
+        FROM leaderboard_entries AS entry
+        WHERE id = '${legacyId}'
+      `);
+      expect(before.rows).toHaveLength(1);
+      expect(before.rows[0]?.session_id).toBe(legacySessionId);
+
+      await applyMigrationFile(client, "0014_ranked_binding_legacy_exemption.sql");
+      const validation = await client.query<{ conname: string; convalidated: boolean }>(`
+        SELECT conname, convalidated
+        FROM pg_constraint
+        WHERE conname IN (
+          'leaderboard_entries_ranked_attempt_chk',
+          'leaderboard_entries_ranked_attempt_binding_chk',
+          'leaderboard_entries_ranked_attempt_binding_fk'
+        )
+        ORDER BY conname
+      `);
+      expect(validation.rows).toEqual([
+        {
+          conname: "leaderboard_entries_ranked_attempt_binding_chk",
+          convalidated: true,
+        },
+        {
+          conname: "leaderboard_entries_ranked_attempt_binding_fk",
+          convalidated: false,
+        },
+        { conname: "leaderboard_entries_ranked_attempt_chk", convalidated: true },
+      ]);
+
+      await expect(
+        client.exec(`
+          INSERT INTO leaderboard_entries (
+            id,
+            season_key,
+            mode,
+            draft_mode,
+            draft_order,
+            era,
+            rating_basis,
+            user_id,
+            token,
+            verified_score
+          ) VALUES (
+            '00000000-0000-4000-8000-000000000014',
+            'season-non-exempt',
+            'ranked',
+            'classic',
+            'squad_first',
+            'all_time',
+            'career',
+            '${USER_ID}',
+            'non-exempt-attemptless-token',
+            999
+          )
+        `),
+      ).rejects.toThrow(/leaderboard_entries_ranked_attempt_(?:binding_)?chk|check constraint/i);
+
+      await client.exec(`DELETE FROM sessions WHERE id = '${legacySessionId}'`);
+      const after = await client.query<{ session_id: string | null; stable_md5: string }>(`
+        SELECT session_id, md5((to_jsonb(entry) - 'session_id')::text) AS stable_md5
+        FROM leaderboard_entries AS entry
+        WHERE id = '${legacyId}'
+      `);
+      expect(after.rows).toEqual([{ session_id: null, stable_md5: before.rows[0]?.stable_md5 }]);
+
+      await applyDownMigrationFile(client, "0014_ranked_binding_legacy_exemption.down.sql");
+      const restored = await client.query<{
+        conname: string;
+        convalidated: boolean;
+        definition: string;
+      }>(`
+        SELECT conname, convalidated, pg_get_constraintdef(oid) AS definition
+        FROM pg_constraint
+        WHERE conname IN (
+          'leaderboard_entries_ranked_attempt_chk',
+          'leaderboard_entries_ranked_attempt_binding_chk'
+        )
+        ORDER BY conname
+      `);
+      expect(restored.rows).toHaveLength(2);
+      for (const row of restored.rows) {
+        expect(row.convalidated).toBe(false);
+        expect(row.definition).not.toContain(legacyId);
+      }
+      const survivor = await client.query<{ count: number }>(`
+        SELECT count(*)::integer AS count
+        FROM leaderboard_entries
+        WHERE id = '${legacyId}' AND session_id IS NULL
+      `);
+      expect(survivor.rows).toEqual([{ count: 1 }]);
+    } finally {
+      await client.close();
+    }
+  });
+});
+
 describe("@wcdraft/db 0013 audit auth migration runtime", () => {
   it("backfills exact bytes, enforces checks, and returns to the 0012 shape on down", async () => {
     const client = new PGlite();

@@ -30,6 +30,7 @@
     "db:migrate:status": "tsx scripts/migrate-status.ts",
     "db:branch:verify": "tsx scripts/verify-neon-branch.ts",
     "db:rollback-check": "tsx scripts/rollback-check.ts",
+    "db:verify-ranked-legacy-exemption": "tsx scripts/verify-ranked-legacy-exemption.ts",
     "db:branch:create": "tsx scripts/neon-branch-create.ts",
     "db:branch:delete": "tsx scripts/neon-branch-delete.ts"
   },

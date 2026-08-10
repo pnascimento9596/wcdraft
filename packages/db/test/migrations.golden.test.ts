@@ -149,6 +149,16 @@ const auditAuthDownSql = readFileSync(
   "utf8",
 );
 
+const rankedLegacyExemptionSql = readFileSync(
+  new URL("../migrations/0014_ranked_binding_legacy_exemption.sql", import.meta.url),
+  "utf8",
+);
+
+const rankedLegacyExemptionDownSql = readFileSync(
+  new URL("../migrations/0014_ranked_binding_legacy_exemption.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
@@ -179,7 +189,7 @@ function readSnapshot(index: number): DrizzleSnapshot {
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(14);
+    expect(journal.entries).toHaveLength(15);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -208,14 +218,16 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[12]?.idx).toBe(12);
     expect(journal.entries[13]?.tag).toBe("0013_audit_s1_auth_abuse");
     expect(journal.entries[13]?.idx).toBe(13);
+    expect(journal.entries[14]?.tag).toBe("0014_ranked_binding_legacy_exemption");
+    expect(journal.entries[14]?.idx).toBe(14);
   });
 
-  it("has one linked drizzle-kit snapshot for every journal entry through 0013", () => {
+  it("has one linked drizzle-kit snapshot for every journal entry through 0014", () => {
     const snapshotFiles = readdirSync(new URL("../migrations/meta", import.meta.url))
       .filter((file) => /^\d{4}_snapshot\.json$/u.test(file))
       .sort();
     expect(snapshotFiles).toHaveLength(journal.entries.length);
-    expect(snapshotFiles.at(-1)).toBe("0013_snapshot.json");
+    expect(snapshotFiles.at(-1)).toBe("0014_snapshot.json");
 
     const snapshots = journal.entries.map((entry) => readSnapshot(entry.idx));
     for (let index = 1; index < snapshots.length; index += 1) {
@@ -872,6 +884,45 @@ describe("@wcdraft/db migrations — 0013_audit_s1_auth_abuse", () => {
     ]) {
       expect(auditAuthDownSql).toContain(`DROP COLUMN IF EXISTS "${column}"`);
     }
+  });
+});
+
+describe("@wcdraft/db migrations — 0014_ranked_binding_legacy_exemption", () => {
+  const legacyId = "4dc1df8e-530d-47c3-9364-5e6beea571a2";
+
+  it("exempts only the occupied historical primary key and validates both ranked checks", () => {
+    expect(rankedLegacyExemptionSql.match(new RegExp(`${legacyId}'::uuid`, "gu"))).toHaveLength(2);
+    expect(rankedLegacyExemptionSql).not.toMatch(/created_at\s*[<>=]/iu);
+    expect(rankedLegacyExemptionSql).not.toMatch(/session_id\s*[<>=]|[<>=]\s*[^\n]*session_id/iu);
+
+    for (const name of [
+      "leaderboard_entries_ranked_attempt_chk",
+      "leaderboard_entries_ranked_attempt_binding_chk",
+    ]) {
+      expect(rankedLegacyExemptionSql).toMatch(
+        new RegExp(`ADD CONSTRAINT "${name}"[\\s\\S]*?\\) NOT VALID;`, "u"),
+      );
+      expect(rankedLegacyExemptionSql).toContain(`VALIDATE CONSTRAINT "${name}"`);
+    }
+  });
+
+  it("documents the unforgeable boundary and cascade-safe rationale in the migration", () => {
+    expect(rankedLegacyExemptionSql).toContain("exact occupied primary key");
+    expect(rankedLegacyExemptionSql).toContain("application insert path explicitly");
+    expect(rankedLegacyExemptionSql).toContain("ON DELETE SET NULL");
+    expect(rankedLegacyExemptionSql).toContain("Scoping only");
+  });
+
+  it("down migration restores the two prior NOT VALID definitions without data mutation", () => {
+    expect(rankedLegacyExemptionDownSql).not.toContain(legacyId);
+    expect(rankedLegacyExemptionDownSql).not.toMatch(/\b(?:UPDATE|DELETE|INSERT)\b/iu);
+    expect(rankedLegacyExemptionDownSql).not.toContain("VALIDATE CONSTRAINT");
+    expect(rankedLegacyExemptionDownSql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_ranked_attempt_chk"[\s\S]*"mode" <> 'ranked'[\s\S]*"attempt_id" IS NOT NULL[\s\S]*\) NOT VALID;/u,
+    );
+    expect(rankedLegacyExemptionDownSql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_ranked_attempt_binding_chk"[\s\S]*"attempt_consumed_at" IS NOT NULL[\s\S]*\) NOT VALID;/u,
+    );
   });
 });
 

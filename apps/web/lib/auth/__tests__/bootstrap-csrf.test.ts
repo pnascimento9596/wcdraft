@@ -1,6 +1,6 @@
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { leaderboardEntries, sessions, users } from "@wcdraft/db";
-import { eq, sql } from "drizzle-orm";
+import type { Db } from "@wcdraft/db";
 
 import { setupTestDb, testCookieSecret } from "./_test-db";
 import {
@@ -100,10 +100,7 @@ describe("expired-session sweep", () => {
     ]);
   });
 
-  it("still reaps safe expired sessions when one id is blocked by pre-binding ranked SET NULL", async () => {
-    // Production shape: a pre-0012 ranked row with NULL attempt_id still
-    // references an expired session. ON DELETE SET NULL re-validates
-    // leaderboard_entries_ranked_attempt_binding_chk and aborts the batch.
+  it("reaps the exact exempt pre-binding session and the safe session in one batch", async () => {
     const now = Date.UTC(2026, 6, 21);
     const userRows = await env.db
       .insert(users)
@@ -134,18 +131,8 @@ describe("expired-session sweep", () => {
       },
     ]);
 
-    // Seed a NOT VALID-shaped legacy ranked row (cannot INSERT under the live
-    // CHECK). Drop/re-add the binding check the same way production migration
-    // 0012 did so the row can exist while remaining non-updatable via SET NULL.
-    await env.db.execute(sql`
-      ALTER TABLE leaderboard_entries
-        DROP CONSTRAINT IF EXISTS leaderboard_entries_ranked_attempt_binding_chk
-    `);
-    await env.db.execute(sql`
-      ALTER TABLE leaderboard_entries
-        DROP CONSTRAINT IF EXISTS leaderboard_entries_ranked_attempt_chk
-    `);
     await env.db.insert(leaderboardEntries).values({
+      id: "4dc1df8e-530d-47c3-9364-5e6beea571a2",
       seasonKey: "engine-legacy-pre-binding",
       mode: "ranked",
       draftMode: "classic",
@@ -160,48 +147,41 @@ describe("expired-session sweep", () => {
       verifiedScore: 23,
       scoreBreakdown: [],
     });
-    await env.db.execute(sql`
-      ALTER TABLE leaderboard_entries
-        ADD CONSTRAINT leaderboard_entries_ranked_attempt_chk
-        CHECK (mode <> 'ranked' OR attempt_id IS NOT NULL) NOT VALID
-    `);
-    await env.db.execute(sql`
-      ALTER TABLE leaderboard_entries
-        ADD CONSTRAINT leaderboard_entries_ranked_attempt_binding_chk
-        CHECK (
-          mode <> 'ranked'
-          OR (
-            attempt_id IS NOT NULL
-            AND user_id IS NOT NULL
-            AND attempt_formation_id IS NOT NULL
-            AND draft_order IS NOT NULL
-            AND era IS NOT NULL
-            AND rating_basis IS NOT NULL
-            AND attempt_consumed_at IS NOT NULL
-          )
-        ) NOT VALID
-    `);
 
-    // Prove the cascade is still poison: deleting the blocked session alone fails.
-    let poisonDeleteFailed = false;
-    try {
-      await env.db.delete(sessions).where(eq(sessions.id, "poison-expired"));
-    } catch (error) {
-      poisonDeleteFailed = true;
-      const message = error instanceof Error ? error.message : String(error);
-      const cause =
-        error instanceof Error && error.cause instanceof Error ? error.cause.message : "";
-      expect(`${message}\n${cause}`).toMatch(
-        /ranked_attempt_binding_chk|check constraint|Failed query/i,
-      );
-    }
-    expect(poisonDeleteFailed).toBe(true);
-
-    const deleted = await sweepExpiredSessions({ db: env.db, now: () => now }, 250);
-    expect(deleted).toBe(1);
+    let deleteCalls = 0;
+    const observedDb = new Proxy(env.db, {
+      get(target, property, receiver) {
+        if (property !== "delete") return Reflect.get(target, property, receiver);
+        return (...args: Parameters<Db["delete"]>) => {
+          deleteCalls += 1;
+          return target.delete(...args);
+        };
+      },
+    });
+    const deleted = await sweepExpiredSessions({ db: observedDb, now: () => now }, 250);
+    expect(deleted).toBe(2);
+    expect(deleteCalls).toBe(1);
     const remaining = (await env.db.select({ id: sessions.id }).from(sessions))
       .map((row) => row.id)
       .sort();
-    expect(remaining).toEqual(["live-ok", "poison-expired"]);
+    expect(remaining).toEqual(["live-ok"]);
+    const legacy = await env.db
+      .select({
+        id: leaderboardEntries.id,
+        sessionId: leaderboardEntries.sessionId,
+        userId: leaderboardEntries.userId,
+        token: leaderboardEntries.token,
+        verifiedScore: leaderboardEntries.verifiedScore,
+      })
+      .from(leaderboardEntries);
+    expect(legacy).toEqual([
+      {
+        id: "4dc1df8e-530d-47c3-9364-5e6beea571a2",
+        sessionId: null,
+        userId,
+        token: "legacy-ranked-token",
+        verifiedScore: 23,
+      },
+    ]);
   });
 });

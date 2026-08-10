@@ -463,6 +463,17 @@ async function main(): Promise<void> {
         if (!ownerId || !rivalId) {
           throw new Error("[rollback-check] FATAL: ranked binding probe users were not created");
         }
+        await assertInsertRejected(
+          "leaderboard_entries: non-exempt ranked row without an attempt must be rejected",
+          () =>
+            verifiedDb.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, token, verified_score)
+          VALUES
+            (${lbSeason}, 'ranked', 'classic', 'squad_first', 'all_time', 'career', ${ownerId}::uuid, ${`${lbToken}-attemptless-non-exempt`}, 999)
+        `),
+          /leaderboard_entries_ranked_attempt_(binding_)?chk|check constraint|23514/i,
+        );
         const attemptRows = await verifiedDb.execute<{ id: string }>(sql`
       INSERT INTO ranked_attempts
         (user_id, season_key, formation_id, draft_mode, draft_order, era, rating_basis, issued_parent_seed, nonce, window_expires_at)
