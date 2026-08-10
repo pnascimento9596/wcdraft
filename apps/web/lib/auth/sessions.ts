@@ -108,14 +108,11 @@ export async function deleteSession(sessionId: string, deps: SessionDeps): Promi
  * crypto and does not need a durable row. The two-step form keeps the same
  * order/limit contract while avoiding the execute/result-shape edge.
  *
- * Batch delete can still fail when a selected session is referenced by a
- * pre-binding ranked `leaderboard_entries` row: `ON DELETE SET NULL` on
- * `session_id` re-validates `leaderboard_entries_ranked_attempt_binding_chk`
- * (NOT VALID only exempts pre-existing rows at constraint-add time; any later
- * UPDATE must satisfy the check). One poisoned id in a multi-id DELETE aborts
- * the whole batch, which historically froze the sweep after the oldest
- * expired session became that historical ranked exception. On batch failure
- * we fall back to per-id deletes so safe expired sessions still reaped.
+ * Migration 0014 gives the sole genuine pre-binding ranked row an exact-id,
+ * cascade-stable exemption, so its `session_id` ON DELETE SET NULL no longer
+ * poisons the batch. The per-id fallback remains defense in depth for an
+ * unrelated row-level constraint or storage failure: one blocked id must not
+ * prevent other expired sessions from being reaped.
  */
 export async function sweepExpiredSessions(
   deps: Pick<SessionDeps, "db" | "now">,
@@ -148,8 +145,8 @@ export async function sweepExpiredSessions(
           .returning({ id: sessions.id });
         deleted += rows.length;
       } catch {
-        // Leave the poisoned session; next sweep will skip it again after
-        // selecting it, or succeed if the blocking row is later repaired.
+        // Leave the blocked session; a later sweep can succeed after the
+        // unrelated row-level or storage failure is repaired.
       }
     }
     return deleted;

@@ -42,7 +42,7 @@ EXPECTED_MAIN_SHA="$(git rev-parse origin/main)"
 gh workflow run production-db-migrate.yml \
   --ref main \
   -f expected_main_sha="$EXPECTED_MAIN_SHA" \
-  -f expected_pending_migration=0013_audit_s1_auth_abuse
+  -f expected_pending_migration=0014_ranked_binding_legacy_exemption
 ```
 
 The workflow refuses a moving or non-default ref, any mismatch among the
