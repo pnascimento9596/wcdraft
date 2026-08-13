@@ -47,18 +47,18 @@
     "@wcdraft/core": "workspace:*",
     "@wcdraft/data": "workspace:*",
     "@wcdraft/db": "workspace:*",
-    "next": "^16.2.10",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "next": "^16.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "zod": "3.25.76"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "drizzle-orm": "^0.45.2",
-    "happy-dom": "^20.10.6",
-    "playwright-core": "^1.61.1",
+    "happy-dom": "^20.11.2",
+    "playwright-core": "^1.62.1",
     "vitest": "^4.1.10"
   }
 }
