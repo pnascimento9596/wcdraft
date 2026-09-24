@@ -43,22 +43,22 @@
     "verify:native-app-feel:webkit": "WCDRAFT_NATIVE_APP_FEEL_SERVER=production tsx scripts/verify-native-app-feel-webkit.mts"
   },
   "dependencies": {
-    "@node-rs/argon2": "^2.0.2",
+    "@node-rs/argon2": "^2.2.1",
     "@wcdraft/core": "workspace:*",
     "@wcdraft/data": "workspace:*",
     "@wcdraft/db": "workspace:*",
-    "next": "^16.2.10",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.4",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "drizzle-orm": "^0.45.2",
-    "happy-dom": "^20.10.6",
-    "playwright-core": "^1.61.1",
+    "@electric-sql/pglite": "^0.5.8",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-orm": "^0.45.3",
+    "happy-dom": "^20.14.5",
+    "playwright-core": "^1.63.0",
     "vitest": "^4.1.10"
   }
 }
