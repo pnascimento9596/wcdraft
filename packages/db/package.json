@@ -35,11 +35,11 @@
     "db:branch:delete": "tsx scripts/neon-branch-delete.ts"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.0",
-    "drizzle-orm": "^0.45.2"
+    "@neondatabase/serverless": "^1.2.0",
+    "drizzle-orm": "^0.45.3"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.4",
-    "drizzle-kit": "^0.31.10"
+    "@electric-sql/pglite": "^0.5.8",
+    "drizzle-kit": "^0.31.11"
   }
 }
